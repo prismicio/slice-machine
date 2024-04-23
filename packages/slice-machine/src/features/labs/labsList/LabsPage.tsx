@@ -1,14 +1,15 @@
-import {
-  AppLayout,
-  AppLayoutBreadcrumb,
-  AppLayoutContent,
-  AppLayoutHeader,
-} from "@components/AppLayout";
 import { Box, DefaultErrorMessage, ProgressCircle } from "@prismicio/editor-ui";
 import { BreadcrumbItem } from "@src/components/Breadcrumb";
 import { ErrorBoundary } from "@src/ErrorBoundary";
 import Head from "next/head";
 import { type FC, ReactNode, Suspense } from "react";
+
+import {
+  AppLayout,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@/legacy/components/AppLayout";
 
 import { LabsList } from "./LabsList";
 

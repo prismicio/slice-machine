@@ -1,8 +1,9 @@
-import Li from "@components/Li";
-import ListItem from "@components/ListItem";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Box, Text } from "theme-ui";
+
+import Li from "@/legacy/components/Li";
+import ListItem from "@/legacy/components/ListItem";
 
 import { findWidgetByConfigOrType } from "../../../utils";
 import Hint from "./components/Hints";

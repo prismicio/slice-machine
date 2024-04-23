@@ -1,4 +1,3 @@
-import { validateSliceModalValues as validateAsNewSliceValues } from "@components/Forms/formsValidator";
 import { pascalize } from "@lib/utils/str";
 import {
   Box,
@@ -17,6 +16,8 @@ import { SliceMachineStoreType } from "@src/redux/type";
 import { Formik } from "formik";
 import type { FC } from "react";
 import { useSelector } from "react-redux";
+
+import { validateSliceModalValues as validateAsNewSliceValues } from "@/legacy/components/Forms/formsValidator";
 
 import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";

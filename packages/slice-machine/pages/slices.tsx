@@ -1,17 +1,3 @@
-import {
-  AppLayout,
-  AppLayoutActions,
-  AppLayoutBreadcrumb,
-  AppLayoutContent,
-  AppLayoutHeader,
-} from "@components/AppLayout";
-import { DeleteSliceModal } from "@components/DeleteSliceModal";
-import EmptyState from "@components/EmptyState";
-import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-import { RenameSliceModal } from "@components/Forms/RenameSliceModal";
-import Grid from "@components/Grid";
-import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
-import { SliceToastMessage } from "@components/ToasterContainer";
 import { VIDEO_WHAT_ARE_SLICES } from "@lib/consts";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { LibraryUI } from "@lib/models/common/LibraryUI";
@@ -29,6 +15,21 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
+
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@/legacy/components/AppLayout";
+import { DeleteSliceModal } from "@/legacy/components/DeleteSliceModal";
+import EmptyState from "@/legacy/components/EmptyState";
+import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
+import { RenameSliceModal } from "@/legacy/components/Forms/RenameSliceModal";
+import Grid from "@/legacy/components/Grid";
+import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
+import { SliceToastMessage } from "@/legacy/components/ToasterContainer";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();

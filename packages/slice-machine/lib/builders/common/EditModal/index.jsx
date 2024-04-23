@@ -1,7 +1,3 @@
-import Card from "@components/Card/WithTabs";
-import { Col, Flex as FlexGrid } from "@components/Flex";
-import ItemHeader from "@components/ItemHeader";
-import SliceMachineModal from "@components/SliceMachineModal";
 import { createFieldNameFromKey, createInitialValues } from "@lib/forms";
 import { DeprecatedMockConfigMessage } from "@lib/models/common/DeprecatedMockConfigMessage";
 import * as Widgets from "@lib/models/common/widgets/withGroup";
@@ -9,6 +5,11 @@ import { removeProp } from "@lib/utils";
 import Modal from "react-modal";
 import { Box, Button, Close, Flex, useThemeUI } from "theme-ui";
 import * as yup from "yup";
+
+import Card from "@/legacy/components/Card/WithTabs";
+import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
+import ItemHeader from "@/legacy/components/ItemHeader";
+import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 
 import { findWidgetByConfigOrType } from "../../utils";
 import WidgetFormField from "./Field";

@@ -1,7 +1,4 @@
 import AddVariationModal from "@builders/SliceBuilder/Sidebar/AddVariationModal";
-import { DeleteVariationModal } from "@components/DeleteVariationModal";
-import { RenameVariationModal } from "@components/Forms/RenameVariationModal";
-import ScreenshotChangesModal from "@components/ScreenshotChangesModal";
 import type { VariationSM } from "@lib/models/common/Slice";
 import { Box, Button, Gradient } from "@prismicio/editor-ui";
 import { updateSlice } from "@src/apiClient";
@@ -14,6 +11,10 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useRouter } from "next/router";
 import { type FC, useState } from "react";
 import { toast } from "react-toastify";
+
+import { DeleteVariationModal } from "@/legacy/components/DeleteVariationModal";
+import { RenameVariationModal } from "@/legacy/components/Forms/RenameVariationModal";
+import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
 
 type DialogState =
   | { type: "ADD_VARIATION"; variation?: undefined; loading?: boolean }

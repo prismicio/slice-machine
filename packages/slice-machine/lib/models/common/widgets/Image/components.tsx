@@ -1,12 +1,13 @@
-import { FormFieldInput } from "@components/FormFields";
-import SliceMachineIconButton, {
-  SliceMachineIconButtonProps,
-} from "@components/SliceMachineIconButton";
 import { FieldMetaProps, useField } from "formik";
 import React, { Fragment } from "react";
 import { BsFillPlusSquareFill, BsImage } from "react-icons/bs";
 import { MdCancel } from "react-icons/md";
 import { Badge, Flex, Text, ThemeUIStyleObject } from "theme-ui";
+
+import { FormFieldInput } from "@/legacy/components/FormFields";
+import SliceMachineIconButton, {
+  SliceMachineIconButtonProps,
+} from "@/legacy/components/SliceMachineIconButton";
 
 type ThumbnailButtonProps = Pick<
   SliceMachineIconButtonProps,

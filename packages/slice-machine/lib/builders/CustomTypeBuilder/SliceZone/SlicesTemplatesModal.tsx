@@ -10,7 +10,8 @@ import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { FC } from "react";
 import { Text } from "theme-ui";
 
-import ModalFormCard from "../../../../components/ModalFormCard";
+import ModalFormCard from "@/legacy/components/ModalFormCard";
+
 import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 

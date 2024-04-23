@@ -1,5 +1,4 @@
 import { findWidgetByConfigOrType } from "@builders/utils";
-import ListItem from "@components/ListItem";
 import EditModal from "@lib/builders/common/EditModal";
 import SelectFieldTypeModal from "@lib/builders/common/SelectFieldTypeModal";
 import Hint from "@lib/builders/common/Zone/Card/components/Hints";
@@ -21,6 +20,8 @@ import { Fragment, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { Box, Button } from "theme-ui";
+
+import ListItem from "@/legacy/components/ListItem";
 
 /* eslint-disable */
 const CustomListItem = ({

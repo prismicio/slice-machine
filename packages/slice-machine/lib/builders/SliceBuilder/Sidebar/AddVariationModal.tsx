@@ -1,5 +1,3 @@
-import Card from "@components/Card/Default";
-import SliceMachineModal from "@components/SliceMachineModal";
 import { VariationSM } from "@lib/models/common/Slice";
 import { Box, Button } from "@prismicio/editor-ui";
 import { Field, Form, Formik } from "formik";
@@ -7,6 +5,9 @@ import { camelCase } from "lodash";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { Input, Label, Text } from "theme-ui";
+
+import Card from "@/legacy/components/Card/Default";
+import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 
 const Error = ({ msg }: { msg?: string }) => (
   <Text as="span" sx={{ fontSize: 12, color: "error", mt: "5px", ml: 2 }}>

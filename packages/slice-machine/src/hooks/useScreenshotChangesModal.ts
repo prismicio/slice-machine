@@ -1,7 +1,8 @@
-import { SliceVariationSelector } from "@components/ScreenshotChangesModal";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useState } from "react";
+
+import { SliceVariationSelector } from "@/legacy/components/ScreenshotChangesModal";
 
 type ModalPayload = {
   sliceFilterFn: (s: ComponentUI[]) => ComponentUI[];

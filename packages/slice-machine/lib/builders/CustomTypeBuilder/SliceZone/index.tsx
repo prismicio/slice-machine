@@ -1,5 +1,3 @@
-import { CreateSliceModal } from "@components/Forms/CreateSliceModal";
-import { ToastMessageWithPath } from "@components/ToasterContainer";
 import type { ComponentUI } from "@lib/models/common/ComponentUI";
 import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 import type { SliceZoneSlice } from "@lib/models/common/CustomType/sliceZone";
@@ -33,6 +31,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
+
+import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
+import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";

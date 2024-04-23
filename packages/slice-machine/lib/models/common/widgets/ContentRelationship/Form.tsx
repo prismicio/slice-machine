@@ -1,4 +1,3 @@
-import { Col, Flex as FlexGrid } from "@components/Flex";
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@lib/forms";
 import { DefaultFields } from "@lib/forms/defaults";
@@ -8,6 +7,8 @@ import { useSelector } from "react-redux";
 import Select from "react-select";
 import { Box, Label } from "theme-ui";
 import * as yup from "yup";
+
+import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 
 import { hasLocal } from "../../ModelData";
 

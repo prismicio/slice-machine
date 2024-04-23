@@ -1,8 +1,9 @@
-import { Col, Flex as FlexGrid } from "@components/Flex";
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@lib/forms";
 import { DefaultFields } from "@lib/forms/defaults";
 import { CheckBox } from "@lib/forms/fields";
+
+import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {

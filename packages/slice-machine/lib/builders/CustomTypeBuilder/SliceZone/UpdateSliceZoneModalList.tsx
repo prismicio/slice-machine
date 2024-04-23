@@ -1,7 +1,8 @@
-import Grid from "@components/Grid";
 import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { SharedSliceCard } from "@src/features/slices/sliceCards/SharedSliceCard";
 import { FieldArray } from "formik";
+
+import Grid from "@/legacy/components/Grid";
 
 import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
 

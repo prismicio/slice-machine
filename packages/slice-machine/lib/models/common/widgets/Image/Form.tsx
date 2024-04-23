@@ -1,4 +1,3 @@
-import { Col, Flex as FlexGrid } from "@components/Flex";
 import WidgetFormField from "@lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@lib/forms";
 import { DefaultFields } from "@lib/forms/defaults";
@@ -7,6 +6,8 @@ import { FieldArray } from "formik";
 import { Fragment, useEffect, useState } from "react";
 import { Card, Flex, Label } from "theme-ui";
 import * as yup from "yup";
+
+import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 
 import {
   AddThumbnailButton,

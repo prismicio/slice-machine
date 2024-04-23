@@ -36,9 +36,10 @@ import type { Persistor } from "redux-persist/es/types";
 import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
-import SliceMachineApp from "../components/App";
-import LoadingPage from "../components/LoadingPage";
-import ToastContainer from "../components/ToasterContainer";
+import SliceMachineApp from "@/legacy/components/App";
+import LoadingPage from "@/legacy/components/LoadingPage";
+import ToastContainer from "@/legacy/components/ToasterContainer";
+
 import { normalizeFrontendCustomTypes } from "../lib/models/common/normalizers/customType";
 import type ServerState from "../lib/models/server/ServerState";
 import { getState } from "../src/apiClient";

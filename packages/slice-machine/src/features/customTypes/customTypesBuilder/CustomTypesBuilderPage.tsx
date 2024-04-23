@@ -1,11 +1,3 @@
-import {
-  AppLayout,
-  AppLayoutActions,
-  AppLayoutBackButton,
-  AppLayoutBreadcrumb,
-  AppLayoutContent,
-  AppLayoutHeader,
-} from "@components/AppLayout";
 import { CustomTypeBuilder } from "@lib/builders/CustomTypeBuilder";
 import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
 import { hasLocal } from "@lib/models/common/ModelData";
@@ -23,6 +15,15 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { type FC, useEffect } from "react";
 import { useSelector } from "react-redux";
+
+import {
+  AppLayout,
+  AppLayoutActions,
+  AppLayoutBackButton,
+  AppLayoutBreadcrumb,
+  AppLayoutContent,
+  AppLayoutHeader,
+} from "@/legacy/components/AppLayout";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 import { EditDropdown } from "../EditDropdown";
