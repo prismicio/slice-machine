@@ -73,6 +73,7 @@ describe("Normalizer - CustomType", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
@@ -85,6 +86,7 @@ describe("Normalizer - CustomType", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
@@ -99,6 +101,7 @@ describe("Normalizer - CustomType", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
@@ -111,6 +114,7 @@ describe("Normalizer - CustomType", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
@@ -190,6 +194,7 @@ describe("Normalizer - CustomType", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
@@ -202,6 +207,7 @@ describe("Normalizer - CustomType", () => {
             label: "lama",
             repeatable: false,
             status: true,
+            format: "custom",
             tabs: [
               {
                 key: "Main",
