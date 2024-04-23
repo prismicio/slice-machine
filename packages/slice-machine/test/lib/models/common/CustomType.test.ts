@@ -1,5 +1,6 @@
-import { describe, expect, test } from "vitest";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { describe, expect, test } from "vitest";
+
 import {
   CustomTypes,
   CustomTypeSM,

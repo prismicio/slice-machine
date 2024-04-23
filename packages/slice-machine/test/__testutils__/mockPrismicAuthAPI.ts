@@ -1,5 +1,5 @@
-import { TestContext } from "vitest";
 import { rest } from "msw";
+import { TestContext } from "vitest";
 
 type MockPrismicAuthAPIConfig = {
   endpoint?: string;

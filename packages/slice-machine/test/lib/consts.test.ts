@@ -1,4 +1,5 @@
-import { describe, test, expect } from "vitest";
+import { describe, expect, test } from "vitest";
+
 import {
   API_ID_REGEX,
   API_ID_RETRO_COMPATIBLE_REGEX,

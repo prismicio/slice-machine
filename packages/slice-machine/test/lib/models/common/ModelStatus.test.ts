@@ -1,9 +1,11 @@
-import { describe, test, expect } from "vitest";
-import {
-  ModelStatus,
-  computeModelStatus,
-} from "@/legacy/lib/models/common/ModelStatus";
+import { describe, expect, test } from "vitest";
+
 import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
+import {
+  computeModelStatus,
+  ModelStatus,
+} from "@/legacy/lib/models/common/ModelStatus";
+
 import { customTypeMock } from "../../../__fixtures__/customType";
 
 const model = CustomTypes.toSM(customTypeMock);
