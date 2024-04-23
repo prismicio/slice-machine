@@ -1,9 +1,9 @@
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { useState } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { Flex } from "theme-ui";
 
 import { DropDownMenu } from "@/legacy/components/DropDownSelector";
+import { ScreenDimensions } from "@/legacy/lib/models/common/Screenshots";
 
 import {
   ScreensizeInput,

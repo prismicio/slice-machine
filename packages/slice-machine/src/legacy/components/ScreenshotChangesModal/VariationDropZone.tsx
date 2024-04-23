@@ -1,5 +1,3 @@
-import { acceptedImagesTypes } from "@lib/consts";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { uploadSliceScreenshot } from "@src/features/slices/actions/uploadSliceScreenshot";
 import useSliceMachineActions from "@src/modules/useSliceMachineActions";
 import { useState } from "react";
@@ -9,6 +7,8 @@ import { toast } from "react-toastify";
 import { Flex, Spinner, Text } from "theme-ui";
 
 import { ScreenshotPreview } from "@/legacy/components/ScreenshotPreview";
+import { acceptedImagesTypes } from "@/legacy/lib/consts";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
 import useCustomScreenshot from "./useCustomScreenshot";
 

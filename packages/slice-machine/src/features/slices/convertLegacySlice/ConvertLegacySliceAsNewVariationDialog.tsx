@@ -1,4 +1,3 @@
-import { LibraryUI } from "@models/common/LibraryUI";
 import {
   Box,
   Dialog,
@@ -14,6 +13,8 @@ import {
 import { Formik } from "formik";
 import { camelCase } from "lodash";
 import { type FC, useState } from "react";
+
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 
 import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";

@@ -1,7 +1,8 @@
-import { svelte } from "@lib/hljs/svelte";
 import hljs from "highlight.js";
 import React from "react";
 import { Flex, type ThemeUIStyleObject, useThemeUI } from "theme-ui";
+
+import { svelte } from "@/legacy/lib/hljs/svelte";
 
 hljs.registerLanguage("svelte", svelte);
 

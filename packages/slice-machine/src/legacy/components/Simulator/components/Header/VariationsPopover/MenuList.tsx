@@ -1,6 +1,7 @@
-import { VariationSM } from "@lib/models/common/Slice";
 import React from "react";
 import { Box, Flex, Text } from "theme-ui";
+
+import { VariationSM } from "@/legacy/lib/models/common/Slice";
 
 const MenuList: React.FunctionComponent<{
   defaultValue: VariationSM;

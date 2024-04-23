@@ -1,6 +1,3 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LocalOrRemoteCustomType } from "@lib/models/common/ModelData";
-import { ModelStatus } from "@lib/models/common/ModelStatus";
 import { Box, Button, Text } from "@prismicio/editor-ui";
 import { countMissingScreenshots } from "@src/domain/slice";
 import { ErrorBoundary } from "@src/ErrorBoundary";
@@ -15,6 +12,9 @@ import { ChangesSectionHeader } from "@/legacy/components/ChangesSectionHeader";
 import { CustomTypeTable } from "@/legacy/components/CustomTypeTable/changesPage";
 import Grid from "@/legacy/components/Grid";
 import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { LocalOrRemoteCustomType } from "@/legacy/lib/models/common/ModelData";
+import { ModelStatus } from "@/legacy/lib/models/common/ModelStatus";
 
 import { DevCollaborationExperiment } from "./DevCollaborationExperiment";
 

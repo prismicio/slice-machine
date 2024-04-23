@@ -1,6 +1,7 @@
-import { acceptedImagesTypes } from "@lib/consts";
 import React, { useRef } from "react";
 import { Label } from "theme-ui";
+
+import { acceptedImagesTypes } from "@/legacy/lib/consts";
 
 type HandleFileProp = {
   inputFile: React.RefObject<HTMLInputElement>;

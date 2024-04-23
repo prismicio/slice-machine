@@ -1,4 +1,3 @@
-import { getModelId, isRemoteOnly } from "@lib/models/common/ModelData";
 import { PushChangesLimit } from "@slicemachine/manager";
 import { selectAllCustomTypes } from "@src/modules/availableCustomTypes";
 import { SliceMachineStoreType } from "@src/redux/type";
@@ -8,6 +7,7 @@ import { Text } from "theme-ui";
 
 import { Button } from "@/legacy/components/Button";
 import { SliceMachineDrawerUI } from "@/legacy/components/SliceMachineDrawer";
+import { getModelId, isRemoteOnly } from "@/legacy/lib/models/common/ModelData";
 
 import { AssociatedDocumentsCard } from "./AssociatedDocumentsCard";
 

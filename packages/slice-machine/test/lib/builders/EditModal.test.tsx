@@ -4,7 +4,7 @@ import { describe, test, expect, vi } from "vitest";
 import React from "react";
 import { render, act, fireEvent } from "../../__testutils__";
 import Modal from "react-modal";
-import EditModal from "@lib/builders/common/EditModal";
+import EditModal from "@/legacy/lib/builders/common/EditModal";
 
 vi.mock("next/router", () => require("next-router-mock"));
 

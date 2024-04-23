@@ -1,6 +1,9 @@
 import { describe, expect, test } from "vitest";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import { CustomTypes, CustomTypeSM } from "@lib/models/common/CustomType";
+import {
+  CustomTypes,
+  CustomTypeSM,
+} from "@/legacy/lib/models/common/CustomType";
 
 const customTypeObject = {
   id: "test-page",

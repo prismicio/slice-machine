@@ -1,8 +1,9 @@
-import { API_ID_REGEX, RESERVED_SLICE_NAME } from "@lib/consts";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { SliceSM } from "@lib/models/common/Slice";
 import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
+
+import { API_ID_REGEX, RESERVED_SLICE_NAME } from "@/legacy/lib/consts";
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { SliceSM } from "@/legacy/lib/models/common/Slice";
 
 import { SliceModalValues } from "./formsTypes";
 

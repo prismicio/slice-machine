@@ -1,5 +1,6 @@
-import { ScreenDimensions } from "@lib/models/common/Screenshots";
 import { Flex, Input, Label, ThemeUIStyleObject } from "theme-ui";
+
+import { ScreenDimensions } from "@/legacy/lib/models/common/Screenshots";
 
 export enum ScreenSizeOptions {
   DESKTOP = "Desktop",

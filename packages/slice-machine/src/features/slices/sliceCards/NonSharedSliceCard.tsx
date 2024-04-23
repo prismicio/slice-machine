@@ -1,9 +1,10 @@
-import { type NonSharedSliceInSliceZone } from "@models/common/CustomType/sliceZone";
 import { Badge, Box, Text, Tooltip } from "@prismicio/editor-ui";
 import { Card, CardActions, CardFooter, CardMedia } from "@src/components/Card";
 import { getNonSharedSliceLabel } from "@src/domain/slice";
 import { useLab } from "@src/features/labs/labsList/useLab";
 import type { FC } from "react";
+
+import { type NonSharedSliceInSliceZone } from "@/legacy/lib/models/common/CustomType/sliceZone";
 
 import { ConvertLegacySliceButton } from "../convertLegacySlice/ConvertLegacySliceButton";
 

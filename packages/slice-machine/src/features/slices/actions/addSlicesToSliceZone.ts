@@ -1,6 +1,7 @@
-import { CustomTypeSM } from "@lib/models/common/CustomType";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { telemetry } from "@src/apiClient";
+
+import { CustomTypeSM } from "@/legacy/lib/models/common/CustomType";
 
 export type AddSlicesToSliceZoneArgs = {
   customType: CustomTypeSM;

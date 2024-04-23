@@ -1,4 +1,4 @@
-import { filterSliceFromCustomType } from "@lib/utils/shared/customTypes";
+import { filterSliceFromCustomType } from "@/legacy/lib/utils/shared/customTypes";
 // @ts-expect-error TS(2307) FIXME: Cannot find module '@slicemachine/core/build/model... Remove this comment to see the full error message
 import { CustomTypeSM } from "@slicemachine/core/build/models/CustomType";
 

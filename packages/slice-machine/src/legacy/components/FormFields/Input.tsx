@@ -1,7 +1,8 @@
-import { InputType } from "@lib/forms/fields";
 import { Field, FieldMetaProps } from "formik";
 import React from "react";
 import { Box, Input, Label, Text, ThemeUIStyleObject } from "theme-ui";
+
+import { InputType } from "@/legacy/lib/forms/fields";
 
 export enum InputFieldStyles {
   ERROR,

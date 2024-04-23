@@ -1,10 +1,11 @@
+import { telemetry } from "@src/apiClient";
+import { countMissingScreenshots } from "@src/domain/slice";
+
 import {
   ChangedCustomType,
   ChangedSlice,
   ModelStatus,
-} from "@lib/models/common/ModelStatus";
-import { telemetry } from "@src/apiClient";
-import { countMissingScreenshots } from "@src/domain/slice";
+} from "@/legacy/lib/models/common/ModelStatus";
 
 type TrackPushChangesSuccessArgs = {
   changedSlices: ReadonlyArray<ChangedSlice>;

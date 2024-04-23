@@ -1,9 +1,3 @@
-import { normalizeFrontendCustomTypes } from "@lib/models/common/normalizers/customType";
-import { normalizeFrontendSlices } from "@lib/models/common/normalizers/slices";
-import { buildEndpoints } from "@lib/prismic/endpoints";
-import { startPolling } from "@lib/utils/poll";
-import preferWroomBase from "@lib/utils/preferWroomBase";
-import { CheckAuthStatusResponse } from "@models/common/Auth";
 import { checkAuthStatus, getState, startAuth } from "@src/apiClient";
 import { getActiveEnvironment } from "@src/features/environments/actions/getActiveEnvironment";
 import { useAutoSync } from "@src/features/sync/AutoSyncProvider";
@@ -32,6 +26,12 @@ import {
 } from "theme-ui";
 
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
+import { CheckAuthStatusResponse } from "@/legacy/lib/models/common/Auth";
+import { normalizeFrontendCustomTypes } from "@/legacy/lib/models/common/normalizers/customType";
+import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/slices";
+import { buildEndpoints } from "@/legacy/lib/prismic/endpoints";
+import { startPolling } from "@/legacy/lib/utils/poll";
+import preferWroomBase from "@/legacy/lib/utils/preferWroomBase";
 
 interface ValidAuthStatus extends CheckAuthStatusResponse {
   status: "ok";

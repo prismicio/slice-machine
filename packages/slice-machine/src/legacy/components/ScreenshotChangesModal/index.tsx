@@ -1,4 +1,3 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
 import { Kbd } from "@src/components/Kbd";
 import { FigmaIcon } from "@src/icons/FigmaIcon";
 import { isModalOpen } from "@src/modules/modal";
@@ -14,6 +13,7 @@ import { Box, Close, Flex, Heading, Text } from "theme-ui";
 
 import Card from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
 import VariationDropZone from "./VariationDropZone";
 
