@@ -7,11 +7,11 @@ import {
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import mockRouter from "next-router-mock";
 import { createDynamicRouteParser } from "next-router-mock/dynamic-routes";
-import { render, screen, within } from "test/__testutils__";
-import { createTestPlugin } from "test/__testutils__/createTestPlugin";
-import { createTestProject } from "test/__testutils__/createTestProject";
 import { describe, test, TestContext, vi } from "vitest";
 
+import { render, screen, within } from "@/../test/__testutils__";
+import { createTestPlugin } from "@/../test/__testutils__/createTestPlugin";
+import { createTestProject } from "@/../test/__testutils__/createTestProject";
 import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 
 import pkg from "../../../../package.json";

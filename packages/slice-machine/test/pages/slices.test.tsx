@@ -4,8 +4,8 @@ import { Analytics } from "@segment/analytics-node";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import mockRouter from "next-router-mock";
-import { createTestPlugin } from "test/__testutils__/createTestPlugin";
-import { createTestProject } from "test/__testutils__/createTestProject";
+import { createTestPlugin } from "../__testutils__/createTestPlugin";
+import { createTestProject } from "../__testutils__/createTestProject";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import SlicesIndex from "@/pages/slices";
