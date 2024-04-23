@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import { describe, expect, it } from "vitest";
+
 import { slicesReducer } from "@/modules/slices";
 import { SlicesStoreType } from "@/modules/slices/types";
 

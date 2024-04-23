@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  userContextReducer,
   sendAReviewCreator,
   skipReviewCreator,
+  userContextReducer,
 } from "@/modules/userContext";
 import { UserContextStoreType } from "@/modules/userContext/types";
 

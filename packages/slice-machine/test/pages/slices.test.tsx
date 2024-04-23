@@ -1,24 +1,24 @@
 // @vitest-environment jsdom
 
-import { describe, test, afterEach, beforeEach, expect, vi } from "vitest";
-import mockRouter from "next-router-mock";
 import { Analytics } from "@segment/analytics-node";
+import { createSliceMachineManager } from "@slicemachine/manager";
+import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
+import mockRouter from "next-router-mock";
+import { createTestPlugin } from "test/__testutils__/createTestPlugin";
+import { createTestProject } from "test/__testutils__/createTestProject";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+
+import SlicesIndex from "@/pages/slices";
 
 import pkg from "../../package.json";
-import SlicesIndex from "../../pages/slices";
-
 import {
-  render,
-  fireEvent,
   act,
+  fireEvent,
+  render,
   screen,
   waitFor,
   within,
 } from "../__testutils__";
-import { createTestPlugin } from "test/__testutils__/createTestPlugin";
-import { createTestProject } from "test/__testutils__/createTestProject";
-import { createSliceMachineManager } from "@slicemachine/manager";
-import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 
 vi.mock("next/router", () => import("next-router-mock"));
 

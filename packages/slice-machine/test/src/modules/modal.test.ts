@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  modalReducer,
-  modalOpenCreator,
-  modalCloseCreator,
   initialState as modalInitialState,
+  modalCloseCreator,
+  modalOpenCreator,
+  modalReducer,
 } from "@/modules/modal";
 import { ModalKeysEnum, ModalStoreType } from "@/modules/modal/types";
 

@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  initialState,
   loadingReducer,
   startLoadingActionCreator,
   stopLoadingActionCreator,
 } from "@/modules/loading";
 import { LoadingKeysEnum, LoadingStoreType } from "@/modules/loading/types";
-import { initialState } from "@/modules/loading";
 
 const dummyLoadingState: LoadingStoreType = initialState;
 
