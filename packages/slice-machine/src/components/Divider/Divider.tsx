@@ -1,11 +1,11 @@
-import { colors, sprinkles } from "@prismicio/editor-ui";
+import { theme } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import type { FC } from "react";
 
-import * as styles from "./Divider.css";
+import styles from "./Divider.module.css";
 
 type DividerProps = {
-  color?: keyof typeof colors;
+  color?: keyof typeof theme.color;
   variant?: "dashed" | "edgeFaded";
   className?: string;
 };
@@ -15,11 +15,8 @@ export const Divider: FC<DividerProps> = (props) => {
 
   return (
     <hr
-      className={clsx(
-        styles.variants[variant],
-        sprinkles({ color: colors[color] }),
-        className,
-      )}
+      className={clsx(styles[`variant-${variant}`], className)}
+      style={{ color: theme.color[color] }}
     />
   );
 };
