@@ -1,8 +1,7 @@
-import { colors } from "@prismicio/editor-ui";
+import { theme } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Divider } from "./Divider";
-import { variants } from "./Divider.css";
 
 type Story = StoryObj<typeof meta>;
 
@@ -11,11 +10,11 @@ const meta = {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: Object.keys(variants),
+      options: ["dashed", "edgeFaded"],
     },
     color: {
       control: { type: "select" },
-      options: Object.keys(colors),
+      options: Object.keys(theme.color),
     },
   },
 } satisfies Meta<typeof Divider>;
