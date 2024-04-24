@@ -10,7 +10,7 @@ import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import Card from "./Card";
 import NewField from "./Card/components/NewField";
-import EmptyState from "./components/EmptyState";
+import { ZoneEmptyState } from "./components/ZoneEmptyState";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
@@ -110,7 +110,7 @@ const Zone = ({
                 color="grey"
                 disabled={newFieldData !== null}
               >
-                Add a new field
+                Add
               </Button>
             </>
           ) : undefined
@@ -122,7 +122,7 @@ const Zone = ({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         fields.length === 0 && !newFieldData ? (
           <BaseStyles>
-            <EmptyState
+            <ZoneEmptyState
               onEnterSelectMode={() => enterSelectMode()}
               // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
               zoneName={isRepeatable ? "Repeatable" : "Static"}

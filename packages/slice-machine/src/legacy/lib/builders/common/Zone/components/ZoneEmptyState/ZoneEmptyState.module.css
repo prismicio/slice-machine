@@ -1,0 +1,6 @@
+.root {
+  background-color: var(--grey3);
+  text-align: center;
+  padding-top: 32px;
+  padding-bottom: 32px;
+}

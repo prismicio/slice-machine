@@ -1,7 +1,9 @@
-import { Button } from "@prismicio/editor-ui";
-import { Box, Heading, Text } from "theme-ui";
+import { Button, Text } from "@prismicio/editor-ui";
+import { Box } from "theme-ui";
 
-const ZoneEmptyState = ({
+import styles from "./ZoneEmptyState.module.css";
+
+export const ZoneEmptyState = ({
   onEnterSelectMode,
   zoneName,
 }: {
@@ -9,13 +11,11 @@ const ZoneEmptyState = ({
   onEnterSelectMode: Function;
   zoneName: string;
 }) => (
-  <Box sx={{ textAlign: "center", my: 4 }}>
-    <Heading as="h5">Add a new field here</Heading>
-    <Box sx={{ my: 2 }}>
-      <Text sx={{ color: "textClear" }}>
-        Fields are inputs for content (e.g. text, images, links).
-      </Text>
-    </Box>
+  <div className={styles.root}>
+    <Text variant="bold">Add a new field here</Text>
+    <Text color="grey11">
+      Fields are inputs for content (e.g. text, images, links).
+    </Text>
     <Box sx={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
       <Button
         color="grey"
@@ -24,10 +24,8 @@ const ZoneEmptyState = ({
         data-testid={`add-${zoneName}-field`}
         startIcon="add"
       >
-        Add a new field
+        Add new
       </Button>
     </Box>
-  </Box>
+  </div>
 );
-
-export default ZoneEmptyState;
