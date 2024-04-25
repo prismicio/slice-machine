@@ -15,6 +15,7 @@ const format = async (input: string, helpers: SliceMachineHelpers) => {
 		includeNewlineAtEnd: false,
 		prettier: {
 			parser: "typescript",
+			printWidth: 60,
 		},
 	});
 
@@ -86,9 +87,11 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		case "Group": {
 			const code = await format(
 				stripIndent`
-					<>{${dotPath(fieldPath)}.map(item => (
-					  <>{/* Render content for item */}</>
-					))}</>
+					<>
+						{${dotPath(fieldPath)}.map((item) => {
+							// Render the item
+						})}
+					</>
 				`,
 				helpers,
 			);

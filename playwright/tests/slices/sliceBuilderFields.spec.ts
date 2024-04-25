@@ -329,3 +329,29 @@ test("I can see and copy the code snippets", async ({
   await expect(sliceBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
   await sliceBuilderPage.copyCodeSnippet("my_rich_text", "static");
 });
+
+test("I can see and copy the code snippets for groups", async ({
+  sliceBuilderPage,
+  slice,
+  procedures,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+
+  await expect(sliceBuilderPage.codeSnippetsFieldSwitch).not.toBeChecked();
+  await sliceBuilderPage.codeSnippetsFieldSwitch.click();
+  await expect(sliceBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
+  await sliceBuilderPage.copyCodeSnippet("my_group", "static");
+});

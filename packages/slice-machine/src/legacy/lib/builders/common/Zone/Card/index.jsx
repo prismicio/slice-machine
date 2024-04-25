@@ -93,12 +93,6 @@ const FieldZone = ({
                   testId: `list-item-${item.key}`,
                 };
 
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                if (widget.CustomListItem) {
-                  const { CustomListItem } = widget;
-                  return <CustomListItem {...props} />;
-                }
-
                 const HintElement = (
                   <Hint
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
@@ -114,6 +108,15 @@ const FieldZone = ({
                     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
                   />
                 );
+
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                if (widget.CustomListItem) {
+                  const { CustomListItem } = widget;
+                  return (
+                    <CustomListItem {...props} HintElement={HintElement} />
+                  );
+                }
+
                 return <ListItem {...props} HintElement={HintElement} />;
               })
             }
