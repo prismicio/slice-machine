@@ -1,0 +1,23 @@
+.base {
+  width: 100%;
+  border-style: none;
+  margin: 0px;
+}
+
+.variant-dashed {
+  composes: base;
+  border-color: currentColor;
+  border-top-style: dashed;
+  border-width: 1px;
+}
+
+.variant-edgeFaded {
+  composes: base;
+  height: 1px;
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, currentColor, transparent 100%),
+    currentColor,
+    color-mix(in srgb, currentColor, transparent 100%)
+  );
+}
