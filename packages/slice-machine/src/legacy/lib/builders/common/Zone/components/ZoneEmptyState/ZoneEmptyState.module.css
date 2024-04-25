@@ -1,4 +1,8 @@
 .root {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
   background-color: var(--grey3);
   text-align: center;
   padding-top: 32px;

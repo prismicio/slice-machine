@@ -1,31 +1,32 @@
 import { Button, Text } from "@prismicio/editor-ui";
-import { Box } from "theme-ui";
+import { FC } from "react";
 
 import styles from "./ZoneEmptyState.module.css";
 
-export const ZoneEmptyState = ({
-  onEnterSelectMode,
-  zoneName,
-}: {
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  onEnterSelectMode: Function;
+type ZoneEmptyStateProps = {
+  onEnterSelectMode: () => void;
   zoneName: string;
-}) => (
-  <div className={styles.root}>
-    <Text variant="bold">Add a new field here</Text>
-    <Text color="grey11">
-      Fields are inputs for content (e.g. text, images, links).
-    </Text>
-    <Box sx={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+};
+
+export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
+  const { zoneName, onEnterSelectMode } = props;
+
+  return (
+    <div className={styles.root}>
+      <div>
+        <Text variant="bold">No fields</Text>
+        <Text color="grey11">
+          Fields are inputs for content (e.g. text, images, links).
+        </Text>
+      </div>
       <Button
         color="grey"
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         onClick={() => onEnterSelectMode()}
         data-testid={`add-${zoneName}-field`}
         startIcon="add"
       >
         Add new
       </Button>
-    </Box>
-  </div>
-);
+    </div>
+  );
+};
