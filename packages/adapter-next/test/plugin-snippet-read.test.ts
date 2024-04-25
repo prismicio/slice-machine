@@ -65,7 +65,12 @@ const testSnippet = (
 			expect(res).toStrictEqual({
 				label: "React",
 				language: "tsx",
-				code: (await prettier.format(expected, { parser: "typescript" }))
+				code: (
+					await prettier.format(expected, {
+						parser: "typescript",
+						printWidth: 60,
+					})
+				)
 					.replace(/[\r\n]+$/, "")
 					.replace(/;$/, ""),
 			});
@@ -96,9 +101,9 @@ testSnippet(
 
 testSnippet(
 	"group",
-	`<>{${model.id}.data.group.map((item) => (
-<>{/* Render content for item */}</>
-))}</>`,
+	`<>{${model.id}.data.group.map((item) => {
+// Render the item
+})}</>`,
 );
 
 testSnippet("image", `<PrismicNextImage field={${model.id}.data.image} />`);

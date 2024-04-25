@@ -34,6 +34,7 @@ const CustomListItem = ({
   item: groupItem,
   draggableId,
   saveItem,
+  HintElement,
   ...rest
 }) => {
   const [selectMode, setSelectMode] = useState(false);
@@ -166,6 +167,7 @@ const CustomListItem = ({
         draggableId={draggableId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unused-vars, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
         {...rest}
+        HintElement={HintElement}
         CustomEditElements={[
           <Button
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
