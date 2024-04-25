@@ -211,6 +211,7 @@ const FieldZones: FC = () => {
         }
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
+        addFieldButtonLabel="Add"
       />
       {!groupsInSlicesExperiment.eligible || hasItems ? (
         <Zone
