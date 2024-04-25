@@ -30,7 +30,6 @@ const Zone = ({
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
   testId,
   isRepeatableCustomType,
-  addFieldButtonLabel = "Add a new field",
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
@@ -111,7 +110,7 @@ const Zone = ({
                 color="grey"
                 disabled={newFieldData !== null}
               >
-                {addFieldButtonLabel}
+                Add a field
               </Button>
             </>
           ) : undefined

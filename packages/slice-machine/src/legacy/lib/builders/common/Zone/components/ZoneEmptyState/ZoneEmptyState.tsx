@@ -4,8 +4,8 @@ import { FC } from "react";
 import styles from "./ZoneEmptyState.module.css";
 
 type ZoneEmptyStateProps = {
-  onEnterSelectMode: () => void;
   zoneName: string;
+  onEnterSelectMode: () => void;
 };
 
 export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
@@ -25,7 +25,7 @@ export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
         data-testid={`add-${zoneName}-field`}
         startIcon="add"
       >
-        Add new
+        Add a field
       </Button>
     </div>
   );
