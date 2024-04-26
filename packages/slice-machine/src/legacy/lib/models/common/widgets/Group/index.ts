@@ -10,7 +10,7 @@ import CustomListItem from "./ListItem";
 const Meta = {
   icon: MdPlaylistAdd,
   title: "Group",
-  description: "A Group of Prismic fields",
+  description: "A repeatable set of fields",
 };
 
 const schema = yup.object().shape({
