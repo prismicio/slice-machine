@@ -118,9 +118,9 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   component: Comp = "a",
   ...otherProps
 }) => {
-  const isMedium = useMediaQuery({ max: "medium" });
+  const visible = useMediaQuery({ max: "medium" });
   return (
-    <Tooltip content={title} side="right" visible={isMedium}>
+    <Tooltip content={title} side="right" visible={visible}>
       <Comp {...otherProps} className={styles.link} data-active={active}>
         <Icon className={styles.linkIcon} />
         <div className={styles.linkContent}>

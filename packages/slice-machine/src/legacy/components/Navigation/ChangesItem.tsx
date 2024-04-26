@@ -30,7 +30,7 @@ export const ChangesItem: FC = () => {
   const open = useOpenChangesHoverCard();
   const router = useRouter();
   const { autoSyncStatus } = useAutoSync();
-  const isMedium = useMediaQuery({ max: "medium" });
+  const collapsed = useMediaQuery({ max: "medium" });
 
   const onClose = () => {
     setSeenChangesToolTip();
@@ -46,14 +46,14 @@ export const ChangesItem: FC = () => {
       sideOffset={24}
       trigger={
         <Box
-          alignItems={isMedium ? "center" : undefined}
+          alignItems={collapsed ? "center" : undefined}
           flexDirection="column"
         >
           {autoSyncStatus === "failed" ||
           autoSyncStatus === "synced" ||
           autoSyncStatus === "syncing" ? (
             <AutoSyncStatusIndicator autoSyncStatus={autoSyncStatus} />
-          ) : isMedium ? (
+          ) : collapsed ? (
             <Tooltip content="Review changes" side="right">
               <Box position="relative">
                 {/*
