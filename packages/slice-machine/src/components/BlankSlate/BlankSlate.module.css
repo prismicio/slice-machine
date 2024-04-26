@@ -1,0 +1,74 @@
+.column {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.root {
+  composes: column;
+  max-width: 498px;
+  min-height: 400px;
+  animation: 300 fadeIn ease-in-out;
+  border-color: var(--grey6);
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
+  overflow: hidden;
+  background-color: var(--light-grey1);
+}
+
+.withBackground {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  text-align: center;
+  background-size: cover;
+  background-color: transparent;
+  border-radius: 0px;
+  border-style: none;
+}
+
+.image {
+  composes: column;
+  border-bottom-color: var(--grey6);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  overflow: hidden;
+}
+
+.content {
+  composes: column;
+  padding: 32px;
+}
+.withBackground .content {
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- TODO(DT-2120): Add the missing padding value in the editor-ui theme */
+  padding: 64px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 32px;
+}
+
+.desc {
+  font-weight: 400;
+  line-height: 24px;
+}
+.withBackground .desc {
+  max-width: 464px;
+  align-self: center;
+}
+
+.actions {
+  all: unset;
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+.withBackground .actions {
+  justify-content: center;
+}
