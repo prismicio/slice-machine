@@ -2,7 +2,6 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { generateLibraries, generateTypes } from "../../mocks";
 
 test("I cannot see the login screen when logged in", async ({
   changesPage,
@@ -56,6 +55,7 @@ test("I can see the unauthorized screen when not authorized", async ({
 test("I can see the empty state when I don't have any changes to push", async ({
   changesPage,
   procedures,
+  generateLibraries,
 }) => {
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
@@ -74,8 +74,10 @@ test("I can see the empty state when I don't have any changes to push", async ({
 test("I can see the changes I have to push", async ({
   changesPage,
   procedures,
+  generateLibraries,
+  generateCustomTypes,
 }) => {
-  const types = generateTypes({ typesCount: 1 });
+  const types = generateCustomTypes({ typesCount: 1 });
   const customType = types[0] as CustomType;
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
@@ -116,11 +118,16 @@ test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
   ).not.toBeVisible();
 });
 
-test("I can push the changes I have", async ({ changesPage, procedures }) => {
+test("I can push the changes I have", async ({
+  changesPage,
+  procedures,
+  generateLibraries,
+  generateCustomTypes,
+}) => {
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     libraries: generateLibraries({ slicesCount: 0 }),
-    customTypes: generateTypes({ typesCount: 1 }),
+    customTypes: generateCustomTypes({ typesCount: 1 }),
     remoteCustomTypes: [],
     remoteSlices: [],
     clientError: undefined,
@@ -137,11 +144,13 @@ test("I can push the changes I have", async ({ changesPage, procedures }) => {
 test("I can see an error when the push failed", async ({
   changesPage,
   procedures,
+  generateLibraries,
+  generateCustomTypes,
 }) => {
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     libraries: generateLibraries({ slicesCount: 0 }),
-    customTypes: generateTypes({ typesCount: 1 }),
+    customTypes: generateCustomTypes({ typesCount: 1 }),
     remoteCustomTypes: [],
     remoteSlices: [],
     clientError: undefined,
@@ -163,11 +172,13 @@ test("I can see an error when the push failed", async ({
 test("I have to confirm the push when I reach a soft limit of deleted documents", async ({
   changesPage,
   procedures,
+  generateLibraries,
+  generateCustomTypes,
 }) => {
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     libraries: generateLibraries({ slicesCount: 0 }),
-    customTypes: generateTypes({ typesCount: 1 }),
+    customTypes: generateCustomTypes({ typesCount: 1 }),
     remoteCustomTypes: [],
     remoteSlices: [],
     clientError: undefined,
@@ -200,11 +211,13 @@ test("I have to confirm the push when I reach a soft limit of deleted documents"
 test("I cannot push the changes when I reach a hard limit of deleted documents", async ({
   changesPage,
   procedures,
+  generateLibraries,
+  generateCustomTypes,
 }) => {
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     libraries: generateLibraries({ slicesCount: 0 }),
-    customTypes: generateTypes({ typesCount: 1 }),
+    customTypes: generateCustomTypes({ typesCount: 1 }),
     remoteCustomTypes: [],
     remoteSlices: [],
     clientError: undefined,

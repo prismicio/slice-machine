@@ -1,7 +1,6 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { generateLibraries, generateTypes } from "../../mocks";
 
 test.use({
   onboarded: false,
@@ -13,6 +12,8 @@ test.use({
 test("I can write a review after onboarding", async ({
   sliceMachinePage,
   procedures,
+  generateLibraries,
+  generateCustomTypes,
 }) => {
   const libraries = generateLibraries({ slicesCount: 1 });
 
@@ -20,7 +21,7 @@ test("I can write a review after onboarding", async ({
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     libraries,
-    customTypes: generateTypes({ typesCount: 1, libraries }),
+    customTypes: generateCustomTypes({ typesCount: 1, libraries }),
     remoteCustomTypes: [],
     remoteSlices: [],
     clientError: undefined,
@@ -44,6 +45,8 @@ test("I can write a review after onboarding", async ({
 test("I can write a review after creating enough models", async ({
   sliceMachinePage,
   procedures,
+  generateLibraries,
+  generateCustomTypes,
 }) => {
   const libraries = generateLibraries({ slicesCount: 6 });
 
@@ -53,7 +56,7 @@ test("I can write a review after creating enough models", async ({
     ({ data }) => ({
       ...(data as Record<string, unknown>),
       libraries,
-      customTypes: generateTypes({ typesCount: 1, libraries }),
+      customTypes: generateCustomTypes({ typesCount: 1, libraries }),
       remoteCustomTypes: [],
       remoteSlices: [],
       clientError: undefined,
@@ -72,7 +75,7 @@ test("I can write a review after creating enough models", async ({
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     libraries,
-    customTypes: generateTypes({ typesCount: 6, libraries }),
+    customTypes: generateCustomTypes({ typesCount: 6, libraries }),
     remoteCustomTypes: [],
     remoteSlices: [],
     clientError: undefined,
@@ -94,6 +97,8 @@ test("I can write a review after creating enough models", async ({
 test("I can close the review dialog", async ({
   sliceMachinePage,
   procedures,
+  generateLibraries,
+  generateCustomTypes,
 }) => {
   const libraries = generateLibraries({ slicesCount: 1 });
 
@@ -101,7 +106,7 @@ test("I can close the review dialog", async ({
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     libraries,
-    customTypes: generateTypes({ typesCount: 1, libraries }),
+    customTypes: generateCustomTypes({ typesCount: 1, libraries }),
     remoteCustomTypes: [],
     remoteSlices: [],
     clientError: undefined,

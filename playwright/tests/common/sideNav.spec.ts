@@ -1,11 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import {
-  experimentVariant,
-  generateLibraries,
-  generateTypes,
-} from "../../mocks";
+import { experimentVariant } from "../../mocks";
 
 test("I can navigate through all menu entries", async ({
   procedures,
@@ -141,6 +137,8 @@ test.describe("Tutorial tooltip", () => {
   test("I can close the tutorial video tooltip and it stays close", async ({
     sliceMachinePage,
     procedures,
+    generateLibraries,
+    generateCustomTypes,
   }) => {
     const libraries = generateLibraries({ slicesCount: 1 });
 
@@ -148,7 +146,7 @@ test.describe("Tutorial tooltip", () => {
     procedures.mock("getState", ({ data }) => ({
       ...(data as Record<string, unknown>),
       libraries,
-      customTypes: generateTypes({ typesCount: 1, libraries }),
+      customTypes: generateCustomTypes({ typesCount: 1, libraries }),
       remoteCustomTypes: [],
       remoteSlices: [],
       clientError: undefined,

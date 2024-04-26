@@ -2,6 +2,7 @@ import { type PlaywrightTestConfig, devices } from "@playwright/test";
 
 // See https://playwright.dev/docs/api/class-testconfig
 const config = {
+  fullyParallel: true,
   // Configuration for the expect assertion library
   expect: {
     // Maximum time expect() should wait for the condition to be met. For

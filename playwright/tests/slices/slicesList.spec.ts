@@ -1,7 +1,6 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { generateLibraries } from "../../mocks";
 import { generateRandomId } from "../../utils/generateRandomId";
 
 test("I can create a slice", async ({ sliceBuilderPage, slicesListPage }) => {
@@ -168,6 +167,7 @@ test("I cannot create two slices with the same name", async ({
 test("I can see the empty state when there are no slices", async ({
   slicesListPage,
   procedures,
+  generateLibraries,
 }) => {
   const libraries = generateLibraries({ slicesCount: 0 });
   procedures.mock("getState", ({ data }) => ({

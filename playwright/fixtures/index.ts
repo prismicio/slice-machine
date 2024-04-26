@@ -1,12 +1,12 @@
 import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
-import { test as baseTest, expect } from "@playwright/test";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { test as baseTest } from "@playwright/test";
 import {
   createSliceMachineManagerClient,
   SliceMachineManagerClient,
 } from "@slicemachine/manager/client";
+import { createMockFactory, MockFactory } from "@prismicio/mock";
 
 import { PageTypesTablePage } from "../pages/PageTypesTablePage";
 import { PageTypeBuilderPage } from "../pages/PageTypesBuilderPage";
@@ -19,8 +19,7 @@ import { SettingsPage } from "../pages/SettingsPage";
 import { ChangelogPage } from "../pages/ChangelogPage";
 import { SimulatorPage } from "../pages/SimulatorPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
-import { generateRandomId } from "../utils/generateRandomId";
-import { MockManagerProcedures } from "../utils";
+import { generateRandomId, MockManagerProcedures } from "../utils";
 import config from "../playwright.config";
 
 type Options = {
@@ -49,7 +48,9 @@ type Fixtures = {
    * Data
    */
   reusablePageType: { name: string };
+  reusablePageTypeFromUI: { name: string };
   singlePageType: { name: string };
+  singlePageTypeFromUI: { name: string };
   reusableCustomType: { name: string };
   singleCustomType: { name: string };
   slice: { name: string };
@@ -65,6 +66,19 @@ type Fixtures = {
    * Mocks
    */
   procedures: MockManagerProcedures;
+  mockFactory: MockFactory;
+  generateLibraries: (args: {
+    slicesCount: number;
+  }) => Awaited<ReturnType<SliceMachineManagerClient["getState"]>>["libraries"];
+  generateCustomTypes: (args: {
+    typesCount: number;
+    format?: "custom" | "page";
+    libraries?: Awaited<
+      ReturnType<SliceMachineManagerClient["getState"]>
+    >["libraries"];
+  }) => Awaited<
+    ReturnType<SliceMachineManagerClient["getState"]>
+  >["customTypes"];
 };
 
 export const test = baseTest.extend<Options & Fixtures>({
@@ -112,7 +126,20 @@ export const test = baseTest.extend<Options & Fixtures>({
   /**
    * Data
    */
-  reusablePageType: async ({ pageTypesTablePage }, use) => {
+  reusablePageType: async ({ manager, mockFactory }, use) => {
+    const model = mockFactory.model.customType({
+      label: "Page Type " + generateRandomId(),
+      format: "page",
+      repeatable: true,
+      tabs: { Main: {} },
+    });
+    await manager.customTypes.createCustomType({ model });
+
+    await use({ name: model.label });
+
+    await manager.customTypes.deleteCustomType({ id: model.id });
+  },
+  reusablePageTypeFromUI: async ({ pageTypesTablePage, manager }, use) => {
     await pageTypesTablePage.goto();
     await pageTypesTablePage.openCreateDialog();
 
@@ -123,8 +150,25 @@ export const test = baseTest.extend<Options & Fixtures>({
     );
 
     await use({ name: pageTypeName });
+
+    await manager.customTypes.deleteCustomType({
+      id: pageTypeName.toLowerCase().replace(" ", "_"),
+    });
   },
-  singlePageType: async ({ pageTypesTablePage }, use) => {
+  singlePageType: async ({ manager, mockFactory }, use) => {
+    const model = mockFactory.model.customType({
+      label: "Page Type " + generateRandomId(),
+      format: "page",
+      repeatable: false,
+      tabs: { Main: {} },
+    });
+    await manager.customTypes.createCustomType({ model });
+
+    await use({ name: model.label });
+
+    await manager.customTypes.deleteCustomType({ id: model.id });
+  },
+  singlePageTypeFromUI: async ({ pageTypesTablePage, manager }, use) => {
     await pageTypesTablePage.goto();
     await pageTypesTablePage.openCreateDialog();
 
@@ -135,59 +179,66 @@ export const test = baseTest.extend<Options & Fixtures>({
     );
 
     await use({ name: pageTypeName });
+
+    await manager.customTypes.deleteCustomType({
+      id: pageTypeName.toLowerCase().replace(" ", "_"),
+    });
   },
-  reusableCustomType: async ({ customTypesTablePage }, use) => {
-    await customTypesTablePage.goto();
-    await customTypesTablePage.openCreateDialog();
+  reusableCustomType: async ({ manager, mockFactory }, use) => {
+    const model = mockFactory.model.customType({
+      label: "Custom Type " + generateRandomId(),
+      format: "custom",
+      repeatable: true,
+      tabs: { Main: {} },
+    });
+    await manager.customTypes.createCustomType({ model });
 
-    const customTypeName = "Custom Type " + generateRandomId();
-    await customTypesTablePage.createTypeDialog.createType(
-      customTypeName,
-      "reusable",
-    );
+    await use({ name: model.label });
 
-    await use({ name: customTypeName });
+    await manager.customTypes.deleteCustomType({ id: model.id });
   },
-  singleCustomType: async ({ customTypesTablePage }, use) => {
-    await customTypesTablePage.goto();
-    await customTypesTablePage.openCreateDialog();
+  singleCustomType: async ({ manager, mockFactory }, use) => {
+    const model = mockFactory.model.customType({
+      label: "Custom Type " + generateRandomId(),
+      format: "custom",
+      repeatable: false,
+      tabs: { Main: {} },
+    });
+    await manager.customTypes.createCustomType({ model });
 
-    const customTypeName = "Custom Type " + generateRandomId();
-    await customTypesTablePage.createTypeDialog.createType(
-      customTypeName,
-      "single",
-    );
+    await use({ name: model.label });
 
-    await use({ name: customTypeName });
+    await manager.customTypes.deleteCustomType({ id: model.id });
   },
-  slice: async ({ slicesListPage }, use) => {
-    await slicesListPage.goto();
-    await expect(slicesListPage.breadcrumbLabel).toBeVisible();
-    await slicesListPage.openCreateDialog();
+  slice: async ({ firstSliceLibrary, manager, mockFactory }, use) => {
+    const model = mockFactory.model.sharedSlice({
+      name: "Slice" + generateRandomId(),
+      variations: [mockFactory.model.sharedSliceVariation({ id: "default" })],
+    });
+    await manager.slices.createSlice({
+      libraryID: firstSliceLibrary.id,
+      model,
+    });
 
-    const sliceName = "Slice" + generateRandomId();
-    await slicesListPage.createSliceDialog.createSlice(sliceName);
+    await use({ name: model.name });
 
-    await use({ name: sliceName });
+    await manager.slices.deleteSlice({
+      libraryID: firstSliceLibrary.id,
+      sliceID: model.id,
+    });
   },
-  repeatableZoneSlice: async ({ firstSliceLibrary, manager }, use) => {
-    const sliceName = "Slice" + generateRandomId();
-    const model = {
-      id: sliceName,
-      name: sliceName,
-      type: "SharedSlice",
+  repeatableZoneSlice: async (
+    { firstSliceLibrary, manager, mockFactory },
+    use,
+  ) => {
+    const model = mockFactory.model.sharedSlice({
+      name: "Slice" + generateRandomId(),
       variations: [
-        {
-          id: "default",
-          name: "Default",
-          description: "description",
-          imageUrl: "imageUrl",
-          version: "version",
-          docURL: "docURL",
-          items: { existing_field: { type: "Boolean" } },
-        },
+        mockFactory.model.sharedSliceVariation({
+          itemsFields: { existing_field: mockFactory.model.boolean() },
+        }),
       ],
-    } satisfies SharedSlice;
+    });
 
     await manager.slices.createSlice({
       libraryID: firstSliceLibrary.id,
@@ -195,6 +246,11 @@ export const test = baseTest.extend<Options & Fixtures>({
     });
 
     await use({ name: model.name });
+
+    await manager.slices.deleteSlice({
+      libraryID: firstSliceLibrary.id,
+      sliceID: model.id,
+    });
   },
   firstSliceLibrary: async ({ manager }, use) => {
     const config = await manager.project.getSliceMachineConfig();
@@ -300,9 +356,9 @@ export const test = baseTest.extend<Options & Fixtures>({
    * Manager
    */
   // eslint-disable-next-line no-empty-pattern
-  manager: async ({}, use, config) => {
+  manager: async ({}, use, testInfo) => {
     const client = createSliceMachineManagerClient({
-      serverURL: new URL("./_manager", config.project.use.baseURL).toString(),
+      serverURL: new URL("./_manager", testInfo.project.use.baseURL).toString(),
     });
 
     await use(client);
@@ -318,5 +374,74 @@ export const test = baseTest.extend<Options & Fixtures>({
     procedures.mock("getExperimentVariant", () => undefined);
 
     await use(procedures);
+  },
+
+  // eslint-disable-next-line no-empty-pattern
+  mockFactory: async ({}, use, testInfo) => {
+    const mockFactory = createMockFactory({ seed: testInfo.testId });
+
+    await use(mockFactory);
+  },
+
+  generateLibraries: async ({ mockFactory }, use) => {
+    await use(({ slicesCount }) => {
+      return [
+        {
+          name: "slices",
+          path: "slices",
+          isLocal: true,
+          components: Array.from({ length: slicesCount }, () => {
+            const variations = [mockFactory.model.sharedSliceVariation()];
+            const model = mockFactory.model.sharedSlice({ variations });
+
+            return {
+              from: "slices",
+              href: "slices",
+              pathToSlice: "pathToSlice",
+              fileName: "fileName",
+              extension: "extension",
+              model,
+              screenshots: {},
+              mocks: [],
+            };
+          }),
+          meta: {
+            isNodeModule: false,
+            isDownloaded: false,
+            isManual: true,
+          },
+        },
+      ];
+    });
+  },
+
+  generateCustomTypes: async ({ mockFactory }, use) => {
+    await use(({ typesCount, format = "page", libraries }) => {
+      return Array.from({ length: typesCount }, () => {
+        if (libraries) {
+          const choices: Record<string, { type: "SharedSlice" }> = {};
+          for (const library of libraries) {
+            for (const component of library.components) {
+              choices[component.model.id] =
+                mockFactory.model.sharedSliceChoice();
+            }
+          }
+
+          return mockFactory.model.customType({
+            format,
+            tabs: {
+              Main: {
+                slices: mockFactory.model.sliceZone({ choices }),
+              },
+            },
+          });
+        } else {
+          return mockFactory.model.customType({
+            format,
+            tabs: { Main: {} },
+          });
+        }
+      });
+    });
   },
 });

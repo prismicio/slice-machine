@@ -4,9 +4,9 @@ import { test } from "../../fixtures";
 
 test("I can see default SEO & Metadata tab fields", async ({
   pageTypesBuilderPage,
-  reusablePageType,
+  reusablePageTypeFromUI,
 }) => {
-  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.goto(reusablePageTypeFromUI.name);
   await pageTypesBuilderPage.getTab("SEO & Metadata").click();
 
   await expect(
@@ -227,9 +227,9 @@ test("I can see and copy the code snippets for groups", async ({
 
 test("I cannot delete default UID field for reusable page type", async ({
   pageTypesBuilderPage,
-  reusablePageType,
+  reusablePageTypeFromUI,
 }) => {
-  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.goto(reusablePageTypeFromUI.name);
 
   await expect(
     pageTypesBuilderPage.getFieldMenuButton("uid"),
