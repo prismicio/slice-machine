@@ -2,7 +2,7 @@ import { Text } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import type { CSSProperties, FC, PropsWithChildren } from "react";
 
-import * as styles from "./BlankSlate.css";
+import styles from "./BlankSlate.module.css";
 
 interface BlankSlateProps extends PropsWithChildren {
   style?: CSSProperties;
