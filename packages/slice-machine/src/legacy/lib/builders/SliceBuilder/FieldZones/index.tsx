@@ -248,12 +248,12 @@ const FieldZones: FC = () => {
         <DialogContent>
           <Box padding={24} gap={12} flexDirection="column">
             <strong>
-              This action will permanently remove the Repeatable Zone from the{" "}
+              This action will permanently remove the repeatable zone from the{" "}
               {slice.model.name} slice.
             </strong>
             <div>
-              If you need repeatable fields again, use a repeatable group field
-              in place of the repeatable zone.
+              To reimplement repeatable fields later, use a group field instead
+              of the repeatable zone.
             </div>
           </Box>
           <DialogActions
