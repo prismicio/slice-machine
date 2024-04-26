@@ -1,7 +1,6 @@
 import type { UrlObject } from "node:url";
 
-import { useMediaQuery } from "@prismicio/editor-support/React";
-import { breakpoints, Tooltip } from "@prismicio/editor-ui";
+import { Tooltip, useMediaQuery } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import {
   type FC,
@@ -119,9 +118,9 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   component: Comp = "a",
   ...otherProps
 }) => {
-  const isSmall = useMediaQuery(breakpoints.small);
+  const visible = useMediaQuery({ max: "medium" });
   return (
-    <Tooltip content={title} side="right" visible={isSmall}>
+    <Tooltip content={title} side="right" visible={visible}>
       <Comp {...otherProps} className={styles.link} data-active={active}>
         <Icon className={styles.linkIcon} />
         <div className={styles.linkContent}>

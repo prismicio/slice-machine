@@ -19,12 +19,12 @@ it("returns global Slice Machine state", async () => {
 	expect(result.env.endpoints).toStrictEqual({
 		AwsAclProvider:
 			"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
-		PrismicOembed: "https://oembed.prismic.io",
+		PrismicEmbed: "https://oembed.prismic.io",
 		PrismicAuthentication: "https://auth.prismic.io/",
 		PrismicModels: "https://customtypes.prismic.io/",
 		PrismicUser: "https://user-service.prismic.io/",
 		PrismicWroom: "https://prismic.io/",
-		PrismicUnsplash: "https://unsplash.prismic.io",
+		PrismicUnsplash: "https://unsplash.prismic.io/",
 		SliceMachineV1: "https://sm-api.prismic.io/v1/",
 	});
 	expect(result.clientError).toStrictEqual({

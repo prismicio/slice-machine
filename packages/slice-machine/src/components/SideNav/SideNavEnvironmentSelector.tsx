@@ -1,7 +1,6 @@
-import { useMediaQuery } from "@prismicio/editor-support/React";
 import {
   Box,
-  breakpoints,
+  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -9,10 +8,10 @@ import {
   DropdownMenuTrigger,
   Icon,
   IconButton,
-  InvisibleButton,
   ProgressCircle,
   Text,
   Tooltip,
+  useMediaQuery,
 } from "@prismicio/editor-ui";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import type { Environment } from "@slicemachine/manager/client";
@@ -47,14 +46,14 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
     onSelect,
   } = props;
 
-  const isSmall = useMediaQuery(breakpoints.small);
+  const collapsed = useMediaQuery({ max: "medium" });
 
   const isProductionEnvironmentActive = activeEnvironment?.kind === "prod";
 
   return (
     <Box alignItems="center" gap={16}>
       <Box position="relative">
-        {isSmall && environments.length > 1 ? (
+        {collapsed && environments.length > 1 ? (
           <EnvironmentDropdownMenu
             activeEnvironment={activeEnvironment}
             disabled={disabled || loading}
@@ -74,7 +73,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
           />
         )}
       </Box>
-      {!isSmall && (
+      {!collapsed && (
         <>
           <Box
             flexGrow={1}
@@ -89,10 +88,9 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
             ) : undefined}
 
             {variant === "unauthenticated" ? (
-              <InvisibleButton
-                buttonText="Login required"
-                onClick={onLogInClick}
-              />
+              <Button invisible onClick={onLogInClick}>
+                Login required
+              </Button>
             ) : undefined}
 
             {variant === "offline" ? (

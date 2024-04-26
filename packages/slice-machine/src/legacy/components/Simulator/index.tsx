@@ -55,11 +55,12 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
 
   const editorConfig: EditorConfig = useMemo(
     () => ({
-      embedsUrl: endpoints.PrismicOembed,
-      env: "prod",
-      unsplashUrl: endpoints.PrismicUnsplash,
+      embedApiEndpoint: new URL(endpoints.PrismicEmbed),
+      authStrategy: "cookie",
+      unsplashApiBaseUrl: new URL(endpoints.PrismicUnsplash),
+      baseUrl: new URL("builder/", endpoints.PrismicWroom),
     }),
-    [endpoints.PrismicOembed, endpoints.PrismicUnsplash],
+    [endpoints.PrismicEmbed, endpoints.PrismicUnsplash, endpoints.PrismicWroom],
   );
 
   useEffect(() => {

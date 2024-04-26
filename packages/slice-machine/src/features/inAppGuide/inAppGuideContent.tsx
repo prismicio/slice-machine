@@ -1,4 +1,4 @@
-import { Text, TextLink } from "@prismicio/editor-ui";
+import { Text } from "@prismicio/editor-ui";
 
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 
@@ -37,9 +37,9 @@ export function useInAppGuideContent() {
         description: (
           <>
             Open your{" "}
-            <TextLink href={repositoryUrl} underline>
+            <Text href={repositoryUrl} underline>
               Page Builder
-            </TextLink>
+            </Text>
             , create a page, add slices, save, and publish. Then, come back
             here.
           </>

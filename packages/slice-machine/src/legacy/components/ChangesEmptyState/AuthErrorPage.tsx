@@ -1,4 +1,4 @@
-import { Box, Button, Text, TextLink } from "@prismicio/editor-ui";
+import { Box, Button, Text } from "@prismicio/editor-ui";
 import React, { FC } from "react";
 
 import { AuthStatus } from "@/modules/userContext/types";
@@ -41,9 +41,9 @@ export const AuthErrorPage: FC<AuthErrorPageProps> = (props) => {
       <Text align="center">
         If that doesn't work, it's possible that Slice Machine is having trouble
         accessing Prismic's servers.{" "}
-        <TextLink href="https://community.prismic.io/">
+        <Text href="https://community.prismic.io/">
           Contact our support team
-        </TextLink>
+        </Text>
         .
       </Text>
       {authStatus === AuthStatus.FORBIDDEN && (
