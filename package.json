@@ -13,6 +13,7 @@
     "dev:slice-machine-ui": "yarn workspace slice-machine-ui dev",
     "dev:adapter-next": "yarn workspace @slicemachine/adapter-next dev",
     "dev:adapter-sveltekit": "yarn workspace @slicemachine/adapter-sveltekit dev",
+    "dev:init": "yarn workspace @slicemachine/init dev",
     "dev:e2e-next": "cd ./e2e-projects/next && yarn dev --port 8000",
     "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
     "postinstall": "husky install",
