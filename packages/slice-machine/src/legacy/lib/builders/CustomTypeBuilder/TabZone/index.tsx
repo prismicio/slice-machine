@@ -215,6 +215,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           {query.newPageType === undefined ? (
             <Zone
               zoneType="customType"
+              zoneTypeFormat={customType.format ?? "custom"}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               tabId={tabId}
               title="Static Zone"

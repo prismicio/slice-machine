@@ -184,6 +184,7 @@ const FieldZones: FC = () => {
     <List>
       <Zone
         zoneType="slice"
+        zoneTypeFormat={undefined}
         tabId={undefined}
         title="Fields"
         dataTip={dataTipText}
@@ -211,10 +212,12 @@ const FieldZones: FC = () => {
         }
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
+        emptyStateHeading="No fields"
       />
       {!groupsInSlicesExperiment.eligible || hasItems ? (
         <Zone
           zoneType="slice"
+          zoneTypeFormat={undefined}
           tabId={undefined}
           isRepeatable
           title="Repeatable Zone"
@@ -237,6 +240,7 @@ const FieldZones: FC = () => {
           }
           testId="slice-repeatable-zone"
           isRepeatableCustomType={undefined}
+          emptyStateHeading="No fields"
         />
       ) : null}
       <Dialog
