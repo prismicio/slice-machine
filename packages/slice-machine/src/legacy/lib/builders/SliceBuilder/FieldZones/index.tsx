@@ -212,7 +212,9 @@ const FieldZones: FC = () => {
         }
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
-        emptyStateHeading="No fields"
+        emptyStateHeading={
+          groupsInSlicesExperiment.eligible ? undefined : "No fields"
+        }
         emptyStateActionTestId="add-Static-field"
       />
       {!groupsInSlicesExperiment.eligible || hasItems ? (
