@@ -1,4 +1,15 @@
-import { Button, Icon, Image, tokens } from "@prismicio/editor-ui";
+import {
+  Button,
+  Icon,
+  Image,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Text,
+  tokens,
+} from "@prismicio/editor-ui";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { type CustomTypeFormat } from "@slicemachine/manager";
 import { useRouter } from "next/router";
@@ -12,19 +23,13 @@ import {
   BlankSlateImage,
   BlankSlateTitle,
 } from "@/components/BlankSlate";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-} from "@/components/Table";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import { ReusableIcon } from "@/icons/ReusableIcon";
-import { UniqueIcon } from "@/icons/UniqueIcon";
+import { SingleIcon } from "@/icons/SingleIcon";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { EditDropdown } from "../EditDropdown";
+import styles from "./CustomTypesTable.module.css";
 import {
   useCustomTypes,
   useCustomTypesAutoRevalidation,
@@ -82,49 +87,80 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
     );
   }
 
+  // The wrapping `<div>` prevents `<Table>` from growing vertically.
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableCell>
-            <Icon name="notes" size="medium" />
-          </TableCell>
-          <TableCell>Label</TableCell>
-          <TableCell>API ID</TableCell>
-          <TableCell>Limit</TableCell>
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {sortedCustomTypes.map((customType: CustomType) => {
-          const { repeatable, label, id } = customType;
+    <div>
+      <Table columnLayout="28px 1fr 1fr 1fr 40px">
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <Icon name="notes" size="medium" />
+            </TableCell>
+            <TableCell>
+              <Text color="grey11" variant="small">
+                Label
+              </Text>
+            </TableCell>
+            <TableCell>
+              <Text color="grey11" variant="small">
+                API ID
+              </Text>
+            </TableCell>
+            <TableCell>
+              <Text color="grey11" variant="small">
+                Limit
+              </Text>
+            </TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {sortedCustomTypes.map((customType: CustomType) => {
+            const { repeatable, label, id } = customType;
 
-          return (
-            <TableRow
-              key={id}
-              onClick={() => {
-                void router.push(
-                  CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id),
-                );
-              }}
-            >
-              <TableCell>
-                {repeatable ? <ReusableIcon /> : <UniqueIcon />}
-              </TableCell>
-              <TableCell>{label}</TableCell>
-              <TableCell>{id}</TableCell>
-              <TableCell>{repeatable ? "Reusable" : "Single"}</TableCell>
-              <TableCell>
-                <EditDropdown
-                  isChangesLocal={false}
-                  format={format}
-                  customType={customType}
-                />
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+            return (
+              <TableRow
+                key={id}
+                onClick={() => {
+                  void router.push(
+                    CUSTOM_TYPES_CONFIG[format].getBuilderPagePathname(id),
+                  );
+                }}
+              >
+                <TableCell>
+                  {repeatable ? (
+                    <ReusableIcon width={20} />
+                  ) : (
+                    <SingleIcon width={20} />
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Text variant="bold" className={styles.ellipsis}>
+                    {label}
+                  </Text>
+                </TableCell>
+                <TableCell>
+                  <Text color="grey11" className={styles.ellipsis}>
+                    {id}
+                  </Text>
+                </TableCell>
+                <TableCell>
+                  <Text color="grey11">
+                    {repeatable ? "Reusable" : "Single"}
+                  </Text>
+                </TableCell>
+                <TableCell>
+                  <EditDropdown
+                    isChangesLocal={false}
+                    format={format}
+                    customType={customType}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
