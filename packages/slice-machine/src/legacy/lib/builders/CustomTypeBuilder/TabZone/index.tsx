@@ -242,6 +242,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
               }
               testId="static-zone-content"
               isRepeatableCustomType={customType.repeatable}
+              emptyStateActionTestId="add-Static-field"
             />
           ) : undefined}
 
