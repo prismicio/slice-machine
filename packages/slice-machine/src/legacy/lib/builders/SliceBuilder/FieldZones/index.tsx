@@ -213,6 +213,7 @@ const FieldZones: FC = () => {
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
         emptyStateHeading="No fields"
+        emptyStateActionTestId="add-Static-field"
       />
       {!groupsInSlicesExperiment.eligible || hasItems ? (
         <Zone
@@ -241,6 +242,7 @@ const FieldZones: FC = () => {
           testId="slice-repeatable-zone"
           isRepeatableCustomType={undefined}
           emptyStateHeading="No fields"
+          emptyStateActionTestId="add-Repeatable-field"
         />
       ) : null}
       <Dialog

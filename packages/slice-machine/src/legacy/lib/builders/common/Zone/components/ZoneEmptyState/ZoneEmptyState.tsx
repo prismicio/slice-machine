@@ -6,14 +6,16 @@ import styles from "./ZoneEmptyState.module.css";
 type ZoneEmptyStateProps = {
   zoneType: "custom type" | "page type" | "slice";
   heading?: ReactNode;
-  onEnterSelectMode: () => void;
+  onActionClick: () => void;
+  actionTestId?: string;
 };
 
 export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
   const {
     zoneType,
     heading = `Your ${zoneType} has no fields yet`,
-    onEnterSelectMode,
+    onActionClick,
+    actionTestId,
   } = props;
 
   return (
@@ -26,8 +28,8 @@ export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
       </div>
       <Button
         color="grey"
-        onClick={() => onEnterSelectMode()}
-        data-testid={`add-${zoneType.replace(" ", "-")}-field`}
+        onClick={() => onActionClick()}
+        data-testid={actionTestId}
         startIcon="add"
       >
         Add a field

@@ -32,6 +32,7 @@ const Zone = ({
   testId,
   isRepeatableCustomType,
   emptyStateHeading,
+  emptyStateActionTestId,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
@@ -128,7 +129,9 @@ const Zone = ({
             zoneType={getResolvedZoneType(zoneType, zoneTypeFormat)}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             heading={emptyStateHeading}
-            onEnterSelectMode={() => enterSelectMode()}
+            onActionClick={() => enterSelectMode()}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            actionTestId={emptyStateActionTestId}
           />
         ) : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         fields.length > 0 || newFieldData ? (
