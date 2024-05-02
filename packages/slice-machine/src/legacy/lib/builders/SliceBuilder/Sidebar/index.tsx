@@ -1,4 +1,4 @@
-import { Box, Button, Gradient } from "@prismicio/editor-ui";
+import { Box, Button, Gradient, theme } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type FC, useState } from "react";
 import { toast } from "react-toastify";
@@ -73,32 +73,40 @@ export const Sidebar: FC = () => {
             variationId={v.id}
           />
         ))}
-        <Box
-          backgroundColor="grey2"
-          bottom={0}
-          flexDirection="column"
-          padding={{ bottom: 40, inline: 24 }}
-          position="sticky"
-          // As `PageLayoutContent` has a `16px` bottom padding, we need to
-          // apply an equal negative margin to the `Box` if we want it to sit
-          // flush with the bottom of the page.
-          // @ts-expect-error TODO(PBD-1080): write the new `ScrollAreaEndGradient` component instead of using a `Box`.
-          style={{ marginBottom: "-16px" }}
+        {/*
+         * As `PageLayoutContent` has a `16px` bottom padding, we need to apply
+         * an equal negative margin to the `div` if we want it to sit flush with
+         * the bottom of the page.
+         * TODO(PBD-1080): write the new `ScrollAreaEndGradient` component
+         * instead of using a `div`.
+         */}
+        <div
+          style={{
+            bottom: theme.space[0],
+            marginBottom: `-${theme.space[16]}`,
+            position: "sticky",
+          }}
         >
-          <Gradient sx={{ left: 0, position: "absolute", right: 0 }} />
-          <Button
-            onClick={() => {
-              setDialog({ type: "ADD_VARIATION" });
-            }}
-            startIcon="add"
-            // Set `position` to `relative` to position `Button` on top of
-            // `Gradient`.
-            sx={{ position: "relative" }}
-            color="grey"
+          <Box
+            backgroundColor="grey2"
+            flexDirection="column"
+            padding={{ bottom: 40, inline: 24 }}
           >
-            Add a new variation
-          </Button>
-        </Box>
+            <Gradient sx={{ left: 0, position: "absolute", right: 0 }} />
+            <Button
+              color="grey"
+              onClick={() => {
+                setDialog({ type: "ADD_VARIATION" });
+              }}
+              startIcon="add"
+              // Set `position` to `relative` to position `Button` on top of
+              // `Gradient`.
+              sx={{ position: "relative" }}
+            >
+              Add a new variation
+            </Button>
+          </Box>
+        </div>
       </Box>
       <ScreenshotChangesModal
         slices={sliceFilterFn([slice])}
