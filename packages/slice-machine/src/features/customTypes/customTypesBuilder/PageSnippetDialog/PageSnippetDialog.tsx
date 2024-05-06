@@ -9,7 +9,7 @@ import { MarkdownRenderer } from "@/features/documentation/MarkdownRenderer";
 import { useDocumentation } from "@/features/documentation/useDocumentation";
 import { useAdapterName } from "@/hooks/useAdapterName";
 
-import * as styles from "./PageSnippetDialog.css";
+import styles from "./PageSnippetDialog.module.css";
 
 type PageSnippetContentProps = { model: CustomType };
 
