@@ -8,7 +8,7 @@ import { telemetry } from "@/apiClient";
 import { CodeBlock } from "@/components/CodeBlock";
 import { useAdapterName } from "@/hooks/useAdapterName";
 
-import * as styles from "./MarkdownRenderer.css";
+import styles from "./MarkdownRenderer.module.css";
 
 type MarkdownRenderer = FC<{
   markdown: string;
