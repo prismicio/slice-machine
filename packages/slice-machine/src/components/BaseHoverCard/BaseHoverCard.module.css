@@ -1,0 +1,18 @@
+.reset {
+  all: "unset";
+  box-sizing: "border-box";
+  display: revert;
+  font-family: var(--font-family-body);
+}
+
+.container {
+  composes: reset;
+  background-color: var(--grey1);
+  border-radius: 6px;
+  box-shadow: var(--box-shadow-3);
+}
+
+.arrow {
+  composes: reset;
+  fill: var(--grey1);
+}
