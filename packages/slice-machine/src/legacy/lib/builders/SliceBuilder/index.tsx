@@ -1,4 +1,4 @@
-import { Box } from "@prismicio/editor-ui";
+import { Box, useMediaQuery } from "@prismicio/editor-ui";
 import { type FC } from "react";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
@@ -20,6 +20,16 @@ import { Sidebar } from "./Sidebar";
 
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
+  const horizontalScroll = useMediaQuery({ max: "medium" });
+
+  const contentDisplayProps = horizontalScroll
+    ? {
+        gridTemplateRows: "320px 1fr",
+      }
+    : {
+        gridTemplateColumns: "320px 1fr",
+        gap: 16 as const,
+      };
 
   return (
     <AppLayout>
@@ -35,13 +45,8 @@ export const SliceBuilder: FC = () => {
         </AppLayoutActions>
       </AppLayoutHeader>
       <AppLayoutContent>
-        <Box
-          alignItems="flex-start"
-          display="grid"
-          gap={16}
-          gridTemplateColumns="320px 1fr"
-        >
-          <Sidebar />
+        <Box display="grid" alignItems="flex-start" {...contentDisplayProps}>
+          <Sidebar horizontalScroll={horizontalScroll} />
           <FieldZones />
         </Box>
         <FloatingBackButton />
