@@ -50,8 +50,10 @@ export const header = style([
   }),
   {
     selectors: {
-      [`${windowStyles.tabsContent} > ${root} > &:not(:first-child)`]: {
-        marginTop: vars.space[16],
+      ["&:not(:first-child)"]: {
+        borderTopStyle: "solid",
+        borderTopColor: vars.color.greyLight6,
+        borderTopWidth: 1,
       },
     },
   },

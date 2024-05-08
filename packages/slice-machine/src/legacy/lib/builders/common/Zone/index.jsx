@@ -10,10 +10,11 @@ import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import Card from "./Card";
 import NewField from "./Card/components/NewField";
-import EmptyState from "./components/EmptyState";
+import { ZoneEmptyState } from "./components/ZoneEmptyState";
 
 const Zone = ({
   zoneType /* type of the zone: customType or slice */,
+  zoneTypeFormat /* format of the zone: page or custom */,
   tabId,
   title /* text info to display in Card Header */,
   fields /* widgets registered in the zone */,
@@ -30,6 +31,8 @@ const Zone = ({
   renderFieldAccessor /* render field accessor (eg. slice.primary.title) */,
   testId,
   isRepeatableCustomType,
+  emptyStateHeading,
+  emptyStateActionTestId,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
@@ -110,7 +113,7 @@ const Zone = ({
                 color="grey"
                 disabled={newFieldData !== null}
               >
-                Add a new field
+                Add a field
               </Button>
             </>
           ) : undefined
@@ -121,13 +124,15 @@ const Zone = ({
       {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         fields.length === 0 && !newFieldData ? (
-          <BaseStyles>
-            <EmptyState
-              onEnterSelectMode={() => enterSelectMode()}
-              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-              zoneName={isRepeatable ? "Repeatable" : "Static"}
-            />
-          </BaseStyles>
+          <ZoneEmptyState
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            zoneType={getResolvedZoneType(zoneType, zoneTypeFormat)}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            heading={emptyStateHeading}
+            onActionClick={() => enterSelectMode()}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            actionTestId={emptyStateActionTestId}
+          />
         ) : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         fields.length > 0 || newFieldData ? (
           <BaseStyles>
@@ -223,5 +228,21 @@ Zone.propTypes = {
     }),
   ),
 };
+
+/**
+ * Determines the resolved type of a given zone type.
+ *
+ * @param {"customType" | "slice"} zoneType - The type of the zone.
+ * @param {"page" | "custom"} [format] - The format of the zone type (if applicable).
+ *
+ * @returns {"custom type" | "page type" | "slice"}
+ */
+function getResolvedZoneType(zoneType, format) {
+  if (zoneType === "customType") {
+    return format === "page" ? "page type" : "custom type";
+  }
+
+  return zoneType;
+}
 
 export default Zone;
