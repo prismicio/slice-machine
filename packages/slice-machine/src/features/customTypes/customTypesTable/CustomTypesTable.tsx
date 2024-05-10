@@ -29,7 +29,6 @@ import { SingleIcon } from "@/icons/SingleIcon";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { EditDropdown } from "../EditDropdown";
-import styles from "./CustomTypesTable.module.css";
 import {
   useCustomTypes,
   useCustomTypesAutoRevalidation,
@@ -135,17 +134,17 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
                   )}
                 </TableCell>
                 <TableCell>
-                  <Text variant="bold" className={styles.ellipsis}>
+                  <Text variant="bold" noWrap={true}>
                     {label}
                   </Text>
                 </TableCell>
                 <TableCell>
-                  <Text color="grey11" className={styles.ellipsis}>
+                  <Text color="grey11" noWrap={true}>
                     {id}
                   </Text>
                 </TableCell>
                 <TableCell>
-                  <Text color="grey11">
+                  <Text color="grey11" noWrap={true}>
                     {repeatable ? "Reusable" : "Single"}
                   </Text>
                 </TableCell>
