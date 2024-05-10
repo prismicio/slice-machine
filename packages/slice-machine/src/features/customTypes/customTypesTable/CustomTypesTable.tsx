@@ -8,6 +8,7 @@ import {
   TableHead,
   TableRow,
   Text,
+  theme,
   tokens,
 } from "@prismicio/editor-ui";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
@@ -128,9 +129,9 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
               >
                 <TableCell>
                   {repeatable ? (
-                    <ReusableIcon width={20} />
+                    <ReusableIcon width={theme.space[20]} />
                   ) : (
-                    <SingleIcon width={20} />
+                    <SingleIcon width={theme.space[20]} />
                   )}
                 </TableCell>
                 <TableCell>
