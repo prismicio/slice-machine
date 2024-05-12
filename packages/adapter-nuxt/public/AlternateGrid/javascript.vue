@@ -48,11 +48,11 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 					/>
 				</div>
 				<div
-					v-if="slice.items && slice.items.length"
+					v-if="slice.primary.items && slice.primary.items.length"
 					class="es-alternate-grid__primary-content__items"
 				>
 					<div
-						v-for="(item, i) in slice.items"
+						v-for="(item, i) in slice.primary.items"
 						:key="i"
 						class="es-alternate-grid__item"
 					>

@@ -24,15 +24,18 @@ defineProps(
 			>
 				<PrismicRichText :field="slice.primary.eyebrowHeadline" />
 			</div>
-			<ul v-if="slice.items.length > 0" class="es-customer-logos__logos">
+			<ul
+				v-if="slice.primary.logos.length > 0"
+				class="es-customer-logos__logos"
+			>
 				<li
-					v-for="item in slice.items"
-					:key="item.image.url"
+					v-for="logo in slice.primary.logos"
+					:key="logo.image.url"
 					class="es-customer-logos__logo"
 				>
-					<PrismicLink :field="item.link">
+					<PrismicLink :field="logo.link">
 						<PrismicImage
-							:field="item.image"
+							:field="logo.image"
 							:height="26"
 							:width="160"
 							class="es-customer-logos__logo__link__image"
