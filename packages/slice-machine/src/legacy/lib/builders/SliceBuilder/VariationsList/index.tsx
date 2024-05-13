@@ -1,4 +1,4 @@
-import { Box, Button, Gradient, theme } from "@prismicio/editor-ui";
+import { Box, Button, Gradient, Text, theme } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type FC, useState } from "react";
 import { toast } from "react-toastify";
@@ -10,13 +10,14 @@ import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvid
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
-import { SliceVariationsIcon } from "@/icons/SliceVariationsIcon";
 import { DeleteVariationModal } from "@/legacy/components/DeleteVariationModal";
 import { RenameVariationModal } from "@/legacy/components/Forms/RenameVariationModal";
 import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
-import AddVariationModal from "@/legacy/lib/builders/SliceBuilder/Sidebar/AddVariationModal";
+import AddVariationModal from "@/legacy/lib/builders/SliceBuilder/VariationsList/AddVariationModal";
 import type { VariationSM } from "@/legacy/lib/models/common/Slice";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
+
+import styles from "./VariationsList.module.css";
 
 type DialogState =
   | { type: "ADD_VARIATION"; variation?: undefined; loading?: boolean }
@@ -24,11 +25,11 @@ type DialogState =
   | { type: "DELETE_VARIATION"; variation: VariationSM; loading?: boolean }
   | undefined;
 
-type SidebarProps = {
-  horizontalScroll?: boolean;
+type VariationsListProps = {
+  horizontalScroll: boolean;
 };
 
-export const Sidebar: FC = (props: SidebarProps) => {
+export const VariationsList: FC<VariationsListProps> = (props) => {
   const { horizontalScroll = false } = props;
   const { slice, variation, setSlice } = useSliceState();
   const [dialog, setDialog] = useState<DialogState>();
@@ -46,11 +47,10 @@ export const Sidebar: FC = (props: SidebarProps) => {
         {horizontalScroll ? (
           <>
             <Divider variant="edgeFaded" color="grey6" />
-            <Box alignItems="center" gap={8}>
-              <SliceVariationsIcon />
-              <Box flexGrow={1}>
+            <Box justifyContent="space-between">
+              <Text color="grey11">
                 {variationCount} variation{variationCount !== 1 && "s"}
-              </Box>
+              </Text>
               <Button
                 onClick={() => {
                   setDialog({ type: "ADD_VARIATION" });
@@ -60,11 +60,13 @@ export const Sidebar: FC = (props: SidebarProps) => {
               />
             </Box>
             <div
+              className={styles.hideScrollbar}
               style={{
-                width: "calc(100% + 32px)",
-                height: "calc(240px + 16px)",
+                height: "240px",
                 position: "relative",
+                marginRight: "-32px",
                 overflowX: "scroll",
+                scrollSnapType: "x mandatory",
               }}
             >
               <div
@@ -74,10 +76,9 @@ export const Sidebar: FC = (props: SidebarProps) => {
                 }}
               >
                 <Box flexDirection="row" gap={16}>
-                  <SharedSliceCards width="320px" />
+                  <SharedSliceCards width={320} />
                 </Box>
               </div>
-              <Gradient sx={{ position: "fixed", right: 0, height: "100%" }} />
             </div>
           </>
         ) : (
@@ -177,17 +178,23 @@ export const Sidebar: FC = (props: SidebarProps) => {
 };
 
 type SharedSliceCardsProps = {
-  width?: `${string}px`;
+  width?: 320;
 };
 
 export const SharedSliceCards = (props: SharedSliceCardsProps) => {
   const { width } = props;
-  const [_dialog, setDialog] = useState<DialogState>();
+  const [, setDialog] = useState<DialogState>();
   const screenshotChangesModal = useScreenshotChangesModal();
   const { slice, variation, setSlice } = useSliceState();
 
+  const defaultCardStyle = { scrollSnapAlign: "start" };
+
   return slice.model.variations.map((v) => (
-    <div style={width !== undefined ? { width } : {}}>
+    <div
+      style={
+        width !== undefined ? { ...defaultCardStyle, width } : defaultCardStyle
+      }
+    >
       <SharedSliceCard
         action={{
           type: "menu",

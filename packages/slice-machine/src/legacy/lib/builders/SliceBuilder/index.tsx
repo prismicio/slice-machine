@@ -16,20 +16,15 @@ import {
 import SimulatorButton from "@/legacy/lib/builders/SliceBuilder/SimulatorButton";
 
 import FieldZones from "./FieldZones";
-import { Sidebar } from "./Sidebar";
+import { VariationsList } from "./VariationsList";
 
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
   const horizontalScroll = useMediaQuery({ max: "medium" });
 
   const contentDisplayProps = horizontalScroll
-    ? {
-        gridTemplateRows: "320px 1fr",
-      }
-    : {
-        gridTemplateColumns: "320px 1fr",
-        gap: 16 as const,
-      };
+    ? { gridTemplateRows: "304px 1fr" }
+    : { gridTemplateColumns: "320px 1fr" };
 
   return (
     <AppLayout>
@@ -45,8 +40,13 @@ export const SliceBuilder: FC = () => {
         </AppLayoutActions>
       </AppLayoutHeader>
       <AppLayoutContent>
-        <Box display="grid" alignItems="flex-start" {...contentDisplayProps}>
-          <Sidebar horizontalScroll={horizontalScroll} />
+        <Box
+          display="grid"
+          alignItems="flex-start"
+          gap={16}
+          {...contentDisplayProps}
+        >
+          <VariationsList horizontalScroll={horizontalScroll} />
           <FieldZones />
         </Box>
         <FloatingBackButton />
