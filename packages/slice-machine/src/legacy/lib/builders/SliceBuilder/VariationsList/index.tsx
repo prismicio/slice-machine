@@ -189,49 +189,55 @@ export const SharedSliceCards = (props: SharedSliceCardsProps) => {
 
   const defaultCardStyle = { scrollSnapAlign: "start" };
 
-  return slice.model.variations.map((v) => (
-    <div
-      style={
-        width !== undefined ? { ...defaultCardStyle, width } : defaultCardStyle
-      }
-    >
-      <SharedSliceCard
-        action={{
-          type: "menu",
-          onRename: () => {
-            setDialog({
-              type: "RENAME_VARIATION",
-              variation: v,
-            });
-          },
-          onRemove: () => {
-            setDialog({
-              type: "DELETE_VARIATION",
-              variation: v,
-            });
-          },
-          removeDisabled: slice.model.variations.length <= 1,
-        }}
-        key={v.id}
-        mode="navigation"
-        onUpdateScreenshot={() => {
-          screenshotChangesModal.onOpenModal({
-            sliceFilterFn: (s) => s,
-            defaultVariationSelector: {
-              sliceID: slice.model.id,
-              variationID: v.id,
-            },
-            onUploadSuccess: (newSlice) => {
-              setSlice(newSlice);
-            },
-          });
-        }}
-        replace
-        selected={v.id === variation.id}
-        slice={slice}
-        variant="outlined"
-        variationId={v.id}
-      />
-    </div>
-  ));
+  return (
+    <>
+      {slice.model.variations.map((v) => (
+        <div
+          style={
+            width !== undefined
+              ? { ...defaultCardStyle, width }
+              : defaultCardStyle
+          }
+        >
+          <SharedSliceCard
+            action={{
+              type: "menu",
+              onRename: () => {
+                setDialog({
+                  type: "RENAME_VARIATION",
+                  variation: v,
+                });
+              },
+              onRemove: () => {
+                setDialog({
+                  type: "DELETE_VARIATION",
+                  variation: v,
+                });
+              },
+              removeDisabled: slice.model.variations.length <= 1,
+            }}
+            key={v.id}
+            mode="navigation"
+            onUpdateScreenshot={() => {
+              screenshotChangesModal.onOpenModal({
+                sliceFilterFn: (s) => s,
+                defaultVariationSelector: {
+                  sliceID: slice.model.id,
+                  variationID: v.id,
+                },
+                onUploadSuccess: (newSlice) => {
+                  setSlice(newSlice);
+                },
+              });
+            }}
+            replace
+            selected={v.id === variation.id}
+            slice={slice}
+            variant="outlined"
+            variationId={v.id}
+          />
+        </div>
+      ))}
+    </>
+  );
 };
