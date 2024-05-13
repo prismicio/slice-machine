@@ -1,6 +1,6 @@
 import { Box, Button, Gradient, Text, theme } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import { type FC, useState } from "react";
+import { type Dispatch, type FC, type SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
 
 import { updateSlice } from "@/apiClient";
@@ -9,7 +9,10 @@ import { copySliceVariation } from "@/domain/slice";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
-import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
+import {
+  type Payload,
+  useScreenshotChangesModal,
+} from "@/hooks/useScreenshotChangesModal";
 import { DeleteVariationModal } from "@/legacy/components/DeleteVariationModal";
 import { RenameVariationModal } from "@/legacy/components/Forms/RenameVariationModal";
 import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
@@ -76,14 +79,21 @@ export const VariationsList: FC<VariationsListProps> = (props) => {
                 }}
               >
                 <Box flexDirection="row" gap={16}>
-                  <SharedSliceCards width={320} />
+                  <SharedSliceCards
+                    screenshotChangesModal={screenshotChangesModal}
+                    setDialog={setDialog}
+                    width={320}
+                  />
                 </Box>
               </div>
             </div>
           </>
         ) : (
           <>
-            <SharedSliceCards />
+            <SharedSliceCards
+              screenshotChangesModal={screenshotChangesModal}
+              setDialog={setDialog}
+            />
             {/*
              * As `PageLayoutContent` has a `16px` bottom padding, we need to apply
              * an equal negative margin to the `div` if we want it to sit flush with
@@ -178,13 +188,13 @@ export const VariationsList: FC<VariationsListProps> = (props) => {
 };
 
 type SharedSliceCardsProps = {
+  screenshotChangesModal: Payload;
+  setDialog: Dispatch<SetStateAction<DialogState>>;
   width?: 320;
 };
 
 export const SharedSliceCards = (props: SharedSliceCardsProps) => {
-  const { width } = props;
-  const [, setDialog] = useState<DialogState>();
-  const screenshotChangesModal = useScreenshotChangesModal();
+  const { screenshotChangesModal, setDialog, width } = props;
   const { slice, variation, setSlice } = useSliceState();
 
   const defaultCardStyle = { scrollSnapAlign: "start" };
