@@ -10,7 +10,7 @@ type ModalPayload = {
   onUploadSuccess?: (newSlice: ComponentUI) => void;
 };
 
-type Payload = {
+export type Payload = {
   modalPayload: ModalPayload;
   onOpenModal: (p: ModalPayload) => void;
 };
