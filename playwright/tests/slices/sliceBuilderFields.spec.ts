@@ -54,15 +54,7 @@ test("I can edit a rich text field in the static zone", async ({
 test("I can add a group field in the static zone", async ({
   sliceBuilderPage,
   slice,
-  procedures,
 }) => {
-  procedures.mock(
-    "telemetry.getExperimentVariant",
-    ({ args }) =>
-      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
-    { execute: false },
-  );
-
   await sliceBuilderPage.goto(slice.name);
 
   await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
@@ -80,15 +72,7 @@ test("I can add a group field in the static zone", async ({
 test("I can add a sub field within a group field", async ({
   sliceBuilderPage,
   slice,
-  procedures,
 }) => {
-  procedures.mock(
-    "telemetry.getExperimentVariant",
-    ({ args }) =>
-      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
-    { execute: false },
-  );
-
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",
@@ -120,15 +104,7 @@ test("I can add a sub field within a group field", async ({
 test("I can edit a sub field within a group field", async ({
   sliceBuilderPage,
   slice,
-  procedures,
 }) => {
-  procedures.mock(
-    "telemetry.getExperimentVariant",
-    ({ args }) =>
-      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
-    { execute: false },
-  );
-
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",
@@ -173,15 +149,7 @@ test("I can edit a sub field within a group field", async ({
 test("I can delete a sub field within a group field", async ({
   sliceBuilderPage,
   slice,
-  procedures,
 }) => {
-  procedures.mock(
-    "telemetry.getExperimentVariant",
-    ({ args }) =>
-      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
-    { execute: false },
-  );
-
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",
@@ -296,15 +264,7 @@ test("I can delete a field in the repeatable zone", async ({
 test("I can delete the repeatable zone by deleting the zone's last field", async ({
   sliceBuilderPage,
   repeatableZoneSlice,
-  procedures,
 }) => {
-  procedures.mock(
-    "telemetry.getExperimentVariant",
-    ({ args }) =>
-      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
-    { execute: false },
-  );
-
   await sliceBuilderPage.goto(repeatableZoneSlice.name);
   await sliceBuilderPage.deleteField("existing_field", "repeatable");
   await sliceBuilderPage.deleteRepeatableZoneDialog.deleteRepeatableZone();
@@ -333,15 +293,7 @@ test("I can see and copy the code snippets", async ({
 test("I can see and copy the code snippets for groups", async ({
   sliceBuilderPage,
   slice,
-  procedures,
 }) => {
-  procedures.mock(
-    "telemetry.getExperimentVariant",
-    ({ args }) =>
-      args[0] === "slicemachine-groups-in-slices" ? { value: "on" } : undefined,
-    { execute: false },
-  );
-
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",

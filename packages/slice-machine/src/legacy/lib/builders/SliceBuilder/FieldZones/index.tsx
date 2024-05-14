@@ -20,7 +20,6 @@ import {
   updateField,
 } from "@/domain/slice";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
-import { useGroupsInSlicesExperiment } from "@/features/slices/sliceBuilder/useGroupsInSlicesExperiment";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import Zone from "@/legacy/lib/builders/common/Zone";
 import { Groups } from "@/legacy/lib/models/common/Group";
@@ -49,7 +48,6 @@ const FieldZones: FC = () => {
     isDeleteRepeatableZoneDialogOpen,
     setIsDeleteRepeatableZoneDialogOpen,
   ] = useState(false);
-  const groupsInSlicesExperiment = useGroupsInSlicesExperiment();
 
   // We won't show the Repeatable Zone if no items are configured.
   const hasItems = Boolean(
@@ -58,7 +56,6 @@ const FieldZones: FC = () => {
 
   const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
     if (
-      groupsInSlicesExperiment.eligible &&
       widgetArea === WidgetsArea.Items &&
       variation.items &&
       Object.keys(variation.items).length <= 1
@@ -191,11 +188,7 @@ const FieldZones: FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.primary}
         EditModal={EditModal}
-        widgetsArray={
-          groupsInSlicesExperiment.eligible
-            ? sliceBuilderWidgetsArray
-            : groupBuilderWidgetsArray
-        }
+        widgetsArray={sliceBuilderWidgetsArray}
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
         onSave={_onSave(WidgetsArea.Primary)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
@@ -212,12 +205,10 @@ const FieldZones: FC = () => {
         }
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
-        emptyStateHeading={
-          groupsInSlicesExperiment.eligible ? undefined : "No fields"
-        }
+        emptyStateHeading={undefined}
         emptyStateActionTestId="add-Static-field"
       />
-      {!groupsInSlicesExperiment.eligible || hasItems ? (
+      {hasItems ? (
         <Zone
           zoneType="slice"
           zoneTypeFormat={undefined}
