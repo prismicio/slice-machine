@@ -46,7 +46,7 @@
     "@prismicio/editor-support": "0.4.25-alpha.feat-support-group-in-primary.1",
     "@prismicio/editor-ui": "0.4.25-alpha.feat-support-group-in-primary.1",
     "@prismicio/mock": "0.3.3",
-    "@prismicio/mocks": "2.2.0-alpha.2",
+    "@prismicio/mocks": "2.2.0",
     "@prismicio/simulator": "0.1.4",
     "@prismicio/types-internal": "2.4.1",
     "@radix-ui/react-hover-card": "1.0.6",
