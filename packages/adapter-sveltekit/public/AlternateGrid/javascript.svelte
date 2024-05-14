@@ -54,9 +54,9 @@
 					</div>
 				{/if}
 			</div>
-			{#if slice.items && slice.items.length}
+			{#if slice.primary.items && slice.primary.items.length}
 				<div class="es-alternate-grid__primary-content__items">
-					{#each slice.items as item, i}
+					{#each slice.primary.items as item, i}
 						<div class="es-alternate-grid__item">
 							{#if isFilled.richText(item.title)}
 								<div class="es-alternate-grid__item__heading">

@@ -71,120 +71,124 @@ export const mocks: SharedSliceContent[] = [
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
+			items: {
+				__TYPE__: "GroupContentType",
+				value: [
+					{
+						__TYPE__: "GroupItemContent",
+						value: [
+							[
+								"title",
+								{
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "heading3",
+											content: {
+												text: "Integrate with the SliceZone",
+												spans: [],
+											},
+											direction: "ltr",
+										},
+									],
+								},
+							],
+							[
+								"description",
+								{
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "paragraph",
+											content: {
+												text: "This component has been matched by the SliceZone. Its model has been fetched from SliceMachine next-adapter!",
+												spans: [],
+											},
+											direction: "ltr",
+										},
+									],
+								},
+							],
+						],
+					},
+					{
+						__TYPE__: "GroupItemContent",
+						value: [
+							[
+								"title",
+								{
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "heading3",
+											content: {
+												text: "Create your own",
+												spans: [],
+											},
+											direction: "ltr",
+										},
+									],
+								},
+							],
+							[
+								"description",
+								{
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "paragraph",
+											content: {
+												text: "Feel free to use this component fully, or use it as an example! We're adding templates as often as we can.",
+												spans: [],
+											},
+											direction: "ltr",
+										},
+									],
+								},
+							],
+						],
+					},
+					{
+						__TYPE__: "GroupItemContent",
+						value: [
+							[
+								"title",
+								{
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "heading3",
+											content: {
+												text: "Add a variation",
+												spans: [],
+											},
+											direction: "ltr",
+										},
+									],
+								},
+							],
+							[
+								"description",
+								{
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "paragraph",
+											content: {
+												text: 'This slice comes with a "Image Right" variation, which means editors can switch text/image direction!',
+												spans: [],
+											},
+											direction: "ltr",
+										},
+									],
+								},
+							],
+						],
+					},
+				],
+			},
 		},
-		items: [
-			{
-				__TYPE__: "GroupItemContent",
-				value: [
-					[
-						"title",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
-								{
-									type: "heading3",
-									content: {
-										text: "Integrate with the SliceZone",
-										spans: [],
-									},
-									direction: "ltr",
-								},
-							],
-						},
-					],
-					[
-						"description",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
-								{
-									type: "paragraph",
-									content: {
-										text: "This component has been matched by the SliceZone. Its model has been fetched from SliceMachine next-adapter!",
-										spans: [],
-									},
-									direction: "ltr",
-								},
-							],
-						},
-					],
-				],
-			},
-			{
-				__TYPE__: "GroupItemContent",
-				value: [
-					[
-						"title",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
-								{
-									type: "heading3",
-									content: {
-										text: "Create your own",
-										spans: [],
-									},
-									direction: "ltr",
-								},
-							],
-						},
-					],
-					[
-						"description",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
-								{
-									type: "paragraph",
-									content: {
-										text: "Feel free to use this component fully, or use it as an example! We're adding templates as often as we can.",
-										spans: [],
-									},
-									direction: "ltr",
-								},
-							],
-						},
-					],
-				],
-			},
-			{
-				__TYPE__: "GroupItemContent",
-				value: [
-					[
-						"title",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
-								{
-									type: "heading3",
-									content: {
-										text: "Add a variation",
-										spans: [],
-									},
-									direction: "ltr",
-								},
-							],
-						},
-					],
-					[
-						"description",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
-								{
-									type: "paragraph",
-									content: {
-										text: 'This slice comes with a "Image Right" variation, which means editors can switch text/image direction!',
-										spans: [],
-									},
-									direction: "ltr",
-								},
-							],
-						},
-					],
-				],
-			},
-		],
+		items: [],
 	},
 	{
 		__TYPE__: "SharedSliceContent",
@@ -250,52 +254,56 @@ export const mocks: SharedSliceContent[] = [
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
-		},
-		items: [
-			{
-				__TYPE__: "GroupItemContent",
+			items: {
+				__TYPE__: "GroupContentType",
 				value: [
-					[
-						"title",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
+					{
+						__TYPE__: "GroupItemContent",
+						value: [
+							[
+								"title",
 								{
-									type: "heading3",
-									content: {
-										text: "Create a unique, high-performing site",
-										spans: [
-											{
-												type: "strong",
-												start: 9,
-												end: 15,
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "heading3",
+											content: {
+												text: "Create a unique, high-performing site",
+												spans: [
+													{
+														type: "strong",
+														start: 9,
+														end: 15,
+													},
+												],
 											},
-										],
-									},
-									direction: "ltr",
+											direction: "ltr",
+										},
+									],
 								},
 							],
-						},
-					],
-					[
-						"description",
-						{
-							__TYPE__: "StructuredTextContent",
-							value: [
+							[
+								"description",
 								{
-									type: "paragraph",
-									content: {
-										text: "Prismic is the headless website builder designed to help developers and marketers create unique, high-performing websites that are easy to edit.",
-										spans: [],
-									},
-									direction: "ltr",
+									__TYPE__: "StructuredTextContent",
+									value: [
+										{
+											type: "paragraph",
+											content: {
+												text: "Prismic is the headless website builder designed to help developers and marketers create unique, high-performing websites that are easy to edit.",
+												spans: [],
+											},
+											direction: "ltr",
+										},
+									],
 								},
 							],
-						},
-					],
+						],
+					},
 				],
 			},
-		],
+		},
+		items: [],
 	},
 ];
 
@@ -348,25 +356,32 @@ export const model: SharedSlice = {
 						thumbnails: [],
 					},
 				},
-			},
-			items: {
-				title: {
-					type: "StructuredText",
+				items: {
+					type: "Group",
 					config: {
-						label: "title",
-						placeholder: "",
-						allowTargetBlank: true,
-						single: "heading2,heading3,heading4,heading5,heading6,strong,em",
-					},
-				},
-				description: {
-					type: "StructuredText",
-					config: {
-						label: "description",
-						placeholder: "",
-						allowTargetBlank: true,
-						multi:
-							"paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl",
+						label: "items",
+						fields: {
+							title: {
+								type: "StructuredText",
+								config: {
+									label: "title",
+									placeholder: "",
+									allowTargetBlank: true,
+									single:
+										"heading2,heading3,heading4,heading5,heading6,strong,em",
+								},
+							},
+							description: {
+								type: "StructuredText",
+								config: {
+									label: "description",
+									placeholder: "",
+									allowTargetBlank: true,
+									multi:
+										"paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl",
+								},
+							},
+						},
 					},
 				},
 			},
@@ -414,25 +429,32 @@ export const model: SharedSlice = {
 						thumbnails: [],
 					},
 				},
-			},
-			items: {
-				title: {
-					type: "StructuredText",
+				items: {
+					type: "Group",
 					config: {
-						label: "title",
-						placeholder: "",
-						allowTargetBlank: true,
-						single: "heading2,heading3,heading4,heading5,heading6,strong,em",
-					},
-				},
-				description: {
-					type: "StructuredText",
-					config: {
-						label: "description",
-						placeholder: "",
-						allowTargetBlank: true,
-						multi:
-							"paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl",
+						label: "items",
+						fields: {
+							title: {
+								type: "StructuredText",
+								config: {
+									label: "title",
+									placeholder: "",
+									allowTargetBlank: true,
+									single:
+										"heading2,heading3,heading4,heading5,heading6,strong,em",
+								},
+							},
+							description: {
+								type: "StructuredText",
+								config: {
+									label: "description",
+									placeholder: "",
+									allowTargetBlank: true,
+									multi:
+										"paragraph,preformatted,hyperlink,strong,em,list-item,o-list-item,rtl",
+								},
+							},
+						},
 					},
 				},
 			},

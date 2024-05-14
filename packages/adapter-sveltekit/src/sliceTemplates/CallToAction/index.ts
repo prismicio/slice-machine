@@ -146,12 +146,7 @@ export const mocks: SharedSliceContent[] = [
 				value: "Learn more!",
 			},
 		},
-		items: [
-			{
-				__TYPE__: "GroupItemContent",
-				value: [],
-			},
-		],
+		items: [],
 	},
 ];
 
