@@ -1,0 +1,202 @@
+.flex {
+  all: unset;
+  display: flex;
+}
+
+.grid {
+  all: unset;
+  display: grid;
+}
+
+.column {
+  composes: flex;
+  flex-direction: column;
+}
+
+.root {
+  composes: column;
+  position: relative;
+  box-sizing: border-box;
+  border-color: var(--grey6);
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
+  overflow-x: hidden;
+}
+
+.size-small {
+  height: 240px;
+}
+
+.size-medium {
+  height: 320px;
+}
+
+.solid {
+  background-color: var(--grey3);
+
+  &[data-state="checked"] {
+    border-color: var(--purple10);
+  }
+}
+
+.outlined {
+  background-color: var(--grey2);
+
+  &[data-state="checked"] {
+    border-color: var(--purple8);
+  }
+}
+
+.interactive {
+  &:focus-visible {
+    box-shadow: var(--box-shadow-purple-focus);
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+
+  &:not([data-disabled]) {
+    cursor: pointer;
+  }
+
+  &.solid {
+    &:focus-visible {
+      background-color: var(--grey5);
+      border-color: var(--purple10);
+    }
+  }
+
+  &.outlined {
+    &:active {
+      background-color: var(--grey4);
+      border-color: var(--purple9);
+    }
+
+    &:focus-visible {
+      background-color: var(--grey1);
+      border-color: var(--purple8);
+    }
+
+    &:hover {
+      background-color: var(--grey4);
+    }
+  }
+}
+
+.media {
+  composes: column;
+  flex-basis: 0;
+  flex-grow: 1;
+  min-height: 0;
+  position: relative;
+  order: 0;
+}
+.solid > .media {
+  padding: 32px;
+}
+.outlined > .media {
+  background-color: var(--light-grey3);
+  margin-inline: 16px;
+  margin-top: 16px;
+  padding: 16px;
+}
+
+.mediaComponent-div {
+  composes: grid;
+  flex-grow: 1;
+}
+
+.mediaComponent-img {
+  height: 100%;
+  object-fit: contain;
+
+  &:not([src]) {
+    visibility: hidden;
+  }
+}
+
+.mediaOverlay {
+  composes: grid;
+  inset: 0;
+  position: absolute;
+  visibility: hidden;
+
+  &::before {
+    background-color: var(--light-grey12);
+    content: "";
+    inset: 0;
+    opacity: 0.1;
+    position: absolute;
+  }
+}
+.interactive:focus-visible .mediaOverlay,
+.interactive:not([data-disabled]) .mediaOverlay:has(:focus-visible),
+.interactive:not([data-disabled]) .media:hover > .mediaOverlay {
+  visibility: visible;
+}
+
+.nonMedia {
+  composes: flex;
+  align-items: center;
+  box-sizing: border-box;
+  flex-direction: row;
+}
+.solid > .nonMedia {
+  background-color: var(--light-grey1);
+
+  &:not(:first-child) {
+    border-top-color: var(--light-grey6);
+    border-top-style: solid;
+    border-top-width: inherit;
+  }
+}
+
+.actions {
+  composes: nonMedia;
+  height: 48px;
+  justify-content: space-between;
+  order: 1;
+}
+.solid > .actions {
+  padding-left: 12px;
+  padding-right: 8px;
+}
+.outlined > .actions {
+  padding-inline: 16px;
+}
+
+.footer {
+  composes: nonMedia;
+  gap: 8px;
+  height: 60px;
+  order: 2;
+}
+.solid > .footer {
+  padding-inline: 12px;
+}
+.outlined > .footer {
+  padding-inline: 16px;
+}
+
+.footerTexts {
+  composes: column;
+  flex-basis: 0;
+  flex-grow: 1;
+  min-width: 0px;
+  /* Offset `title` and `subtitle` so that they are centered vertically despite
+     having different line heights. */
+  margin-bottom: 4px;
+}
+
+.status {
+  composes: column;
+  height: 24px;
+  inset-inline: 0;
+  justify-content: center;
+  padding-inline: 8px;
+  position: absolute;
+  background-color: var(--purple4);
+  color: var(--purple11);
+}
