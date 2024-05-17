@@ -5242,12 +5242,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:7.5.0-alpha.0, @prismicio/client@npm:^7.5.0-alpha.0":
-  version: 7.5.0-alpha.0
-  resolution: "@prismicio/client@npm:7.5.0-alpha.0"
+"@prismicio/client@npm:7.5.0, @prismicio/client@npm:^7.5.0":
+  version: 7.5.0
+  resolution: "@prismicio/client@npm:7.5.0"
   dependencies:
     imgix-url-builder: ^0.0.4
-  checksum: 979da91d867be96b9869bd7cbeca56b61b83a556a1b3c0eccc5f1f1a0a91186b6b7a76ceb4cd6ba9b0b92346cd7131c7d1825b9e09310ae97ee8bd5a026dd820
+  checksum: d139a7859240e2fa97d0d933ac1424d77d8c0c2a4ed23e2600ef369f13f27028650c4e34a3a51291f5e79f6f0c841980c7403997d128f6669b610cbf4970a95d
   languageName: node
   linkType: hard
 
@@ -5289,14 +5289,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.25-alpha.feat-support-group-in-primary.1":
-  version: 0.4.25-alpha.feat-support-group-in-primary.1
-  resolution: "@prismicio/editor-fields@npm:0.4.25-alpha.feat-support-group-in-primary.1"
+"@prismicio/editor-fields@npm:0.4.27":
+  version: 0.4.27
+  resolution: "@prismicio/editor-fields@npm:0.4.27"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.25-alpha.feat-support-group-in-primary.1
+    "@prismicio/editor-support": 0.4.27
     "@prismicio/richtext": 2.1.1
-    "@prismicio/types-internal": 2.4.0-alpha.6
+    "@prismicio/types-internal": 2.4.1
     "@tiptap/core": 2.3.0
     "@tiptap/extension-bold": 2.3.0
     "@tiptap/extension-bullet-list": 2.3.0
@@ -5325,16 +5325,16 @@ __metadata:
     uuid: 9.0.1
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.25-alpha.feat-support-group-in-primary.1
+    "@prismicio/editor-ui": ^0.4.27
     react: 18
     react-dom: 18
-  checksum: 659a42ade40ae969b2f4f951c6e2281f9860b6b1a8b4a825508590ff4b2240541de02db26eb1c1c784f38fb5e867e03f3fd53f235e5739392bd83f8e589d2641
+  checksum: 3aa57e64537f0dc333ba13d0cea2afab057afa3bbd3893457b2e8d624e3c2a7d9054c8093d964dbff9a8b619e7fa000d4e7b86a5e5cdf07962b484279edc6405
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.25-alpha.feat-support-group-in-primary.1":
-  version: 0.4.25-alpha.feat-support-group-in-primary.1
-  resolution: "@prismicio/editor-support@npm:0.4.25-alpha.feat-support-group-in-primary.1"
+"@prismicio/editor-support@npm:0.4.27":
+  version: 0.4.27
+  resolution: "@prismicio/editor-support@npm:0.4.27"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -5345,16 +5345,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 449ba487d4d0e6a2cd5cb0f0aca0c7e10fee8b43e52352817f06fb52243429e0333445611ff2e9e09598044b52740e0738a41754d3a71f55330a26e5b21634d7
+  checksum: f9c101de387788353de8df69efc69b38ef8b51f2f7f30d15aa5b3d87d7f63f584f61bf5e24b7e96a3e23f21f09c1689bb223cf6fcc31a9508efe5ab6e01c5dbe
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.25-alpha.feat-support-group-in-primary.1":
-  version: 0.4.25-alpha.feat-support-group-in-primary.1
-  resolution: "@prismicio/editor-ui@npm:0.4.25-alpha.feat-support-group-in-primary.1"
+"@prismicio/editor-ui@npm:0.4.27":
+  version: 0.4.27
+  resolution: "@prismicio/editor-ui@npm:0.4.27"
   dependencies:
     "@internationalized/date": 3.5.0
-    "@prismicio/editor-support": 0.4.25-alpha.feat-support-group-in-primary.1
+    "@prismicio/editor-support": 0.4.27
     "@radix-ui/react-avatar": 1.0.4
     "@radix-ui/react-checkbox": 1.0.4
     "@radix-ui/react-dialog": 1.0.5
@@ -5406,7 +5406,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 3f5282bbfa7920fbdc2305c0a330d40480d37c0bc56648a00fe5840fa72f8a162573df8dc0bbfc672a9cab6ff5db3d4e2959bd9c5bd97697f285199b0397c8f9
+  checksum: f0042e8bd941bf56c251f03dc1ce1cce5227a7a60414411449883da65006f06698b116185efa3b8976ed47740efafbfa0c45fb9ea4a1c74668f23c57ee3e2e19
   languageName: node
   linkType: hard
 
@@ -8508,7 +8508,7 @@ __metadata:
   dependencies:
     "@amplitude/experiment-node-server": 1.8.1
     "@antfu/ni": ^0.20.0
-    "@prismicio/client": ^7.5.0-alpha.0
+    "@prismicio/client": ^7.5.0
     "@prismicio/custom-types-client": 1.3.1
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.2.0
@@ -8568,7 +8568,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/plugin-kit@workspace:packages/plugin-kit"
   dependencies:
-    "@prismicio/client": ^7.5.0-alpha.0
+    "@prismicio/client": ^7.5.0
     "@prismicio/mock": 0.2.0
     "@prismicio/types-internal": 2.4.1
     "@size-limit/preset-small-lib": 8.2.4
@@ -14306,7 +14306,7 @@ __metadata:
   dependencies:
     "@headlessui/react": ^1.5.0
     "@heroicons/react": ^1.0.6
-    "@prismicio/client": ^7.5.0-alpha.0
+    "@prismicio/client": ^7.5.0
     "@prismicio/helpers": ^2.3.9
     "@prismicio/next": ^1.1.0
     "@prismicio/react": ^2.6.0
@@ -23999,7 +23999,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "next-upgrade@workspace:e2e-projects/next-upgrade"
   dependencies:
-    "@prismicio/client": ^7.5.0-alpha.0
+    "@prismicio/client": ^7.5.0
     "@prismicio/next": ^1.3.6
     "@prismicio/react": ^2.7.3
     "@slicemachine/adapter-next": "workspace:*"
@@ -30228,10 +30228,10 @@ __metadata:
   dependencies:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
-    "@prismicio/client": 7.5.0-alpha.0
-    "@prismicio/editor-fields": 0.4.25-alpha.feat-support-group-in-primary.1
-    "@prismicio/editor-support": 0.4.25-alpha.feat-support-group-in-primary.1
-    "@prismicio/editor-ui": 0.4.25-alpha.feat-support-group-in-primary.1
+    "@prismicio/client": 7.5.0
+    "@prismicio/editor-fields": 0.4.27
+    "@prismicio/editor-support": 0.4.27
+    "@prismicio/editor-ui": 0.4.27
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.2.0
     "@prismicio/simulator": 0.1.4
@@ -31506,7 +31506,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "sveltekit@workspace:e2e-projects/sveltekit"
   dependencies:
-    "@prismicio/client": ^7.5.0-alpha.0
+    "@prismicio/client": ^7.5.0
     "@prismicio/svelte": ^0.0.11
     "@slicemachine/adapter-sveltekit": "workspace:*"
     "@sveltejs/adapter-auto": ^3.0.0
