@@ -34,6 +34,8 @@ export const SegmentEventType = {
 	devCollab_setUpWorkflowOpened: "dev-collab:set-up-workflow-opened",
 	devCollab_workflowStubDisplayed: "dev-collab:workflow-stub-displayed",
 	sliceMachine_start: "slice-machine:start",
+	sliceLibrary_beta_modalOpened: "slice-library:beta:modal-opened",
+	sliceLibrary_beta_codeOpened: "slice-library:beta:code-opened",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -77,6 +79,10 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.devCollab_workflowStubDisplayed]:
 		"SliceMachine Dev Collab Workflow Stub Displayed",
 	[SegmentEventType.sliceMachine_start]: "SliceMachine Start",
+	[SegmentEventType.sliceLibrary_beta_modalOpened]:
+		"SliceMachine Slice Library [BETA} CTA modal displayed",
+	[SegmentEventType.sliceLibrary_beta_codeOpened]:
+		"SliceMachine Slice Library [BETA} CTA example code opened",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -311,6 +317,14 @@ type SliceMachineStart = SegmentEvent<
 	}
 >;
 
+type SliceLibraryBetaModalOpened = SegmentEvent<
+	typeof SegmentEventType.sliceLibrary_beta_modalOpened
+>;
+
+type SliceLibraryBetaCodeOpened = SegmentEvent<
+	typeof SegmentEventType.sliceLibrary_beta_codeOpened
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -339,4 +353,6 @@ export type SegmentEvents =
 	| DevCollabJoinBetaClicked
 	| DevCollabSetUpWorkflowOpened
 	| DevCollabWorkflowStubDisplayed
-	| SliceMachineStart;
+	| SliceMachineStart
+	| SliceLibraryBetaModalOpened
+	| SliceLibraryBetaCodeOpened;
