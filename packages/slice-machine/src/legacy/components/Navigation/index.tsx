@@ -1,7 +1,7 @@
 import { Box } from "@prismicio/editor-ui";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type FC, Suspense } from "react";
+import { type FC, Suspense, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { telemetry } from "@/apiClient";
@@ -17,16 +17,18 @@ import { ErrorBoundary } from "@/ErrorBoundary";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
+import { useAdapterName } from "@/hooks/useAdapterName";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
-import { MathPlusIcon } from "@/icons/MathPlusIcon";
+import { MasterSliceLibraryIcon } from "@/icons/MasterSliceLibraryIcon";
 import { SettingsIcon } from "@/icons/SettingsIcon";
 import VideoItem from "@/legacy/components/Navigation/VideoItem";
 import { userHasSeenTutorialsToolTip } from "@/modules/userContext";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
 
+import { SliceLibraryPreviewModal } from "../SliceLibraryPreviewModal";
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
 import styles from "./index.module.css";
@@ -34,6 +36,7 @@ import { RunningVersion } from "./RunningVersion";
 import { UpdateBox } from "./UpdateBox";
 
 const Navigation: FC = () => {
+  const adapter = useAdapterName();
   const { hasSeenTutorialsToolTip } = useSelector(
     (store: SliceMachineStoreType) => ({
       hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
@@ -44,6 +47,9 @@ const Navigation: FC = () => {
   const { repositoryName, repositoryDomain, repositoryUrl } =
     useRepositoryInformation();
   const gitIntegrationExperiment = useGitIntegrationExperiment();
+  const [isSliceLibraryDialogOpen, setIsSliceLibraryDialogOpen] =
+    useState<boolean>(false);
+  const showSliceLibraryPreview = adapter == "@slicemachine/adapter-next";
 
   return (
     <SideNav>
@@ -118,19 +124,31 @@ const Navigation: FC = () => {
       </ErrorBoundary>
 
       <SideNavList position="bottom">
-        <SideNavListItem>
-          <SideNavLink
-            title="Invite team"
-            href={`${repositoryUrl}/settings/users`}
-            Icon={MathPlusIcon}
-            onClick={() => {
-              void telemetry.track({
-                event: "users-invite-button-clicked",
-              });
-            }}
-            target="_blank"
-          />
-        </SideNavListItem>
+        {showSliceLibraryPreview && (
+          <SideNavListItem>
+            <SliceLibraryPreviewModal
+              isOpen={isSliceLibraryDialogOpen}
+              onClose={() => {
+                setIsSliceLibraryDialogOpen(false);
+              }}
+            />
+            <SideNavLink
+              title="Master Slice Library"
+              href={"/"}
+              Icon={MasterSliceLibraryIcon}
+              onClick={(e) => {
+                void telemetry.track({
+                  event: "slice-library:beta:modal-opened",
+                });
+
+                setIsSliceLibraryDialogOpen(true);
+
+                // We don't want it to actually navigate anywhere, but `href` is required
+                e.preventDefault();
+              }}
+            />
+          </SideNavListItem>
+        )}
 
         <ErrorBoundary>
           <Suspense>
