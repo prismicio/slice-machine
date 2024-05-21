@@ -1,6 +1,6 @@
 import { Text } from "@prismicio/editor-ui";
-import type { CSSProperties, FC, PropsWithChildren, ReactNode } from "react";
 import clsx from "clsx";
+import type { CSSProperties, FC, PropsWithChildren, ReactNode } from "react";
 
 import styles from "./List.module.css";
 
