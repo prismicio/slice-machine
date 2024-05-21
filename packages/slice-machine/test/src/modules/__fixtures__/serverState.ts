@@ -1,4 +1,4 @@
-import ServerState from "@models/server/ServerState";
+import ServerState from "@/legacy/lib/models/server/ServerState";
 
 export const dummyServerState: Pick<
   ServerState,
@@ -21,8 +21,8 @@ export const dummyServerState: Pick<
       PrismicUser: "https://user-service.prismic.io/",
       AwsAclProvider:
         "https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
-      PrismicOembed: "https://oembed.prismic.io",
-      PrismicUnsplash: "https://unsplash.prismic.io",
+      PrismicEmbed: "https://oembed.prismic.io",
+      PrismicUnsplash: "https://unsplash.prismic.io/",
       SliceMachineV1: "https://sm-api.prismic.io/v1/",
     },
     shortId: "shortId",

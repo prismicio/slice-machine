@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from "react";
 
-import { FlowerBackgroundIcon } from "@src/icons/FlowerBackgroundIcon";
+import { FlowerBackgroundIcon } from "@/icons/FlowerBackgroundIcon";
 
 import styles from "./Count.module.css";
 

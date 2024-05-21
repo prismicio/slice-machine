@@ -6,16 +6,15 @@ import {
   DialogHeader,
   FormInput,
   Text,
-  TextLink,
 } from "@prismicio/editor-ui";
 import type { GitRepo, GitRepoSpecifier } from "@slicemachine/manager";
 import { Formik } from "formik";
 import type { FC, ReactNode } from "react";
 import { toast } from "react-toastify";
 
-import { gitProviderToConfig } from "@src/features/settings/git/GitProvider";
-import { useWriteAPIToken } from "@src/features/settings/git/useWriteAPIToken";
-import { useRepositoryInformation } from "@src/hooks/useRepositoryInformation";
+import { gitProviderToConfig } from "@/features/settings/git/GitProvider";
+import { useWriteAPIToken } from "@/features/settings/git/useWriteAPIToken";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 
 type GitRepositoryConnectDialogProps = {
   linkRepo: (repo: GitRepoSpecifier) => Promise<void>;
@@ -71,11 +70,9 @@ export const GitRepositoryConnectDialog: FC<
               <DialogActions
                 cancel={{ text: "Cancel" }}
                 link={
-                  <TextLink
-                    href={new URL("/settings/apps", repositoryUrl).href}
-                  >
+                  <Text href={new URL("/settings/apps", repositoryUrl).href}>
                     Create a Prismic Write API token
-                  </TextLink>
+                  </Text>
                 }
                 ok={{
                   disabled: !formikProps.isValid,

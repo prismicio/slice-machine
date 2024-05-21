@@ -9,9 +9,9 @@ import {
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { AddPhotoAlternateIcon } from "@src/icons/AddPhotoAlternateIcon";
-import { ArrowDropDownIcon } from "@src/icons/ArrowDropDownIcon";
-import { SyncAltIcon } from "@src/icons/SyncAltIcon";
+import { AddPhotoAlternateIcon } from "@/icons/AddPhotoAlternateIcon";
+import { ArrowDropDownIcon } from "@/icons/ArrowDropDownIcon";
+import { SyncAltIcon } from "@/icons/SyncAltIcon";
 
 import { Card, CardActions, CardFooter, CardMedia, CardStatus } from "./Card";
 

@@ -7,7 +7,7 @@ export type APIEndpoints = {
 	PrismicModels: string;
 	PrismicUser: string;
 	AwsAclProvider: string;
-	PrismicOembed: string;
+	PrismicEmbed: string;
 	PrismicUnsplash: string;
 	SliceMachineV1: string;
 };
@@ -23,11 +23,11 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				PrismicModels: addTrailingSlash(process.env.customtypesapi_endpoint),
 				PrismicUser: addTrailingSlash(process.env.user_service_endpoint),
 				AwsAclProvider: addTrailingSlash(process.env.acl_provider_endpoint),
-				PrismicOembed: removeTrailingSlash(
+				PrismicEmbed: removeTrailingSlash(
 					process.env.oembed_endpoint ?? "https://oembed.wroom.io",
 				),
-				PrismicUnsplash: removeTrailingSlash(
-					process.env.unsplash_endpoint ?? "https://unsplash.wroom.io",
+				PrismicUnsplash: addTrailingSlash(
+					process.env.unsplash_endpoint ?? "https://unsplash.wroom.io/",
 				),
 				SliceMachineV1: addTrailingSlash(
 					process.env.slice_machine_v1_endpoint ??
@@ -77,8 +77,8 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicUser: "https://user-service.wroom.io/",
 				AwsAclProvider:
 					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
-				PrismicOembed: "https://oembed.wroom.io",
-				PrismicUnsplash: "https://unsplash.wroom.io",
+				PrismicEmbed: "https://oembed.wroom.io",
+				PrismicUnsplash: "https://unsplash.wroom.io/",
 				SliceMachineV1:
 					"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
 			};
@@ -93,8 +93,8 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicUser: "https://user-service.prismic.io/",
 				AwsAclProvider:
 					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
-				PrismicOembed: "https://oembed.prismic.io",
-				PrismicUnsplash: "https://unsplash.prismic.io",
+				PrismicEmbed: "https://oembed.prismic.io",
+				PrismicUnsplash: "https://unsplash.prismic.io/",
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",
 			};
 		}

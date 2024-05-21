@@ -20,14 +20,14 @@
 				<PrismicRichText field={slice.primary.eyebrowHeadline} />
 			</div>
 		{/if}
-		{#if slice.items.length > 0}
+		{#if slice.primary.logos.length > 0}
 			<ul class="es-customer-logos__logos">
-				{#each slice.items as item}
-					{#if isFilled.image(item.image)}
+				{#each slice.primary.logos as logo}
+					{#if isFilled.image(logo.image)}
 						<li class="es-customer-logos__logo">
-							<PrismicLink field={item.link}>
+							<PrismicLink field={logo.link}>
 								<PrismicImage
-									field={item.image}
+									field={logo.image}
 									class="es-customer-logos__logo__link__image"
 									height="26"
 									width="160"

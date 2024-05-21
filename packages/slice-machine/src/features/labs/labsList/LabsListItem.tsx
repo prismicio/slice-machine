@@ -1,5 +1,5 @@
+import { Box, Card, Icon, Switch, Text } from "@prismicio/editor-ui";
 import { type FC, type PropsWithChildren } from "react";
-import { Switch, Box, Card, Icon, Text } from "@prismicio/editor-ui";
 
 type LabsListItemProps = PropsWithChildren<{
   title: string;

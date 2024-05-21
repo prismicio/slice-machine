@@ -1,7 +1,8 @@
 import { useState } from "react";
-import useSliceMachineActions from "@src/modules/useSliceMachineActions";
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { SliceVariationSelector } from "@components/ScreenshotChangesModal";
+
+import { SliceVariationSelector } from "@/legacy/components/ScreenshotChangesModal";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 type ModalPayload = {
   sliceFilterFn: (s: ComponentUI[]) => ComponentUI[];
@@ -9,7 +10,7 @@ type ModalPayload = {
   onUploadSuccess?: (newSlice: ComponentUI) => void;
 };
 
-type Payload = {
+export type Payload = {
   modalPayload: ModalPayload;
   onOpenModal: (p: ModalPayload) => void;
 };

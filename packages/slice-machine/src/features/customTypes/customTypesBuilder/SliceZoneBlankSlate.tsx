@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { ActionList, ActionListItem, Badge, Box } from "@prismicio/editor-ui";
+import { FC } from "react";
 
 import {
   BlankSlate,
@@ -7,8 +7,8 @@ import {
   BlankSlateContent,
   BlankSlateDescription,
   BlankSlateTitle,
-} from "@src/components/BlankSlate";
-import { SliceMachinePrinterIcon } from "@src/icons/SliceMachinePrinterIcon";
+} from "@/components/BlankSlate";
+import { SliceMachinePrinterIcon } from "@/icons/SliceMachinePrinterIcon";
 
 export type SliceZoneBlankSlateProps = {
   openUpdateSliceZoneModal: () => void;

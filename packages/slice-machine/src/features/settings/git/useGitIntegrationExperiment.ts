@@ -1,4 +1,4 @@
-import { useExperimentVariant } from "@src/hooks/useExperimentVariant";
+import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 
 type UseGitIntegrationExperimentReturnType = { eligible: boolean };
 

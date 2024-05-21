@@ -1,0 +1,46 @@
+.block {
+  all: unset;
+  box-sizing: border-box;
+  font-family: var(--font-family-body);
+}
+
+.blockWithDisplayRevert {
+  composes: block;
+  display: revert;
+}
+
+.root {
+  composes: blockWithDisplayRevert;
+  border-width: 1px;
+  border-radius: 6px;
+  border-style: solid;
+  border-color: var(--grey6);
+}
+
+.header {
+  composes: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  background-color: var(--grey2);
+  border-bottom-color: var(--grey6);
+  padding-block: 4px;
+  padding-right: 4px;
+}
+
+.fileInfo {
+  composes: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fileName {
+  composes: blockWithDisplayRevert;
+  font-size: calc(14rem / 16);
+  line-height: calc(32rem / 16);
+}

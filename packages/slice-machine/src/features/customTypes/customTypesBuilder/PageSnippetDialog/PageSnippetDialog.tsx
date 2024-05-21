@@ -1,15 +1,15 @@
-import { FC, Suspense } from "react";
 import { Button, Dialog, DialogHeader, ScrollArea } from "@prismicio/editor-ui";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import { FC, Suspense } from "react";
 
-import { ContentTabs } from "@src/components/ContentTabs";
-import { MarkdownRenderer } from "@src/features/documentation/MarkdownRenderer";
-import { useDocumentation } from "@src/features/documentation/useDocumentation";
+import { telemetry } from "@/apiClient";
+import { ContentTabs } from "@/components/ContentTabs";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import { MarkdownRenderer } from "@/features/documentation/MarkdownRenderer";
+import { useDocumentation } from "@/features/documentation/useDocumentation";
+import { useAdapterName } from "@/hooks/useAdapterName";
 
-import * as styles from "./PageSnippetDialog.css";
-import { telemetry } from "@src/apiClient";
-import { useAdapterName } from "@src/hooks/useAdapterName";
-import { ErrorBoundary } from "@src/ErrorBoundary";
+import styles from "./PageSnippetDialog.module.css";
 
 type PageSnippetContentProps = { model: CustomType };
 

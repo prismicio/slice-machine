@@ -1,7 +1,7 @@
-import { FC } from "react";
 import { Box, Icon, ProgressCircle, Text } from "@prismicio/editor-ui";
+import { FC } from "react";
 
-import { ActionQueueStatus } from "@src/hooks/useActionQueue";
+import { ActionQueueStatus } from "@/hooks/useActionQueue";
 
 type AutoSaveStatusIndicatorProps = {
   status: ActionQueueStatus;

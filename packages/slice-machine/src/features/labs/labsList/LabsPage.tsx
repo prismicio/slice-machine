@@ -1,17 +1,17 @@
-import { type FC, ReactNode, Suspense } from "react";
-import { Box, ProgressCircle, DefaultErrorMessage } from "@prismicio/editor-ui";
+import { Box, DefaultErrorMessage, ProgressCircle } from "@prismicio/editor-ui";
 import Head from "next/head";
+import { type FC, ReactNode, Suspense } from "react";
 
+import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { ErrorBoundary } from "@/ErrorBoundary";
 import {
   AppLayout,
   AppLayoutBreadcrumb,
   AppLayoutContent,
   AppLayoutHeader,
-} from "@components/AppLayout";
-import { ErrorBoundary } from "@src/ErrorBoundary";
+} from "@/legacy/components/AppLayout";
 
 import { LabsList } from "./LabsList";
-import { BreadcrumbItem } from "@src/components/Breadcrumb";
 
 export const LabsPage: FC = () => {
   return (

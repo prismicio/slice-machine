@@ -1,7 +1,6 @@
-import { TestContext } from "vitest";
-import { rest } from "msw";
-
 import { PrismicUserProfile } from "@slicemachine/manager";
+import { rest } from "msw";
+import { TestContext } from "vitest";
 
 type MockPrismicUserAPIConfig = {
   endpoint?: string;

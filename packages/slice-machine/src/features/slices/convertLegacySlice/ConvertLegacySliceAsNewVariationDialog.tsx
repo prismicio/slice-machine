@@ -1,22 +1,22 @@
-import { useState, type FC } from "react";
-import { Formik } from "formik";
-import { camelCase } from "lodash";
 import {
   Box,
   Dialog,
   DialogActions,
   DialogContent,
   DialogHeader,
-  ScrollArea,
   FormInput,
-  Text,
+  ScrollArea,
   Select,
   SelectItem,
+  Text,
 } from "@prismicio/editor-ui";
+import { Formik } from "formik";
+import { camelCase } from "lodash";
+import { type FC, useState } from "react";
 
-import { LibraryUI } from "@models/common/LibraryUI";
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 
-import * as styles from "./ConvertLegacySliceButton.css";
+import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";
 
 type FormValues = {

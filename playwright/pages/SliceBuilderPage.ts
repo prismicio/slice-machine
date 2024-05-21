@@ -82,8 +82,18 @@ export class SliceBuilderPage extends BuilderPage {
     });
   }
 
-  getListItem(fieldId: string, zoneType: ZoneType) {
+  getListItem<TZoneType extends ZoneType>(
+    fieldId: string,
+    zoneType: TZoneType,
+    groupFieldId?: TZoneType extends "static" ? string : never,
+  ) {
     if (zoneType === "static") {
+      if (groupFieldId) {
+        return this.page
+          .getByTestId("static-zone-content")
+          .getByTestId(`list-item-group-${groupFieldId}-${fieldId}`);
+      }
+
       return this.page
         .getByTestId("static-zone-content")
         .getByTestId(`list-item-${fieldId}`);
@@ -94,30 +104,57 @@ export class SliceBuilderPage extends BuilderPage {
       .getByTestId(`list-item-${fieldId}`);
   }
 
-  getListItemFieldName(fieldId: string, fieldName: string, zoneType: ZoneType) {
-    return this.getListItem(fieldId, zoneType)
+  getListItemFieldName<TZoneType extends ZoneType>(
+    fieldId: string,
+    fieldName: string,
+    zoneType: TZoneType,
+    groupFieldId?: TZoneType extends "static" ? string : never,
+  ) {
+    return this.getListItem(fieldId, zoneType, groupFieldId)
       .getByTestId("field-name")
       .getByText(fieldName, { exact: true });
   }
 
-  getEditFieldButton(fieldId: string, zoneType: ZoneType) {
-    return this.getListItem(fieldId, zoneType).getByRole("button", {
-      name: "Edit field",
-      exact: true,
-    });
+  getEditFieldButton<TZoneType extends ZoneType>(
+    fieldId: string,
+    zoneType: TZoneType,
+    groupFieldId?: TZoneType extends "static" ? string : never,
+  ) {
+    return this.getListItem(fieldId, zoneType, groupFieldId).getByRole(
+      "button",
+      {
+        name: "Edit field",
+        exact: true,
+      },
+    );
   }
 
-  getFieldMenuButton(fieldId: string, zoneType: ZoneType) {
-    return this.getListItem(fieldId, zoneType).getByTestId("field-menu-button");
+  getFieldMenuButton<TZoneType extends ZoneType>(
+    fieldId: string,
+    zoneType: TZoneType,
+    groupFieldId?: TZoneType extends "static" ? string : never,
+  ) {
+    return this.getListItem(fieldId, zoneType, groupFieldId).getByTestId(
+      "field-menu-button",
+    );
   }
 
-  getListItemFieldId(fieldId: string, zoneType: ZoneType) {
+  getListItemFieldId<TZoneType extends ZoneType>(
+    fieldId: string,
+    zoneType: TZoneType,
+    groupFieldId?: TZoneType extends "static" ? string : never,
+  ) {
     let fieldSubId;
-
     if (zoneType === "static") {
       fieldSubId = "primary";
     } else {
       fieldSubId = "items[i]";
+    }
+
+    if (groupFieldId) {
+      return this.getListItem(fieldId, zoneType, groupFieldId)
+        .getByTestId("field-id")
+        .getByText(`item.${fieldId}`, { exact: true });
     }
 
     return this.getListItem(fieldId, zoneType)
@@ -154,16 +191,23 @@ export class SliceBuilderPage extends BuilderPage {
     await this.addVariationButton.click();
   }
 
-  async addField(args: {
+  async addField<TZoneType extends ZoneType>(args: {
     type: FieldTypeLabel;
     name: string;
     expectedId: string;
-    zoneType: ZoneType;
+    zoneType: TZoneType;
+    groupFieldId?: TZoneType extends "static" ? string : never;
   }) {
-    const { type, name, expectedId, zoneType } = args;
+    const { type, name, expectedId, zoneType, groupFieldId } = args;
 
     if (zoneType === "static") {
-      await this.staticZoneAddFieldButton.click();
+      if (groupFieldId) {
+        await this.getListItem(groupFieldId, zoneType)
+          .getByRole("button", { name: "Add Field", exact: true })
+          .click();
+      } else {
+        await this.staticZoneAddFieldButton.click();
+      }
     } else {
       await this.repeatableZoneAddFieldButton.click();
     }
@@ -176,13 +220,21 @@ export class SliceBuilderPage extends BuilderPage {
     await expect(this.addFieldDialog.title).not.toBeVisible();
   }
 
-  async deleteField(fieldId: string, zoneType: ZoneType) {
-    await this.getFieldMenuButton(fieldId, zoneType).click();
+  async deleteField<TZoneType extends ZoneType>(
+    fieldId: string,
+    zoneType: TZoneType,
+    groupFieldId?: TZoneType extends "static" ? string : never,
+  ) {
+    await this.getFieldMenuButton(fieldId, zoneType, groupFieldId).click();
     await this.page.getByRole("menuitem", { name: "Delete field" }).click();
   }
 
-  async copyCodeSnippet(fieldId: string, zoneType: ZoneType) {
-    await this.getListItem(fieldId, zoneType)
+  async copyCodeSnippet<TZoneType extends ZoneType>(
+    fieldId: string,
+    zoneType: TZoneType,
+    groupFieldId?: TZoneType extends "static" ? string : never,
+  ) {
+    await this.getListItem(fieldId, zoneType, groupFieldId)
       .getByRole("button", {
         name: "Copy code snippet",
         exact: true,
@@ -196,13 +248,13 @@ export class SliceBuilderPage extends BuilderPage {
     expect(clipboardContent).toContain(fieldId);
 
     await expect(
-      this.getListItem(fieldId, zoneType).getByRole("button", {
+      this.getListItem(fieldId, zoneType, groupFieldId).getByRole("button", {
         name: "Code snippet copied",
         exact: true,
       }),
     ).toBeVisible();
     await expect(
-      this.getListItem(fieldId, zoneType).getByRole("button", {
+      this.getListItem(fieldId, zoneType, groupFieldId).getByRole("button", {
         name: "Copy code snippet",
         exact: true,
       }),

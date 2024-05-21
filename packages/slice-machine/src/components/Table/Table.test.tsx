@@ -2,14 +2,14 @@
 
 import { describe, test, vi } from "vitest";
 
+import { render, screen } from "@/../test/__testutils__";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-} from "@src/components/Table";
-import { render, screen } from "test/__testutils__";
+} from "@/components/Table";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
 vi.mock("next/router", () => require("next-router-mock"));

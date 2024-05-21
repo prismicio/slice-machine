@@ -1,14 +1,14 @@
 import {
+  createContext,
   Dispatch,
   FC,
   PropsWithChildren,
   SetStateAction,
-  createContext,
   useContext,
   useMemo,
 } from "react";
 
-import { usePersistedState } from "@src/hooks/usePersistedState";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 type InAppGuideContextValue = {
   isInAppGuideOpen: boolean;

@@ -22,15 +22,15 @@ const PascalNameToReplace = ({ slice }) => {
 						<PrismicRichText field={slice.primary.eyebrowHeadline} />
 					</div>
 				)}
-				{slice.items.length > 0 && (
+				{slice.primary.logos.length > 0 && (
 					<ul className="es-customer-logos__logos">
-						{slice.items.map(
-							(item) =>
-								isFilled.image(item.image) && (
-									<li key={item.image.url} className="es-customer-logos__logo">
-										<PrismicNextLink field={item.link}>
+						{slice.primary.logos.map(
+							(logo) =>
+								isFilled.image(logo.image) && (
+									<li key={logo.image.url} className="es-customer-logos__logo">
+										<PrismicNextLink field={logo.link}>
 											<PrismicNextImage
-												field={item.image}
+												field={logo.image}
 												height={26}
 												width={160}
 												className="es-customer-logos__logo__link__image"

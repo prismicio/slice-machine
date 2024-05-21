@@ -208,6 +208,23 @@ test("I can see and copy the code snippets", async ({
   await pageTypesBuilderPage.copyCodeSnippet("my_rich_text");
 });
 
+test("I can see and copy the code snippets for groups", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+
+  await expect(pageTypesBuilderPage.codeSnippetsFieldSwitch).not.toBeChecked();
+  await pageTypesBuilderPage.codeSnippetsFieldSwitch.click();
+  await expect(pageTypesBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
+  await pageTypesBuilderPage.copyCodeSnippet("my_group");
+});
+
 test("I cannot delete default UID field for reusable page type", async ({
   pageTypesBuilderPage,
   reusablePageType,

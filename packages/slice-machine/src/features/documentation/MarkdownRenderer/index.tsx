@@ -1,15 +1,14 @@
-import { FC } from "react";
-import remarkGfm from "remark-gfm";
-import ReactMarkdown from "react-markdown";
-
-import { CodeBlock } from "@src/components/CodeBlock";
-import type { CodeProps } from "react-markdown/lib/ast-to-react";
-
 import { Text } from "@prismicio/editor-ui";
+import { FC } from "react";
+import ReactMarkdown from "react-markdown";
+import type { CodeProps } from "react-markdown/lib/ast-to-react";
+import remarkGfm from "remark-gfm";
 
-import * as styles from "./MarkdownRenderer.css";
-import { useAdapterName } from "@src/hooks/useAdapterName";
-import { telemetry } from "@src/apiClient";
+import { telemetry } from "@/apiClient";
+import { CodeBlock } from "@/components/CodeBlock";
+import { useAdapterName } from "@/hooks/useAdapterName";
+
+import styles from "./MarkdownRenderer.module.css";
 
 type MarkdownRenderer = FC<{
   markdown: string;

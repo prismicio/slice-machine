@@ -1,8 +1,10 @@
+import type { UrlObject } from "node:url";
+
 import { findFocusableAncestor } from "@prismicio/editor-support/DOM";
 import { Text } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
-import type { UrlObject } from "node:url";
 import {
+  createElement,
   type CSSProperties,
   type FC,
   type HTMLAttributes,
@@ -10,17 +12,16 @@ import {
   type MouseEvent,
   type PropsWithChildren,
   type ReactNode,
-  createElement,
 } from "react";
 
-import * as styles from "./Card.css";
+import styles from "./Card.module.css";
 
 type CardProps = PropsWithChildren<
   {
     checked?: boolean;
-    size?: keyof typeof styles.size;
+    size?: "small" | "medium";
     style?: CSSProperties;
-    variant?: keyof typeof styles.variant;
+    variant?: "solid" | "outlined";
   } & (
     | // Props for rendering a non-interactive `div` element.
     NarrowedCardProps<{ interactive?: false }>
@@ -76,9 +77,8 @@ export const Card: FC<CardProps> = (props) => {
   } = props;
   const elementProps = {
     ...otherProps,
-    className: clsx(styles.root, styles.size[size], styles.variant[variant], {
+    className: clsx(styles.root, styles[`size-${size}`], styles[variant], {
       [styles.interactive]: props.interactive,
-      [styles.interactiveVariant[variant]]: props.interactive,
     }),
     "data-state": checked === true ? "checked" : undefined,
   };
@@ -129,7 +129,7 @@ export const CardMedia: FC<CardMediaProps> = ({
   <div className={styles.media}>
     {createElement(component, {
       ...otherProps,
-      className: clsx(styles.mediaComponent[component], className),
+      className: clsx(styles[`mediaComponent-${component}`], className),
     })}
     {Boolean(overlay) ? (
       <div className={styles.mediaOverlay}>{overlay}</div>

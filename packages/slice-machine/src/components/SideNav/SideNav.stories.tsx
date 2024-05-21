@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { RadarIcon } from "@src/icons/RadarIcon";
-import { LightningIcon } from "@src/icons/Lightning";
+import { LightningIcon } from "@/icons/Lightning";
+import { RadarIcon } from "@/icons/RadarIcon";
 
 import { PageLayout, PageLayoutPane } from "../PageLayout";
 import {
+  RightElement,
   SideNav,
+  SideNavLink,
   SideNavList,
   SideNavListItem,
-  SideNavLink,
-  SideNavSeparator,
   SideNavListTitle,
-  UpdateInfo,
   SideNavRepository,
-  RightElement,
+  SideNavSeparator,
+  UpdateInfo,
 } from "./SideNav";
 import { SideNavEnvironmentSelector } from "./SideNavEnvironmentSelector";
 

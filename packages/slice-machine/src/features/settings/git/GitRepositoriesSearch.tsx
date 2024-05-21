@@ -1,14 +1,14 @@
 import type { GitOwner } from "@slicemachine/manager";
 import { type FC, Suspense, useState } from "react";
 
-import { FieldSetContent, FieldSetHeader } from "@src/components/FieldSet";
-import { ConnectGitRepositoryBlankSlate } from "@src/features/settings/git/ConnectGitRepositoryBlankSlate";
-import { GitOwnerSelect } from "@src/features/settings/git/GitOwnerSelect";
+import { FieldSetContent, FieldSetHeader } from "@/components/FieldSet";
+import { ConnectGitRepositoryBlankSlate } from "@/features/settings/git/ConnectGitRepositoryBlankSlate";
+import { GitOwnerSelect } from "@/features/settings/git/GitOwnerSelect";
 import {
   GitRepositoriesList,
   GitRepositoriesListSkeleton,
-} from "@src/features/settings/git/GitRepositoriesList";
-import { useGitRepos } from "@src/features/settings/git/useGitRepos";
+} from "@/features/settings/git/GitRepositoriesList";
+import { useGitRepos } from "@/features/settings/git/useGitRepos";
 
 type GitRepositoriesSearchProps = { owners: GitOwner[] };
 

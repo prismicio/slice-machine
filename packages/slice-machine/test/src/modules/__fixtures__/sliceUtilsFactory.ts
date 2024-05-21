@@ -1,6 +1,6 @@
-import { ComponentUI } from "@lib/models/common/ComponentUI";
-import { LibraryUI } from "@lib/models/common/LibraryUI";
-import { SliceSM } from "@lib/models/common/Slice";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { SliceSM } from "@/legacy/lib/models/common/Slice";
 
 const DEFAULT_SLICE_SM: SliceSM = {
   id: "blog_section_three_column_cards",

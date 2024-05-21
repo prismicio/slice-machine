@@ -55,9 +55,9 @@ const PascalNameToReplace = ({
 							</div>
 						)}
 					</div>
-					{slice.items.length > 0 && (
+					{slice.primary.items.length > 0 && (
 						<div className="es-alternate-grid__primary-content__items">
-							{slice.items.map((item, i) => (
+							{slice.primary.items.map((item, i) => (
 								<div key={`item-${i + 1}`} className="es-alternate-grid__item">
 									{isFilled.richText(item.title) && (
 										<div className="es-alternate-grid__item__heading">

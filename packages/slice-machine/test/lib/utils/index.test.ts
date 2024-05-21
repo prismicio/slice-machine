@@ -1,5 +1,6 @@
-import { describe, test, expect } from "vitest";
-import { slugify } from "@lib/utils/str";
+import { describe, expect, test } from "vitest";
+
+import { slugify } from "@/legacy/lib/utils/str";
 
 describe("slugify", () => {
   test("returns the same string if valid", () => {

@@ -1,16 +1,18 @@
-import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
-import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
-import { FormData } from "formdata-polyfill/esm.min";
-import { setupServer, SetupServer } from "msw/node";
-import { cleanup } from "@testing-library/react";
-import { createMockFactory, MockFactory } from "@prismicio/mock";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import * as os from "node:os";
+import "@testing-library/jest-dom";
 
+import * as fs from "node:fs/promises";
+import * as os from "node:os";
+import * as path from "node:path";
+
+import { createMockFactory, MockFactory } from "@prismicio/mock";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
-import "@testing-library/jest-dom";
+import { cleanup } from "@testing-library/react";
+import { FormData } from "formdata-polyfill/esm.min";
+import { SetupServer, setupServer } from "msw/node";
+import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
+
 import pkg from "../package.json";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";

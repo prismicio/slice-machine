@@ -1,10 +1,10 @@
-import { useMediaQuery } from "@prismicio/editor-support/React";
-import { Tooltip, breakpoints } from "@prismicio/editor-ui";
-import { clsx } from "clsx";
 import type { UrlObject } from "node:url";
+
+import { Tooltip, useMediaQuery } from "@prismicio/editor-ui";
+import { clsx } from "clsx";
 import {
-  forwardRef,
   type FC,
+  forwardRef,
   type HTMLAttributes,
   type LiHTMLAttributes,
   type MouseEvent,
@@ -13,8 +13,8 @@ import {
   type SVGProps,
 } from "react";
 
-import { LogoIcon } from "@src/icons/LogoIcon";
-import OpenIcon from "@src/icons/OpenIcon";
+import { LogoIcon } from "@/icons/LogoIcon";
+import OpenIcon from "@/icons/OpenIcon";
 
 import { Divider } from "../Divider";
 import styles from "./SideNav.module.css";
@@ -118,9 +118,9 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   component: Comp = "a",
   ...otherProps
 }) => {
-  const isSmall = useMediaQuery(breakpoints.small);
+  const visible = useMediaQuery({ max: "medium" });
   return (
-    <Tooltip content={title} side="right" visible={isSmall}>
+    <Tooltip content={title} side="right" visible={visible}>
       <Comp {...otherProps} className={styles.link} data-active={active}>
         <Icon className={styles.linkIcon} />
         <div className={styles.linkContent}>
