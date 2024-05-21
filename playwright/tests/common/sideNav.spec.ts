@@ -205,7 +205,9 @@ test('I can open a modal describing Master Slice Libraries by clicking the "Mast
   await expect(sliceMachinePage.menu.masterSliceLibraryButton).toBeVisible();
 
   const modal = sliceMachinePage.page.getByRole("dialog");
-  const modalHeader = modal.getByText("Master Slice Library Generator", { exact: true });
+  const modalHeader = modal.getByText("Master Slice Library Generator", {
+    exact: true,
+  });
   await sliceMachinePage.menu.masterSliceLibraryButton.click();
   await expect(modalHeader).toBeVisible();
 
@@ -214,7 +216,7 @@ test('I can open a modal describing Master Slice Libraries by clicking the "Mast
     exact: false,
   });
   const newExampleTabPromise = sliceMachinePage.page.waitForEvent("popup");
-  
+
   await exampleLink.click();
 
   const newExampleTab = await newExampleTabPromise;
@@ -224,9 +226,9 @@ test('I can open a modal describing Master Slice Libraries by clicking the "Mast
     "https://slicify-app.vercel.app/slice-library",
   );
 
-  const codeLink = modal.getByText("Get the code", { exact: true, });
+  const codeLink = modal.getByText("Get the code", { exact: true });
   const newCodeTabPromise = sliceMachinePage.page.waitForEvent("popup");
-  
+
   await codeLink.click();
 
   const newCodeTab = await newCodeTabPromise;
