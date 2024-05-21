@@ -80,9 +80,9 @@ export const HumanSegmentEventType = {
 		"SliceMachine Dev Collab Workflow Stub Displayed",
 	[SegmentEventType.sliceMachine_start]: "SliceMachine Start",
 	[SegmentEventType.sliceLibrary_beta_modalOpened]:
-		"SliceMachine Slice Library [BETA} CTA modal displayed",
+		"SliceMachine Slice Library [BETA] CTA modal displayed",
 	[SegmentEventType.sliceLibrary_beta_codeOpened]:
-		"SliceMachine Slice Library [BETA} CTA example code opened",
+		"SliceMachine Slice Library [BETA] CTA example code opened",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];

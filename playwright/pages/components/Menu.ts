@@ -11,7 +11,7 @@ export class Menu {
   readonly customTypesLink: Locator;
   readonly slicesLink: Locator;
   readonly changesLink: Locator;
-  readonly inviteTeamLink: Locator;
+  readonly masterSliceLibraryButton: Locator;
   readonly learnPrismicLink: Locator;
   readonly settingsLink: Locator;
   readonly changelogLink: Locator;
@@ -53,8 +53,8 @@ export class Menu {
     this.changesLink = this.menu.getByRole("button", {
       name: "Review changes",
     });
-    this.inviteTeamLink = this.menu.getByRole("link", {
-      name: "Invite team",
+    this.masterSliceLibraryButton = this.menu.getByRole("link", {
+      name: "Master Slice Library",
       exact: true,
     });
     this.learnPrismicLink = this.menu.getByRole("link", {

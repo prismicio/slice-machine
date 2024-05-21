@@ -190,7 +190,7 @@ test('I can access the Academy from the "Learn Prismic" link', async ({
   await expect(newTab).toHaveTitle(/Prismic Academy/);
 });
 
-test('I can access the repository\'s users page from the "Invite team" link', async ({
+test('I can open a modal describing Master Slice Libraries by clicking the "Master Slice Library" button', async ({
   sliceMachinePage,
   procedures,
 }) => {
@@ -202,15 +202,37 @@ test('I can access the repository\'s users page from the "Invite team" link', as
   });
 
   await sliceMachinePage.gotoDefaultPage();
-  await expect(sliceMachinePage.menu.inviteTeamLink).toBeVisible();
+  await expect(sliceMachinePage.menu.masterSliceLibraryButton).toBeVisible();
 
-  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
-  await sliceMachinePage.menu.inviteTeamLink.click();
-  const newTab = await newTabPromise;
-  await newTab.waitForLoadState();
+  const modal = sliceMachinePage.page.getByRole("dialog");
+  const modalHeader = modal.getByText("Master Slice Library Generator", { exact: true });
+  await sliceMachinePage.menu.masterSliceLibraryButton.click();
+  await expect(modalHeader).toBeVisible();
 
-  // We cannot test the title since it only contains the repository's name.
-  await expect(newTab).toHaveURL(
-    "https://example-prismic-repo.prismic.io/settings/users",
+  const exampleLink = modal.getByRole("link", {
+    name: "example slice library",
+    exact: false,
+  });
+  const newExampleTabPromise = sliceMachinePage.page.waitForEvent("popup");
+  
+  await exampleLink.click();
+
+  const newExampleTab = await newExampleTabPromise;
+  await newExampleTab.waitForLoadState();
+
+  await expect(newExampleTab).toHaveURL(
+    "https://slicify-app.vercel.app/slice-library",
+  );
+
+  const codeLink = modal.getByText("Get the code", { exact: true, });
+  const newCodeTabPromise = sliceMachinePage.page.waitForEvent("popup");
+  
+  await codeLink.click();
+
+  const newCodeTab = await newCodeTabPromise;
+  await newCodeTab.waitForLoadState();
+
+  await expect(newCodeTab).toHaveURL(
+    "https://github.com/prismicio-solution-engineering/slicify-library#readme",
   );
 });

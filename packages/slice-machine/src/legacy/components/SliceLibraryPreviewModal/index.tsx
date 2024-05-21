@@ -31,7 +31,7 @@ export const SliceLibraryPreviewModal: React.FunctionComponent<
       <Flex sx={{ alignItems: "center" }}>
         <MasterSliceLibraryIcon />
         <Heading sx={{ fontSize: ".75rem", fontWeight: "bold", ml: 1, mr: 2 }}>
-          Master Slice Library generator
+          Master Slice Library Generator
         </Heading>
         <Tag title="BETA" />
       </Flex>
@@ -95,7 +95,7 @@ export const SliceLibraryPreviewModal: React.FunctionComponent<
           </Flex>
         )}
       >
-        <Heading sx={{ mb: 2 }}>Create a master Slice Library</Heading>
+        <Heading sx={{ mb: 2 }}>Create a Master Slice Library</Heading>
         <Video
           src="https://res.cloudinary.com/dmtf1daqp/video/upload/v1715957263/Slice_library_video_oemhy0.mp4"
           sizing="contain"
@@ -108,7 +108,7 @@ export const SliceLibraryPreviewModal: React.FunctionComponent<
             href="https://slicify-app.vercel.app/slice-library"
             target="_blank"
           >
-            example Slice Library
+            example slice library
           </a>
           , which provides you with an overview of all your slices in one place.
           Build it yourself in a few steps.
