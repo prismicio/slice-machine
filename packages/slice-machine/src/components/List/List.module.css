@@ -18,6 +18,11 @@
   overflow-x: hidden;
 }
 
+.root-inset {
+  border-style: none;
+  border-radius: 0px;
+}
+
 .child {
   composes: row;
   align-items: center;
@@ -26,7 +31,8 @@
   box-sizing: border-box;
   height: 48px;
   padding-right: 8px;
-  :last-child {
+
+  &:last-child {
     border-bottom-color: transparent;
   }
 }
