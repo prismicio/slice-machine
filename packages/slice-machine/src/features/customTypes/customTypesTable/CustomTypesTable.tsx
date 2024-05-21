@@ -90,7 +90,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
   // The wrapping `<div>` prevents `<Table>` from growing vertically.
   return (
     <div>
-      <Table columnLayout="28px 1fr 1fr 1fr 40px">
+      <Table columnLayout="28px 1fr 1fr 1fr 42px">
         <TableHead>
           <TableRow>
             <TableCell>
