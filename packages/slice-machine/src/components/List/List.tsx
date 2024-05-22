@@ -5,17 +5,17 @@ import type { CSSProperties, FC, PropsWithChildren, ReactNode } from "react";
 import styles from "./List.module.css";
 
 type ListProps = PropsWithChildren<{
-  inset?: boolean;
+  border?: boolean;
   style?: CSSProperties;
 }>;
 
 export const List: FC<ListProps> = (props) => {
-  const { inset = false, ...otherProps } = props;
+  const { border = true, ...otherProps } = props;
 
   return (
     <div
       {...otherProps}
-      className={clsx(styles.root, inset && styles["root-inset"])}
+      className={clsx(styles.root, border && styles["root-border"])}
     />
   );
 };

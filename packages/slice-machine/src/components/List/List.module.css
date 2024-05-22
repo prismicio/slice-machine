@@ -11,16 +11,14 @@
 .root {
   composes: flex;
   border-color: var(--grey6);
-  border-radius: 6px;
-  border-style: solid;
-  border-width: 1px;
   flex-direction: column;
   overflow-x: hidden;
 }
 
-.root-inset {
-  border-style: none;
-  border-radius: 0px;
+.root-border {
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
 }
 
 .child {
