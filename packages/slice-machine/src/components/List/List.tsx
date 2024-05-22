@@ -1,15 +1,24 @@
 import { Text } from "@prismicio/editor-ui";
+import clsx from "clsx";
 import type { CSSProperties, FC, PropsWithChildren, ReactNode } from "react";
 
-import * as styles from "./List.css";
+import styles from "./List.module.css";
 
 type ListProps = PropsWithChildren<{
+  border?: boolean;
   style?: CSSProperties;
 }>;
 
-export const List: FC<ListProps> = (props) => (
-  <div {...props} className={styles.root} />
-);
+export const List: FC<ListProps> = (props) => {
+  const { border = true, ...otherProps } = props;
+
+  return (
+    <div
+      {...otherProps}
+      className={clsx(styles.root, border && styles["root-border"])}
+    />
+  );
+};
 
 type ListHeaderProps = PropsWithChildren<{
   actions?: ReactNode;

@@ -7,7 +7,9 @@ type Story = StoryObj<typeof meta>;
 
 const meta = {
   component: List,
-  argTypes: { children: { control: { disable: true } } },
+  argTypes: {
+    children: { control: { disable: true } },
+  },
 } satisfies Meta<typeof List>;
 
 export default meta;

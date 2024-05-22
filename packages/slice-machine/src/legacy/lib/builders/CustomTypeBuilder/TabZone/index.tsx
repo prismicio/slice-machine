@@ -211,7 +211,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           </Box>
         }
       >
-        <List style={{ flexGrow: 1 }}>
+        <List border={false} style={{ flexGrow: 1 }}>
           {query.newPageType === undefined ? (
             <Zone
               zoneType="customType"
