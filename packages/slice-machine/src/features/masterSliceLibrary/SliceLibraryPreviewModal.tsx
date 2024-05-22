@@ -20,6 +20,9 @@ export const MasterSliceLibraryPreviewModal: React.FC<
   MasterSliceLibraryPreviewModalProps
 > = ({ isOpen, onClose }) => {
   const { masterSliceLibrary } = useMarketingContent();
+
+  if (!masterSliceLibrary) return null;
+
   const { exampleLinkUrl, codeLinkUrl, previewVideoUrl } = masterSliceLibrary;
   const onGetTheCodeButtonClick = () => {
     void telemetry.track({
@@ -28,6 +31,7 @@ export const MasterSliceLibraryPreviewModal: React.FC<
 
     window.open(codeLinkUrl, "_blank");
   };
+
   return (
     <Dialog
       size="small"

@@ -190,6 +190,9 @@ test('I can access the Academy from the "Learn Prismic" link', async ({
   await expect(newTab).toHaveTitle(/Prismic Academy/);
 });
 
+// NOTE: This tests doesn't use page objects as the Master Slice Library preview modal
+//       is meant to be a temporary experiment lasting a few weeks, so it didn't really
+//       make sense to implement a page object for such a feature.
 test('I can open a modal describing Master Slice Libraries by clicking the "Master Slice Library" button', async ({
   sliceMachinePage,
   procedures,

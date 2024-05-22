@@ -47,7 +47,7 @@ const Navigation: FC = () => {
     useRepositoryInformation();
   const gitIntegrationExperiment = useGitIntegrationExperiment();
   const [isSliceLibraryDialogOpen, setIsSliceLibraryDialogOpen] =
-    useState<boolean>(false);
+    useState(false);
   const { masterSliceLibrary } = useMarketingContent();
 
   return (
@@ -123,7 +123,7 @@ const Navigation: FC = () => {
       </ErrorBoundary>
 
       <SideNavList position="bottom">
-        {masterSliceLibrary.showInNavigation && (
+        {masterSliceLibrary !== undefined && (
           <SideNavListItem>
             <MasterSliceLibraryPreviewModal
               isOpen={isSliceLibraryDialogOpen}
