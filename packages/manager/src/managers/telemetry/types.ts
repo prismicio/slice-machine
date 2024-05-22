@@ -13,7 +13,6 @@ export const SegmentEventType = {
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
 	pageView: "page-view",
-	users_invite_button_clicked: "users-invite-button-clicked",
 	openVideoTutorials: "open-video-tutorials",
 	field_added: "field:added",
 	field_settingsOpened: "field:settings-opened",
@@ -49,8 +48,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sliceSimulator_isNotRunning]:
 		"SliceMachine Slice Simulator is not running",
 	[SegmentEventType.pageView]: "SliceMachine Page View",
-	[SegmentEventType.users_invite_button_clicked]:
-		"Slice Machine Users Invite Button Clicked",
 	[SegmentEventType.openVideoTutorials]: "SliceMachine Open Video Tutorials",
 	[SegmentEventType.field_added]: "SliceMachine Field Added",
 	[SegmentEventType.field_settingsOpened]: "SliceMachine Field Settings Opened",
@@ -168,10 +165,6 @@ type CopyPageSnippetSegmentEvent = SegmentEvent<
 type SwitchEnvironmentSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.switch_environment,
 	{ domain: string }
->;
-
-type UsersInviteButtonClickedSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.users_invite_button_clicked
 >;
 
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
@@ -348,7 +341,6 @@ export type SegmentEvents =
 	| EditorWidgetUsedSegmentEvent
 	| OpenPageSnippetSegmentEvent
 	| CopyPageSnippetSegmentEvent
-	| UsersInviteButtonClickedSegmentEvent
 	| SwitchEnvironmentSegmentEvent
 	| DevCollabJoinBetaClicked
 	| DevCollabSetUpWorkflowOpened

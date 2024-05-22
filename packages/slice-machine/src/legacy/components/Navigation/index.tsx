@@ -16,8 +16,9 @@ import {
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { MasterSliceLibraryPreviewModal } from "@/features/masterSliceLibrary/SliceLibraryPreviewModal";
 import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
-import { useAdapterName } from "@/hooks/useAdapterName";
+import { useMarketingContent } from "@/hooks/useMarketingContent";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
@@ -28,7 +29,6 @@ import { userHasSeenTutorialsToolTip } from "@/modules/userContext";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
 
-import { SliceLibraryPreviewModal } from "../SliceLibraryPreviewModal";
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
 import styles from "./index.module.css";
@@ -36,7 +36,6 @@ import { RunningVersion } from "./RunningVersion";
 import { UpdateBox } from "./UpdateBox";
 
 const Navigation: FC = () => {
-  const adapter = useAdapterName();
   const { hasSeenTutorialsToolTip } = useSelector(
     (store: SliceMachineStoreType) => ({
       hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
@@ -49,7 +48,7 @@ const Navigation: FC = () => {
   const gitIntegrationExperiment = useGitIntegrationExperiment();
   const [isSliceLibraryDialogOpen, setIsSliceLibraryDialogOpen] =
     useState<boolean>(false);
-  const showSliceLibraryPreview = adapter == "@slicemachine/adapter-next";
+  const { masterSliceLibrary } = useMarketingContent();
 
   return (
     <SideNav>
@@ -124,9 +123,9 @@ const Navigation: FC = () => {
       </ErrorBoundary>
 
       <SideNavList position="bottom">
-        {showSliceLibraryPreview && (
+        {masterSliceLibrary.showInNavigation && (
           <SideNavListItem>
-            <SliceLibraryPreviewModal
+            <MasterSliceLibraryPreviewModal
               isOpen={isSliceLibraryDialogOpen}
               onClose={() => {
                 setIsSliceLibraryDialogOpen(false);

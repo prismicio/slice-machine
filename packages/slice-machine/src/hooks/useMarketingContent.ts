@@ -17,6 +17,14 @@ type MarketingContent = {
       };
     };
   };
+  masterSliceLibrary: MasterSliceLibraryMarketingContent;
+};
+
+type MasterSliceLibraryMarketingContent = {
+  showInNavigation: boolean;
+  exampleLinkUrl: string;
+  codeLinkUrl: string;
+  previewVideoUrl: string;
 };
 
 const CONTENT_BY_ADAPTER: Record<string, MarketingContent> = {
@@ -38,6 +46,14 @@ const CONTENT_BY_ADAPTER: Record<string, MarketingContent> = {
         },
       },
     },
+    masterSliceLibrary: {
+      showInNavigation: true,
+      exampleLinkUrl: "https://slicify-app.vercel.app/slice-library",
+      codeLinkUrl:
+        "https://github.com/prismicio-solution-engineering/slicify-library#readme",
+      previewVideoUrl:
+        "https://res.cloudinary.com/dmtf1daqp/video/upload/v1715957263/Slice_library_video_oemhy0.mp4",
+    },
   },
 };
 
@@ -52,6 +68,12 @@ const DEFAULT_CONTENT: MarketingContent = {
       description:
         "Follow our Quick Start guide to learn the basics of Slice Machine",
     },
+  },
+  masterSliceLibrary: {
+    showInNavigation: false,
+    exampleLinkUrl: "",
+    codeLinkUrl: "",
+    previewVideoUrl: "",
   },
 };
 
