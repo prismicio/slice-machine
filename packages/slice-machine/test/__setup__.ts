@@ -10,6 +10,7 @@ import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test"
 import { cleanup } from "@testing-library/react";
 import { FormData } from "formdata-polyfill/esm.min";
 import { SetupServer, setupServer } from "msw/node";
+import { rest } from "msw";
 import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 
@@ -24,7 +25,12 @@ declare module "vitest" {
   }
 }
 
-const mswServer = setupServer();
+const mswServer = setupServer(
+  // Disable all feature flags by default.
+  rest.get("https://api.lab.amplitude.com/sdk/v2/vardata", (_req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+);
 
 beforeAll(() => {
   mswServer.listen({ onUnhandledRequest: "error" });

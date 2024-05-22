@@ -60,7 +60,7 @@ export class TypesTablePage extends SliceMachinePage {
    * Dynamic locators
    */
   getRow(name: string): Locator {
-    return this.page.getByRole("row", {
+    return this.page.getByRole("button", {
       name,
       exact: false,
     });
