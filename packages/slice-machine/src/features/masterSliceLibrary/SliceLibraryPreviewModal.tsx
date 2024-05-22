@@ -16,7 +16,7 @@ type MasterSliceLibraryPreviewModalProps = {
   onClose: () => void;
 };
 
-export const MasterSliceLibraryPreviewModal: React.FunctionComponent<
+export const MasterSliceLibraryPreviewModal: React.FC<
   MasterSliceLibraryPreviewModalProps
 > = ({ isOpen, onClose }) => {
   const { masterSliceLibrary } = useMarketingContent();

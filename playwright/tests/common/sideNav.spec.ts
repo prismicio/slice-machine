@@ -205,7 +205,7 @@ test('I can open a modal describing Master Slice Libraries by clicking the "Mast
   await expect(sliceMachinePage.menu.masterSliceLibraryButton).toBeVisible();
 
   const modal = sliceMachinePage.page.getByRole("dialog");
-  const modalHeader = modal.getByText("Master Slice Library Generator", {
+  const modalHeader = modal.getByText("Master Slice Library Generator (BETA)", {
     exact: true,
   });
   await sliceMachinePage.menu.masterSliceLibraryButton.click();
