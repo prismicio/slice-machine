@@ -1,7 +1,7 @@
 import { Box } from "@prismicio/editor-ui";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { type FC, Suspense } from "react";
+import { type FC, Suspense, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { telemetry } from "@/apiClient";
@@ -16,11 +16,13 @@ import {
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { MasterSliceLibraryPreviewModal } from "@/features/masterSliceLibrary/SliceLibraryPreviewModal";
 import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
+import { useMarketingContent } from "@/hooks/useMarketingContent";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
-import { MathPlusIcon } from "@/icons/MathPlusIcon";
+import { MasterSliceLibraryIcon } from "@/icons/MasterSliceLibraryIcon";
 import { SettingsIcon } from "@/icons/SettingsIcon";
 import VideoItem from "@/legacy/components/Navigation/VideoItem";
 import { userHasSeenTutorialsToolTip } from "@/modules/userContext";
@@ -44,6 +46,9 @@ const Navigation: FC = () => {
   const { repositoryName, repositoryDomain, repositoryUrl } =
     useRepositoryInformation();
   const gitIntegrationExperiment = useGitIntegrationExperiment();
+  const [isSliceLibraryDialogOpen, setIsSliceLibraryDialogOpen] =
+    useState(false);
+  const { masterSliceLibrary } = useMarketingContent();
 
   return (
     <SideNav>
@@ -118,19 +123,31 @@ const Navigation: FC = () => {
       </ErrorBoundary>
 
       <SideNavList position="bottom">
-        <SideNavListItem>
-          <SideNavLink
-            title="Invite team"
-            href={`${repositoryUrl}/settings/users`}
-            Icon={MathPlusIcon}
-            onClick={() => {
-              void telemetry.track({
-                event: "users-invite-button-clicked",
-              });
-            }}
-            target="_blank"
-          />
-        </SideNavListItem>
+        {masterSliceLibrary !== undefined && (
+          <SideNavListItem>
+            <MasterSliceLibraryPreviewModal
+              isOpen={isSliceLibraryDialogOpen}
+              onClose={() => {
+                setIsSliceLibraryDialogOpen(false);
+              }}
+            />
+            <SideNavLink
+              title="Master Slice Library"
+              href={"/"}
+              Icon={MasterSliceLibraryIcon}
+              onClick={(e) => {
+                void telemetry.track({
+                  event: "slice-library:beta:modal-opened",
+                });
+
+                setIsSliceLibraryDialogOpen(true);
+
+                // We don't want it to actually navigate anywhere, but `href` is required
+                e.preventDefault();
+              }}
+            />
+          </SideNavListItem>
+        )}
 
         <ErrorBoundary>
           <Suspense>

@@ -13,7 +13,6 @@ export const SegmentEventType = {
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
 	pageView: "page-view",
-	users_invite_button_clicked: "users-invite-button-clicked",
 	openVideoTutorials: "open-video-tutorials",
 	field_added: "field:added",
 	field_settingsOpened: "field:settings-opened",
@@ -34,6 +33,8 @@ export const SegmentEventType = {
 	devCollab_setUpWorkflowOpened: "dev-collab:set-up-workflow-opened",
 	devCollab_workflowStubDisplayed: "dev-collab:workflow-stub-displayed",
 	sliceMachine_start: "slice-machine:start",
+	sliceLibrary_beta_modalOpened: "slice-library:beta:modal-opened",
+	sliceLibrary_beta_codeOpened: "slice-library:beta:code-opened",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -47,8 +48,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sliceSimulator_isNotRunning]:
 		"SliceMachine Slice Simulator is not running",
 	[SegmentEventType.pageView]: "SliceMachine Page View",
-	[SegmentEventType.users_invite_button_clicked]:
-		"Slice Machine Users Invite Button Clicked",
 	[SegmentEventType.openVideoTutorials]: "SliceMachine Open Video Tutorials",
 	[SegmentEventType.field_added]: "SliceMachine Field Added",
 	[SegmentEventType.field_settingsOpened]: "SliceMachine Field Settings Opened",
@@ -77,6 +76,10 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.devCollab_workflowStubDisplayed]:
 		"SliceMachine Dev Collab Workflow Stub Displayed",
 	[SegmentEventType.sliceMachine_start]: "SliceMachine Start",
+	[SegmentEventType.sliceLibrary_beta_modalOpened]:
+		"SliceMachine Slice Library [BETA] CTA modal displayed",
+	[SegmentEventType.sliceLibrary_beta_codeOpened]:
+		"SliceMachine Slice Library [BETA] CTA example code opened",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -162,10 +165,6 @@ type CopyPageSnippetSegmentEvent = SegmentEvent<
 type SwitchEnvironmentSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.switch_environment,
 	{ domain: string }
->;
-
-type UsersInviteButtonClickedSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.users_invite_button_clicked
 >;
 
 type OpenVideoTutorialsSegmentEvent = SegmentEvent<
@@ -311,6 +310,14 @@ type SliceMachineStart = SegmentEvent<
 	}
 >;
 
+type SliceLibraryBetaModalOpened = SegmentEvent<
+	typeof SegmentEventType.sliceLibrary_beta_modalOpened
+>;
+
+type SliceLibraryBetaCodeOpened = SegmentEvent<
+	typeof SegmentEventType.sliceLibrary_beta_codeOpened
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -334,9 +341,10 @@ export type SegmentEvents =
 	| EditorWidgetUsedSegmentEvent
 	| OpenPageSnippetSegmentEvent
 	| CopyPageSnippetSegmentEvent
-	| UsersInviteButtonClickedSegmentEvent
 	| SwitchEnvironmentSegmentEvent
 	| DevCollabJoinBetaClicked
 	| DevCollabSetUpWorkflowOpened
 	| DevCollabWorkflowStubDisplayed
-	| SliceMachineStart;
+	| SliceMachineStart
+	| SliceLibraryBetaModalOpened
+	| SliceLibraryBetaCodeOpened;

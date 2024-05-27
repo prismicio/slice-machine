@@ -17,6 +17,11 @@ type MarketingContent = {
       };
     };
   };
+  masterSliceLibrary?: {
+    exampleLinkUrl: string;
+    codeLinkUrl: string;
+    previewVideoUrl: string;
+  };
 };
 
 const CONTENT_BY_ADAPTER: Record<string, MarketingContent> = {
@@ -37,6 +42,13 @@ const CONTENT_BY_ADAPTER: Record<string, MarketingContent> = {
           poster: "/prismic-academy-101.png",
         },
       },
+    },
+    masterSliceLibrary: {
+      exampleLinkUrl: "https://slicify-app.vercel.app/slice-library",
+      codeLinkUrl:
+        "https://github.com/prismicio-solution-engineering/slicify-library#readme",
+      previewVideoUrl:
+        "https://res.cloudinary.com/dmtf1daqp/video/upload/v1715957263/Slice_library_video_oemhy0.mp4",
     },
   },
 };
