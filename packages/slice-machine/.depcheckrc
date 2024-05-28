@@ -2,7 +2,6 @@ ignores:
   [
     "@storybook/addon-essentials",
     "@testing-library/dom",
-    "@vanilla-extract/next-plugin",
     "@vitest/coverage-v8",
     "monocle-ts",
     "newtype-ts",
