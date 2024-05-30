@@ -1,4 +1,4 @@
-import { Button, Image, tokens } from "@prismicio/editor-ui";
+import { Button, Image, theme } from "@prismicio/editor-ui";
 import router from "next/router";
 import { FiExternalLink } from "react-icons/fi";
 import { useSelector } from "react-redux";
@@ -25,7 +25,7 @@ export const NoChangesBlankSlate = () => {
     createDocumentsListEndpointFromRepoName(repoName);
 
   return (
-    <BlankSlate style={{ alignSelf: "center", marginTop: tokens.size[72] }}>
+    <BlankSlate style={{ alignSelf: "center", marginTop: theme.space[72] }}>
       <BlankSlateImage>
         <Image src="/blank-slate-changes-uptodate.png" sizing="cover" />
       </BlankSlateImage>

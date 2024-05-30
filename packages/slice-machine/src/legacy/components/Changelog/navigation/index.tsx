@@ -1,4 +1,4 @@
-import { tokens } from "@prismicio/editor-ui";
+import { theme } from "@prismicio/editor-ui";
 import { Version } from "@slicemachine/manager";
 import React from "react";
 import { Flex, Text } from "theme-ui";
@@ -56,7 +56,7 @@ export const Navigation: React.FC<NavigationProps> = ({
       sx={{
         minWidth: "228px",
         borderRight: "1px dashed",
-        borderColor: tokens.color.greyLight6,
+        borderColor: theme.color.grey6,
         flexDirection: "column",
         paddingRight: "48px",
       }}
@@ -65,7 +65,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         sx={{
           flexDirection: "column",
           borderBottom: "1px dashed",
-          borderColor: tokens.color.greyLight6,
+          borderColor: theme.color.grey6,
           paddingBottom: "28px",
         }}
       >

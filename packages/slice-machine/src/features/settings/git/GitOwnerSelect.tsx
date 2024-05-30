@@ -1,4 +1,4 @@
-import { Select, SelectItem, tokens } from "@prismicio/editor-ui";
+import { Select, SelectItem, theme } from "@prismicio/editor-ui";
 import type { GitOwner } from "@slicemachine/manager";
 import type { ComponentPropsWithoutRef, FC } from "react";
 
@@ -56,7 +56,7 @@ type GitOwnerIconProps = { owner: GitOwner | undefined };
 
 const GitOwnerIcon: FC<GitOwnerIconProps> = ({ owner }) => {
   const { Icon } = gitProviderToConfig[owner?.provider ?? "gitHub"];
-  return <Icon color={tokens.color.greyLight11} />;
+  return <Icon color={theme.color.grey11} />;
 };
 
 function formatGitOwnerKey(owner: GitOwner): string {

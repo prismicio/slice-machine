@@ -9,7 +9,6 @@ import {
   TableRow,
   Text,
   theme,
-  tokens,
 } from "@prismicio/editor-ui";
 import { type CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { type CustomTypeFormat } from "@slicemachine/manager";
@@ -62,7 +61,7 @@ export const CustomTypesTable: FC<CustomTypesTableProps> = ({
     return (
       <BlankSlate
         data-testid="blank-slate"
-        style={{ alignSelf: "center", marginTop: tokens.size[72] }}
+        style={{ alignSelf: "center", marginTop: theme.space[72] }}
       >
         <BlankSlateImage>
           <Image src={customTypesConfig.blankSlateImage} sizing="cover" />

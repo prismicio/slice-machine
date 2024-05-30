@@ -1,5 +1,5 @@
 import { keys } from "@prismicio/editor-support/Object";
-import { Button, ButtonGroup, Text, tokens } from "@prismicio/editor-ui";
+import { Button, ButtonGroup, Text, theme } from "@prismicio/editor-ui";
 import { type ComponentPropsWithoutRef, type FC, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -46,7 +46,7 @@ const GitProviderConnectButton: FC<GitProviderConnectButtonProps> = ({
           }
         })();
       }}
-      renderStartIcon={() => <Icon color={tokens.color.greyLight11} />}
+      renderStartIcon={() => <Icon color={theme.color.grey11} />}
       sx={sx}
     >
       {name}
