@@ -1,4 +1,4 @@
-import { Button, tokens } from "@prismicio/editor-ui";
+import { Button, theme } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
@@ -107,13 +107,13 @@ const SimulatorButton: React.FC<{
           disabled={disabled}
           renderStartIcon={() => (
             <PlayCircleIcon
-              color={tokens.color.greyLight1}
-              height={tokens.size[24]}
+              color={theme.color.grey1}
+              height="24px"
               style={{
                 // TODO(DT-1538): our icons should have a `viewBox` of 24px.
                 transform: "scale(calc(4 / 3))",
               }}
-              width={tokens.size[24]}
+              width="24px"
             />
           )}
         >

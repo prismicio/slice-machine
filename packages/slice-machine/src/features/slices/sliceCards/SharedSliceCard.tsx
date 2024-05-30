@@ -9,7 +9,7 @@ import {
   Icon,
   IconButton,
   Text,
-  tokens,
+  theme,
   Tooltip,
 } from "@prismicio/editor-ui";
 import Link from "next/link";
@@ -247,9 +247,7 @@ type UpdateScreenshotButtonProps = { onClick: () => void };
 const UpdateScreenshotButton: FC<UpdateScreenshotButtonProps> = (props) => (
   <Button
     onClick={props.onClick}
-    renderStartIcon={() => (
-      <AddPhotoAlternateIcon color={tokens.color.greyLight11} />
-    )}
+    renderStartIcon={() => <AddPhotoAlternateIcon color={theme.color.grey11} />}
     color="grey"
   >
     Update screenshot

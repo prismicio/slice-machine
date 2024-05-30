@@ -1,15 +1,16 @@
-import { DropdownMenuItem, Icon } from "@prismicio/editor-ui";
-import { useRouter } from "next/router";
-import { useState } from "react";
-
 import {
+  DropdownMenuItem,
+  Icon,
   Window,
   WindowFrame,
   WindowTabs,
   WindowTabsContent,
   WindowTabsList,
   WindowTabsTrigger,
-} from "@/components/Window";
+} from "@prismicio/editor-ui";
+import { useRouter } from "next/router";
+import { useState } from "react";
+
 import {
   createSection,
   deleteSection,
@@ -43,7 +44,7 @@ export const CustomTypeBuilder = () => {
 
   return (
     <>
-      <Window style={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
+      <Window sx={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
         {customType.format === "page" ? <WindowFrame /> : undefined}
         {query.newPageType === "true" ? (
           <TabZone tabId={customTypeSM.tabs[0].key} />

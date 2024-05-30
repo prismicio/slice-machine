@@ -5,7 +5,7 @@ import {
   Checkbox,
   IconButton,
   Text,
-  tokens,
+  theme,
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -64,7 +64,7 @@ export const SolidWithImg = {
             <Box alignItems="center" justifyContent="center">
               <Button
                 renderStartIcon={() => (
-                  <AddPhotoAlternateIcon color={tokens.color.greyLight11} />
+                  <AddPhotoAlternateIcon color={theme.color.grey11} />
                 )}
                 color="grey"
               >
@@ -104,11 +104,9 @@ export const SolidWithDiv = {
           <Badge color="purple" title="Legacy Slice" />
           <Button
             renderEndIcon={() => (
-              <ArrowDropDownIcon color={tokens.color.greyLight11} />
+              <ArrowDropDownIcon color={theme.color.grey11} />
             )}
-            renderStartIcon={() => (
-              <SyncAltIcon color={tokens.color.greyLight11} />
-            )}
+            renderStartIcon={() => <SyncAltIcon color={theme.color.grey11} />}
             color="grey"
           >
             Turn into shared Slice

@@ -1,5 +1,4 @@
 import { withSentryConfig } from "@sentry/nextjs";
-import { createVanillaExtractPlugin } from "@vanilla-extract/next-plugin";
 import semver from "semver";
 
 import pkg from "./package.json" assert { type: "json" };
@@ -88,6 +87,4 @@ if (process.env.NODE_ENV !== "development") {
   }
 }
 
-const withVanillaExtract = createVanillaExtractPlugin();
-
-export default withVanillaExtract(nextConfig);
+export default nextConfig;

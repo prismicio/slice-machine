@@ -7,7 +7,7 @@ import {
   SelectItem,
   Skeleton,
   Text,
-  tokens,
+  theme,
 } from "@prismicio/editor-ui";
 import type { Meta, StoryObj } from "@storybook/react";
 
@@ -59,9 +59,7 @@ export const WithButtonGroupContent = {
         <FieldSetContent>
           <ButtonGroup color="grey">
             <Button
-              renderStartIcon={() => (
-                <GitHubIcon color={tokens.color.greyLight11} />
-              )}
+              renderStartIcon={() => <GitHubIcon color={theme.color.grey11} />}
               sx={{ flexBasis: 0, flexGrow: 1 }}
             >
               GitHub
@@ -69,7 +67,7 @@ export const WithButtonGroupContent = {
             <Button
               disabled
               renderStartIcon={() => (
-                <BitbucketIcon color={tokens.color.greyLight11} />
+                <BitbucketIcon color={theme.color.grey11} />
               )}
               sx={{ flexBasis: 0, flexGrow: 1 }}
             >
@@ -80,9 +78,7 @@ export const WithButtonGroupContent = {
             </Button>
             <Button
               disabled
-              renderStartIcon={() => (
-                <GitLabIcon color={tokens.color.greyLight11} />
-              )}
+              renderStartIcon={() => <GitLabIcon color={theme.color.grey11} />}
               sx={{ flexBasis: 0, flexGrow: 1 }}
             >
               GitLab{" "}
@@ -229,16 +225,14 @@ function OwnerSelect(props: OwnerSelectProps) {
       constrainContentWidth
       flexContent
       placeholder="Owner"
-      renderStartIcon={() => <GitHubIcon color={tokens.color.greyLight11} />}
+      renderStartIcon={() => <GitHubIcon color={theme.color.grey11} />}
       size="large"
       sx={{ width: "calc(50% - 8px)" }}
     >
       {[...Array(2).keys()].map((index) => (
         <SelectItem
           key={index}
-          renderStartIcon={() => (
-            <GitHubIcon color={tokens.color.greyLight11} />
-          )}
+          renderStartIcon={() => <GitHubIcon color={theme.color.grey11} />}
           size="large"
           value={`owner-${index}`}
         >

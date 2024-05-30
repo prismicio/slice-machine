@@ -1,4 +1,4 @@
-import { tokens } from "@prismicio/editor-ui";
+import { theme } from "@prismicio/editor-ui";
 import type { PackageManager, Version } from "@slicemachine/manager";
 import React from "react";
 import { AiFillWarning } from "react-icons/ai";
@@ -40,7 +40,7 @@ export const VersionDetails: React.FC<VersionDetailsProps> = ({
         sx={{
           padding: "0px 0px 32px 32px",
           borderBottom: "1px dashed",
-          borderColor: tokens.color.greyLight6,
+          borderColor: theme.color.grey6,
           justifyContent: "space-between",
           alignItems: "center",
         }}
