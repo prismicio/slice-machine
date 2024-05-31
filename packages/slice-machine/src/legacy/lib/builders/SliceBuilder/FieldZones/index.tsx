@@ -262,7 +262,7 @@ const FieldZones: FC = () => {
               <>
                 <strong>
                   This action will permanently remove the repeatable zone from
-                  the {slice.model.name}
+                  the {slice.model.name}.
                 </strong>
                 <div>
                   To reimplement repeatable fields later, use a group field
