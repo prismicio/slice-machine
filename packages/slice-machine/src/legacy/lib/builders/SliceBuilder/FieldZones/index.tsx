@@ -246,14 +246,30 @@ const FieldZones: FC = () => {
         <DialogHeader icon="delete" title="Delete field" />
         <DialogContent>
           <Box padding={24} gap={12} flexDirection="column">
-            <strong>
-              This action will permanently remove the repeatable zone from the{" "}
-              {slice.model.name} slice {variation.name} variation.
-            </strong>
-            <div>
-              Other variations will be left untouched. To reimplement repeatable{" "}
-              fields later, use a group field instead of the repeatable zone.
-            </div>
+            {slice.model.variations.length > 1 ? (
+              <>
+                <strong>
+                  This action will permanently remove the repeatable zone from
+                  the {slice.model.name} slice {variation.name} variation.
+                </strong>
+                <div>
+                  Other variations will be left untouched. To reimplement
+                  repeatable fields later, use a group field instead of the
+                  repeatable zone.
+                </div>
+              </>
+            ) : (
+              <>
+                <strong>
+                  This action will permanently remove the repeatable zone from
+                  the {slice.model.name}
+                </strong>
+                <div>
+                  To reimplement repeatable fields later, use a group field
+                  instead of the repeatable zone.
+                </div>
+              </>
+            )}
           </Box>
           <DialogActions
             ok={{
