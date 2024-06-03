@@ -11,6 +11,7 @@ type MockSliceMachineAPIConfig = {
 		expectedCookies: string[];
 		environments: Environment[];
 	};
+	onPush?: Parameters<typeof rest.post>[1];
 };
 
 export const mockSliceMachineAPI = (
@@ -45,6 +46,12 @@ export const mockSliceMachineAPI = (
 					}
 				},
 			),
+		);
+	}
+
+	if (config.onPush) {
+		ctx.msw.use(
+			rest.post(new URL("./push", endpoint).toString(), config.onPush),
 		);
 	}
 };
