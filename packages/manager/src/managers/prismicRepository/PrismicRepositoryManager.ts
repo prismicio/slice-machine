@@ -410,9 +410,8 @@ export class PrismicRepositoryManager extends BaseManager {
 
 			const repositoryName = await this.project.getResolvedRepositoryName();
 
-			// TODO: move to customtypes client
 			const response = await this._fetch({
-				url: new URL("./bulk", API_ENDPOINTS.PrismicModels),
+				url: new URL("./push", API_ENDPOINTS.SliceMachineV1),
 				method: "POST",
 				body: requestBody,
 				repository: repositoryName,
