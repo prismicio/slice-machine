@@ -20,7 +20,7 @@ import { BaseManager } from "../BaseManager";
 
 import {
 	AllChangeTypes,
-	BulkBody,
+	PushBody,
 	ChangeTypes,
 	ClientError,
 	PushChangesLimit,
@@ -401,7 +401,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			);
 
 			// Compute the POST body
-			const requestBody: BulkBody = {
+			const requestBody: PushBody = {
 				confirmDeleteDocuments: args.confirmDeleteDocuments,
 				changes: allChanges,
 			};
