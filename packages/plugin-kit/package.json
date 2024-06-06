@@ -62,7 +62,7 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@prismicio/client": "^7.5.0",
+		"@prismicio/client": "v7.6.0-alpha.0",
 		"common-tags": "^1.8.2",
 		"defu": "^6.1.2",
 		"dotenv": "16.3.1",
@@ -72,10 +72,10 @@
 		"io-ts-reporters": "^2.0.1",
 		"p-limit": "^4.0.0",
 		"prettier": "^3.0.3",
-		"prismic-ts-codegen": "^0.1.19"
+		"prismic-ts-codegen": "v0.1.21-alpha.0"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "0.2.0",
+		"@prismicio/mock": "0.3.7-alpha.1",
 		"@prismicio/types-internal": "2.5.0-alpha.4",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
