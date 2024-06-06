@@ -17,8 +17,8 @@ import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
 import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
-import groupBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/groupBuilderArray";
-import * as Widgets from "@/legacy/lib/models/common/widgets/withNestedGroup";
+import * as Widgets from "@/legacy/lib/models/common/widgets";
+import nestedGroupBuilderArray from "@/legacy/lib/models/common/widgets/nestedGroupBuilderArray";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
@@ -86,7 +86,7 @@ const CustomListItem = ({
       group: Groups.fromSM(groupItem.value),
       previousFieldId: previousKey,
       newFieldId: newKey,
-      field: Groups.fromSM(value),
+      field: value,
     });
 
     saveItem({
@@ -215,7 +215,6 @@ const CustomListItem = ({
                           key: item.key,
                           enterEditMode,
                           deleteItem: onDeleteItem,
-                          saveItem: onSaveField,
                           renderFieldAccessor: (key) =>
                             `item${transformKeyAccessor(item.key)}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
@@ -240,17 +239,6 @@ const CustomListItem = ({
                             typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
                           />
                         );
-
-                        if (widget.CustomListItem) {
-                          const { CustomListItem } = widget;
-                          return (
-                            <CustomListItem
-                              {...props}
-                              HintElement={HintElement}
-                            />
-                          );
-                        }
-
                         return (
                           <ListItem {...props} HintElement={HintElement} />
                         );
@@ -264,6 +252,7 @@ const CustomListItem = ({
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                         fields={groupItem.value.config.fields || []}
                         onSave={(...args) => {
+                          console.log({ log: "onSave", ...args });
                           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                           onSaveNewField(...args);
                           setNewFieldData(null);
@@ -282,7 +271,7 @@ const CustomListItem = ({
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={groupBuilderWidgetsArray}
+        widgetsArray={nestedGroupBuilderArray}
       />
       <EditModal
         data={editModalData}
