@@ -5091,8 +5091,12 @@ __metadata:
 "@prismicio/client@npm:7.6.0-alpha.0":
   version: 7.6.0-alpha.0
   resolution: "@prismicio/client@npm:7.6.0-alpha.0"
+"@prismicio/client@npm:7.6.0-alpha.0":
+  version: 7.6.0-alpha.0
+  resolution: "@prismicio/client@npm:7.6.0-alpha.0"
   dependencies:
     imgix-url-builder: ^0.0.4
+  checksum: 298cfa33efdc5d90862e9435500327829010afcaacece1c2dbf12d45ac1e1b4b9fe87c5912788a8de8793b5fceed54bd1caea3eb1932fa12dc355b0112e2aa1b
   checksum: 298cfa33efdc5d90862e9435500327829010afcaacece1c2dbf12d45ac1e1b4b9fe87c5912788a8de8793b5fceed54bd1caea3eb1932fa12dc355b0112e2aa1b
   languageName: node
   linkType: hard
@@ -5100,8 +5104,12 @@ __metadata:
 "@prismicio/custom-types-client@npm:2.1.0-alpha.0":
   version: 2.1.0-alpha.0
   resolution: "@prismicio/custom-types-client@npm:2.1.0-alpha.0"
+"@prismicio/custom-types-client@npm:2.1.0-alpha.0":
+  version: 2.1.0-alpha.0
+  resolution: "@prismicio/custom-types-client@npm:2.1.0-alpha.0"
   peerDependencies:
     "@prismicio/client": ">=7"
+  checksum: e790eb675a48d6d33befb435ba7b7debaa3f63b49bbd4ddd9db1df1dcfa976b069990de9e230559587be4d945e72d11525abd4537b558e246ac73b319174b8b3
   checksum: e790eb675a48d6d33befb435ba7b7debaa3f63b49bbd4ddd9db1df1dcfa976b069990de9e230559587be4d945e72d11525abd4537b558e246ac73b319174b8b3
   languageName: node
   linkType: hard
@@ -5234,6 +5242,7 @@ __metadata:
   linkType: hard
 
 "@prismicio/helpers@npm:^2.3.9":
+"@prismicio/helpers@npm:^2.3.9":
   version: 2.3.9
   resolution: "@prismicio/helpers@npm:2.3.9"
   dependencies:
@@ -5262,6 +5271,17 @@ __metadata:
   peerDependencies:
     "@prismicio/client": ^7
   checksum: 4bcb9a8ae5446b807627e759cde19991d555cc48ba16baaddfe62f466793369ad539bafe3c54264b24395eac6a05267c8b54dfff53b7430045ebece73fa3c704
+  languageName: node
+  linkType: hard
+
+"@prismicio/mock@npm:0.3.7-alpha.1":
+  version: 0.3.7-alpha.1
+  resolution: "@prismicio/mock@npm:0.3.7-alpha.1"
+  dependencies:
+    change-case: ^5.4.4
+  peerDependencies:
+    "@prismicio/client": ^7
+  checksum: a8d05adb329bfadd00ccf02d81d1a19ea9051724298e9fde8f23996a03980a398b28a2cba24e4e34d3f44ab7b4562454fde2bb85c7ee23a4b5bc641f1c8a511b
   languageName: node
   linkType: hard
 
@@ -8350,6 +8370,7 @@ __metadata:
     "@antfu/ni": ^0.20.0
     "@prismicio/client": ^7.5.0
     "@prismicio/custom-types-client": 2.1.0-alpha.0
+    "@prismicio/custom-types-client": 2.1.0-alpha.0
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.2.0
     "@prismicio/types-internal": 2.5.0-alpha.4
@@ -8410,6 +8431,8 @@ __metadata:
   dependencies:
     "@prismicio/client": v7.6.0-alpha.0
     "@prismicio/mock": 0.3.7-alpha.1
+    "@prismicio/client": v7.6.0-alpha.0
+    "@prismicio/mock": 0.3.7-alpha.1
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
     "@types/common-tags": 1.8.1
@@ -8435,7 +8458,7 @@ __metadata:
     p-limit: ^4.0.0
     prettier: ^3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: 0.1.21-alpha.0
+    prismic-ts-codegen: v0.1.21-alpha.0
     size-limit: 8.2.4
     typescript: 4.9.5
     vite: 4.3.9
@@ -27040,6 +27063,33 @@ __metadata:
   linkType: hard
 
 "prismic-ts-codegen@npm:0.1.21-alpha.0":
+  version: 0.1.21-alpha.0
+  resolution: "prismic-ts-codegen@npm:0.1.21-alpha.0"
+  dependencies:
+    "@prismicio/custom-types-client": ^1.1.0
+    common-tags: ^1.8.2
+    fast-glob: ^3.2.12
+    jiti: ^1.18.2
+    joi: ^17.9.2
+    meow: ^12.0.1
+    node-fetch: ^3.3.1
+    pascal-case: ^3.1.2
+    quick-lru: ^6.1.1
+  peerDependencies:
+    "@prismicio/client": ^6.6 || ^7
+    "@prismicio/types": ^0.2.8
+  peerDependenciesMeta:
+    "@prismicio/client":
+      optional: true
+    "@prismicio/types":
+      optional: true
+  bin:
+    prismic-ts-codegen: bin/prismic-ts-codegen.js
+  checksum: 0dac0d18086facb475ee14d2851adbe1bf4c3ac05cf93bd20aae80bcdf9efbd6f455a1cd88c5aa8cb10bce07b03fc0dd270838d6f8c9682fa81c02840a124a1b
+  languageName: node
+  linkType: hard
+
+"prismic-ts-codegen@npm:v0.1.21-alpha.0":
   version: 0.1.21-alpha.0
   resolution: "prismic-ts-codegen@npm:0.1.21-alpha.0"
   dependencies:
