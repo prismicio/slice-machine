@@ -1,15 +1,24 @@
-import { Group } from "@prismicio/types-internal/lib/customtypes/widgets";
+import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
+import {
+  Group,
+  GroupFieldType,
+} from "@prismicio/types-internal/lib/customtypes/widgets";
 import { StringOrNull } from "@prismicio/types-internal/lib/validators";
 import { getOrElseW } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
-import { FieldsSM } from "./Fields";
+import { NestedGroupSM } from "./NestedGroup";
 
 export const GroupConfig = t.exact(
   t.partial({
     label: StringOrNull,
     repeat: t.boolean,
-    fields: FieldsSM,
+    fields: t.array(
+      t.type({
+        key: t.string,
+        value: t.union([NestableWidget, NestedGroupSM]),
+      }),
+    ),
   }),
 );
 export type GroupConfig = t.TypeOf<typeof GroupConfig>;
@@ -34,10 +43,13 @@ export const Groups = {
     const fields = (() => {
       if (!group.config?.fields) return;
 
-      return group.config.fields.reduce(
-        (acc, { key, value }) => ({ ...acc, [key]: value }),
-        {},
-      );
+      return group.config.fields.reduce((acc, { key, value }) => {
+        if (value.type === GroupFieldType) {
+          return { ...acc, [key]: Groups.fromSM(value) };
+        } else {
+          return { ...acc, [key]: value };
+        }
+      }, {});
     })();
 
     return getOrElseW(() => {
@@ -58,10 +70,13 @@ export const Groups = {
       if (!group.config?.fields) return;
 
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      return Object.entries(group.config?.fields || {}).map(([key, value]) => ({
-        key,
-        value,
-      }));
+      return Object.entries(group.config?.fields || {}).map(([key, value]) => {
+        if (value.type === GroupFieldType) {
+          return { key, value: Groups.toSM(value) };
+        } else {
+          return { key, value };
+        }
+      });
     })();
 
     return getOrElseW(() => {

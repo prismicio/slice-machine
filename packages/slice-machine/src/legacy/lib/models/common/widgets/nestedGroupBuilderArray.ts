@@ -1,7 +1,6 @@
-import * as Widgets from "./withNestedGroup";
+import * as Widgets from ".";
 
 export default [
-  Widgets.NestedGroup,
   Widgets.StructuredText,
   Widgets.Image,
   Widgets.Link,

@@ -15,8 +15,8 @@ import {
 } from "@/legacy/lib/forms";
 import { validateId } from "@/legacy/lib/forms/defaults";
 import { InputType } from "@/legacy/lib/forms/fields";
+import * as Widgets from "@/legacy/lib/models/common/widgets/allWidgets";
 import { AnyWidget } from "@/legacy/lib/models/common/widgets/Widget";
-import * as Widgets from "@/legacy/lib/models/common/widgets/withGroup";
 import { slugify } from "@/legacy/lib/utils/str";
 
 import { ErrorTooltip } from "./ErrorTooltip";
