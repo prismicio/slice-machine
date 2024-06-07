@@ -249,11 +249,8 @@ const CustomListItem = ({
                     {newFieldData && (
                       <NewField
                         {...newFieldData}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                         fields={groupItem.value.config.fields || []}
                         onSave={(...args) => {
-                          console.log({ log: "onSave", ...args });
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                           onSaveNewField(...args);
                           setNewFieldData(null);
                         }}

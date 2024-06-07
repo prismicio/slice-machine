@@ -1,4 +1,3 @@
-// import { NestableWidget } from "@prismicio/types-internal/lib/customtypes";
 import { NestedGroup } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { StringOrNull } from "@prismicio/types-internal/lib/validators";
 import { getOrElseW } from "fp-ts/lib/Either";
