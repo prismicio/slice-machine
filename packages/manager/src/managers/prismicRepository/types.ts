@@ -81,7 +81,7 @@ export type AllChangeTypes =
 	| CustomTypeInsertChange
 	| CustomTypeUpdateChange
 	| CustomTypeDeleteChange;
-export interface PushBody extends Record<string, unknown> {
+export interface PushBody {
 	confirmDeleteDocuments: boolean;
 	changes: AllChangeTypes[];
 }
