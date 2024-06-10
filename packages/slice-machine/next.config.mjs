@@ -1,7 +1,7 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import semver from "semver";
 
-import pkg from "./package.json" assert { type: "json" };
+import pkg from "./package.json" with { type: "json" };
 
 const parsedPkgVersion = semver.parse(pkg.version);
 if (parsedPkgVersion === null) {
