@@ -86,7 +86,7 @@ const CustomListItem = ({
       group: Groups.fromSM(groupItem.value),
       previousFieldId: previousKey,
       newFieldId: newKey,
-      field: Groups.fromSM(value),
+      field: value.config?.fields ? Groups.fromSM(value) : value,
     });
 
     saveItem({
