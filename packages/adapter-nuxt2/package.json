@@ -73,7 +73,7 @@
 		"prismic-ts-codegen": "^0.1.17"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "0.2.0",
+		"@prismicio/mock": "0.3.7-alpha.1",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",

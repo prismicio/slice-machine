@@ -5073,18 +5073,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/api-renderer@npm:3.1.0-alpha.0":
-  version: 3.1.0-alpha.0
-  resolution: "@prismicio/api-renderer@npm:3.1.0-alpha.0"
+"@prismicio/api-renderer@npm:3.2.0-alpha.0":
+  version: 3.2.0-alpha.0
+  resolution: "@prismicio/api-renderer@npm:3.2.0-alpha.0"
   dependencies:
-    "@prismicio/types-internal": 2.4.0-alpha.4
+    "@prismicio/types-internal": 2.5.0-alpha.4
     tslib: ^2.5.0
     uuid: ^9.0.0
   peerDependencies:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
-  checksum: 4bbe414502d8f8662bd94ec51598b65958105be85808b9dd7ec6fb4720315873ac4abea81bcba5525cfdf168d3c8bb1125bb83e4a97c4119600540230de4a398
+  checksum: bb33c302e1c869669db2f825b1f44ecb74cf2b3130e9e7f75d4a1956b277800f221f07115284f5fa25dfcffb38a22bb93fd2db48e4a17aae1780e971663c7adc
   languageName: node
   linkType: hard
 
@@ -5244,27 +5244,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mock@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@prismicio/mock@npm:0.2.0"
-  dependencies:
-    "@prismicio/types": ^0.2.4
-    change-case: ^4.1.2
-  checksum: 2da6f9e99495ba2c8cb6380e1244c1d4a709b6a7714b71896ec6ec55c5a4d73c608f01642d71155321c10e6001eed40b7ba90012f306ae50e1e7ab5d1fd93e80
-  languageName: node
-  linkType: hard
-
-"@prismicio/mock@npm:0.3.3":
-  version: 0.3.3
-  resolution: "@prismicio/mock@npm:0.3.3"
-  dependencies:
-    change-case: ^5.4.4
-  peerDependencies:
-    "@prismicio/client": ^7
-  checksum: 4bcb9a8ae5446b807627e759cde19991d555cc48ba16baaddfe62f466793369ad539bafe3c54264b24395eac6a05267c8b54dfff53b7430045ebece73fa3c704
-  languageName: node
-  linkType: hard
-
 "@prismicio/mock@npm:0.3.7-alpha.1":
   version: 0.3.7-alpha.1
   resolution: "@prismicio/mock@npm:0.3.7-alpha.1"
@@ -5276,12 +5255,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mocks@npm:2.2.0, @prismicio/mocks@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "@prismicio/mocks@npm:2.2.0"
+"@prismicio/mocks@npm:v2.3.0-alpha.0":
+  version: 2.3.0-alpha.0
+  resolution: "@prismicio/mocks@npm:2.3.0-alpha.0"
   dependencies:
-    "@prismicio/api-renderer": 3.1.0-alpha.0
-    "@prismicio/types-internal": 2.4.1
+    "@prismicio/api-renderer": 3.2.0-alpha.0
+    "@prismicio/types-internal": 2.5.0-alpha.4
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
@@ -5290,7 +5269,7 @@ __metadata:
     newtype-ts: ^0.3.5
     tslib: ^2.3.1
     uuid: ^9.0.1
-  checksum: 9be4ab6991d188c4beb2697a6840dfe0196e2630d828d6864cf8b59920c7956214f6fbb32b6d7a2df5ad316a9f4e8e457a41dbfebb5c2498f7a0911c4f11c8d5
+  checksum: 6297f75ca96be2f6b3ad189c5ed0e454f5cf67e67e25d5eb6e4ac56f1a6e2bee85e60dfb3d40c65720785dfbb7e3f8fbfee6718be0deffdf94139cac8a1e9d95
   languageName: node
   linkType: hard
 
@@ -5396,6 +5375,23 @@ __metadata:
     "@esbuild/android-arm":
       optional: true
   checksum: a6c79c76e47a8f99efbb745afb1e48583d0f464dc37f18602b0115f84831f758da5aeeaea4dbe165675d8fd405e8ae3e26fc847736d5c6f179f4c6ff0ab1510d
+  languageName: node
+  linkType: hard
+
+"@prismicio/types-internal@npm:2.4.1":
+  version: 2.4.1
+  resolution: "@prismicio/types-internal@npm:2.4.1"
+  dependencies:
+    monocle-ts: ^2.3.11
+    newtype-ts: ^0.3.5
+    tslib: ^2.3.1
+  peerDependencies:
+    "@types/uuid": ^9.0.2
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    io-ts-types: ^0.5.16
+    uuid: ^9.0.0
+  checksum: a70a68b82d618b384cd8eb1343d7bff42c1663da8303d757010c14947cafdee241eaf035322c7b1f42f63918ecaf51d944ebc34a60acb934fa8a9015a1dc7b3d
   languageName: node
   linkType: hard
 
@@ -8099,7 +8095,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-next@workspace:packages/adapter-next"
   dependencies:
-    "@prismicio/mock": 0.2.0
+    "@prismicio/mock": 0.3.7-alpha.1
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
@@ -8144,7 +8140,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-nuxt2@workspace:packages/adapter-nuxt2"
   dependencies:
-    "@prismicio/mock": 0.2.0
+    "@prismicio/mock": 0.3.7-alpha.1
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
@@ -8185,7 +8181,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-nuxt@workspace:packages/adapter-nuxt"
   dependencies:
-    "@prismicio/mock": 0.2.0
+    "@prismicio/mock": 0.3.7-alpha.1
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
@@ -8227,7 +8223,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-sveltekit@workspace:packages/adapter-sveltekit"
   dependencies:
-    "@prismicio/mock": 0.2.0
+    "@prismicio/mock": 0.3.7-alpha.1
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
@@ -8350,8 +8346,8 @@ __metadata:
     "@antfu/ni": ^0.20.0
     "@prismicio/client": ^7.5.0
     "@prismicio/custom-types-client": 2.1.0-alpha.0
-    "@prismicio/mock": 0.2.0
-    "@prismicio/mocks": ^2.2.0
+    "@prismicio/mock": 0.3.7-alpha.1
+    "@prismicio/mocks": v2.3.0-alpha.0
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@segment/analytics-node": 1.1.3
     "@size-limit/preset-small-lib": 8.2.4
@@ -13672,7 +13668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"camel-case@npm:^4.1.1, camel-case@npm:^4.1.2":
+"camel-case@npm:^4.1.1":
   version: 4.1.2
   resolution: "camel-case@npm:4.1.2"
   dependencies:
@@ -13752,17 +13748,6 @@ __metadata:
   version: 1.0.30001594
   resolution: "caniuse-lite@npm:1.0.30001594"
   checksum: 59e52b2213f34fa9317813037fbab4f9b163f9bfeaeeb53035a57046ee2366b69eafc257997eab22982dc061d0576d1f4ef97c29425e1989f6589a7b1d8ed2d5
-  languageName: node
-  linkType: hard
-
-"capital-case@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "capital-case@npm:1.0.4"
-  dependencies:
-    no-case: ^3.0.4
-    tslib: ^2.0.3
-    upper-case-first: ^2.0.2
-  checksum: 41fa8fa87f6d24d0835a2b4a9341a3eaecb64ac29cd7c5391f35d6175a0fa98ab044e7f2602e1ec3afc886231462ed71b5b80c590b8b41af903ec2c15e5c5931
   languageName: node
   linkType: hard
 
@@ -13846,26 +13831,6 @@ __metadata:
     escape-string-regexp: ^1.0.5
     supports-color: ^5.3.0
   checksum: ec3661d38fe77f681200f878edbd9448821924e0f93a9cefc0e26a33b145f1027a2084bf19967160d11e1f03bfe4eaffcabf5493b89098b2782c3fe0b03d80c2
-  languageName: node
-  linkType: hard
-
-"change-case@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "change-case@npm:4.1.2"
-  dependencies:
-    camel-case: ^4.1.2
-    capital-case: ^1.0.4
-    constant-case: ^3.0.4
-    dot-case: ^3.0.4
-    header-case: ^2.0.4
-    no-case: ^3.0.4
-    param-case: ^3.0.4
-    pascal-case: ^3.1.2
-    path-case: ^3.0.4
-    sentence-case: ^3.0.4
-    snake-case: ^3.0.4
-    tslib: ^2.0.3
-  checksum: e4bc4a093a1f7cce8b33896665cf9e456e3bc3cc0def2ad7691b1994cfca99b3188d0a513b16855b01a6bd20692fcde12a7d4d87a5615c4c515bbbf0e651f116
   languageName: node
   linkType: hard
 
@@ -14617,17 +14582,6 @@ __metadata:
   dependencies:
     bluebird: ^3.1.1
   checksum: 5a44ee975f8403dd3ff8ff3472fda7db0484b19f153eaac38e784465505a0741939c72d703befda7c75649739fc7a68f9659a86e2a62469336a8d531bd7a10df
-  languageName: node
-  linkType: hard
-
-"constant-case@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "constant-case@npm:3.0.4"
-  dependencies:
-    no-case: ^3.0.4
-    tslib: ^2.0.3
-    upper-case: ^2.0.2
-  checksum: 6c3346d51afc28d9fae922e966c68eb77a19d94858dba230dd92d7b918b37d36db50f0311e9ecf6847e43e934b1c01406a0936973376ab17ec2c471fbcfb2cf3
   languageName: node
   linkType: hard
 
@@ -19107,16 +19061,6 @@ __metadata:
   bin:
     he: bin/he
   checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
-  languageName: node
-  linkType: hard
-
-"header-case@npm:^2.0.4":
-  version: 2.0.4
-  resolution: "header-case@npm:2.0.4"
-  dependencies:
-    capital-case: ^1.0.4
-    tslib: ^2.0.3
-  checksum: 571c83eeb25e8130d172218712f807c0b96d62b020981400bccc1503a7cf14b09b8b10498a962d2739eccf231d950e3848ba7d420b58a6acd2f9283439546cd9
   languageName: node
   linkType: hard
 
@@ -24868,7 +24812,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"param-case@npm:^3.0.3, param-case@npm:^3.0.4":
+"param-case@npm:^3.0.3":
   version: 3.0.4
   resolution: "param-case@npm:3.0.4"
   dependencies:
@@ -25015,16 +24959,6 @@ __metadata:
   version: 1.0.1
   resolution: "path-browserify@npm:1.0.1"
   checksum: c6d7fa376423fe35b95b2d67990060c3ee304fc815ff0a2dc1c6c3cfaff2bd0d572ee67e18f19d0ea3bbe32e8add2a05021132ac40509416459fffee35200699
-  languageName: node
-  linkType: hard
-
-"path-case@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "path-case@npm:3.0.4"
-  dependencies:
-    dot-case: ^3.0.4
-    tslib: ^2.0.3
-  checksum: 61de0526222629f65038a66f63330dd22d5b54014ded6636283e1d15364da38b3cf29e4433aa3f9d8b0dba407ae2b059c23b0104a34ee789944b1bc1c5c7e06d
   languageName: node
   linkType: hard
 
@@ -29461,17 +29395,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sentence-case@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "sentence-case@npm:3.0.4"
-  dependencies:
-    no-case: ^3.0.4
-    tslib: ^2.0.3
-    upper-case-first: ^2.0.2
-  checksum: 3cfe6c0143e649132365695706702d7f729f484fa7b25f43435876efe7af2478243eefb052bacbcce10babf9319fd6b5b6bc59b94c80a1c819bcbb40651465d5
-  languageName: node
-  linkType: hard
-
 "serialize-javascript@npm:^4.0.0":
   version: 4.0.0
   resolution: "serialize-javascript@npm:4.0.0"
@@ -29797,8 +29720,8 @@ __metadata:
     "@prismicio/editor-fields": 0.4.29
     "@prismicio/editor-support": 0.4.29
     "@prismicio/editor-ui": 0.4.29
-    "@prismicio/mock": 0.3.3
-    "@prismicio/mocks": 2.2.0
+    "@prismicio/mock": 0.3.7-alpha.1
+    "@prismicio/mocks": v2.3.0-alpha.0
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@radix-ui/react-hover-card": 1.0.6
@@ -29906,16 +29829,6 @@ __metadata:
   version: 1.4.0
   resolution: "smob@npm:1.4.0"
   checksum: f693b42698c90262dee4324eae635ea2aa16782161274b47417f87e353880487cdea8e6d9d07fb9b2a0e0df472ef0c5a1bfc07395edd8acfad7062797c1293ca
-  languageName: node
-  linkType: hard
-
-"snake-case@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "snake-case@npm:3.0.4"
-  dependencies:
-    dot-case: ^3.0.4
-    tslib: ^2.0.3
-  checksum: 0a7a79900bbb36f8aaa922cf111702a3647ac6165736d5dc96d3ef367efc50465cac70c53cd172c382b022dac72ec91710608e5393de71f76d7142e6fd80e8a3
   languageName: node
   linkType: hard
 
@@ -30278,7 +30191,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
-    "@prismicio/mocks": ^2.2.0
+    "@prismicio/mocks": v2.3.0-alpha.0
     "@prismicio/types-internal": 2.5.0-alpha.4
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:*"
@@ -32509,28 +32422,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"upper-case-first@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "upper-case-first@npm:2.0.2"
-  dependencies:
-    tslib: ^2.0.3
-  checksum: 4487db4701effe3b54ced4b3e4aa4d9ab06c548f97244d04aafb642eedf96a76d5a03cf5f38f10f415531d5792d1ac6e1b50f2a76984dc6964ad530f12876409
-  languageName: node
-  linkType: hard
-
 "upper-case@npm:^1.1.1":
   version: 1.1.3
   resolution: "upper-case@npm:1.1.3"
   checksum: 991c845de75fa56e5ad983f15e58494dd77b77cadd79d273cc11e8da400067e9881ae1a52b312aed79b3d754496e2e0712e08d22eae799e35c7f9ba6f3d8a85d
-  languageName: node
-  linkType: hard
-
-"upper-case@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "upper-case@npm:2.0.2"
-  dependencies:
-    tslib: ^2.0.3
-  checksum: 508723a2b03ab90cf1d6b7e0397513980fab821cbe79c87341d0e96cedefadf0d85f9d71eac24ab23f526a041d585a575cfca120a9f920e44eb4f8a7cf89121c
   languageName: node
   linkType: hard
 
