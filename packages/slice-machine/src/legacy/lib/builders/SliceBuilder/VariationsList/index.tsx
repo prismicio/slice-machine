@@ -60,7 +60,9 @@ export const VariationsList: FC<VariationsListProps> = (props) => {
                 }}
                 startIcon="add"
                 color="grey"
-              />
+              >
+                Add a variation
+              </Button>
             </Box>
             <div
               className={styles.hideScrollbar}
