@@ -251,6 +251,7 @@ export class SliceBuilderPage extends BuilderPage {
         name: "Copy code snippet",
         exact: true,
       })
+      .first()
       .click();
 
     const handle = await this.page.evaluateHandle(() =>
