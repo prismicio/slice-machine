@@ -23,8 +23,8 @@ The following setup is required to work on this project:
 #### "SM" Types
 
 - Slice Machine contains Slice Machine-specific versions of some `@prismicio/types-internal` types. For example, Slice Machine's `GroupSM` is a modified version of `@prismicio/types-internal`'s `Group`.
-- The "SM" types contain reshaped data that make it easy to perform Slice Machine-specific transformations. For example, `GroupSM` uses an array to define its fields, while `Group` uses an object. The array makes it easy to change the order of fields.
-- "SM" types generally have `fromSM` and `toSM` helpers to convert one data type into the other.
+- The "SM" types contain reshaped data that make it easy to perform Slice Machine-specific transformations. For example, `GroupSM` uses an array to define its fields while `Group` uses an object. The array makes it easy to change the order of fields.
+- "SM" types have `fromSM` and `toSM` helpers to convert one data type into the other.
 - The "SM" types will be removed at some point in the future to simplify cross-repository development.
 
 #### Tests
