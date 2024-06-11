@@ -2837,7 +2837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/hash@npm:^0.9.0, @emotion/hash@npm:^0.9.1":
+"@emotion/hash@npm:^0.9.1":
   version: 0.9.1
   resolution: "@emotion/hash@npm:0.9.1"
   checksum: 716e17e48bf9047bf9383982c071de49f2615310fb4e986738931776f5a823bc1f29c84501abe0d3df91a3803c80122d24e28b57351bca9e01356ebb33d89876
@@ -5115,12 +5115,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.28":
-  version: 0.4.28
-  resolution: "@prismicio/editor-fields@npm:0.4.28"
+"@prismicio/editor-fields@npm:0.4.29":
+  version: 0.4.29
+  resolution: "@prismicio/editor-fields@npm:0.4.29"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.28
+    "@prismicio/editor-support": 0.4.29
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 2.4.1
     "@tiptap/core": 2.3.0
@@ -5151,16 +5151,16 @@ __metadata:
     uuid: 9.0.1
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.28
+    "@prismicio/editor-ui": ^0.4.29
     react: 18
     react-dom: 18
-  checksum: cef831b9053f98a86cc8803e33b9f920f7408902f0ed279e129d38b616c0686341418bac8582c5ba19c9f073872708d4363b2bbd21b233b779250839c4bb3ebc
+  checksum: 4704babe217ca12f6a7de7b56d836bbe476a9fd60b8c9f037eedf2f463c3b3c5c1f6429f03b8a69e8a91c9a370435f78fada7ebcd62526b2a2347a1e62eea007
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.28":
-  version: 0.4.28
-  resolution: "@prismicio/editor-support@npm:0.4.28"
+"@prismicio/editor-support@npm:0.4.29":
+  version: 0.4.29
+  resolution: "@prismicio/editor-support@npm:0.4.29"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -5171,17 +5171,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 596ef0fde95329e3b72917b2913ba58ba9592a0db147f500396a1a971423841aa1fd0642d2d3688b4f2ada13ccf136aea4cb69c14450b2a467ef8ee857af2767
+  checksum: 52c88f98c2aa49b266cb72bcf3310b9e538087a48d197b088c9e98d6211a5a8f7a09de8e2da5f34503cbcf6ea559610e67d116e3399f91a09b4a56bbe1219f40
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.28":
-  version: 0.4.28
-  resolution: "@prismicio/editor-ui@npm:0.4.28"
+"@prismicio/editor-ui@npm:0.4.29":
+  version: 0.4.29
+  resolution: "@prismicio/editor-ui@npm:0.4.29"
   dependencies:
     "@internationalized/date": 3.5.0
-    "@prismicio/editor-support": 0.4.28
-    "@radix-ui/react-accordion": 1.1.2
+    "@prismicio/editor-support": 0.4.29
     "@radix-ui/react-avatar": 1.0.4
     "@radix-ui/react-checkbox": 1.0.4
     "@radix-ui/react-dialog": 1.0.5
@@ -5221,9 +5220,6 @@ __metadata:
     "@tiptap/extension-text": 2.3.0
     "@tiptap/pm": 2.3.0
     "@tiptap/react": 2.3.0
-    "@vanilla-extract/css": 1.14.1
-    "@vanilla-extract/css-utils": 0.1.2
-    "@vanilla-extract/sprinkles": 1.5.0
     clsx: 1.2.1
     csstype: 3.1.2
     react-easy-crop: 4.6.1
@@ -5233,7 +5229,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 881ad868516282686e1c9571ca03494a86d3f8f08c0e5e200b0d3603390ee98cb39d9a3515793259cd571fad79d7505d9fa1ed86ea6154f9b1d055ecf0c44fe8
+  checksum: 9b1f6c378666b5018227ecb094c2d85111e5b3e67c8cc989d9658b19616c7a263f88db4f7caa902c974ff5384ff559a160dc48f80d675d59ce123fd86eafdcfd
   languageName: node
   linkType: hard
 
@@ -5463,34 +5459,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-accordion@npm:1.1.2":
-  version: 1.1.2
-  resolution: "@radix-ui/react-accordion@npm:1.1.2"
-  dependencies:
-    "@babel/runtime": ^7.13.10
-    "@radix-ui/primitive": 1.0.1
-    "@radix-ui/react-collapsible": 1.0.3
-    "@radix-ui/react-collection": 1.0.3
-    "@radix-ui/react-compose-refs": 1.0.1
-    "@radix-ui/react-context": 1.0.1
-    "@radix-ui/react-direction": 1.0.1
-    "@radix-ui/react-id": 1.0.1
-    "@radix-ui/react-primitive": 1.0.3
-    "@radix-ui/react-use-controllable-state": 1.0.1
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-dom": "*"
-    react: ^16.8 || ^17.0 || ^18.0
-    react-dom: ^16.8 || ^17.0 || ^18.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: ac8587c705bb723328399eb8759ebc188aa500a6e1884d7b63cbd9e98e8607e7373c4517b2e4c093a08477129be57259e740b465b963f30df63a4e0dadaee09d
-  languageName: node
-  linkType: hard
-
 "@radix-ui/react-arrow@npm:1.0.3":
   version: 1.0.3
   resolution: "@radix-ui/react-arrow@npm:1.0.3"
@@ -5558,33 +5526,6 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 6dac5bddd9e1c42b149555501440918d9eae70da13b6d8539c3bf46b6c07681119d865d2106a43f729884ae8e2043bedc34c4d00a09a527b3bf0feade088d188
-  languageName: node
-  linkType: hard
-
-"@radix-ui/react-collapsible@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@radix-ui/react-collapsible@npm:1.0.3"
-  dependencies:
-    "@babel/runtime": ^7.13.10
-    "@radix-ui/primitive": 1.0.1
-    "@radix-ui/react-compose-refs": 1.0.1
-    "@radix-ui/react-context": 1.0.1
-    "@radix-ui/react-id": 1.0.1
-    "@radix-ui/react-presence": 1.0.1
-    "@radix-ui/react-primitive": 1.0.3
-    "@radix-ui/react-use-controllable-state": 1.0.1
-    "@radix-ui/react-use-layout-effect": 1.0.1
-  peerDependencies:
-    "@types/react": "*"
-    "@types/react-dom": "*"
-    react: ^16.8 || ^17.0 || ^18.0
-    react-dom: ^16.8 || ^17.0 || ^18.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: 26976e4a72a3e0f4b2c62af2898b3e205c3652af46a3b41cda9a43567fe8381d9ef6afb0b29e3214c450b847f4f2099a533cffc5045844ecab290e9fa6114ca9
   languageName: node
   linkType: hard
 
@@ -11347,48 +11288,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vanilla-extract/css-utils@npm:0.1.2":
-  version: 0.1.2
-  resolution: "@vanilla-extract/css-utils@npm:0.1.2"
-  checksum: 002c65889910c5a1f6672f2f0451e9667aa2a5e17eeb58cf14f4eda1869c6eed9a6a25951ffa444650a65919ecb61831c05380707ab787568be10927653ed53c
-  languageName: node
-  linkType: hard
-
-"@vanilla-extract/css@npm:1.14.1":
-  version: 1.14.1
-  resolution: "@vanilla-extract/css@npm:1.14.1"
-  dependencies:
-    "@emotion/hash": ^0.9.0
-    "@vanilla-extract/private": ^1.0.3
-    chalk: ^4.1.1
-    css-what: ^6.1.0
-    cssesc: ^3.0.0
-    csstype: ^3.0.7
-    deep-object-diff: ^1.1.9
-    deepmerge: ^4.2.2
-    media-query-parser: ^2.0.2
-    modern-ahocorasick: ^1.0.0
-    outdent: ^0.8.0
-  checksum: d46afaf16ad0d487fe4ad83f6ca3a08aa0c566fcaa1360d045b30282eab8853005e9bac36c969d27a06185e15832674e5c5de281afe5b3e3dcf8416d137cc819
-  languageName: node
-  linkType: hard
-
-"@vanilla-extract/private@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@vanilla-extract/private@npm:1.0.3"
-  checksum: 866a71ba6804edeb0735684e7723ba78f5cf0bb40d4fb538fe6bf7d73928099e341312337b2a510ac0ce96ff8a4b39eb7f7a5fad0c842532353dd20e7278f29b
-  languageName: node
-  linkType: hard
-
-"@vanilla-extract/sprinkles@npm:1.5.0":
-  version: 1.5.0
-  resolution: "@vanilla-extract/sprinkles@npm:1.5.0"
-  peerDependencies:
-    "@vanilla-extract/css": ^1.0.0
-  checksum: 522b96afe856a72d76072ab41453edc35117772a6ac829c8a5ad09cddd69152e152b1cbda0b4344d50dbde59d0effa39301beb7acf319ef88f485966c89c80fd
-  languageName: node
-  linkType: hard
-
 "@vercel/nft@npm:^0.22.6":
   version: 0.22.6
   resolution: "@vercel/nft@npm:0.22.6"
@@ -15401,7 +15300,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:3.1.2, csstype@npm:^3.0.10, csstype@npm:^3.0.2, csstype@npm:^3.0.7, csstype@npm:^3.1.0, csstype@npm:^3.1.1":
+"csstype@npm:3.1.2, csstype@npm:^3.0.10, csstype@npm:^3.0.2, csstype@npm:^3.1.0, csstype@npm:^3.1.1":
   version: 3.1.2
   resolution: "csstype@npm:3.1.2"
   checksum: e1a52e6c25c1314d6beef5168da704ab29c5186b877c07d822bd0806717d9a265e8493a2e35ca7e68d0f5d472d43fac1cdce70fd79fd0853dff81f3028d857b5
@@ -15695,13 +15594,6 @@ __metadata:
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
   checksum: edb65dd0d7d1b9c40b2f50219aef30e116cedd6fc79290e740972c132c09106d2e80aa0bc8826673dd5a00222d4179c84b36a790eef63a4c4bca75a37ef90804
-  languageName: node
-  linkType: hard
-
-"deep-object-diff@npm:^1.1.9":
-  version: 1.1.9
-  resolution: "deep-object-diff@npm:1.1.9"
-  checksum: ecd42455e4773f653595d28070295e7aaa8402db5f8ab21d0bec115a7cb4de5e207a5665514767da5f025c96597f1d3a0a4888aeb4dd49e03c996871a3aa05ef
   languageName: node
   linkType: hard
 
@@ -22330,15 +22222,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"media-query-parser@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "media-query-parser@npm:2.0.2"
-  dependencies:
-    "@babel/runtime": ^7.12.5
-  checksum: 8ef956d9e63fe6f4041988beda69843b3a6bb48228ea2923a066f6e7c8f7c5dba75fae357318c48a97ed5beae840b8425cb7e727fc1bb77acc65f2005f8945ab
-  languageName: node
-  linkType: hard
-
 "media-typer@npm:0.3.0":
   version: 0.3.0
   resolution: "media-typer@npm:0.3.0"
@@ -23427,13 +23310,6 @@ __metadata:
   version: 1.0.0
   resolution: "mock-stdin@npm:1.0.0"
   checksum: da038fae5cc189915e4865cbcb0a0b71e98a7e8569959423ac6e798d5e626bc12708c9918d98c46a5aab35d8d8f8bfa782dce25532173137a69fc162990eda91
-  languageName: node
-  linkType: hard
-
-"modern-ahocorasick@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "modern-ahocorasick@npm:1.0.1"
-  checksum: ec83479f406511f37a966d66ce1c2b1701bb4a2cc2aabbbc257001178c9fbc48ce748c88eb10dfe72ba8b7f991a0bc7f1fa14683f444685edd1a9eeb32ecbc1e
   languageName: node
   linkType: hard
 
@@ -24862,13 +24738,6 @@ __metadata:
   version: 1.0.2
   resolution: "os-tmpdir@npm:1.0.2"
   checksum: 5666560f7b9f10182548bf7013883265be33620b1c1b4a4d405c25be2636f970c5488ff3e6c48de75b55d02bde037249fe5dbfbb4c0fb7714953d56aed062e6d
-  languageName: node
-  linkType: hard
-
-"outdent@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "outdent@npm:0.8.0"
-  checksum: 72b7c1a287674317ea477999ec24e73a9eda21de35eb9429218f4a5bab899e964afaee7508265898118fee5cbee1d79397916b66dd8aeee285cd948ea5b1f562
   languageName: node
   linkType: hard
 
@@ -29925,9 +29794,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.5.0
-    "@prismicio/editor-fields": 0.4.28
-    "@prismicio/editor-support": 0.4.28
-    "@prismicio/editor-ui": 0.4.28
+    "@prismicio/editor-fields": 0.4.29
+    "@prismicio/editor-support": 0.4.29
+    "@prismicio/editor-ui": 0.4.29
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.2.0
     "@prismicio/simulator": 0.1.4
