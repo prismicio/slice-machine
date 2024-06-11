@@ -502,3 +502,45 @@ test("I can see and copy the code snippets for groups", async ({
   await expect(sliceBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
   await sliceBuilderPage.copyCodeSnippet("my_group", "static");
 });
+
+test("I can see and copy the code snippets for nested groups and their sub fields", async ({
+  sliceBuilderPage,
+  slice,
+}) => {
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await expect(sliceBuilderPage.codeSnippetsFieldSwitch).not.toBeChecked();
+  await sliceBuilderPage.codeSnippetsFieldSwitch.click();
+  await expect(sliceBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
+  await sliceBuilderPage.copyCodeSnippet(
+    "my_nested_group",
+    "static",
+    "my_group",
+  );
+  await sliceBuilderPage.copyCodeSnippet(
+    "my_nested_group_sub_field",
+    "static",
+    "my_nested_group",
+  );
+});

@@ -390,6 +390,40 @@ test("I can see and copy the code snippets for groups", async ({
   await pageTypesBuilderPage.copyCodeSnippet("my_group");
 });
 
+test("I can see and copy the code snippets for nested groups and their sub fields", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    groupFieldId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await expect(pageTypesBuilderPage.codeSnippetsFieldSwitch).not.toBeChecked();
+  await pageTypesBuilderPage.codeSnippetsFieldSwitch.click();
+  await expect(pageTypesBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
+  await pageTypesBuilderPage.copyCodeSnippet("my_nested_group", "my_group");
+  await pageTypesBuilderPage.copyCodeSnippet(
+    "my_nested_group_sub_field",
+    "my_nested_group",
+  );
+});
+
 test("I cannot delete default UID field for reusable page type", async ({
   pageTypesBuilderPage,
   reusablePageType,

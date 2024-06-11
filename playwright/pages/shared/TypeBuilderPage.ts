@@ -264,12 +264,13 @@ export class TypeBuilderPage extends BuilderPage {
     await this.page.getByRole("menuitem", { name: "Delete field" }).click();
   }
 
-  async copyCodeSnippet(fieldId: string) {
-    await this.getListItem(fieldId)
+  async copyCodeSnippet(fieldId: string, groupFieldId?: string) {
+    await this.getListItem(fieldId, groupFieldId)
       .getByRole("button", {
         name: "Copy code snippet",
         exact: true,
       })
+      .first()
       .click();
 
     const handle = await this.page.evaluateHandle(() =>
@@ -279,13 +280,13 @@ export class TypeBuilderPage extends BuilderPage {
     expect(clipboardContent).toContain(fieldId);
 
     await expect(
-      this.getListItem(fieldId).getByRole("button", {
+      this.getListItem(fieldId, groupFieldId).getByRole("button", {
         name: "Code snippet copied",
         exact: true,
       }),
     ).toBeVisible();
     await expect(
-      this.getListItem(fieldId).getByRole("button", {
+      this.getListItem(fieldId, groupFieldId).getByRole("button", {
         name: "Copy code snippet",
         exact: true,
       }),
