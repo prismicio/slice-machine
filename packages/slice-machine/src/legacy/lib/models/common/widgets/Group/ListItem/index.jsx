@@ -216,6 +216,7 @@ const CustomListItem = ({
                           enterEditMode,
                           deleteItem: onDeleteItem,
                           saveItem: onSaveField,
+                          showHints,
                           renderFieldAccessor: (key) =>
                             `item${transformKeyAccessor(item.key)}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
