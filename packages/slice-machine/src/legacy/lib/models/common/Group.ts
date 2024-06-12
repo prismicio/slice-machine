@@ -7,35 +7,46 @@ import { StringOrNull } from "@prismicio/types-internal/lib/validators";
 import { getOrElseW } from "fp-ts/lib/Either";
 import * as t from "io-ts";
 
-import { NestedGroupSM } from "./NestedGroup";
+import { FieldsSM } from "./Fields";
 
-export const GroupConfig = t.exact(
-  t.partial({
-    label: StringOrNull,
-    repeat: t.boolean,
-    fields: t.array(
+const createGroupConfig = <TFields extends t.Mixed>(fields: TFields) =>
+  t.exact(
+    t.partial({
+      label: StringOrNull,
+      repeat: t.boolean,
+      fields,
+    }),
+  );
+
+const createGroupSM = <TFields extends t.Mixed>(fields: TFields) =>
+  t.exact(
+    t.intersection([
       t.type({
-        key: t.string,
-        value: t.union([NestableWidget, NestedGroupSM]),
+        type: t.literal("Group"),
       }),
-    ),
+      t.partial({
+        fieldset: StringOrNull,
+        icon: t.string,
+        description: t.string,
+        config: createGroupConfig(fields),
+      }),
+    ]),
+  );
+
+export const NestedGroupSM = createGroupSM(FieldsSM);
+export type NestedGroupSM = t.TypeOf<typeof NestedGroupSM>;
+
+const GroupFieldsSM = t.array(
+  t.type({
+    key: t.string,
+    value: t.union([NestableWidget, NestedGroupSM]),
   }),
 );
+
+export const GroupConfig = createGroupConfig(GroupFieldsSM);
 export type GroupConfig = t.TypeOf<typeof GroupConfig>;
 
-export const GroupSM = t.exact(
-  t.intersection([
-    t.type({
-      type: t.literal("Group"),
-    }),
-    t.partial({
-      fieldset: StringOrNull,
-      icon: t.string,
-      description: t.string,
-      config: GroupConfig,
-    }),
-  ]),
-);
+export const GroupSM = createGroupSM(GroupFieldsSM);
 export type GroupSM = t.TypeOf<typeof GroupSM>;
 
 export const Groups = {
