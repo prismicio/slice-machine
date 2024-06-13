@@ -3,7 +3,7 @@ import { Box, Text } from "theme-ui";
 
 import Li from "@/legacy/components/Li";
 import ListItem from "@/legacy/components/ListItem";
-import * as Widgets from "@/legacy/lib/models/common/widgets/withGroup";
+import { Widgets } from "@/legacy/lib/models/common/widgets";
 
 import { findWidgetByConfigOrType } from "../../../utils";
 import Hint from "./components/Hints";

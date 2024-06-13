@@ -17,11 +17,28 @@ import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
 import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
-import groupBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/groupBuilderArray";
-import * as Widgets from "@/legacy/lib/models/common/widgets/withNestedGroup";
+import { Widgets } from "@/legacy/lib/models/common/widgets/groupWidgets";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
+
+export const widgetsArray = [
+  Widgets.NestedGroup,
+  Widgets.StructuredText,
+  Widgets.Image,
+  Widgets.Link,
+  Widgets.LinkToMedia,
+  Widgets.ContentRelationship,
+  Widgets.Select,
+  Widgets.Boolean,
+  Widgets.Date,
+  Widgets.Timestamp,
+  Widgets.Embed,
+  Widgets.Number,
+  Widgets.GeoPoint,
+  Widgets.Color,
+  Widgets.Text,
+];
 
 /* eslint-disable */
 const CustomListItem = ({
@@ -283,7 +300,7 @@ const CustomListItem = ({
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={groupBuilderWidgetsArray}
+        widgetsArray={widgetsArray}
       />
       <EditModal
         data={editModalData}
