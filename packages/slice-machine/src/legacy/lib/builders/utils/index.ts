@@ -27,7 +27,7 @@ export const findWidgetByConfigOrType = (
   // in the same widget group, so this will use whichever is provided. For example,
   // in the custom list item for Group, we always pass NestedGroup as the Group widget.
   if (type === GroupFieldType) {
-    return widgets.NestedGroup ?? widgets.Group;
+    return widgets.Group ?? widgets.NestedGroup;
   }
 
   return widgets[type];

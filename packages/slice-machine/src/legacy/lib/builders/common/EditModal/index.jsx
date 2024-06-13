@@ -11,7 +11,7 @@ import {
   createInitialValues,
 } from "@/legacy/lib/forms";
 import { DeprecatedMockConfigMessage } from "@/legacy/lib/models/common/DeprecatedMockConfigMessage";
-import * as Widgets from "@/legacy/lib/models/common/widgets/withGroup";
+import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { removeProp } from "@/legacy/lib/utils";
 
 import { findWidgetByConfigOrType } from "../../utils";
