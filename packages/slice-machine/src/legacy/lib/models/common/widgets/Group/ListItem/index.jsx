@@ -17,33 +17,16 @@ import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
 import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
-import { Widgets } from "@/legacy/lib/models/common/widgets/groupWidgets";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
-export const widgetsArray = [
-  Widgets.NestedGroup,
-  Widgets.StructuredText,
-  Widgets.Image,
-  Widgets.Link,
-  Widgets.LinkToMedia,
-  Widgets.ContentRelationship,
-  Widgets.Select,
-  Widgets.Boolean,
-  Widgets.Date,
-  Widgets.Timestamp,
-  Widgets.Embed,
-  Widgets.Number,
-  Widgets.GeoPoint,
-  Widgets.Color,
-  Widgets.Text,
-];
-
 /* eslint-disable */
-const CustomListItem = ({
+export const CustomListItem = ({
   tabId,
   widget,
+  Widgets,
+  widgetsArray,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentSnapshot,
   showHints,
@@ -312,6 +295,4 @@ const CustomListItem = ({
     </Fragment>
   );
 };
-
-export default CustomListItem;
 /* eslint-enable */
