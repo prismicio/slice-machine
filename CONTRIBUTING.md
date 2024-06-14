@@ -68,16 +68,16 @@ yarn run dev
 yarn run build
 
 # Lint your changes before requesting a review. No errors are allowed.
-npm run lint
+yarn run lint
 
 # Format your changes before requesting a review. No errors are allowed.
-npm run prettier:check
+yarn run prettier:check
 # Errors can be fixed automatically:
-npm run prettier:fix
+yarn run prettier:fix
 
 # Test your changes before requesting a review.
 # All changes should be tested. No failing tests are allowed.
-npm run test
+yarn run test
 ```
 
 To start the development version of Slice Machine with a Prismic repository, use the `play` script.
