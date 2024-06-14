@@ -1,9 +1,10 @@
+import { useNestedGroupExperiment } from "@/features/settings/git/useNestedGroupExperiment";
 import { Widgets } from "@/legacy/lib/models/common/widgets/groupWidgets";
 
 import { createWidget } from "./createWidget";
 import { CustomListItem } from "./ListItem";
 
-export const widgetsArray = [
+const widgetsArray = [
   Widgets.NestedGroup,
   Widgets.StructuredText,
   Widgets.Image,
@@ -22,9 +23,19 @@ export const widgetsArray = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const GroupListItem = (props: any) => (
-  <CustomListItem Widgets={Widgets} widgetsArray={widgetsArray} {...props} />
-);
+const GroupListItem = (props: any) => {
+  const nestedGroupExperiment = useNestedGroupExperiment();
+  const maybeFilteredWidgetsArray = nestedGroupExperiment.eligible
+    ? widgetsArray
+    : widgetsArray.filter((widget) => widget.CUSTOM_NAME !== "NestedGroup");
+  return (
+    <CustomListItem
+      Widgets={Widgets}
+      widgetsArray={maybeFilteredWidgetsArray}
+      {...props}
+    />
+  );
+};
 
 export const GroupWidget = createWidget({
   schemaTypeRegex: /^Group$/,
