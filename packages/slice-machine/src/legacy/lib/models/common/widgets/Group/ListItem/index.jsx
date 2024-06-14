@@ -17,6 +17,7 @@ import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
 import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
+import { customName as nestedGroupCustomName } from "@/legacy/lib/models/common/widgets/NestedGroup";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
@@ -27,6 +28,7 @@ export const CustomListItem = ({
   widget,
   Widgets,
   widgetsArray,
+  isNestedGroupItem = false,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentSnapshot,
   showHints,
@@ -234,7 +236,12 @@ export const CustomListItem = ({
                             isRepeatable={isRepeatable}
                             renderHintBase={({ item }) =>
                               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-                              `item${transformKeyAccessor(item.key)}`
+                              `${
+                                isNestedGroupItem ? "subItem" : "item"
+                              }${transformKeyAccessor(item.key)}`
+                            }
+                            isNestedGroup={
+                              widget.CUSTOM_NAME === nestedGroupCustomName
                             }
                             Widgets={Widgets}
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

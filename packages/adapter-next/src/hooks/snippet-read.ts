@@ -28,7 +28,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 	data,
 	{ helpers },
 ) => {
-	const { fieldPath } = data;
+	const { fieldPath, isNestedGroup } = data;
 
 	const label = "React";
 
@@ -85,11 +85,12 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case "Group": {
+			const hintBase = isNestedGroup ? "subItem" : "item";
 			const code = await format(
 				stripIndent`
 					<>
-						{${dotPath(fieldPath)}.map((item) => {
-							// Render the item
+						{${dotPath(fieldPath)}.map((${hintBase}) => {
+							// Render the ${hintBase}
 						})}
 					</>
 				`,

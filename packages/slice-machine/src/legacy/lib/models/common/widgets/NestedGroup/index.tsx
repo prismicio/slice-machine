@@ -4,6 +4,8 @@ import { createWidget } from "@/legacy/lib/models/common/widgets/Group/createWid
 import { CustomListItem } from "@/legacy/lib/models/common/widgets/Group/ListItem";
 import { NonGroupWidgets as Widgets } from "@/legacy/lib/models/common/widgets/nonGroupWidgets";
 
+export const customName = "NestedGroup";
+
 const widgetsArray = [
   Widgets.StructuredText,
   Widgets.Image,
@@ -22,11 +24,16 @@ const widgetsArray = [
 ];
 
 const NestedGroupListItem = (props: GroupListItemProps<NestedGroupSM>) => (
-  <CustomListItem Widgets={Widgets} widgetsArray={widgetsArray} {...props} />
+  <CustomListItem
+    Widgets={Widgets}
+    widgetsArray={widgetsArray}
+    isNestedGroupItem
+    {...props}
+  />
 );
 
 export const NestedGroupWidget = createWidget({
   schemaTypeRegex: /^NestedGroup$/,
   customListItem: NestedGroupListItem,
-  customName: "NestedGroup",
+  customName,
 });

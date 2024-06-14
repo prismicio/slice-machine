@@ -27,7 +27,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 	data,
 	{ helpers },
 ) => {
-	const { fieldPath } = data;
+	const { fieldPath, isNestedGroup } = data;
 
 	const label = "Vue";
 
@@ -97,13 +97,15 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case "Group": {
+			const hintBase = isNestedGroup ? "subItem" : "item";
+
 			return {
 				label,
 				language: "vue",
 				code: await format(
 					stripIndent`
-						<template v-for="item in ${dotPath(fieldPath)}">
-							{{ item }}
+						<template v-for="${hintBase} in ${dotPath(fieldPath)}">
+							{{ ${hintBase} }}
 						</template>
 					`,
 					helpers,

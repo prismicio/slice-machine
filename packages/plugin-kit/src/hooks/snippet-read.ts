@@ -20,6 +20,7 @@ export type Snippet = {
  */
 export type SnippetReadHookData = {
 	fieldPath: string[];
+	isNestedGroup: boolean;
 	model: DynamicWidget;
 };
 
