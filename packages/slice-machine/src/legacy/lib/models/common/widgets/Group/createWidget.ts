@@ -1,12 +1,14 @@
 import { MdPlaylistAdd } from "react-icons/md";
 import * as yup from "yup";
 
+import { TabField } from "@/legacy/lib/models/common/CustomType";
 import {
   type GroupSM,
   type NestedGroupSM,
 } from "@/legacy/lib/models/common/Group";
 import { type Widget } from "@/legacy/lib/models/common/widgets/Widget";
 
+import { type GroupListItemProps } from ".";
 import Form, { FormFields } from "./Form";
 
 const Meta = {
@@ -30,23 +32,24 @@ export const createSchema = (typeRegex: RegExp) =>
   });
 export type SchemaType = ReturnType<typeof createSchema>;
 
-type createWidgetProps = {
+type createWidgetPropsBase<T extends TabField> = {
   schemaTypeRegex: RegExp;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  customListItem: (props: any) => React.ReactElement;
-  customName?: "NestedGroup";
+  customListItem: (props: GroupListItemProps<T>) => JSX.Element;
+  customName?: string;
 };
+type createGroupWidgetProps = createWidgetPropsBase<GroupSM>;
+type createNestedGroupWidgetProps = createWidgetPropsBase<NestedGroupSM> & {
+  customName: "NestedGroup";
+};
+type createWidgetProps = createGroupWidgetProps | createNestedGroupWidgetProps;
 
-export function createWidget({
-  schemaTypeRegex,
-  customListItem,
-}: createWidgetProps): Widget<GroupSM, SchemaType>;
+export function createWidget(
+  props: createGroupWidgetProps,
+): Widget<GroupSM, SchemaType>;
 
-export function createWidget({
-  schemaTypeRegex,
-  customListItem,
-  customName,
-}: createWidgetProps): Widget<NestedGroupSM, SchemaType>;
+export function createWidget(
+  props: createNestedGroupWidgetProps,
+): Widget<NestedGroupSM, SchemaType>;
 
 export function createWidget({
   schemaTypeRegex,
