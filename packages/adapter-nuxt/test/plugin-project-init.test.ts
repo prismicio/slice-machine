@@ -108,169 +108,169 @@ export default defineNuxtConfig({
 	});
 });
 
-describe("Slice Simulator page", () => {
-	test("creates a Slice Simulator page file", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+describe.each(["./app", "./src", "./"])(
+	"Slice Simulator page (srcDir: %s)",
+	(srcDir) => {
+		test("creates a Slice Simulator page file", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
+			await fs.mkdir(path.join(ctx.project.root, srcDir), {
+				recursive: true,
+			});
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, srcDir, "pages", "slice-simulator.vue"),
+				"utf8",
+			);
+
+			expect(contents).toBe(`<template>
+  <SliceSimulator #default="{ slices }">
+    <SliceZone :slices="slices" :components="components" />
+  </SliceSimulator>
+</template>
+
+<script setup>
+import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
+import { components } from "~/slices";
+</script>
+`);
 		});
 
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "pages", "slice-simulator.vue"),
-			"utf8",
-		);
+		test("creates a TypeScript Slice Simulator page file when TypeScript is enabled", async (ctx) => {
+			ctx.project.config.adapter.options.typescript = true;
+			const pluginRunner = createSliceMachinePluginRunner({
+				project: ctx.project,
+				nativePlugins: {
+					[ctx.project.config.adapter.resolve]: adapter,
+				},
+			});
+			await pluginRunner.init();
 
-		expect(contents).toMatchInlineSnapshot(`
-			"<template>
-			  <SliceSimulator #default=\\"{ slices }\\">
-			    <SliceZone :slices=\\"slices\\" :components=\\"components\\" />
-			  </SliceSimulator>
-			</template>
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-			<script setup>
-			import { SliceSimulator } from \\"@slicemachine/adapter-nuxt/simulator\\";
-			import { components } from \\"~/slices\\";
-			</script>
-			"
-		`);
-	});
+			await fs.mkdir(path.join(ctx.project.root, srcDir), {
+				recursive: true,
+			});
 
-	test("creates a TypeScript Slice Simulator page file when TypeScript is enabled", async (ctx) => {
-		ctx.project.config.adapter.options.typescript = true;
-		const pluginRunner = createSliceMachinePluginRunner({
-			project: ctx.project,
-			nativePlugins: {
-				[ctx.project.config.adapter.resolve]: adapter,
-			},
-		});
-		await pluginRunner.init();
+			await pluginRunner.callHook("project:init", { log, installDependencies });
 
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, srcDir, "pages", "slice-simulator.vue"),
+				"utf8",
+			);
 
-		await pluginRunner.callHook("project:init", { log, installDependencies });
+			expect(contents).toBe(`<template>
+  <SliceSimulator #default="{ slices }">
+    <SliceZone :slices="slices" :components="components" />
+  </SliceSimulator>
+</template>
 
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "pages", "slice-simulator.vue"),
-			"utf8",
-		);
-
-		expect(contents).toMatchInlineSnapshot(`
-			"<template>
-			  <SliceSimulator #default=\\"{ slices }\\">
-			    <SliceZone :slices=\\"slices\\" :components=\\"components\\" />
-			  </SliceSimulator>
-			</template>
-
-			<script setup lang=\\"ts\\">
-			import { SliceSimulator } from \\"@slicemachine/adapter-nuxt/simulator\\";
-			import { components } from \\"~/slices\\";
-			</script>
-			"
-		`);
-	});
-
-	test("does not overwrite Slice Simulator page file if it already exists", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
-
-		const filePath = path.join(
-			ctx.project.root,
-			"pages",
-			"slice-simulator.vue",
-		);
-		const contents = "foo";
-
-		await fs.mkdir(path.dirname(filePath), { recursive: true });
-		await fs.writeFile(filePath, contents);
-
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
+<script setup lang="ts">
+import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
+import { components } from "~/slices";
+</script>
+`);
 		});
 
-		const postHookContents = await fs.readFile(filePath, "utf8");
+		test("does not overwrite Slice Simulator page file if it already exists", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		expect(postHookContents).toBe(contents);
-	});
+			await fs.mkdir(path.join(ctx.project.root, srcDir), {
+				recursive: true,
+			});
 
-	test("creates Slice Simulator page file in the src directory if it exists", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+			const filePath = path.join(
+				ctx.project.root,
+				srcDir,
+				"pages",
+				"slice-simulator.vue",
+			);
+			const contents = "foo";
 
-		await fs.mkdir(path.join(ctx.project.root, "src/pages"), {
-			recursive: true,
+			await fs.mkdir(path.dirname(filePath), { recursive: true });
+			await fs.writeFile(filePath, contents);
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const postHookContents = await fs.readFile(filePath, "utf8");
+
+			expect(postHookContents).toBe(contents);
 		});
 
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
+		test("Slice Simulator page file is formatted by default", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			await fs.mkdir(path.join(ctx.project.root, srcDir), {
+				recursive: true,
+			});
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, srcDir, "pages", "slice-simulator.vue"),
+				"utf8",
+			);
+
+			expect(contents).toBe(await prettier.format(contents, { parser: "vue" }));
 		});
 
-		const pagesDir = await fs.readdir(
-			path.join(ctx.project.root, "src", "pages"),
-		);
+		test("Slice Simulator page file is not formatted if formatting is disabled", async (ctx) => {
+			ctx.project.config.adapter.options.format = false;
+			const pluginRunner = createSliceMachinePluginRunner({
+				project: ctx.project,
+				nativePlugins: {
+					[ctx.project.config.adapter.resolve]: adapter,
+				},
+			});
+			await pluginRunner.init();
 
-		expect(pagesDir).toContain("slice-simulator.vue");
-	});
+			// Force unusual formatting to detect that formatting did not happen.
+			const prettierOptions = { printWidth: 10 };
+			await fs.writeFile(
+				path.join(ctx.project.root, ".prettierrc"),
+				JSON.stringify(prettierOptions),
+			);
 
-	test("Slice Simulator page file is formatted by default", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
+			await fs.mkdir(path.join(ctx.project.root, srcDir), {
+				recursive: true,
+			});
+
+			await pluginRunner.callHook("project:init", { log, installDependencies });
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, srcDir, "pages", "slice-simulator.vue"),
+				"utf8",
+			);
+
+			expect(contents).not.toBe(
+				await prettier.format(contents, {
+					...prettierOptions,
+					parser: "vue",
+				}),
+			);
 		});
+	},
+);
 
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "pages", "slice-simulator.vue"),
-			"utf8",
-		);
-
-		expect(contents).toBe(await prettier.format(contents, { parser: "vue" }));
-	});
-
-	test("Slice Simulator page file is not formatted if formatting is disabled", async (ctx) => {
-		ctx.project.config.adapter.options.format = false;
-		const pluginRunner = createSliceMachinePluginRunner({
-			project: ctx.project,
-			nativePlugins: {
-				[ctx.project.config.adapter.resolve]: adapter,
-			},
-		});
-		await pluginRunner.init();
-
-		// Force unusual formatting to detect that formatting did not happen.
-		const prettierOptions = { printWidth: 10 };
-		await fs.writeFile(
-			path.join(ctx.project.root, ".prettierrc"),
-			JSON.stringify(prettierOptions),
-		);
-
-		const log = vi.fn();
-		const installDependencies = vi.fn();
-
-		await pluginRunner.callHook("project:init", { log, installDependencies });
-
-		const contents = await fs.readFile(
-			path.join(ctx.project.root, "pages", "slice-simulator.vue"),
-			"utf8",
-		);
-
-		expect(contents).not.toBe(
-			await prettier.format(contents, {
-				...prettierOptions,
-				parser: "vue",
-			}),
-		);
-	});
-});
-
-describe("app.vue", () => {
+describe.each(["./app", "./src", "./"])("app.vue (srcDir: %s)", (srcDir) => {
 	const NUXT_DEFAULT_APP_VUE = /* html */ `<template>
   <div>
     <NuxtWelcome />
@@ -278,11 +278,11 @@ describe("app.vue", () => {
 </template>
 `;
 
-	test("deletes default app.vue and creates a new index page if non-existent", async (ctx) => {
+	test(`deletes default app.vue and creates a new index page if non-existent`, async (ctx) => {
 		const log = vi.fn();
 		const installDependencies = vi.fn();
 
-		const filePathAppVue = path.join(ctx.project.root, "app.vue");
+		const filePathAppVue = path.join(ctx.project.root, srcDir, "app.vue");
 
 		await fs.mkdir(path.dirname(filePathAppVue), { recursive: true });
 		await fs.writeFile(filePathAppVue, NUXT_DEFAULT_APP_VUE);
@@ -293,7 +293,7 @@ describe("app.vue", () => {
 		});
 
 		const contents = await fs.readFile(
-			path.join(ctx.project.root, "pages", "index.vue"),
+			path.join(ctx.project.root, srcDir, "pages", "index.vue"),
 			"utf8",
 		);
 
@@ -303,16 +303,21 @@ describe("app.vue", () => {
 		expect(contents).toBe(NUXT_DEFAULT_APP_VUE);
 	});
 
-	test("deletes default app.vue and doesn't create a new index page if existent", async (ctx) => {
+	test(`deletes default app.vue and doesn't create a new index page if existent`, async (ctx) => {
 		const log = vi.fn();
 		const installDependencies = vi.fn();
 
-		const filePathAppVue = path.join(ctx.project.root, "app.vue");
+		const filePathAppVue = path.join(ctx.project.root, srcDir, "app.vue");
 
 		await fs.mkdir(path.dirname(filePathAppVue), { recursive: true });
 		await fs.writeFile(filePathAppVue, NUXT_DEFAULT_APP_VUE);
 
-		const filePathIndexVue = path.join(ctx.project.root, "pages", "index.vue");
+		const filePathIndexVue = path.join(
+			ctx.project.root,
+			srcDir,
+			"pages",
+			"index.vue",
+		);
 		const contents = "foo";
 
 		await fs.mkdir(path.dirname(filePathIndexVue), { recursive: true });
@@ -331,11 +336,11 @@ describe("app.vue", () => {
 		expect(postHookContents).toBe(contents);
 	});
 
-	test("doesn't delete app.vue is it's not the default one", async (ctx) => {
+	test(`doesn't delete app.vue is it's not the default one`, async (ctx) => {
 		const log = vi.fn();
 		const installDependencies = vi.fn();
 
-		const filePathAppVue = path.join(ctx.project.root, "app.vue");
+		const filePathAppVue = path.join(ctx.project.root, srcDir, "app.vue");
 		const contents = "foo";
 
 		await fs.mkdir(path.dirname(filePathAppVue), { recursive: true });
@@ -404,54 +409,56 @@ describe("modify slicemachine.config.json", () => {
 		);
 	});
 
-	test("nests default Slice Library under src directory if it exists", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+	describe.each(["./app", "./src"])("(srcDir: %s)", (dir) => {
+		test(`nests default Slice Library under ${dir} directory if it exists`, async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		await fs.mkdir(path.join(ctx.project.root, "src"), { recursive: true });
+			await fs.mkdir(path.join(ctx.project.root, dir), { recursive: true });
 
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = JSON.parse(
+				await fs.readFile(
+					path.join(ctx.project.root, "slicemachine.config.json"),
+					"utf8",
+				),
+			);
+
+			expect(contents.libraries).toStrictEqual([`${dir}/slices`]);
 		});
 
-		const contents = JSON.parse(
-			await fs.readFile(
-				path.join(ctx.project.root, "slicemachine.config.json"),
-				"utf8",
-			),
-		);
+		test(`does not nest the default Slice Library under ${dir} directory if it is not empty`, async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
 
-		expect(contents.libraries).toStrictEqual(["./src/slices"]);
-	});
+			await fs.mkdir(path.join(ctx.project.root, dir), { recursive: true });
 
-	test("does not nest the default Slice Library under src directory if it is not empty", async (ctx) => {
-		const log = vi.fn();
-		const installDependencies = vi.fn();
+			await fs.mkdir(path.join(ctx.project.root, "slices", "FooBar"), {
+				recursive: true,
+			});
+			await fs.writeFile(
+				path.join(ctx.project.root, "slices", "FooBar", "model.json"),
+				JSON.stringify(ctx.mock.model.sharedSlice()),
+			);
 
-		await fs.mkdir(path.join(ctx.project.root, "src"), { recursive: true });
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
 
-		await fs.mkdir(path.join(ctx.project.root, "slices", "FooBar"), {
-			recursive: true,
+			const contents = JSON.parse(
+				await fs.readFile(
+					path.join(ctx.project.root, "slicemachine.config.json"),
+					"utf8",
+				),
+			);
+
+			expect(contents.libraries).toStrictEqual(["./slices"]);
 		});
-		await fs.writeFile(
-			path.join(ctx.project.root, "slices", "FooBar", "model.json"),
-			JSON.stringify(ctx.mock.model.sharedSlice()),
-		);
-
-		await ctx.pluginRunner.callHook("project:init", {
-			log,
-			installDependencies,
-		});
-
-		const contents = JSON.parse(
-			await fs.readFile(
-				path.join(ctx.project.root, "slicemachine.config.json"),
-				"utf8",
-			),
-		);
-
-		expect(contents.libraries).toStrictEqual(["./slices"]);
 	});
 
 	test("does not modify Slice Library if it is not the default", async (ctx) => {

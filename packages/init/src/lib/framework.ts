@@ -18,7 +18,7 @@ export type Framework = {
 	sliceMachineTelemetryID:
 		| "next"
 		| "nuxt-2"
-		| "nuxt-3"
+		| "nuxt"
 		| "sveltekit-1"
 		| "sveltekit-2"
 		| "universal";
@@ -94,14 +94,14 @@ export const FRAMEWORKS: Record<string, Framework> = {
 			"@slicemachine/adapter-nuxt2": npmDistributionTag,
 		},
 	},
-	"nuxt-3": {
-		name: "Nuxt 3",
-		sliceMachineTelemetryID: "nuxt-3",
+	nuxt: {
+		name: "Nuxt",
+		sliceMachineTelemetryID: "nuxt",
 		wroomTelemetryID: "nuxt",
-		prismicDocumentation: "https://prismic.dev/init/nuxt-3",
+		prismicDocumentation: "https://prismic.dev/init/nuxt",
 		adapterName: "@slicemachine/adapter-nuxt",
 		compatibility: {
-			nuxt: "^3.0.0",
+			nuxt: "^3.0.0 || ^4.0.0 || ^4.0.0-rc.0",
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,

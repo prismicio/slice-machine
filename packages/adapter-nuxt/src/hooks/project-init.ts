@@ -16,6 +16,7 @@ import { builders, loadFile, writeFile } from "magicast";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
+import { checkHasAppDirectory } from "../lib/checkHasAppDirectory";
 
 import type { PluginOptions } from "../types";
 
@@ -28,23 +29,12 @@ type InstallDependenciesArgs = {
 const installDependencies = async ({
 	installDependencies,
 }: InstallDependenciesArgs) => {
-	try {
-		await installDependencies({
-			dependencies: {
-				[NUXT_PRISMIC]: "^3.0.0",
-			},
-			dev: true,
-		});
-	} catch (error) {
-		// TODO: Remove when latest is published and documented
-		// Fallback to RC if latest is still not available
-		await installDependencies({
-			dependencies: {
-				[NUXT_PRISMIC]: "rc",
-			},
-			dev: true,
-		});
-	}
+	await installDependencies({
+		dependencies: {
+			[NUXT_PRISMIC]: "^3.0.0",
+		},
+		dev: true,
+	});
 };
 
 type ConfigurePrismicModuleArgs = SliceMachineContext<PluginOptions>;
@@ -125,13 +115,37 @@ const createSliceSimulatorPage = async ({
 		options,
 	});
 
+	const appPagesDirectoryExists = await checkHasProjectFile({
+		filename: "app/pages",
+		helpers,
+	});
+
 	const srcPagesDirectoryExists = await checkHasProjectFile({
 		filename: "src/pages",
 		helpers,
 	});
 
+	const pagesDirectoryExists = await checkHasProjectFile({
+		filename: "pages",
+		helpers,
+	});
+
+	const hasAppDirectory = await checkHasAppDirectory({ helpers });
+	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+
 	const filename = path.join(
-		srcPagesDirectoryExists ? "src/pages" : "pages",
+		// We first give priority to existing `pages` directory, then to `srcDir`.
+		appPagesDirectoryExists
+			? "app/pages"
+			: srcPagesDirectoryExists
+			? "src/pages"
+			: pagesDirectoryExists
+			? "pages"
+			: hasAppDirectory
+			? "app/pages"
+			: hasSrcDirectory
+			? "src/pages"
+			: "pages",
 		"slice-simulator.vue",
 	);
 
@@ -169,14 +183,15 @@ const moveOrDeleteAppVue = async ({
 	helpers,
 	options,
 }: CreateSliceSimulatorPageArgs) => {
-	const srcDirectoryExists = await checkHasProjectFile({
-		filename: "src",
-		helpers,
-	});
+	const hasAppDirectory = await checkHasAppDirectory({ helpers });
+	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 
-	const filenameAppVue = path.join(srcDirectoryExists ? "src" : "", "app.vue");
+	const filenameAppVue = path.join(
+		hasAppDirectory ? "app" : hasSrcDirectory ? "src" : "",
+		"app.vue",
+	);
 
-	// If there's not `app.vue`, there's nothing to do.
+	// If there's no `app.vue`, there's nothing to do.
 	if (!(await checkHasProjectFile({ filename: filenameAppVue, helpers }))) {
 		return;
 	}
@@ -187,18 +202,14 @@ const moveOrDeleteAppVue = async ({
 		encoding: "utf-8",
 	});
 
-	// We check for app.vue to contain Nuxt default welcome component to determine if we need to consider it as the default one or not.
+	// We check for app.vue to contain Nuxt default welcome component to determine
+	// if we need to consider it as the default one or not.
 	if (!filecontentAppVue.includes("<NuxtWelcome")) {
 		return;
 	}
 
-	const srcPagesDirectoryExists = await checkHasProjectFile({
-		filename: "src/pages",
-		helpers,
-	});
-
 	const filenameIndexVue = path.join(
-		srcPagesDirectoryExists ? "src/pages" : "pages",
+		hasAppDirectory ? "app/pages" : hasSrcDirectory ? "src/pages" : "pages",
 		"index.vue",
 	);
 
@@ -224,6 +235,7 @@ const modifySliceMachineConfig = async ({
 	options,
 	actions,
 }: SliceMachineContext<PluginOptions>) => {
+	const hasAppDirectory = await checkHasAppDirectory({ helpers });
 	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const project = await helpers.getProject();
 
@@ -231,10 +243,10 @@ const modifySliceMachineConfig = async ({
 	project.config.localSliceSimulatorURL ||=
 		"http://localhost:3000/slice-simulator";
 
-	// Nest the default Slice Library in the src directory if it exists and
-	// is empty.
+	// Nest the default Slice Library in the app or src directory if it exists
+	// and is empty.
 	if (
-		hasSrcDirectory &&
+		(hasAppDirectory || hasSrcDirectory) &&
 		project.config.libraries &&
 		JSON.stringify(project.config.libraries) === JSON.stringify(["./slices"])
 	) {
@@ -243,7 +255,9 @@ const modifySliceMachineConfig = async ({
 		});
 
 		if (sliceLibrary.sliceIDs.length < 1) {
-			project.config.libraries = ["./src/slices"];
+			project.config.libraries = hasAppDirectory
+				? ["./app/slices"]
+				: ["./src/slices"];
 		}
 	}
 
