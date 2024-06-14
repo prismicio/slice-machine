@@ -1,8 +1,11 @@
 import { MdPlaylistAdd } from "react-icons/md";
 import * as yup from "yup";
 
-import { GroupSM, NestedGroupSM } from "@/legacy/lib/models/common/Group";
-import { Widget } from "@/legacy/lib/models/common/widgets/Widget";
+import {
+  type GroupSM,
+  type NestedGroupSM,
+} from "@/legacy/lib/models/common/Group";
+import { type Widget } from "@/legacy/lib/models/common/widgets/Widget";
 
 import Form, { FormFields } from "./Form";
 

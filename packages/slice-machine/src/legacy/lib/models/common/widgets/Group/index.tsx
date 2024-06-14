@@ -1,7 +1,13 @@
-import { useNestedGroupExperiment } from "@/features/settings/git/useNestedGroupExperiment";
-import { Widgets } from "@/legacy/lib/models/common/widgets/groupWidgets";
+import { type DroppableStateSnapshot } from "react-beautiful-dnd";
 
-import { createWidget } from "./createWidget";
+import { useNestedGroupExperiment } from "@/features/settings/git/useNestedGroupExperiment";
+import { type Item } from "@/legacy/components/ListItem";
+import { type TabField } from "@/legacy/lib/models/common/CustomType";
+import { type GroupSM } from "@/legacy/lib/models/common/Group";
+import { Widgets } from "@/legacy/lib/models/common/widgets/groupWidgets";
+import { type Widget } from "@/legacy/lib/models/common/widgets/Widget";
+
+import { createWidget, type SchemaType } from "./createWidget";
 import { CustomListItem } from "./ListItem";
 
 const widgetsArray = [
@@ -22,8 +28,27 @@ const widgetsArray = [
   Widgets.Text,
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const GroupListItem = (props: any) => {
+export interface GroupListItemProps<F extends TabField> {
+  tabId: string;
+  widget: Widget<F, SchemaType>;
+  parentSnapshot: DroppableStateSnapshot;
+  showHints: boolean;
+  isRepeatable: boolean;
+  item: Item<F>;
+  draggableId: string;
+  saveItem: ({
+    apiId,
+    newKey,
+    value,
+  }: {
+    apiId: string;
+    newKey: string;
+    value: F;
+  }) => void;
+  HintElement: JSX.Element;
+}
+
+const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
   const nestedGroupExperiment = useNestedGroupExperiment();
   const maybeFilteredWidgetsArray = nestedGroupExperiment.eligible
     ? widgetsArray
