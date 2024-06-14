@@ -1,3 +1,5 @@
+import { type NestedGroupSM } from "@/legacy/lib/models/common/Group";
+import { type GroupListItemProps } from "@/legacy/lib/models/common/widgets/Group";
 import { createWidget } from "@/legacy/lib/models/common/widgets/Group/createWidget";
 import { CustomListItem } from "@/legacy/lib/models/common/widgets/Group/ListItem";
 import { NonGroupWidgets as Widgets } from "@/legacy/lib/models/common/widgets/nonGroupWidgets";
@@ -19,8 +21,7 @@ const widgetsArray = [
   Widgets.Text,
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const NestedGroupListItem = (props: any) => (
+const NestedGroupListItem = (props: GroupListItemProps<NestedGroupSM>) => (
   <CustomListItem Widgets={Widgets} widgetsArray={widgetsArray} {...props} />
 );
 
