@@ -193,8 +193,16 @@ test("I can delete a sub field within a group field", async ({
 
 test("I can add a nested group with a sub field inside a group field", async ({
   pageTypesBuilderPage,
+  procedures,
   reusablePageType,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
     type: "Group",
@@ -243,8 +251,16 @@ test("I can add a nested group with a sub field inside a group field", async ({
 
 test("I can edit a nested group and its sub field inside a group field", async ({
   pageTypesBuilderPage,
+  procedures,
   reusablePageType,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
     type: "Group",
@@ -315,8 +331,16 @@ test("I can edit a nested group and its sub field inside a group field", async (
 
 test("I can delete a nested group and its sub field inside a group field", async ({
   pageTypesBuilderPage,
+  procedures,
   reusablePageType,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
     type: "Group",
@@ -356,6 +380,40 @@ test("I can delete a nested group and its sub field inside a group field", async
   ).not.toBeVisible();
 });
 
+test("I can't add a nested group if I'm not eligible for the `slicemachine-nested-groups` experiment", async ({
+  pageTypesBuilderPage,
+  procedures,
+  reusablePageType,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "off" } : undefined,
+    { execute: false },
+  );
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage
+    .getListItem("my_group")
+    .getByRole("button", {
+      name: "Add Field",
+      exact: true,
+    })
+    .click();
+
+  await expect(pageTypesBuilderPage.addFieldDialog.title).toBeVisible();
+  const richTextField =
+    pageTypesBuilderPage.addFieldDialog.getField("Rich Text");
+  await expect(richTextField).toBeVisible();
+  const groupField = pageTypesBuilderPage.addFieldDialog.getField("Group");
+  await expect(groupField).not.toBeVisible();
+});
+
 test("I can see and copy the code snippets", async ({
   pageTypesBuilderPage,
   reusablePageType,
@@ -392,8 +450,16 @@ test("I can see and copy the code snippets for groups", async ({
 
 test("I can see and copy the code snippets for nested groups and their sub fields", async ({
   pageTypesBuilderPage,
+  procedures,
   reusablePageType,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
     type: "Group",

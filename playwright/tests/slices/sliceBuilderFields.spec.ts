@@ -173,9 +173,17 @@ test("I can delete a sub field within a group field", async ({
 });
 
 test("I can add a nested group with a sub field inside a group field", async ({
+  procedures,
   sliceBuilderPage,
   slice,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",
@@ -233,9 +241,17 @@ test("I can add a nested group with a sub field inside a group field", async ({
 });
 
 test("I can edit a nested group and its sub field inside a group field", async ({
+  procedures,
   sliceBuilderPage,
   slice,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",
@@ -316,9 +332,17 @@ test("I can edit a nested group and its sub field inside a group field", async (
 });
 
 test("I can delete a nested group and its sub field inside a group field", async ({
+  procedures,
   sliceBuilderPage,
   slice,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",
@@ -504,9 +528,17 @@ test("I can see and copy the code snippets for groups", async ({
 });
 
 test("I can see and copy the code snippets for nested groups and their sub fields", async ({
+  procedures,
   sliceBuilderPage,
   slice,
 }) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
     type: "Group",
