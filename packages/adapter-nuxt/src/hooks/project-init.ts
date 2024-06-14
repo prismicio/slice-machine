@@ -31,7 +31,7 @@ const installDependencies = async ({
 }: InstallDependenciesArgs) => {
 	await installDependencies({
 		dependencies: {
-			[NUXT_PRISMIC]: "^3.0.0",
+			[NUXT_PRISMIC]: "^3.3.0",
 		},
 		dev: true,
 	});

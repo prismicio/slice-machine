@@ -14,7 +14,7 @@ test("installs dependencies", async (ctx) => {
 
 	expect(installDependencies).toHaveBeenCalledWith({
 		dependencies: {
-			"@nuxtjs/prismic": "^3.0.0",
+			"@nuxtjs/prismic": "^3.3.0",
 		},
 		dev: true,
 	});
