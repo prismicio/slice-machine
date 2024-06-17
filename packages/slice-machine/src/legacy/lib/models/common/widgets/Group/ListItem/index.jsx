@@ -27,6 +27,7 @@ export const CustomListItem = ({
   widget,
   Widgets,
   widgetsArray,
+  hintBase,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentSnapshot,
   showHints,
@@ -234,8 +235,9 @@ export const CustomListItem = ({
                             isRepeatable={isRepeatable}
                             renderHintBase={({ item }) =>
                               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-                              `item${transformKeyAccessor(item.key)}`
+                              `${hintBase}${transformKeyAccessor(item.key)}`
                             }
+                            subItemHintBase={widget.SUB_ITEM_HINT_BASE}
                             Widgets={Widgets}
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
