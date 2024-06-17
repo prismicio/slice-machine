@@ -1,6 +1,6 @@
 import { type DroppableStateSnapshot } from "react-beautiful-dnd";
 
-import { useNestedGroupExperiment } from "@/features/settings/git/useNestedGroupExperiment";
+import { useNestedGroupExperiment } from "@/hooks/useNestedGroupExperiment";
 import { type Item } from "@/legacy/components/ListItem";
 import { type TabField } from "@/legacy/lib/models/common/CustomType";
 import { type GroupSM } from "@/legacy/lib/models/common/Group";
