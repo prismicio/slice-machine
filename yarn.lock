@@ -8194,7 +8194,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: ^0.1.17
+    prismic-ts-codegen: ^0.1.20
     react: 18.2.0
     rollup-plugin-preserve-directives: 0.2.0
     size-limit: 8.2.4
@@ -8236,7 +8236,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: ^0.1.17
+    prismic-ts-codegen: ^0.1.20
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -8278,7 +8278,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: ^0.1.17
+    prismic-ts-codegen: ^0.1.20
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -8324,7 +8324,7 @@ __metadata:
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
     prettier-plugin-svelte: ^3.0.3
-    prismic-ts-codegen: ^0.1.17
+    prismic-ts-codegen: ^0.1.20
     size-limit: 8.2.4
     svelte: 4.2.0
     typescript: 4.9.5
@@ -8503,7 +8503,7 @@ __metadata:
     p-limit: ^4.0.0
     prettier: ^3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: ^0.1.19
+    prismic-ts-codegen: ^0.1.20
     size-limit: 8.2.4
     typescript: 4.9.5
     vite: 4.3.9
@@ -27179,9 +27179,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prismic-ts-codegen@npm:^0.1.17":
-  version: 0.1.17
-  resolution: "prismic-ts-codegen@npm:0.1.17"
+"prismic-ts-codegen@npm:^0.1.20":
+  version: 0.1.20
+  resolution: "prismic-ts-codegen@npm:0.1.20"
   dependencies:
     "@prismicio/custom-types-client": ^1.1.0
     common-tags: ^1.8.2
@@ -27202,34 +27202,7 @@ __metadata:
       optional: true
   bin:
     prismic-ts-codegen: bin/prismic-ts-codegen.js
-  checksum: 0dac0d18086facb475ee14d2851adbe1bf4c3ac05cf93bd20aae80bcdf9efbd6f455a1cd88c5aa8cb10bce07b03fc0dd270838d6f8c9682fa81c02840a124a1b
-  languageName: node
-  linkType: hard
-
-"prismic-ts-codegen@npm:^0.1.19":
-  version: 0.1.19
-  resolution: "prismic-ts-codegen@npm:0.1.19"
-  dependencies:
-    "@prismicio/custom-types-client": ^1.1.0
-    common-tags: ^1.8.2
-    fast-glob: ^3.2.12
-    jiti: ^1.18.2
-    joi: ^17.9.2
-    meow: ^12.0.1
-    node-fetch: ^3.3.1
-    pascal-case: ^3.1.2
-    quick-lru: ^6.1.1
-  peerDependencies:
-    "@prismicio/client": ^6.6 || ^7
-    "@prismicio/types": ^0.2.8
-  peerDependenciesMeta:
-    "@prismicio/client":
-      optional: true
-    "@prismicio/types":
-      optional: true
-  bin:
-    prismic-ts-codegen: bin/prismic-ts-codegen.js
-  checksum: 18fdb161d276170786cf2a0300250f32a372810cb5fa8d2810e8c894249e162a8d918a4d0b61ba19196eab9e09c022b4a2a06fe33c0dd669c93f4b1cc12c19c8
+  checksum: 575ddabb75ce31c047d32aed882c5bbef8d59a8390b5ea1721871f27e1b66ebe5a3de22db95ea40a0b31f5d6cc6e870a05789bb8bf54d8543d1c2c3e035e599b
   languageName: node
   linkType: hard
 
