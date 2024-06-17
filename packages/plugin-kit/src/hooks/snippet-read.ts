@@ -21,6 +21,9 @@ export type Snippet = {
 export type SnippetReadHookData = {
 	fieldPath: string[];
 	model: DynamicWidget;
+	context?: {
+		subItemHintBase?: string;
+	};
 };
 
 /**

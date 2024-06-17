@@ -26,7 +26,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 	data,
 	{ helpers },
 ) => {
-	const { fieldPath } = data;
+	const { fieldPath, context } = data;
 
 	const label = "Svelte";
 
@@ -85,8 +85,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		case "Group": {
 			const code = await format(
 				stripIndent`
-					{#each ${dotPath(fieldPath)} as item}
-						<!-- Render content for item -->
+					{#each ${dotPath(fieldPath)} as ${context?.subItemHintBase || "item"}}
+						<!-- Render content for ${context?.subItemHintBase || "item"} -->
 					{/each}
 				`,
 				helpers,

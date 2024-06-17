@@ -48,6 +48,8 @@ export interface GroupListItemProps<F extends TabField> {
   HintElement: JSX.Element;
 }
 
+const subItemHintBase = "item";
+
 const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
   const nestedGroupExperiment = useNestedGroupExperiment();
   const maybeFilteredWidgetsArray = nestedGroupExperiment.eligible
@@ -57,6 +59,7 @@ const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
     <CustomListItem
       Widgets={Widgets}
       widgetsArray={maybeFilteredWidgetsArray}
+      hintBase={subItemHintBase}
       {...props}
     />
   );
@@ -65,4 +68,5 @@ const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
 export const GroupWidget = createGroupWidget({
   schemaTypeRegex: /^Group$/,
   customListItem: GroupListItem,
+  subItemHintBase,
 });

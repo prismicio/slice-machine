@@ -28,7 +28,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 	data,
 	{ helpers },
 ) => {
-	const { fieldPath } = data;
+	const { fieldPath, context } = data;
 
 	const label = "React";
 
@@ -88,8 +88,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			const code = await format(
 				stripIndent`
 					<>
-						{${dotPath(fieldPath)}.map((item) => {
-							// Render the item
+						{${dotPath(fieldPath)}.map((${context?.subItemHintBase || "item"}) => {
+							// Render the ${context?.subItemHintBase || "item"}
 						})}
 					</>
 				`,
