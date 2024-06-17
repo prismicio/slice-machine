@@ -538,6 +538,14 @@ const DEFAULT_MAIN_WITH_UID_AND_SLICE_ZONE: CustomType["json"] = {
 
 const DEFAULT_SEO_TAB: CustomType["json"] = {
   "SEO & Metadata": {
+    meta_title: {
+      config: {
+        label: "Meta Title",
+        placeholder:
+          "A title of the page used for social media and search engines",
+      },
+      type: "Text",
+    },
     meta_description: {
       config: {
         label: "Meta Description",
@@ -555,14 +563,6 @@ const DEFAULT_SEO_TAB: CustomType["json"] = {
         thumbnails: [],
       },
       type: "Image",
-    },
-    meta_title: {
-      config: {
-        label: "Meta Title",
-        placeholder:
-          "A title of the page used for social media and search engines",
-      },
-      type: "Text",
     },
   },
 };
