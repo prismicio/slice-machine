@@ -36,6 +36,7 @@ type CreateGroupWidgetArgsBase<T extends TabField> = {
   schemaTypeRegex: RegExp;
   customListItem: (props: GroupListItemProps<T>) => JSX.Element;
   customName?: string;
+  hintItemName?: string;
 };
 type CreateTopGroupWidgetArgs = CreateGroupWidgetArgsBase<GroupSM>;
 type CreateNestedGroupWidgetArgs = CreateGroupWidgetArgsBase<NestedGroupSM> & {
@@ -57,6 +58,7 @@ export function createGroupWidget({
   schemaTypeRegex,
   customListItem,
   customName,
+  hintItemName,
 }: CreateGroupWidgetArgs):
   | Widget<GroupSM, SchemaType>
   | Widget<NestedGroupSM, SchemaType> {
@@ -76,5 +78,6 @@ export function createGroupWidget({
     CustomListItem: customListItem,
     TYPE_NAME: "Group",
     CUSTOM_NAME: customName,
+    hintItemName,
   };
 }

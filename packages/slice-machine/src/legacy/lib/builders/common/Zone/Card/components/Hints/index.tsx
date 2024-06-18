@@ -9,14 +9,14 @@ interface HintProps {
   show: boolean;
   item: Item;
   renderHintBase: RenderHintBaseFN;
-  subItemHintBase?: string;
+  hintItemName?: string;
 }
 
 const Hint: React.FC<HintProps> = ({
   show,
   renderHintBase,
   item,
-  subItemHintBase,
+  hintItemName,
 }) => {
   const fieldPathString = renderHintBase({ item });
 
@@ -26,7 +26,7 @@ const Hint: React.FC<HintProps> = ({
     return await managerClient.snippets.readSnippets({
       fieldPath: fieldPathString.split("."),
       model: item.value,
-      context: { subItemHintBase },
+      itemName: hintItemName,
     });
   });
 

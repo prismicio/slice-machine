@@ -238,7 +238,7 @@ export const CustomListItem = ({
                               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
                               `${hintBase}${transformKeyAccessor(item.key)}`
                             }
-                            subItemHintBase={widget.SUB_ITEM_HINT_BASE}
+                            hintItemName={widget.hintItemName}
                             Widgets={Widgets}
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}

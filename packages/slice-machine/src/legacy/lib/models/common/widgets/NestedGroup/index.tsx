@@ -21,13 +21,13 @@ const widgetsArray = [
   Widgets.Text,
 ];
 
-const subItemHintBase = "subItem";
+const hintItemName = "subItem";
 
 const NestedGroupListItem = (props: GroupListItemProps<NestedGroupSM>) => (
   <CustomListItem
     Widgets={Widgets}
     widgetsArray={widgetsArray}
-    hintBase={subItemHintBase}
+    hintBase={hintItemName}
     {...props}
   />
 );
@@ -36,5 +36,5 @@ export const NestedGroupWidget = createGroupWidget({
   schemaTypeRegex: /^NestedGroup$/,
   customListItem: NestedGroupListItem,
   customName: "NestedGroup",
-  subItemHintBase,
+  hintItemName,
 });

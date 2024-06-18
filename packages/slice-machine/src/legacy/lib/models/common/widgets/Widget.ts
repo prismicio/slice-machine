@@ -16,7 +16,7 @@ export interface Widget<F extends TabField, S extends AnyObjectSchema> {
   // eslint-disable-next-line @typescript-eslint/ban-types
   FormFields: {};
   CUSTOM_NAME?: string;
-  SUB_ITEM_HINT_BASE?: string;
+  hintItemName?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   CustomListItem?: (props: any) => React.ReactElement;
   // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
