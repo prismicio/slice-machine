@@ -17,7 +17,7 @@ const Meta = {
   description: "A repeatable set of fields",
 };
 
-export const createSchema = (typeRegex: RegExp) =>
+const createSchema = (typeRegex: RegExp) =>
   yup.object().shape({
     type: yup
       .string()
@@ -32,30 +32,32 @@ export const createSchema = (typeRegex: RegExp) =>
   });
 export type SchemaType = ReturnType<typeof createSchema>;
 
-type createWidgetPropsBase<T extends TabField> = {
+type CreateGroupWidgetArgsBase<T extends TabField> = {
   schemaTypeRegex: RegExp;
   customListItem: (props: GroupListItemProps<T>) => JSX.Element;
   customName?: string;
 };
-type createGroupWidgetProps = createWidgetPropsBase<GroupSM>;
-type createNestedGroupWidgetProps = createWidgetPropsBase<NestedGroupSM> & {
+type CreateTopGroupWidgetArgs = CreateGroupWidgetArgsBase<GroupSM>;
+type CreateNestedGroupWidgetArgs = CreateGroupWidgetArgsBase<NestedGroupSM> & {
   customName: "NestedGroup";
 };
-type createWidgetProps = createGroupWidgetProps | createNestedGroupWidgetProps;
+type CreateGroupWidgetArgs =
+  | CreateTopGroupWidgetArgs
+  | CreateNestedGroupWidgetArgs;
 
-export function createWidget(
-  props: createGroupWidgetProps,
+export function createGroupWidget(
+  args: CreateTopGroupWidgetArgs,
 ): Widget<GroupSM, SchemaType>;
 
-export function createWidget(
-  props: createNestedGroupWidgetProps,
+export function createGroupWidget(
+  args: CreateNestedGroupWidgetArgs,
 ): Widget<NestedGroupSM, SchemaType>;
 
-export function createWidget({
+export function createGroupWidget({
   schemaTypeRegex,
   customListItem,
   customName,
-}: createWidgetProps):
+}: CreateGroupWidgetArgs):
   | Widget<GroupSM, SchemaType>
   | Widget<NestedGroupSM, SchemaType> {
   return {

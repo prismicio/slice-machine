@@ -1,6 +1,6 @@
 import { type NestedGroupSM } from "@/legacy/lib/models/common/Group";
 import { type GroupListItemProps } from "@/legacy/lib/models/common/widgets/Group";
-import { createWidget } from "@/legacy/lib/models/common/widgets/Group/createWidget";
+import { createGroupWidget } from "@/legacy/lib/models/common/widgets/Group/createGroupWidget";
 import { CustomListItem } from "@/legacy/lib/models/common/widgets/Group/ListItem";
 import { NonGroupWidgets as Widgets } from "@/legacy/lib/models/common/widgets/nonGroupWidgets";
 
@@ -25,7 +25,7 @@ const NestedGroupListItem = (props: GroupListItemProps<NestedGroupSM>) => (
   <CustomListItem Widgets={Widgets} widgetsArray={widgetsArray} {...props} />
 );
 
-export const NestedGroupWidget = createWidget({
+export const NestedGroupWidget = createGroupWidget({
   schemaTypeRegex: /^NestedGroup$/,
   customListItem: NestedGroupListItem,
   customName: "NestedGroup",

@@ -1,3 +1,4 @@
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Fragment, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
@@ -86,7 +87,7 @@ export const CustomListItem = ({
       group: Groups.fromSM(groupItem.value),
       previousFieldId: previousKey,
       newFieldId: newKey,
-      field: value.config?.fields ? Groups.fromSM(value) : value,
+      field: value.type === GroupFieldType ? Groups.fromSM(value) : value,
     });
 
     saveItem({

@@ -233,15 +233,8 @@ export class TypeBuilderPage extends BuilderPage {
     const { type, name, expectedId, groupFieldId, grandparentGroupFieldId } =
       args;
 
-    if (groupFieldId && grandparentGroupFieldId) {
+    if (groupFieldId) {
       await this.getListItem(groupFieldId, grandparentGroupFieldId)
-        .getByRole("button", {
-          name: "Add Field",
-          exact: true,
-        })
-        .click();
-    } else if (groupFieldId) {
-      await this.getListItem(groupFieldId)
         .getByRole("button", {
           name: "Add Field",
           exact: true,

@@ -126,7 +126,7 @@ export const VariationsList: FC<VariationsListProps> = (props) => {
                   // `Gradient`.
                   sx={{ position: "relative" }}
                 >
-                  Add a new variation
+                  Add a variation
                 </Button>
               </Box>
             </div>

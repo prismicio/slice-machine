@@ -7,7 +7,7 @@ import { type GroupSM } from "@/legacy/lib/models/common/Group";
 import { Widgets } from "@/legacy/lib/models/common/widgets/groupWidgets";
 import { type Widget } from "@/legacy/lib/models/common/widgets/Widget";
 
-import { createWidget, type SchemaType } from "./createWidget";
+import { createGroupWidget, type SchemaType } from "./createGroupWidget";
 import { CustomListItem } from "./ListItem";
 
 const widgetsArray = [
@@ -62,7 +62,7 @@ const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
   );
 };
 
-export const GroupWidget = createWidget({
+export const GroupWidget = createGroupWidget({
   schemaTypeRegex: /^Group$/,
   customListItem: GroupListItem,
 });

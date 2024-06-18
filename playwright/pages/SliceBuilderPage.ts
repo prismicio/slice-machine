@@ -54,7 +54,7 @@ export class SliceBuilderPage extends BuilderPage {
       name: "slice card",
       exact: false,
     });
-    this.addVariationButton = page.getByText("Add a new variation", {
+    this.addVariationButton = page.getByText("Add a variation", {
       exact: true,
     });
     this.noScreenshotMessage = page.getByText("No screenshot available", {

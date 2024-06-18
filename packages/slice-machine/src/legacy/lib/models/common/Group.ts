@@ -43,9 +43,6 @@ const GroupFieldsSM = t.array(
   }),
 );
 
-export const GroupConfig = createGroupConfig(GroupFieldsSM);
-export type GroupConfig = t.TypeOf<typeof GroupConfig>;
-
 export const GroupSM = createGroupSM(GroupFieldsSM);
 export type GroupSM = t.TypeOf<typeof GroupSM>;
 
