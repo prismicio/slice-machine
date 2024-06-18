@@ -6,6 +6,7 @@ import type {
 } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
+	joinAppPath,
 	deleteProjectFile,
 	readProjectFile,
 	writeProjectFile,
@@ -15,8 +16,6 @@ import { builders, loadFile, writeFile } from "magicast";
 
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
-import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
-import { checkHasAppDirectory } from "../lib/checkHasAppDirectory";
 
 import type { PluginOptions } from "../types";
 
@@ -130,24 +129,21 @@ const createSliceSimulatorPage = async ({
 		helpers,
 	});
 
-	const hasAppDirectory = await checkHasAppDirectory({ helpers });
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
-
-	const filename = path.join(
-		// We first give priority to existing `pages` directory, then to `srcDir`.
-		appPagesDirectoryExists
-			? "app/pages"
-			: srcPagesDirectoryExists
-			? "src/pages"
-			: pagesDirectoryExists
-			? "pages"
-			: hasAppDirectory
-			? "app/pages"
-			: hasSrcDirectory
-			? "src/pages"
-			: "pages",
-		"slice-simulator.vue",
-	);
+	let filename: string;
+	// We first give priority to existing `pages` directory, then to `srcDir`.
+	if (appPagesDirectoryExists) {
+		filename = path.join("app/pages", "slice-simulator.vue");
+	} else if (srcPagesDirectoryExists) {
+		filename = path.join("src/pages", "slice-simulator.vue");
+	} else if (pagesDirectoryExists) {
+		filename = path.join("pages", "slice-simulator.vue");
+	} else {
+		filename = await joinAppPath(
+			{ appDirs: ["app", "src"], helpers },
+			"pages",
+			"slice-simulator.vue",
+		);
+	}
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -183,11 +179,8 @@ const moveOrDeleteAppVue = async ({
 	helpers,
 	options,
 }: CreateSliceSimulatorPageArgs) => {
-	const hasAppDirectory = await checkHasAppDirectory({ helpers });
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
-
-	const filenameAppVue = path.join(
-		hasAppDirectory ? "app" : hasSrcDirectory ? "src" : "",
+	const filenameAppVue = await joinAppPath(
+		{ appDirs: ["app", "src"], helpers },
 		"app.vue",
 	);
 
@@ -208,8 +201,9 @@ const moveOrDeleteAppVue = async ({
 		return;
 	}
 
-	const filenameIndexVue = path.join(
-		hasAppDirectory ? "app/pages" : hasSrcDirectory ? "src/pages" : "pages",
+	const filenameIndexVue = await joinAppPath(
+		{ appDirs: ["app", "src"], helpers },
+		"pages",
 		"index.vue",
 	);
 
@@ -235,16 +229,22 @@ const modifySliceMachineConfig = async ({
 	options,
 	actions,
 }: SliceMachineContext<PluginOptions>) => {
-	const hasAppDirectory = await checkHasAppDirectory({ helpers });
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+	const hasAppDirectory = await checkHasProjectFile({
+		filename: "app",
+		helpers,
+	});
+	const hasSrcDirectory = await checkHasProjectFile({
+		filename: "src",
+		helpers,
+	});
 	const project = await helpers.getProject();
 
 	// Add Slice Simulator URL.
 	project.config.localSliceSimulatorURL ||=
 		"http://localhost:3000/slice-simulator";
 
-	// Nest the default Slice Library in the app or src directory if it exists
-	// and is empty.
+	// Nest the default Slice Library in the `app` or `src` directory if it
+	// exists and is empty.
 	if (
 		(hasAppDirectory || hasSrcDirectory) &&
 		project.config.libraries &&

@@ -12,6 +12,9 @@ export type { UpsertGlobalTypeScriptTypesArgs } from "./upsertGlobalTypeScriptTy
 export { checkHasProjectFile } from "./checkHasProjectFile";
 export type { CheckHasProjectFileArgs } from "./checkHasProjectFile";
 
+export { joinAppPath } from "./joinAppPath";
+export type { JoinAppPathArgs } from "./joinAppPath";
+
 export { writeProjectFile } from "./writeProjectFile";
 export type { WriteProjectFileArgs } from "./writeProjectFile";
 
