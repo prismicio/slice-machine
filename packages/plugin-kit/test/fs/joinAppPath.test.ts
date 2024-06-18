@@ -23,5 +23,5 @@ it("joins path from first `appDirs` directory that exists", async (ctx) => {
 		filename,
 	);
 
-	expect(res).toBe(`app/${filename}`);
+	expect(res).toBe(`app${path.sep}${filename}`);
 });
