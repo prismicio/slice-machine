@@ -1,7 +1,17 @@
+import * as fs from "node:fs";
+import * as path from "node:path";
+import * as url from "node:url";
+
 import { withSentryConfig } from "@sentry/nextjs";
 import semver from "semver";
 
-import pkg from "./package.json" with { type: "json" };
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+
+/** @type {{ name: string, version: string }} */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const pkg = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, "package.json"), "utf8"),
+);
 
 const parsedPkgVersion = semver.parse(pkg.version);
 if (parsedPkgVersion === null) {
