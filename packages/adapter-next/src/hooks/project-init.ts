@@ -5,11 +5,11 @@ import type {
 } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
-	joinAppPath,
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
 
+import { buildSrcPath } from "../lib/buildSrcPath";
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
@@ -51,13 +51,10 @@ const createPrismicIOFile = async ({
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = await joinAppPath(
-		{
-			appDirs: ["src"],
-			helpers,
-		},
-		`prismicio.${extension}`,
-	);
+	const filename = await buildSrcPath({
+		filename: `prismicio.${extension}`,
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -262,15 +259,12 @@ const createSliceSimulatorPage = async ({
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options, jsx: true });
-	const filename = await joinAppPath(
-		{
-			appDirs: ["src"],
-			helpers,
-		},
-		hasAppRouter
+	const filename = await buildSrcPath({
+		filename: hasAppRouter
 			? `app/slice-simulator/page.${extension}`
 			: `pages/slice-simulator.${extension}`,
-	);
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -359,15 +353,12 @@ const createPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = await joinAppPath(
-		{
-			appDirs: ["src"],
-			helpers,
-		},
-		hasAppRouter
+	const filename = await buildSrcPath({
+		filename: hasAppRouter
 			? `app/api/preview/route.${extension}`
 			: `pages/api/preview.${extension}`,
-	);
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -454,15 +445,12 @@ const createExitPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = await joinAppPath(
-		{
-			appDirs: ["src"],
-			helpers,
-		},
-		hasAppRouter
+	const filename = await buildSrcPath({
+		filename: hasAppRouter
 			? `app/api/exit-preview/route.${extension}`
 			: `pages/api/exit-preview.${extension}`,
-	);
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -554,13 +542,10 @@ const createRevalidateRoute = async ({
 	}
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = await joinAppPath(
-		{
-			appDirs: ["src"],
-			helpers,
-		},
-		`app/api/revalidate/route.${extension}`,
-	);
+	const filename = await buildSrcPath({
+		filename: `app/api/revalidate/route.${extension}`,
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;

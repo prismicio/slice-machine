@@ -6,12 +6,12 @@ import type {
 } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
-	joinAppPath,
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { stripIndent } from "common-tags";
 import { builders, loadFile, writeFile } from "magicast";
 
+import { buildSrcPath } from "../lib/buildSrcPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
 import type { PluginOptions } from "../types";
@@ -141,14 +141,10 @@ const createSliceSimulatorPage = async ({
 	helpers,
 	options,
 }: CreateSliceSimulatorPageArgs) => {
-	const filename = await joinAppPath(
-		{
-			appDirs: ["src"],
-			helpers,
-		},
-		"pages",
-		"slice-simulator.vue",
-	);
+	const filename = await buildSrcPath({
+		filename: path.join("pages", "slice-simulator.vue"),
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;

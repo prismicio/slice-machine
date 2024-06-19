@@ -6,7 +6,6 @@ import type {
 } from "@slicemachine/plugin-kit";
 import {
 	checkHasProjectFile,
-	joinAppPath,
 	deleteProjectFile,
 	readProjectFile,
 	writeProjectFile,
@@ -14,6 +13,7 @@ import {
 import { stripIndent } from "common-tags";
 import { builders, loadFile, writeFile } from "magicast";
 
+import { buildSrcPath } from "../lib/buildSrcPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
@@ -114,36 +114,10 @@ const createSliceSimulatorPage = async ({
 		options,
 	});
 
-	const appPagesDirectoryExists = await checkHasProjectFile({
-		filename: "app/pages",
+	const filename = await buildSrcPath({
+		filename: path.join("pages", "slice-simulator.vue"),
 		helpers,
 	});
-
-	const srcPagesDirectoryExists = await checkHasProjectFile({
-		filename: "src/pages",
-		helpers,
-	});
-
-	const pagesDirectoryExists = await checkHasProjectFile({
-		filename: "pages",
-		helpers,
-	});
-
-	let filename: string;
-	// We first give priority to existing `pages` directory, then to `srcDir`.
-	if (appPagesDirectoryExists) {
-		filename = path.join("app/pages", "slice-simulator.vue");
-	} else if (srcPagesDirectoryExists) {
-		filename = path.join("src/pages", "slice-simulator.vue");
-	} else if (pagesDirectoryExists) {
-		filename = path.join("pages", "slice-simulator.vue");
-	} else {
-		filename = await joinAppPath(
-			{ appDirs: ["app", "src"], helpers },
-			"pages",
-			"slice-simulator.vue",
-		);
-	}
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -179,10 +153,7 @@ const moveOrDeleteAppVue = async ({
 	helpers,
 	options,
 }: CreateSliceSimulatorPageArgs) => {
-	const filenameAppVue = await joinAppPath(
-		{ appDirs: ["app", "src"], helpers },
-		"app.vue",
-	);
+	const filenameAppVue = await buildSrcPath({ filename: "app.vue", helpers });
 
 	// If there's no `app.vue`, there's nothing to do.
 	if (!(await checkHasProjectFile({ filename: filenameAppVue, helpers }))) {
@@ -201,11 +172,10 @@ const moveOrDeleteAppVue = async ({
 		return;
 	}
 
-	const filenameIndexVue = await joinAppPath(
-		{ appDirs: ["app", "src"], helpers },
-		"pages",
-		"index.vue",
-	);
+	const filenameIndexVue = await buildSrcPath({
+		filename: path.join("pages/index.vue"),
+		helpers,
+	});
 
 	// If we don't have an `index.vue` we create one with the content of `app.vue`
 	if (!(await checkHasProjectFile({ filename: filenameIndexVue, helpers }))) {
