@@ -1,9 +1,9 @@
 import { FieldType } from "@prismicio/types-internal/lib/customtypes";
-import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
 
 import { TabField } from "@/legacy/lib/models/common/CustomType";
+import { GroupSM, NestedGroupSM } from "@/legacy/lib/models/common/Group";
 
 interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
   TYPE_NAME: FieldType;
@@ -24,20 +24,13 @@ interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
   prepareInitialValues?: (props: F["config"]) => F["config"];
 }
 
-interface GroupWidget<F extends TabField, S extends AnyObjectSchema>
-  extends WidgetBase<F, S> {
-  TYPE_NAME: typeof GroupFieldType;
-  hintItemName: string;
-}
-
-interface NonGroupWidget<F extends TabField, S extends AnyObjectSchema>
-  extends WidgetBase<F, S> {
-  TYPE_NAME: Exclude<FieldType, typeof GroupFieldType>;
-}
-
-export type Widget<F extends TabField, S extends AnyObjectSchema> =
-  | GroupWidget<F, S>
-  | NonGroupWidget<F, S>;
+export type Widget<F extends TabField, S extends AnyObjectSchema> = F extends
+  | GroupSM
+  | NestedGroupSM
+  ? WidgetBase<F, S> & {
+      hintItemName: string;
+    }
+  : WidgetBase<F, S>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any, @typescript-eslint/no-explicit-any
 export type AnyWidget = Widget<any, any>;
