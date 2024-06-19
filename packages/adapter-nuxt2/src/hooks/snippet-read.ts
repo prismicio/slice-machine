@@ -102,8 +102,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				language: "vue",
 				code: await format(
 					stripIndent`
-						<template v-for="${itemName || "item"} in ${dotPath(fieldPath)}">
-							{{ ${itemName || "item"} }}
+						<template v-for="${itemName} in ${dotPath(fieldPath)}">
+							{{ ${itemName} }}
 						</template>
 					`,
 					helpers,

@@ -85,8 +85,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		case "Group": {
 			const code = await format(
 				stripIndent`
-					{#each ${dotPath(fieldPath)} as ${itemName || "item"}}
-						<!-- Render content for ${itemName || "item"} -->
+					{#each ${dotPath(fieldPath)} as ${itemName}}
+						<!-- Render content for ${itemName} -->
 					{/each}
 				`,
 				helpers,

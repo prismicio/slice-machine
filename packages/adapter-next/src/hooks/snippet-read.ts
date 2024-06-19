@@ -88,8 +88,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			const code = await format(
 				stripIndent`
 					<>
-						{${dotPath(fieldPath)}.map((${itemName || "item"}) => {
-							// Render the ${itemName || "item"}
+						{${dotPath(fieldPath)}.map((${itemName}) => {
+							// Render the ${itemName}
 						})}
 					</>
 				`,

@@ -35,8 +35,8 @@ export type SchemaType = ReturnType<typeof createSchema>;
 type CreateGroupWidgetArgsBase<T extends TabField> = {
   schemaTypeRegex: RegExp;
   customListItem: (props: GroupListItemProps<T>) => JSX.Element;
+  hintItemName: string;
   customName?: string;
-  hintItemName?: string;
 };
 type CreateTopGroupWidgetArgs = CreateGroupWidgetArgsBase<GroupSM>;
 type CreateNestedGroupWidgetArgs = CreateGroupWidgetArgsBase<NestedGroupSM> & {
