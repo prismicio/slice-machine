@@ -208,6 +208,45 @@ import { components } from "~/slices";
 			expect(postHookContents).toBe(contents);
 		});
 
+		describe.each(["./app/pages", "./src/pages", "./pages"])(
+			"(pagesDir: %s)",
+			(pagesDir) => {
+				test("prefers existing pages directory over assumed srcDir", async (ctx) => {
+					const log = vi.fn();
+					const installDependencies = vi.fn();
+
+					await fs.mkdir(path.join(ctx.project.root, srcDir), {
+						recursive: true,
+					});
+					await fs.mkdir(path.join(ctx.project.root, pagesDir), {
+						recursive: true,
+					});
+
+					await ctx.pluginRunner.callHook("project:init", {
+						log,
+						installDependencies,
+					});
+
+					const contents = await fs.readFile(
+						path.join(ctx.project.root, pagesDir, "slice-simulator.vue"),
+						"utf8",
+					);
+
+					expect(contents).toBe(`<template>
+  <SliceSimulator #default="{ slices }">
+    <SliceZone :slices="slices" :components="components" />
+  </SliceSimulator>
+</template>
+
+<script setup>
+import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
+import { components } from "~/slices";
+</script>
+`);
+				});
+			},
+		);
+
 		test("Slice Simulator page file is formatted by default", async (ctx) => {
 			const log = vi.fn();
 			const installDependencies = vi.fn();
