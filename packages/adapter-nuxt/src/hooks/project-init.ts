@@ -114,10 +114,36 @@ const createSliceSimulatorPage = async ({
 		options,
 	});
 
-	const filename = await buildSrcPath({
-		filename: path.join("pages", "slice-simulator.vue"),
+	const appPagesDirectoryExists = await checkHasProjectFile({
+		filename: "app/pages",
 		helpers,
 	});
+
+	const srcPagesDirectoryExists = await checkHasProjectFile({
+		filename: "src/pages",
+		helpers,
+	});
+
+	const pagesDirectoryExists = await checkHasProjectFile({
+		filename: "pages",
+		helpers,
+	});
+
+	let filename: string;
+	// We first give priority to existing `pages` directory, then to `srcDir`
+	// because there could be conflicts with legacy `app` directory.
+	if (appPagesDirectoryExists) {
+		filename = path.join("app/pages", "slice-simulator.vue");
+	} else if (srcPagesDirectoryExists) {
+		filename = path.join("src/pages", "slice-simulator.vue");
+	} else if (pagesDirectoryExists) {
+		filename = path.join("pages", "slice-simulator.vue");
+	} else {
+		filename = await buildSrcPath({
+			filename: path.join("pages", "slice-simulator.vue"),
+			helpers,
+		});
+	}
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
