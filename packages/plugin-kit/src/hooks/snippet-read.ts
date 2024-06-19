@@ -17,6 +17,11 @@ export type Snippet = {
 
 /**
  * Data provided to `snippet:read` hook handlers.
+ *
+ * The `itemName` string keeps slice machine as the single source of truth for
+ * the code snippet base names. Angelo suggested an improvement to `fieldPath`
+ * (linked below) that could be done in the future.
+ * https://github.com/prismicio/slice-machine/pull/1390#pullrequestreview-2123845118
  */
 export type SnippetReadHookData = {
 	fieldPath: string[];
