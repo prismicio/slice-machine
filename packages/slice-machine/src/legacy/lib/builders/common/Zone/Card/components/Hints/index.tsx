@@ -9,9 +9,15 @@ interface HintProps {
   show: boolean;
   item: Item;
   renderHintBase: RenderHintBaseFN;
+  hintItemName?: string;
 }
 
-const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
+const Hint: React.FC<HintProps> = ({
+  show,
+  renderHintBase,
+  item,
+  hintItemName,
+}) => {
   const fieldPathString = renderHintBase({ item });
 
   // TODO: Call `swr`'s global `mutate` function when something changes to clear the cache.
@@ -20,6 +26,7 @@ const Hint: React.FC<HintProps> = ({ show, renderHintBase, item }) => {
     return await managerClient.snippets.readSnippets({
       fieldPath: fieldPathString.split("."),
       model: item.value,
+      itemName: hintItemName,
     });
   });
 
