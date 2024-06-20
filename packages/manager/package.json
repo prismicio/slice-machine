@@ -66,7 +66,7 @@
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
 		"@prismicio/client": "^7.5.0",
-		"@prismicio/custom-types-client": "2.1.0-alpha.0",
+		"@prismicio/custom-types-client": "2.1.0",
 		"@prismicio/mocks": "^2.3.0",
 		"@prismicio/types-internal": "2.5.0",
 		"@segment/analytics-node": "1.1.3",

@@ -5097,12 +5097,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/custom-types-client@npm:2.1.0-alpha.0":
-  version: 2.1.0-alpha.0
-  resolution: "@prismicio/custom-types-client@npm:2.1.0-alpha.0"
+"@prismicio/custom-types-client@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@prismicio/custom-types-client@npm:2.1.0"
   peerDependencies:
     "@prismicio/client": ">=7"
-  checksum: e790eb675a48d6d33befb435ba7b7debaa3f63b49bbd4ddd9db1df1dcfa976b069990de9e230559587be4d945e72d11525abd4537b558e246ac73b319174b8b3
+  checksum: bcdc611856977f142385575464b41966b11a33fe34517541804ecd0b6d33ba7aa55eedcfda97e7c58d5ba9ca978a83594fbbb66528f2a992257b498dab3a1a3c
   languageName: node
   linkType: hard
 
@@ -8338,7 +8338,7 @@ __metadata:
     "@amplitude/experiment-node-server": 1.8.1
     "@antfu/ni": ^0.20.0
     "@prismicio/client": ^7.5.0
-    "@prismicio/custom-types-client": 2.1.0-alpha.0
+    "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.3.7
     "@prismicio/mocks": ^2.3.0
     "@prismicio/types-internal": 2.5.0
