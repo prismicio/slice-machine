@@ -5254,6 +5254,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/mock@npm:0.3.3":
+  version: 0.3.3
+  resolution: "@prismicio/mock@npm:0.3.3"
+  dependencies:
+    change-case: ^5.4.4
+  peerDependencies:
+    "@prismicio/client": ^7
+  checksum: 4bcb9a8ae5446b807627e759cde19991d555cc48ba16baaddfe62f466793369ad539bafe3c54264b24395eac6a05267c8b54dfff53b7430045ebece73fa3c704
+  languageName: node
+  linkType: hard
+
 "@prismicio/mock@npm:0.3.7":
   version: 0.3.7
   resolution: "@prismicio/mock@npm:0.3.7"
@@ -8088,7 +8099,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-next@workspace:packages/adapter-next"
   dependencies:
-    "@prismicio/mock": 0.3.7
+    "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.5.0
     "@size-limit/preset-small-lib": 8.2.4
@@ -8133,7 +8144,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-nuxt2@workspace:packages/adapter-nuxt2"
   dependencies:
-    "@prismicio/mock": 0.3.7
+    "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.5.0
     "@size-limit/preset-small-lib": 8.2.4
@@ -8216,7 +8227,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-sveltekit@workspace:packages/adapter-sveltekit"
   dependencies:
-    "@prismicio/mock": 0.3.7
+    "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 2.5.0
     "@size-limit/preset-small-lib": 8.2.4
@@ -8339,7 +8350,7 @@ __metadata:
     "@antfu/ni": ^0.20.0
     "@prismicio/client": ^7.5.0
     "@prismicio/custom-types-client": 2.1.0
-    "@prismicio/mock": 0.3.7
+    "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.3.0
     "@prismicio/types-internal": 2.5.0
     "@segment/analytics-node": 1.1.3
@@ -29759,7 +29770,7 @@ __metadata:
     "@prismicio/editor-fields": 0.4.29
     "@prismicio/editor-support": 0.4.29
     "@prismicio/editor-ui": 0.4.29
-    "@prismicio/mock": 0.3.7
+    "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.0
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 2.5.0
