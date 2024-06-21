@@ -5088,12 +5088,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:7.6.0":
+"@prismicio/client@npm:7.6.0, @prismicio/client@npm:^7.1.0, @prismicio/client@npm:^7.5.0, @prismicio/client@npm:^7.6.0, @prismicio/client@npm:v7.6.0":
   version: 7.6.0
   resolution: "@prismicio/client@npm:7.6.0"
   dependencies:
     imgix-url-builder: ^0.0.4
   checksum: 716d9d3f0d920c58d3af74a3558886a090dc12d7ec190761d296bcfb8beda1dd47806681eeebf6543f1fdb24c92411939554517d74c9ac3120c84755b2dd14ad
+  languageName: node
+  linkType: hard
+
+"@prismicio/client@npm:^6.7.3":
+  version: 6.9.0
+  resolution: "@prismicio/client@npm:6.9.0"
+  dependencies:
+    "@prismicio/helpers": ^2.3.8
+    "@prismicio/types": ^0.2.7
+  checksum: ba76743c89740992c9dfc73958d9b79ab93c40f29147c88c971b6b72091844422ca0d30ec0058d3b14117b6e7d97000bc6893a9457d5d56489dda33eb354c1cd
   languageName: node
   linkType: hard
 
@@ -5233,7 +5243,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/helpers@npm:^2.3.9":
+"@prismicio/helpers@npm:^2.3.8, @prismicio/helpers@npm:^2.3.9":
   version: 2.3.9
   resolution: "@prismicio/helpers@npm:2.3.9"
   dependencies:
@@ -5396,6 +5406,23 @@ __metadata:
     "@esbuild/android-arm":
       optional: true
   checksum: a6c79c76e47a8f99efbb745afb1e48583d0f464dc37f18602b0115f84831f758da5aeeaea4dbe165675d8fd405e8ae3e26fc847736d5c6f179f4c6ff0ab1510d
+  languageName: node
+  linkType: hard
+
+"@prismicio/types-internal@npm:2.4.1":
+  version: 2.4.1
+  resolution: "@prismicio/types-internal@npm:2.4.1"
+  dependencies:
+    monocle-ts: ^2.3.11
+    newtype-ts: ^0.3.5
+    tslib: ^2.3.1
+  peerDependencies:
+    "@types/uuid": ^9.0.2
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    io-ts-types: ^0.5.16
+    uuid: ^9.0.0
+  checksum: a70a68b82d618b384cd8eb1343d7bff42c1663da8303d757010c14947cafdee241eaf035322c7b1f42f63918ecaf51d944ebc34a60acb934fa8a9015a1dc7b3d
   languageName: node
   linkType: hard
 
