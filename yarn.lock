@@ -5409,23 +5409,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:2.4.1":
-  version: 2.4.1
-  resolution: "@prismicio/types-internal@npm:2.4.1"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-  peerDependencies:
-    "@types/uuid": ^9.0.2
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-    uuid: ^9.0.0
-  checksum: a70a68b82d618b384cd8eb1343d7bff42c1663da8303d757010c14947cafdee241eaf035322c7b1f42f63918ecaf51d944ebc34a60acb934fa8a9015a1dc7b3d
-  languageName: node
-  linkType: hard
-
 "@prismicio/types-internal@npm:2.5.0":
   version: 2.5.0
   resolution: "@prismicio/types-internal@npm:2.5.0"
