@@ -4,7 +4,7 @@ This package is primarily maintained by [Prismic](https://prismic.io)[^1]. Exter
 
 ## :gear: Setup
 
-<!-- When applicable, list system requriements to work on the project. -->
+<!-- When applicable, list system requirements to work on the project. -->
 
 The following setup is required to work on this project:
 
@@ -48,7 +48,7 @@ See [playwright/README.md](./playwright/README.md) for details.
 > [!NOTE]
 > It's highly recommended to discuss your changes with the Prismic team before starting by [opening an issue](https://github.com/prismicio/slice-machine/issues/new/choose).[^2]
 >
-> A short discussion can accellerate your work and ship it faster.
+> A short discussion can accelerate your work and ship it faster.
 
 ```sh
 # Clone and prepare the project.
