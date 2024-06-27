@@ -7,7 +7,7 @@ import {
   CustomTypes,
   CustomTypeSM,
 } from "@/legacy/lib/models/common/CustomType";
-import * as Widgets from "@/legacy/lib/models/common/widgets";
+import { NonGroupWidgets as Widgets } from "@/legacy/lib/models/common/widgets/nonGroupWidgets";
 
 const widgetEntries = Object.entries(Widgets);
 

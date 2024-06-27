@@ -172,6 +172,225 @@ test("I can delete a sub field within a group field", async ({
   ).not.toBeVisible();
 });
 
+test("I can add a nested group with a sub field inside a group field", async ({
+  procedures,
+  sliceBuilderPage,
+  slice,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId(
+      "my_nested_group",
+      "static",
+      "my_group",
+    ),
+  ).toBeVisible();
+  await expect(
+    sliceBuilderPage.getListItemFieldName(
+      "my_nested_group",
+      "My Nested Group",
+      "static",
+      "my_group",
+    ),
+  ).toBeVisible();
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId(
+      "my_nested_group_sub_field",
+      "static",
+      "my_nested_group",
+    ),
+  ).toBeVisible();
+  await expect(
+    sliceBuilderPage.getListItemFieldName(
+      "my_nested_group_sub_field",
+      "My Nested Group Sub Field",
+      "static",
+      "my_nested_group",
+    ),
+  ).toBeVisible();
+});
+
+test("I can edit a nested group and its sub field inside a group field", async ({
+  procedures,
+  sliceBuilderPage,
+  slice,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await sliceBuilderPage
+    .getEditFieldButton(
+      "my_nested_group_sub_field",
+      "static",
+      "my_nested_group",
+    )
+    .click();
+  await sliceBuilderPage.editFieldDialog.editField({
+    name: "My Nested Group Sub Field",
+    newName: "My Nested Group Sub Field Renamed",
+    newId: "my_nested_group_sub_field_renamed",
+  });
+
+  await sliceBuilderPage
+    .getEditFieldButton("my_nested_group", "static", "my_group")
+    .first()
+    .click();
+  await sliceBuilderPage.editFieldDialog.editField({
+    name: "My Nested Group",
+    newName: "My Nested Group Renamed",
+    newId: "my_nested_group_renamed",
+  });
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId(
+      "my_nested_group_sub_field_renamed",
+      "static",
+      "my_nested_group_renamed",
+    ),
+  ).toBeVisible();
+  await expect(
+    sliceBuilderPage.getListItemFieldName(
+      "my_nested_group_sub_field_renamed",
+      "My Nested Group Sub Field Renamed",
+      "static",
+      "my_nested_group_renamed",
+    ),
+  ).toBeVisible();
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId(
+      "my_nested_group_renamed",
+      "static",
+      "my_group",
+    ),
+  ).toBeVisible();
+  await expect(
+    sliceBuilderPage.getListItemFieldName(
+      "my_nested_group_renamed",
+      "My Nested Group Renamed",
+      "static",
+      "my_group",
+    ),
+  ).toBeVisible();
+});
+
+test("I can delete a nested group and its sub field inside a group field", async ({
+  procedures,
+  sliceBuilderPage,
+  slice,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await sliceBuilderPage.deleteField(
+    "my_nested_group_sub_field",
+    "static",
+    "my_nested_group",
+  );
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId(
+      "my_nested_group_sub_field",
+      "static",
+      "my_nested_group",
+    ),
+  ).not.toBeVisible();
+
+  await sliceBuilderPage.deleteField("my_nested_group", "static", "my_group");
+
+  await expect(
+    sliceBuilderPage.getListItemFieldId(
+      "my_nested_group",
+      "static",
+      "my_group",
+    ),
+  ).not.toBeVisible();
+});
+
 test("I can delete a field in the static zone", async ({
   sliceBuilderPage,
   slice,
@@ -306,4 +525,54 @@ test("I can see and copy the code snippets for groups", async ({
   await sliceBuilderPage.codeSnippetsFieldSwitch.click();
   await expect(sliceBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
   await sliceBuilderPage.copyCodeSnippet("my_group", "static");
+});
+
+test("I can see and copy the code snippets for nested groups and their sub fields", async ({
+  procedures,
+  sliceBuilderPage,
+  slice,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await sliceBuilderPage.goto(slice.name);
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+    zoneType: "static",
+  });
+  await sliceBuilderPage.addField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    zoneType: "static",
+    groupFieldId: "my_group",
+  });
+  await sliceBuilderPage.addField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    zoneType: "static",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await expect(sliceBuilderPage.codeSnippetsFieldSwitch).not.toBeChecked();
+  await sliceBuilderPage.codeSnippetsFieldSwitch.click();
+  await expect(sliceBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
+  await sliceBuilderPage.copyCodeSnippet(
+    "my_nested_group",
+    "static",
+    "my_group",
+  );
+  await sliceBuilderPage.copyCodeSnippet(
+    "my_nested_group_sub_field",
+    "static",
+    "my_nested_group",
+  );
 });

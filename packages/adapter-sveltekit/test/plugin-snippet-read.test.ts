@@ -1,5 +1,6 @@
 import { test, expect } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 import { Snippet } from "@slicemachine/plugin-kit";
 import prettier from "prettier";
 
@@ -36,6 +37,8 @@ const model = mock.model.customType({
 	},
 });
 
+const itemName = "item";
+
 const prettierConfig: prettier.Options = {
 	plugins: ["prettier-plugin-svelte"],
 	parser: "svelte",
@@ -51,6 +54,10 @@ const testSnippet = (
 		} = await ctx.pluginRunner.callHook("snippet:read", {
 			fieldPath: [model.id, "data", fieldName],
 			model: model.json.Main[fieldName],
+			itemName:
+				model.json.Main[fieldName].type === GroupFieldType
+					? itemName
+					: undefined,
 		});
 
 		if (Array.isArray(expected)) {
@@ -96,8 +103,8 @@ testSnippet(
 
 testSnippet(
 	"group",
-	`{#each ${model.id}.data.group as item}
-	<!-- Render content for item -->
+	`{#each ${model.id}.data.group as ${itemName}}
+	<!-- Render content for ${itemName} -->
 {/each}`,
 );
 

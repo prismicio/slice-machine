@@ -191,6 +191,229 @@ test("I can delete a sub field within a group field", async ({
   ).not.toBeVisible();
 });
 
+test("I can add a nested group with a sub field inside a group field", async ({
+  pageTypesBuilderPage,
+  procedures,
+  reusablePageType,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    groupFieldId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_nested_group", "my_group"),
+  ).toBeVisible();
+  await expect(
+    pageTypesBuilderPage.getListItemFieldName(
+      "my_nested_group",
+      "My Nested Group",
+      "my_group",
+    ),
+  ).toBeVisible();
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_nested_group_sub_field",
+      "my_nested_group",
+    ),
+  ).toBeVisible();
+  await expect(
+    pageTypesBuilderPage.getListItemFieldName(
+      "my_nested_group_sub_field",
+      "My Nested Group Sub Field",
+      "my_nested_group",
+    ),
+  ).toBeVisible();
+});
+
+test("I can edit a nested group and its sub field inside a group field", async ({
+  pageTypesBuilderPage,
+  procedures,
+  reusablePageType,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    groupFieldId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_nested_group_sub_field", "my_nested_group")
+    .click();
+  await pageTypesBuilderPage.editFieldDialog.editField({
+    name: "My Nested Group Sub Field",
+    newName: "My Nested Group Sub Field Renamed",
+    newId: "my_nested_group_sub_field_renamed",
+  });
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_nested_group", "my_group")
+    .first()
+    .click();
+  await pageTypesBuilderPage.editFieldDialog.editField({
+    name: "My Nested Group",
+    newName: "My Nested Group Renamed",
+    newId: "my_nested_group_renamed",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_nested_group_renamed",
+      "my_group",
+    ),
+  ).toBeVisible();
+  await expect(
+    pageTypesBuilderPage.getListItemFieldName(
+      "my_nested_group_renamed",
+      "My Nested Group Renamed",
+      "my_group",
+    ),
+  ).toBeVisible();
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_nested_group_sub_field_renamed",
+      "my_nested_group_renamed",
+    ),
+  ).toBeVisible();
+  await expect(
+    pageTypesBuilderPage.getListItemFieldName(
+      "my_nested_group_sub_field_renamed",
+      "My Nested Group Sub Field Renamed",
+      "my_nested_group_renamed",
+    ),
+  ).toBeVisible();
+});
+
+test("I can delete a nested group and its sub field inside a group field", async ({
+  pageTypesBuilderPage,
+  procedures,
+  reusablePageType,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    groupFieldId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await pageTypesBuilderPage.deleteField(
+    "my_nested_group_sub_field",
+    "my_nested_group",
+  );
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_nested_group_sub_field",
+      "my_nested_group",
+    ),
+  ).not.toBeVisible();
+
+  await pageTypesBuilderPage.deleteField("my_nested_group", "my_group");
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_nested_group", "my_group"),
+  ).not.toBeVisible();
+});
+
+test("I can't add a nested group if I'm not eligible for the `slicemachine-nested-groups` experiment", async ({
+  pageTypesBuilderPage,
+  procedures,
+  reusablePageType,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "off" } : undefined,
+    { execute: false },
+  );
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage
+    .getListItem("my_group")
+    .getByRole("button", {
+      name: "Add Field",
+      exact: true,
+    })
+    .click();
+
+  await expect(pageTypesBuilderPage.addFieldDialog.title).toBeVisible();
+  const richTextField =
+    pageTypesBuilderPage.addFieldDialog.getField("Rich Text");
+  await expect(richTextField).toBeVisible();
+  const groupField = pageTypesBuilderPage.addFieldDialog.getField("Group");
+  await expect(groupField).not.toBeVisible();
+});
+
 test("I can see and copy the code snippets", async ({
   pageTypesBuilderPage,
   reusablePageType,
@@ -223,6 +446,48 @@ test("I can see and copy the code snippets for groups", async ({
   await pageTypesBuilderPage.codeSnippetsFieldSwitch.click();
   await expect(pageTypesBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
   await pageTypesBuilderPage.copyCodeSnippet("my_group");
+});
+
+test("I can see and copy the code snippets for nested groups and their sub fields", async ({
+  pageTypesBuilderPage,
+  procedures,
+  reusablePageType,
+}) => {
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "slicemachine-nested-groups" ? { value: "on" } : undefined,
+    { execute: false },
+  );
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Group",
+    name: "My Nested Group",
+    expectedId: "my_nested_group",
+    groupFieldId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Nested Group Sub Field",
+    expectedId: "my_nested_group_sub_field",
+    groupFieldId: "my_nested_group",
+    grandparentGroupFieldId: "my_group",
+  });
+
+  await expect(pageTypesBuilderPage.codeSnippetsFieldSwitch).not.toBeChecked();
+  await pageTypesBuilderPage.codeSnippetsFieldSwitch.click();
+  await expect(pageTypesBuilderPage.codeSnippetsFieldSwitch).toBeChecked();
+  await pageTypesBuilderPage.copyCodeSnippet("my_nested_group", "my_group");
+  await pageTypesBuilderPage.copyCodeSnippet(
+    "my_nested_group_sub_field",
+    "my_nested_group",
+  );
 });
 
 test("I cannot delete default UID field for reusable page type", async ({

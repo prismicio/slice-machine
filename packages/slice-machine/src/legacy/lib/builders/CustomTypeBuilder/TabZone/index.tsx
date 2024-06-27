@@ -30,7 +30,7 @@ import {
   TabFieldsModel,
   TabSM,
 } from "@/legacy/lib/models/common/CustomType";
-import ctBuilderArray from "@/legacy/lib/models/common/widgets/ctBuilderArray";
+import { Widgets } from "@/legacy/lib/models/common/widgets";
 import type { AnyWidget } from "@/legacy/lib/models/common/widgets/Widget";
 import {
   ensureDnDDestination,
@@ -39,10 +39,28 @@ import {
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
-import * as Widgets from "../../../../lib/models/common/widgets/withGroup";
 import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
 import SliceZone from "../SliceZone";
+
+const widgetsArray = [
+  Widgets.UID,
+  Widgets.Group,
+  Widgets.StructuredText,
+  Widgets.Image,
+  Widgets.Link,
+  Widgets.LinkToMedia,
+  Widgets.ContentRelationship,
+  Widgets.Select,
+  Widgets.Boolean,
+  Widgets.Date,
+  Widgets.Timestamp,
+  Widgets.Embed,
+  Widgets.Number,
+  Widgets.GeoPoint,
+  Widgets.Color,
+  Widgets.Text,
+];
 
 interface TabZoneProps {
   tabId: string;
@@ -227,7 +245,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
               poolOfFieldsToCheck={poolOfFields}
               showHints={true}
               EditModal={EditModal}
-              widgetsArray={ctBuilderArray}
+              widgetsArray={widgetsArray}
               onDeleteItem={onDeleteItem}
               onSave={onSave}
               onSaveNewField={onSaveNewField}

@@ -3,7 +3,7 @@ import { Box, Text } from "theme-ui";
 
 import Li from "@/legacy/components/Li";
 import ListItem from "@/legacy/components/ListItem";
-import * as Widgets from "@/legacy/lib/models/common/widgets/withGroup";
+import { Widgets } from "@/legacy/lib/models/common/widgets";
 
 import { findWidgetByConfigOrType } from "../../../utils";
 import Hint from "./components/Hints";
@@ -103,6 +103,8 @@ const FieldZone = ({
                     isRepeatable={isRepeatable}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     renderHintBase={renderHintBase}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    hintItemName={widget.hintItemName}
                     Widgets={Widgets}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
                     typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
