@@ -21,6 +21,50 @@ test("installs dependencies", async (ctx) => {
 	});
 });
 
+test("creates all Slice library index files", async (ctx) => {
+	await fs.writeFile(
+		path.join(ctx.project.root, "slicemachine.config.json"),
+		JSON.stringify({
+			...ctx.project.config,
+			libraries: ["./foo", "./bar"],
+		}),
+	);
+
+	await ctx.pluginRunner.callHook("project:init", {
+		log: vi.fn(),
+		installDependencies: vi.fn(),
+	});
+
+	expect(await fs.readdir(path.join(ctx.project.root, "foo"))).includes(
+		"index.js",
+	);
+	expect(await fs.readdir(path.join(ctx.project.root, "bar"))).includes(
+		"index.js",
+	);
+});
+
+test("doesn't throw if no Slice libraries are configured", async (ctx) => {
+	ctx.project.config.libraries = undefined;
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
+	await pluginRunner.init();
+
+	await expect(
+		ctx.pluginRunner.callHook("project:init", {
+			log: vi.fn(),
+			installDependencies: vi.fn(),
+		}),
+	).resolves.toStrictEqual(
+		expect.objectContaining({
+			errors: [],
+		}),
+	);
+});
+
 describe("modify slicemachine.config.json", () => {
 	test("adds default localSliceSimulatorURL", async (ctx) => {
 		const log = vi.fn();

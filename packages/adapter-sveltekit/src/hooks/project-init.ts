@@ -391,7 +391,7 @@ const upsertSliceLibraryIndexFiles = async (
 ) => {
 	// We must use the `getProject()` helper to get the latest version of
 	// the project config. The config may have been modified in
-	// `modifySliceMachineConfig()` and will not be relfected in
+	// `modifySliceMachineConfig()` and will not be reflected in
 	// `context.project`.
 	// TODO: Automatically update the plugin runner's in-memory `project`
 	// object when `updateSliceMachineConfig()` is called.
