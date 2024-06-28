@@ -851,6 +851,13 @@ describe("Slice Simulator route", () => {
 				import { components } from \\"../../slices\\";
 
 				export default function SliceSimulatorPage({ searchParams }) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    redirect(\\"/\\");
+				  }
+
 				  const slices = getSlices(searchParams.state);
 
 				  return (
@@ -916,6 +923,13 @@ describe("Slice Simulator route", () => {
 				import { components } from \\"../../slices\\";
 
 				export default function SliceSimulatorPage({ searchParams }) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    redirect(\\"/\\");
+				  }
+
 				  const slices = getSlices(searchParams.state);
 
 				  return (
@@ -1015,6 +1029,13 @@ describe("Slice Simulator route", () => {
 				export default function SliceSimulatorPage({
 				  searchParams,
 				}: SliceSimulatorParams) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    redirect(\\"/\\");
+				  }
+
 				  const slices = getSlices(searchParams.state);
 
 				  return (
@@ -1055,6 +1076,17 @@ describe("Slice Simulator route", () => {
 				      sliceZone={(props) => <SliceZone {...props} components={components} />}
 				    />
 				  );
+				}
+
+				export function getServerSideProps(context) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    return { redirect: { destination: \\"/\\", permanent: false } };
+				  }
+
+				  return { props: {} };
 				}
 				"
 			`);
@@ -1112,6 +1144,17 @@ describe("Slice Simulator route", () => {
 				      sliceZone={(props) => <SliceZone {...props} components={components} />}
 				    />
 				  );
+				}
+
+				export function getServerSideProps(context) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    return { redirect: { destination: \\"/\\", permanent: false } };
+				  }
+
+				  return { props: {} };
 				}
 				"
 			`);
@@ -1192,7 +1235,8 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"import { GetServerSidePropsContext } from \\"next\\";
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";
@@ -1203,6 +1247,17 @@ describe("Slice Simulator route", () => {
 				      sliceZone={(props) => <SliceZone {...props} components={components} />}
 				    />
 				  );
+				}
+
+				export function getServerSideProps(context: GetServerSidePropsContext) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    return { redirect: { destination: \\"/\\", permanent: false } };
+				  }
+
+				  return { props: {} };
 				}
 				"
 			`);

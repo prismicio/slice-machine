@@ -287,6 +287,13 @@ const createSliceSimulatorPage = async ({
 				export default function SliceSimulatorPage({
 					searchParams,
 				}: SliceSimulatorParams) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						redirect("/");
+					}
+
 					const slices = getSlices(searchParams.state);
 
 					return (
@@ -307,6 +314,13 @@ const createSliceSimulatorPage = async ({
 				import { components } from "../../slices";
 
 				export default function SliceSimulatorPage({ searchParams }) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						redirect("/");
+					}
+
 					const slices = getSlices(searchParams.state);
 
 					return (
@@ -318,20 +332,60 @@ const createSliceSimulatorPage = async ({
 			`;
 		}
 	} else {
-		contents = source`
-			import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-			import { SliceZone } from "@prismicio/react";
+		if (isTypeScriptProject) {
+			contents = source`
+				import { GetServerSidePropsContext } from "next";
+				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+				import { SliceZone } from "@prismicio/react";
 
-			import { components } from "../slices";
+				import { components } from "../slices";
 
-			export default function SliceSimulatorPage() {
-				return (
-					<SliceSimulator
-						sliceZone={(props) => <SliceZone {...props} components={components} />}
-					/>
-				);
-			}
-		`;
+				export default function SliceSimulatorPage() {
+					return (
+						<SliceSimulator
+							sliceZone={(props) => <SliceZone {...props} components={components} />}
+						/>
+					);
+				}
+
+				export function getServerSideProps(context: GetServerSidePropsContext) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						return { redirect: { destination: "/", permanent: false } };
+					}
+
+					return { props: {} };
+				}
+			`;
+		} else {
+			contents = source`
+				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+				import { SliceZone } from "@prismicio/react";
+
+				import { components } from "../slices";
+
+				export default function SliceSimulatorPage() {
+					return (
+						<SliceSimulator
+							sliceZone={(props) => <SliceZone {...props} components={components} />}
+						/>
+					);
+				}
+
+				export function getServerSideProps(context) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						return { redirect: { destination: "/", permanent: false } };
+					}
+
+					return { props: {} };
+				}
+			`;
+		}
 	}
 
 	await writeProjectFile({
