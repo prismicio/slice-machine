@@ -891,6 +891,7 @@ describe("Slice Simulator route", () => {
 				  getSlices,
 				} from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
+				import { redirect } from \\"next/navigation\\";
 
 				import { components } from \\"../../slices\\";
 
@@ -963,6 +964,7 @@ describe("Slice Simulator route", () => {
 				  getSlices,
 				} from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
+				import { redirect } from \\"next/navigation\\";
 
 				import { components } from \\"../../slices\\";
 
@@ -1067,6 +1069,7 @@ describe("Slice Simulator route", () => {
 				  getSlices,
 				} from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
+				import { redirect } from \\"next/navigation\\";
 
 				import { components } from \\"../../slices\\";
 

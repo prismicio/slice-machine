@@ -282,6 +282,7 @@ const createSliceSimulatorPage = async ({
 					getSlices,
 				} from "@slicemachine/adapter-next/simulator";
 				import { SliceZone } from "@prismicio/react";
+				import { redirect } from "next/navigation";
 
 				import { components } from "../../slices";
 
@@ -311,6 +312,7 @@ const createSliceSimulatorPage = async ({
 					getSlices,
 				} from "@slicemachine/adapter-next/simulator";
 				import { SliceZone } from "@prismicio/react";
+				import { redirect } from "next/navigation";
 
 				import { components } from "../../slices";
 
