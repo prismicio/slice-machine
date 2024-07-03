@@ -1,4 +1,4 @@
-import _module from "node:module";
+import _module, { createRequire } from "node:module";
 
 /**
  * Resolves a module path with `createRequire().resolve()` with Yarn PnP
@@ -24,7 +24,7 @@ export default (id: string, from: string): string => {
 		}
 	}
 
-	const require = _module.createRequire(from);
+	const require = createRequire(from);
 
 	return require.resolve(_id);
 };

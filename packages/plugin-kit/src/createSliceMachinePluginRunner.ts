@@ -1,5 +1,5 @@
 import * as path from "node:path";
-import _module from "node:module";
+import _module, { createRequire } from "node:module";
 
 import { defu } from "defu";
 
@@ -147,13 +147,13 @@ export class SliceMachinePluginRunner {
 					"findPnpApi" in _module &&
 					_module.findPnpApi instanceof Function
 				) {
-					const pnpApi = _module.findPnpApi(this._project.root);
+					const pnpApi = _module.findPnpApi(noop);
 					if (pnpApi) {
 						_resolve = pnpApi.resolveRequest(resolve, noop);
 					}
 				}
 
-				const raw = await _module.createRequire(noop)(_resolve);
+				const raw = await createRequire(noop)(_resolve);
 				plugin = raw.default || raw;
 			} catch (error) {
 				// Only log in development, but not during tests when a native plugin matches.
