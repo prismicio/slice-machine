@@ -88,7 +88,6 @@
 		"prettier": "^3.0.3",
 		"r19": "0.1.8",
 		"rc9": "^2.0.1",
-		"readable-web-to-node-stream": "^3.0.2",
 		"semver": "^7.3.8"
 	},
 	"devDependencies": {

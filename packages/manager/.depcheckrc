@@ -6,7 +6,6 @@ ignores:
     "monocle-ts",
     "newtype-ts",
     "prettier-plugin-jsdoc",
-    "readable-web-to-node-stream",
     "typescript",
   ]
 skip - missing: true
