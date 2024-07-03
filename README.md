@@ -22,12 +22,15 @@ For the smoothest onboarding experience, go to [Prismic][prismic-dashboard], cre
 
 If you want to dive in without any guidance, follow these steps:
 
-Create a Next.js or Nuxt app:
+Create a Next.js, Nuxt, or SvelteKit app:
 ```
 npx create-next-app@latest my-app
 ```
 ```
 npx nuxi@latest init my-app
+```
+```
+npm create svelte@latest my-app
 ```
 
 Open the folder:
