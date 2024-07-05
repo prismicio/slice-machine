@@ -7787,35 +7787,39 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@segment/analytics-core@npm:1.3.2":
-  version: 1.3.2
-  resolution: "@segment/analytics-core@npm:1.3.2"
+"@segment/analytics-core@npm:1.6.0":
+  version: 1.6.0
+  resolution: "@segment/analytics-core@npm:1.6.0"
   dependencies:
     "@lukeed/uuid": ^2.0.0
+    "@segment/analytics-generic-utils": 1.2.0
     dset: ^3.1.2
     tslib: ^2.4.1
-  checksum: d3402a0de749eb94253feb45961f12483660fc8ee170f226be3c26b1d5b94df035a99f1f189e375c44f2b6b9b824b7485c47d35806ab0bad362989699521caca
+  checksum: 45f5c2688dfef558fe2fc9fe6fe13628de1ca25e7a9e408265f4255e84bdac41be7a4f65814903223402cbdebdeec6d7c321841ec0ed7464911d7f914991a8ea
   languageName: node
   linkType: hard
 
-"@segment/analytics-generic-utils@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@segment/analytics-generic-utils@npm:1.0.0"
-  checksum: b1a371269565179833f2c61a556d2a89a53eb4eb633188a7637b37b2f75020811065c8211bc70c2ac6eccd228c233c9e069fed047c9dcbc1880f50526b86a21d
+"@segment/analytics-generic-utils@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@segment/analytics-generic-utils@npm:1.2.0"
+  dependencies:
+    tslib: ^2.4.1
+  checksum: f36aa093722e4f51dddd4dfa37164bd082175bb0c0960096f9b03073c482e96a17012bc99782259a9d3787e52a48f03ab3447902c6c635654a8ce544892073e5
   languageName: node
   linkType: hard
 
-"@segment/analytics-node@npm:1.1.3":
-  version: 1.1.3
-  resolution: "@segment/analytics-node@npm:1.1.3"
+"@segment/analytics-node@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@segment/analytics-node@npm:2.1.2"
   dependencies:
     "@lukeed/uuid": ^2.0.0
-    "@segment/analytics-core": 1.3.2
-    "@segment/analytics-generic-utils": 1.0.0
+    "@segment/analytics-core": 1.6.0
+    "@segment/analytics-generic-utils": 1.2.0
     buffer: ^6.0.3
+    jose: ^5.1.0
     node-fetch: ^2.6.7
     tslib: ^2.4.1
-  checksum: 0c907fa2252c0f49484d2de7fc4430a0a20247b5f0a43c93fef0c93860957c32a8744a307ded1cf3bca89a7ddca792ea289596ad211c4dbca19b53760f66e794
+  checksum: 2cff334b270607c7418332aa3755b5016a6f4faf1a1ecf201cb64b81f2bb05398cb9553d59990518910f2ba6018dc99bda3debce3adb2802d7f989c126c7786a
   languageName: node
   linkType: hard
 
@@ -8364,7 +8368,7 @@ __metadata:
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.3.0
     "@prismicio/types-internal": ^2.5.0
-    "@segment/analytics-node": 1.1.3
+    "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/cookie": 0.5.1
@@ -8401,6 +8405,7 @@ __metadata:
     prettier-plugin-jsdoc: 1.1.1
     r19: 0.1.8
     rc9: ^2.0.1
+    readable-web-to-node-stream: ^3.0.2
     semver: ^7.3.8
     size-limit: 8.2.4
     typescript: 4.9.5
@@ -20782,6 +20787,13 @@ __metadata:
     "@sideway/formula": ^3.0.1
     "@sideway/pinpoint": ^2.0.0
   checksum: 8c3709849293411c524e5a679dba7b42598a29a663478941767b8d5b06288611dece58803c468a2c7320cc2429a3e71e3d94337fe47aefcf6c22174dbd90b601
+  languageName: node
+  linkType: hard
+
+"jose@npm:^5.1.0":
+  version: 5.6.3
+  resolution: "jose@npm:5.6.3"
+  checksum: c8722ba820b2d149728c0a80dec5d17029b1bcf68fa93eddcd348ec1eaca75588a4379b760fbf90197fb6f6fb115ce2565846c82e5335e5e542fd14248297831
   languageName: node
   linkType: hard
 
