@@ -18,7 +18,7 @@ import { findEnvironment } from "../../lib/findEnvironment";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
-import requireResolve from "../../lib/requireResolve";
+import { requireResolve } from "../../lib/requireResolve";
 
 import {
 	PackageManager,

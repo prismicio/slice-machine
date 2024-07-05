@@ -9,22 +9,22 @@ import _module, { createRequire } from "node:module";
  *
  * @returns - Resolved module path.
  */
-export default (id: string, from: string): string => {
-	let _id = id;
+export const requireResolve = (id: string, from: string): string => {
+	let resolvedID = id;
 
 	// Support Yarn PnP
 	if (
 		process.versions.pnp &&
 		"findPnpApi" in _module &&
-		_module.findPnpApi instanceof Function
+		typeof _module.findPnpApi === "function"
 	) {
 		const pnpApi = _module.findPnpApi(from);
 		if (pnpApi) {
-			_id = pnpApi.resolveRequest(id, from);
+			resolvedID = pnpApi.resolveRequest(id, from);
 		}
 	}
 
 	const require = createRequire(from);
 
-	return require.resolve(_id);
+	return require.resolve(resolvedID);
 };

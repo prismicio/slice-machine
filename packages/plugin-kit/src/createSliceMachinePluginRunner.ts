@@ -139,7 +139,7 @@ export class SliceMachinePluginRunner {
 			try {
 				const noop = path.resolve(this._project.root, "noop.js");
 
-				let _resolve = resolve;
+				let resolvedID = resolve;
 
 				// Support Yarn PnP
 				if (
@@ -149,11 +149,11 @@ export class SliceMachinePluginRunner {
 				) {
 					const pnpApi = _module.findPnpApi(noop);
 					if (pnpApi) {
-						_resolve = pnpApi.resolveRequest(resolve, noop);
+						resolvedID = pnpApi.resolveRequest(resolve, noop);
 					}
 				}
 
-				const raw = await createRequire(noop)(_resolve);
+				const raw = await createRequire(noop)(resolvedID);
 				plugin = raw.default || raw;
 			} catch (error) {
 				// Only log in development, but not during tests when a native plugin matches.
