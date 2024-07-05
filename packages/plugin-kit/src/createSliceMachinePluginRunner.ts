@@ -145,7 +145,7 @@ export class SliceMachinePluginRunner {
 				if (
 					process.versions.pnp &&
 					"findPnpApi" in _module &&
-					_module.findPnpApi instanceof Function
+					typeof _module.findPnpApi === "function"
 				) {
 					const pnpApi = _module.findPnpApi(noop);
 					if (pnpApi) {
