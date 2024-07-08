@@ -548,22 +548,35 @@ Continue with next steps in Slice Machine.
 		}
 	}
 
+	protected getLoggingInTitle(description?: string): string {
+		return `
+███████████████████████████████████████████████████████████████████████
+
+* * Logging in to Prismic...\n${description ? `* * ${description}` : ""}
+
+███████████████████████████████████████████████████████████████████████
+`;
+	}
+
 	protected loginAndFetchUserData(): Promise<void> {
 		return listrRun([
 			{
-				title: "Logging in to Prismic...",
+				title: this.getLoggingInTitle(),
 				task: async (_, parentTask) => {
-					parentTask.output = "Validating session...";
+					parentTask.title = this.getLoggingInTitle("Validating session...");
 					const isLoggedIn = await this.manager.user.checkIsLoggedIn();
 
 					if (!isLoggedIn) {
-						parentTask.output = "Press any key to open the browser to login...";
+						parentTask.title = this.getLoggingInTitle(
+							`${chalk.cyan("Press any key to open the browser to login...")}`,
+						);
 						await this.pressKeyToLogin();
-						parentTask.output = "Browser opened, waiting for you to login...";
+						parentTask.title = this.getLoggingInTitle(
+							`${chalk.cyan("Browser opened, waiting for you to login...")}`,
+						);
 						await this.waitingForLogin();
 					}
 
-					parentTask.output = "";
 					parentTask.title = `Logged in`;
 
 					return listr(
