@@ -548,13 +548,20 @@ Continue with next steps in Slice Machine.
 		}
 	}
 
-	protected getLoggingInTitle(description?: string): string {
+	protected getLoggingInTitle(
+		subtitle?: string,
+		...extraLines: string[]
+	): string {
 		return `
-███████████████████████████████████████████████████████████████████████
+███████████████████████████████████████████████████████████████████████████
 
-* * Logging in to Prismic...\n${description ? `* * ${description}` : ""}
-
-███████████████████████████████████████████████████████████████████████
+* * Logging in to Prismic...\n${subtitle ? `* * ${subtitle}` : ""}
+${
+	extraLines.length
+		? `\n${extraLines.map((line) => `   ${line}`).join("\n")}\n`
+		: ""
+}
+███████████████████████████████████████████████████████████████████████████
 `;
 	}
 
@@ -571,10 +578,15 @@ Continue with next steps in Slice Machine.
 							`${chalk.cyan("Press any key to open the browser to login...")}`,
 						);
 						await this.pressKeyToLogin();
-						parentTask.title = this.getLoggingInTitle(
-							`${chalk.cyan("Browser opened, waiting for you to login...")}`,
-						);
-						await this.waitingForLogin();
+						await this.waitingForLogin(({ url }) => {
+							parentTask.title = this.getLoggingInTitle(
+								`${chalk.cyan("Opening browser, waiting for you to login...")}`,
+								chalk.yellow(
+									"If your browser did not open automatically, please use the url below:",
+								),
+								url,
+							);
+						});
 					}
 
 					parentTask.title = `Logged in`;
@@ -619,12 +631,20 @@ Continue with next steps in Slice Machine.
 		});
 	}
 
-	protected async waitingForLogin(): Promise<void> {
-		const { port, url } = await this.manager.user.getLoginSessionInfo();
+	protected async waitingForLogin(
+		onListenCallback?: (
+			sessionInfo: Awaited<
+				ReturnType<typeof this.manager.user.getLoginSessionInfo>
+			>,
+		) => void,
+	): Promise<void> {
+		const sessionInfo = await this.manager.user.getLoginSessionInfo();
+		const { port, url } = sessionInfo;
 		await this.manager.user.nodeLoginSession({
 			port,
 			onListenCallback() {
 				open(url);
+				onListenCallback?.(sessionInfo);
 			},
 		});
 	}
