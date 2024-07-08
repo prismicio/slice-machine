@@ -575,12 +575,12 @@ ${
 
 					if (!isLoggedIn) {
 						parentTask.title = this.getLoggingInTitle(
-							`${chalk.cyan("Press any key to open the browser to login...")}`,
+							chalk.cyan("Press any key to open the browser to login..."),
 						);
 						await this.pressKeyToLogin();
 						await this.waitingForLogin(({ url }) => {
 							parentTask.title = this.getLoggingInTitle(
-								`${chalk.cyan("Opening browser, waiting for you to login...")}`,
+								chalk.cyan("Opening browser, waiting for you to login..."),
 								chalk.yellow(
 									"If your browser did not open automatically, please use the url below:",
 								),
@@ -639,11 +639,10 @@ ${
 		) => void,
 	): Promise<void> {
 		const sessionInfo = await this.manager.user.getLoginSessionInfo();
-		const { port, url } = sessionInfo;
 		await this.manager.user.nodeLoginSession({
-			port,
+			port: sessionInfo.port,
 			onListenCallback() {
-				open(url);
+				open(sessionInfo.url);
 				onListenCallback?.(sessionInfo);
 			},
 		});
