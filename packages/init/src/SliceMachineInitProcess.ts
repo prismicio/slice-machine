@@ -548,24 +548,18 @@ Continue with next steps in Slice Machine.
 		}
 	}
 
-	protected getLoggingInTitle(
-		subtitle?: string,
-		...extraLines: string[]
-	): string {
-		return `
-███████████████████████████████████████████████████████████████████████████
-
-* * Logging in to Prismic...\n${subtitle ? `* * ${subtitle}` : ""}
-${
-	extraLines.length
-		? `\n${extraLines.map((line) => `   ${line}`).join("\n")}\n`
-		: ""
-}
-███████████████████████████████████████████████████████████████████████████
-`;
+	private SEPARATOR = Array.from({ length: 75 }, () => "█").join("");
+	private getLoggingInTitle(message?: string, ...extra: string[]): string {
+		return `${message ? `* ${message}` : ""}
+${extra.length ? `\n${extra.map((line) => `   ${line}`).join("\n")}\n` : ""}
+${this.SEPARATOR}\n`;
 	}
 
 	protected loginAndFetchUserData(): Promise<void> {
+		// Print the first part with a console.log move the spinning animation down to the relevant task
+		// eslint-disable-next-line no-console
+		console.log(`\n${this.SEPARATOR}\n\n* * Logging in to Prismic...`);
+
 		return listrRun([
 			{
 				title: this.getLoggingInTitle(),
