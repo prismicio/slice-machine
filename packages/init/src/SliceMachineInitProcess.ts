@@ -548,20 +548,13 @@ Continue with next steps in Slice Machine.
 		}
 	}
 
-	protected getLoggingInTitle(
-		subtitle?: string,
-		...extraLines: string[]
-	): string {
+	protected getLoggingInTitle(subtitle?: string, ...extra: string[]): string {
 		return `Logging in to Prismic...
 		
 ███████████████████████████████████████████████████████████████████████████
 
 ${subtitle ? `* * ${subtitle}` : ""}
-${
-	extraLines.length
-		? `\n${extraLines.map((line) => `   ${line}`).join("\n")}\n`
-		: ""
-}
+${extra.length ? `\n${extra.map((line) => `   ${line}`).join("\n")}\n` : ""}
 ███████████████████████████████████████████████████████████████████████████
 `;
 	}
