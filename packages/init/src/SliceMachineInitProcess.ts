@@ -552,10 +552,11 @@ Continue with next steps in Slice Machine.
 		subtitle?: string,
 		...extraLines: string[]
 	): string {
-		return `
+		return `Logging in to Prismic...
+		
 ███████████████████████████████████████████████████████████████████████████
 
-* * Logging in to Prismic...\n${subtitle ? `* * ${subtitle}` : ""}
+${subtitle ? `* * ${subtitle}` : ""}
 ${
 	extraLines.length
 		? `\n${extraLines.map((line) => `   ${line}`).join("\n")}\n`
