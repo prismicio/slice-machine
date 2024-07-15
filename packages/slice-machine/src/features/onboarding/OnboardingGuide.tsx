@@ -1,5 +1,9 @@
 import {
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogHeader,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -7,8 +11,9 @@ import {
   DropdownMenuTrigger,
   Icon,
   Text,
+  Video,
 } from "@prismicio/editor-ui";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 import { useLocalStorageItem } from "@/hooks/useLocalStorageItem";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
@@ -112,37 +117,84 @@ const useOnboardingProgress = () => {
   return { steps, completedStepCount, stepStatus, toggleStepComplete };
 };
 
-const OnboardingProgressMenu = () => {
-  const { completedStepCount, steps, stepStatus, toggleStepComplete } =
-    useOnboardingProgress();
+type OnboardingStepDialogProps = {
+  step: Step | undefined;
+  onClose: () => void;
+};
+
+export const OnboardingStepDialog = ({
+  step,
+  onClose,
+}: OnboardingStepDialogProps) => {
+  const { toggleStepComplete, stepStatus, steps } = useOnboardingProgress();
+
+  if (!step) return null;
+
+  const markAsDone = () => {
+    toggleStepComplete(step.id);
+    onClose();
+  };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button>{completedStepCount > 0 ? "Continue" : "Start"}</Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        <DropdownMenuLabel>Progress</DropdownMenuLabel>
-        {steps.map((step) => {
-          const isChecked = stepStatus[step.id];
+    <Dialog open onOpenChange={onClose}>
+      <DialogHeader title={step.title} />
+      <DialogContent>
+        <Text>Step {steps.findIndex((s) => s.id === step.id) + 1}</Text>
+        {typeof step.description === "string" ? (
+          <Text>{step.description}</Text>
+        ) : (
+          <step.description />
+        )}
+        <Video src={step.videoUrl} sizing="contain" autoPlay loop />
+        <DialogActions
+          ok={{
+            text: stepStatus[step.id] ? "Mark as not done" : "Mark as done",
+            onClick: markAsDone,
+          }}
+          cancel={{ text: "Close" }}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+};
 
-          return (
-            <DropdownMenuItem
-              key={step.id}
-              onSelect={() => toggleStepComplete(step.id)}
-              startIcon={
-                <Icon
-                  color={isChecked ? "green10" : "currentColor"}
-                  name={isChecked ? "checkBox" : "checkBoxOutlinedBlank"}
-                />
-              }
-            >
-              {step.title}
-            </DropdownMenuItem>
-          );
-        })}
-      </DropdownMenuContent>
-    </DropdownMenu>
+const OnboardingProgressMenu = () => {
+  const [activeStep, setActiveStep] = useState<Step>();
+  const { completedStepCount, steps, stepStatus } = useOnboardingProgress();
+
+  return (
+    <>
+      <OnboardingStepDialog
+        step={activeStep}
+        onClose={() => setActiveStep(undefined)}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button>{completedStepCount > 0 ? "Continue" : "Start"}</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuLabel>Progress</DropdownMenuLabel>
+          {steps.map((step) => {
+            const isCompleted = stepStatus[step.id];
+
+            return (
+              <DropdownMenuItem
+                key={step.id}
+                onSelect={() => setActiveStep(step)}
+                startIcon={
+                  <Icon
+                    color={isCompleted ? "green10" : "currentColor"}
+                    name={isCompleted ? "checkBox" : "checkBoxOutlinedBlank"}
+                  />
+                }
+              >
+                {step.title}
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 
