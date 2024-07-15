@@ -1,4 +1,3 @@
-import * as path from "node:path";
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
@@ -10,8 +9,8 @@ import {
 } from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
 
+import { buildSrcPath } from "../lib/buildSrcPath";
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
-import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
@@ -45,15 +44,17 @@ const createPrismicIOFile = async ({
 		helpers,
 		options,
 	});
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+	const hasSrcDirectory = await checkHasProjectFile({
+		filename: "src",
+		helpers,
+	});
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = path.join(
-		...[hasSrcDirectory ? "src" : undefined, `prismicio.${extension}`].filter(
-			(segment): segment is NonNullable<typeof segment> => Boolean(segment),
-		),
-	);
+	const filename = await buildSrcPath({
+		filename: `prismicio.${extension}`,
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -255,20 +256,15 @@ const createSliceSimulatorPage = async ({
 		helpers,
 		options,
 	});
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	const extension = await getJSFileExtension({ helpers, options, jsx: true });
-	const filename = path.join(
-		...[
-			hasSrcDirectory ? "src" : undefined,
-			hasAppRouter
-				? `app/slice-simulator/page.${extension}`
-				: `pages/slice-simulator.${extension}`,
-		].filter((segment): segment is NonNullable<typeof segment> =>
-			Boolean(segment),
-		),
-	);
+	const filename = await buildSrcPath({
+		filename: hasAppRouter
+			? `app/slice-simulator/page.${extension}`
+			: `pages/slice-simulator.${extension}`,
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -350,7 +346,6 @@ const createPreviewRoute = async ({
 	helpers,
 	options,
 }: SliceMachineContext<PluginOptions>) => {
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 	const isTypeScriptProject = await checkIsTypeScriptProject({
 		helpers,
@@ -358,16 +353,12 @@ const createPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = path.join(
-		...[
-			hasSrcDirectory ? "src" : undefined,
-			hasAppRouter
-				? `app/api/preview/route.${extension}`
-				: `pages/api/preview.${extension}`,
-		].filter((segment): segment is NonNullable<typeof segment> =>
-			Boolean(segment),
-		),
-	);
+	const filename = await buildSrcPath({
+		filename: hasAppRouter
+			? `app/api/preview/route.${extension}`
+			: `pages/api/preview.${extension}`,
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -447,7 +438,6 @@ const createExitPreviewRoute = async ({
 	helpers,
 	options,
 }: SliceMachineContext<PluginOptions>) => {
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 	const isTypeScriptProject = await checkIsTypeScriptProject({
 		helpers,
@@ -455,16 +445,12 @@ const createExitPreviewRoute = async ({
 	});
 
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = path.join(
-		...[
-			hasSrcDirectory ? "src" : undefined,
-			hasAppRouter
-				? `app/api/exit-preview/route.${extension}`
-				: `pages/api/exit-preview.${extension}`,
-		].filter((segment): segment is NonNullable<typeof segment> =>
-			Boolean(segment),
-		),
-	);
+	const filename = await buildSrcPath({
+		filename: hasAppRouter
+			? `app/api/exit-preview/route.${extension}`
+			: `pages/api/exit-preview.${extension}`,
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -514,7 +500,10 @@ const modifySliceMachineConfig = async ({
 	options,
 	actions,
 }: SliceMachineContext<PluginOptions>) => {
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+	const hasSrcDirectory = await checkHasProjectFile({
+		filename: "src",
+		helpers,
+	});
 	const project = await helpers.getProject();
 
 	// Add Slice Simulator URL.
@@ -552,17 +541,11 @@ const createRevalidateRoute = async ({
 		return;
 	}
 
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
-
 	const extension = await getJSFileExtension({ helpers, options });
-	const filename = path.join(
-		...[
-			hasSrcDirectory ? "src" : undefined,
-			`app/api/revalidate/route.${extension}`,
-		].filter((segment): segment is NonNullable<typeof segment> =>
-			Boolean(segment),
-		),
-	);
+	const filename = await buildSrcPath({
+		filename: `app/api/revalidate/route.${extension}`,
+		helpers,
+	});
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;

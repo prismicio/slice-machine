@@ -27,7 +27,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 	data,
 	{ helpers },
 ) => {
-	const { fieldPath } = data;
+	const { fieldPath, itemName } = data;
 
 	const label = "Vue";
 
@@ -102,8 +102,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				language: "vue",
 				code: await format(
 					stripIndent`
-						<template v-for="item in ${dotPath(fieldPath)}">
-							{{ item }}
+						<template v-for="${itemName} in ${dotPath(fieldPath)}">
+							{{ ${itemName} }}
 						</template>
 					`,
 					helpers,

@@ -20,7 +20,7 @@ import { VariationsList } from "./VariationsList";
 
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
-  const horizontalScroll = useMediaQuery({ max: "medium" });
+  const horizontalScroll = useMediaQuery({ max: "large" });
 
   const contentDisplayProps = horizontalScroll
     ? { gridTemplateRows: "304px 1fr" }

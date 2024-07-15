@@ -1,7 +1,6 @@
 import * as fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import * as path from "node:path";
-import { createRequire } from "node:module";
 import { detect as niDetect } from "@antfu/ni";
 import { ExecaChildProcess } from "execa";
 import {
@@ -19,6 +18,7 @@ import { findEnvironment } from "../../lib/findEnvironment";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
+import { requireResolve } from "../../lib/requireResolve";
 
 import {
 	PackageManager,
@@ -220,9 +220,9 @@ export class ProjectManager extends BaseManager {
 	async locateSliceMachineUIDir(): Promise<string> {
 		const projectRoot = await this.getRoot();
 
-		const require = createRequire(path.join(projectRoot, "index.js"));
-		const sliceMachinePackageJSONPath = require.resolve(
+		const sliceMachinePackageJSONPath = requireResolve(
 			`${SLICE_MACHINE_NPM_PACKAGE_NAME}/package.json`,
+			path.join(projectRoot, "index.js"),
 		);
 
 		return path.dirname(sliceMachinePackageJSONPath);
@@ -278,9 +278,9 @@ export class ProjectManager extends BaseManager {
 	async locateAdapterDir(): Promise<string> {
 		const projectRoot = await this.getRoot();
 		const adapterName = await this.getAdapterName();
-		const require = createRequire(path.join(projectRoot, "index.js"));
-		const adapterPackageJSONPath = require.resolve(
+		const adapterPackageJSONPath = requireResolve(
 			`${adapterName}/package.json`,
+			path.join(projectRoot, "index.js"),
 		);
 
 		return path.dirname(adapterPackageJSONPath);

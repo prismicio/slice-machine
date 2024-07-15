@@ -14,7 +14,7 @@ import Li from "../Li";
 import SliceMachineIconButton from "../SliceMachineIconButton";
 import ItemHeader from "./Header";
 
-type Item<F extends TabField> = { key: string; value: F };
+export type Item<F extends TabField> = { key: string; value: F };
 
 interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   item: Item<F>;

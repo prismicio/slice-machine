@@ -1,3 +1,4 @@
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { Fragment, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
@@ -17,16 +18,17 @@ import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
 import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
-import * as Widgets from "@/legacy/lib/models/common/widgets";
-import groupBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/groupBuilderArray";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 /* eslint-disable */
-const CustomListItem = ({
+export const CustomListItem = ({
   tabId,
   widget,
+  Widgets,
+  widgetsArray,
+  hintBase,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   parentSnapshot,
   showHints,
@@ -86,7 +88,7 @@ const CustomListItem = ({
       group: Groups.fromSM(groupItem.value),
       previousFieldId: previousKey,
       newFieldId: newKey,
-      field: value,
+      field: value.type === GroupFieldType ? Groups.fromSM(value) : value,
     });
 
     saveItem({
@@ -215,6 +217,8 @@ const CustomListItem = ({
                           key: item.key,
                           enterEditMode,
                           deleteItem: onDeleteItem,
+                          saveItem: onSaveField,
+                          showHints,
                           renderFieldAccessor: (key) =>
                             `item${transformKeyAccessor(item.key)}`,
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
@@ -232,13 +236,25 @@ const CustomListItem = ({
                             isRepeatable={isRepeatable}
                             renderHintBase={({ item }) =>
                               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-                              `item${transformKeyAccessor(item.key)}`
+                              `${hintBase}${transformKeyAccessor(item.key)}`
                             }
+                            hintItemName={widget.hintItemName}
                             Widgets={Widgets}
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
                           />
                         );
+
+                        if (widget.CustomListItem) {
+                          const { CustomListItem } = widget;
+                          return (
+                            <CustomListItem
+                              {...props}
+                              HintElement={HintElement}
+                            />
+                          );
+                        }
+
                         return (
                           <ListItem {...props} HintElement={HintElement} />
                         );
@@ -270,7 +286,7 @@ const CustomListItem = ({
         data={{ isOpen: selectMode }}
         close={() => setSelectMode(false)}
         onSelect={onSelectFieldType}
-        widgetsArray={groupBuilderWidgetsArray}
+        widgetsArray={widgetsArray}
       />
       <EditModal
         data={editModalData}
@@ -282,6 +298,4 @@ const CustomListItem = ({
     </Fragment>
   );
 };
-
-export default CustomListItem;
 /* eslint-enable */

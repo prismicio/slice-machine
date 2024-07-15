@@ -548,22 +548,41 @@ Continue with next steps in Slice Machine.
 		}
 	}
 
+	protected getLoggingInTitle(subtitle?: string, ...extra: string[]): string {
+		return `Logging in to Prismic...
+		
+███████████████████████████████████████████████████████████████████████████
+
+${subtitle ? `* * ${subtitle}` : ""}
+${extra.length ? `\n${extra.map((line) => `   ${line}`).join("\n")}\n` : ""}
+███████████████████████████████████████████████████████████████████████████
+`;
+	}
+
 	protected loginAndFetchUserData(): Promise<void> {
 		return listrRun([
 			{
-				title: "Logging in to Prismic...",
+				title: this.getLoggingInTitle(),
 				task: async (_, parentTask) => {
-					parentTask.output = "Validating session...";
+					parentTask.title = this.getLoggingInTitle("Validating session...");
 					const isLoggedIn = await this.manager.user.checkIsLoggedIn();
 
 					if (!isLoggedIn) {
-						parentTask.output = "Press any key to open the browser to login...";
+						parentTask.title = this.getLoggingInTitle(
+							chalk.cyan("Press any key to open the browser to login..."),
+						);
 						await this.pressKeyToLogin();
-						parentTask.output = "Browser opened, waiting for you to login...";
-						await this.waitingForLogin();
+						await this.waitingForLogin(({ url }) => {
+							parentTask.title = this.getLoggingInTitle(
+								chalk.cyan("Opening browser, waiting for you to login..."),
+								chalk.yellow(
+									"If your browser did not open automatically, please use the url below:",
+								),
+								url,
+							);
+						});
 					}
 
-					parentTask.output = "";
 					parentTask.title = `Logged in`;
 
 					return listr(
@@ -606,12 +625,19 @@ Continue with next steps in Slice Machine.
 		});
 	}
 
-	protected async waitingForLogin(): Promise<void> {
-		const { port, url } = await this.manager.user.getLoginSessionInfo();
+	protected async waitingForLogin(
+		onListenCallback?: (
+			sessionInfo: Awaited<
+				ReturnType<typeof this.manager.user.getLoginSessionInfo>
+			>,
+		) => void,
+	): Promise<void> {
+		const sessionInfo = await this.manager.user.getLoginSessionInfo();
 		await this.manager.user.nodeLoginSession({
-			port,
+			port: sessionInfo.port,
 			onListenCallback() {
-				open(url);
+				open(sessionInfo.url);
+				onListenCallback?.(sessionInfo);
 			},
 		});
 	}

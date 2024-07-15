@@ -27,9 +27,7 @@ import {
   SlicePrimaryFieldSM,
   WidgetsArea,
 } from "@/legacy/lib/models/common/Slice";
-import * as Widgets from "@/legacy/lib/models/common/widgets";
-import groupBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/groupBuilderArray";
-import sliceBuilderWidgetsArray from "@/legacy/lib/models/common/widgets/sliceBuilderArray";
+import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
@@ -41,6 +39,25 @@ const dataTipText = ` The non-repeatable zone
 const dataTipText2 = `The repeatable zone is for a group<br/>
   of fields that you want to be able to repeat an<br/>
   indeterminate number of times, like FAQs`;
+
+const itemsWidgetsArray = [
+  Widgets.StructuredText,
+  Widgets.Image,
+  Widgets.Link,
+  Widgets.LinkToMedia,
+  Widgets.ContentRelationship,
+  Widgets.Select,
+  Widgets.Boolean,
+  Widgets.Date,
+  Widgets.Timestamp,
+  Widgets.Embed,
+  Widgets.Number,
+  Widgets.GeoPoint,
+  Widgets.Color,
+  Widgets.Text,
+];
+
+const primaryWidgetsArray = [Widgets.Group, ...itemsWidgetsArray];
 
 const FieldZones: FC = () => {
   const { slice, setSlice, variation } = useSliceState();
@@ -110,7 +127,7 @@ const FieldZones: FC = () => {
       label: string;
       widgetTypeName: keyof typeof Widgets;
     }) => {
-      const widget = sliceBuilderWidgetsArray.find(
+      const widget = primaryWidgetsArray.find(
         (sliceBuilderWidget) =>
           sliceBuilderWidget.CUSTOM_NAME === widgetTypeName ||
           sliceBuilderWidget.TYPE_NAME === widgetTypeName,
@@ -188,7 +205,7 @@ const FieldZones: FC = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         fields={variation.primary}
         EditModal={EditModal}
-        widgetsArray={sliceBuilderWidgetsArray}
+        widgetsArray={primaryWidgetsArray}
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
         onSave={_onSave(WidgetsArea.Primary)}
         onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
@@ -216,7 +233,7 @@ const FieldZones: FC = () => {
           isRepeatable
           title="Repeatable Zone"
           dataTip={dataTipText2}
-          widgetsArray={groupBuilderWidgetsArray}
+          widgetsArray={itemsWidgetsArray}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           fields={variation.items}
           EditModal={EditModal}

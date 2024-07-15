@@ -54,7 +54,7 @@ export class SliceBuilderPage extends BuilderPage {
       name: "slice card",
       exact: false,
     });
-    this.addVariationButton = page.getByText("Add a new variation", {
+    this.addVariationButton = page.getByText("Add a variation", {
       exact: true,
     });
     this.noScreenshotMessage = page.getByText("No screenshot available", {
@@ -197,11 +197,23 @@ export class SliceBuilderPage extends BuilderPage {
     expectedId: string;
     zoneType: TZoneType;
     groupFieldId?: TZoneType extends "static" ? string : never;
+    grandparentGroupFieldId?: TZoneType extends "static" ? string : never;
   }) {
-    const { type, name, expectedId, zoneType, groupFieldId } = args;
+    const {
+      type,
+      name,
+      expectedId,
+      zoneType,
+      groupFieldId,
+      grandparentGroupFieldId,
+    } = args;
 
     if (zoneType === "static") {
-      if (groupFieldId) {
+      if (groupFieldId && grandparentGroupFieldId) {
+        await this.getListItem(groupFieldId, zoneType, grandparentGroupFieldId)
+          .getByRole("button", { name: "Add Field", exact: true })
+          .click();
+      } else if (groupFieldId) {
         await this.getListItem(groupFieldId, zoneType)
           .getByRole("button", { name: "Add Field", exact: true })
           .click();
@@ -239,6 +251,7 @@ export class SliceBuilderPage extends BuilderPage {
         name: "Copy code snippet",
         exact: true,
       })
+      .first()
       .click();
 
     const handle = await this.page.evaluateHandle(() =>

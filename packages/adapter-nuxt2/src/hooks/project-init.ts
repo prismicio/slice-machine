@@ -11,8 +11,8 @@ import {
 import { stripIndent } from "common-tags";
 import { builders, loadFile, writeFile } from "magicast";
 
+import { buildSrcPath } from "../lib/buildSrcPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-import { checkHasSrcDirectory } from "../lib/checkHasSrcDirectory";
 
 import type { PluginOptions } from "../types";
 
@@ -141,15 +141,10 @@ const createSliceSimulatorPage = async ({
 	helpers,
 	options,
 }: CreateSliceSimulatorPageArgs) => {
-	const srcPagesDirectoryExists = await checkHasProjectFile({
-		filename: "src/pages",
+	const filename = await buildSrcPath({
+		filename: path.join("pages", "slice-simulator.vue"),
 		helpers,
 	});
-
-	const filename = path.join(
-		srcPagesDirectoryExists ? "src/pages" : "pages",
-		"slice-simulator.vue",
-	);
 
 	if (await checkHasProjectFile({ filename, helpers })) {
 		return;
@@ -190,7 +185,10 @@ const modifySliceMachineConfig = async ({
 	options,
 	actions,
 }: SliceMachineContext<PluginOptions>) => {
-	const hasSrcDirectory = await checkHasSrcDirectory({ helpers });
+	const hasSrcDirectory = await checkHasProjectFile({
+		filename: "src",
+		helpers,
+	});
 	const project = await helpers.getProject();
 
 	// Add Slice Simulator URL.

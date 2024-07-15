@@ -1,5 +1,5 @@
 import * as path from "node:path";
-import { createRequire } from "node:module";
+import _module, { createRequire } from "node:module";
 
 import { defu } from "defu";
 
@@ -137,9 +137,23 @@ export class SliceMachinePluginRunner {
 		if (typeof resolve === "string") {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			try {
-				const raw = await createRequire(
-					path.resolve(this._project.root, "noop.js"),
-				)(resolve);
+				const noop = path.resolve(this._project.root, "noop.js");
+
+				let resolvedID = resolve;
+
+				// Support Yarn PnP
+				if (
+					process.versions.pnp &&
+					"findPnpApi" in _module &&
+					typeof _module.findPnpApi === "function"
+				) {
+					const pnpApi = _module.findPnpApi(noop);
+					if (pnpApi) {
+						resolvedID = pnpApi.resolveRequest(resolve, noop);
+					}
+				}
+
+				const raw = await createRequire(noop)(resolvedID);
 				plugin = raw.default || raw;
 			} catch (error) {
 				// Only log in development, but not during tests when a native plugin matches.

@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt2",
-	"version": "0.3.40",
+	"version": "0.3.42",
 	"description": "Slice Machine adapter for Nuxt 2.",
 	"keywords": [
 		"typescript",
@@ -60,7 +60,7 @@
 	},
 	"dependencies": {
 		"@prismicio/simulator": "^0.1.4",
-		"@prismicio/types-internal": "^2.4.1",
+		"@prismicio/types-internal": "^2.5.0",
 		"@slicemachine/plugin-kit": "workspace:*",
 		"common-tags": "^1.8.2",
 		"fp-ts": "^2.13.1",
@@ -69,8 +69,7 @@
 		"magicast": "^0.3.4",
 		"monocle-ts": "^2.3.13",
 		"newtype-ts": "^0.3.5",
-		"pascal-case": "^3.1.2",
-		"prismic-ts-codegen": "^0.1.17"
+		"pascal-case": "^3.1.2"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.2.0",
@@ -86,6 +85,7 @@
 		"nuxt": "2.16.3",
 		"prettier": "3.0.3",
 		"prettier-plugin-jsdoc": "1.1.1",
+		"prismic-ts-codegen": "^0.1.21",
 		"size-limit": "8.2.4",
 		"ts-morph": "17.0.1",
 		"typescript": "4.9.5",
