@@ -1,0 +1,14 @@
+.onboardingCard {
+  border: 1px solid var(--grey6);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h3,
+  p {
+    margin: 0px;
+  }
+}
