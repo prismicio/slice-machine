@@ -1,4 +1,13 @@
-import { Button, Text } from "@prismicio/editor-ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  Icon,
+  Text,
+} from "@prismicio/editor-ui";
 import { ReactNode } from "react";
 
 import { useLocalStorageItem } from "@/hooks/useLocalStorageItem";
@@ -103,15 +112,42 @@ const useOnboardingProgress = () => {
   return { steps, completedStepCount, stepStatus, toggleStepComplete };
 };
 
-export const OnboardingGuide = () => {
-  const { steps, completedStepCount, stepStatus, toggleStepComplete } =
+const OnboardingProgressMenu = () => {
+  const { completedStepCount, steps, stepStatus, toggleStepComplete } =
     useOnboardingProgress();
 
-  const onClick = () => {
-    // TODO: remove demonstration code
-    const [s] = Object.entries(stepStatus).find((c) => !c[1]) ?? [null, null];
-    if (s != null) toggleStepComplete(s as StepType);
-  };
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button>{completedStepCount > 0 ? "Continue" : "Start"}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <DropdownMenuLabel>Progress</DropdownMenuLabel>
+        {steps.map((step) => {
+          const isChecked = stepStatus[step.id];
+
+          return (
+            <DropdownMenuItem
+              key={step.id}
+              onSelect={() => toggleStepComplete(step.id)}
+              startIcon={
+                <Icon
+                  color={isChecked ? "green10" : "currentColor"}
+                  name={isChecked ? "checkBox" : "checkBoxOutlinedBlank"}
+                />
+              }
+            >
+              {step.title}
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+export const OnboardingGuide = () => {
+  const { steps, completedStepCount } = useOnboardingProgress();
 
   return (
     <div>
@@ -120,7 +156,7 @@ export const OnboardingGuide = () => {
       <p>
         {completedStepCount}/{steps.length}
       </p>
-      <Button onClick={onClick}>Continue</Button>
+      <OnboardingProgressMenu />
     </div>
   );
 };
