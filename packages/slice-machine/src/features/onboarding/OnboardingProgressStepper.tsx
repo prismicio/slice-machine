@@ -17,9 +17,9 @@ import {
 } from "@/features/onboarding/helpers";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 
-export const OnboardingProgressMenu = () => {
+export const OnboardingProgressStepper = () => {
   const [activeStep, setActiveStep] = useState<OnboardingStep>();
-  const { completedStepCount, steps, stepStatus } = useOnboardingProgress();
+  const { completedStepCount, steps, isStepComplete } = useOnboardingProgress();
 
   return (
     <>
@@ -41,7 +41,7 @@ export const OnboardingProgressMenu = () => {
         <DropdownMenuContent align="start">
           <DropdownMenuLabel>Progress</DropdownMenuLabel>
           {steps.map((step) => {
-            const isCompleted = stepStatus[step.id];
+            const isCompleted = isStepComplete(step);
 
             return (
               <DropdownMenuItem

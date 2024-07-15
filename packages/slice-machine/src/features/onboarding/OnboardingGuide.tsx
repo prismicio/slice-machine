@@ -1,12 +1,14 @@
 import { Text } from "@prismicio/editor-ui";
 
 import { useOnboardingProgress } from "@/features/onboarding/helpers";
-import { OnboardingProgressMenu } from "@/features/onboarding/OnboardingProgress";
+import { OnboardingProgressStepper } from "@/features/onboarding/OnboardingProgressStepper";
 
 import styles from "./OnboardingGuide.module.css";
 
 export const OnboardingGuide = () => {
-  const { steps, completedStepCount } = useOnboardingProgress();
+  const { steps, completedStepCount, isComplete } = useOnboardingProgress();
+
+  if (isComplete) return null;
 
   return (
     <div className={styles.onboardingCard}>
@@ -21,7 +23,7 @@ export const OnboardingGuide = () => {
       <Text color="grey11" variant="small" align="end">
         {completedStepCount}/{steps.length}
       </Text>
-      <OnboardingProgressMenu />
+      <OnboardingProgressStepper />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { Text } from "@prismicio/editor-ui";
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction, useEffect, useRef } from "react";
 
 import { useLocalStorageItem } from "@/hooks/useLocalStorageItem";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
@@ -22,7 +22,7 @@ export type OnboardingStepStatuses = {
   [K in OnboardingStepType]: boolean;
 };
 
-const useSteps = (): OnboardingStep[] => {
+const useOnboardingStepsContent = (): OnboardingStep[] => {
   const { repositoryUrl } = useRepositoryInformation();
 
   return [
@@ -80,25 +80,68 @@ const useSteps = (): OnboardingStep[] => {
   ];
 };
 
-const initialState: OnboardingStepStatuses = {
-  createPage: false,
-  codePage: false,
-  addSlice: false,
-  writeContent: false,
-  pushModels: false,
+const getInitialState = (): OnboardingStepStatuses => {
+  // if the old guide was dismissed, all steps start as complete
+  const startComplete =
+    localStorage.getItem("slice-machine_isInAppGuideOpen") === "false";
+
+  return {
+    createPage: startComplete,
+    codePage: startComplete,
+    addSlice: startComplete,
+    writeContent: startComplete,
+    pushModels: startComplete,
+  };
 };
 
-export const useOnboardingProgress = () => {
-  const steps = useSteps();
-  const [stepStatus, setStepStatus] = useLocalStorageItem(
+const useOnboardingStepStatus = (): [
+  OnboardingStepStatuses,
+  Dispatch<SetStateAction<OnboardingStepStatuses>>,
+] => {
+  const initialState = useRef(getInitialState()).current;
+  const [status, setStatus, { wasUnset: wasStatusUnset }] = useLocalStorageItem(
     "onboardingSteps",
     initialState,
   );
+
+  useEffect(() => {
+    // populate onboarding status if not defined
+    if (wasStatusUnset) setStatus(initialState);
+
+    /* eslint-disable-next-line react-hooks/exhaustive-deps -- 
+    We don't care if the values of wasStatusUnset, setStatus or initialState change here. */
+  }, [status]);
+
+  return [status, setStatus];
+};
+
+export const useOnboardingProgress = () => {
+  const steps = useOnboardingStepsContent();
+  const [stepStatus, setStepStatus] = useOnboardingStepStatus();
   const completedStepCount = Object.values(stepStatus).filter(Boolean).length;
 
   const toggleStepComplete = (step: OnboardingStepType) => {
     setStepStatus((prev) => ({ ...prev, [step]: !prev[step] }));
   };
 
-  return { steps, completedStepCount, stepStatus, toggleStepComplete };
+  const getStepIndex = (stepOrId: OnboardingStep | OnboardingStepType) => {
+    return steps.findIndex(({ id }) => {
+      return id === (typeof stepOrId === "string" ? stepOrId : stepOrId.id);
+    });
+  };
+
+  const isStepComplete = (stepOrId: OnboardingStep | OnboardingStepType) => {
+    return (
+      stepStatus[typeof stepOrId === "string" ? stepOrId : stepOrId.id] ?? false
+    );
+  };
+
+  return {
+    steps,
+    getStepIndex,
+    isStepComplete,
+    completedStepCount,
+    toggleStepComplete,
+    isComplete: completedStepCount === steps.length,
+  };
 };

@@ -1,4 +1,21 @@
-import { Dispatch, SetStateAction, useMemo, useSyncExternalStore } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useMemo,
+  useRef,
+  useSyncExternalStore,
+} from "react";
+
+export type UseLocalStorageItemInfo = {
+  /** Whether the item was set in localStorage the first time. */
+  wasUnset: boolean;
+};
+
+export type UseLocalStorageReturnType<T> = [
+  T,
+  Dispatch<SetStateAction<T>>,
+  UseLocalStorageItemInfo,
+];
 
 const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
 
@@ -9,8 +26,15 @@ const isFunction = (value: any): value is (...args: any[]) => any => {
 
 export function useLocalStorageItem<T>(
   key: string,
+): UseLocalStorageReturnType<T | undefined>;
+export function useLocalStorageItem<T>(
+  key: string,
   defaultValue: T,
-): [T, Dispatch<SetStateAction<T>>] {
+): UseLocalStorageReturnType<T>;
+export function useLocalStorageItem<T>(
+  key: string,
+  defaultValue?: T | undefined,
+): UseLocalStorageReturnType<T | undefined> {
   const storageKey = `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`;
   const getSnapshot = () => localStorage.getItem(storageKey);
 
@@ -30,7 +54,9 @@ export function useLocalStorageItem<T>(
     }
   }, [serializedItem, defaultValue, storageKey]);
 
-  const setItem = (value: SetStateAction<T>) => {
+  const wasUnset = useRef(serializedItem == null).current;
+
+  const setItem = (value: SetStateAction<T | undefined>) => {
     try {
       const newValue = JSON.stringify(isFunction(value) ? value(item) : value);
       localStorage.setItem(storageKey, newValue);
@@ -40,5 +66,5 @@ export function useLocalStorageItem<T>(
     }
   };
 
-  return [item, setItem];
+  return [item, setItem, { wasUnset }];
 }

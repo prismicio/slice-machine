@@ -22,7 +22,8 @@ export const OnboardingStepDialog = ({
   step,
   onClose,
 }: OnboardingStepDialogProps) => {
-  const { toggleStepComplete, stepStatus, steps } = useOnboardingProgress();
+  const { toggleStepComplete, isStepComplete, getStepIndex } =
+    useOnboardingProgress();
 
   if (!step) return null;
 
@@ -37,7 +38,7 @@ export const OnboardingStepDialog = ({
       <DialogContent>
         <ScrollArea>
           <Text color="purple9" variant="bold">
-            Step {steps.findIndex(({ id }) => id === step.id) + 1}
+            Step {getStepIndex(step) + 1}
           </Text>
           {typeof step.description === "string" ? (
             <Text>{step.description}</Text>
@@ -48,7 +49,7 @@ export const OnboardingStepDialog = ({
         </ScrollArea>
         <DialogActions
           ok={{
-            text: stepStatus[step.id] ? "Undo step" : "Mark as done",
+            text: isStepComplete(step) ? "Undo step" : "Mark as done",
             onClick: markAsDone,
           }}
           cancel={{ text: "Close" }}
