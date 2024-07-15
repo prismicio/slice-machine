@@ -10,6 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   Icon,
+  ScrollArea,
   Text,
   Video,
 } from "@prismicio/editor-ui";
@@ -65,13 +66,13 @@ const useSteps = (): Step[] => {
       videoUrl:
         "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/WRITE.mp4",
       description: () => (
-        <>
+        <span>
           Open your{" "}
           <Text href={repositoryUrl} underline>
             Page Builder
           </Text>
           , create a page, add slices, save, and publish. Then, come back here.
-        </>
+        </span>
       ),
     },
     {
@@ -80,11 +81,11 @@ const useSteps = (): Step[] => {
       videoUrl:
         "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/PREVIEW.mp4",
       description: () => (
-        <>
+        <span>
           To render the page, run your project in your terminal and visit the
           page on localhost (e.g.{" "}
           <Text component="code">localhost:3000/example-page</Text>).
-        </>
+        </span>
       ),
     },
   ];
@@ -139,16 +140,20 @@ export const OnboardingStepDialog = ({
     <Dialog open onOpenChange={onClose}>
       <DialogHeader title={step.title} />
       <DialogContent>
-        <Text>Step {steps.findIndex((s) => s.id === step.id) + 1}</Text>
-        {typeof step.description === "string" ? (
-          <Text>{step.description}</Text>
-        ) : (
-          <step.description />
-        )}
-        <Video src={step.videoUrl} sizing="contain" autoPlay loop />
+        <ScrollArea>
+          <Text color="purple9" variant="bold">
+            Step {steps.findIndex(({ id }) => id === step.id) + 1}
+          </Text>
+          {typeof step.description === "string" ? (
+            <Text>{step.description}</Text>
+          ) : (
+            <step.description />
+          )}
+          <Video src={step.videoUrl} sizing="contain" autoPlay loop />
+        </ScrollArea>
         <DialogActions
           ok={{
-            text: stepStatus[step.id] ? "Mark as not done" : "Mark as done",
+            text: stepStatus[step.id] ? "Undo step" : "Mark as done",
             onClick: markAsDone,
           }}
           cancel={{ text: "Close" }}
