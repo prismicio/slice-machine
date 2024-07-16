@@ -9,10 +9,10 @@ import {
 } from "@prismicio/editor-ui";
 
 import {
-  OnboardingStep,
   useOnboardingProgress,
   useOnboardingStepsContent,
 } from "@/features/onboarding/helpers";
+import type { OnboardingStep } from "@/features/onboarding/types";
 
 import styles from "./OnboardingStepDialog.module.css";
 

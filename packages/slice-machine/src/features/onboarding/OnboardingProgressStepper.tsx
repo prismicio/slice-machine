@@ -11,11 +11,9 @@ import {
 } from "@prismicio/editor-ui";
 import { useReducer } from "react";
 
-import {
-  OnboardingStep,
-  useOnboardingProgress,
-} from "@/features/onboarding/helpers";
+import { useOnboardingProgress } from "@/features/onboarding/helpers";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
+import type { OnboardingStep } from "@/features/onboarding/types";
 
 type DialogState = {
   isOpen: boolean;
