@@ -41,20 +41,20 @@ const dataTipText2 = `The repeatable zone is for a group<br/>
   indeterminate number of times, like FAQs`;
 
 const itemsWidgetsArray = [
-  Widgets.StructuredText,
   Widgets.Image,
+  Widgets.Text,
+  Widgets.StructuredText,
   Widgets.Link,
-  Widgets.LinkToMedia,
-  Widgets.ContentRelationship,
   Widgets.Select,
   Widgets.Boolean,
-  Widgets.Date,
-  Widgets.Timestamp,
-  Widgets.Embed,
   Widgets.Number,
-  Widgets.GeoPoint,
   Widgets.Color,
-  Widgets.Text,
+  Widgets.Date,
+  Widgets.Embed,
+  Widgets.Timestamp,
+  Widgets.GeoPoint,
+  Widgets.ContentRelationship,
+  Widgets.LinkToMedia,
 ];
 
 const primaryWidgetsArray = [Widgets.Group, ...itemsWidgetsArray];
@@ -223,7 +223,6 @@ const FieldZones: FC = () => {
         testId="static-zone-content"
         isRepeatableCustomType={undefined}
         emptyStateHeading={undefined}
-        emptyStateActionTestId="add-Static-field"
       />
       {hasItems ? (
         <Zone
@@ -252,7 +251,6 @@ const FieldZones: FC = () => {
           testId="slice-repeatable-zone"
           isRepeatableCustomType={undefined}
           emptyStateHeading="No fields"
-          emptyStateActionTestId="add-Repeatable-field"
         />
       ) : null}
       <Dialog

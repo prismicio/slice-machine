@@ -30,8 +30,6 @@ const schema = yup.object().shape({
 
 const Meta = {
   icon: MdTitle,
-  title: "Key Text",
-  description: "A simple text string field",
 };
 
 export const TextWidget: Widget<Text, typeof schema> = {

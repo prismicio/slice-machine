@@ -10,8 +10,6 @@ interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
   create: (label: string) => F;
   Meta: {
     icon: IconType;
-    title: string;
-    description: string;
   };
   schema: S;
   // eslint-disable-next-line @typescript-eslint/ban-types

@@ -1,5 +1,5 @@
 import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdDns } from "react-icons/md";
+import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import * as yup from "yup";
 
 import { createValidationSchema } from "../../../../forms";
@@ -19,9 +19,7 @@ import FormFields from "./FormFields";
 */
 
 const Meta = {
-  icon: MdDns,
-  title: "Select",
-  description: "A dropdown field of options for content creators.",
+  icon: MdOutlineArrowDropDownCircle,
 };
 
 const schema = yup.object().shape({

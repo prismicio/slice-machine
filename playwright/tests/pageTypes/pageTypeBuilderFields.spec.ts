@@ -106,7 +106,7 @@ test("I can add a sub field within a group field", async ({
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
@@ -135,7 +135,7 @@ test("I can edit a sub field within a group field", async ({
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
@@ -173,7 +173,7 @@ test("I can delete a sub field within a group field", async ({
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
@@ -205,12 +205,12 @@ test("I can add a nested group with a sub field inside a group field", async ({
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     groupFieldId: "my_group",
@@ -263,12 +263,12 @@ test("I can edit a nested group and its sub field inside a group field", async (
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     groupFieldId: "my_group",
@@ -343,12 +343,12 @@ test("I can delete a nested group and its sub field inside a group field", async
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     groupFieldId: "my_group",
@@ -394,23 +394,24 @@ test("I can't add a nested group if I'm not eligible for the `slicemachine-neste
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
   await pageTypesBuilderPage
     .getListItem("my_group")
     .getByRole("button", {
-      name: "Add Field",
+      name: "Add a field",
       exact: true,
     })
     .click();
 
-  await expect(pageTypesBuilderPage.addFieldDialog.title).toBeVisible();
+  await expect(pageTypesBuilderPage.addFieldDropdown.menu).toBeVisible();
   const richTextField =
-    pageTypesBuilderPage.addFieldDialog.getField("Rich Text");
+    pageTypesBuilderPage.addFieldDropdown.getField("Rich Text");
   await expect(richTextField).toBeVisible();
-  const groupField = pageTypesBuilderPage.addFieldDialog.getField("Group");
+  const groupField =
+    pageTypesBuilderPage.addFieldDropdown.getField("Repeatable group");
   await expect(groupField).not.toBeVisible();
 });
 
@@ -437,7 +438,7 @@ test("I can see and copy the code snippets for groups", async ({
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
@@ -462,12 +463,12 @@ test("I can see and copy the code snippets for nested groups and their sub field
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Group",
     expectedId: "my_group",
   });
   await pageTypesBuilderPage.addStaticField({
-    type: "Group",
+    type: "Repeatable group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     groupFieldId: "my_group",

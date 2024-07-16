@@ -1,5 +1,5 @@
 import { GeoPoint } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdPlace } from "react-icons/md";
+import { MdOutlinePlace } from "react-icons/md";
 import * as yup from "yup";
 
 import { DefaultFields } from "../../../../forms/defaults";
@@ -36,9 +36,7 @@ const schema = yup.object().shape({
 });
 
 const Meta = {
-  icon: MdPlace,
-  title: "GeoPoint",
-  description: "A field for storing geo-coordinates",
+  icon: MdOutlinePlace,
 };
 
 export const GeoPointWidget: Widget<GeoPoint, typeof schema> = {

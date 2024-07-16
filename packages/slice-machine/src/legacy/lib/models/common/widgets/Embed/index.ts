@@ -1,5 +1,5 @@
 import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { FiCode } from "react-icons/fi";
+import { MdCode } from "react-icons/md";
 
 import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
@@ -16,9 +16,7 @@ import { Widget } from "../Widget";
 const { FormFields, schema } = createDefaultWidgetValues("Embed");
 
 const Meta = {
-  icon: FiCode,
-  title: "Embed",
-  description: "Embed videos, songs, tweets, slides, …",
+  icon: MdCode,
 };
 
 export const EmbedWidget: Widget<Embed, typeof schema> = {

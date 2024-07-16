@@ -17,8 +17,6 @@ const { FormFields, schema } = createDefaultWidgetValues("Date");
 
 const Meta = {
   icon: MdDateRange,
-  title: "Date",
-  description: "A calendar date picker",
 };
 
 export const DateWidget: Widget<Date, typeof schema> = {

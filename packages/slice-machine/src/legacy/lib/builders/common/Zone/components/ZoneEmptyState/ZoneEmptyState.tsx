@@ -1,4 +1,4 @@
-import { Button, Text } from "@prismicio/editor-ui";
+import { Text } from "@prismicio/editor-ui";
 import { FC, ReactNode } from "react";
 
 import styles from "./ZoneEmptyState.module.css";
@@ -6,16 +6,14 @@ import styles from "./ZoneEmptyState.module.css";
 type ZoneEmptyStateProps = {
   zoneType: "custom type" | "page type" | "slice";
   heading?: ReactNode;
-  onActionClick: () => void;
-  actionTestId?: string;
+  action: ReactNode;
 };
 
 export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
   const {
     zoneType,
     heading = `Your ${zoneType} has no fields yet`,
-    onActionClick,
-    actionTestId,
+    action,
   } = props;
 
   return (
@@ -26,14 +24,7 @@ export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
           A field is an input for content (e.g. text, images, links).
         </Text>
       </div>
-      <Button
-        color="grey"
-        onClick={() => onActionClick()}
-        data-testid={actionTestId}
-        startIcon="add"
-      >
-        Add a field
-      </Button>
+      {action}
     </div>
   );
 };

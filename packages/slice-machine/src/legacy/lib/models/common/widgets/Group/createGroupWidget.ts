@@ -1,4 +1,4 @@
-import { MdPlaylistAdd } from "react-icons/md";
+import { MdOutlineCreateNewFolder } from "react-icons/md";
 import * as yup from "yup";
 
 import { TabField } from "@/legacy/lib/models/common/CustomType";
@@ -12,9 +12,7 @@ import { type GroupListItemProps } from ".";
 import Form, { FormFields } from "./Form";
 
 const Meta = {
-  icon: MdPlaylistAdd,
-  title: "Group",
-  description: "A repeatable set of fields",
+  icon: MdOutlineCreateNewFolder,
 };
 
 const createSchema = (typeRegex: RegExp) =>

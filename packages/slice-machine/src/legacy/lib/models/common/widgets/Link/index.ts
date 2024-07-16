@@ -1,5 +1,5 @@
 import { Link } from "@prismicio/types-internal/lib/customtypes";
-import { FiLink2 } from "react-icons/fi";
+import { MdLink } from "react-icons/md";
 import * as yup from "yup";
 
 import { Widget } from "../Widget";
@@ -51,9 +51,7 @@ import Form, { FormFields } from "./Form";
   */
 
 const Meta = {
-  icon: FiLink2,
-  title: "Link",
-  description: "A link to web, media or Prismic document",
+  icon: MdLink,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

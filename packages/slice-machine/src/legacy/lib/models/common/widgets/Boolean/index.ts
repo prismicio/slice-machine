@@ -1,5 +1,5 @@
 import { BooleanField } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { BsToggleOn } from "react-icons/bs";
+import { MdOutlineToggleOff } from "react-icons/md";
 import * as yup from "yup";
 
 import { createValidationSchema } from "../../../../forms";
@@ -18,9 +18,7 @@ import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
 
 const Meta = {
-  icon: BsToggleOn,
-  title: "Boolean",
-  description: "An input that is either true or false",
+  icon: MdOutlineToggleOff,
 };
 
 const FormFields = {

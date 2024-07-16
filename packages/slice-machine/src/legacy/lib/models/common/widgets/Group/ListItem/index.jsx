@@ -2,18 +2,19 @@ import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes/widget
 import { Fragment, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
-import { Box, Button } from "theme-ui";
+import { Box } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
+import { fields as allFields } from "@/domain/fields";
 import {
   addFieldToGroup,
   deleteFieldFromGroup,
   reorderFieldInGroup,
   updateFieldInGroup,
 } from "@/domain/group";
+import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
 import ListItem from "@/legacy/components/ListItem";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
-import SelectFieldTypeModal from "@/legacy/lib/builders/common/SelectFieldTypeModal";
 import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
 import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
@@ -39,14 +40,12 @@ export const CustomListItem = ({
   HintElement,
   ...rest
 }) => {
-  const [selectMode, setSelectMode] = useState(false);
   const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     setNewFieldData({ widgetTypeName });
-    setSelectMode(false);
   };
 
   const onCancelNewField = () => {
@@ -171,15 +170,35 @@ export const CustomListItem = ({
         {...rest}
         HintElement={HintElement}
         CustomEditElements={[
-          <Button
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-            key={`custom-edit-element-${groupItem.key}`}
-            mr={2}
-            variant="buttons.darkSmall"
-            onClick={() => setSelectMode(true)}
-          >
-            Add Field
-          </Button>,
+          <AddFieldDropdown
+            key="add-field-dropdown"
+            disabled={newFieldData !== null}
+            onSelectField={onSelectFieldType}
+            fields={
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+              widgetsArray
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+                .filter((e) => e)
+                .map((widget) => {
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  const { TYPE_NAME, CUSTOM_NAME } = widget;
+
+                  const field = allFields.find(
+                    (f) =>
+                      f.type === TYPE_NAME &&
+                      (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
+                  );
+
+                  if (!field) {
+                    throw new Error(
+                      `Field not found for widget: ${TYPE_NAME} - ${CUSTOM_NAME}`,
+                    );
+                  }
+
+                  return field;
+                })
+            }
+          />,
         ]}
         children={
           <Box sx={{ ml: 4 }}>
@@ -281,12 +300,6 @@ export const CustomListItem = ({
             </DragDropContext>
           </Box>
         }
-      />
-      <SelectFieldTypeModal
-        data={{ isOpen: selectMode }}
-        close={() => setSelectMode(false)}
-        onSelect={onSelectFieldType}
-        widgetsArray={widgetsArray}
       />
       <EditModal
         data={editModalData}
