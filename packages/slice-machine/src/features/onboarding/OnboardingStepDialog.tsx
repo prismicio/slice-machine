@@ -49,10 +49,10 @@ export const OnboardingStepDialog = ({
                 Step {getStepIndex(step) + 1}
               </Text>
               <Text variant="h3">{stepContent.title ?? step.title}</Text>
-              {typeof stepContent.description === "string" ? (
-                <Text>{stepContent.description}</Text>
+              {typeof stepContent.content === "string" ? (
+                <Text>{stepContent.content}</Text>
               ) : (
-                <stepContent.description />
+                <stepContent.content />
               )}
             </div>
             <Video src={stepContent.videoUrl} sizing="contain" autoPlay loop />
