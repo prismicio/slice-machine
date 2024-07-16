@@ -1,14 +1,8 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useMemo,
-  useRef,
-  useSyncExternalStore,
-} from "react";
+import { Dispatch, SetStateAction, useMemo, useSyncExternalStore } from "react";
 
 export type UseLocalStorageItemInfo = {
-  /** Whether the item was set in localStorage the first time. */
-  wasUnset: boolean;
+  /** Whether the item is unset in localStorage and using the defaultValue as a fallback. */
+  isUnset: boolean;
 };
 
 export type UseLocalStorageReturnType<T> = [
@@ -54,8 +48,6 @@ export function useLocalStorageItem<T>(
     }
   }, [serializedItem, defaultValue, storageKey]);
 
-  const wasUnset = useRef(serializedItem == null).current;
-
   const setItem = (value: SetStateAction<T | undefined>) => {
     try {
       const newValue = JSON.stringify(isFunction(value) ? value(item) : value);
@@ -66,5 +58,5 @@ export function useLocalStorageItem<T>(
     }
   };
 
-  return [item, setItem, { wasUnset }];
+  return [item, setItem, { isUnset: serializedItem == null }];
 }

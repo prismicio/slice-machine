@@ -11,41 +11,52 @@ import {
 import {
   OnboardingStep,
   useOnboardingProgress,
+  useOnboardingStepsContent,
 } from "@/features/onboarding/helpers";
 
+import styles from "./OnboardingStepDialog.module.css";
+
 type OnboardingStepDialogProps = {
-  step: OnboardingStep | undefined;
+  step: OnboardingStep;
+  isOpen: boolean;
   onClose: () => void;
 };
 
 export const OnboardingStepDialog = ({
   step,
+  isOpen,
   onClose,
 }: OnboardingStepDialogProps) => {
   const { toggleStepComplete, isStepComplete, getStepIndex } =
     useOnboardingProgress();
-
-  if (!step) return null;
+  const content = useOnboardingStepsContent();
+  const stepContent = content[step.id];
 
   const markAsDone = () => {
+    if (!isOpen) return;
     toggleStepComplete(step.id);
     onClose();
   };
 
   return (
-    <Dialog open onOpenChange={onClose}>
-      <DialogHeader title={step.title} />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogHeader title="Learn" />
       <DialogContent>
         <ScrollArea>
-          <Text color="purple9" variant="bold">
-            Step {getStepIndex(step) + 1}
-          </Text>
-          {typeof step.description === "string" ? (
-            <Text>{step.description}</Text>
-          ) : (
-            <step.description />
-          )}
-          <Video src={step.videoUrl} sizing="contain" autoPlay loop />
+          <div className={styles.content}>
+            <div className={styles.contentHeader}>
+              <Text color="purple9" variant="bold">
+                Step {getStepIndex(step) + 1}
+              </Text>
+              <Text variant="h3">{stepContent.title ?? step.title}</Text>
+              {typeof stepContent.description === "string" ? (
+                <Text>{stepContent.description}</Text>
+              ) : (
+                <stepContent.description />
+              )}
+            </div>
+            <Video src={stepContent.videoUrl} sizing="contain" autoPlay loop />
+          </div>
         </ScrollArea>
         <DialogActions
           ok={{

@@ -9,7 +9,7 @@ import {
   Icon,
   Text,
 } from "@prismicio/editor-ui";
-import { useState } from "react";
+import { useReducer } from "react";
 
 import {
   OnboardingStep,
@@ -17,15 +17,29 @@ import {
 } from "@/features/onboarding/helpers";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 
+type DialogState = {
+  isOpen: boolean;
+  step: OnboardingStep;
+};
+
 export const OnboardingProgressStepper = () => {
-  const [activeStep, setActiveStep] = useState<OnboardingStep>();
   const { completedStepCount, steps, isStepComplete } = useOnboardingProgress();
+
+  const [dialog, setDialog] = useReducer(
+    (prev: DialogState, next: Partial<DialogState>) => ({ ...prev, ...next }),
+    { isOpen: false, step: steps[0] },
+  );
+
+  const openDialog = (step: OnboardingStep) => {
+    setDialog({ isOpen: true, step });
+  };
 
   return (
     <>
       <OnboardingStepDialog
-        step={activeStep}
-        onClose={() => setActiveStep(undefined)}
+        step={dialog.step}
+        isOpen={dialog.isOpen}
+        onClose={() => setDialog({ isOpen: false })}
       />
       <DropdownMenu>
         <DropdownMenuTrigger>
@@ -46,13 +60,14 @@ export const OnboardingProgressStepper = () => {
             return (
               <DropdownMenuItem
                 key={step.id}
-                onSelect={() => setActiveStep(step)}
+                onSelect={() => openDialog(step)}
                 startIcon={
                   <Icon
                     color={isCompleted ? "green10" : "currentColor"}
                     name={isCompleted ? "checkBox" : "checkBoxOutlinedBlank"}
                   />
                 }
+                description={step.title}
               >
                 {step.title}
               </DropdownMenuItem>
