@@ -1,23 +1,12 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
-import {
-  getOnboardingStepsContent,
-  onboardingSteps as steps,
-} from "@/features/onboarding/content";
+import { onboardingSteps as steps } from "@/features/onboarding/content";
 import type {
   OnboardingStep,
-  OnboardingStepContent,
   OnboardingStepStatuses,
   OnboardingStepType,
 } from "@/features/onboarding/types";
 import { useLocalStorageItem } from "@/hooks/useLocalStorageItem";
-import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
-
-export const useOnboardingStepsContent = (): OnboardingStepContent => {
-  const { repositoryUrl } = useRepositoryInformation();
-
-  return getOnboardingStepsContent({ repositoryUrl });
-};
 
 const getInitialState = (): OnboardingStepStatuses => {
   // if the old guide was dismissed, all steps start as complete
@@ -34,11 +23,10 @@ const useOnboardingStepStatus = (): [
   Dispatch<SetStateAction<OnboardingStepStatuses>>,
 ] => {
   const initialState = useRef(getInitialState()).current;
-  const [status, setStatus, { isUnset: isStatusUnset }] =
-    useLocalStorageItem<OnboardingStepStatuses>(
-      "onboardingSteps",
-      initialState,
-    );
+  const [status, setStatus, { isUnset: isStatusUnset }] = useLocalStorageItem(
+    "onboardingSteps",
+    initialState,
+  );
 
   useEffect(() => {
     // populate onboarding status if not defined
