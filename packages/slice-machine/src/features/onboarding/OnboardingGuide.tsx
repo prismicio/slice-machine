@@ -1,10 +1,10 @@
 import { Card, CardContent, Text } from "@prismicio/editor-ui";
 
-import { useOnboardingProgress } from "@/features/onboarding/helpers";
 import { OnboardingProgressStepper } from "@/features/onboarding/OnboardingProgressStepper";
+import { OnboardingProvider, useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 
-export const OnboardingGuide = () => {
-  const { steps, completedStepCount, isComplete } = useOnboardingProgress();
+const OnboardingGuideContent = () => {
+  const { steps, completedStepCount, isComplete } = useOnboardingContext();
 
   if (isComplete) return null;
 
@@ -27,3 +27,9 @@ export const OnboardingGuide = () => {
     </Card>
   );
 };
+
+export const OnboardingGuide = () => (
+  <OnboardingProvider>
+    <OnboardingGuideContent />
+  </OnboardingProvider>
+);

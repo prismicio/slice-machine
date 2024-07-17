@@ -9,14 +9,14 @@ import {
 } from "@prismicio/editor-ui";
 import { useState } from "react";
 
-import { useOnboardingProgress } from "@/features/onboarding/helpers";
+import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 import type { OnboardingStep } from "@/features/onboarding/types";
 
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
 export const OnboardingProgressStepper = () => {
-  const { completedStepCount, steps, isStepComplete } = useOnboardingProgress();
+  const { completedStepCount, steps, isStepComplete } = useOnboardingContext();
 
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(steps[0]);

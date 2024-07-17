@@ -1,16 +1,34 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 type PersistedState<T> = [T, Dispatch<SetStateAction<T>>];
 
 const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
 
+type UsePersistedStateOptions = {
+  storeDefaultValue?: boolean;
+};
+
+export function usePersistedState<T>(
+  key: string,
+): PersistedState<T | undefined>;
 export function usePersistedState<T>(
   key: string,
   defaultValue: T,
-): PersistedState<T> {
-  const computedKey = `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`;
+  options?: UsePersistedStateOptions,
+): PersistedState<T>;
+export function usePersistedState<T>(
+  key: string,
+  defaultValue?: T,
+  options?: UsePersistedStateOptions,
+): PersistedState<T | undefined> {
+  const { storeDefaultValue } = options ?? {};
+  const staticPropsRef = useRef({
+    computedKey: `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`,
+    defaultValue,
+  });
 
-  const [value, setValue] = useState<T>(() => {
+  const [value, setValue] = useState<T | undefined>(() => {
+    const { computedKey, defaultValue } = staticPropsRef.current;
     try {
       const value = localStorage.getItem(computedKey);
 
@@ -23,12 +41,16 @@ export function usePersistedState<T>(
   });
 
   useEffect(() => {
+    const { computedKey, defaultValue } = staticPropsRef.current;
     try {
       localStorage.setItem(computedKey, JSON.stringify(value));
+      if (storeDefaultValue === true && defaultValue != null && value == null) {
+        localStorage.setItem(computedKey, JSON.stringify(defaultValue));
+      }
     } catch (error) {
       console.warn(`Error setting localStorage key “${computedKey}”:`, error);
     }
-  }, [computedKey, value]);
+  }, [value, storeDefaultValue]);
 
   return [value, setValue];
 }

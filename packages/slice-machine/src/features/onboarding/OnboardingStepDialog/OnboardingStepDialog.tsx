@@ -8,11 +8,9 @@ import {
   Video,
 } from "@prismicio/editor-ui";
 
-import {
-  useOnboardingProgress,
-  useOnboardingStepsContent,
-} from "@/features/onboarding/helpers";
+import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import type { OnboardingStep } from "@/features/onboarding/types";
+import { useOnboardingStepsContent } from "@/features/onboarding/useOnboardingStepsContent";
 
 import styles from "./OnboardingStepDialog.module.css";
 
@@ -28,7 +26,7 @@ export const OnboardingStepDialog = ({
   onClose,
 }: OnboardingStepDialogProps) => {
   const { toggleStepComplete, isStepComplete, getStepIndex } =
-    useOnboardingProgress();
+    useOnboardingContext();
   const stepContent = useOnboardingStepsContent(step.id);
 
   const markAsDone = () => {
