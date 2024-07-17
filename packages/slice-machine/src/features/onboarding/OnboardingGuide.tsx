@@ -11,14 +11,12 @@ export const OnboardingGuide = () => {
   return (
     <Card color="grey2" variant="outlined" paddingBlock={16}>
       <CardContent>
-        <div>
-          <Text variant="bold" color="grey12">
-            Welcome
-          </Text>
+        <Text variant="bold" color="grey12">
+          Welcome
           <Text color="grey11" variant="small">
             Get started in {steps.length} steps
           </Text>
-        </div>
+        </Text>
         <Text color="grey11" variant="small" align="end">
           {completedStepCount}/{steps.length}
         </Text>

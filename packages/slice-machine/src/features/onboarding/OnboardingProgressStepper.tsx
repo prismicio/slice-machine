@@ -9,35 +9,29 @@ import {
   Icon,
   Text,
 } from "@prismicio/editor-ui";
-import { useReducer } from "react";
+import { useState } from "react";
 
 import { useOnboardingProgress } from "@/features/onboarding/helpers";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 import type { OnboardingStep } from "@/features/onboarding/types";
 
-type DialogState = {
-  isOpen: boolean;
-  step: OnboardingStep;
-};
-
 export const OnboardingProgressStepper = () => {
   const { completedStepCount, steps, isStepComplete } = useOnboardingProgress();
 
-  const [dialog, setDialog] = useReducer(
-    (prev: DialogState, next: Partial<DialogState>) => ({ ...prev, ...next }),
-    { isOpen: false, step: steps[0] },
-  );
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [activeStep, setActiveStep] = useState(steps[0]);
 
-  const openDialog = (step: OnboardingStep) => {
-    setDialog({ isOpen: true, step });
+  const showStep = (step: OnboardingStep) => {
+    setActiveStep(step);
+    setDialogOpen(true);
   };
 
   return (
     <>
       <OnboardingStepDialog
-        step={dialog.step}
-        isOpen={dialog.isOpen}
-        onClose={() => setDialog({ isOpen: false })}
+        step={activeStep}
+        isOpen={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
       />
       <DropdownMenu>
         <DropdownMenuTrigger>
@@ -58,7 +52,7 @@ export const OnboardingProgressStepper = () => {
             return (
               <DropdownMenuItem
                 key={step.id}
-                onSelect={() => openDialog(step)}
+                onSelect={() => showStep(step)}
                 startIcon={
                   <Icon
                     color={isCompleted ? "green10" : "currentColor"}
