@@ -16,6 +16,7 @@ import {
   Field,
   FieldVariants,
   groupField,
+  groupFieldTemplates,
   nestableFields,
   UIDField,
 } from "@/domain/fields";
@@ -35,7 +36,7 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
     triggerDataTestId = "add-field",
   } = props;
 
-  const renderDropdownItem = (field: Field) => {
+  const renderDropdownItem = (field: Field, isTemplate = false) => {
     const { description, icon, name, type, variant } = field;
 
     return (
@@ -69,6 +70,14 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
         )}
       >
         {name}
+        {isTemplate && (
+          <>
+            <Text variant="smallBold">&nbsp;⋅&nbsp;</Text>
+            <Text color="purple9" variant="smallBold">
+              Template
+            </Text>
+          </>
+        )}
       </DropdownMenuItem>
     );
   };
@@ -82,6 +91,9 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
   const groupFieldToRender = fields.find(
     (field) => field.name === groupField.name,
   );
+  const groupFieldTemplatesToRender = fields.filter((field) =>
+    groupFieldTemplates.some((template) => template.name === field.name),
+  );
 
   return (
     <DropdownMenu>
@@ -94,10 +106,13 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
         <DropdownMenuLabel>Single fields</DropdownMenuLabel>
         {singleFieldsToRender.map((field) => renderDropdownItem(field))}
 
-        {groupFieldToRender && (
+        {(groupFieldToRender || groupFieldTemplatesToRender.length > 0) && (
           <>
             <DropdownMenuLabel>Sets of fields</DropdownMenuLabel>
-            {renderDropdownItem(groupFieldToRender)}
+            {groupFieldToRender && renderDropdownItem(groupFieldToRender)}
+            {groupFieldTemplatesToRender.map((groupFieldTemplate) =>
+              renderDropdownItem(groupFieldTemplate, true),
+            )}
           </>
         )}
       </DropdownMenuContent>

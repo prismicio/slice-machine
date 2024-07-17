@@ -1,5 +1,9 @@
 import { type DroppableStateSnapshot } from "react-beautiful-dnd";
 
+import {
+  advancedGroupFieldTemplate,
+  simpleGroupFieldTemplate,
+} from "@/domain/fields";
 import { useNestedGroupExperiment } from "@/hooks/useNestedGroupExperiment";
 import { type Item } from "@/legacy/components/ListItem";
 import { type TabField } from "@/legacy/lib/models/common/CustomType";
@@ -69,4 +73,20 @@ export const GroupWidget = createGroupWidget({
   schemaTypeRegex: /^Group$/,
   customListItem: GroupListItem,
   hintItemName,
+});
+
+export const SimpleGroupTemplateWidget = createGroupWidget({
+  schemaTypeRegex: /^Group$/,
+  customListItem: GroupListItem,
+  hintItemName,
+  customName: "SimpleGroup",
+  customDefaultValue: simpleGroupFieldTemplate.defaultValue,
+});
+
+export const AdvancedGroupTemplateWidget = createGroupWidget({
+  schemaTypeRegex: /^Group$/,
+  customListItem: GroupListItem,
+  hintItemName,
+  customName: "AdvancedGroup",
+  customDefaultValue: advancedGroupFieldTemplate.defaultValue,
 });

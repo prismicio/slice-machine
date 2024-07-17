@@ -6,6 +6,7 @@ import {
   EmbedFieldType,
   FieldType,
   GeoPointFieldType,
+  Group,
   GroupFieldType,
   ImageFieldType,
   LinkFieldType,
@@ -28,7 +29,11 @@ export interface Field {
 
 export type NestableFieldVariants = "ContentRelationship" | "LinkToMedia";
 export type GroupFieldVariants = "NestedGroup";
-export type FieldVariants = NestableFieldVariants | GroupFieldVariants;
+export type GroupFieldTemplateVariants = "SimpleGroup" | "AdvancedGroup";
+export type FieldVariants =
+  | NestableFieldVariants
+  | GroupFieldVariants
+  | GroupFieldTemplateVariants;
 
 export interface NestableField extends Field {
   type: NestableFieldTypes;
@@ -43,6 +48,12 @@ export interface UIDField extends Field {
 export interface GroupField extends Field {
   type: typeof GroupFieldType;
   variant?: "NestedGroup";
+}
+
+export interface GroupFieldTemplate extends Field {
+  type: typeof GroupFieldType;
+  defaultValue: Group;
+  variant: GroupFieldTemplateVariants;
 }
 
 /**
@@ -196,7 +207,83 @@ export const nestedGroupField: GroupField = {
 export const groupFields: GroupField[] = [groupField, nestedGroupField];
 
 /**
+ * Group field templates
+ */
+
+export const simpleGroupFieldTemplate: GroupFieldTemplate = {
+  name: "Simple group",
+  description: "A simple example group field.",
+  icon: "folder",
+  type: GroupFieldType,
+  variant: "SimpleGroup",
+  defaultValue: {
+    type: "Group",
+    config: {
+      fields: {
+        text: {
+          type: "Text",
+          config: {
+            label: "A text",
+          },
+        },
+        image: {
+          type: "Image",
+          config: {
+            label: "An image",
+          },
+        },
+      },
+    },
+  },
+};
+
+export const advancedGroupFieldTemplate: GroupFieldTemplate = {
+  name: "Advanced group",
+  description: "An advanced example group field.",
+  icon: "folder",
+  type: GroupFieldType,
+  variant: "AdvancedGroup",
+  defaultValue: {
+    type: "Group",
+    config: {
+      fields: {
+        nestedGroup: {
+          type: "Group",
+          config: {
+            label: "A nested group",
+            fields: {
+              nestedText: {
+                type: "Text",
+                config: {
+                  label: "A text",
+                },
+              },
+              nestedImage: {
+                type: "Image",
+                config: {
+                  label: "An image",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const groupFieldTemplates: GroupFieldTemplate[] = [
+  simpleGroupFieldTemplate,
+  advancedGroupFieldTemplate,
+];
+
+/**
  * All fields
  */
 
-export const fields = [...nestableFields, UIDField, ...groupFields];
+export const fields = [
+  ...nestableFields,
+  UIDField,
+  ...groupFields,
+  ...groupFieldTemplates,
+];

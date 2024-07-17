@@ -1,9 +1,11 @@
+import { Group, NestedGroup } from "@prismicio/types-internal/lib/customtypes";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import * as yup from "yup";
 
 import { TabField } from "@/legacy/lib/models/common/CustomType";
 import {
-  type GroupSM,
+  Groups,
+  GroupSM,
   type NestedGroupSM,
 } from "@/legacy/lib/models/common/Group";
 import { type Widget } from "@/legacy/lib/models/common/widgets/Widget";
@@ -35,10 +37,12 @@ type CreateGroupWidgetArgsBase<T extends TabField> = {
   customListItem: (props: GroupListItemProps<T>) => JSX.Element;
   hintItemName: string;
   customName?: string;
+  customDefaultValue?: Group;
 };
 type CreateTopGroupWidgetArgs = CreateGroupWidgetArgsBase<GroupSM>;
 type CreateNestedGroupWidgetArgs = CreateGroupWidgetArgsBase<NestedGroupSM> & {
   customName: "NestedGroup";
+  customDefaultValue?: NestedGroup;
 };
 type CreateGroupWidgetArgs =
   | CreateTopGroupWidgetArgs
@@ -57,6 +61,7 @@ export function createGroupWidget({
   customListItem,
   customName,
   hintItemName,
+  customDefaultValue,
 }: CreateGroupWidgetArgs):
   | Widget<GroupSM, SchemaType>
   | Widget<NestedGroupSM, SchemaType> {
@@ -65,14 +70,17 @@ export function createGroupWidget({
     Form,
     FormFields,
     schema: createSchema(schemaTypeRegex),
-    create: (label: string) => ({
-      type: "Group",
-      config: {
-        label,
-        repeat: true,
-        fields: [],
-      },
-    }),
+    create: (label: string) =>
+      customDefaultValue
+        ? Groups.toSM(customDefaultValue)
+        : {
+            type: "Group",
+            config: {
+              label,
+              repeat: true,
+              fields: [],
+            },
+          },
     CustomListItem: customListItem,
     TYPE_NAME: "Group",
     CUSTOM_NAME: customName,

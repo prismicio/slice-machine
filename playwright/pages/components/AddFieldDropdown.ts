@@ -17,6 +17,9 @@ export type FieldTypeLabel =
   | "Key Text"
   | "Repeatable group";
 
+export type GroupFieldTemplateLabel = "Simple group" | "Advanced group";
+const groupFieldTemplateLabels = ["Simple group", "Advanced group"];
+
 export class AddFieldDropdown {
   readonly page: Page;
   readonly menu: Locator;
@@ -37,8 +40,11 @@ export class AddFieldDropdown {
   /**
    * Dynamic locators
    */
-  getField(fieldType: FieldTypeLabel): Locator {
-    return this.menu.getByRole("menuitem").getByText(fieldType, {
+  getField(fieldType: FieldTypeLabel | GroupFieldTemplateLabel): Locator {
+    const fieldLabel = groupFieldTemplateLabels.includes(fieldType)
+      ? `${fieldType} ⋅ Template`
+      : fieldType;
+    return this.menu.getByRole("menuitem").getByText(fieldLabel, {
       exact: true,
     });
   }
@@ -46,7 +52,7 @@ export class AddFieldDropdown {
   /**
    * Actions
    */
-  async selectField(fieldType: FieldTypeLabel) {
+  async selectField(fieldType: FieldTypeLabel | GroupFieldTemplateLabel) {
     await this.getField(fieldType).click();
     await expect(this.menu).not.toBeVisible();
   }

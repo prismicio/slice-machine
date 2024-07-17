@@ -28,6 +28,10 @@ import {
   WidgetsArea,
 } from "@/legacy/lib/models/common/Slice";
 import { Widgets } from "@/legacy/lib/models/common/widgets";
+import {
+  AdvancedGroupTemplateWidget,
+  SimpleGroupTemplateWidget,
+} from "@/legacy/lib/models/common/widgets/Group";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
@@ -57,7 +61,12 @@ const itemsWidgetsArray = [
   Widgets.LinkToMedia,
 ];
 
-const primaryWidgetsArray = [Widgets.Group, ...itemsWidgetsArray];
+const primaryWidgetsArray = [
+  ...itemsWidgetsArray,
+  Widgets.Group,
+  SimpleGroupTemplateWidget,
+  AdvancedGroupTemplateWidget,
+];
 
 const FieldZones: FC = () => {
   const { slice, setSlice, variation } = useSliceState();

@@ -5,7 +5,10 @@ import { RenameVariationDialog } from "./components/RenameVariationDialog";
 import { DeleteVariationDialog } from "./components/DeleteVariationDialog";
 import { BuilderPage } from "./shared/BuilderPage";
 import { SlicesListPage } from "./SlicesListPage";
-import { FieldTypeLabel } from "./components/AddFieldDropdown";
+import {
+  FieldTypeLabel,
+  GroupFieldTemplateLabel,
+} from "./components/AddFieldDropdown";
 import { UpdateScreenshotDialog } from "./components/UpdateScreenshotDialog";
 import { DeleteRepeatableZoneDialog } from "./components/DeleteRepeatableZoneDialog";
 
@@ -185,7 +188,7 @@ export class SliceBuilderPage extends BuilderPage {
   }
 
   async addField<TZoneType extends ZoneType>(args: {
-    type: FieldTypeLabel;
+    type: FieldTypeLabel | GroupFieldTemplateLabel;
     name: string;
     expectedId: string;
     zoneType: TZoneType;
