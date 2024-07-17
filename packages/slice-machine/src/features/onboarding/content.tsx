@@ -65,13 +65,13 @@ export const getOnboardingStepsContent = ({
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/WRITE.mp4",
     content: () => (
-      <span>
+      <Text>
         Open your{" "}
         <Text href={repositoryUrl} underline>
           Page Builder
         </Text>
         , create a page, add slices, save, and publish. Then, come back here.
-      </span>
+      </Text>
     ),
   },
 });

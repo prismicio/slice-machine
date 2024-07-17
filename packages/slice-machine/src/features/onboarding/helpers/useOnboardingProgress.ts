@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-
 import { onboardingSteps as steps } from "@/features/onboarding/content";
 import type {
   OnboardingStep,
@@ -18,29 +16,11 @@ const getInitialState = (): OnboardingStepStatuses => {
   ) as OnboardingStepStatuses;
 };
 
-const useOnboardingStepStatus = (): [
-  OnboardingStepStatuses,
-  Dispatch<SetStateAction<OnboardingStepStatuses>>,
-] => {
-  const initialState = useRef(getInitialState()).current;
-  const [status, setStatus, { isUnset: isStatusUnset }] = useLocalStorageItem(
-    "onboardingSteps",
-    initialState,
-  );
-
-  useEffect(() => {
-    // populate onboarding status if not defined
-    if (isStatusUnset) setStatus(initialState);
-
-    /* eslint-disable-next-line react-hooks/exhaustive-deps -- 
-    We don't care if the values of isStatusUnset, setStatus or initialState change here. */
-  }, [status]);
-
-  return [status, setStatus];
-};
-
 export const useOnboardingProgress = () => {
-  const [stepStatus, setStepStatus] = useOnboardingStepStatus();
+  const [stepStatus, setStepStatus] = useLocalStorageItem(
+    "onboardingSteps",
+    getInitialState(),
+  );
   const completedStepCount = Object.values(stepStatus).filter(Boolean).length;
 
   const toggleStepComplete = (step: OnboardingStepType) => {

@@ -1,21 +1,18 @@
-import { Dispatch, SetStateAction, useMemo, useSyncExternalStore } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useMemo,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 
-export type UseLocalStorageItemInfo = {
-  /** Whether the item is unset in localStorage and using the defaultValue as a fallback. */
-  isUnset: boolean;
-};
-
-export type UseLocalStorageReturnType<T> = [
-  T,
-  Dispatch<SetStateAction<T>>,
-  UseLocalStorageItemInfo,
-];
+export type UseLocalStorageReturnType<T> = [T, Dispatch<SetStateAction<T>>];
 
 const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const isFunction = (value: any): value is (...args: any[]) => any => {
-  return typeof value === "function";
+const subscribe = (listener: () => void) => {
+  window.addEventListener("storage", listener);
+  return () => void window.removeEventListener("storage", listener);
 };
 
 export function useLocalStorageItem<T>(
@@ -23,34 +20,41 @@ export function useLocalStorageItem<T>(
 ): UseLocalStorageReturnType<T | undefined>;
 export function useLocalStorageItem<T>(
   key: string,
-  defaultValue: T,
+  initialValue: T,
 ): UseLocalStorageReturnType<T>;
 export function useLocalStorageItem<T>(
   key: string,
-  defaultValue?: T | undefined,
+  initialValue?: T | undefined,
 ): UseLocalStorageReturnType<T | undefined> {
-  const storageKey = `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`;
-  const getSnapshot = () => localStorage.getItem(storageKey);
+  const staticPropsRef = useRef({
+    storageKey: `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`,
+    initialValue,
+  });
 
-  const subscribe = (listener: () => void) => {
-    window.addEventListener("storage", listener);
-    return () => void window.removeEventListener("storage", listener);
+  const getSnapshot = () => {
+    return localStorage.getItem(staticPropsRef.current.storageKey);
   };
 
   const serializedItem = useSyncExternalStore(subscribe, getSnapshot);
   const item = useMemo(() => {
     try {
       if (serializedItem != null) return JSON.parse(serializedItem) as T;
-      return defaultValue;
+      return staticPropsRef.current.initialValue;
     } catch (error) {
-      console.warn(`Error reading localStorage key “${storageKey}”:`, error);
-      return defaultValue;
+      console.warn(
+        `Error reading localStorage key “${staticPropsRef.current.storageKey}”:`,
+        error,
+      );
+      return staticPropsRef.current.initialValue;
     }
-  }, [serializedItem, defaultValue, storageKey]);
+  }, [serializedItem]);
 
   const setItem = (value: SetStateAction<T | undefined>) => {
+    const { storageKey: storageKey } = staticPropsRef.current;
     try {
-      const newValue = JSON.stringify(isFunction(value) ? value(item) : value);
+      const newValue = JSON.stringify(
+        value instanceof Function ? value(item) : value,
+      );
       localStorage.setItem(storageKey, newValue);
       window.dispatchEvent(new StorageEvent("storage", { key, newValue }));
     } catch (error) {
@@ -58,5 +62,9 @@ export function useLocalStorageItem<T>(
     }
   };
 
-  return [item, setItem, { isUnset: serializedItem == null }];
+  if (serializedItem == null && initialValue !== undefined) {
+    setItem(initialValue);
+  }
+
+  return [item, setItem];
 }
