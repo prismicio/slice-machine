@@ -3,16 +3,11 @@ import {
   DialogActions,
   DialogContent,
   DialogHeader,
-  ScrollArea,
-  Text,
-  Video,
 } from "@prismicio/editor-ui";
 
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
+import { OnboardingStepDialogContent } from "@/features/onboarding/OnboardingStepDialog/OnboardingStepDialogContent";
 import type { OnboardingStep } from "@/features/onboarding/types";
-import { useOnboardingStepsContent } from "@/features/onboarding/useOnboardingStepsContent";
-
-import styles from "./OnboardingStepDialog.module.css";
 
 type OnboardingStepDialogProps = {
   step: OnboardingStep;
@@ -25,9 +20,7 @@ export const OnboardingStepDialog = ({
   isOpen,
   onClose,
 }: OnboardingStepDialogProps) => {
-  const { toggleStepComplete, isStepComplete, getStepIndex } =
-    useOnboardingContext();
-  const stepContent = useOnboardingStepsContent(step.id);
+  const { toggleStepComplete, isStepComplete } = useOnboardingContext();
 
   const markAsDone = () => {
     if (!isOpen) return;
@@ -35,24 +28,11 @@ export const OnboardingStepDialog = ({
     onClose();
   };
 
-  const { content: Content } = stepContent;
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogHeader title="Learn" />
       <DialogContent>
-        <ScrollArea>
-          <article className={styles.scrollableContent}>
-            <section>
-              <Text sx={{ marginBottom: 4 }} color="purple9" variant="bold">
-                Step {getStepIndex(step) + 1}
-              </Text>
-              <Text variant="h3">{stepContent.title ?? step.title}</Text>
-              <Content />
-            </section>
-            <Video src={stepContent.videoUrl} sizing="contain" autoPlay loop />
-          </article>
-        </ScrollArea>
+        <OnboardingStepDialogContent step={step} />
         <DialogActions
           ok={{
             text: isStepComplete(step) ? "Undo step" : "Mark as done",
