@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -7,13 +6,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   Icon,
-  Text,
 } from "@prismicio/editor-ui";
 import { useState } from "react";
 
 import { useOnboardingProgress } from "@/features/onboarding/helpers";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 import type { OnboardingStep } from "@/features/onboarding/types";
+
+const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
 export const OnboardingProgressStepper = () => {
   const { completedStepCount, steps, isStepComplete } = useOnboardingProgress();
@@ -35,13 +35,12 @@ export const OnboardingProgressStepper = () => {
       />
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Button color="grey" sx={{ width: "100%" }}>
-            <Box alignItems="center" gap={4}>
-              <Text variant="bold" color="grey12">
-                {completedStepCount > 0 ? "Continue" : "Start"}
-              </Text>
-              <Icon name="playCircle" size="small" color="grey11" />
-            </Box>
+          <Button
+            color="grey"
+            sx={{ width: "100%" }}
+            renderEndIcon={EndCtaIcon}
+          >
+            {completedStepCount > 0 ? "Continue" : "Start"}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

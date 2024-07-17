@@ -46,11 +46,7 @@ export const OnboardingStepDialog = ({
         <ScrollArea>
           <article className={styles.scrollableContent}>
             <section>
-              <Text
-                className={styles.stepNumberText}
-                color="purple9"
-                variant="bold"
-              >
+              <Text sx={{ marginBottom: 4 }} color="purple9" variant="bold">
                 Step {getStepIndex(step) + 1}
               </Text>
               <Text variant="h3">{stepContent.title ?? step.title}</Text>
