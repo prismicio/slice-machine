@@ -11,9 +11,9 @@ export type OnboardingStep = {
   description: string;
 };
 
-type OnboardingStepContentDefinition = {
+export type OnboardingStepContentDefinition = {
   title?: string;
-  content: string | (() => JSX.Element);
+  content: () => JSX.Element;
   videoUrl: string;
 };
 

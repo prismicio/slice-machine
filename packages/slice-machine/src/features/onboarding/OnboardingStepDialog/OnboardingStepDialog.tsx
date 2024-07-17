@@ -29,14 +29,15 @@ export const OnboardingStepDialog = ({
 }: OnboardingStepDialogProps) => {
   const { toggleStepComplete, isStepComplete, getStepIndex } =
     useOnboardingProgress();
-  const content = useOnboardingStepsContent();
-  const stepContent = content[step.id];
+  const stepContent = useOnboardingStepsContent(step.id);
 
   const markAsDone = () => {
     if (!isOpen) return;
     toggleStepComplete(step.id);
     onClose();
   };
+
+  const { content: Content } = stepContent;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -53,11 +54,7 @@ export const OnboardingStepDialog = ({
                 Step {getStepIndex(step) + 1}
               </Text>
               <Text variant="h3">{stepContent.title ?? step.title}</Text>
-              {typeof stepContent.content === "string" ? (
-                <Text>{stepContent.content}</Text>
-              ) : (
-                <stepContent.content />
-              )}
+              <Content />
             </section>
             <Video src={stepContent.videoUrl} sizing="contain" autoPlay loop />
           </article>
