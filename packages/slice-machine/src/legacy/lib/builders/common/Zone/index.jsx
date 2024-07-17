@@ -84,18 +84,15 @@ const Zone = ({
       onSelectField={onSelectFieldType}
       fields={
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        widgetsArrayWithCondUid
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          .filter((e) => e)
-          .map((widget) => {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const { TYPE_NAME, CUSTOM_NAME } = widget;
-            return allFields.find(
-              (f) =>
-                f.type === TYPE_NAME &&
-                (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
-            );
-          })
+        widgetsArrayWithCondUid.filter(Boolean).map((widget) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const { TYPE_NAME, CUSTOM_NAME } = widget;
+          return allFields.find(
+            (f) =>
+              f.type === TYPE_NAME &&
+              (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
+          );
+        })
       }
       triggerDataTestId={
         isRepeatable === true ? "add-field-in-items" : undefined

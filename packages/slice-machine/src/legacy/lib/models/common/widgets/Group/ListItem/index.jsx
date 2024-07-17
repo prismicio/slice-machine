@@ -174,30 +174,23 @@ export const CustomListItem = ({
             key="add-field-dropdown"
             disabled={newFieldData !== null}
             onSelectField={onSelectFieldType}
-            fields={
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-              widgetsArray
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                .filter((e) => e)
-                .map((widget) => {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  const { TYPE_NAME, CUSTOM_NAME } = widget;
+            fields={widgetsArray.filter(Boolean).map((widget) => {
+              const { TYPE_NAME, CUSTOM_NAME } = widget;
 
-                  const field = allFields.find(
-                    (f) =>
-                      f.type === TYPE_NAME &&
-                      (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
-                  );
+              const field = allFields.find(
+                (f) =>
+                  f.type === TYPE_NAME &&
+                  (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
+              );
 
-                  if (!field) {
-                    throw new Error(
-                      `Field not found for widget: ${TYPE_NAME} - ${CUSTOM_NAME}`,
-                    );
-                  }
+              if (!field) {
+                throw new Error(
+                  `Field not found for widget: ${TYPE_NAME} - ${CUSTOM_NAME}`,
+                );
+              }
 
-                  return field;
-                })
-            }
+              return field;
+            })}
           />,
         ]}
         children={
