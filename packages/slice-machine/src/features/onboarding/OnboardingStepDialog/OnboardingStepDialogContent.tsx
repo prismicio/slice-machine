@@ -1,11 +1,9 @@
-import { ScrollArea, Text, Video } from "@prismicio/editor-ui";
+import { Box, ScrollArea, Text, Video } from "@prismicio/editor-ui";
 
 import { getOnboardingStepsContent } from "@/features/onboarding/content";
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStep } from "@/features/onboarding/types";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
-
-import styles from "./OnboardingStepDialogContent.module.css";
 
 type OnboardingStepDialogContentProps = {
   step: OnboardingStep;
@@ -25,7 +23,7 @@ export const OnboardingStepDialogContent = ({
 
   return (
     <ScrollArea>
-      <article className={styles.scrollableContent}>
+      <Box as="article" flexDirection="column" padding={16} gap={16}>
         <section>
           <Text sx={{ marginBottom: 4 }} color="purple9" variant="bold">
             Step {getStepIndex(step) + 1}
@@ -34,7 +32,7 @@ export const OnboardingStepDialogContent = ({
           <Content />
         </section>
         <Video src={videoUrl} sizing="contain" autoPlay loop />
-      </article>
+      </Box>
     </ScrollArea>
   );
 };
