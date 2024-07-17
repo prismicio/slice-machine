@@ -1,12 +1,10 @@
-.content {
+.scrollableContent {
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.contentHeader {
-  > *:first-child {
-    margin-bottom: 4px;
-  }
+.stepNumberText {
+  margin-bottom: 4px;
 }

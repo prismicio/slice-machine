@@ -43,9 +43,13 @@ export const OnboardingStepDialog = ({
       <DialogHeader title="Learn" />
       <DialogContent>
         <ScrollArea>
-          <div className={styles.content}>
-            <div className={styles.contentHeader}>
-              <Text color="purple9" variant="bold">
+          <article className={styles.scrollableContent}>
+            <section>
+              <Text
+                className={styles.stepNumberText}
+                color="purple9"
+                variant="bold"
+              >
                 Step {getStepIndex(step) + 1}
               </Text>
               <Text variant="h3">{stepContent.title ?? step.title}</Text>
@@ -54,9 +58,9 @@ export const OnboardingStepDialog = ({
               ) : (
                 <stepContent.content />
               )}
-            </div>
+            </section>
             <Video src={stepContent.videoUrl} sizing="contain" autoPlay loop />
-          </div>
+          </article>
         </ScrollArea>
         <DialogActions
           ok={{
