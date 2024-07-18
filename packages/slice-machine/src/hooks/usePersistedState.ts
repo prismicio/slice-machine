@@ -1,8 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { AnyZodObject } from "zod";
 
 type PersistedState<T> = [T, Dispatch<SetStateAction<T>>];
 
 const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
+
+type UsePersistedStateOptions = {
+  schema?: AnyZodObject;
+};
 
 export function usePersistedState<T>(
   key: string,
@@ -10,18 +15,26 @@ export function usePersistedState<T>(
 export function usePersistedState<T>(
   key: string,
   defaultValue: T,
+  options?: UsePersistedStateOptions,
 ): PersistedState<T>;
 export function usePersistedState<T>(
   key: string,
   defaultValue?: T,
+  options?: UsePersistedStateOptions,
 ): PersistedState<T | undefined> {
+  const { schema } = options ?? {};
   const computedKey = `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`;
 
   const [value, setValue] = useState<T | undefined>(() => {
     try {
       const value = localStorage.getItem(computedKey);
 
-      return value !== null ? (JSON.parse(value) as T) : defaultValue;
+      if (value == null) return defaultValue;
+      if (!schema) return JSON.parse(value) as T;
+
+      const result = schema.safeParse(JSON.parse(value));
+      if (!result.success) throw result.error;
+      return result.data as T;
     } catch (error) {
       console.warn(`Error reading localStorage key “${computedKey}”:`, error);
 

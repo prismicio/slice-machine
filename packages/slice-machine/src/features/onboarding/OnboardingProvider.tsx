@@ -1,10 +1,11 @@
 import { createContext, ReactNode, useContext } from "react";
 
 import { onboardingSteps as steps } from "@/features/onboarding/content";
-import type {
-  OnboardingStep,
-  OnboardingStepStatuses,
-  OnboardingStepType,
+import {
+  type OnboardingStep,
+  type OnboardingStepStatuses,
+  onboardingStepStatusesSchema,
+  type OnboardingStepType,
 } from "@/features/onboarding/types";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
@@ -35,6 +36,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
     getInitialState(),
+    { schema: onboardingStepStatusesSchema },
   );
 
   const toggleStepComplete = (step: OnboardingStepType) => {
