@@ -31,7 +31,6 @@ export function usePersistedState<T>(
 
       if (value == null) return defaultValue;
       if (!schema) return JSON.parse(value) as T;
-
       return schema.parse(JSON.parse(value));
     } catch (error) {
       console.warn(`Error reading localStorage key “${computedKey}”:`, error);
