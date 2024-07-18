@@ -23,11 +23,11 @@ export const OnboardingContext = createContext<OnboardingContext | undefined>(
 
 const getInitialState = (): OnboardingStepStatuses => {
   // if the old guide was dismissed, all steps start as complete
-  const startComplete =
+  const wasOldGuideDismissed =
     localStorage.getItem("slice-machine_isInAppGuideOpen") === "false";
 
   return Object.fromEntries(
-    steps.map((step) => [step.id, startComplete]),
+    steps.map((step) => [step.id, wasOldGuideDismissed]),
   ) as OnboardingStepStatuses;
 };
 
