@@ -48,55 +48,55 @@ export const getOnboardingStepsContent = ({
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/ADD_SLICE.mp4",
     content: () => (
-      <>
+      <Text>
         Commodo irure ipsum exercitation consequat enim velit amet commodo.
         Excepteur proident Lorem sunt enim amet tempor qui Lorem non non Lorem.
         Ex sint elit ea. Proident veniam dolor cupidatat amet aute consectetur.
         Non ad consectetur irure adipisicing aliquip. Ipsum nulla velit mollit
         magna aliqua eu veniam. Commodo elit labore veniam nulla dolor aliqua
         esse proident pariatur nostrud.
-      </>
+      </Text>
     ),
   },
   codePage: {
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/CODE_SNIP.mp4",
     content: () => (
-      <>
+      <Text>
         Nulla consequat occaecat ut ut ex culpa veniam sunt nisi nisi. Velit
         excepteur excepteur do anim incididunt in cillum ullamco occaecat minim
         reprehenderit eu enim. Nulla irure est fugiat aliqua elit excepteur
         labore ipsum occaecat eu minim duis non sit. Ea eu irure dolore duis
         labore ad. Quis sunt eu commodo sit nisi ullamco qui aliqua nostrud
         labore nostrud ut nostrud nostrud.
-      </>
+      </Text>
     ),
   },
   addSlice: {
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/PUSH.mp4",
     content: () => (
-      <>
+      <Text>
         Minim anim velit laboris cupidatat cupidatat culpa labore sunt eiusmod.
         Consequat culpa mollit enim dolore aliquip ex voluptate ex eiusmod
         incididunt eu. Cillum magna cillum magna consectetur. Id aliquip
         excepteur adipisicing officia excepteur et pariatur aliquip aliquip
         laborum.
-      </>
+      </Text>
     ),
   },
   pushModels: {
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/PREVIEW.mp4",
     content: () => (
-      <>
+      <Text>
         Ipsum aliqua do consequat eiusmod id. Reprehenderit consectetur sit
         officia consequat velit non officia aliquip laboris incididunt cillum
         proident incididunt. Ad quis laborum tempor dolor duis ea cillum aliqua
         occaecat. Sunt reprehenderit fugiat et ullamco proident pariatur
         deserunt minim. Irure enim nulla et ad ut id anim elit. Voluptate culpa
         esse qui et reprehenderit aute est.
-      </>
+      </Text>
     ),
   },
   writeContent: {
