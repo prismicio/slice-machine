@@ -14,7 +14,7 @@ import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 
 import {
   Field,
-  FieldVariants,
+  FieldVariant,
   groupField,
   nestableFields,
   UIDField,
@@ -22,7 +22,7 @@ import {
 
 interface AddFieldDropdownProps {
   disabled: boolean;
-  onSelectField: (fieldType: FieldType | FieldVariants) => void;
+  onSelectField: (fieldType: FieldType | FieldVariant) => void;
   fields: Field[];
   triggerDataTestId?: string;
 }
@@ -34,44 +34,6 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
     fields,
     triggerDataTestId = "add-field",
   } = props;
-
-  const renderDropdownItem = (field: Field) => {
-    const { description, icon, name, type, variant } = field;
-
-    return (
-      <DropdownMenuItem
-        key={`${type}${variant ? `-${variant}` : ""}`}
-        startIcon={<Icon name={icon} size="large" />}
-        description={description}
-        onSelect={() => onSelectField(variant ?? type)}
-        renderTooltip={(trigger) => (
-          <Tooltip
-            visible
-            variant="custom"
-            content={
-              <>
-                <Image
-                  src="https://i.ibb.co/7SdbTsR/Screenshot-2024-07-12-at-19-35-34.png"
-                  sx={{
-                    height: 170,
-                    width: 278,
-                    borderRadius: 4,
-                  }}
-                />
-                <Text color="white">How it will look for content editors.</Text>
-              </>
-            }
-            side="left"
-            sideOffset={4}
-          >
-            {trigger}
-          </Tooltip>
-        )}
-      >
-        {name}
-      </DropdownMenuItem>
-    );
-  };
 
   const singleFieldsToRender = fields.filter(
     (field) =>
@@ -92,15 +54,65 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" maxHeight={400} collisionPadding={8}>
         <DropdownMenuLabel>Single fields</DropdownMenuLabel>
-        {singleFieldsToRender.map((field) => renderDropdownItem(field))}
+        {singleFieldsToRender.map((field) => (
+          <AddFieldDropdownItem {...field} onSelectField={onSelectField} />
+        ))}
 
         {groupFieldToRender && (
           <>
-            <DropdownMenuLabel>Sets of fields</DropdownMenuLabel>
-            {renderDropdownItem(groupFieldToRender)}
+            <DropdownMenuLabel>Set of fields</DropdownMenuLabel>
+            {
+              <AddFieldDropdownItem
+                {...groupFieldToRender}
+                onSelectField={onSelectField}
+              />
+            }
           </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+type AddFieldDropdownItemProps = {
+  onSelectField: AddFieldDropdownProps["onSelectField"];
+} & Field;
+
+function AddFieldDropdownItem(props: AddFieldDropdownItemProps) {
+  const { name, description, icon, thumbnail, type, variant, onSelectField } =
+    props;
+
+  return (
+    <DropdownMenuItem
+      key={`${type}${variant ? `-${variant}` : ""}`}
+      startIcon={<Icon name={icon} size="large" />}
+      description={description}
+      onSelect={() => onSelectField(variant ?? type)}
+      renderTooltip={(trigger) => (
+        <Tooltip
+          visible
+          variant="custom"
+          content={
+            <>
+              <Image
+                src={thumbnail}
+                sx={{
+                  height: 170,
+                  width: 278,
+                  borderRadius: 4,
+                }}
+              />
+              <Text color="white">How it will look for content editors.</Text>
+            </>
+          }
+          side="left"
+          sideOffset={4}
+        >
+          {trigger}
+        </Tooltip>
+      )}
+    >
+      {name}
+    </DropdownMenuItem>
   );
 }

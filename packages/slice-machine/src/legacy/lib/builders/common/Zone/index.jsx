@@ -95,7 +95,7 @@ const Zone = ({
         })
       }
       triggerDataTestId={
-        isRepeatable === true ? "add-field-in-items" : undefined
+        Boolean(isRepeatable) ? "add-field-in-items" : undefined
       }
     />
   );
