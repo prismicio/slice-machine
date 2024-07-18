@@ -5,6 +5,7 @@ import {
   OnboardingProvider,
   useOnboardingContext,
 } from "@/features/onboarding/OnboardingProvider";
+import { useIsOnboardingEnabled } from "@/features/onboarding/useOnboardingExperiment";
 
 const OnboardingGuideContent = () => {
   const { steps, completedStepCount, isComplete } = useOnboardingContext();
@@ -31,8 +32,14 @@ const OnboardingGuideContent = () => {
   );
 };
 
-export const OnboardingGuide = () => (
-  <OnboardingProvider>
-    <OnboardingGuideContent />
-  </OnboardingProvider>
-);
+export const OnboardingGuide = () => {
+  const isEnabled = useIsOnboardingEnabled();
+
+  if (!isEnabled) return null;
+
+  return (
+    <OnboardingProvider>
+      <OnboardingGuideContent />
+    </OnboardingProvider>
+  );
+};
