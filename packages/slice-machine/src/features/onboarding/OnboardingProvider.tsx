@@ -12,8 +12,8 @@ type OnboardingContext = {
   steps: OnboardingStep[];
   completedStepCount: number;
   toggleStepComplete: (step: OnboardingStepType) => void;
-  getStepIndex: (stepOrId: OnboardingStep | OnboardingStepType) => number;
-  isStepComplete: (stepOrId: OnboardingStep | OnboardingStepType) => boolean;
+  getStepIndex: (stepId: OnboardingStepType) => number;
+  isStepComplete: (stepId: OnboardingStepType) => boolean;
   isComplete: boolean;
 };
 
@@ -35,23 +35,18 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
     getInitialState(),
-    { storeDefaultValue: true },
   );
 
   const toggleStepComplete = (step: OnboardingStepType) => {
     setStepStatus((current) => ({ ...current, [step]: !current[step] }));
   };
 
-  const getStepIndex = (stepOrId: OnboardingStep | OnboardingStepType) => {
-    return steps.findIndex(({ id }) => {
-      return id === (typeof stepOrId === "string" ? stepOrId : stepOrId.id);
-    });
+  const getStepIndex = (stepId: OnboardingStepType) => {
+    return steps.findIndex(({ id }) => id === stepId);
   };
 
-  const isStepComplete = (stepOrId: OnboardingStep | OnboardingStepType) => {
-    return (
-      stepStatus[typeof stepOrId === "string" ? stepOrId : stepOrId.id] ?? false
-    );
+  const isStepComplete = (stepId: OnboardingStepType) => {
+    return stepStatus[stepId] ?? false;
   };
 
   const completedStepCount = Object.values(stepStatus).filter(Boolean).length;

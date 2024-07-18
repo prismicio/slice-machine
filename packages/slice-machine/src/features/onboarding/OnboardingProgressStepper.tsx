@@ -46,7 +46,7 @@ export const OnboardingProgressStepper = () => {
         <DropdownMenuContent align="start">
           <DropdownMenuLabel>Progress</DropdownMenuLabel>
           {steps.map((step) => {
-            const isCompleted = isStepComplete(step);
+            const isCompleted = isStepComplete(step.id);
 
             return (
               <DropdownMenuItem

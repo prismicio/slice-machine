@@ -35,7 +35,7 @@ export const OnboardingStepDialog = ({
         <OnboardingStepDialogContent step={step} />
         <DialogActions
           ok={{
-            text: isStepComplete(step) ? "Undo step" : "Mark as done",
+            text: isStepComplete(step.id) ? "Undo step" : "Mark as done",
             onClick: markAsDone,
           }}
           cancel={{ text: "Close" }}
