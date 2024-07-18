@@ -17,6 +17,7 @@ import { ErrorBoundary } from "@/ErrorBoundary";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import { MasterSliceLibraryPreviewModal } from "@/features/masterSliceLibrary/SliceLibraryPreviewModal";
+import { OnboardingGuide } from "@/features/onboarding/OnboardingGuide";
 import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
 import { useMarketingContent } from "@/hooks/useMarketingContent";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
@@ -123,6 +124,7 @@ const Navigation: FC = () => {
       </ErrorBoundary>
 
       <SideNavList position="bottom">
+        <OnboardingGuide />
         {masterSliceLibrary !== undefined && (
           <SideNavListItem>
             <MasterSliceLibraryPreviewModal
