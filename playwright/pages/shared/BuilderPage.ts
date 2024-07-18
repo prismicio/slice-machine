@@ -1,11 +1,11 @@
 import { Locator, Page } from "@playwright/test";
 
-import { AddFieldDialog } from "../components/AddFieldDialog";
+import { AddFieldDropdown } from "../components/AddFieldDropdown";
 import { EditFieldDialog } from "../components/EditFieldDialog";
 import { SliceMachinePage } from "../SliceMachinePage";
 
 export class BuilderPage extends SliceMachinePage {
-  readonly addFieldDialog: AddFieldDialog;
+  readonly addFieldDropdown: AddFieldDropdown;
   readonly editFieldDialog: EditFieldDialog;
   readonly saveButton: Locator;
   readonly autoSaveStatusSaved: Locator;
@@ -26,7 +26,7 @@ export class BuilderPage extends SliceMachinePage {
     /**
      * Components
      */
-    this.addFieldDialog = new AddFieldDialog(page);
+    this.addFieldDropdown = new AddFieldDropdown(page);
     this.editFieldDialog = new EditFieldDialog(page);
 
     /**
@@ -46,7 +46,7 @@ export class BuilderPage extends SliceMachinePage {
     });
     // Static zone
     this.staticZoneContent = page.getByTestId("static-zone-content");
-    this.staticZoneAddFieldButton = page.getByTestId("add-Static-field");
+    this.staticZoneAddFieldButton = page.getByTestId("add-field");
     this.staticZoneListItem = this.staticZoneContent.getByRole("listitem");
     // Code snippets
     this.codeSnippetsFieldSwitch = page.getByTestId("code-snippets-switch");

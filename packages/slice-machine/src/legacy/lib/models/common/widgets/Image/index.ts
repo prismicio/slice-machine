@@ -1,5 +1,5 @@
 import { Image } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { BsImage } from "react-icons/bs";
+import { MdOutlineImage } from "react-icons/md";
 import * as yup from "yup";
 
 import { createValidationSchema } from "../../../../forms";
@@ -38,9 +38,7 @@ const schema = yup.object().shape({
 });
 
 const Meta = {
-  icon: BsImage,
-  title: "Image",
-  description: "A responsive image field with constraints",
+  icon: MdOutlineImage,
 };
 
 export const ImageWidget: Widget<Image, typeof schema> = {

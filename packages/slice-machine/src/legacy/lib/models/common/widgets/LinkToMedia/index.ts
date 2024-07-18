@@ -1,5 +1,5 @@
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdAttachment } from "react-icons/md";
+import { MdAttachFile } from "react-icons/md";
 import * as yup from "yup";
 
 import { linkConfigSchema } from "@/legacy/lib/models/common/widgets/Link";
@@ -8,9 +8,7 @@ import { Widget } from "../Widget";
 import Form, { FormFields } from "./Form";
 
 const Meta = {
-  icon: MdAttachment,
-  title: "Link to media",
-  description: "A link to files, document and media",
+  icon: MdAttachFile,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

@@ -11,21 +11,21 @@ import { createGroupWidget, type SchemaType } from "./createGroupWidget";
 import { CustomListItem } from "./ListItem";
 
 const widgetsArray = [
-  Widgets.NestedGroup,
-  Widgets.StructuredText,
   Widgets.Image,
+  Widgets.Text,
+  Widgets.StructuredText,
   Widgets.Link,
-  Widgets.LinkToMedia,
-  Widgets.ContentRelationship,
   Widgets.Select,
   Widgets.Boolean,
-  Widgets.Date,
-  Widgets.Timestamp,
-  Widgets.Embed,
   Widgets.Number,
-  Widgets.GeoPoint,
   Widgets.Color,
-  Widgets.Text,
+  Widgets.Date,
+  Widgets.Embed,
+  Widgets.Timestamp,
+  Widgets.GeoPoint,
+  Widgets.ContentRelationship,
+  Widgets.LinkToMedia,
+  Widgets.NestedGroup,
 ];
 
 export interface GroupListItemProps<F extends TabField> {

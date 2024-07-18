@@ -205,6 +205,7 @@ export const SharedSliceCards = (props: SharedSliceCardsProps) => {
     <>
       {slice.model.variations.map((v) => (
         <div
+          key={v.id}
           style={
             width !== undefined
               ? { ...defaultCardStyle, width }

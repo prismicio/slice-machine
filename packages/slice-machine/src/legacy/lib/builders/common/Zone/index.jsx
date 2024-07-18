@@ -1,13 +1,14 @@
-import { Button, Switch, Text } from "@prismicio/editor-ui";
+import { Switch, Text } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
 import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
+import { fields as allFields } from "@/domain/fields";
+import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
-import SelectFieldTypeModal from "../SelectFieldTypeModal";
 import Card from "./Card";
 import NewField from "./Card/components/NewField";
 import { ZoneEmptyState } from "./components/ZoneEmptyState";
@@ -32,7 +33,6 @@ const Zone = ({
   testId,
   isRepeatableCustomType,
   emptyStateHeading,
-  emptyStateActionTestId,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
@@ -50,7 +50,6 @@ const Zone = ({
 
   const [showHints, setShowHints] = useState(false);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
-  const [selectModalData, setSelectModalData] = useState({ isOpen: false });
   const [newFieldData, setNewFieldData] = useState(null);
 
   /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
@@ -68,22 +67,38 @@ const Zone = ({
       contentType: getContentTypeForTracking(window.location.pathname),
     });
   };
-  const enterSelectMode = () => {
-    setSelectModalData({ isOpen: true });
-  };
 
   const closeEditModal = () => {
     setEditModalData({ isOpen: false });
   };
-  const closeSelectModal = () => setSelectModalData({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
     setNewFieldData({ widgetTypeName, fields });
-    setSelectModalData({ isOpen: false });
   };
 
   const onCancelNewField = () => setNewFieldData(null);
+  const addFieldDropdown = (
+    <AddFieldDropdown
+      disabled={newFieldData !== null}
+      onSelectField={onSelectFieldType}
+      fields={
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        widgetsArrayWithCondUid.filter(Boolean).map((widget) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          const { TYPE_NAME, CUSTOM_NAME } = widget;
+          return allFields.find(
+            (f) =>
+              f.type === TYPE_NAME &&
+              (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
+          );
+        })
+      }
+      triggerDataTestId={
+        Boolean(isRepeatable) ? "add-field-in-items" : undefined
+      }
+    />
+  );
 
   return (
     <>
@@ -103,18 +118,7 @@ const Zone = ({
                 style={{ flexShrink: 0 }}
                 data-testid="code-snippets-switch"
               />
-              <Button
-                data-testid={`add-${
-                  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                  isRepeatable ? "Repeatable" : "Static"
-                }-field`}
-                onClick={enterSelectMode}
-                startIcon="add"
-                color="grey"
-                disabled={newFieldData !== null}
-              >
-                Add a field
-              </Button>
+              {addFieldDropdown}
             </>
           ) : undefined
         }
@@ -129,9 +133,8 @@ const Zone = ({
             zoneType={getResolvedZoneType(zoneType, zoneTypeFormat)}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             heading={emptyStateHeading}
-            onActionClick={() => enterSelectMode()}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            actionTestId={emptyStateActionTestId}
+            action={addFieldDropdown}
           />
         ) : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         fields.length > 0 || newFieldData ? (
@@ -153,7 +156,6 @@ const Zone = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
               renderHintBase={renderHintBase}
               enterEditMode={enterEditMode}
-              enterSelectMode={enterSelectMode}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               onDragEnd={onDragEnd}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -193,13 +195,6 @@ const Zone = ({
         fields={poolOfFieldsToCheck}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         zoneType={zoneType}
-      />
-      <SelectFieldTypeModal
-        data={selectModalData}
-        close={closeSelectModal}
-        onSelect={onSelectFieldType}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        widgetsArray={widgetsArrayWithCondUid}
       />
     </>
   );

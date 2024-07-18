@@ -13,7 +13,7 @@ import { DeleteSliceZoneDialog } from "../components/DeleteSliceZoneDialog";
 import { CustomTypesTablePage } from "../CustomTypesTablePage";
 import { PageTypesTablePage } from "../PageTypesTablePage";
 import { BuilderPage } from "./BuilderPage";
-import { FieldTypeLabel } from "../components/AddFieldDialog";
+import { FieldTypeLabel } from "../components/AddFieldDropdown";
 
 export class TypeBuilderPage extends BuilderPage {
   readonly createTypeDialog: CreateTypeDialog;
@@ -236,7 +236,7 @@ export class TypeBuilderPage extends BuilderPage {
     if (groupFieldId) {
       await this.getListItem(groupFieldId, grandparentGroupFieldId)
         .getByRole("button", {
-          name: "Add Field",
+          name: "Add a field",
           exact: true,
         })
         .click();
@@ -244,12 +244,11 @@ export class TypeBuilderPage extends BuilderPage {
       await this.staticZoneAddFieldButton.click();
     }
 
-    await expect(this.addFieldDialog.title).toBeVisible();
-    await this.addFieldDialog.selectField(type);
+    await expect(this.addFieldDropdown.menu).toBeVisible();
+    await this.addFieldDropdown.selectField(type);
     await this.newFieldNameInput.fill(name);
     await expect(this.newFieldIdInput).toHaveValue(expectedId);
     await this.newFieldAddButton.click();
-    await expect(this.addFieldDialog.title).not.toBeVisible();
   }
 
   async deleteField(fieldId: string, groupFieldId?: string) {

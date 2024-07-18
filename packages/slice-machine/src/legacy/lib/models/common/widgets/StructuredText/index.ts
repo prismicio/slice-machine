@@ -20,8 +20,6 @@ import { optionValues } from "./options";
 
 const Meta = {
   icon: MdTextFields,
-  title: "Rich Text",
-  description: "A rich text field with formatting options",
 };
 
 const ManualFields = {

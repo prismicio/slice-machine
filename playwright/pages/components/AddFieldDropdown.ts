@@ -1,7 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
 
-import { Dialog } from "./Dialog";
-
 export type FieldTypeLabel =
   | "Rich Text"
   | "Image"
@@ -14,21 +12,21 @@ export type FieldTypeLabel =
   | "Timestamp"
   | "Embed"
   | "Number"
-  | "GeoPoint"
+  | "Geopoint"
   | "Color"
   | "Key Text"
-  | "Group";
+  | "Repeatable Group";
 
-export class AddFieldDialog extends Dialog {
+export class AddFieldDropdown {
+  readonly page: Page;
+  readonly menu: Locator;
+
   constructor(page: Page) {
-    super(page, {
-      title: "Add a new field",
-    });
-
     /**
      * Components
      */
-    // Handle components here
+    this.page = page;
+    this.menu = page.getByRole("menu");
 
     /**
      * Static locators
@@ -40,8 +38,7 @@ export class AddFieldDialog extends Dialog {
    * Dynamic locators
    */
   getField(fieldType: FieldTypeLabel): Locator {
-    return this.dialog.getByRole("heading", {
-      name: fieldType,
+    return this.menu.getByRole("menuitem").getByText(fieldType, {
       exact: true,
     });
   }
@@ -51,7 +48,7 @@ export class AddFieldDialog extends Dialog {
    */
   async selectField(fieldType: FieldTypeLabel) {
     await this.getField(fieldType).click();
-    await expect(this.title).not.toBeVisible();
+    await expect(this.menu).not.toBeVisible();
   }
 
   /**

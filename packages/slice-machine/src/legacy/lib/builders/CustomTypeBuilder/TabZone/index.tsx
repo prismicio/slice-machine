@@ -45,21 +45,22 @@ import SliceZone from "../SliceZone";
 
 const widgetsArray = [
   Widgets.UID,
-  Widgets.Group,
-  Widgets.StructuredText,
   Widgets.Image,
+  Widgets.Text,
+  Widgets.StructuredText,
   Widgets.Link,
-  Widgets.LinkToMedia,
-  Widgets.ContentRelationship,
   Widgets.Select,
   Widgets.Boolean,
-  Widgets.Date,
-  Widgets.Timestamp,
-  Widgets.Embed,
   Widgets.Number,
-  Widgets.GeoPoint,
   Widgets.Color,
-  Widgets.Text,
+  Widgets.Date,
+  Widgets.Embed,
+  Widgets.Timestamp,
+  Widgets.GeoPoint,
+  Widgets.ContentRelationship,
+  Widgets.LinkToMedia,
+  Widgets.Group,
+  Widgets.NestedGroup,
 ];
 
 interface TabZoneProps {
@@ -260,7 +261,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
               }
               testId="static-zone-content"
               isRepeatableCustomType={customType.repeatable}
-              emptyStateActionTestId="add-Static-field"
             />
           ) : undefined}
 

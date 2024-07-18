@@ -1,5 +1,5 @@
 import { Color } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdColorLens } from "react-icons/md";
+import { MdOutlineColorLens } from "react-icons/md";
 
 import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
@@ -12,9 +12,7 @@ import { Widget } from "../Widget";
 } */
 
 const Meta = {
-  icon: MdColorLens,
-  title: "Color",
-  description: "A color picker",
+  icon: MdOutlineColorLens,
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

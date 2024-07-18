@@ -60,7 +60,7 @@ test("I can add a group field in the static zone", async ({
   await expect(sliceBuilderPage.staticZoneListItem).toHaveCount(0);
 
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
@@ -75,7 +75,7 @@ test("I can add a sub field within a group field", async ({
 }) => {
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
@@ -107,7 +107,7 @@ test("I can edit a sub field within a group field", async ({
 }) => {
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
@@ -152,7 +152,7 @@ test("I can delete a sub field within a group field", async ({
 }) => {
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
@@ -186,13 +186,13 @@ test("I can add a nested group with a sub field inside a group field", async ({
 
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
   });
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     zoneType: "static",
@@ -254,13 +254,13 @@ test("I can edit a nested group and its sub field inside a group field", async (
 
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
   });
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     zoneType: "static",
@@ -345,13 +345,13 @@ test("I can delete a nested group and its sub field inside a group field", async
 
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
   });
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     zoneType: "static",
@@ -515,7 +515,7 @@ test("I can see and copy the code snippets for groups", async ({
 }) => {
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
@@ -541,13 +541,13 @@ test("I can see and copy the code snippets for nested groups and their sub field
 
   await sliceBuilderPage.goto(slice.name);
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Group",
     expectedId: "my_group",
     zoneType: "static",
   });
   await sliceBuilderPage.addField({
-    type: "Group",
+    type: "Repeatable Group",
     name: "My Nested Group",
     expectedId: "my_nested_group",
     zoneType: "static",

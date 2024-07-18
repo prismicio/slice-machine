@@ -25,8 +25,6 @@ import Form, { FormFields } from "./Form";
 
 const Meta = {
   icon: MdSettingsEthernet,
-  title: "Content Relationship",
-  description: "Define content relations & internal links",
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call

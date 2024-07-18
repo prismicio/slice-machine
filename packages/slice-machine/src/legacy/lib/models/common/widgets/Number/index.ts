@@ -1,5 +1,5 @@
 import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { AiOutlineFieldNumber } from "react-icons/ai";
+import { MdOutlinePin } from "react-icons/md";
 
 import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
@@ -16,9 +16,7 @@ import { Widget } from "../Widget";
 const { FormFields, schema } = createDefaultWidgetValues("Number");
 
 const Meta = {
-  icon: AiOutlineFieldNumber,
-  title: "Number",
-  description: "A number input field",
+  icon: MdOutlinePin,
 };
 
 export const NumberWidget: Widget<PrismicNumber, typeof schema> = {

@@ -1,5 +1,5 @@
 import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { MdVpnKey } from "react-icons/md";
+import { MdTag } from "react-icons/md";
 import * as yup from "yup";
 
 import { createValidationSchema } from "../../../../forms";
@@ -35,9 +35,7 @@ const schema = yup.object().shape({
 });
 
 const Meta = {
-  icon: MdVpnKey,
-  title: "UID",
-  description: "Unique Identifier",
+  icon: MdTag,
 };
 
 export const UIDWidget: Widget<UID, typeof schema> = {

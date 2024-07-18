@@ -5,7 +5,7 @@ import { RenameVariationDialog } from "./components/RenameVariationDialog";
 import { DeleteVariationDialog } from "./components/DeleteVariationDialog";
 import { BuilderPage } from "./shared/BuilderPage";
 import { SlicesListPage } from "./SlicesListPage";
-import { FieldTypeLabel } from "./components/AddFieldDialog";
+import { FieldTypeLabel } from "./components/AddFieldDropdown";
 import { UpdateScreenshotDialog } from "./components/UpdateScreenshotDialog";
 import { DeleteRepeatableZoneDialog } from "./components/DeleteRepeatableZoneDialog";
 
@@ -26,7 +26,6 @@ export class SliceBuilderPage extends BuilderPage {
   readonly noScreenshotMessage: Locator;
   readonly repeatableZone: Locator;
   readonly repeatableZoneAddFieldButton: Locator;
-  readonly repeatableZonePlaceholder: Locator;
   readonly repeatableZoneListItem: Locator;
 
   constructor(page: Page) {
@@ -62,13 +61,7 @@ export class SliceBuilderPage extends BuilderPage {
     });
     // Repeatable zone
     this.repeatableZone = page.getByTestId("slice-repeatable-zone");
-    this.repeatableZoneAddFieldButton = page.getByTestId(
-      "add-Repeatable-field",
-    );
-    this.repeatableZonePlaceholder = page.getByText(
-      "Add a field to your Repeatable Zone",
-      { exact: true },
-    );
+    this.repeatableZoneAddFieldButton = page.getByTestId("add-field-in-items");
     this.repeatableZoneListItem = this.repeatableZone.getByRole("listitem");
   }
 
@@ -211,11 +204,11 @@ export class SliceBuilderPage extends BuilderPage {
     if (zoneType === "static") {
       if (groupFieldId && grandparentGroupFieldId) {
         await this.getListItem(groupFieldId, zoneType, grandparentGroupFieldId)
-          .getByRole("button", { name: "Add Field", exact: true })
+          .getByRole("button", { name: "Add a field", exact: true })
           .click();
       } else if (groupFieldId) {
         await this.getListItem(groupFieldId, zoneType)
-          .getByRole("button", { name: "Add Field", exact: true })
+          .getByRole("button", { name: "Add a field", exact: true })
           .click();
       } else {
         await this.staticZoneAddFieldButton.click();
@@ -224,12 +217,11 @@ export class SliceBuilderPage extends BuilderPage {
       await this.repeatableZoneAddFieldButton.click();
     }
 
-    await expect(this.addFieldDialog.title).toBeVisible();
-    await this.addFieldDialog.selectField(type);
+    await expect(this.addFieldDropdown.menu).toBeVisible();
+    await this.addFieldDropdown.selectField(type);
     await this.newFieldNameInput.fill(name);
     await expect(this.newFieldIdInput).toHaveValue(expectedId);
     await this.newFieldAddButton.click();
-    await expect(this.addFieldDialog.title).not.toBeVisible();
   }
 
   async deleteField<TZoneType extends ZoneType>(

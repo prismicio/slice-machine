@@ -1,5 +1,5 @@
 import { Timestamp } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
-import { MdDateRange } from "react-icons/md";
+import { MdSchedule } from "react-icons/md";
 import * as yup from "yup";
 
 import { createValidationSchema } from "../../../../forms";
@@ -27,9 +27,7 @@ const schema = yup.object().shape({
 });
 
 const Meta = {
-  icon: MdDateRange,
-  title: "Timestamp",
-  description: "A calendar date picker with time",
+  icon: MdSchedule,
 };
 
 export const TimestampWidget: Widget<Timestamp, typeof schema> = {
