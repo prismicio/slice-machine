@@ -55,7 +55,7 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
       <DropdownMenuContent align="end" maxHeight={400} collisionPadding={8}>
         <DropdownMenuLabel>Single fields</DropdownMenuLabel>
         {singleFieldsToRender.map((field) => (
-          <AddFieldDropdownItem {...field} onSelectField={onSelectField} />
+          <AddFieldDropdownItem field={field} onSelectField={onSelectField} />
         ))}
 
         {groupFieldToRender && (
@@ -63,7 +63,7 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
             <DropdownMenuLabel>Set of fields</DropdownMenuLabel>
             {
               <AddFieldDropdownItem
-                {...groupFieldToRender}
+                field={groupFieldToRender}
                 onSelectField={onSelectField}
               />
             }
@@ -74,13 +74,14 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
   );
 }
 
-type AddFieldDropdownItemProps = {
+interface AddFieldDropdownItemProps {
   onSelectField: AddFieldDropdownProps["onSelectField"];
-} & Field;
+  field: Field;
+}
 
 function AddFieldDropdownItem(props: AddFieldDropdownItemProps) {
-  const { name, description, icon, thumbnail, type, variant, onSelectField } =
-    props;
+  const { field, onSelectField } = props;
+  const { type, variant, name, icon, description, thumbnail } = field;
 
   return (
     <DropdownMenuItem
