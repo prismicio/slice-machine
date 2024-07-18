@@ -1,9 +1,18 @@
-export type OnboardingStepType =
-  | "createPage"
-  | "codePage"
-  | "addSlice"
-  | "writeContent"
-  | "pushModels";
+import { z } from "zod";
+
+export const onboardingStepStatusesSchema = z.object({
+  createPage: z.boolean(),
+  codePage: z.boolean(),
+  addSlice: z.boolean(),
+  writeContent: z.boolean(),
+  pushModels: z.boolean(),
+});
+
+export type OnboardingStepStatuses = z.infer<
+  typeof onboardingStepStatusesSchema
+>;
+
+export type OnboardingStepType = keyof OnboardingStepStatuses;
 
 export type OnboardingStep = {
   id: OnboardingStepType;
@@ -21,5 +30,3 @@ export type OnboardingStepContent = Record<
   OnboardingStepType,
   OnboardingStepContentDefinition
 >;
-
-export type OnboardingStepStatuses = Record<OnboardingStepType, boolean>;
