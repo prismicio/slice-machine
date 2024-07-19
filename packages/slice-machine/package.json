@@ -28,7 +28,8 @@
     "lint:precommit": "eslint --max-warnings 0",
     "stylelint:precommit": "stylelint --max-warnings 0",
     "depcheck": "depcheck --config=.depcheckrc",
-    "audit": "yarn npm audit --environment production --severity high"
+    "audit": "yarn npm audit --environment production --severity high",
+    "tsc-watch": "yarn tsc --watch"
   },
   "bin": {
     "start-slicemachine": "./bin/start-slicemachine.cjs"
@@ -67,8 +68,8 @@
     "@types/react-modal": "3.13.1",
     "@types/react-select": "4.0.18",
     "@types/react-syntax-highlighter": "15.5.7",
-    "@typescript-eslint/eslint-plugin": "5.55.0",
-    "@typescript-eslint/parser": "5.55.0",
+    "@typescript-eslint/eslint-plugin": "6.21.0",
+    "@typescript-eslint/parser": "6.21.0",
     "@vitejs/plugin-react": "3.1.0",
     "@vitest/coverage-v8": "0.32.0",
     "cloudinary-react": "1.8.1",
@@ -131,7 +132,7 @@
     "theme-ui": "0.15.5",
     "typed-css-modules": "0.8.1",
     "typesafe-actions": "5.1.0",
-    "typescript": "4.9.5",
+    "typescript": "5.3.3",
     "vite": "4.3.9",
     "vitest": "0.32.0",
     "yup": "0.32.11",
