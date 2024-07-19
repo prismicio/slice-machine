@@ -1,4 +1,4 @@
-import { PushChangesLimit } from "@slicemachine/manager";
+import { PushChangesLimit, PushChangesLimitType } from "@slicemachine/manager";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Checkbox, Flex, Label, Text, ThemeUIStyleObject } from "theme-ui";
@@ -52,7 +52,7 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
     }),
   );
 
-  if (modalData?.type !== "SOFT") return null;
+  if (modalData?.type !== PushChangesLimitType.SOFT) return null;
 
   const associatedDocumentsCards = modalData.details.customTypes.map(
     (customTypeDetail) => {
@@ -75,7 +75,7 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
 
   return (
     <SliceMachineDrawerUI
-      isOpen={modalData.type === "SOFT"}
+      isOpen={modalData.type === PushChangesLimitType.SOFT}
       title="Confirm deletion"
       onClose={onClose}
       footer={

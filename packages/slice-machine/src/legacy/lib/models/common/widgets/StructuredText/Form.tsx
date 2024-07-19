@@ -122,7 +122,9 @@ const WidgetForm: React.FC<{
   const initialOptions = single
     ? _createInitialOptions(single)
     : // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      (multi && _createInitialOptions(multi)) || optionValues;
+    multi
+    ? _createInitialOptions(multi)
+    : optionValues;
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const [isMulti, setIsMulti] = useState(single ? false : true);

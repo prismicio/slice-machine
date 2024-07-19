@@ -25,7 +25,7 @@
     "typed-css-modules:watch": "yarn typed-css-modules --watch",
     "unit": "vitest run --coverage",
     "unit:watch": "vitest watch",
-    "lint:precommit": "eslint --max-warnings 0",
+    "lint:precommit": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx .",
     "stylelint:precommit": "stylelint --max-warnings 0",
     "depcheck": "depcheck --config=.depcheckrc",
     "audit": "yarn npm audit --environment production --severity high"

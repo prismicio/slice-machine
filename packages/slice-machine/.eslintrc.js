@@ -28,7 +28,12 @@ module.exports = {
         caughtErrorsIgnorePattern: "^_",
       },
     ],
-    "@typescript-eslint/prefer-nullish-coalescing": "warn",
+    "@typescript-eslint/prefer-nullish-coalescing": [
+      "warn",
+      {
+        ignorePrimitives: true,
+      },
+    ],
     "@typescript-eslint/strict-boolean-expressions": "warn",
     "simple-import-sort/exports": "warn",
     "simple-import-sort/imports": "warn",
