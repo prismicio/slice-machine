@@ -2,6 +2,7 @@ import {
   useOnChange,
   useStableCallback,
 } from "@prismicio/editor-support/React";
+import { PushChangesLimitType } from "@slicemachine/manager";
 import {
   Environment,
   isUnauthenticatedError,
@@ -110,7 +111,7 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
 
           // Hard limit reached is the only limit that can be reached as we set
           // confirmDeleteDocuments to true.
-          if (response && response.type === "HARD") {
+          if (response && response.type === PushChangesLimitType.HARD) {
             console.error(
               `Manual action required. ${
                 response.details.customTypes.length > 1
