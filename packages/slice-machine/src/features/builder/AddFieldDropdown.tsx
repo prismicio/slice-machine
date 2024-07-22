@@ -102,12 +102,15 @@ function AddFieldDropdownItem(props: AddFieldDropdownItemProps) {
                   width: 278,
                   borderRadius: 4,
                 }}
+                animateOnLoad={false}
               />
               <Text color="white">How it will look for content editors.</Text>
             </>
           }
+          align="start"
           side="left"
           sideOffset={4}
+          animation="none"
         >
           {trigger}
         </Tooltip>

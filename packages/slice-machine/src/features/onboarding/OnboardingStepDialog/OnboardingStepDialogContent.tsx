@@ -18,7 +18,7 @@ export const OnboardingStepDialogContent = ({
   const {
     content: Content,
     videoUrl,
-    title,
+    title = step.title,
   } = getOnboardingStepsContent({ repositoryUrl })[step.id];
 
   return (

@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const onboardingStepStatusesSchema = z.object({
-  createPage: z.boolean(),
-  codePage: z.boolean(),
   addSlice: z.boolean(),
-  writeContent: z.boolean(),
+  codePage: z.boolean(),
   pushModels: z.boolean(),
+  createContent: z.boolean(),
+  renderPage: z.boolean(),
 });
 
 export type OnboardingStepStatuses = z.infer<
