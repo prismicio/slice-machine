@@ -1,4 +1,4 @@
-import { PushChangesLimit, PushChangesLimitType } from "@slicemachine/manager";
+import { PushChangesLimit } from "@slicemachine/manager";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Text } from "theme-ui";
@@ -22,7 +22,8 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
     }),
   );
 
-  if (modalData?.type !== PushChangesLimitType.HARD) return null;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+  if (modalData?.type !== "HARD") return null;
 
   const associatedDocumentsCards = modalData.details.customTypes.map(
     (customTypeDetail) => {
@@ -45,7 +46,8 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
 
   return (
     <SliceMachineDrawerUI
-      isOpen={modalData.type === PushChangesLimitType.HARD}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
+      isOpen={modalData.type === "HARD"}
       title="Manual action required"
       onClose={onClose}
       footer={

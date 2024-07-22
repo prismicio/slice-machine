@@ -19,7 +19,6 @@ export type {
 	Environment,
 	PushChangesLimit,
 } from "./managers/prismicRepository/types";
-export { PushChangesLimitType } from "./managers/prismicRepository/types";
 
 export type {
 	PrismicAuthManager,
