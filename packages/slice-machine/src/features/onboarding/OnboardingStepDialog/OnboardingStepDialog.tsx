@@ -29,7 +29,7 @@ export const OnboardingStepDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose} size="small">
       <DialogHeader title="Learn" />
       <DialogContent>
         <OnboardingStepDialogContent step={step} />
@@ -39,6 +39,7 @@ export const OnboardingStepDialog = ({
             onClick: markAsDone,
           }}
           cancel={{ text: "Close" }}
+          size="medium"
         />
       </DialogContent>
     </Dialog>
