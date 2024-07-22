@@ -9,7 +9,7 @@ type MockManagerProcedure = {
 type MockManagerProcedureHandler = (args: {
   data?: unknown;
   args: unknown[];
-}) => unknown | Promise<unknown>;
+}) => unknown;
 
 type MockManagerProcedureConfig = {
   /**
