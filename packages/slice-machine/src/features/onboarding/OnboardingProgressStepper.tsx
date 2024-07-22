@@ -58,7 +58,7 @@ export const OnboardingProgressStepper = () => {
                     name={isCompleted ? "checkBox" : "checkBoxOutlinedBlank"}
                   />
                 }
-                description={step.title}
+                description={step.description}
               >
                 {step.title}
               </DropdownMenuItem>
