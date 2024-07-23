@@ -5234,9 +5234,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.33":
-  version: 0.4.33
-  resolution: "@prismicio/editor-ui@npm:0.4.33"
+"@prismicio/editor-ui@npm:0.4.34-alpha-dialog-animation-callback.1":
+  version: 0.4.34-alpha-dialog-animation-callback.1
+  resolution: "@prismicio/editor-ui@npm:0.4.34-alpha-dialog-animation-callback.1"
   dependencies:
     "@internationalized/date": 3.5.0
     "@prismicio/editor-support": 0.4.33
@@ -5289,7 +5289,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 5eec58dc1cd850d7d27ca0eae982819c09a7d7db8982add9c8a8a900bedd19b946231239cfef5ed00034ecb84dbc1772590c4c316365657586ea7020b5542928
+  checksum: 216c44a7c1c4e6334af06565e8081c9af5c8f8be8834cb5f03967e7c65edac8f683aa443503d6e28039d6b243fed22196f6081af65a7e6af5798142f49105902
   languageName: node
   linkType: hard
 
@@ -30447,7 +30447,7 @@ __metadata:
     "@prismicio/client": 7.6.0
     "@prismicio/editor-fields": 0.4.33
     "@prismicio/editor-support": 0.4.33
-    "@prismicio/editor-ui": 0.4.33
+    "@prismicio/editor-ui": 0.4.34-alpha-dialog-animation-callback.1
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.0
     "@prismicio/simulator": 0.1.4
