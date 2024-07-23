@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext } from "react";
 
+import { telemetry } from "@/apiClient";
 import { onboardingSteps as steps } from "@/features/onboarding/content";
 import {
   type OnboardingStep,
@@ -40,7 +41,16 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const toggleStepComplete = (step: OnboardingStepType) => {
-    setStepStatus((current) => ({ ...current, [step]: !current[step] }));
+    const isComplete = !stepStatus[step];
+    const nextState = { ...stepStatus, [step]: isComplete };
+    setStepStatus(nextState);
+
+    if (isComplete) {
+      void telemetry.track({ event: "onboarding:step-completed", step });
+    }
+    if (Object.values(nextState).every(Boolean)) {
+      void telemetry.track({ event: "onboarding:completed" });
+    }
   };
 
   const getStepIndex = (stepId: OnboardingStepType) => {
