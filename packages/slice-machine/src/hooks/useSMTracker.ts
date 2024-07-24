@@ -54,9 +54,7 @@ function group(
     manualLibsCount: libs.filter((l) => l.meta.isManual).length,
     downloadedLibsCount: downloadedLibs.length,
     npmLibsCount: libs.filter((l) => l.meta.isNodeModule).length,
-    downloadedLibs: downloadedLibs.map((l) =>
-      l.meta.name != null ? l.meta.name : "Unknown",
-    ),
+    downloadedLibs: downloadedLibs.map((l) => l.meta.name ?? "Unknown"),
   });
 }
 

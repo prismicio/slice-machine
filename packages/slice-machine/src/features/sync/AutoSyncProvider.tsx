@@ -110,6 +110,7 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
 
           // Hard limit reached is the only limit that can be reached as we set
           // confirmDeleteDocuments to true.
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
           if (response && response.type === "HARD") {
             console.error(
               `Manual action required. ${

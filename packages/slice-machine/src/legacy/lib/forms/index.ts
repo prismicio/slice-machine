@@ -64,49 +64,54 @@ export const createValidationSchema = (FormFields: {
   [fieldKey: string]: any;
 }): Yup.AnyObjectSchema => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  return Yup.object()
-    .shape(
-      Object.entries(FormFields)
-        .filter((e) => e)
-        .reduce((acc, [key, formField]) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const { validate, yupType } = formField;
-          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-          if (!validate) {
-            return acc;
-          }
-          if (typeof validate === "function") {
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    Yup.object()
+      .shape(
+        Object.entries(FormFields)
+          .filter((e) => e)
+          .reduce((acc, [key, formField]) => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            const { validate, yupType } = formField;
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (!validate) {
+              return acc;
+            }
+            if (typeof validate === "function") {
+              return {
+                ...acc,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+                [key]: validate(key, formField),
+              };
+            }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+            let validator = (Yup as any)[yupType]();
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            Object.entries(validate)
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+              .filter((e) => e && e[1])
+              .forEach(([func, args]) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
+                if (args && validator[func]) {
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                  validator = validator[func](
+                    ...(Array.isArray(args) ? args : [args]),
+                  );
+                  return;
+                }
+                console.warn(`Invalid Yup validator for field "${key}"`);
+              });
             return {
               ...acc,
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-              [key]: validate(key, formField),
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              [key]: validator,
             };
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-          let validator = (Yup as any)[yupType]();
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          Object.entries(validate)
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            .filter((e) => e && e[1])
-            .forEach(([func, args]) => {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-              if (args && validator[func]) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                validator = validator[func](
-                  ...(Array.isArray(args) ? args : [args]),
-                );
-                return;
-              }
-              console.warn(`Invalid Yup validator for field "${key}"`);
-            });
-          return {
-            ...acc,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            [key]: validator,
-          };
-        }, {}),
-    )
-    .required()
-    .default(undefined)
-    .noUnknown(true);
+          }, {}),
+      )
+      .required()
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      .default(undefined)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      .noUnknown(true)
+  );
 };

@@ -22,6 +22,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
     }),
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   if (modalData?.type !== "HARD") return null;
 
   const associatedDocumentsCards = modalData.details.customTypes.map(
@@ -45,6 +46,7 @@ export const HardDeleteDocumentsDrawer: React.FunctionComponent<{
 
   return (
     <SliceMachineDrawerUI
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
       isOpen={modalData.type === "HARD"}
       title="Manual action required"
       onClose={onClose}

@@ -28,7 +28,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 
   const dropDownChangeHandler = (selected: string) => {
     setSelectedDropdown(selected);
-    if (selected === ScreenSizeOptions.CUSTOM) {
+    if (selected === ScreenSizeOptions.CUSTOM.toString()) {
       return;
     }
     const dimensions = ScreenSizes[selected];

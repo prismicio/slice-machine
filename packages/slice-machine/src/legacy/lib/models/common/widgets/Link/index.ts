@@ -72,7 +72,9 @@ export const linkConfigSchema = yup
     allowTargetBlank: yup.boolean().strict().optional(),
   })
   .required()
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   .default(undefined)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   .noUnknown(true);
 
 const schema = yup.object().shape({

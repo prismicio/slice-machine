@@ -52,6 +52,7 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
     }),
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
   if (modalData?.type !== "SOFT") return null;
 
   const associatedDocumentsCards = modalData.details.customTypes.map(
@@ -75,6 +76,7 @@ export const SoftDeleteDocumentsDrawer: React.FunctionComponent<{
 
   return (
     <SliceMachineDrawerUI
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
       isOpen={modalData.type === "SOFT"}
       title="Confirm deletion"
       onClose={onClose}

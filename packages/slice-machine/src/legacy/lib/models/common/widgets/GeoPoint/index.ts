@@ -31,7 +31,9 @@ const schema = yup.object().shape({
       label: yup.string(),
     })
     .required()
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     .default(undefined)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     .noUnknown(true),
 });
 
