@@ -49,7 +49,6 @@ export const OnboardingProgressStepper = () => {
         <DropdownMenuContent align="center" sideOffset={-56} minWidth={256}>
           <div
             onMouseLeave={() => {
-              if (!isListOpen) return;
               setListOpen(false);
             }}
           >
