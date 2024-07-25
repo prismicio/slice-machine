@@ -45,7 +45,7 @@ export const OnboardingStepDialog = ({
       onAnimationStart={execIfOpen(updateCtaOkText)}
       size="small"
     >
-      <DialogHeader title="Learn" />
+      <DialogHeader title="Onboarding" />
       <DialogContent>
         <OnboardingStepDialogContent step={step} />
         <DialogActions

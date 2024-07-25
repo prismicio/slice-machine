@@ -1,9 +1,8 @@
 import { Box, ScrollArea, Text, Video } from "@prismicio/editor-ui";
 
-import { getOnboardingStepsContent } from "@/features/onboarding/content";
+import { onboardingStepContent } from "@/features/onboarding/content";
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStep } from "@/features/onboarding/types";
-import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 
 type OnboardingStepDialogContentProps = {
   step: OnboardingStep;
@@ -13,13 +12,12 @@ export const OnboardingStepDialogContent = ({
   step,
 }: OnboardingStepDialogContentProps) => {
   const { getStepIndex } = useOnboardingContext();
-  const { repositoryUrl } = useRepositoryInformation();
 
   const {
     content: Content,
     videoUrl,
     title = step.title,
-  } = getOnboardingStepsContent({ repositoryUrl })[step.id];
+  } = onboardingStepContent[step.id];
 
   return (
     <ScrollArea>
