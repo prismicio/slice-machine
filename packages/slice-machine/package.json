@@ -37,6 +37,7 @@
   "dependencies": {
     "@radix-ui/react-visually-hidden": "1.0.3",
     "@slicemachine/manager": "workspace:*",
+    "eslint-config-next": "14.2.5",
     "start-slicemachine": "workspace:*"
   },
   "devDependencies": {
@@ -98,7 +99,7 @@
     "monocle-ts": "2.3.13",
     "msw": "1.1.0",
     "newtype-ts": "0.3.5",
-    "next": "12.3.4",
+    "next": "14.2.5",
     "next-router-mock": "0.8.0",
     "node-fetch": "3.3.1",
     "parse-multipart-data": "1.5.0",
