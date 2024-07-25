@@ -39,9 +39,6 @@ export const onboardingSteps: OnboardingStep[] = [
   },
 ];
 
-// TODO: Type check with satisfies once we upgrade to next > 12 to have at least the same number of steps
-export const indexLabel = ["one", "two", "three", "four", "five", "six"];
-
 export const onboardingStepContent: Record<
   OnboardingStepType,
   OnboardingStepContentDefinition
