@@ -46,7 +46,7 @@ export const OnboardingProgressStepper = () => {
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
           >
-            {completedStepCount > 0 ? "Continue" : "Start"}
+            {completedStepCount > 0 ? "Continue" : "Start now"}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

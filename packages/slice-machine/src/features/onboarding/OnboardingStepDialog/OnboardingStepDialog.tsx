@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
 } from "@prismicio/editor-ui";
+import { useState } from "react";
 
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStepDialogContent } from "@/features/onboarding/OnboardingStepDialog/OnboardingStepDialogContent";
@@ -21,6 +22,11 @@ export const OnboardingStepDialog = ({
   onClose,
 }: OnboardingStepDialogProps) => {
   const { toggleStepComplete, isStepComplete } = useOnboardingContext();
+  const [ctaOkText, setCtaOkText] = useState(getCtaOkText);
+
+  function getCtaOkText() {
+    return isStepComplete(step.id) ? "Undo step" : "Mark as done";
+  }
 
   const markAsDone = () => {
     if (!isOpen) return;
@@ -28,17 +34,26 @@ export const OnboardingStepDialog = ({
     onClose();
   };
 
+  const updateCtaOkText = () => {
+    if (!isOpen) return;
+    setCtaOkText(getCtaOkText());
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogHeader title="Learn" />
+    <Dialog
+      open={isOpen}
+      onOpenChange={onClose}
+      onAnimationEnd={updateCtaOkText}
+      onAnimationStart={updateCtaOkText}
+      size="small"
+    >
+      <DialogHeader title="Onboarding" />
       <DialogContent>
         <OnboardingStepDialogContent step={step} />
         <DialogActions
-          ok={{
-            text: isStepComplete(step) ? "Undo step" : "Mark as done",
-            onClick: markAsDone,
-          }}
+          ok={{ text: ctaOkText, onClick: markAsDone }}
           cancel={{ text: "Close" }}
+          size="medium"
         />
       </DialogContent>
     </Dialog>
