@@ -6,7 +6,7 @@ import type {
   OnboardingStepType,
 } from "@/features/onboarding/types";
 
-export const onboardingSteps = [
+export const onboardingSteps: OnboardingStep[] = [
   {
     id: "createPageType",
     title: "Create a Page Type",
@@ -37,20 +37,17 @@ export const onboardingSteps = [
     title: "Render your page",
     description: "View your page in the browser.",
   },
-] as const satisfies OnboardingStep[];
+];
 
-type OnboardingStepIndexNumeralMap = {
-  [K in Exclude<keyof typeof onboardingSteps, keyof unknown[]>]: string;
-};
-
-export const stepIndexNumeral: Record<number, string> = {
-  0: "one",
-  1: "two",
-  2: "three",
-  3: "four",
-  4: "five",
-  5: "six",
-} satisfies OnboardingStepIndexNumeralMap;
+// TODO: Type check with satisfies once we upgrade to next > 12 to have at least the same number of steps
+export const stepIndexNumeral = [
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+];
 
 export const onboardingStepContent: Record<
   OnboardingStepType,
