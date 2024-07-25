@@ -37,7 +37,6 @@
   "dependencies": {
     "@radix-ui/react-visually-hidden": "1.0.3",
     "@slicemachine/manager": "workspace:*",
-    "eslint-config-next": "14.2.5",
     "start-slicemachine": "workspace:*"
   },
   "devDependencies": {
