@@ -25,10 +25,10 @@ export const OnboardingProgressStepper = () => {
   const showStep = (step: OnboardingStep) => {
     setActiveStep(step);
     setDialogOpen(true);
-
     void telemetry.track({
-      event: "cta-clicked",
-      name: "Onboarding Guide Cta",
+      event: "onboarding:step-opened",
+      stepId: step.id,
+      stepTitle: step.title,
     });
   };
 
@@ -52,7 +52,7 @@ export const OnboardingProgressStepper = () => {
         <DropdownMenuContent align="start">
           <DropdownMenuLabel>Progress</DropdownMenuLabel>
           {steps.map((step) => {
-            const isCompleted = isStepComplete(step.id);
+            const isCompleted = isStepComplete(step);
 
             return (
               <DropdownMenuItem

@@ -6,16 +6,15 @@ import {
   type OnboardingStep,
   type OnboardingStepStatuses,
   onboardingStepStatusesSchema,
-  type OnboardingStepType,
 } from "@/features/onboarding/types";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
 type OnboardingContext = {
   steps: OnboardingStep[];
   completedStepCount: number;
-  toggleStepComplete: (step: OnboardingStepType) => void;
-  getStepIndex: (stepId: OnboardingStepType) => number;
-  isStepComplete: (stepId: OnboardingStepType) => boolean;
+  toggleStepComplete: (step: OnboardingStep) => void;
+  getStepIndex: (step: OnboardingStep) => number;
+  isStepComplete: (step: OnboardingStep) => boolean;
   isComplete: boolean;
 };
 
@@ -40,25 +39,29 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     { schema: onboardingStepStatusesSchema },
   );
 
-  const toggleStepComplete = (step: OnboardingStepType) => {
-    const isComplete = !stepStatus[step];
-    const nextState = { ...stepStatus, [step]: isComplete };
+  const toggleStepComplete = (step: OnboardingStep) => {
+    const isComplete = !stepStatus[step.id];
+    const nextState = { ...stepStatus, [step.id]: isComplete };
     setStepStatus(nextState);
 
     if (isComplete) {
-      void telemetry.track({ event: "onboarding:step-completed", step });
+      void telemetry.track({
+        event: "onboarding:step-completed",
+        stepId: step.id,
+        stepTitle: step.title,
+      });
     }
     if (Object.values(nextState).every(Boolean)) {
       void telemetry.track({ event: "onboarding:completed" });
     }
   };
 
-  const getStepIndex = (stepId: OnboardingStepType) => {
-    return steps.findIndex(({ id }) => id === stepId);
+  const getStepIndex = (step: OnboardingStep) => {
+    return steps.findIndex(({ id }) => id === step.id);
   };
 
-  const isStepComplete = (stepId: OnboardingStepType) => {
-    return stepStatus[stepId] ?? false;
+  const isStepComplete = (step: OnboardingStep) => {
+    return stepStatus[step.id] ?? false;
   };
 
   const completedStepCount = Object.values(stepStatus).filter(Boolean).length;

@@ -24,7 +24,7 @@ export const OnboardingStepDialog = ({
 
   const markAsDone = () => {
     if (!isOpen) return;
-    toggleStepComplete(step.id);
+    toggleStepComplete(step);
     onClose();
   };
 
@@ -35,7 +35,7 @@ export const OnboardingStepDialog = ({
         <OnboardingStepDialogContent step={step} />
         <DialogActions
           ok={{
-            text: isStepComplete(step.id) ? "Undo step" : "Mark as done",
+            text: isStepComplete(step) ? "Undo step" : "Mark as done",
             onClick: markAsDone,
           }}
           cancel={{ text: "Close" }}

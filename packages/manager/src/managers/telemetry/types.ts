@@ -13,7 +13,6 @@ export const SegmentEventType = {
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
 	pageView: "page-view",
-	ctaClicked: "cta-clicked",
 	openVideoTutorials: "open-video-tutorials",
 	field_added: "field:added",
 	field_settingsOpened: "field:settings-opened",
@@ -36,6 +35,7 @@ export const SegmentEventType = {
 	sliceMachine_start: "slice-machine:start",
 	sliceLibrary_beta_modalOpened: "slice-library:beta:modal-opened",
 	sliceLibrary_beta_codeOpened: "slice-library:beta:code-opened",
+	onboarding_step_opened: "onboarding:step-opened",
 	onboarding_step_completed: "onboarding:step-completed",
 	onboarding_completed: "onboarding:completed",
 } as const;
@@ -51,7 +51,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sliceSimulator_isNotRunning]:
 		"SliceMachine Slice Simulator is not running",
 	[SegmentEventType.pageView]: "SliceMachine Page View",
-	[SegmentEventType.ctaClicked]: "SliceMachine CTA Clicked",
 	[SegmentEventType.openVideoTutorials]: "SliceMachine Open Video Tutorials",
 	[SegmentEventType.field_added]: "SliceMachine Field Added",
 	[SegmentEventType.field_settingsOpened]: "SliceMachine Field Settings Opened",
@@ -84,10 +83,11 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slice Library [BETA] CTA modal displayed",
 	[SegmentEventType.sliceLibrary_beta_codeOpened]:
 		"SliceMachine Slice Library [BETA] CTA example code opened",
+	[SegmentEventType.onboarding_step_opened]:
+		"SliceMachine Onboarding Step Opened",
 	[SegmentEventType.onboarding_step_completed]:
 		"SliceMachine Onboarding Step Completed",
-	[SegmentEventType.onboarding_completed]:
-		"SliceMachine Onboarding Completed (all steps)",
+	[SegmentEventType.onboarding_completed]: "SliceMachine Onboarding Completed",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -326,17 +326,19 @@ type SliceLibraryBetaCodeOpened = SegmentEvent<
 	typeof SegmentEventType.sliceLibrary_beta_codeOpened
 >;
 
-type SliceMachineCtaClicked = SegmentEvent<
-	typeof SegmentEventType.ctaClicked,
+type SliceMachineOnboardingStepOpened = SegmentEvent<
+	typeof SegmentEventType.onboarding_step_opened,
 	{
-		name: string;
+		stepId: string;
+		stepTitle: string;
 	}
 >;
 
 type SliceMachineOnboardingStepCompleted = SegmentEvent<
 	typeof SegmentEventType.onboarding_step_completed,
 	{
-		step: string;
+		stepId: string;
+		stepTitle: string;
 	}
 >;
 
@@ -374,6 +376,6 @@ export type SegmentEvents =
 	| SliceMachineStart
 	| SliceLibraryBetaModalOpened
 	| SliceLibraryBetaCodeOpened
-	| SliceMachineCtaClicked
+	| SliceMachineOnboardingStepOpened
 	| SliceMachineOnboardingStepCompleted
 	| SliceMachineOnboardingCompleted;
