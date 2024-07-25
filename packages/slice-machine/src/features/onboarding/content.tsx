@@ -15,7 +15,7 @@ export const onboardingSteps: OnboardingStep[] = [
   {
     id: "codePage",
     title: "Code Your Page Type",
-    description: "Prepare your code to fetch content.",
+    description: "Prepare code to fetch content.",
   },
   {
     id: "createSlice",
@@ -29,7 +29,7 @@ export const onboardingSteps: OnboardingStep[] = [
   },
   {
     id: "createContent",
-    title: "Create Content in the Page Builder",
+    title: "Create Content",
     description: "Publish a page to the Prismic API.",
   },
   {
