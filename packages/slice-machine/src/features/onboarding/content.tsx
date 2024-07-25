@@ -48,7 +48,7 @@ export const onboardingStepContent: Record<
 > = {
   createPageType: {
     videoUrl:
-      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/ADD_SLICE.mp4",
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Create_page_type_xdn13j.mp4",
     content: () => (
       <Text>
         A page type is a base content structure editors will use to create pages
@@ -60,14 +60,14 @@ export const onboardingStepContent: Record<
   },
   codePage: {
     videoUrl:
-      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/CODE_SNIP.mp4",
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Step2_code_your_page_jatiur.mp4",
     content: () => (
       <Text>Prepare your code to query the content from the Prismic API.</Text>
     ),
   },
   createSlice: {
     videoUrl:
-      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/ADD_SLICE.mp4",
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918322/DEV_TOOLS/ONBOARDING_GUIDE/Step3_add_slice_qzmvxf.mp4",
     content: () => (
       <Text>
         Slices are website sections that can be reused on different pages with
@@ -79,7 +79,7 @@ export const onboardingStepContent: Record<
   },
   reviewAndPush: {
     videoUrl:
-      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/PUSH.mp4",
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/DevTools_Squad_push_changes_ovvmul.mp4",
     content: () => (
       <Text>
         Your page types and slices currently exist only in your local project.
@@ -90,7 +90,7 @@ export const onboardingStepContent: Record<
   },
   createContent: {
     videoUrl:
-      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/WRITE.mp4",
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918324/DEV_TOOLS/ONBOARDING_GUIDE/Cre%CC%81er_contenu_e%CC%81tape_4_z9vlzt.mp4",
     content: () => (
       <Text>
         In Prismic, content creation takes place in the Prismic Page Builder UI.
@@ -100,7 +100,7 @@ export const onboardingStepContent: Record<
   },
   renderPage: {
     videoUrl:
-      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1700213517/IN-APP-GUIDE-SM/PREVIEW.mp4",
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918321/DEV_TOOLS/ONBOARDING_GUIDE/Step_6_Render_Page_tnauh9.mp4",
     content: () => (
       <Text>
         Now that your content is published, you can run your project in your
