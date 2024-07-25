@@ -35,6 +35,9 @@ export const SegmentEventType = {
 	sliceMachine_start: "slice-machine:start",
 	sliceLibrary_beta_modalOpened: "slice-library:beta:modal-opened",
 	sliceLibrary_beta_codeOpened: "slice-library:beta:code-opened",
+	onboarding_step_opened: "onboarding:step-opened",
+	onboarding_step_completed: "onboarding:step-completed",
+	onboarding_completed: "onboarding:completed",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -80,6 +83,11 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slice Library [BETA] CTA modal displayed",
 	[SegmentEventType.sliceLibrary_beta_codeOpened]:
 		"SliceMachine Slice Library [BETA] CTA example code opened",
+	[SegmentEventType.onboarding_step_opened]:
+		"SliceMachine Onboarding Step Opened",
+	[SegmentEventType.onboarding_step_completed]:
+		"SliceMachine Onboarding Step Completed",
+	[SegmentEventType.onboarding_completed]: "SliceMachine Onboarding Completed",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -318,6 +326,26 @@ type SliceLibraryBetaCodeOpened = SegmentEvent<
 	typeof SegmentEventType.sliceLibrary_beta_codeOpened
 >;
 
+type SliceMachineOnboardingStepOpened = SegmentEvent<
+	typeof SegmentEventType.onboarding_step_opened,
+	{
+		stepId: string;
+		stepTitle: string;
+	}
+>;
+
+type SliceMachineOnboardingStepCompleted = SegmentEvent<
+	typeof SegmentEventType.onboarding_step_completed,
+	{
+		stepId: string;
+		stepTitle: string;
+	}
+>;
+
+type SliceMachineOnboardingCompleted = SegmentEvent<
+	typeof SegmentEventType.onboarding_completed
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -347,4 +375,7 @@ export type SegmentEvents =
 	| DevCollabWorkflowStubDisplayed
 	| SliceMachineStart
 	| SliceLibraryBetaModalOpened
-	| SliceLibraryBetaCodeOpened;
+	| SliceLibraryBetaCodeOpened
+	| SliceMachineOnboardingStepOpened
+	| SliceMachineOnboardingStepCompleted
+	| SliceMachineOnboardingCompleted;

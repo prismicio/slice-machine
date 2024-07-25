@@ -24,7 +24,7 @@ export const OnboardingStepDialogContent = ({
       <Box as="article" flexDirection="column" padding={16} gap={16}>
         <section>
           <Text sx={{ marginBottom: 4 }} color="purple9" variant="bold">
-            Step {getStepIndex(step.id) + 1}
+            Step {getStepIndex(step) + 1}
           </Text>
           <Text variant="h3">{title}</Text>
           <Content />

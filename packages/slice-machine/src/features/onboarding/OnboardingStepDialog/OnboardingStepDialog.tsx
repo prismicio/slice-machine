@@ -25,12 +25,12 @@ export const OnboardingStepDialog = ({
   const [ctaOkText, setCtaOkText] = useState(getCtaOkText);
 
   function getCtaOkText() {
-    return isStepComplete(step.id) ? "Undo step" : "Mark as done";
+    return isStepComplete(step) ? "Undo step" : "Mark as done";
   }
 
   const markAsDone = () => {
     if (!isOpen) return;
-    toggleStepComplete(step.id);
+    toggleStepComplete(step);
     onClose();
   };
 
