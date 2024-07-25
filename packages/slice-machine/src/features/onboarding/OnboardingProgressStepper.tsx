@@ -6,6 +6,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
   Icon,
+  Text,
 } from "@prismicio/editor-ui";
 import { useState } from "react";
 
@@ -18,6 +19,7 @@ const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 export const OnboardingProgressStepper = () => {
   const { completedStepCount, steps, isStepComplete } = useOnboardingContext();
 
+  const [isListOpen, setListOpen] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(steps[0]);
 
@@ -33,37 +35,47 @@ export const OnboardingProgressStepper = () => {
         isOpen={isDialogOpen}
         onClose={() => setDialogOpen(false)}
       />
-      <DropdownMenu>
+      <DropdownMenu open={isListOpen} onOpenChange={setListOpen}>
         <DropdownMenuTrigger>
           <Button
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
+            onMouseEnter={() => setListOpen(true)}
           >
             {completedStepCount > 0 ? "Continue" : "Start"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuLabel>Progress</DropdownMenuLabel>
-          {steps.map((step) => {
-            const isCompleted = isStepComplete(step.id);
+        <DropdownMenuContent align="center" sideOffset={-56} minWidth={256}>
+          <div
+            onMouseLeave={() => {
+              if (!isListOpen) return;
+              setListOpen(false);
+            }}
+          >
+            <DropdownMenuLabel>
+              <Text variant="small" color="grey11">
+                Progress
+              </Text>
+            </DropdownMenuLabel>
+            {steps.map((step) => {
+              const isCompleted = isStepComplete(step.id);
 
-            return (
-              <DropdownMenuItem
-                key={step.id}
-                onSelect={() => showStep(step)}
-                startIcon={
-                  <Icon
-                    color={isCompleted ? "green10" : "currentColor"}
-                    name={isCompleted ? "checkBox" : "checkBoxOutlinedBlank"}
-                  />
-                }
-                description={step.description}
-              >
-                {step.title}
-              </DropdownMenuItem>
-            );
-          })}
+              return (
+                <DropdownMenuItem
+                  key={step.id}
+                  onSelect={() => showStep(step)}
+                  description={step.description}
+                  completed={isCompleted}
+                  endAdornment={
+                    <Icon name="chevronRight" size="small" color="grey11" />
+                  }
+                >
+                  {step.title}
+                </DropdownMenuItem>
+              );
+            })}
+          </div>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

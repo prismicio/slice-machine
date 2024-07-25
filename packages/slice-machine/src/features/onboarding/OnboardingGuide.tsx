@@ -1,4 +1,10 @@
-import { Card, CardContent, Text } from "@prismicio/editor-ui";
+import {
+  Card,
+  CardContent,
+  ProgressBar,
+  Text,
+  useMediaQuery,
+} from "@prismicio/editor-ui";
 
 import { OnboardingProgressStepper } from "@/features/onboarding/OnboardingProgressStepper";
 import {
@@ -9,8 +15,9 @@ import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExpe
 
 const OnboardingGuideContent = () => {
   const { steps, completedStepCount, isComplete } = useOnboardingContext();
+  const visible = useMediaQuery({ min: "medium" });
 
-  if (isComplete) return null;
+  if (isComplete || !visible) return null;
 
   return (
     <Card color="grey2" variant="outlined" paddingBlock={16}>
@@ -23,9 +30,12 @@ const OnboardingGuideContent = () => {
             Get started in {steps.length} steps
           </Text>
         </div>
-        <Text color="grey11" variant="small" align="end">
-          {completedStepCount}/{steps.length}
-        </Text>
+        <ProgressBar
+          value={completedStepCount}
+          max={steps.length}
+          displayLabel
+          getValueLabel={(value, max) => `${value}/${max}`}
+        />
         <OnboardingProgressStepper />
       </CardContent>
     </Card>
