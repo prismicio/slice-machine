@@ -6,7 +6,7 @@ import type {
   OnboardingStepType,
 } from "@/features/onboarding/types";
 
-export const onboardingSteps: OnboardingStep[] = [
+export const onboardingSteps = [
   {
     id: "createPageType",
     title: "Create a Page Type",
@@ -37,7 +37,20 @@ export const onboardingSteps: OnboardingStep[] = [
     title: "Render your page",
     description: "View your page in the browser.",
   },
-];
+] as const satisfies OnboardingStep[];
+
+type OnboardingStepIndexNumeralMap = {
+  [K in Exclude<keyof typeof onboardingSteps, keyof unknown[]>]: string;
+};
+
+export const stepIndexNumeral: Record<number, string> = {
+  0: "one",
+  1: "two",
+  2: "three",
+  3: "four",
+  4: "five",
+  5: "six",
+} satisfies OnboardingStepIndexNumeralMap;
 
 export const onboardingStepContent: Record<
   OnboardingStepType,
