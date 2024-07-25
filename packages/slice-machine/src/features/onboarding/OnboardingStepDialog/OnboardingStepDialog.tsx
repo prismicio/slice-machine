@@ -22,33 +22,36 @@ export const OnboardingStepDialog = ({
   onClose,
 }: OnboardingStepDialogProps) => {
   const { toggleStepComplete, isStepComplete } = useOnboardingContext();
-  const [ctaOkText, updateCtaOkText] = useUpdatableState(() => {
-    return isStepComplete(step.id) ? "Undo step" : "Mark as done";
-  });
+  const [ctaOkText, setCtaOkText] = useState(getCtaOkText);
 
-  const execIfOpen = (fn: () => void) => () => {
-    if (!isOpen) return;
-    fn();
-  };
+  function getCtaOkText() {
+    return isStepComplete(step.id) ? "Undo step" : "Mark as done";
+  }
 
   const markAsDone = () => {
+    if (!isOpen) return;
     toggleStepComplete(step.id);
     onClose();
+  };
+
+  const updateCtaOkText = () => {
+    if (!isOpen) return;
+    setCtaOkText(getCtaOkText());
   };
 
   return (
     <Dialog
       open={isOpen}
       onOpenChange={onClose}
-      onAnimationEnd={execIfOpen(updateCtaOkText)}
-      onAnimationStart={execIfOpen(updateCtaOkText)}
+      onAnimationEnd={updateCtaOkText}
+      onAnimationStart={updateCtaOkText}
       size="small"
     >
       <DialogHeader title="Onboarding" />
       <DialogContent>
         <OnboardingStepDialogContent step={step} />
         <DialogActions
-          ok={{ text: ctaOkText, onClick: execIfOpen(markAsDone) }}
+          ok={{ text: ctaOkText, onClick: markAsDone }}
           cancel={{ text: "Close" }}
           size="medium"
         />
@@ -56,8 +59,3 @@ export const OnboardingStepDialog = ({
     </Dialog>
   );
 };
-
-function useUpdatableState<T>(getValue: () => T): [T, () => void] {
-  const [state, setState] = useState(getValue());
-  return [state, () => setState(getValue())];
-}
