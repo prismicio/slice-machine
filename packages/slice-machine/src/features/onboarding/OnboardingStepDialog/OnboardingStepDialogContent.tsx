@@ -1,8 +1,8 @@
 import { Box, ScrollArea, Text, Video } from "@prismicio/editor-ui";
 
 import {
+  indexLabel,
   onboardingStepContent,
-  stepIndexNumeral,
 } from "@/features/onboarding/content";
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStep } from "@/features/onboarding/types";
@@ -27,7 +27,7 @@ export const OnboardingStepDialogContent = ({
       <Box as="article" flexDirection="column" padding={16} gap={16}>
         <section>
           <Text sx={{ marginBottom: 4 }} color="purple9" variant="bold">
-            Step {stepIndexNumeral[getStepIndex(step.id)]}
+            Step {indexLabel[getStepIndex(step.id)]}
           </Text>
           <Text variant="h3">{title}</Text>
           <Content />
