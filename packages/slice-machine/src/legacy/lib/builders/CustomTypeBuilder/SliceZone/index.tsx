@@ -227,7 +227,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                       onSelect={openSlicesTemplatesModal}
                       startIcon={<Icon name="contentCopy" size="large" />}
                       description="Select from premade examples."
-                      shortcut={<Badge color="purple" title="New" />}
+                      endAdornment={<Badge color="purple" title="New" />}
                     >
                       Use template
                     </DropdownMenuItem>
