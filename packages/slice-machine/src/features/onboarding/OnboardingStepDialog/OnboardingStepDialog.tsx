@@ -16,11 +16,6 @@ type OnboardingStepDialogProps = {
   onClose: () => void;
 };
 
-function useUpdatableState<T>(getValue: () => T): [T, () => void] {
-  const [state, setState] = useState(getValue());
-  return [state, () => setState(getValue())];
-}
-
 export const OnboardingStepDialog = ({
   step,
   isOpen,
@@ -31,7 +26,11 @@ export const OnboardingStepDialog = ({
     return isStepComplete(step.id) ? "Undo step" : "Mark as done";
   });
 
-  const execIfOpen = (fn: () => void) => () => isOpen && fn();
+  const execIfOpen = (fn: () => void) => () => {
+    if (!isOpen) return;
+    fn();
+  };
+
   const markAsDone = () => {
     toggleStepComplete(step.id);
     onClose();
@@ -57,3 +56,8 @@ export const OnboardingStepDialog = ({
     </Dialog>
   );
 };
+
+function useUpdatableState<T>(getValue: () => T): [T, () => void] {
+  const [state, setState] = useState(getValue());
+  return [state, () => setState(getValue())];
+}
