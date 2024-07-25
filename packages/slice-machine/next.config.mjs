@@ -36,7 +36,7 @@ if (parsedPkgVersion.prerelease.length === 0) {
 
 /** @type {import("next").NextConfig} */
 let nextConfig = {
-  experimental: { newNextLinkBehavior: true },
+  output: 'export',
   swcMinify: true,
   publicRuntimeConfig: { sentryEnvironment },
 };

@@ -12,7 +12,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "build": "yarn typed-css-modules && cross-env NODE_OPTIONS=--max_old_space_size=8192 next build && next export",
+    "build": "yarn typed-css-modules && cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "dev": "concurrently \"yarn typed-css-modules:watch\" \"next dev\" --names \"typed-css-modules,next\" --prefix-colors auto",
     "lint": "eslint --max-warnings 0 --ext .ts,.tsx,.js,.jsx .",
     "stylelint": "stylelint --max-warnings 0 \"src/**/*.module.css\"",
