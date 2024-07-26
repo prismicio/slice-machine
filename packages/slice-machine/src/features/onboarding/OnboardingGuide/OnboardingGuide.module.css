@@ -13,5 +13,7 @@
 
 .invisible {
   opacity: 0;
-  transition: opacity 500ms linear 2000ms;
+  /* A delay of 2s gives room for a 3s confetti animation to happen and then 
+     fade out while the it's ending */
+  transition: opacity 500ms linear 2s;
 }
