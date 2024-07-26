@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useRef } from "react";
 
 import { telemetry } from "@/apiClient";
 import { onboardingSteps as steps } from "@/features/onboarding/content";
@@ -15,6 +15,7 @@ type OnboardingContext = {
   toggleStepComplete: (step: OnboardingStep) => void;
   getStepIndex: (step: OnboardingStep) => number;
   isStepComplete: (step: OnboardingStep) => boolean;
+  setOnCompleteHandler: (handler: () => void) => void;
   isComplete: boolean;
 };
 
@@ -32,7 +33,16 @@ const getInitialState = (): OnboardingStepStatuses => {
   ) as OnboardingStepStatuses;
 };
 
-export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
+type OnboardingProviderProps = {
+  children: ReactNode;
+  onComplete?: () => void;
+};
+
+export const OnboardingProvider = ({
+  children,
+  onComplete,
+}: OnboardingProviderProps) => {
+  const onCompleteRef = useRef(onComplete);
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
     getInitialState(),
@@ -52,6 +62,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     if (Object.values(nextState).every(Boolean)) {
+      onCompleteRef.current?.();
       void telemetry.track({ event: "onboarding:completed" });
     }
   };
@@ -64,6 +75,10 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     return stepStatus[step.id] ?? false;
   };
 
+  const setOnCompleteHandler = (handler: () => void) => {
+    onCompleteRef.current = handler;
+  };
+
   const completedStepCount = Object.values(stepStatus).filter(Boolean).length;
 
   return (
@@ -74,6 +89,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
         isStepComplete,
         getStepIndex,
         completedStepCount,
+        setOnCompleteHandler,
         isComplete: completedStepCount === steps.length,
       }}
     >
@@ -82,13 +98,20 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useOnboardingContext = () => {
+type UseOnboardingContextProps = Pick<OnboardingProviderProps, "onComplete">;
+
+export const useOnboardingContext = (props?: UseOnboardingContextProps) => {
+  const { onComplete } = props ?? {};
   const context = useContext(OnboardingContext);
 
   if (context == null) {
     throw new Error(
       "useOnboardingContext must be used within an OnboardingProvider",
     );
+  }
+
+  if (onComplete != null) {
+    context.setOnCompleteHandler(onComplete);
   }
 
   return context;
