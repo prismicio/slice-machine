@@ -18,6 +18,50 @@ import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExpe
 
 import styles from "./OnboardingGuide.module.css";
 
+const OnboardingGuideCard = () => {
+  const { steps, completedStepCount } = useOnboardingContext();
+  const isVisible = useMediaQuery({ min: "medium" });
+
+  if (!isVisible) return null;
+
+  return (
+    <Card color="grey2" variant="outlined" paddingBlock={16}>
+      <CardContent>
+        <div>
+          <Text variant="bold" color="grey12">
+            Build a page in {steps.length} steps
+          </Text>
+          <Text color="grey11" variant="small">
+            Render a live page with content coming from Prismic
+          </Text>
+        </div>
+        <ProgressBar
+          value={completedStepCount}
+          max={steps.length}
+          displayLabel
+          getValueLabel={(value, max) => `${value}/${max}`}
+        />
+        <OnboardingProgressStepper />
+      </CardContent>
+    </Card>
+  );
+};
+
+const FadeOutOnCompleteContainer = ({ children }: PropsWithChildren) => {
+  const { isComplete } = useOnboardingContext();
+
+  return (
+    <div
+      className={clsx(
+        styles.container,
+        isComplete ? styles.invisible : styles.visible,
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
 const confettiConfig: ConfettiConfig = {
   colors: ["#8E44EC", "#E8C7FF", "#59B5F8", "#C3EEFE"],
   elementCount: 300,
@@ -29,44 +73,7 @@ const confettiConfig: ConfettiConfig = {
   duration: 3000,
 };
 
-const OnboardingGuideContent = ({ children }: PropsWithChildren) => {
-  const { steps, completedStepCount, isComplete } = useOnboardingContext();
-  const isVisible = useMediaQuery({ min: "medium" });
-
-  if (!isVisible) return null;
-
-  return (
-    <div
-      className={clsx(
-        styles.container,
-        isComplete ? styles.invisible : styles.visible,
-      )}
-    >
-      <Card color="grey2" variant="outlined" paddingBlock={16}>
-        <CardContent>
-          <div>
-            <Text variant="bold" color="grey12">
-              Build a page in {steps.length} steps
-            </Text>
-            <Text color="grey11" variant="small">
-              Render a live page with content coming from Prismic
-            </Text>
-          </div>
-          <ProgressBar
-            value={completedStepCount}
-            max={steps.length}
-            displayLabel
-            getValueLabel={(value, max) => `${value}/${max}`}
-          />
-          <OnboardingProgressStepper />
-        </CardContent>
-        {children}
-      </Card>
-    </div>
-  );
-};
-
-const OnboardingGuideWithConfetti = () => {
+const OnboardingGuideContent = () => {
   const [isVisible, setVisible] = useState(true);
   const confettiCannonRef = useRef<HTMLDivElement>(null);
 
@@ -80,9 +87,10 @@ const OnboardingGuideWithConfetti = () => {
 
   return (
     <OnboardingProvider onComplete={onComplete}>
-      <OnboardingGuideContent>
+      <FadeOutOnCompleteContainer>
+        <OnboardingGuideCard />
         <div ref={confettiCannonRef} className={styles.confettiCannon} />
-      </OnboardingGuideContent>
+      </FadeOutOnCompleteContainer>
     </OnboardingProvider>
   );
 };
@@ -92,5 +100,5 @@ export const OnboardingGuide = () => {
 
   if (!eligible) return null;
 
-  return <OnboardingGuideWithConfetti />;
+  return <OnboardingGuideContent />;
 };
