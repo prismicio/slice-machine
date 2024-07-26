@@ -13,7 +13,6 @@ import { OnboardingProgressStepper } from "@/features/onboarding/OnboardingProgr
 import {
   OnboardingProvider,
   useOnboardingContext,
-  useOnOnboardingComplete,
 } from "@/features/onboarding/OnboardingProvider";
 import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 
@@ -21,7 +20,7 @@ import styles from "./OnboardingGuide.module.css";
 
 const confettiConfig: ConfettiConfig = {
   colors: ["#8E44EC", "#E8C7FF", "#59B5F8", "#C3EEFE"],
-  elementCount: 200,
+  elementCount: 300,
   width: "8px",
   height: "8px",
   stagger: 0.2,
@@ -31,16 +30,18 @@ const confettiConfig: ConfettiConfig = {
 };
 
 const OnboardingGuideContent = () => {
-  const { steps, completedStepCount, isComplete } = useOnboardingContext();
+  const { steps, completedStepCount, isComplete } = useOnboardingContext({
+    onComplete,
+  });
   const [isVisible, setVisible] = useState(true);
   const isMediaQueryVisible = useMediaQuery({ min: "medium" });
   const confettiCannonRef = useRef<HTMLDivElement>(null);
 
-  useOnOnboardingComplete(() => {
+  function onComplete() {
     const { current: confettiCannon } = confettiCannonRef;
     if (confettiCannon) fireConfetti(confettiCannon, confettiConfig);
     setTimeout(() => setVisible(false), confettiConfig.duration);
-  });
+  }
 
   if (!isVisible || !isMediaQueryVisible) return null;
 
