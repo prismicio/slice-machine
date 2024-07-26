@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useRef } from "react";
+import { createContext, ReactNode, useContext, useEffect, useRef } from "react";
 
 import { telemetry } from "@/apiClient";
 import { onboardingSteps as steps } from "@/features/onboarding/content";
@@ -15,7 +15,6 @@ type OnboardingContext = {
   toggleStepComplete: (step: OnboardingStep) => void;
   getStepIndex: (step: OnboardingStep) => number;
   isStepComplete: (step: OnboardingStep) => boolean;
-  setOnCompleteHandler: (handler: () => void) => void;
   isComplete: boolean;
 };
 
@@ -33,16 +32,7 @@ const getInitialState = (): OnboardingStepStatuses => {
   ) as OnboardingStepStatuses;
 };
 
-type OnboardingProviderProps = {
-  children: ReactNode;
-  onComplete?: () => void;
-};
-
-export const OnboardingProvider = ({
-  children,
-  onComplete,
-}: OnboardingProviderProps) => {
-  const onCompleteRef = useRef(onComplete);
+export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
     getInitialState(),
@@ -62,7 +52,6 @@ export const OnboardingProvider = ({
       });
     }
     if (Object.values(nextState).every(Boolean)) {
-      onCompleteRef.current?.();
       void telemetry.track({ event: "onboarding:completed" });
     }
   };
@@ -75,10 +64,6 @@ export const OnboardingProvider = ({
     return stepStatus[step.id] ?? false;
   };
 
-  const setOnCompleteHandler = (handler: () => void) => {
-    onCompleteRef.current = handler;
-  };
-
   const completedStepCount = Object.values(stepStatus).filter(Boolean).length;
 
   return (
@@ -89,7 +74,6 @@ export const OnboardingProvider = ({
         isStepComplete,
         getStepIndex,
         completedStepCount,
-        setOnCompleteHandler,
         isComplete: completedStepCount === steps.length,
       }}
     >
@@ -98,10 +82,7 @@ export const OnboardingProvider = ({
   );
 };
 
-type UseOnboardingContextProps = Pick<OnboardingProviderProps, "onComplete">;
-
-export const useOnboardingContext = (props?: UseOnboardingContextProps) => {
-  const { onComplete } = props ?? {};
+export const useOnboardingContext = () => {
   const context = useContext(OnboardingContext);
 
   if (context == null) {
@@ -110,9 +91,18 @@ export const useOnboardingContext = (props?: UseOnboardingContextProps) => {
     );
   }
 
-  if (onComplete != null) {
-    context.setOnCompleteHandler(onComplete);
-  }
-
   return context;
+};
+
+export const useOnOnboardingComplete = (handler: () => void) => {
+  const { isComplete } = useOnboardingContext();
+  const previousIsCompleteRef = useRef<boolean>();
+
+  useEffect(() => {
+    previousIsCompleteRef.current = isComplete;
+  });
+
+  if (previousIsCompleteRef.current !== isComplete && isComplete) {
+    handler();
+  }
 };
