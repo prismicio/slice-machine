@@ -46,7 +46,12 @@ const OnboardingGuideContent = () => {
   if (!isVisible || !isMediaQueryVisible) return null;
 
   return (
-    <div className={clsx(styles.container, isComplete && styles.invisible)}>
+    <div
+      className={clsx(
+        styles.container,
+        isComplete ? styles.invisible : styles.visible,
+      )}
+    >
       <Card color="grey2" variant="outlined" paddingBlock={16}>
         <CardContent>
           <div>
