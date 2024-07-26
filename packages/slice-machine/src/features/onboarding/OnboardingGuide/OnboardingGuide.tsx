@@ -5,9 +5,8 @@ import {
   Text,
   useMediaQuery,
 } from "@prismicio/editor-ui";
-import clsx from "clsx";
 import { confetti as fireConfetti, ConfettiConfig } from "dom-confetti";
-import { PropsWithChildren, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { OnboardingProgressStepper } from "@/features/onboarding/OnboardingProgressStepper";
 import {
@@ -18,30 +17,14 @@ import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExpe
 
 import styles from "./OnboardingGuide.module.css";
 
-const confettiConfig: ConfettiConfig = {
-  colors: ["#8E44EC", "#E8C7FF", "#59B5F8", "#C3EEFE"],
-  elementCount: 300,
-  width: "8px",
-  height: "8px",
-  stagger: 0.2,
-  startVelocity: 35,
-  spread: 90,
-  duration: 3000,
-};
-
-const OnboardingGuideContent = ({ children }: PropsWithChildren) => {
+const OnboardingGuideCard = () => {
   const { steps, completedStepCount, isComplete } = useOnboardingContext();
   const isVisible = useMediaQuery({ min: "medium" });
 
   if (!isVisible) return null;
 
   return (
-    <div
-      className={clsx(
-        styles.container,
-        isComplete ? styles.invisible : styles.visible,
-      )}
-    >
+    <div className={isComplete ? styles.invisible : styles.visible}>
       <Card color="grey2" variant="outlined" paddingBlock={16}>
         <CardContent>
           <div>
@@ -60,13 +43,23 @@ const OnboardingGuideContent = ({ children }: PropsWithChildren) => {
           />
           <OnboardingProgressStepper />
         </CardContent>
-        {children}
       </Card>
     </div>
   );
 };
 
-const OnboardingGuideWithConfetti = () => {
+const confettiConfig: ConfettiConfig = {
+  colors: ["#8E44EC", "#E8C7FF", "#59B5F8", "#C3EEFE"],
+  elementCount: 300,
+  width: "8px",
+  height: "8px",
+  stagger: 0.2,
+  startVelocity: 35,
+  spread: 90,
+  duration: 3000,
+};
+
+const OnboardingGuideContent = () => {
   const [isVisible, setVisible] = useState(true);
   const confettiCannonRef = useRef<HTMLDivElement>(null);
 
@@ -80,9 +73,10 @@ const OnboardingGuideWithConfetti = () => {
 
   return (
     <OnboardingProvider onComplete={onComplete}>
-      <OnboardingGuideContent>
+      <div className={styles.container}>
+        <OnboardingGuideCard />
         <div ref={confettiCannonRef} className={styles.confettiCannon} />
-      </OnboardingGuideContent>
+      </div>
     </OnboardingProvider>
   );
 };
@@ -92,5 +86,5 @@ export const OnboardingGuide = () => {
 
   if (!eligible) return null;
 
-  return <OnboardingGuideWithConfetti />;
+  return <OnboardingGuideContent />;
 };
