@@ -1,9 +1,10 @@
 import { z } from "zod";
 
 export const onboardingStepStatusesSchema = z.object({
-  addSlice: z.boolean(),
+  createPageType: z.boolean(),
   codePage: z.boolean(),
-  pushModels: z.boolean(),
+  createSlice: z.boolean(),
+  reviewAndPush: z.boolean(),
   createContent: z.boolean(),
   renderPage: z.boolean(),
 });

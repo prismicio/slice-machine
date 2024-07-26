@@ -10,6 +10,7 @@ import {
 } from "@prismicio/editor-ui";
 import { useState } from "react";
 
+import { telemetry } from "@/apiClient";
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 import type { OnboardingStep } from "@/features/onboarding/types";
@@ -26,6 +27,11 @@ export const OnboardingProgressStepper = () => {
   const showStep = (step: OnboardingStep) => {
     setActiveStep(step);
     setDialogOpen(true);
+    void telemetry.track({
+      event: "onboarding:step-opened",
+      stepId: step.id,
+      stepTitle: step.title,
+    });
   };
 
   return (
@@ -43,7 +49,7 @@ export const OnboardingProgressStepper = () => {
             renderEndIcon={EndCtaIcon}
             onMouseEnter={() => setListOpen(true)}
           >
-            {completedStepCount > 0 ? "Continue" : "Start"}
+            {completedStepCount > 0 ? "Continue" : "Start now"}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center" sideOffset={-56} minWidth={256}>
@@ -58,7 +64,7 @@ export const OnboardingProgressStepper = () => {
               </Text>
             </DropdownMenuLabel>
             {steps.map((step) => {
-              const isCompleted = isStepComplete(step.id);
+              const isCompleted = isStepComplete(step);
 
               return (
                 <DropdownMenuItem

@@ -24,10 +24,10 @@ const OnboardingGuideContent = () => {
       <CardContent>
         <div>
           <Text variant="bold" color="grey12">
-            Welcome
+            Build a page in {steps.length} steps
           </Text>
           <Text color="grey11" variant="small">
-            Get started in {steps.length} steps
+            Render a live page with content coming from Prismic
           </Text>
         </div>
         <ProgressBar
