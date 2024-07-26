@@ -36,7 +36,6 @@ import { getState } from "@/apiClient";
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { InAppGuideProvider } from "@/features/inAppGuide/InAppGuideContext";
 import { InAppGuideDialog } from "@/features/inAppGuide/InAppGuideDialog";
-import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
 import { RouteChangeProvider } from "@/hooks/useRouteChange";
 import SliceMachineApp from "@/legacy/components/App";
@@ -70,20 +69,6 @@ const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
 
   return <>{children}</>;
 };
-
-function LegacyInAppGuide() {
-  const { eligible: isNewOnboardingEnabled } = useOnboardingExperiment();
-
-  if (isNewOnboardingEnabled) return null;
-
-  return (
-    <ErrorBoundary>
-      <Suspense>
-        <InAppGuideDialog />
-      </Suspense>
-    </ErrorBoundary>
-  );
-}
 
 function App({
   Component,
@@ -167,7 +152,11 @@ function App({
                                   <Component {...pageProps} />
                                 </ComponentLayout>
                               </RouteChangeProvider>
-                              <LegacyInAppGuide />
+                              <ErrorBoundary>
+                                <Suspense>
+                                  <InAppGuideDialog />
+                                </Suspense>
+                              </ErrorBoundary>
                             </InAppGuideProvider>
                           </AutoSyncProvider>
                         </Suspense>
