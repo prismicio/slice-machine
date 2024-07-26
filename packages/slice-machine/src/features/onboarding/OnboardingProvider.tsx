@@ -32,7 +32,15 @@ const getInitialState = (): OnboardingStepStatuses => {
   ) as OnboardingStepStatuses;
 };
 
-export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
+type OnboardingProviderProps = {
+  children: ReactNode;
+  onComplete?: () => void;
+};
+
+export const OnboardingProvider = ({
+  children,
+  onComplete,
+}: OnboardingProviderProps) => {
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
     getInitialState(),
@@ -52,6 +60,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     if (Object.values(nextState).every(Boolean)) {
+      onComplete?.();
       void telemetry.track({ event: "onboarding:completed" });
     }
   };

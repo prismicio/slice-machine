@@ -16396,6 +16396,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dom-confetti@npm:0.2.2":
+  version: 0.2.2
+  resolution: "dom-confetti@npm:0.2.2"
+  checksum: 6b14f4432fa758b038d63cfb7c8d56577d4ce99b11b7a7c74d261e5fb2fb4e2495c6b6787ba78c778cfad2627730612234424f675c524d903ad8d7485319af22
+  languageName: node
+  linkType: hard
+
 "dom-converter@npm:^0.2.0":
   version: 0.2.0
   resolution: "dom-converter@npm:0.2.0"
@@ -30320,6 +30327,7 @@ __metadata:
     connected-next-router: 4.2.0
     cross-env: 7.0.3
     depcheck: 1.4.3
+    dom-confetti: 0.2.2
     eslint: 8.56.0
     eslint-config-prettier: 9.0.0
     eslint-import-resolver-typescript: 3.5.3
