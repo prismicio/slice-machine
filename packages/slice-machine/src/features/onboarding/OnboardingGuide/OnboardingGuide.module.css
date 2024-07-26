@@ -2,7 +2,6 @@
   overflow: hidden;
   position: relative;
   opacity: 1;
-  visibility: visible;
   transition: opacity 500ms linear;
 }
 
@@ -14,10 +13,5 @@
 
 .invisible {
   opacity: 0;
-  visibility: hidden;
-  transition-delay: 2000ms;
-  transition-property: visibility, opacity;
-  /* stylelint-disable-next-line declaration-property-value-allowed-list -- Value is correct 🤷‍♂️ */
-  transition-duration: 500ms;
-  transition-timing-function: linear;
+  transition: opacity 500ms linear 2000ms;
 }
