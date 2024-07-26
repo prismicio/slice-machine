@@ -18,7 +18,8 @@ import type { OnboardingStep } from "@/features/onboarding/types";
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
 export const OnboardingProgressStepper = () => {
-  const { completedStepCount, steps, isStepComplete } = useOnboardingContext();
+  const { completedStepCount, steps, isStepComplete, isComplete } =
+    useOnboardingContext();
 
   const [isListOpen, setListOpen] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -44,6 +45,7 @@ export const OnboardingProgressStepper = () => {
       <DropdownMenu open={isListOpen} onOpenChange={setListOpen}>
         <DropdownMenuTrigger>
           <Button
+            disabled={isComplete}
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
