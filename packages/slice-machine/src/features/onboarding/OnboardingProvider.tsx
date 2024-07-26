@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useRef } from "react";
+import { createContext, ReactNode, useContext } from "react";
 
 import { telemetry } from "@/apiClient";
 import { onboardingSteps as steps } from "@/features/onboarding/content";
@@ -15,7 +15,6 @@ type OnboardingContext = {
   toggleStepComplete: (step: OnboardingStep) => void;
   getStepIndex: (step: OnboardingStep) => number;
   isStepComplete: (step: OnboardingStep) => boolean;
-  setOnCompleteCallback: (onComplete: () => void) => void;
   isComplete: boolean;
 };
 
@@ -33,8 +32,15 @@ const getInitialState = (): OnboardingStepStatuses => {
   ) as OnboardingStepStatuses;
 };
 
-export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
-  const onCompleteCallbackRef = useRef<() => void>();
+type OnboardingProviderProps = {
+  children: ReactNode;
+  onComplete?: () => void;
+};
+
+export const OnboardingProvider = ({
+  children,
+  onComplete,
+}: OnboardingProviderProps) => {
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
     getInitialState(),
@@ -54,7 +60,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     if (Object.values(nextState).every(Boolean)) {
-      onCompleteCallbackRef.current?.();
+      onComplete?.();
       void telemetry.track({ event: "onboarding:completed" });
     }
   };
@@ -67,10 +73,6 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     return stepStatus[step.id] ?? false;
   };
 
-  const setOnCompleteCallback = (onComplete: () => void) => {
-    onCompleteCallbackRef.current = onComplete;
-  };
-
   const completedStepCount = Object.values(stepStatus).filter(Boolean).length;
 
   return (
@@ -81,7 +83,6 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
         isStepComplete,
         getStepIndex,
         completedStepCount,
-        setOnCompleteCallback,
         isComplete: completedStepCount === steps.length,
       }}
     >
@@ -90,22 +91,13 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-type UseOnboardingContextProps = {
-  onComplete?: () => void;
-};
-
-export const useOnboardingContext = (props?: UseOnboardingContextProps) => {
-  const { onComplete } = props ?? {};
+export const useOnboardingContext = () => {
   const context = useContext(OnboardingContext);
 
   if (context == null) {
     throw new Error(
       "useOnboardingContext must be used within an OnboardingProvider",
     );
-  }
-
-  if (onComplete) {
-    context.setOnCompleteCallback(onComplete);
   }
 
   return context;

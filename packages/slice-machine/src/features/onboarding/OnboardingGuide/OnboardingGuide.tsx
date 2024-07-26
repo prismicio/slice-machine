@@ -7,7 +7,7 @@ import {
 } from "@prismicio/editor-ui";
 import clsx from "clsx";
 import { confetti as fireConfetti, ConfettiConfig } from "dom-confetti";
-import { useRef, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 
 import { OnboardingProgressStepper } from "@/features/onboarding/OnboardingProgressStepper";
 import {
@@ -29,21 +29,17 @@ const confettiConfig: ConfettiConfig = {
   duration: 3000,
 };
 
-const OnboardingGuideContent = () => {
-  const { steps, completedStepCount, isComplete } = useOnboardingContext({
-    onComplete,
-  });
-  const [isVisible, setVisible] = useState(true);
-  const isMediaQueryVisible = useMediaQuery({ min: "medium" });
-  const confettiCannonRef = useRef<HTMLDivElement>(null);
+type OnboardingGuideContentProps = {
+  confettiCannonRef: RefObject<HTMLDivElement>;
+};
 
-  function onComplete() {
-    const { current: confettiCannon } = confettiCannonRef;
-    if (confettiCannon) fireConfetti(confettiCannon, confettiConfig);
-    setTimeout(() => setVisible(false), confettiConfig.duration);
-  }
+const OnboardingGuideContent = ({
+  confettiCannonRef,
+}: OnboardingGuideContentProps) => {
+  const { steps, completedStepCount, isComplete } = useOnboardingContext();
+  const isVisible = useMediaQuery({ min: "medium" });
 
-  if (!isVisible || !isMediaQueryVisible) return null;
+  if (!isVisible) return null;
 
   return (
     <div
@@ -76,14 +72,29 @@ const OnboardingGuideContent = () => {
   );
 };
 
+const OnboardingGuideWithConfetti = () => {
+  const [isVisible, setVisible] = useState(true);
+  const confettiCannonRef = useRef<HTMLDivElement>(null);
+
+  const onComplete = () => {
+    const { current: confettiCannon } = confettiCannonRef;
+    if (confettiCannon) fireConfetti(confettiCannon, confettiConfig);
+    setTimeout(() => setVisible(false), confettiConfig.duration);
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <OnboardingProvider onComplete={onComplete}>
+      <OnboardingGuideContent confettiCannonRef={confettiCannonRef} />
+    </OnboardingProvider>
+  );
+};
+
 export const OnboardingGuide = () => {
   const { eligible } = useOnboardingExperiment();
 
   if (!eligible) return null;
 
-  return (
-    <OnboardingProvider>
-      <OnboardingGuideContent />
-    </OnboardingProvider>
-  );
+  return <OnboardingGuideWithConfetti />;
 };
