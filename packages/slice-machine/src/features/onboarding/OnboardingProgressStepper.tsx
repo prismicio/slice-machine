@@ -52,14 +52,11 @@ export const OnboardingProgressStepper = () => {
             {completedStepCount > 0 ? "Continue" : "Start now"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="center" sideOffset={-56} minWidth={256}>
-          <div
-            onMouseLeave={() => {
-              setListOpen(false);
-            }}
-          >
+        {/* The sideOffset is used to align the list with the bottom of the onboarding card */}
+        <DropdownMenuContent align="center" sideOffset={-50} minWidth={256}>
+          <div onMouseLeave={() => setListOpen(false)}>
             <DropdownMenuLabel>
-              <Text variant="small" color="grey11">
+              <Text variant="small" color="grey11" sx={{ marginInline: 8 }}>
                 Progress
               </Text>
             </DropdownMenuLabel>
