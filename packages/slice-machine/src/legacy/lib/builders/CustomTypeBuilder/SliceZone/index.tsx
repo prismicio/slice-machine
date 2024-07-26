@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
   Icon,
   Switch,
+  Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useRouter } from "next/router";
@@ -227,7 +228,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                       onSelect={openSlicesTemplatesModal}
                       startIcon={<Icon name="contentCopy" size="large" />}
                       description="Select from premade examples."
-                      endAdornment={<Badge color="purple" title="New" />}
+                      endAdornment={
+                        <Text color="inherit" component="kbd">
+                          <Badge color="purple" title="New" />
+                        </Text>
+                      }
                     >
                       Use template
                     </DropdownMenuItem>
