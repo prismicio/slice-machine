@@ -8,6 +8,7 @@ import {
   useMemo,
 } from "react";
 
+import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
 type InAppGuideContextValue = {
@@ -21,14 +22,18 @@ export const InAppGuideContext = createContext<
 
 export const InAppGuideProvider: FC<PropsWithChildren> = (props) => {
   const { children } = props;
+  const { eligible: isNewOnboardingEnabled } = useOnboardingExperiment();
   const [isInAppGuideOpen, setIsInAppGuideOpen] = usePersistedState(
     "isInAppGuideOpen",
     true,
   );
 
   const memoizedValue = useMemo(
-    () => ({ isInAppGuideOpen, setIsInAppGuideOpen }),
-    [isInAppGuideOpen, setIsInAppGuideOpen],
+    () => ({
+      isInAppGuideOpen: isNewOnboardingEnabled ? isInAppGuideOpen : false,
+      setIsInAppGuideOpen,
+    }),
+    [isInAppGuideOpen, setIsInAppGuideOpen, isNewOnboardingEnabled],
   );
 
   return (

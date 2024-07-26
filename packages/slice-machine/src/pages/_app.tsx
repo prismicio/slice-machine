@@ -36,6 +36,7 @@ import { getState } from "@/apiClient";
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { InAppGuideProvider } from "@/features/inAppGuide/InAppGuideContext";
 import { InAppGuideDialog } from "@/features/inAppGuide/InAppGuideDialog";
+import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
 import { RouteChangeProvider } from "@/hooks/useRouteChange";
 import SliceMachineApp from "@/legacy/components/App";
@@ -74,6 +75,7 @@ function App({
   Component,
   pageProps,
 }: AppContextWithComponentLayout & AppInitialProps) {
+  const { eligible: isNewOnboardingEnabled } = useOnboardingExperiment();
   const [serverState, setServerState] = useState<ServerState | null>(null);
   const [smStore, setSMStore] = useState<{
     store: Store;
@@ -152,11 +154,13 @@ function App({
                                   <Component {...pageProps} />
                                 </ComponentLayout>
                               </RouteChangeProvider>
-                              <ErrorBoundary>
-                                <Suspense>
-                                  <InAppGuideDialog />
-                                </Suspense>
-                              </ErrorBoundary>
+                              {!isNewOnboardingEnabled && (
+                                <ErrorBoundary>
+                                  <Suspense>
+                                    <InAppGuideDialog />
+                                  </Suspense>
+                                </ErrorBoundary>
+                              )}
                             </InAppGuideProvider>
                           </AutoSyncProvider>
                         </Suspense>
