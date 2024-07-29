@@ -55,7 +55,11 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
       <DropdownMenuContent align="end" maxHeight={400} collisionPadding={8}>
         <DropdownMenuLabel>Single fields</DropdownMenuLabel>
         {singleFieldsToRender.map((field) => (
-          <AddFieldDropdownItem field={field} onSelectField={onSelectField} />
+          <AddFieldDropdownItem
+            key={field.name}
+            field={field}
+            onSelectField={onSelectField}
+          />
         ))}
 
         {groupFieldToRender && (
