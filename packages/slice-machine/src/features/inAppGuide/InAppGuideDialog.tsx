@@ -12,6 +12,7 @@ import {
 import { FC } from "react";
 
 import { Count } from "@/components/Count";
+import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { useIsEmptyProject } from "@/hooks/useIsEmptyProject";
 import { HelpIcon } from "@/icons/HelpIcon";
 
@@ -23,8 +24,10 @@ export const InAppGuideDialog: FC = () => {
   const { isInAppGuideOpen, setIsInAppGuideOpen } = useInAppGuide();
   const inAppGuideContent = useInAppGuideContent();
 
+  const { eligible: newOnboardingEnabled } = useOnboardingExperiment();
+
   const trigger =
-    isEmptyProject === false ? (
+    !isEmptyProject && !newOnboardingEnabled ? (
       <Box position="fixed" right={16} bottom={16}>
         <IconButton
           color="purple"
@@ -42,7 +45,7 @@ export const InAppGuideDialog: FC = () => {
     <Dialog
       trigger={trigger}
       modal={false}
-      open={isInAppGuideOpen && isEmptyProject === false}
+      open={isInAppGuideOpen && !isEmptyProject}
       onOpenChange={(open) => {
         setIsInAppGuideOpen(open);
       }}
