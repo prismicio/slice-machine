@@ -1,7 +1,10 @@
 import {
   Box,
   Dialog,
+  DialogActionButton,
+  DialogActionLink,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
   FormInput,
@@ -67,21 +70,22 @@ export const GitRepositoryConnectDialog: FC<
                   Required to sync models from {providerConfig.name} to Prismic.
                 </Text>
               </Box>
-              <DialogActions
-                cancel={{ text: "Cancel" }}
-                link={
-                  <Text href={new URL("/settings/apps", repositoryUrl).href}>
-                    Create a Prismic Write API token
-                  </Text>
-                }
-                ok={{
-                  disabled: !formikProps.isValid,
-                  loading: formikProps.isSubmitting,
-                  onClick: () => void formikProps.submitForm(),
-                  text: "Save Token",
-                }}
-                size="medium"
-              />
+              <DialogActions>
+                <DialogActionLink
+                  href={new URL("/settings/apps", repositoryUrl).href}
+                >
+                  Create a Prismic Write API token
+                </DialogActionLink>
+                <DialogCancelButton size="medium" />
+                <DialogActionButton
+                  disabled={!formikProps.isValid}
+                  loading={formikProps.isSubmitting}
+                  onClick={() => void formikProps.submitForm()}
+                  size="medium"
+                >
+                  Save Token
+                </DialogActionButton>
+              </DialogActions>
             </form>
           )}
         </Formik>

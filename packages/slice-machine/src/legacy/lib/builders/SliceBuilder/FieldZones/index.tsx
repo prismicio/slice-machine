@@ -1,7 +1,9 @@
 import {
   Box,
   Dialog,
+  DialogActionButton,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
 } from "@prismicio/editor-ui";
@@ -286,14 +288,12 @@ const FieldZones: FC = () => {
               </>
             )}
           </Box>
-          <DialogActions
-            ok={{
-              text: "Delete",
-              color: "tomato",
-              onClick: () => onDeleteRepeatableZone(),
-            }}
-            cancel={{ text: "Cancel" }}
-          />
+          <DialogActions>
+            <DialogCancelButton />
+            <DialogActionButton color="tomato" onClick={onDeleteRepeatableZone}>
+              Delete
+            </DialogActionButton>
+          </DialogActions>
         </DialogContent>
       </Dialog>
     </List>

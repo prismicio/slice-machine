@@ -1,7 +1,9 @@
 import {
   Box,
   Dialog,
+  DialogActionButton,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
   FormInput,
@@ -132,16 +134,17 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
                       </Text>
                     </Box>
                   </ScrollArea>
-                  <DialogActions
-                    ok={{
-                      text: "Upgrade",
-                      onClick: () => void formik.submitForm(),
-                      loading: isLoading,
-                      disabled: !formik.isValid,
-                    }}
-                    cancel={{ text: "Cancel" }}
-                    size="medium"
-                  />
+                  <DialogActions>
+                    <DialogCancelButton size="medium" />
+                    <DialogActionButton
+                      size="medium"
+                      loading={isLoading}
+                      disabled={!formik.isValid}
+                      onClick={() => void formik.submitForm()}
+                    >
+                      Upgrade
+                    </DialogActionButton>
+                  </DialogActions>
                 </Box>
               </form>
             );

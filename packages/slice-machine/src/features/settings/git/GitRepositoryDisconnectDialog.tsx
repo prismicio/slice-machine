@@ -1,7 +1,9 @@
 import {
   Box,
   Dialog,
+  DialogActionButton,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
   Text,
@@ -32,13 +34,13 @@ export const GitRepositoryDisconnectDialog: FC<
           </Text>
         </Box>
       </DialogContent>
-      <DialogActions
-        asFooter
-        cancel={{ text: "Cancel" }}
-        ok={{
-          color: "tomato",
-          loading,
-          onClick: () => {
+      <DialogActions>
+        <DialogCancelButton size="medium" />
+        <DialogActionButton
+          size="medium"
+          color="tomato"
+          loading={loading}
+          onClick={() => {
             void (async () => {
               setLoading(true);
               try {
@@ -50,11 +52,11 @@ export const GitRepositoryDisconnectDialog: FC<
               }
               setLoading(false);
             })();
-          },
-          text: "Disconnect",
-        }}
-        size="medium"
-      />
+          }}
+        >
+          Disconnect
+        </DialogActionButton>
+      </DialogActions>
     </Dialog>
   );
 };

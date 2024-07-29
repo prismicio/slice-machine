@@ -2,7 +2,9 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActionButton,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
   Text,
@@ -87,20 +89,21 @@ export function DevCollaborationExperiment() {
             <Box flexDirection="column" padding={16}>
               <Text>{payload.dialogDescription}</Text>
             </Box>
-            <DialogActions
-              cancel={{ text: "Cancel" }}
-              ok={{
-                text: payload.dialogButtonLabel,
-                onClick: () => {
+            <DialogActions>
+              <DialogCancelButton size="medium" />
+              <DialogActionButton
+                size="medium"
+                onClick={() => {
                   void telemetry.track({
                     event: "dev-collab:join-beta-clicked",
                   });
                   window.open(payload.dialogButtonLink, "_blank");
                   setIsExperimentDialogOpen(false);
-                },
-              }}
-              size="medium"
-            />
+                }}
+              >
+                {payload.dialogButtonLabel}
+              </DialogActionButton>
+            </DialogActions>
           </Box>
         </DialogContent>
       </Dialog>
