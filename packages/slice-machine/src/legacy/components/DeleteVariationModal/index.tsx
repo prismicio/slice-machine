@@ -1,7 +1,9 @@
 import {
   Box,
   Dialog,
+  DialogActionButton,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
   Text,
@@ -49,11 +51,12 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
             <Bold>not</Bold> affect your documents until you <Bold>edit</Bold>{" "}
             them manually.
           </Text>
-          <DialogActions
-            ok={{
-              text: "Delete",
-              color: "tomato",
-              onClick: () => {
+          <DialogActions>
+            <DialogCancelButton size="medium" />
+            <DialogActionButton
+              size="medium"
+              color="tomato"
+              onClick={() => {
                 if (!variation) return;
                 void (async () => {
                   setIsDeleting(true);
@@ -69,12 +72,12 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
                   setIsDeleting(false);
                   onClose();
                 })();
-              },
-              loading: isDeleting,
-            }}
-            cancel={{ text: "Cancel" }}
-            size="medium"
-          />
+              }}
+              loading={isDeleting}
+            >
+              Delete
+            </DialogActionButton>
+          </DialogActions>
         </Box>
       </DialogContent>
     </Dialog>

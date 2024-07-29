@@ -1,7 +1,9 @@
 import {
   Box,
   Dialog,
+  DialogActionButton,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
   FormInput,
@@ -98,16 +100,17 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
                     />
                   </Box>
                 </Box>
-                <DialogActions
-                  ok={{
-                    text: "Rename",
-                    onClick: () => void formik.submitForm(),
-                    loading: isRenaming,
-                    disabled: !formik.isValid,
-                  }}
-                  cancel={{ text: "Cancel" }}
-                  size="medium"
-                />
+                <DialogActions>
+                  <DialogCancelButton size="medium" />
+                  <DialogActionButton
+                    size="medium"
+                    onClick={() => void formik.submitForm()}
+                    loading={isRenaming}
+                    disabled={!formik.isValid}
+                  >
+                    Rename
+                  </DialogActionButton>
+                </DialogActions>
               </form>
             )}
           </Formik>

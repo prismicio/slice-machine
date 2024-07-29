@@ -1,6 +1,8 @@
 import {
   Dialog,
+  DialogActionButton,
   DialogActions,
+  DialogCancelButton,
   DialogContent,
   DialogHeader,
 } from "@prismicio/editor-ui";
@@ -50,11 +52,12 @@ export const OnboardingStepDialog = ({
       <DialogHeader title="Onboarding" />
       <DialogContent>
         <OnboardingStepDialogContent step={step} />
-        <DialogActions
-          ok={{ text: ctaOkText, onClick: markAsDone }}
-          cancel={{ text: "Close" }}
-          size="medium"
-        />
+        <DialogActions>
+          <DialogCancelButton size="medium">Close</DialogCancelButton>
+          <DialogActionButton size="medium" onClick={markAsDone}>
+            {ctaOkText}
+          </DialogActionButton>
+        </DialogActions>
       </DialogContent>
     </Dialog>
   );
