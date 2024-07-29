@@ -5137,12 +5137,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.37-alpha.dialog-actions.0":
-  version: 0.4.37-alpha.dialog-actions.0
-  resolution: "@prismicio/editor-fields@npm:0.4.37-alpha.dialog-actions.0"
+"@prismicio/editor-fields@npm:0.4.37":
+  version: 0.4.37
+  resolution: "@prismicio/editor-fields@npm:0.4.37"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.37-alpha.dialog-actions.0
+    "@prismicio/editor-support": 0.4.37
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 2.6.0
     "@tiptap/core": 2.3.0
@@ -5173,16 +5173,16 @@ __metadata:
     uuid: 9.0.1
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.37-alpha.dialog-actions.0
+    "@prismicio/editor-ui": ^0.4.37
     react: 18
     react-dom: 18
-  checksum: 97697dd5dce420fc8101398020ada2b57bf6345199401761c2c18dd928e9777ba9697aab3a4adbd4aa046a4cdf0a55279b250ab04b05d4e87023e34bbc3e4345
+  checksum: 1352fa54941bf68188315925b6a059f6edf170f24e4e4413aaaedb6eef62868dc52a7991e93822e02119b0ba9cecf67921fa26aa1d7102ab2854a0075c341e3a
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.37-alpha.dialog-actions.0":
-  version: 0.4.37-alpha.dialog-actions.0
-  resolution: "@prismicio/editor-support@npm:0.4.37-alpha.dialog-actions.0"
+"@prismicio/editor-support@npm:0.4.37":
+  version: 0.4.37
+  resolution: "@prismicio/editor-support@npm:0.4.37"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -5193,16 +5193,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: a8c19e9804a6c2fe90f16f7f798162a11dd5db889c3a1a2a5e2c048e5839a8a5fb0b8baa32c601d6467daf90c720e4b2b66b8ea40bc68dbb5fb92c9ac9ca66a8
+  checksum: 2d4406042f2b84280c7d951c300d6e800cce1298da2366381b092cdc96fdb14fa63cd5efe2afe6cd64f7506a1081e094cb095edc0d2992c5d59a046d874485f8
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.37-alpha.dialog-actions.0":
-  version: 0.4.37-alpha.dialog-actions.0
-  resolution: "@prismicio/editor-ui@npm:0.4.37-alpha.dialog-actions.0"
+"@prismicio/editor-ui@npm:0.4.37":
+  version: 0.4.37
+  resolution: "@prismicio/editor-ui@npm:0.4.37"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.37-alpha.dialog-actions.0
+    "@prismicio/editor-support": 0.4.37
     "@radix-ui/react-avatar": 1.0.4
     "@radix-ui/react-checkbox": 1.0.4
     "@radix-ui/react-dialog": 1.0.5
@@ -5252,7 +5252,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: a18e78df839c02567ea5efcb5a0d3bea9b43d5db015206f57118d669379bb2a2ab21bacf275f659eae73c6801bbe11ea968dc3dcd8b92cbb69247db6a5a46a11
+  checksum: 51a4e3aa025cbacd6eab48de4917e1445d7e09bb32ee380ddb2bc859387195fcae586805aace1d114f438623a6058c0071eff0bf126010bffc18736518a9c602
   languageName: node
   linkType: hard
 
@@ -30283,9 +30283,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.6.0
-    "@prismicio/editor-fields": 0.4.37-alpha.dialog-actions.0
-    "@prismicio/editor-support": 0.4.37-alpha.dialog-actions.0
-    "@prismicio/editor-ui": 0.4.37-alpha.dialog-actions.0
+    "@prismicio/editor-fields": 0.4.37
+    "@prismicio/editor-support": 0.4.37
+    "@prismicio/editor-ui": 0.4.37
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.0
     "@prismicio/simulator": 0.1.4
