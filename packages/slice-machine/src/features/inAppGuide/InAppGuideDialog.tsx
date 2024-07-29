@@ -24,10 +24,10 @@ export const InAppGuideDialog: FC = () => {
   const { isInAppGuideOpen, setIsInAppGuideOpen } = useInAppGuide();
   const inAppGuideContent = useInAppGuideContent();
 
-  const { eligible: isNewOnboardingEnable } = useOnboardingExperiment();
+  const { eligible: newOnboardingEnable } = useOnboardingExperiment();
 
   const trigger =
-    isEmptyProject === false && !isNewOnboardingEnable ? (
+    !isEmptyProject && !newOnboardingEnable ? (
       <Box position="fixed" right={16} bottom={16}>
         <IconButton
           color="purple"
@@ -45,7 +45,7 @@ export const InAppGuideDialog: FC = () => {
     <Dialog
       trigger={trigger}
       modal={false}
-      open={isInAppGuideOpen && isEmptyProject === false}
+      open={isInAppGuideOpen && !isEmptyProject}
       onOpenChange={(open) => {
         setIsInAppGuideOpen(open);
       }}
