@@ -36,7 +36,7 @@ if (parsedPkgVersion.prerelease.length === 0) {
 
 /** @type {import("next").NextConfig} */
 let nextConfig = {
-  output: 'export',
+  output: "export",
   swcMinify: true,
   publicRuntimeConfig: { sentryEnvironment },
 };
