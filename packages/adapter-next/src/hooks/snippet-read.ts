@@ -85,16 +85,13 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case "Group": {
-			const code = await format(
-				stripIndent`
-					<>
-						{${dotPath(fieldPath)}.map((${itemName}) => {
-							// Render the ${itemName}
-						})}
-					</>
-				`,
-				helpers,
-			);
+			// We cannot use `format` since this snippet contains invalid syntax.
+			// Please ensure this snippet is manually formatted correctly.
+			const code = stripIndent`
+				{${dotPath(fieldPath)}.map((${itemName}) => (
+				  // Render the ${itemName}
+				))}
+			`;
 
 			return {
 				label,
