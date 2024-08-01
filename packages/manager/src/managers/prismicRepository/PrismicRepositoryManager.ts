@@ -20,7 +20,7 @@ import { BaseManager } from "../BaseManager";
 
 import {
 	AllChangeTypes,
-	BulkBody,
+	PushBody,
 	ChangeTypes,
 	ClientError,
 	PushChangesLimit,
@@ -401,16 +401,15 @@ export class PrismicRepositoryManager extends BaseManager {
 			);
 
 			// Compute the POST body
-			const requestBody: BulkBody = {
+			const requestBody: PushBody = {
 				confirmDeleteDocuments: args.confirmDeleteDocuments,
 				changes: allChanges,
 			};
 
 			const repositoryName = await this.project.getResolvedRepositoryName();
 
-			// TODO: move to customtypes client
 			const response = await this._fetch({
-				url: new URL("./bulk", API_ENDPOINTS.PrismicModels),
+				url: new URL("./push", API_ENDPOINTS.SliceMachineV1),
 				method: "POST",
 				body: requestBody,
 				repository: repositoryName,
