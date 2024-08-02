@@ -90,16 +90,16 @@ const testSnippet = (
 	});
 };
 
-testSnippet("boolean", `<>{${model.id}.data.boolean}</>`);
+testSnippet("boolean", `{${model.id}.data.boolean}`, { format: false });
 
-testSnippet("color", `<>{${model.id}.data.color}</>`);
+testSnippet("color", `{${model.id}.data.color}`, { format: false });
 
 testSnippet(
 	"contentRelationship",
 	`<PrismicNextLink field={${model.id}.data.contentRelationship}>Link</PrismicNextLink>`,
 );
 
-testSnippet("date", `<>{${model.id}.data.date}</>`);
+testSnippet("date", `{${model.id}.data.date}`, { format: false });
 
 testSnippet(
 	"embed",
@@ -108,7 +108,8 @@ testSnippet(
 
 testSnippet(
 	"geoPoint",
-	`<>{${model.id}.data.geoPoint.latitude}, {${model.id}.data.geoPoint.longitude}</>`,
+	`{${model.id}.data.geoPoint.latitude}, {${model.id}.data.geoPoint.longitude}`,
+	{ format: false },
 );
 
 testSnippet(
@@ -121,9 +122,11 @@ testSnippet(
 
 testSnippet("image", `<PrismicNextImage field={${model.id}.data.image} />`);
 
-testSnippet("integrationFields", `<>{${model.id}.data.integrationFields}</>`);
+testSnippet("integrationFields", `{${model.id}.data.integrationFields}`, {
+	format: false,
+});
 
-testSnippet("keyText", `<>{${model.id}.data.keyText}</>`);
+testSnippet("keyText", `{${model.id}.data.keyText}`, { format: false });
 
 testSnippet(
 	"link",
@@ -135,7 +138,7 @@ testSnippet(
 	`<PrismicNextLink field={${model.id}.data.linkToMedia}>Link</PrismicNextLink>`,
 );
 
-testSnippet("number", `<>{${model.id}.data.number}</>`);
+testSnippet("number", `{${model.id}.data.number}`, { format: false });
 
 testSnippet("richText", [
 	{
@@ -150,14 +153,14 @@ testSnippet("richText", [
 	},
 ]);
 
-testSnippet("select", `<>{${model.id}.data.select}</>`);
+testSnippet("select", `{${model.id}.data.select}`, { format: false });
 
 testSnippet(
 	"sliceZone",
 	`<SliceZone slices={${model.id}.data.sliceZone} components={components} />`,
 );
 
-testSnippet("timestamp", `<>{${model.id}.data.timestamp}</>`);
+testSnippet("timestamp", `{${model.id}.data.timestamp}`, { format: false });
 
 testSnippet("title", [
 	{
@@ -172,4 +175,4 @@ testSnippet("title", [
 	},
 ]);
 
-testSnippet("uid", `<>{${model.id}.data.uid}</>`);
+testSnippet("uid", `{${model.id}.data.uid}`, { format: false });

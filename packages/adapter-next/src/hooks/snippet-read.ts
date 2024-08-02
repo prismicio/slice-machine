@@ -77,8 +77,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				language: "tsx",
 				code: await format(
 					stripIndent`
-							<PrismicNextImage field={${dotPath(fieldPath)}} />
-						`,
+						<PrismicNextImage field={${dotPath(fieldPath)}} />
+					`,
 					helpers,
 				),
 			};
@@ -119,12 +119,11 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case "GeoPoint": {
-			const code = await format(
-				stripIndent`
-					<>{${dotPath(fieldPath, "latitude")}}, {${dotPath(fieldPath, "longitude")}}</>
-				`,
-				helpers,
-			);
+			// We cannot use `format` since this snippet contains invalid syntax.
+			// Please ensure this snippet is manually formatted correctly.
+			const code = stripIndent`
+				{${dotPath(fieldPath, "latitude")}}, {${dotPath(fieldPath, "longitude")}}
+			`;
 
 			return {
 				label,
@@ -152,12 +151,11 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			return {
 				label,
 				language: "tsx",
-				code: await format(
-					stripIndent`
-						<>{${dotPath(fieldPath)}}</>
-					`,
-					helpers,
-				),
+				// We cannot use `format` since this snippet contains invalid syntax.
+				// Please ensure this snippet is manually formatted correctly.
+				code: stripIndent`
+					{${dotPath(fieldPath)}}
+				`,
 			};
 		}
 	}
