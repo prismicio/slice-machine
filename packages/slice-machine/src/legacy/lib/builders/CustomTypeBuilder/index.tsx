@@ -23,6 +23,7 @@ import CreateModal from "./TabModal/create";
 import DeleteModal from "./TabModal/delete";
 import UpdateModal from "./TabModal/update";
 import TabZone from "./TabZone";
+import { UIDEditor } from "./UIDEditor";
 
 type DialogState =
   | { type: "CREATE_CUSTOM_TYPE_TAB" }
@@ -42,10 +43,21 @@ export const CustomTypeBuilder = () => {
     customTypeSM.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
       .length === 0;
 
+  const uidField = customTypeSM.tabs
+    .find((tab) => tab.key === tabValue)
+    ?.value?.find((field) => field.key === "uid");
+
   return (
     <>
       <Window sx={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
-        {customType.format === "page" ? <WindowFrame /> : undefined}
+        {customType.format === "page" ? (
+          <WindowFrame
+            title={
+              uidField &&
+              customType.repeatable && <UIDEditor field={uidField} />
+            }
+          />
+        ) : undefined}
         {query.newPageType === "true" ? (
           <TabZone tabId={customTypeSM.tabs[0].key} />
         ) : (
