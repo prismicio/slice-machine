@@ -297,6 +297,7 @@ export class TypeBuilderPage extends BuilderPage {
     await this.getUidEditorButton("UID").click();
     await expect(this.uidEditorDialog).toBeVisible();
     await this.page.getByRole("textbox", { name: "Label *" }).fill(label);
+    await this.page.getByRole("button", { name: "Save" }).click();
   }
 
   /**
