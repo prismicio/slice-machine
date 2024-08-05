@@ -21,6 +21,50 @@ test("installs dependencies", async (ctx) => {
 	});
 });
 
+test("creates all Slice library index files", async (ctx) => {
+	await fs.writeFile(
+		path.join(ctx.project.root, "slicemachine.config.json"),
+		JSON.stringify({
+			...ctx.project.config,
+			libraries: ["./foo", "./bar"],
+		}),
+	);
+
+	await ctx.pluginRunner.callHook("project:init", {
+		log: vi.fn(),
+		installDependencies: vi.fn(),
+	});
+
+	expect(await fs.readdir(path.join(ctx.project.root, "foo"))).includes(
+		"index.js",
+	);
+	expect(await fs.readdir(path.join(ctx.project.root, "bar"))).includes(
+		"index.js",
+	);
+});
+
+test("doesn't throw if no Slice libraries are configured", async (ctx) => {
+	ctx.project.config.libraries = undefined;
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
+	await pluginRunner.init();
+
+	await expect(
+		ctx.pluginRunner.callHook("project:init", {
+			log: vi.fn(),
+			installDependencies: vi.fn(),
+		}),
+	).resolves.toStrictEqual(
+		expect.objectContaining({
+			errors: [],
+		}),
+	);
+});
+
 describe("modify slicemachine.config.json", () => {
 	test("adds default localSliceSimulatorURL", async (ctx) => {
 		const log = vi.fn();
@@ -847,10 +891,18 @@ describe("Slice Simulator route", () => {
 				  getSlices,
 				} from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
+				import { redirect } from \\"next/navigation\\";
 
 				import { components } from \\"../../slices\\";
 
 				export default function SliceSimulatorPage({ searchParams }) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    redirect(\\"/\\");
+				  }
+
 				  const slices = getSlices(searchParams.state);
 
 				  return (
@@ -912,10 +964,18 @@ describe("Slice Simulator route", () => {
 				  getSlices,
 				} from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
+				import { redirect } from \\"next/navigation\\";
 
 				import { components } from \\"../../slices\\";
 
 				export default function SliceSimulatorPage({ searchParams }) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    redirect(\\"/\\");
+				  }
+
 				  const slices = getSlices(searchParams.state);
 
 				  return (
@@ -1009,12 +1069,20 @@ describe("Slice Simulator route", () => {
 				  getSlices,
 				} from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
+				import { redirect } from \\"next/navigation\\";
 
 				import { components } from \\"../../slices\\";
 
 				export default function SliceSimulatorPage({
 				  searchParams,
 				}: SliceSimulatorParams) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    redirect(\\"/\\");
+				  }
+
 				  const slices = getSlices(searchParams.state);
 
 				  return (
@@ -1055,6 +1123,17 @@ describe("Slice Simulator route", () => {
 				      sliceZone={(props) => <SliceZone {...props} components={components} />}
 				    />
 				  );
+				}
+
+				export function getServerSideProps(context) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    return { redirect: { destination: \\"/\\", permanent: false } };
+				  }
+
+				  return { props: {} };
 				}
 				"
 			`);
@@ -1112,6 +1191,17 @@ describe("Slice Simulator route", () => {
 				      sliceZone={(props) => <SliceZone {...props} components={components} />}
 				    />
 				  );
+				}
+
+				export function getServerSideProps(context) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    return { redirect: { destination: \\"/\\", permanent: false } };
+				  }
+
+				  return { props: {} };
 				}
 				"
 			`);
@@ -1192,7 +1282,8 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"import { GetServerSidePropsContext } from \\"next\\";
+				import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";
@@ -1203,6 +1294,17 @@ describe("Slice Simulator route", () => {
 				      sliceZone={(props) => <SliceZone {...props} components={components} />}
 				    />
 				  );
+				}
+
+				export function getServerSideProps(context: GetServerSidePropsContext) {
+				  if (
+				    process.env.SLICE_SIMULATOR_SECRET &&
+				    context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+				  ) {
+				    return { redirect: { destination: \\"/\\", permanent: false } };
+				  }
+
+				  return { props: {} };
 				}
 				"
 			`);

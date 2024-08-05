@@ -17,6 +17,7 @@ import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
 import type { PluginOptions } from "../types";
 import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
+import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];
@@ -281,12 +282,20 @@ const createSliceSimulatorPage = async ({
 					getSlices,
 				} from "@slicemachine/adapter-next/simulator";
 				import { SliceZone } from "@prismicio/react";
+				import { redirect } from "next/navigation";
 
 				import { components } from "../../slices";
 
 				export default function SliceSimulatorPage({
 					searchParams,
 				}: SliceSimulatorParams) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						redirect("/");
+					}
+
 					const slices = getSlices(searchParams.state);
 
 					return (
@@ -303,10 +312,18 @@ const createSliceSimulatorPage = async ({
 					getSlices,
 				} from "@slicemachine/adapter-next/simulator";
 				import { SliceZone } from "@prismicio/react";
+				import { redirect } from "next/navigation";
 
 				import { components } from "../../slices";
 
 				export default function SliceSimulatorPage({ searchParams }) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						searchParams.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						redirect("/");
+					}
+
 					const slices = getSlices(searchParams.state);
 
 					return (
@@ -318,20 +335,60 @@ const createSliceSimulatorPage = async ({
 			`;
 		}
 	} else {
-		contents = source`
-			import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-			import { SliceZone } from "@prismicio/react";
+		if (isTypeScriptProject) {
+			contents = source`
+				import { GetServerSidePropsContext } from "next";
+				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+				import { SliceZone } from "@prismicio/react";
 
-			import { components } from "../slices";
+				import { components } from "../slices";
 
-			export default function SliceSimulatorPage() {
-				return (
-					<SliceSimulator
-						sliceZone={(props) => <SliceZone {...props} components={components} />}
-					/>
-				);
-			}
-		`;
+				export default function SliceSimulatorPage() {
+					return (
+						<SliceSimulator
+							sliceZone={(props) => <SliceZone {...props} components={components} />}
+						/>
+					);
+				}
+
+				export function getServerSideProps(context: GetServerSidePropsContext) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						return { redirect: { destination: "/", permanent: false } };
+					}
+
+					return { props: {} };
+				}
+			`;
+		} else {
+			contents = source`
+				import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
+				import { SliceZone } from "@prismicio/react";
+
+				import { components } from "../slices";
+
+				export default function SliceSimulatorPage() {
+					return (
+						<SliceSimulator
+							sliceZone={(props) => <SliceZone {...props} components={components} />}
+						/>
+					);
+				}
+
+				export function getServerSideProps(context) {
+					if (
+						process.env.SLICE_SIMULATOR_SECRET &&
+						context.query.secret !== process.env.SLICE_SIMULATOR_SECRET
+					) {
+						return { redirect: { destination: "/", permanent: false } };
+					}
+
+					return { props: {} };
+				}
+			`;
+		}
 	}
 
 	await writeProjectFile({
@@ -570,6 +627,28 @@ const createRevalidateRoute = async ({
 	});
 };
 
+const upsertSliceLibraryIndexFiles = async (
+	context: SliceMachineContext<PluginOptions>,
+) => {
+	// We must use the `getProject()` helper to get the latest version of
+	// the project config. The config may have been modified in
+	// `modifySliceMachineConfig()` and will not be reflected in
+	// `context.project`.
+	// TODO: Automatically update the plugin runner's in-memory `project`
+	// object when `updateSliceMachineConfig()` is called.
+	const project = await context.helpers.getProject();
+
+	if (!project.config.libraries) {
+		return;
+	}
+
+	await Promise.all(
+		project.config.libraries.map(async (libraryID) => {
+			await upsertSliceLibraryIndexFile({ libraryID, ...context });
+		}),
+	);
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
@@ -585,4 +664,8 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			createRevalidateRoute(context),
 		]),
 	);
+
+	// This must happen after `modifySliceMachineConfig()` since the
+	// location of the default Slice library may change.
+	await upsertSliceLibraryIndexFiles(context);
 };
