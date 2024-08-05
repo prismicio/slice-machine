@@ -43,9 +43,10 @@ export const CustomTypeBuilder = () => {
     customTypeSM.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
       .length === 0;
 
-  const uidField = customTypeSM.tabs
-    .find((tab) => tab.key === tabValue)
-    ?.value?.find((field) => field.key === "uid");
+  const tabWithUid = customTypeSM.tabs.find((tab) =>
+    tab.value.find((field) => field.key === "uid"),
+  );
+  const uidField = tabWithUid?.value.find((field) => field.key === "uid");
 
   return (
     <>
