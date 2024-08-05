@@ -14,6 +14,7 @@ import {
   useOnboardingContext,
 } from "@/features/onboarding/OnboardingProvider";
 import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
+import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 
 import styles from "./OnboardingGuide.module.css";
 
@@ -83,8 +84,12 @@ const OnboardingGuideContent = () => {
 
 export const OnboardingGuide = () => {
   const { eligible } = useOnboardingExperiment();
+  const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =
+    useUpdateAvailable();
 
-  if (!eligible) return null;
+  if (!eligible || sliceMachineUpdateAvailable || adapterUpdateAvailable) {
+    return null;
+  }
 
   return <OnboardingGuideContent />;
 };
