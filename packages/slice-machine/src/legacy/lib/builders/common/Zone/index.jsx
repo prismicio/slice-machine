@@ -48,7 +48,7 @@ const Zone = ({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     if (hasUid) return widgets;
 
-    // Move UID widget to the end of the array
+    // Move UID widget to the end of the array because it is used very rarely
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const uidField = widgetsArray.find(({ TYPE_NAME }) => TYPE_NAME === "UID");

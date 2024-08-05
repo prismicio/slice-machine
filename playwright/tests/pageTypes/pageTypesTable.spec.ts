@@ -33,10 +33,10 @@ test("I can create a reusable page type", async ({
   await expect(pageTypesBuilderPage.getTab("Main")).toBeVisible();
   await expect(pageTypesBuilderPage.getTab("SEO & Metadata")).toBeVisible();
 
-  await expect(pageTypesBuilderPage.staticZoneListItem).toHaveCount(1);
-  await expect(pageTypesBuilderPage.getListItemFieldId("uid")).toBeVisible();
+  await expect(pageTypesBuilderPage.getUidEditorButton("UID")).toBeVisible();
+  await pageTypesBuilderPage.saveUidLabel("UID Label");
   await expect(
-    pageTypesBuilderPage.getListItemFieldName("uid", "UID"),
+    pageTypesBuilderPage.getUidEditorButton("UID Label"),
   ).toBeVisible();
 
   await expect(pageTypesBuilderPage.sliceZoneSwitch).not.toBeVisible();

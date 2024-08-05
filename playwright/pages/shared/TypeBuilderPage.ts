@@ -46,6 +46,7 @@ export class TypeBuilderPage extends BuilderPage {
   readonly sliceZoneAddDropdownSelectExistingAction: Locator;
   readonly sliceZoneAddDropdownCreateNewAction: Locator;
   readonly removeSliceButton: Locator;
+  readonly uidEditorDialog: Locator;
 
   constructor(
     page: Page,
@@ -129,6 +130,9 @@ export class TypeBuilderPage extends BuilderPage {
       name: "Remove slice",
       exact: true,
     });
+    this.uidEditorDialog = page
+      .getByRole("dialog")
+      .getByText("Update the UID label");
   }
 
   /**
@@ -192,6 +196,10 @@ export class TypeBuilderPage extends BuilderPage {
     return this.getListItem(fieldId)
       .getByTestId("field-id")
       .getByText(`data.${fieldId}`, { exact: true });
+  }
+
+  getUidEditorButton(label: string) {
+    return this.page.getByRole("button").getByText(label);
   }
 
   /**
@@ -283,6 +291,12 @@ export class TypeBuilderPage extends BuilderPage {
         exact: true,
       }),
     ).toBeVisible();
+  }
+
+  async saveUidLabel(label: string) {
+    await this.getUidEditorButton("UID").click();
+    await expect(this.uidEditorDialog).toBeVisible();
+    await this.page.getByRole("textbox", { name: "Label *" }).fill(label);
   }
 
   /**

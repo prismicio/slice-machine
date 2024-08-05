@@ -36,7 +36,6 @@ interface UIDEditorProps {
 
 export const UIDEditor: FC<UIDEditorProps> = ({ field }) => {
   const [isOpen, setOpen] = useState(false);
-  const [isSaving, setSaving] = useState(false);
 
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
@@ -68,7 +67,7 @@ export const UIDEditor: FC<UIDEditorProps> = ({ field }) => {
     <Dialog
       open={isOpen}
       onOpenChange={setOpen}
-      size={{ width: 448, height: 248 }}
+      size="small"
       trigger={
         <Button
           color="grey"
@@ -76,11 +75,11 @@ export const UIDEditor: FC<UIDEditorProps> = ({ field }) => {
           startIcon="language"
           sx={{ marginInline: "auto" }}
         >
-          :uid
+          {field?.value?.config?.label ?? "UID"}
         </Button>
       }
     >
-      <DialogHeader title="Update UID label" />
+      <DialogHeader title="Update the UID label" />
       <DialogContent>
         <Formik
           initialValues={{ label: field?.value?.config?.label ?? "" }}
@@ -92,17 +91,13 @@ export const UIDEditor: FC<UIDEditorProps> = ({ field }) => {
             return errors;
           }}
           onSubmit={(values) => {
-            setSaving(true);
-
             saveUIDLabel(values.label);
-
-            setSaving(false);
             setOpen(false);
           }}
         >
           {(formik) => (
             <form onSubmit={formik.handleSubmit}>
-              <Box flexDirection="column" padding={16}>
+              <Box flexDirection="column" padding={16} gap={4}>
                 <FormInput
                   type="text"
                   label="Label *"
@@ -113,7 +108,7 @@ export const UIDEditor: FC<UIDEditorProps> = ({ field }) => {
                   }
                   error={typeof formik.errors.label === "string"}
                 />
-                <Box alignItems="center" gap={4} padding={{ top: 4 }}>
+                <Box alignItems="center" gap={4}>
                   {typeof formik.errors.label === "string" ? (
                     <>
                       <Icon name="alert" color="tomato11" size="small" />
@@ -125,10 +120,9 @@ export const UIDEditor: FC<UIDEditorProps> = ({ field }) => {
                 </Box>
               </Box>
               <DialogActions>
-                <DialogCancelButton size="medium" disabled={isSaving} />
+                <DialogCancelButton size="medium" />
                 <DialogActionButton
                   size="medium"
-                  loading={isSaving}
                   onClick={() => void formik.submitForm()}
                   disabled={!formik.isValid}
                 >
