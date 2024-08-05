@@ -124,7 +124,11 @@ const Navigation: FC = () => {
       </ErrorBoundary>
 
       <SideNavList position="bottom">
-        <OnboardingGuide />
+        <ErrorBoundary>
+          <Suspense>
+            <OnboardingGuide />
+          </Suspense>
+        </ErrorBoundary>
         {masterSliceLibrary !== undefined && (
           <SideNavListItem>
             <MasterSliceLibraryPreviewModal
