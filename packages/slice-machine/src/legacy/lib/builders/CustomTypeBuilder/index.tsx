@@ -84,19 +84,21 @@ export const CustomTypeBuilder = () => {
                       >
                         Rename
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        color="tomato"
-                        disabled={customTypeSM.tabs.length <= 1}
-                        onSelect={() => {
-                          setDialog({
-                            type: "DELETE_CUSTOM_TYPE_TAB",
-                            tabKey: tab.key,
-                          });
-                        }}
-                        startIcon={<Icon name="delete" />}
-                      >
-                        Remove
-                      </DropdownMenuItem>
+                      {tabWithUid?.key !== tab.key && (
+                        <DropdownMenuItem
+                          color="tomato"
+                          disabled={customTypeSM.tabs.length <= 1}
+                          onSelect={() => {
+                            setDialog({
+                              type: "DELETE_CUSTOM_TYPE_TAB",
+                              tabKey: tab.key,
+                            });
+                          }}
+                          startIcon={<Icon name="delete" />}
+                        >
+                          Remove ?
+                        </DropdownMenuItem>
+                      )}
                     </>
                   }
                   value={tab.key}
