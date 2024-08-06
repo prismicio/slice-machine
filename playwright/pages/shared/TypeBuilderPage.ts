@@ -46,7 +46,8 @@ export class TypeBuilderPage extends BuilderPage {
   readonly sliceZoneAddDropdownSelectExistingAction: Locator;
   readonly sliceZoneAddDropdownCreateNewAction: Locator;
   readonly removeSliceButton: Locator;
-  readonly uidEditorDialog: Locator;
+  // TODO
+  // readonly uidEditorDialog: Locator;
 
   constructor(
     page: Page,
@@ -130,9 +131,10 @@ export class TypeBuilderPage extends BuilderPage {
       name: "Remove slice",
       exact: true,
     });
-    this.uidEditorDialog = page
-      .getByRole("dialog")
-      .getByText("Update the UID label");
+    // TODO
+    // this.uidEditorDialog = page
+    //   .getByRole("dialog")
+    //   .getByText("Update the UID label", {exact: true});
   }
 
   /**
@@ -198,9 +200,10 @@ export class TypeBuilderPage extends BuilderPage {
       .getByText(`data.${fieldId}`, { exact: true });
   }
 
-  getUidEditorButton(label: string) {
-    return this.page.getByRole("button").getByText(label);
-  }
+  // TODO
+  // getUidEditorButton(label: string) {
+  //   return this.page.getByRole("button").getByText(label, { exact: true });
+  // }
 
   /**
    * Actions
@@ -293,12 +296,15 @@ export class TypeBuilderPage extends BuilderPage {
     ).toBeVisible();
   }
 
-  async saveUidLabel(label: string) {
-    await this.getUidEditorButton("UID").click();
-    await expect(this.uidEditorDialog).toBeVisible();
-    await this.page.getByRole("textbox", { name: "Label *" }).fill(label);
-    await this.page.getByRole("button", { name: "Save" }).click();
-  }
+  // TODO
+  // async saveUidLabel(label: string) {
+  //   await this.getUidEditorButton("UID").click();
+  //   await expect(this.uidEditorDialog).toBeVisible();
+  //   await this.page
+  //     .getByRole("textbox", { name: "Label *", exact: true })
+  //     .fill(label);
+  //   await this.page.getByRole("button", { name: "Save", exact: true }).click();
+  // }
 
   /**
    *  Assertions

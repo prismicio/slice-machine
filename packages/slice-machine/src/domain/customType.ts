@@ -129,6 +129,28 @@ export function getSectionSliceZoneConfig(
   return maybeSliceZone?.config ?? undefined;
 }
 
+// TODO add tests
+// We block user from deleteing section containing UID field,
+// so we can expect uid to be in the main section
+export function getUidField(customType: CustomType): UID | undefined {
+  const mainSectionEntry = getMainSectionEntry(customType);
+  const [_, mainSection] = mainSectionEntry ?? [];
+
+  return Object.values(mainSection ?? {}).find(
+    (field): field is UID => field.type === "UID",
+  );
+}
+
+// TODO add tests
+export function findSectionWithUidField(customType: CustomType): string | null {
+  const sectionEntries = getSectionEntries(customType);
+  const sectionWithUid = sectionEntries.find(([_, section]) =>
+    Object.values(section).some((field) => field.type === "UID"),
+  );
+
+  return sectionWithUid?.[0] ?? null;
+}
+
 // Find the next available key for a slice zone
 // Each section slice zone must have a unique key because
 // all slice zones from a custom type are flattened and
@@ -415,6 +437,41 @@ export function reorderField(args: ReorderFieldArgs): CustomType {
     const [sliceZoneKey, sliceZoneField] = maybeSliceZoneEntry;
     updatedSection[sliceZoneKey] = sliceZoneField;
   }
+
+  const newCustomType = updateSection({
+    customType,
+    sectionId,
+    updatedSection,
+  });
+
+  return newCustomType;
+}
+
+// TODO add tests
+export function updateUidField(
+  label: string,
+  customType: CustomType,
+): CustomType {
+  const field = getUidField(customType);
+  if (!field) return customType;
+
+  const section = findSectionWithUidField(customType);
+  const sectionId = section ?? "Main";
+
+  const newField = {
+    ...field,
+    config: {
+      ...field.config,
+      label,
+    },
+  };
+
+  const updatedSection = updateFields({
+    fields: customType.json[sectionId],
+    previousFieldId: "uid",
+    newFieldId: "uid",
+    newField,
+  });
 
   const newCustomType = updateSection({
     customType,

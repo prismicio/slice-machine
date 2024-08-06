@@ -17,13 +17,13 @@ import {
   renameSection,
 } from "@/domain/customType";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { UIDEditor } from "@/features/customTypes/customTypesBuilder/UIDEditor";
 import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 
 import CreateModal from "./TabModal/create";
 import DeleteModal from "./TabModal/delete";
 import UpdateModal from "./TabModal/update";
 import TabZone from "./TabZone";
-import { UIDEditor } from "./UIDEditor";
 
 type DialogState =
   | { type: "CREATE_CUSTOM_TYPE_TAB" }
@@ -43,21 +43,16 @@ export const CustomTypeBuilder = () => {
     customTypeSM.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
       .length === 0;
 
+  // block removing tab with UID field
   const tabWithUid = customTypeSM.tabs.find((tab) =>
     tab.value.find((field) => field.key === "uid"),
   );
-  const uidField = tabWithUid?.value.find((field) => field.key === "uid");
 
   return (
     <>
       <Window sx={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
         {customType.format === "page" ? (
-          <WindowFrame
-            title={
-              uidField &&
-              customType.repeatable && <UIDEditor field={uidField} />
-            }
-          />
+          <WindowFrame title={<UIDEditor />} />
         ) : undefined}
         {query.newPageType === "true" ? (
           <TabZone tabId={customTypeSM.tabs[0].key} />
@@ -84,21 +79,22 @@ export const CustomTypeBuilder = () => {
                       >
                         Rename
                       </DropdownMenuItem>
-                      {tabWithUid?.key !== tab.key && (
-                        <DropdownMenuItem
-                          color="tomato"
-                          disabled={customTypeSM.tabs.length <= 1}
-                          onSelect={() => {
-                            setDialog({
-                              type: "DELETE_CUSTOM_TYPE_TAB",
-                              tabKey: tab.key,
-                            });
-                          }}
-                          startIcon={<Icon name="delete" />}
-                        >
-                          Remove ?
-                        </DropdownMenuItem>
-                      )}
+                      <DropdownMenuItem
+                        color="tomato"
+                        disabled={
+                          customTypeSM.tabs.length <= 1 ||
+                          tabWithUid?.key === tab.key
+                        }
+                        onSelect={() => {
+                          setDialog({
+                            type: "DELETE_CUSTOM_TYPE_TAB",
+                            tabKey: tab.key,
+                          });
+                        }}
+                        startIcon={<Icon name="delete" />}
+                      >
+                        Remove
+                      </DropdownMenuItem>
                     </>
                   }
                   value={tab.key}
