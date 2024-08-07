@@ -502,16 +502,20 @@ test("I cannot see default UID field for single page type", async ({
   ).not.toBeVisible();
 });
 
-test('I can edit the UID field', async ({
+test("I can edit the UID field", async ({
   pageTypesBuilderPage,
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
 
-  await expect(pageTypesBuilderPage.uidEditor.getDialogTrigger("UID")).toBeVisible();
-  
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).toBeVisible();
+
   await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
   await pageTypesBuilderPage.uidEditor.editUID("my_uid");
 
-  await expect(pageTypesBuilderPage.uidEditor.getDialogTrigger("my_uid")).toBeVisible();
-})
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("my_uid"),
+  ).toBeVisible();
+});

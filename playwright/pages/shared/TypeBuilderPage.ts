@@ -197,7 +197,6 @@ export class TypeBuilderPage extends BuilderPage {
       .getByText(`data.${fieldId}`, { exact: true });
   }
 
-
   /**
    * Actions
    */
@@ -288,7 +287,6 @@ export class TypeBuilderPage extends BuilderPage {
       }),
     ).toBeVisible();
   }
-
 
   /**
    *  Assertions
