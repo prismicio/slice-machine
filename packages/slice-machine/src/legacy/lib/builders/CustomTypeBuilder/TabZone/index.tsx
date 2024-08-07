@@ -104,6 +104,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     label: string;
     widgetTypeName: keyof typeof Widgets;
   }) => {
+    console.log("onSaveNewField", id, label, widgetTypeName);
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }

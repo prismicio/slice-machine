@@ -7,7 +7,6 @@ import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { fields as allFields } from "@/domain/fields";
 import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
-import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
@@ -56,8 +55,6 @@ const Zone = ({
 
   /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
   const enterEditMode = (field) => {
-    console.log({ field });
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     setEditModalData({ isOpen: true, field });
 
@@ -76,22 +73,11 @@ const Zone = ({
     setEditModalData({ isOpen: false });
   };
 
-  /** @param {string} widgetTypeName */
+  /** @param {keyof typeof Widgets} widgetTypeName */
   const onSelectFieldType = (widgetTypeName) => {
-    const maybeWidget = findWidgetByConfigOrType(
-      Widgets,
-      { label: "", placeholder: "" },
-      widgetTypeName,
-    );
-
-    if (maybeWidget != null) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      setEditModalData({ isOpen: true, field: ["", maybeWidget.create("")] });
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-    // setNewFieldData({ widgetTypeName, fields });
+    const widget = Widgets[widgetTypeName];
+    const field = widget.create("");
+    setEditModalData({ isOpen: true, field: ['', field] });
   };
 
   const onCancelNewField = () => setNewFieldData(null);
