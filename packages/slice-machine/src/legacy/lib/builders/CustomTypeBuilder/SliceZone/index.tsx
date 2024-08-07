@@ -203,74 +203,73 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   return (
     <>
-      {query.newPageType === undefined ? (
-        <ListHeader
-          actions={
-            sliceZone ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button color="grey" startIcon="add">
-                    Add slices
-                  </Button>
-                </DropdownMenuTrigger>
+      <ListHeader
+        actions={
+          sliceZone ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button color="grey" startIcon="add">
+                  Add slices
+                </Button>
+              </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  startIcon={<Icon name="add" size="large" />}
+                  onSelect={openCreateSliceModal}
+                  description="Start from scratch."
+                >
+                  Create new
+                </DropdownMenuItem>
+
+                {availableSlicesTemplates.length > 0 ? (
                   <DropdownMenuItem
-                    startIcon={<Icon name="add" size="large" />}
-                    onSelect={openCreateSliceModal}
-                    description="Start from scratch."
+                    onSelect={openSlicesTemplatesModal}
+                    startIcon={<Icon name="contentCopy" size="large" />}
+                    description="Select from premade examples."
+                    endAdornment={
+                      <Text color="inherit" component="kbd">
+                        <Badge color="purple" title="New" />
+                      </Text>
+                    }
                   >
-                    Create new
+                    Use template
                   </DropdownMenuItem>
+                ) : undefined}
 
-                  {availableSlicesTemplates.length > 0 ? (
-                    <DropdownMenuItem
-                      onSelect={openSlicesTemplatesModal}
-                      startIcon={<Icon name="contentCopy" size="large" />}
-                      description="Select from premade examples."
-                      endAdornment={
-                        <Text color="inherit" component="kbd">
-                          <Badge color="purple" title="New" />
-                        </Text>
-                      }
-                    >
-                      Use template
-                    </DropdownMenuItem>
-                  ) : undefined}
+                {availableSlicesToAdd.length > 0 ? (
+                  <DropdownMenuItem
+                    onSelect={openUpdateSliceZoneModal}
+                    startIcon={<Icon name="folder" size="large" />}
+                    description="Select from your own slices."
+                  >
+                    Select existing
+                  </DropdownMenuItem>
+                ) : undefined}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : undefined
+        }
+        toggle={
+          customType.format !== "page" || tabId !== "Main" ? (
+            <Switch
+              checked={!!sliceZone}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  onCreateSliceZone();
+                } else {
+                  setIsDeleteSliceZoneModalOpen(true);
+                }
+              }}
+              size="small"
+              data-testid="slice-zone-switch"
+            />
+          ) : undefined
+        }
+      >
+        Slice Zone
+      </ListHeader>
 
-                  {availableSlicesToAdd.length > 0 ? (
-                    <DropdownMenuItem
-                      onSelect={openUpdateSliceZoneModal}
-                      startIcon={<Icon name="folder" size="large" />}
-                      description="Select from your own slices."
-                    >
-                      Select existing
-                    </DropdownMenuItem>
-                  ) : undefined}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : undefined
-          }
-          toggle={
-            customType.format !== "page" || tabId !== "Main" ? (
-              <Switch
-                checked={!!sliceZone}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    onCreateSliceZone();
-                  } else {
-                    setIsDeleteSliceZoneModalOpen(true);
-                  }
-                }}
-                size="small"
-                data-testid="slice-zone-switch"
-              />
-            ) : undefined
-          }
-        >
-          Slice Zone
-        </ListHeader>
-      ) : undefined}
       {sliceZone ? (
         slicesInSliceZone.length > 0 ? (
           <BaseStyles>
