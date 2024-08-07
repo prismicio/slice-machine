@@ -14,6 +14,7 @@ import { CustomTypesTablePage } from "../CustomTypesTablePage";
 import { PageTypesTablePage } from "../PageTypesTablePage";
 import { BuilderPage } from "./BuilderPage";
 import { FieldTypeLabel } from "../components/AddFieldDropdown";
+import { UIDEditor } from "../components/UIDEditor";
 
 export class TypeBuilderPage extends BuilderPage {
   readonly createTypeDialog: CreateTypeDialog;
@@ -28,6 +29,7 @@ export class TypeBuilderPage extends BuilderPage {
   readonly customTypeTablePage: CustomTypesTablePage;
   readonly pageTypeTablePage: PageTypesTablePage;
   readonly deleteSliceZoneDialog: DeleteSliceZoneDialog;
+  readonly uidEditor: UIDEditor;
   readonly format: "page" | "custom";
   readonly tab: Locator;
   readonly tabList: Locator;
@@ -46,8 +48,6 @@ export class TypeBuilderPage extends BuilderPage {
   readonly sliceZoneAddDropdownSelectExistingAction: Locator;
   readonly sliceZoneAddDropdownCreateNewAction: Locator;
   readonly removeSliceButton: Locator;
-  // TODO
-  // readonly uidEditorDialog: Locator;
 
   constructor(
     page: Page,
@@ -73,6 +73,7 @@ export class TypeBuilderPage extends BuilderPage {
     this.renameTabDialog = new RenameTabDialog(page);
     this.deleteTabDialog = new DeleteTabDialog(page);
     this.deleteSliceZoneDialog = new DeleteSliceZoneDialog(page);
+    this.uidEditor = new UIDEditor(page);
 
     /**
      * Static locators
@@ -131,10 +132,6 @@ export class TypeBuilderPage extends BuilderPage {
       name: "Remove slice",
       exact: true,
     });
-    // TODO
-    // this.uidEditorDialog = page
-    //   .getByRole("dialog")
-    //   .getByText("Update the UID label", {exact: true});
   }
 
   /**
@@ -200,10 +197,6 @@ export class TypeBuilderPage extends BuilderPage {
       .getByText(`data.${fieldId}`, { exact: true });
   }
 
-  // TODO
-  // getUidEditorButton(label: string) {
-  //   return this.page.getByRole("button").getByText(label, { exact: true });
-  // }
 
   /**
    * Actions
@@ -296,15 +289,6 @@ export class TypeBuilderPage extends BuilderPage {
     ).toBeVisible();
   }
 
-  // TODO
-  // async saveUidLabel(label: string) {
-  //   await this.getUidEditorButton("UID").click();
-  //   await expect(this.uidEditorDialog).toBeVisible();
-  //   await this.page
-  //     .getByRole("textbox", { name: "Label *", exact: true })
-  //     .fill(label);
-  //   await this.page.getByRole("button", { name: "Save", exact: true }).click();
-  // }
 
   /**
    *  Assertions
