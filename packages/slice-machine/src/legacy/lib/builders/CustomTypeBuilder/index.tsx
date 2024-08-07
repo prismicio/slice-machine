@@ -43,16 +43,26 @@ export const CustomTypeBuilder = () => {
     customTypeSM.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
       .length === 0;
 
-  // block removing tab with UID field
-  const tabWithUid = customTypeSM.tabs.find((tab) =>
-    tab.value.find((field) => field.key === "uid"),
-  );
+  function isRemoveDisabled(tabKey: string) {
+    if (customTypeSM.tabs.length <= 1) return true;
+
+    const tabWithUID = customTypeSM.tabs.find((tab) =>
+      tab.value.find((field) => field.key === "uid"),
+    );
+    return (
+      customType.format === "page" &&
+      customType.repeatable &&
+      tabWithUID?.key === tabKey
+    );
+  }
 
   return (
     <>
       <Window sx={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
         {customType.format === "page" ? (
-          <WindowFrame title={<UIDEditor />} />
+          <WindowFrame
+            title={customType.repeatable ? <UIDEditor /> : undefined}
+          />
         ) : undefined}
         {query.newPageType === "true" ? (
           <TabZone tabId={customTypeSM.tabs[0].key} />
@@ -81,10 +91,7 @@ export const CustomTypeBuilder = () => {
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         color="tomato"
-                        disabled={
-                          customTypeSM.tabs.length <= 1 ||
-                          tabWithUid?.key === tab.key
-                        }
+                        disabled={isRemoveDisabled(tab.key)}
                         onSelect={() => {
                           setDialog({
                             type: "DELETE_CUSTOM_TYPE_TAB",

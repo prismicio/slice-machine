@@ -89,6 +89,10 @@ export function getMainSectionEntry(
   const sections = getSectionEntries(customType);
   return sections[0];
 }
+// TODO tests
+export function getMainSectionId(customType: CustomType): string {
+  return Object.keys(customType.json)[0];
+}
 
 export function getSection(
   customType: CustomType,
@@ -130,25 +134,30 @@ export function getSectionSliceZoneConfig(
 }
 
 // TODO add tests
-// We block user from deleteing section containing UID field,
-// so we can expect uid to be in the main section
-export function getUidField(customType: CustomType): UID | undefined {
-  const mainSectionEntry = getMainSectionEntry(customType);
-  const [_, mainSection] = mainSectionEntry ?? [];
+export function getSectionWithUIDField(
+  customType: CustomType,
+): [string, DynamicSection] | undefined {
+  const sections = getSectionEntries(customType);
+  const sectionWithUID = sections.find(([_, section]) =>
+    Object.values(section).some((field): field is UID => field.type === "UID"),
+  );
+  return sectionWithUID;
+}
 
-  return Object.values(mainSection ?? {}).find(
+// TODO add tests
+export function getUIDField(customType: CustomType): UID | undefined {
+  const sectionEntry = getSectionWithUIDField(customType);
+  const [_, section] = sectionEntry ?? [];
+
+  return Object.values(section ?? {}).find(
     (field): field is UID => field.type === "UID",
   );
 }
 
 // TODO add tests
-export function findSectionWithUidField(customType: CustomType): string | null {
-  const sectionEntries = getSectionEntries(customType);
-  const sectionWithUid = sectionEntries.find(([_, section]) =>
-    Object.values(section).some((field) => field.type === "UID"),
-  );
-
-  return sectionWithUid?.[0] ?? null;
+export function getUIDFieldLabel(customType: CustomType): string | undefined {
+  const field = getUIDField(customType);
+  return field?.config?.label ?? undefined;
 }
 
 // Find the next available key for a slice zone
@@ -448,29 +457,51 @@ export function reorderField(args: ReorderFieldArgs): CustomType {
 }
 
 // TODO add tests
-export function updateUidField(
+// if the UID is not existing in any section, it should be added to the main section
+export function addUIDField(label: string, customType: CustomType): CustomType {
+  const sectionId = getMainSectionId(customType);
+  const newFieldId = "uid";
+  const newField: UID = {
+    config: {
+      label,
+    },
+    type: "UID",
+  };
+
+  return addField({ customType, sectionId, newField, newFieldId });
+}
+
+// TODO add tests
+export function updateUIDField(
   label: string,
   customType: CustomType,
 ): CustomType {
-  const field = getUidField(customType);
-  if (!field) return customType;
+  const [sectionId, section] = getSectionWithUIDField(customType) ?? [];
 
-  const section = findSectionWithUidField(customType);
-  const sectionId = section ?? "Main";
+  const fieldId = Object.keys(section ?? {})?.find(
+    (key) => section?.[key]?.type === "UID",
+  );
 
-  const newField = {
-    ...field,
-    config: {
-      ...field.config,
-      label,
-    },
-  };
+  const field = getUIDField(customType);
+
+  if (
+    !field ||
+    typeof fieldId === "undefined" ||
+    typeof sectionId === "undefined"
+  )
+    return customType;
 
   const updatedSection = updateFields({
     fields: customType.json[sectionId],
-    previousFieldId: "uid",
-    newFieldId: "uid",
-    newField,
+    previousFieldId: fieldId,
+    newFieldId: fieldId,
+    newField: {
+      ...field,
+      config: {
+        ...field.config,
+        label,
+      },
+    },
   });
 
   const newCustomType = updateSection({

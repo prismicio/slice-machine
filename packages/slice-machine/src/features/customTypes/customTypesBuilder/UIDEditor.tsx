@@ -12,31 +12,33 @@ import {
   Icon,
   Text,
 } from "@prismicio/editor-ui";
-import { type KeyboardEvent, useState } from "react";
+import { useState } from "react";
 
-import { getUidField, updateUidField } from "@/domain/customType";
+import {
+  addUIDField,
+  getUIDField,
+  getUIDFieldLabel,
+  updateUIDField,
+} from "@/domain/customType";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 
 export function UIDEditor() {
   const [isOpen, setOpen] = useState(false);
   const { customType, setCustomType } = useCustomTypeState();
-  const field = getUidField(customType);
-  const [label, setLabel] = useState(field?.config?.label ?? "");
+  const field = getUIDField(customType);
+  const uidFieldLabel = getUIDFieldLabel(customType);
+  const [label, setLabel] = useState(uidFieldLabel ?? "");
 
-  function submitLabel() {
-    const updatedCustomType = updateUidField(label, customType);
+  function handleSubmit() {
+    if (!label) {
+      return;
+    }
+    const updatedCustomType = field
+      ? updateUIDField(label, customType)
+      : addUIDField(label, customType);
+
     setCustomType(updatedCustomType);
     setOpen(false);
-  }
-
-  function handleKeyDown(e: KeyboardEvent<Element>) {
-    if (e.key === "Enter") {
-      submitLabel();
-    }
-  }
-
-  if (!field) {
-    return null;
   }
 
   return (
@@ -48,16 +50,16 @@ export function UIDEditor() {
         <Button
           color="grey"
           textColor="placeholder"
-          startIcon="language"
+          startIcon={field ? "language" : "add"}
           sx={{ marginInline: "auto" }}
         >
-          {field.config?.label ?? "UID"}
+          {field ? uidFieldLabel : "Add an UID"}
         </Button>
       }
     >
-      <DialogHeader title="Update the UID label" />
+      <DialogHeader title="Edit the UID label" />
       <DialogContent>
-        <Form onSubmit={submitLabel}>
+        <Form onSubmit={handleSubmit}>
           <Box flexDirection="column" padding={16} gap={4}>
             <FormInput
               type="text"
@@ -65,7 +67,6 @@ export function UIDEditor() {
               placeholder="UID"
               value={label}
               onValueChange={setLabel}
-              onKeyDown={handleKeyDown}
               error={!label}
             />
             <Box alignItems="center" gap={4}>
@@ -82,11 +83,7 @@ export function UIDEditor() {
           </Box>
           <DialogActions>
             <DialogCancelButton size="medium" />
-            <DialogActionButton
-              size="medium"
-              onClick={submitLabel}
-              disabled={!label}
-            >
+            <DialogActionButton size="medium" disabled={!label}>
               Save
             </DialogActionButton>
           </DialogActions>
