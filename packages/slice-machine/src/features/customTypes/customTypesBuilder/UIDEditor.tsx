@@ -9,7 +9,6 @@ import {
   DialogHeader,
   Form,
   FormInput,
-  Icon,
   Text,
 } from "@prismicio/editor-ui";
 import { useState } from "react";
@@ -67,19 +66,9 @@ export function UIDEditor() {
               placeholder="UID"
               value={label}
               onValueChange={setLabel}
-              error={!label}
+              error={!label && "This field is required"}
             />
-            <Box alignItems="center" gap={4}>
-              {/* TODO: move error message into FormInput component when editor-ui is bumped to version 0.4.39 */}
-              {!label ? (
-                <>
-                  <Icon name="alert" color="tomato11" size="small" />
-                  <Text color="tomato11">This field is required</Text>
-                </>
-              ) : (
-                <Text color="grey11">A label for the UID</Text>
-              )}
-            </Box>
+            {label && <Text color="grey11">A label for the UID</Text>}
           </Box>
           <DialogActions>
             <DialogCancelButton size="medium" />
