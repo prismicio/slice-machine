@@ -77,7 +77,8 @@ const Zone = ({
   const onSelectFieldType = (widgetTypeName) => {
     const widget = Widgets[widgetTypeName];
     const field = widget.create("");
-    setEditModalData({ isOpen: true, field: ['', field] });
+    setEditModalData({ isOpen: true, field: ["", field] });
+    // setNewFieldData({ widgetTypeName, fields });
   };
 
   const onCancelNewField = () => setNewFieldData(null);
