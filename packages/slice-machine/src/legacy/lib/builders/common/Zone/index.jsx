@@ -75,10 +75,12 @@ const Zone = ({
 
   /** @param {keyof typeof Widgets} widgetTypeName */
   const onSelectFieldType = (widgetTypeName) => {
-    const widget = Widgets[widgetTypeName];
-    const field = widget.create("");
+    /** `widgetTypeName` might have less keys than `Widgets`, but we lost track 
+    of the types because the `widgetsArray` is not typed and is also filtered into 
+    `widgetsArrayWithCondUid`. Although it's safe to use it to index the `Widgets` 
+    as longs as `widgetsArrayWithCondUid` is a subset of `widgetsArray`.*/
+    const field = Widgets[widgetTypeName].create("");
     setEditModalData({ isOpen: true, field: ["", field] });
-    // setNewFieldData({ widgetTypeName, fields });
   };
 
   const onCancelNewField = () => setNewFieldData(null);
