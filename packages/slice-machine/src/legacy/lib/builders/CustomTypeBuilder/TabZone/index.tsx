@@ -117,7 +117,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     widgetTypeName: keyof typeof Widgets;
   }) => {
     // debugger;
-    console.log("onSaveNewField", { id, label, widgetTypeName });
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }
@@ -194,7 +193,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   }) => {
     // debugger;
     const { apiId: previousKey, newKey, value } = props;
-    console.log("onSave", { previousKey, newKey, value });
     if (previousKey === "") {
       onSaveNewField({
         id: newKey,

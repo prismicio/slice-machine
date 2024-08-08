@@ -113,14 +113,12 @@ const FieldZone = ({
 
                 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 if (widget.CustomListItem) {
-                  // console.log("CustomListItem", widget);
                   const { CustomListItem } = widget;
                   return (
                     <CustomListItem {...props} HintElement={HintElement} />
                   );
                 }
 
-                // console.log({ props });
                 return <ListItem {...props} HintElement={HintElement} />;
               })
             }
