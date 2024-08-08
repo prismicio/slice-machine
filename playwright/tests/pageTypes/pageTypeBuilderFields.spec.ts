@@ -581,7 +581,7 @@ test("I cannot save UID longer than 35 characters for reusable page", async ({
 
   await expect(
     pageTypesBuilderPage.uidEditor.getErrorMessage(
-      "String is too long. Max: 35",
+      "The label can't be longer than 35 characters",
     ),
   ).toBeVisible();
 });
