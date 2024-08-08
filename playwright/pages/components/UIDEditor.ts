@@ -34,7 +34,7 @@ export class UIDEditor {
   }
 
   getErrorMessage(message: string): Locator {
-    return this.dialog.getByText(message);
+    return this.dialog.getByText(message, {exact: true});
   }
   /**
    * Actions
