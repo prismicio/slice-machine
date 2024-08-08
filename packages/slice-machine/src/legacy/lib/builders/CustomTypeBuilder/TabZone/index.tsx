@@ -1,11 +1,12 @@
 import { Box, ProgressCircle } from "@prismicio/editor-ui";
 import {
+  CustomType,
   Group,
   NestableWidget,
   UID,
 } from "@prismicio/types-internal/lib/customtypes";
 import { useRouter } from "next/router";
-import { FC, Suspense, useEffect, useRef } from "react";
+import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import type { AnyObjectSchema } from "yup";
@@ -70,8 +71,6 @@ interface TabZoneProps {
 type PoolOfFields = ReadonlyArray<{ key: string; value: TabField }>;
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const creationDataRef = useRef<any>();
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
   const sliceZone = customTypeSM.tabs.find((tab) => tab.key === tabId)
@@ -97,16 +96,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (creationDataRef.current) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      onSave(creationDataRef.current);
-      creationDataRef.current = undefined;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customType]);
-
   const onSaveNewField = ({
     id,
     label,
@@ -115,8 +104,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     id: string;
     label: string;
     widgetTypeName: keyof typeof Widgets;
-  }) => {
-    // debugger;
+  }): CustomType | undefined => {
     if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
       return;
     }
@@ -161,6 +149,8 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
     });
+
+    return newCustomType;
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -186,39 +176,40 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     flushSync(() => setCustomType(newCustomType));
   };
 
-  const onSave = (props: {
+  const onSave = ({
+    apiId: previousKey,
+    newKey,
+    value,
+  }: {
     apiId: string;
     newKey: string;
     value: TabField;
   }) => {
-    // debugger;
-    const { apiId: previousKey, newKey, value } = props;
-    if (previousKey === "") {
-      onSaveNewField({
+    let savedCustomType: CustomType | undefined = undefined;
+    if (previousKey === "" && value.config?.label != null) {
+      savedCustomType = onSaveNewField({
         id: newKey,
-        label: value.config!.label as string,
+        label: value.config.label,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
         widgetTypeName: value.type as any,
       });
-      creationDataRef.current = props;
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      if (ensureWidgetTypeExistence(Widgets, value.type)) {
-        return;
-      }
-
-      const newField: NestableWidget | UID | Group =
-        TabFieldsModel.fromSM(value);
-      const newCustomType = updateField({
-        customType,
-        previousFieldId: previousKey,
-        newFieldId: newKey,
-        newField,
-        sectionId: tabId,
-      });
-
-      setCustomType(newCustomType);
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    if (ensureWidgetTypeExistence(Widgets, value.type)) {
+      return;
+    }
+
+    const newField: NestableWidget | UID | Group = TabFieldsModel.fromSM(value);
+    const newCustomType = updateField({
+      customType: savedCustomType ?? customType,
+      previousFieldId: previousKey,
+      newFieldId: newKey,
+      newField,
+      sectionId: tabId,
+    });
+
+    setCustomType(newCustomType);
   };
 
   const onCreateSliceZone = () => {
