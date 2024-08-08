@@ -62,6 +62,7 @@ interface FormFieldInputProps {
   initialValues?: Record<string, string>;
   isDisabled?: boolean;
   variant?: string;
+  autoFocus?: boolean;
 }
 
 export const FormFieldInput = ({
@@ -116,6 +117,7 @@ export const FormFieldInput = ({
         sx={getInputFieldStyles(style)}
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
         disabled={isDisabled || formField.disabled}
+        autoFocus={formField.autoFocus}
       />
     </Box>
   );

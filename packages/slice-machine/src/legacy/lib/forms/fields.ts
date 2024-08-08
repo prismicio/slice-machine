@@ -56,6 +56,7 @@ export interface InputType {
   yupType: "string";
   placeholder: string;
   disabled?: boolean;
+  autoFocus?: boolean;
 }
 
 export const Input = (
@@ -73,6 +74,7 @@ export const Input = (
   fieldLevelValidation: FieldLevelValidationFn | undefined | null,
   defaultValue: string | undefined,
   placeholder: string,
+  autoFocus = false,
 ): InputType => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   const { min, max, required, matches } = conditions || {};
@@ -89,5 +91,6 @@ export const Input = (
     fieldLevelValidation,
     yupType: "string",
     placeholder: placeholder,
+    autoFocus,
   };
 };

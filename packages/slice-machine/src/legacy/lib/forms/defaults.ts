@@ -29,6 +29,7 @@ export const DefaultFields: Record<string, InputType> = {
     undefined,
     undefined,
     "Label for content creators (defaults to field type)",
+    true,
   ),
   id: Input(
     "API ID*",

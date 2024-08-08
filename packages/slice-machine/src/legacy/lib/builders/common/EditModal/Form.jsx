@@ -51,21 +51,19 @@ const WidgetForm = ({
         }}
       >
         {(props) => (
-          <>
+          <Form // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            id={formId}
+          >
             <SlugifyLabelObserver />
-            <Form // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              id={formId}
-            >
-              {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-                children({
-                  ...props,
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  initialValues,
-                })
-              }
-            </Form>
-          </>
+            {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+              children({
+                ...props,
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                initialValues,
+              })
+            }
+          </Form>
         )}
       </Formik>
     </Box>
