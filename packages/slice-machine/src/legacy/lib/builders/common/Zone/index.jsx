@@ -75,10 +75,11 @@ const Zone = ({
 
   /** @param {keyof typeof Widgets} widgetTypeName */
   const onSelectFieldType = (widgetTypeName) => {
+    // widgetTypeName might have less widgets than `Widgets`, we lost track of the types because
+    // the widgetsArray is not typed and is also filtered into `widgetsArrayWithCondUid`
     const widget = Widgets[widgetTypeName];
     const field = widget.create("");
     setEditModalData({ isOpen: true, field: ["", field] });
-    // setNewFieldData({ widgetTypeName, fields });
   };
 
   const onCancelNewField = () => setNewFieldData(null);
