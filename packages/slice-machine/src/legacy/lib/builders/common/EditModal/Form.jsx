@@ -2,6 +2,8 @@ import { Form, Formik } from "formik";
 import { memo } from "react";
 import { Box } from "theme-ui";
 
+import { SlugifyLabelObserver } from "@/legacy/lib/builders/common/EditModal/SlugifyLabelObserver";
+
 const WidgetForm = ({
   formId,
   initialValues,
@@ -49,18 +51,21 @@ const WidgetForm = ({
         }}
       >
         {(props) => (
-          <Form // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            id={formId}
-          >
-            {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-              children({
-                ...props,
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                initialValues,
-              })
-            }
-          </Form>
+          <>
+            <SlugifyLabelObserver />
+            <Form // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              id={formId}
+            >
+              {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+                children({
+                  ...props,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  initialValues,
+                })
+              }
+            </Form>
+          </>
         )}
       </Formik>
     </Box>
