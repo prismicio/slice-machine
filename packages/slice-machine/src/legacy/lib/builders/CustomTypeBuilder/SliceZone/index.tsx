@@ -10,7 +10,6 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -111,7 +110,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
-  const { query, replace, pathname } = useRouter();
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
@@ -177,16 +175,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       customTypeId: customType.id,
       customTypeFormat: customType.format,
     });
-  };
-
-  const redirectToEditMode = () => {
-    if (query.newPageType === "true") {
-      void replace(
-        { pathname, query: { pageTypeId: query.pageTypeId } },
-        undefined,
-        { shallow: true },
-      );
-    }
   };
 
   const closeUpdateSliceZoneModal = () => {
@@ -306,7 +294,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             });
             setCustomType(CustomTypes.fromSM(newCustomType));
             closeUpdateSliceZoneModal();
-            redirectToEditMode();
             toast.success("Slice(s) added to slice zone");
           }}
           close={closeUpdateSliceZoneModal}
@@ -325,7 +312,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             });
             setCustomType(CustomTypes.fromSM(newCustomType));
             closeSlicesTemplatesModal();
-            redirectToEditMode();
             toast.success(
               <ToastMessageWithPath
                 message="Slice template(s) added to slice zone and created at: "
@@ -357,7 +343,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             });
             setCustomType(CustomTypes.fromSM(newCustomType));
             closeCreateSliceModal();
-            redirectToEditMode();
             toast.success(
               <ToastMessageWithPath
                 message="New slice added to slice zone and created at: "
