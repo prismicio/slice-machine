@@ -456,9 +456,8 @@ export function addUIDField(label: string, customType: CustomType): CustomType {
   const mainSectionEntry = getMainSectionEntry(customType);
   const [sectionId] = mainSectionEntry ?? [];
 
-  if (typeof sectionId === "undefined") {
-    return customType;
-  }
+  if (sectionId === undefined) return customType;
+
   const newFieldId = "uid";
   const newField: UID = {
     type: "UID",
@@ -478,11 +477,7 @@ export function updateUIDField(
   const [sectionId] = getSectionWithUIDFieldEntry(customType) ?? [];
   const [fieldId, field] = getUIDFieldEntry(customType) ?? [];
 
-  if (
-    !field ||
-    typeof fieldId === "undefined" ||
-    typeof sectionId === "undefined"
-  )
+  if (!field || fieldId === undefined || sectionId === undefined)
     return customType;
 
   const updatedSection = updateFields({

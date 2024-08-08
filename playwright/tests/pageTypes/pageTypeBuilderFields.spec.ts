@@ -533,6 +533,17 @@ test("I can edit the UID field for reusable page", async ({
   ).toBeVisible();
 });
 
+test("I cannot edit the UID field with UIDEditor for single page", async ({
+  pageTypesBuilderPage,
+  singlePageType,
+}) => {
+  await pageTypesBuilderPage.goto(singlePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).not.toBeVisible();
+});
+
 test("I cannot save empty UID for reusable page", async ({
   pageTypesBuilderPage,
   reusablePageType,
@@ -545,8 +556,11 @@ test("I cannot save empty UID for reusable page", async ({
 
   await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
   await pageTypesBuilderPage.uidEditor.editInput("");
+  await pageTypesBuilderPage.uidEditor.submitInput();
 
-  await expect(pageTypesBuilderPage.uidEditor.submitInput()).rejects.toThrow();
+  await expect(
+    pageTypesBuilderPage.uidEditor.getErrorMessage("This field is required"),
+  ).toBeVisible();
 });
 
 test("I cannot save UID longer than 35 characters for reusable page", async ({
@@ -563,6 +577,11 @@ test("I cannot save UID longer than 35 characters for reusable page", async ({
   await pageTypesBuilderPage.uidEditor.editInput(
     generateRandomStringOfLength(36),
   );
+  await pageTypesBuilderPage.uidEditor.submitInput();
 
-  await expect(pageTypesBuilderPage.uidEditor.submitInput()).rejects.toThrow();
+  await expect(
+    pageTypesBuilderPage.uidEditor.getErrorMessage(
+      "String is too long. Max: 35",
+    ),
+  ).toBeVisible();
 });

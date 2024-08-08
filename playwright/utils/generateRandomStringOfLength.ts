@@ -1,5 +1,7 @@
-export function generateRandomStringOfLength(length: number) {
-  return Math.random()
-    .toString(36)
-    .substring(2, length + 2);
+export function generateRandomStringOfLength(length: number): string {
+  let randomString = "";
+  while (randomString.length < length) {
+    randomString += Math.random().toString(36).substring(2);
+  }
+  return randomString.substring(0, length);
 }

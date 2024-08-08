@@ -29,11 +29,13 @@ export class UIDEditor {
   /**
    * Dynamic locators
    */
-
   getDialogTrigger(label: string): Locator {
     return this.page.getByRole("button", { name: label, exact: true });
   }
 
+  getErrorMessage(message: string): Locator {
+    return this.dialog.getByText(message);
+  }
   /**
    * Actions
    */
@@ -44,8 +46,6 @@ export class UIDEditor {
   async submitInput() {
     if (await this.saveButton.isEnabled()) {
       await this.saveButton.click();
-    } else {
-      throw new Error();
     }
   }
 }

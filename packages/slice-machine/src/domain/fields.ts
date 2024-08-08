@@ -204,7 +204,7 @@ export const UIDFieldCustomErrorMap: z.ZodErrorMap = (issue, ctx) => {
     return { message: `String is too long. Max: ${issue.maximum}` };
   }
   if (issue.code === z.ZodIssueCode.too_small) {
-    return { message: `This field is required` };
+    return { message: "This field is required" };
   }
   return { message: ctx.defaultError };
 };

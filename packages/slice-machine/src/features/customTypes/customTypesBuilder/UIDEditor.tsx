@@ -91,7 +91,7 @@ export function UIDEditor() {
               error={error}
             />
             {/* TODO: refactor if change proposed in: https://github.com/prismicio/editor/pull/1151 is released */}
-            {typeof error === "undefined" && (
+            {error === undefined && (
               <Text color="grey11">A label for the UID</Text>
             )}
           </Box>
