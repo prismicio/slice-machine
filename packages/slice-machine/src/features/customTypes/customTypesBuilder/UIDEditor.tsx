@@ -15,21 +15,43 @@ import { useState } from "react";
 
 import {
   addUIDField,
-  getUIDField,
-  getUIDFieldLabel,
+  getFieldLabel,
+  getUIDFieldEntry,
   updateUIDField,
 } from "@/domain/customType";
+import { UIDFieldCustomErrorMap, UIDFieldLabelSchema } from "@/domain/fields";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 
 export function UIDEditor() {
   const [isOpen, setOpen] = useState(false);
   const { customType, setCustomType } = useCustomTypeState();
-  const field = getUIDField(customType);
-  const uidFieldLabel = getUIDFieldLabel(customType);
+  const [_, field] = getUIDFieldEntry(customType) ?? [];
+  const uidFieldLabel = field ? getFieldLabel(field) : "";
   const [label, setLabel] = useState(uidFieldLabel ?? "");
+  const [error, setError] = useState<string | undefined>();
+
+  function handleOpenChange(open: boolean) {
+    setOpen(open);
+    if (!open) {
+      setLabel(uidFieldLabel ?? "");
+      setError(undefined);
+    }
+  }
+
+  function handleValueChange(value: string) {
+    setLabel(value);
+    const result = UIDFieldLabelSchema.safeParse(value, {
+      errorMap: UIDFieldCustomErrorMap,
+    });
+    if (result.error) {
+      setError(result.error.errors[0].message);
+    } else {
+      setError(undefined);
+    }
+  }
 
   function handleSubmit() {
-    if (!label) {
+    if (Boolean(error)) {
       return;
     }
     const updatedCustomType = field
@@ -43,7 +65,7 @@ export function UIDEditor() {
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       size="small"
       trigger={
         <Button
@@ -65,14 +87,17 @@ export function UIDEditor() {
               label="Label *"
               placeholder="UID"
               value={label}
-              onValueChange={setLabel}
-              error={!label && "This field is required"}
+              onValueChange={handleValueChange}
+              error={error}
             />
-            {label && <Text color="grey11">A label for the UID</Text>}
+            {/* TODO: refactor if change proposed in: https://github.com/prismicio/editor/pull/1151 is released */}
+            {typeof error === "undefined" && (
+              <Text color="grey11">A label for the UID</Text>
+            )}
           </Box>
           <DialogActions>
             <DialogCancelButton size="medium" />
-            <DialogActionButton size="medium" disabled={!label}>
+            <DialogActionButton size="medium" disabled={Boolean(error)}>
               Save
             </DialogActionButton>
           </DialogActions>

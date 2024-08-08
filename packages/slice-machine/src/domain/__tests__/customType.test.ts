@@ -120,21 +120,6 @@ describe("CustomTypeModel test suite", () => {
     ).toEqual(undefined);
   });
 
-  it("getMainSectionId should return the key of the first section", () => {
-    expect(CustomTypeModel.getMainSectionId(mockCustomType)).toEqual(
-      "mainSection",
-    );
-  });
-
-  it("getMainSectionId should return undefined if there are no sections", () => {
-    expect(
-      CustomTypeModel.getMainSectionId({
-        ...mockCustomType,
-        json: {},
-      }),
-    ).toEqual(undefined);
-  });
-
   it("getSection should return the section matching the key", () => {
     expect(
       CustomTypeModel.getSection(mockCustomType, "anotherSection"),
@@ -153,25 +138,24 @@ describe("CustomTypeModel test suite", () => {
     ).toEqual(undefined);
   });
 
-  it("getSectionWithUIDField should return the first section containing the UID type field", () => {
-    expect(CustomTypeModel.getSectionWithUIDField(mockCustomType)).toEqual([
-      "mainSection",
-      mainSection,
-    ]);
+  it("getSectionWithUIDFieldEntry should return the first section containing the UID type field", () => {
+    expect(CustomTypeModel.getSectionWithUIDFieldEntry(mockCustomType)).toEqual(
+      ["mainSection", mainSection],
+    );
   });
 
-  it("getSectionWithUIDField should return undefined if there are no sections", () => {
+  it("getSectionWithUIDFieldEntry should return undefined if there are no sections", () => {
     expect(
-      CustomTypeModel.getSectionWithUIDField({
+      CustomTypeModel.getSectionWithUIDFieldEntry({
         ...mockCustomType,
         json: {},
       }),
     ).toEqual(undefined);
   });
 
-  it("getSectionWithUIDField should return undefined if there are no UID type fields", () => {
+  it("getSectionWithUIDFieldEntry should return undefined if there are no UID type fields", () => {
     expect(
-      CustomTypeModel.getSectionWithUIDField({
+      CustomTypeModel.getSectionWithUIDFieldEntry({
         ...mockCustomType,
         json: {
           mainSection: {
@@ -187,27 +171,25 @@ describe("CustomTypeModel test suite", () => {
     ).toEqual(undefined);
   });
 
-  it("getUIDField should return the UID field", () => {
-    expect(CustomTypeModel.getUIDField(mockCustomType)).toEqual({
-      config: {
-        label: "MainSectionField",
-      },
-      type: "UID",
-    });
+  it("getUIDFieldEntry should return the UID field", () => {
+    expect(CustomTypeModel.getUIDFieldEntry(mockCustomType)).toEqual([
+      "uid",
+      mainSection.uid,
+    ]);
   });
 
-  it("getUIDField should return undefined if there are no sections", () => {
+  it("getUIDFieldEntry should return undefined if there are no sections", () => {
     expect(
-      CustomTypeModel.getUIDField({
+      CustomTypeModel.getUIDFieldEntry({
         ...mockCustomType,
         json: {},
       }),
     ).toEqual(undefined);
   });
 
-  it("getUIDField should return undefined if there are no UID type fields", () => {
+  it("getUIDFieldEntry should return undefined if there are no UID type fields", () => {
     expect(
-      CustomTypeModel.getUIDField({
+      CustomTypeModel.getUIDFieldEntry({
         ...mockCustomType,
         json: {
           mainSection: {
@@ -218,32 +200,19 @@ describe("CustomTypeModel test suite", () => {
     ).toEqual(undefined);
   });
 
-  it("getUIDFieldLabel should return the label of the UID field", () => {
-    expect(CustomTypeModel.getUIDFieldLabel(mockCustomType)).toEqual(
-      "MainSectionField",
-    );
-  });
-
-  it("getUIDFieldLabel should return undefined if there are no sections", () => {
+  it("getFieldLabel should return the label of the field", () => {
     expect(
-      CustomTypeModel.getUIDFieldLabel({
-        ...mockCustomType,
-        json: {},
-      }),
-    ).toEqual(undefined);
-  });
-
-  it("getUIDFieldLabel should return undefined if there are no UID type fields", () => {
-    expect(
-      CustomTypeModel.getUIDFieldLabel({
-        ...mockCustomType,
-        json: {
-          mainSection: {
-            booleanField: mainSection.booleanField,
-          },
+      CustomTypeModel.getFieldLabel({
+        config: {
+          label: "MainSectionField",
         },
+        type: "UID",
       }),
-    ).toEqual(undefined);
+    ).toEqual("MainSectionField");
+  });
+
+  it("getFieldLabel should return undefined if there is no label", () => {
+    expect(CustomTypeModel.getFieldLabel({ type: "UID" })).toEqual(undefined);
   });
 
   it("getSectionSliceZoneEntry should return the slice zone of the given section", () => {
@@ -613,7 +582,7 @@ describe("CustomTypeModel test suite", () => {
     );
   });
 
-  it("addUIDField should return the given custom type with the uid field added to the first section", () => {
+  it("addUIDField should return the given custom type with the uid field (with default placeholder) added to the first section", () => {
     expect(
       CustomTypeModel.addUIDField("UID label", {
         ...mockCustomType,
@@ -628,6 +597,7 @@ describe("CustomTypeModel test suite", () => {
           uid: {
             config: {
               label: "UID label",
+              placeholder: "Enter a unique identifier",
             },
             type: "UID",
           },
@@ -658,6 +628,7 @@ describe("CustomTypeModel test suite", () => {
           uid: {
             config: {
               label: "UIDFieldUpdated",
+              placeholder: "Enter a unique identifier",
             },
             type: "UID",
           },

@@ -37,8 +37,15 @@ export class UIDEditor {
   /**
    * Actions
    */
-  async editUID(label: string) {
+  async editInput(label: string) {
     await this.input.fill(label);
-    await this.saveButton.click();
+  }
+
+  async submitInput() {
+    if (await this.saveButton.isEnabled()) {
+      await this.saveButton.click();
+    } else {
+      throw new Error();
+    }
   }
 }

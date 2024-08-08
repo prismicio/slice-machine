@@ -3,6 +3,7 @@ import {
   FieldType,
   NestableFieldTypes,
 } from "@prismicio/types-internal/lib/customtypes";
+import { z } from "zod";
 
 interface BaseField {
   description: string;
@@ -194,6 +195,18 @@ export const UIDField: UIDField = {
   thumbnail:
     "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295519/DEV_TOOLS/SM_FIELDS/Type_UID_hrwzug.png",
   type: "UID",
+};
+
+export const UIDFieldLabelSchema = z.string().max(35).min(1);
+
+export const UIDFieldCustomErrorMap: z.ZodErrorMap = (issue, ctx) => {
+  if (issue.code === z.ZodIssueCode.too_big) {
+    return { message: `String is too long. Max: ${issue.maximum}` };
+  }
+  if (issue.code === z.ZodIssueCode.too_small) {
+    return { message: `This field is required` };
+  }
+  return { message: ctx.defaultError };
 };
 
 /**

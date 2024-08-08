@@ -90,10 +90,6 @@ export function getMainSectionEntry(
   return sections[0];
 }
 
-export function getMainSectionId(customType: CustomType): string | undefined {
-  return Object.keys(customType.json)[0];
-}
-
 export function getSection(
   customType: CustomType,
   sectionId: string,
@@ -101,7 +97,7 @@ export function getSection(
   return customType.json[sectionId];
 }
 
-export function getSectionWithUIDField(
+export function getSectionWithUIDFieldEntry(
   customType: CustomType,
 ): [string, DynamicSection] | undefined {
   const sections = getSectionEntries(customType);
@@ -111,17 +107,19 @@ export function getSectionWithUIDField(
   return sectionWithUID;
 }
 
-export function getUIDField(customType: CustomType): UID | undefined {
-  const sectionEntry = getSectionWithUIDField(customType);
-  const [_, section] = sectionEntry ?? [];
+export function getUIDFieldEntry(
+  customType: CustomType,
+): [string, UID] | undefined {
+  const [_, section] = getSectionWithUIDFieldEntry(customType) ?? [];
 
-  return Object.values(section ?? {}).find(
-    (field): field is UID => field.type === "UID",
-  );
+  return Object.entries(section ?? {}).find(
+    ([_, field]) => field.type === "UID",
+  ) as [string, UID] | undefined;
 }
 
-export function getUIDFieldLabel(customType: CustomType): string | undefined {
-  const field = getUIDField(customType);
+export function getFieldLabel(
+  field: NestableWidget | UID | Group,
+): string | undefined {
   return field?.config?.label ?? undefined;
 }
 
@@ -455,16 +453,19 @@ export function reorderField(args: ReorderFieldArgs): CustomType {
 
 // if the UID is not existing in any section, it should be added to the main section
 export function addUIDField(label: string, customType: CustomType): CustomType {
-  const sectionId = getMainSectionId(customType);
+  const mainSectionEntry = getMainSectionEntry(customType);
+  const [sectionId] = mainSectionEntry ?? [];
+
   if (typeof sectionId === "undefined") {
     return customType;
   }
   const newFieldId = "uid";
   const newField: UID = {
+    type: "UID",
     config: {
       label,
+      placeholder: "Enter a unique identifier",
     },
-    type: "UID",
   };
 
   return addField({ customType, sectionId, newField, newFieldId });
@@ -474,13 +475,8 @@ export function updateUIDField(
   label: string,
   customType: CustomType,
 ): CustomType {
-  const [sectionId, section] = getSectionWithUIDField(customType) ?? [];
-
-  const fieldId = Object.keys(section ?? {})?.find(
-    (key) => section?.[key]?.type === "UID",
-  );
-
-  const field = getUIDField(customType);
+  const [sectionId] = getSectionWithUIDFieldEntry(customType) ?? [];
+  const [fieldId, field] = getUIDFieldEntry(customType) ?? [];
 
   if (
     !field ||
@@ -498,6 +494,7 @@ export function updateUIDField(
       config: {
         ...field.config,
         label,
+        placeholder: field.config?.placeholder ?? "Enter a unique identifier",
       },
     },
   });
@@ -607,10 +604,10 @@ const DEFAULT_MAIN_WITH_SLICE_ZONE: CustomType["json"] = {
 const DEFAULT_MAIN_WITH_UID: CustomType["json"] = {
   Main: {
     uid: {
+      type: "UID",
       config: {
         label: "UID",
       },
-      type: "UID",
     },
   },
 };

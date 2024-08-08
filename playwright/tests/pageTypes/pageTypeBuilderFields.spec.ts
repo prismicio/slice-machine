@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
+import { generateRandomStringOfLength } from "../../utils";
 
 test("I can see default SEO & Metadata tab fields", async ({
   pageTypesBuilderPage,
@@ -502,7 +503,18 @@ test("I cannot see default UID field for single page type", async ({
   ).not.toBeVisible();
 });
 
-test("I can edit the UID field", async ({
+test("I cannot see default UID field in Static Fields for reusable page type", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("uid"),
+  ).not.toBeVisible();
+});
+
+test("I can edit the UID field for reusable page", async ({
   pageTypesBuilderPage,
   reusablePageType,
 }) => {
@@ -513,9 +525,44 @@ test("I can edit the UID field", async ({
   ).toBeVisible();
 
   await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
-  await pageTypesBuilderPage.uidEditor.editUID("my_uid");
+  await pageTypesBuilderPage.uidEditor.editInput("my_uid");
+  await pageTypesBuilderPage.uidEditor.submitInput();
 
   await expect(
     pageTypesBuilderPage.uidEditor.getDialogTrigger("my_uid"),
   ).toBeVisible();
+});
+
+test("I cannot save empty UID for reusable page", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
+  await pageTypesBuilderPage.uidEditor.editInput("");
+
+  await expect(pageTypesBuilderPage.uidEditor.submitInput()).rejects.toThrow();
+});
+
+test("I cannot save UID longer than 35 characters for reusable page", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
+  await pageTypesBuilderPage.uidEditor.editInput(
+    generateRandomStringOfLength(36),
+  );
+
+  await expect(pageTypesBuilderPage.uidEditor.submitInput()).rejects.toThrow();
 });
