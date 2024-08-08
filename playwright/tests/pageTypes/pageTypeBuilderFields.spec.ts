@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { generateRandomStringOfLength } from "../../utils";
+import { generateRandomString } from "../../utils";
 
 test("I can see default SEO & Metadata tab fields", async ({
   pageTypesBuilderPage,
@@ -575,7 +575,7 @@ test("I cannot save UID longer than 35 characters for reusable page", async ({
 
   await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
   await pageTypesBuilderPage.uidEditor.editInput(
-    generateRandomStringOfLength(36),
+    generateRandomString({ length: 36 }),
   );
   await pageTypesBuilderPage.uidEditor.submitInput();
 

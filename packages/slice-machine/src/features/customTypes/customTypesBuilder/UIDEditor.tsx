@@ -12,6 +12,7 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { useState } from "react";
+import { z } from "zod";
 
 import {
   addUIDField,
@@ -19,7 +20,6 @@ import {
   getUIDFieldEntry,
   updateUIDField,
 } from "@/domain/customType";
-import { UIDFieldCustomErrorMap, UIDFieldLabelSchema } from "@/domain/fields";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 
 export function UIDEditor() {
@@ -40,14 +40,7 @@ export function UIDEditor() {
 
   function handleValueChange(value: string) {
     setLabel(value);
-    const result = UIDFieldLabelSchema.safeParse(value, {
-      errorMap: UIDFieldCustomErrorMap,
-    });
-    if (result.error) {
-      setError(result.error.errors[0].message);
-    } else {
-      setError(undefined);
-    }
+    setError(validateLabel(value));
   }
 
   function handleSubmit() {
@@ -106,3 +99,28 @@ export function UIDEditor() {
     </Dialog>
   );
 }
+
+function validateLabel(value: string): string | undefined {
+  const result = UIDFieldLabelSchema.safeParse(value, {
+    errorMap: UIDFieldCustomErrorMap,
+  });
+
+  if (result.error) {
+    return result.error.errors[0].message;
+  }
+}
+
+const UIDFieldLabelSchema = z.string().max(35).min(1);
+
+const UIDFieldCustomErrorMap: z.ZodErrorMap = (issue) => {
+  switch (issue.code) {
+    case z.ZodIssueCode.too_big:
+      return {
+        message: `The label can't be longer than ${issue.maximum} characters`,
+      };
+    case z.ZodIssueCode.too_small:
+      return { message: "This field is required" };
+    default:
+      return { message: "Invalid value" };
+  }
+};

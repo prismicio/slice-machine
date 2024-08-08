@@ -4,5 +4,5 @@ export {
   UnauthorizedError,
 } from "./errors";
 export { generateRandomId } from "./generateRandomId";
-export { generateRandomStringOfLength } from "./generateRandomStringOfLength";
+export { generateRandomString } from "./generateRandomString";
 export { MockManagerProcedures } from "./MockManagerProcedures";

@@ -1,4 +1,4 @@
-export function generateRandomStringOfLength(length: number): string {
+export function generateRandomString({ length }: { length: number }): string {
   let randomString = "";
   while (randomString.length < length) {
     randomString += Math.random().toString(36).substring(2);
