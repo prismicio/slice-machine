@@ -8,7 +8,6 @@ import {
   WindowTabsList,
   WindowTabsTrigger,
 } from "@prismicio/editor-ui";
-import { useRouter } from "next/router";
 import { useState } from "react";
 
 import {
@@ -37,7 +36,6 @@ export const CustomTypeBuilder = () => {
 
   const [dialog, setDialog] = useState<DialogState>();
 
-  const { query } = useRouter();
   const sliceZoneEmpty =
     customTypeSM.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
       .length === 0;
@@ -46,59 +44,56 @@ export const CustomTypeBuilder = () => {
     <>
       <Window sx={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
         {customType.format === "page" ? <WindowFrame /> : undefined}
-        {query.newPageType === "true" ? (
-          <TabZone tabId={customTypeSM.tabs[0].key} />
-        ) : (
-          <WindowTabs onValueChange={setTabValue} value={tabValue}>
-            <WindowTabsList
-              onAddNewTab={() => {
-                setDialog({ type: "CREATE_CUSTOM_TYPE_TAB" });
-              }}
-            >
-              {customTypeSM.tabs.map((tab) => (
-                <WindowTabsTrigger
-                  key={tab.key}
-                  menu={
-                    <>
-                      <DropdownMenuItem
-                        onSelect={() => {
-                          setDialog({
-                            type: "UPDATE_CUSTOM_TYPE_TAB",
-                            tabKey: tab.key,
-                          });
-                        }}
-                        startIcon={<Icon name="edit" />}
-                      >
-                        Rename
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        color="tomato"
-                        disabled={customTypeSM.tabs.length <= 1}
-                        onSelect={() => {
-                          setDialog({
-                            type: "DELETE_CUSTOM_TYPE_TAB",
-                            tabKey: tab.key,
-                          });
-                        }}
-                        startIcon={<Icon name="delete" />}
-                      >
-                        Remove
-                      </DropdownMenuItem>
-                    </>
-                  }
-                  value={tab.key}
-                >
-                  {tab.key}
-                </WindowTabsTrigger>
-              ))}
-            </WindowTabsList>
+
+        <WindowTabs onValueChange={setTabValue} value={tabValue}>
+          <WindowTabsList
+            onAddNewTab={() => {
+              setDialog({ type: "CREATE_CUSTOM_TYPE_TAB" });
+            }}
+          >
             {customTypeSM.tabs.map((tab) => (
-              <WindowTabsContent key={tab.key} value={tab.key}>
-                <TabZone tabId={tab.key} />
-              </WindowTabsContent>
+              <WindowTabsTrigger
+                key={tab.key}
+                menu={
+                  <>
+                    <DropdownMenuItem
+                      onSelect={() => {
+                        setDialog({
+                          type: "UPDATE_CUSTOM_TYPE_TAB",
+                          tabKey: tab.key,
+                        });
+                      }}
+                      startIcon={<Icon name="edit" />}
+                    >
+                      Rename
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      color="tomato"
+                      disabled={customTypeSM.tabs.length <= 1}
+                      onSelect={() => {
+                        setDialog({
+                          type: "DELETE_CUSTOM_TYPE_TAB",
+                          tabKey: tab.key,
+                        });
+                      }}
+                      startIcon={<Icon name="delete" />}
+                    >
+                      Remove
+                    </DropdownMenuItem>
+                  </>
+                }
+                value={tab.key}
+              >
+                {tab.key}
+              </WindowTabsTrigger>
             ))}
-          </WindowTabs>
-        )}
+          </WindowTabsList>
+          {customTypeSM.tabs.map((tab) => (
+            <WindowTabsContent key={tab.key} value={tab.key}>
+              <TabZone tabId={tab.key} />
+            </WindowTabsContent>
+          ))}
+        </WindowTabs>
       </Window>
       {dialog?.type === "CREATE_CUSTOM_TYPE_TAB" ? (
         <CreateModal

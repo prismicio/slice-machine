@@ -10,7 +10,6 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -111,7 +110,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
-  const { query, replace, pathname } = useRouter();
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
@@ -179,16 +177,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     });
   };
 
-  const redirectToEditMode = () => {
-    if (query.newPageType === "true") {
-      void replace(
-        { pathname, query: { pageTypeId: query.pageTypeId } },
-        undefined,
-        { shallow: true },
-      );
-    }
-  };
-
   const closeUpdateSliceZoneModal = () => {
     setIsUpdateSliceZoneModalOpen(false);
   };
@@ -203,74 +191,73 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   return (
     <>
-      {query.newPageType === undefined ? (
-        <ListHeader
-          actions={
-            sliceZone ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button color="purple" startIcon="add">
-                    Add
-                  </Button>
-                </DropdownMenuTrigger>
+      <ListHeader
+        actions={
+          sliceZone ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button color="purple" startIcon="add">
+                  Add
+                </Button>
+              </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                  startIcon={<Icon name="add" size="large" />}
+                  onSelect={openCreateSliceModal}
+                  description="Start from scratch."
+                >
+                  Create new
+                </DropdownMenuItem>
+
+                {availableSlicesTemplates.length > 0 ? (
                   <DropdownMenuItem
-                    startIcon={<Icon name="add" size="large" />}
-                    onSelect={openCreateSliceModal}
-                    description="Start from scratch."
+                    onSelect={openSlicesTemplatesModal}
+                    startIcon={<Icon name="contentCopy" size="large" />}
+                    description="Select from premade examples."
+                    endAdornment={
+                      <Text color="inherit" component="kbd">
+                        <Badge color="purple" title="New" />
+                      </Text>
+                    }
                   >
-                    Create new
+                    Use template
                   </DropdownMenuItem>
+                ) : undefined}
 
-                  {availableSlicesTemplates.length > 0 ? (
-                    <DropdownMenuItem
-                      onSelect={openSlicesTemplatesModal}
-                      startIcon={<Icon name="contentCopy" size="large" />}
-                      description="Select from premade examples."
-                      endAdornment={
-                        <Text color="inherit" component="kbd">
-                          <Badge color="purple" title="New" />
-                        </Text>
-                      }
-                    >
-                      Use template
-                    </DropdownMenuItem>
-                  ) : undefined}
+                {availableSlicesToAdd.length > 0 ? (
+                  <DropdownMenuItem
+                    onSelect={openUpdateSliceZoneModal}
+                    startIcon={<Icon name="folder" size="large" />}
+                    description="Select from your own slices."
+                  >
+                    Select existing
+                  </DropdownMenuItem>
+                ) : undefined}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : undefined
+        }
+        toggle={
+          customType.format !== "page" || tabId !== "Main" ? (
+            <Switch
+              checked={!!sliceZone}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  onCreateSliceZone();
+                } else {
+                  setIsDeleteSliceZoneModalOpen(true);
+                }
+              }}
+              size="small"
+              data-testid="slice-zone-switch"
+            />
+          ) : undefined
+        }
+      >
+        Slices
+      </ListHeader>
 
-                  {availableSlicesToAdd.length > 0 ? (
-                    <DropdownMenuItem
-                      onSelect={openUpdateSliceZoneModal}
-                      startIcon={<Icon name="folder" size="large" />}
-                      description="Select from your own slices."
-                    >
-                      Select existing
-                    </DropdownMenuItem>
-                  ) : undefined}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : undefined
-          }
-          toggle={
-            customType.format !== "page" || tabId !== "Main" ? (
-              <Switch
-                checked={!!sliceZone}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    onCreateSliceZone();
-                  } else {
-                    setIsDeleteSliceZoneModalOpen(true);
-                  }
-                }}
-                size="small"
-                data-testid="slice-zone-switch"
-              />
-            ) : undefined
-          }
-        >
-          Slices
-        </ListHeader>
-      ) : undefined}
       {sliceZone ? (
         slicesInSliceZone.length > 0 ? (
           <BaseStyles>
@@ -307,7 +294,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             });
             setCustomType(CustomTypes.fromSM(newCustomType));
             closeUpdateSliceZoneModal();
-            redirectToEditMode();
             toast.success("Slice(s) added to slice zone");
           }}
           close={closeUpdateSliceZoneModal}
@@ -326,7 +312,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             });
             setCustomType(CustomTypes.fromSM(newCustomType));
             closeSlicesTemplatesModal();
-            redirectToEditMode();
             toast.success(
               <ToastMessageWithPath
                 message="Slice template(s) added to slice zone and created at: "
@@ -358,7 +343,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             });
             setCustomType(CustomTypes.fromSM(newCustomType));
             closeCreateSliceModal();
-            redirectToEditMode();
             toast.success(
               <ToastMessageWithPath
                 message="New slice added to slice zone and created at: "

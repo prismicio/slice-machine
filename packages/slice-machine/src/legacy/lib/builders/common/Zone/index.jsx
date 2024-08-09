@@ -107,34 +107,34 @@ const Zone = ({
       <ListHeader
         actions={
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          (fields.length > 0 && zoneType === "slice") ||
-          zoneType === "customType" ? (
-            <>
-              {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                fields.length > 0 && (
-                  <>
-                    <Text color="grey11" component="span" noWrap>
-                      Show code snippets?
-                    </Text>
-                    <Switch
-                      checked={showHints}
-                      onCheckedChange={setShowHints}
-                      size="small"
-                      // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
-                      style={{ flexShrink: 0 }}
-                      data-testid="code-snippets-switch"
-                    />
-                  </>
-                )
-              }
-              {zoneType === "slice" ? (
+          <>
+            {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              fields.length > 0 && (
+                <>
+                  <Text color="grey11" component="span" noWrap>
+                    Show code snippets?
+                  </Text>
+                  <Switch
+                    checked={showHints}
+                    onCheckedChange={setShowHints}
+                    size="small"
+                    // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
+                    style={{ flexShrink: 0 }}
+                    data-testid="code-snippets-switch"
+                  />
+                </>
+              )
+            }
+            {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              zoneType === "slice" && fields.length > 0 ? (
                 <AddFieldDropdown {...addFieldDropdownProps} />
-              ) : (
+              ) : zoneType === "customType" ? (
                 <AddStaticFieldButton {...addFieldDropdownProps} />
-              )}
-            </>
-          ) : undefined
+              ) : undefined
+            }
+          </>
         }
       >
         {title}
