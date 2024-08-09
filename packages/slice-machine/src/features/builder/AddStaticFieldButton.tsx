@@ -1,5 +1,5 @@
 import { Box } from "@prismicio/editor-ui";
-import { createContext, ReactNode, useContext, useState } from "react";
+import { useState } from "react";
 
 import {
   AddFieldDropdown,
@@ -11,39 +11,18 @@ import { usePersistedState } from "@/hooks/usePersistedState";
 const LOCAL_STORAGE_KEY = "staticFieldsInfoDialogDismissed";
 
 export function AddStaticFieldButton(props: AddFieldDropdownProps) {
-  return (
-    <StaticFieldsInfoProvider>
-      <AddStaticFieldButtonComponent {...props} />
-    </StaticFieldsInfoProvider>
-  );
-}
+  const { disabled, fields, triggerDataTestId, onSelectField } = props;
 
-interface StaticFieldsInfoProviderProps {
-  children: ReactNode;
-}
-
-function StaticFieldsInfoProvider(props: StaticFieldsInfoProviderProps) {
-  const { children } = props;
-
+  const [isAddFieldDropdownOpen, setAddFieldDropdownOpen] = useState(false);
   const [isInfoDialogSeen, setInfoDialogSeen] = usePersistedState<boolean>(
     LOCAL_STORAGE_KEY,
     false,
   );
 
-  return (
-    <StaticFieldsInfoContext.Provider
-      value={{ isInfoDialogSeen, setInfoDialogSeen }}
-    >
-      {children}
-    </StaticFieldsInfoContext.Provider>
-  );
-}
-
-function AddStaticFieldButtonComponent(props: AddFieldDropdownProps) {
-  const { disabled, fields, triggerDataTestId, onSelectField } = props;
-
-  const { isInfoDialogSeen, setInfoDialogSeen } = useStaticFieldsInfoContext();
-  const [isAddFieldDropdownOpen, setAddFieldDropdownOpen] = useState(false);
+  function dismissDialog() {
+    setInfoDialogSeen(true);
+    setAddFieldDropdownOpen(true);
+  }
 
   return (
     <Box position="relative">
@@ -58,35 +37,9 @@ function AddStaticFieldButtonComponent(props: AddFieldDropdownProps) {
       />
       {!isInfoDialogSeen && (
         <Box position="absolute" top={0} right={0}>
-          <StaticFieldsInfoDialog
-            onClose={() => {
-              setInfoDialogSeen(true);
-              setAddFieldDropdownOpen(true);
-            }}
-          />
+          <StaticFieldsInfoDialog onClose={dismissDialog} />
         </Box>
       )}
     </Box>
   );
 }
-
-interface StaticFieldsInfoContext {
-  isInfoDialogSeen: boolean;
-  setInfoDialogSeen: (value: boolean) => void;
-}
-
-const StaticFieldsInfoContext = createContext<
-  StaticFieldsInfoContext | undefined
->(undefined);
-
-const useStaticFieldsInfoContext = () => {
-  const context = useContext(StaticFieldsInfoContext);
-
-  if (!context) {
-    throw new Error(
-      "useStaticFieldsInfoContext must be used within a StaticFieldsInfoProvider",
-    );
-  }
-
-  return context;
-};
