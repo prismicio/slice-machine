@@ -2,6 +2,8 @@ import { Form, Formik } from "formik";
 import { memo } from "react";
 import { Box } from "theme-ui";
 
+import { LabelSlugToIdObserver } from "@/legacy/lib/builders/common/EditModal/LabelSlugToIdObserver";
+
 const WidgetForm = ({
   formId,
   initialValues,
@@ -52,6 +54,7 @@ const WidgetForm = ({
           <Form // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             id={formId}
           >
+            <LabelSlugToIdObserver />
             {
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
               children({

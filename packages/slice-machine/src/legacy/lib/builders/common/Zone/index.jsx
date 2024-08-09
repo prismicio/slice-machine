@@ -7,6 +7,7 @@ import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { fields as allFields } from "@/domain/fields";
 import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
+import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 import Card from "./Card";
@@ -81,9 +82,14 @@ const Zone = ({
     setEditModalData({ isOpen: false });
   };
 
+  /** @param {keyof typeof Widgets} widgetTypeName */
   const onSelectFieldType = (widgetTypeName) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-    setNewFieldData({ widgetTypeName, fields });
+    /** `widgetTypeName` might have less keys than `Widgets`, but we lost track 
+    of the types because the `widgetsArray` is not typed and is also filtered into 
+    `widgetsArrayWithCondUid`. Although it's safe to use it to index the `Widgets` 
+    as longs as `widgetsArrayWithCondUid` is a subset of `widgetsArray`.*/
+    const field = Widgets[widgetTypeName].create("");
+    setEditModalData({ isOpen: true, field: ["", field] });
   };
 
   const onCancelNewField = () => setNewFieldData(null);
