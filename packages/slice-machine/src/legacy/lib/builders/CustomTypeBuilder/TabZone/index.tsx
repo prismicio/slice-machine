@@ -4,7 +4,6 @@ import {
   NestableWidget,
   UID,
 } from "@prismicio/types-internal/lib/customtypes";
-import { useRouter } from "next/router";
 import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
@@ -82,7 +81,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       ? allFields.filter((field) => field.key !== "uid")
       : allFields;
 
-  const { query } = useRouter();
   const poolOfFields = customTypeSM.tabs.reduce<PoolOfFields>(
     (acc: PoolOfFields, curr: TabSM) => {
       return [...acc, ...curr.value];
@@ -236,38 +234,36 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
         }
       >
         <List border={false} style={{ flexGrow: 1 }}>
-          {query.newPageType === undefined ? (
-            <Zone
-              zoneType="customType"
-              zoneTypeFormat={customType.format ?? "custom"}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              tabId={tabId}
-              title="Static Zone"
-              dataTip={""}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              fields={fields}
-              // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-              poolOfFieldsToCheck={poolOfFields}
-              showHints={true}
-              EditModal={EditModal}
-              widgetsArray={widgetsArray}
-              onDeleteItem={onDeleteItem}
-              onSave={onSave}
-              onSaveNewField={onSaveNewField}
-              onDragEnd={onDragEnd}
-              renderHintBase={({ item }) =>
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                `data${transformKeyAccessor(item.key)}`
-              }
-              renderFieldAccessor={(key) =>
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-                `data${transformKeyAccessor(key)}`
-              }
-              testId="static-zone-content"
-              isRepeatableCustomType={customType.repeatable}
-            />
-          ) : undefined}
+          <Zone
+            zoneType="customType"
+            zoneTypeFormat={customType.format ?? "custom"}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            tabId={tabId}
+            title="Static Zone"
+            dataTip={""}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            fields={fields}
+            // @ts-expect-error propsType and typescript are incompatible on this type, we can remove the error when migrating the Zone component
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            poolOfFieldsToCheck={poolOfFields}
+            showHints={true}
+            EditModal={EditModal}
+            widgetsArray={widgetsArray}
+            onDeleteItem={onDeleteItem}
+            onSave={onSave}
+            onSaveNewField={onSaveNewField}
+            onDragEnd={onDragEnd}
+            renderHintBase={({ item }) =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+              `data${transformKeyAccessor(item.key)}`
+            }
+            renderFieldAccessor={(key) =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+              `data${transformKeyAccessor(key)}`
+            }
+            testId="static-zone-content"
+            isRepeatableCustomType={customType.repeatable}
+          />
 
           <SliceZone
             customType={customTypeSM}

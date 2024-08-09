@@ -39,10 +39,24 @@ const model = mock.model.customType({
 
 const itemName = "item";
 
+const formatSnippet = async (input: string) => {
+	return (
+		await prettier.format(input, {
+			parser: "typescript",
+			printWidth: 60,
+		})
+	)
+		.replace(/[\r\n]+$/, "")
+		.replace(/;$/, "");
+};
+
 const testSnippet = (
 	fieldName: keyof typeof model.json.Main,
 	expected: string | Snippet[],
+	config: { format?: boolean } = {},
 ) => {
+	const { format = true } = config;
+
 	test(fieldName, async (ctx) => {
 		const {
 			data: [res],
@@ -60,11 +74,9 @@ const testSnippet = (
 				await Promise.all(
 					expected.map(async (descriptor) => ({
 						...descriptor,
-						code: (
-							await prettier.format(descriptor.code, { parser: "typescript" })
-						)
-							.replace(/[\r\n]+$/, "")
-							.replace(/;$/, ""),
+						code: format
+							? await formatSnippet(descriptor.code)
+							: descriptor.code,
 					})),
 				),
 			);
@@ -72,29 +84,22 @@ const testSnippet = (
 			expect(res).toStrictEqual({
 				label: "React",
 				language: "tsx",
-				code: (
-					await prettier.format(expected, {
-						parser: "typescript",
-						printWidth: 60,
-					})
-				)
-					.replace(/[\r\n]+$/, "")
-					.replace(/;$/, ""),
+				code: format ? await formatSnippet(expected) : expected,
 			});
 		}
 	});
 };
 
-testSnippet("boolean", `<>{${model.id}.data.boolean}</>`);
+testSnippet("boolean", `{${model.id}.data.boolean}`, { format: false });
 
-testSnippet("color", `<>{${model.id}.data.color}</>`);
+testSnippet("color", `{${model.id}.data.color}`, { format: false });
 
 testSnippet(
 	"contentRelationship",
 	`<PrismicNextLink field={${model.id}.data.contentRelationship}>Link</PrismicNextLink>`,
 );
 
-testSnippet("date", `<>{${model.id}.data.date}</>`);
+testSnippet("date", `{${model.id}.data.date}`, { format: false });
 
 testSnippet(
 	"embed",
@@ -103,21 +108,25 @@ testSnippet(
 
 testSnippet(
 	"geoPoint",
-	`<>{${model.id}.data.geoPoint.latitude}, {${model.id}.data.geoPoint.longitude}</>`,
+	`{${model.id}.data.geoPoint.latitude}, {${model.id}.data.geoPoint.longitude}`,
+	{ format: false },
 );
 
 testSnippet(
 	"group",
-	`<>{${model.id}.data.group.map((${itemName}) => {
-// Render the ${itemName}
-})}</>`,
+	`{${model.id}.data.group.map((${itemName}) => (
+  // Render the ${itemName}
+))}`,
+	{ format: false },
 );
 
 testSnippet("image", `<PrismicNextImage field={${model.id}.data.image} />`);
 
-testSnippet("integrationFields", `<>{${model.id}.data.integrationFields}</>`);
+testSnippet("integrationFields", `{${model.id}.data.integrationFields}`, {
+	format: false,
+});
 
-testSnippet("keyText", `<>{${model.id}.data.keyText}</>`);
+testSnippet("keyText", `{${model.id}.data.keyText}`, { format: false });
 
 testSnippet(
 	"link",
@@ -129,7 +138,7 @@ testSnippet(
 	`<PrismicNextLink field={${model.id}.data.linkToMedia}>Link</PrismicNextLink>`,
 );
 
-testSnippet("number", `<>{${model.id}.data.number}</>`);
+testSnippet("number", `{${model.id}.data.number}`, { format: false });
 
 testSnippet("richText", [
 	{
@@ -144,14 +153,14 @@ testSnippet("richText", [
 	},
 ]);
 
-testSnippet("select", `<>{${model.id}.data.select}</>`);
+testSnippet("select", `{${model.id}.data.select}`, { format: false });
 
 testSnippet(
 	"sliceZone",
 	`<SliceZone slices={${model.id}.data.sliceZone} components={components} />`,
 );
 
-testSnippet("timestamp", `<>{${model.id}.data.timestamp}</>`);
+testSnippet("timestamp", `{${model.id}.data.timestamp}`, { format: false });
 
 testSnippet("title", [
 	{
@@ -166,4 +175,4 @@ testSnippet("title", [
 	},
 ]);
 
-testSnippet("uid", `<>{${model.id}.data.uid}</>`);
+testSnippet("uid", `{${model.id}.data.uid}`, { format: false });
