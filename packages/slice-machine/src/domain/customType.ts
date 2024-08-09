@@ -97,6 +97,32 @@ export function getSection(
   return customType.json[sectionId];
 }
 
+export function getSectionWithUIDFieldEntry(
+  customType: CustomType,
+): [string, DynamicSection] | undefined {
+  const sections = getSectionEntries(customType);
+  const sectionWithUID = sections.find(([_, section]) =>
+    Object.values(section).some((field): field is UID => field.type === "UID"),
+  );
+  return sectionWithUID;
+}
+
+export function getUIDFieldEntry(
+  customType: CustomType,
+): [string, UID] | undefined {
+  const [_, section] = getSectionWithUIDFieldEntry(customType) ?? [];
+
+  return Object.entries(section ?? {}).find(
+    ([_, field]) => field.type === "UID",
+  ) as [string, UID] | undefined;
+}
+
+export function getFieldLabel(
+  field: NestableWidget | UID | Group,
+): string | undefined {
+  return field?.config?.label ?? undefined;
+}
+
 export function getSectionSliceZoneEntry(
   customType: CustomType,
   sectionId: string,
@@ -425,6 +451,58 @@ export function reorderField(args: ReorderFieldArgs): CustomType {
   return newCustomType;
 }
 
+// if the UID is not existing in any section, it should be added to the main section
+export function addUIDField(label: string, customType: CustomType): CustomType {
+  const mainSectionEntry = getMainSectionEntry(customType);
+  const [sectionId] = mainSectionEntry ?? [];
+
+  if (sectionId === undefined) return customType;
+
+  const newFieldId = "uid";
+  const newField: UID = {
+    type: "UID",
+    config: {
+      label,
+      placeholder: "Enter a unique identifier",
+    },
+  };
+
+  return addField({ customType, sectionId, newField, newFieldId });
+}
+
+export function updateUIDField(
+  label: string,
+  customType: CustomType,
+): CustomType {
+  const [sectionId] = getSectionWithUIDFieldEntry(customType) ?? [];
+  const [fieldId, field] = getUIDFieldEntry(customType) ?? [];
+
+  if (!field || fieldId === undefined || sectionId === undefined)
+    return customType;
+
+  const updatedSection = updateFields({
+    fields: customType.json[sectionId],
+    previousFieldId: fieldId,
+    newFieldId: fieldId,
+    newField: {
+      ...field,
+      config: {
+        ...field.config,
+        label,
+        placeholder: field.config?.placeholder ?? "Enter a unique identifier",
+      },
+    },
+  });
+
+  const newCustomType = updateSection({
+    customType,
+    sectionId,
+    updatedSection,
+  });
+
+  return newCustomType;
+}
+
 export function updateSection(args: UpdateSectionArgs): CustomType {
   const { customType, sectionId, updatedSection } = args;
 
@@ -521,10 +599,10 @@ const DEFAULT_MAIN_WITH_SLICE_ZONE: CustomType["json"] = {
 const DEFAULT_MAIN_WITH_UID: CustomType["json"] = {
   Main: {
     uid: {
+      type: "UID",
       config: {
         label: "UID",
       },
-      type: "UID",
     },
   },
 };

@@ -14,6 +14,7 @@ import { CustomTypesTablePage } from "../CustomTypesTablePage";
 import { PageTypesTablePage } from "../PageTypesTablePage";
 import { BuilderPage } from "./BuilderPage";
 import { FieldTypeLabel } from "../components/AddFieldDropdown";
+import { UIDEditor } from "../components/UIDEditor";
 
 export class TypeBuilderPage extends BuilderPage {
   readonly createTypeDialog: CreateTypeDialog;
@@ -28,6 +29,7 @@ export class TypeBuilderPage extends BuilderPage {
   readonly customTypeTablePage: CustomTypesTablePage;
   readonly pageTypeTablePage: PageTypesTablePage;
   readonly deleteSliceZoneDialog: DeleteSliceZoneDialog;
+  readonly uidEditor: UIDEditor;
   readonly format: "page" | "custom";
   readonly tab: Locator;
   readonly tabList: Locator;
@@ -71,6 +73,7 @@ export class TypeBuilderPage extends BuilderPage {
     this.renameTabDialog = new RenameTabDialog(page);
     this.deleteTabDialog = new DeleteTabDialog(page);
     this.deleteSliceZoneDialog = new DeleteSliceZoneDialog(page);
+    this.uidEditor = new UIDEditor(page);
 
     /**
      * Static locators
