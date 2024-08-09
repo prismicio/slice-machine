@@ -1,5 +1,6 @@
+import { useOnChange } from "@prismicio/editor-support/React";
 import { useField } from "formik";
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 
 import { slugify } from "@/legacy/lib/utils/str";
 
@@ -13,25 +14,24 @@ import { slugify } from "@/legacy/lib/utils/str";
  */
 export function LabelSlugToIdObserver() {
   const [{ value: label }] = useField<string | undefined>("config.label");
-  const [{ value: id }, { initialValue: initialId }, { setValue: setId }] =
-    useField<string | undefined>("id");
+  const [{ value: id }, idMeta, idHelpers] = useField<string | undefined>("id");
 
-  const wasIdChangedRef = useRef(initialId != null && initialId.length > 0); // rule 2
+  const [isIdManual, setIdManual] = useState(
+    idMeta.initialValue != null && idMeta.initialValue.length > 0, // rule 2
+  );
 
-  useEffect(() => {
-    if (!wasIdChangedRef.current && label != null) {
-      setId(slugify(label));
-    }
-  }, [label]); // eslint-disable-line react-hooks/exhaustive-deps
+  useOnChange(label, () => {
+    if (isIdManual || label == null) return;
+    idHelpers.setValue(slugify(label));
+  });
 
-  useEffect(() => {
+  useOnChange(id, () => {
     const isIdEmpty = id == null || id.length === 0;
-    if (wasIdChangedRef.current) {
-      if (isIdEmpty) {
-        wasIdChangedRef.current = false; // rule 3
-      }
+    if (isIdManual) {
+      if (!isIdEmpty) return;
+      setIdManual(false); // rule 3
     } else if (!isIdEmpty && (label == null || id !== slugify(label))) {
-      wasIdChangedRef.current = true; // rule 1
+      setIdManual(true); // rule 1
     }
-  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+  });
 }
