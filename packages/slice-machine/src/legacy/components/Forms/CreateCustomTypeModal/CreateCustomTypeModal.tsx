@@ -81,12 +81,6 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
 
         await router.push({
           pathname: customTypesConfig.getBuilderPagePathname(id),
-          query:
-            newCustomType.format === "page"
-              ? {
-                  newPageType: true,
-                }
-              : undefined,
         });
 
         syncChanges();
