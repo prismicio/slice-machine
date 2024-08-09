@@ -84,7 +84,7 @@ const DIALOG_CONTENT = {
   subtitle: "About",
   title: "Static fields",
   description:
-    "<b>Static fields</b> in Prismic page Types represent a dedicated section where editors can edit fields that will always be present on the page. Unlike Slices, which are optional and can be added or removed to customize the content layout, static fields ensures that certain essential information is consistently present for every version of the Page, like page metadata for example.",
+    "Static fields in Prismic page Types represent a dedicated section where editors can edit fields that will always be present on the page. Unlike Slices, which are optional and can be added or removed to customize the content layout, static fields ensures that certain essential information is consistently present for every version of the Page, like page metadata for example.",
   videoUrl:
     "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Create_page_type_xdn13j.mp4",
 };

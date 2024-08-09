@@ -73,8 +73,13 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const customTypeSM = CustomTypes.toSM(customType);
   const sliceZone = customTypeSM.tabs.find((tab) => tab.key === tabId)
     ?.sliceZone;
-  const fields: TabFields =
+  const allFields: TabFields =
     customTypeSM.tabs.find((tab) => tab.key === tabId)?.value ?? [];
+  // the uid field is moved to the top of the editor on repeatable pages
+  const fields =
+    customTypeSM.format === "page" && customTypeSM.repeatable
+      ? allFields.filter((field) => field.key !== "uid")
+      : allFields;
 
   const poolOfFields = customTypeSM.tabs.reduce<PoolOfFields>(
     (acc: PoolOfFields, curr: TabSM) => {

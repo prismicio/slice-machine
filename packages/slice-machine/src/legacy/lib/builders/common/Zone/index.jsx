@@ -42,11 +42,20 @@ const Zone = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       ([, { value }]) => value.type === "UID",
     );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const widgets = widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== "UID");
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return hasUid
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== "UID")
-      : widgetsArray;
+    if (hasUid) return widgets;
+
+    // Move UID widget to the end of the array because it is used very rarely
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const uidField = widgetsArray.find(({ TYPE_NAME }) => TYPE_NAME === "UID");
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    return [...widgets, uidField];
   })();
 
   const [showHints, setShowHints] = useState(false);

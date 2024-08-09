@@ -1,6 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
+import { generateRandomString } from "../../utils";
 
 test("I can see default SEO & Metadata tab fields", async ({
   pageTypesBuilderPage,
@@ -501,17 +502,6 @@ test("I can see and copy the code snippets for nested groups and their sub field
   );
 });
 
-test("I cannot delete default UID field for reusable page type", async ({
-  pageTypesBuilderPage,
-  reusablePageType,
-}) => {
-  await pageTypesBuilderPage.goto(reusablePageType.name);
-
-  await expect(
-    pageTypesBuilderPage.getFieldMenuButton("uid"),
-  ).not.toBeVisible();
-});
-
 test("I cannot see default UID field for single page type", async ({
   pageTypesBuilderPage,
   singlePageType,
@@ -521,4 +511,87 @@ test("I cannot see default UID field for single page type", async ({
   await expect(
     pageTypesBuilderPage.getListItemFieldId("uid"),
   ).not.toBeVisible();
+});
+
+test("I cannot see default UID field in Static Fields for reusable page type", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("uid"),
+  ).not.toBeVisible();
+});
+
+test("I can edit the UID field for reusable page", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
+  await pageTypesBuilderPage.uidEditor.editInput("my_uid");
+  await pageTypesBuilderPage.uidEditor.submitInput();
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("my_uid"),
+  ).toBeVisible();
+});
+
+test("I cannot edit the UID field with UIDEditor for single page", async ({
+  pageTypesBuilderPage,
+  singlePageType,
+}) => {
+  await pageTypesBuilderPage.goto(singlePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).not.toBeVisible();
+});
+
+test("I cannot save empty UID for reusable page", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
+  await pageTypesBuilderPage.uidEditor.editInput("");
+  await pageTypesBuilderPage.uidEditor.submitInput();
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getErrorMessage("This field is required"),
+  ).toBeVisible();
+});
+
+test("I cannot save UID longer than 35 characters for reusable page", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+}) => {
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getDialogTrigger("UID"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage.uidEditor.getDialogTrigger("UID").click();
+  await pageTypesBuilderPage.uidEditor.editInput(
+    generateRandomString({ length: 36 }),
+  );
+  await pageTypesBuilderPage.uidEditor.submitInput();
+
+  await expect(
+    pageTypesBuilderPage.uidEditor.getErrorMessage(
+      "The label can't be longer than 35 characters",
+    ),
+  ).toBeVisible();
 });
