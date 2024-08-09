@@ -1,3 +1,4 @@
+import { useOnChange } from "@prismicio/editor-support/React";
 import {
   Box,
   Button,
@@ -30,13 +31,12 @@ export function UIDEditor() {
   const [label, setLabel] = useState(uidFieldLabel ?? "");
   const [error, setError] = useState<string | undefined>();
 
-  function handleOpenChange(open: boolean) {
-    setOpen(open);
-    if (!open) {
+  useOnChange(isOpen, () => {
+    if (!isOpen) {
       setLabel(uidFieldLabel ?? "");
       setError(undefined);
     }
-  }
+  });
 
   function handleValueChange(value: string) {
     setLabel(value);
@@ -58,7 +58,7 @@ export function UIDEditor() {
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={handleOpenChange}
+      onOpenChange={setOpen}
       size="small"
       trigger={
         <Button
