@@ -1,6 +1,5 @@
 import { Box, ProgressCircle } from "@prismicio/editor-ui";
 import {
-  CustomType,
   Group,
   NestableWidget,
   UID,
@@ -70,6 +69,12 @@ interface TabZoneProps {
 
 type PoolOfFields = ReadonlyArray<{ key: string; value: TabField }>;
 
+type OnSaveFieldProps = {
+  apiId: string;
+  newKey: string;
+  value: TabField;
+};
+
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
@@ -96,21 +101,14 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
   };
 
-  const onSaveNewField = ({
-    id,
-    label,
-    widgetTypeName,
-  }: {
-    id: string;
-    label: string;
-    widgetTypeName: keyof typeof Widgets;
-  }): CustomType | undefined => {
-    if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
+  const onSaveNewField = ({ apiId: id, value }: OnSaveFieldProps) => {
+    const label = value.config?.label;
+    if (ensureWidgetTypeExistence(Widgets, value.type) || label == null) {
       return;
     }
     // @ts-expect-error We have to create a widget map or a service instead of using export name
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
+    const widget: Widget<TabField, AnyObjectSchema> = Widgets[value.type];
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
     const field: TabField = widget.create(label);
 
@@ -131,7 +129,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       throw new Error(`Add field: Model is invalid for field "${field.type}".`);
     }
 
-    const newField: NestableWidget | UID | Group = TabFieldsModel.fromSM(field);
+    const newField: NestableWidget | UID | Group = TabFieldsModel.fromSM(value);
     const newCustomType = addField({
       customType,
       newField,
@@ -149,8 +147,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
     });
-
-    return newCustomType;
   };
 
   const onDragEnd = (result: DropResult) => {
@@ -176,25 +172,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     flushSync(() => setCustomType(newCustomType));
   };
 
-  const onSave = ({
-    apiId: previousKey,
-    newKey,
-    value,
-  }: {
-    apiId: string;
-    newKey: string;
-    value: TabField;
-  }) => {
-    let savedCustomType: CustomType | undefined = undefined;
-    if (previousKey === "" && value.config?.label != null) {
-      savedCustomType = onSaveNewField({
-        id: newKey,
-        label: value.config.label,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-        widgetTypeName: value.type as any,
-      });
-    }
-
+  const onSave = ({ apiId: previousKey, newKey, value }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
@@ -202,7 +180,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
 
     const newField: NestableWidget | UID | Group = TabFieldsModel.fromSM(value);
     const newCustomType = updateField({
-      customType: savedCustomType ?? customType,
+      customType,
       previousFieldId: previousKey,
       newFieldId: newKey,
       newField,
@@ -210,6 +188,11 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     });
 
     setCustomType(newCustomType);
+  };
+
+  const onCreateOrSave = (props: OnSaveFieldProps) => {
+    if (props.apiId === "") return onSaveNewField(props); // create new
+    return onSave(props); // update existing
   };
 
   const onCreateSliceZone = () => {
@@ -261,7 +244,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
               EditModal={EditModal}
               widgetsArray={widgetsArray}
               onDeleteItem={onDeleteItem}
-              onSave={onSave}
+              onSave={onCreateOrSave}
               onSaveNewField={onSaveNewField}
               onDragEnd={onDragEnd}
               renderHintBase={({ item }) =>
