@@ -112,10 +112,7 @@ export class TypeBuilderPage extends BuilderPage {
       this.sliceZoneBlankSlate.getByText("Create new", {
         exact: true,
       });
-    this.sliceZoneAddDropdown = page.getByRole("button", {
-      name: "Add slices",
-      exact: true,
-    });
+    this.sliceZoneAddDropdown = page.getByTestId("add-new-slice-dropdown");
     this.sliceZoneAddDropdownUseTemplateAction = page
       .getByRole("menu")
       .getByText("Use template", { exact: true });
@@ -223,6 +220,15 @@ export class TypeBuilderPage extends BuilderPage {
       .click();
   }
 
+  async dismissStaticFieldsInfoDialog() {
+    await this.page.getByTestId("static-fields-info-trigger").click();
+    await this.page
+      .getByRole("button", { name: "Got it", exact: true })
+      .click();
+    await expect(this.addFieldDropdown.menu).toBeVisible();
+    await this.staticZoneAddFieldButton.click();
+  }
+
   async addStaticField(args: {
     type: FieldTypeLabel;
     name: string;
@@ -235,10 +241,7 @@ export class TypeBuilderPage extends BuilderPage {
 
     if (groupFieldId) {
       await this.getListItem(groupFieldId, grandparentGroupFieldId)
-        .getByRole("button", {
-          name: "Add a field",
-          exact: true,
-        })
+        .getByTestId("add-field")
         .click();
     } else {
       await this.staticZoneAddFieldButton.click();

@@ -37,7 +37,13 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
     <Dialog
       open={isOpen}
       onOpenChange={handleOpenChange}
-      trigger={<Button startIcon="add" color="grey" />}
+      trigger={
+        <Button
+          startIcon="add"
+          color="grey"
+          data-testid="static-fields-info-trigger"
+        />
+      }
       size="small"
     >
       <DialogHeader title={DIALOG_CONTENT.header} />
