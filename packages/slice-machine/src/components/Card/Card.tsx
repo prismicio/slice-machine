@@ -1,8 +1,7 @@
-import type { UrlObject } from "node:url";
-
 import { findFocusableAncestor } from "@prismicio/editor-support/DOM";
 import { Text } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
+import { LinkProps } from "next/link";
 import {
   createElement,
   type CSSProperties,
@@ -16,7 +15,7 @@ import {
 
 import styles from "./Card.module.css";
 
-type CardProps = PropsWithChildren<
+export type CardProps = PropsWithChildren<
   {
     checked?: boolean;
     size?: "small" | "medium";
@@ -56,11 +55,6 @@ type NarrowedCardProps<T> = NarrowedProps<
  */
 type NarrowedProps<T, K extends PropertyKey> = T &
   Omit<Partial<Record<K, never>>, keyof T>;
-
-type LinkProps = {
-  href: string | UrlObject;
-  onClick?: (event: MouseEvent) => void;
-};
 
 export const Card: FC<CardProps> = (props) => {
   const {

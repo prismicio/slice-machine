@@ -16,6 +16,7 @@ import Link from "next/link";
 import type { FC } from "react";
 
 import { Card, CardFooter, CardMedia, CardStatus } from "@/components/Card";
+import { CardProps } from "@/components/Card/Card";
 import { countMissingScreenshots, getScreenshotUrl } from "@/domain/slice";
 import {
   StatusBadge,
@@ -83,7 +84,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
   const disableOverlay = variant === "outlined";
   const hasVariationId = variationId !== undefined;
 
-  let modeProps;
+  let modeProps: CardProps;
   if (props.mode === "selection") {
     modeProps = {
       disabled,
