@@ -20,11 +20,14 @@ import {
   UIDField,
 } from "@/domain/fields";
 
-interface AddFieldDropdownProps {
+export interface AddFieldDropdownProps {
   disabled: boolean;
   onSelectField: (fieldType: FieldType | FieldVariant) => void;
   fields: Field[];
   triggerDataTestId?: string;
+  hideTriggerLabel?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function AddFieldDropdown(props: AddFieldDropdownProps) {
@@ -33,6 +36,8 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
     onSelectField,
     fields,
     triggerDataTestId = "add-field",
+    hideTriggerLabel = false,
+    ...implicitProps
   } = props;
 
   const singleFieldsToRender = fields.filter(
@@ -46,10 +51,15 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
   );
 
   return (
-    <DropdownMenu>
+    <DropdownMenu {...implicitProps}>
       <DropdownMenuTrigger disabled={disabled}>
-        <Button startIcon="add" color="grey" data-testid={triggerDataTestId}>
-          Add a field
+        <Button
+          startIcon="add"
+          color="grey"
+          data-testid={triggerDataTestId}
+          aria-label={hideTriggerLabel && "Add a field"}
+        >
+          {!hideTriggerLabel && "Add a field"}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" maxHeight={400} collisionPadding={8}>

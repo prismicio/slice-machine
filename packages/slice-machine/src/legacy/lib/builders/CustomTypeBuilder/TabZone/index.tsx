@@ -237,7 +237,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
               zoneTypeFormat={customType.format ?? "custom"}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               tabId={tabId}
-              title="Static Zone"
+              title="Static fields"
               dataTip={""}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={fields}
