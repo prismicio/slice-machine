@@ -53,10 +53,7 @@ export class BuilderPage extends SliceMachinePage {
     // New field
     this.newFieldNameInput = page.getByPlaceholder("Field Name");
     this.newFieldIdInput = page.getByPlaceholder("e.g. buttonLink");
-    this.newFieldAddButton = page.getByRole("button", {
-      name: "Add",
-      exact: true,
-    });
+    this.newFieldAddButton = page.getByTestId("new-field-add-button");
   }
 
   /**

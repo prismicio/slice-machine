@@ -117,6 +117,7 @@ test("I can see my changes auto-saved", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -138,6 +139,7 @@ test("I can see my changes being saved", async ({
   });
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -161,6 +163,7 @@ test("I can see that my changes failed to save and I can retry", async ({
   });
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
+  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
