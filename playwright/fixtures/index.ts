@@ -251,6 +251,10 @@ export const test = baseTest.extend<Options & Fixtures>({
             name: `${SLICE_MACHINE_STORAGE_PREFIX}_isInAppGuideOpen`,
             value: "false",
           },
+          {
+            name: `${SLICE_MACHINE_STORAGE_PREFIX}_staticFieldsInfoDialogDismissed`,
+            value: "true",
+          },
         ]
           .filter(
             (item) =>

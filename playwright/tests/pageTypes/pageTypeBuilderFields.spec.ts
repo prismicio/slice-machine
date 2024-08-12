@@ -40,7 +40,6 @@ test("I can add a rich text field", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -60,7 +59,6 @@ test("I can edit a rich text field", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -90,7 +88,6 @@ test("I can delete a field", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -109,7 +106,6 @@ test("I can add a sub field within a group field", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -139,7 +135,6 @@ test("I can edit a sub field within a group field", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -178,7 +173,6 @@ test("I can delete a sub field within a group field", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -211,7 +205,6 @@ test("I can add a nested group with a sub field inside a group field", async ({
   );
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -270,7 +263,6 @@ test("I can edit a nested group and its sub field inside a group field", async (
   );
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -351,7 +343,6 @@ test("I can delete a nested group and its sub field inside a group field", async
   );
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -403,7 +394,6 @@ test("I can't add a nested group if I'm not eligible for the `slicemachine-neste
   );
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -428,7 +418,6 @@ test("I can see and copy the code snippets", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -446,7 +435,6 @@ test("I can see and copy the code snippets for groups", async ({
   reusablePageType,
 }) => {
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",
@@ -472,7 +460,6 @@ test("I can see and copy the code snippets for nested groups and their sub field
   );
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Repeatable Group",
     name: "My Group",

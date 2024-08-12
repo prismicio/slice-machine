@@ -34,7 +34,6 @@ test("I can see the auto-sync succeed when making a change", async ({
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
 
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -81,7 +80,6 @@ test("I can see the auto-sync succeed after a failed attempt", async ({
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
 
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
@@ -142,7 +140,6 @@ test("I can see the auto-sync fail because of an hard limit", async ({
 
   await pageTypesBuilderPage.goto(reusablePageType.name);
 
-  await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",

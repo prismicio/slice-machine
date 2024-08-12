@@ -7,7 +7,6 @@ test("I can create a rich text field that allows multiple paragraphs by default"
   singleCustomType,
 }) => {
   await customTypesBuilderPage.goto(singleCustomType.name);
-  await customTypesBuilderPage.dismissStaticFieldsInfoDialog();
   await customTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Rich Text",
