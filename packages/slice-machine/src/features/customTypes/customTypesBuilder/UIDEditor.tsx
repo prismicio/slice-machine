@@ -10,9 +10,10 @@ import {
   DialogHeader,
   Form,
   FormInput,
+  Icon,
   Text,
 } from "@prismicio/editor-ui";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { z } from "zod";
 
 import {
@@ -55,6 +56,13 @@ export function UIDEditor() {
     setOpen(false);
   }
 
+  const uidIcon = useCallback(
+    () => (
+      <Icon name={field ? "language" : "add"} size="small" color="grey11" />
+    ),
+    [field],
+  );
+
   return (
     <Dialog
       open={isOpen}
@@ -64,7 +72,8 @@ export function UIDEditor() {
         <Button
           color="grey"
           textColor="placeholder"
-          startIcon={field ? "language" : "add"}
+          textWeight="normal"
+          renderStartIcon={uidIcon}
           sx={{ marginInline: "auto" }}
         >
           {field ? uidFieldLabel : "Add an UID"}
