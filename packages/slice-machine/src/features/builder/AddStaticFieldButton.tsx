@@ -1,5 +1,4 @@
 import { Button } from "@prismicio/editor-ui";
-import { ButtonProps } from "@prismicio/editor-ui/dist/components/Button";
 import { useState } from "react";
 
 import {
@@ -27,24 +26,20 @@ export function AddStaticFieldButton(props: AddFieldDropdownProps) {
     }
   };
 
-  const commonTriggerProps: ButtonProps = {
-    startIcon: "add",
-    color: "grey",
-  };
+  const trigger = (
+    <Button
+      startIcon="add"
+      color="grey"
+      data-testid={triggerDataTestId ?? "add-field"}
+      aria-label="Add a field"
+    />
+  );
 
   return (
     <>
       <StaticFieldsInfoDialog
-        trigger={
-          !isInfoDialogSeen && (
-            <Button
-              {...commonTriggerProps}
-              data-testid="static-fields-info-trigger"
-              aria-label="Add a field"
-            />
-          )
-        }
         onClose={dismissDialog}
+        trigger={!isInfoDialogSeen ? trigger : null}
       />
       <AddFieldDropdown
         open={isAddFieldDropdownOpen}
@@ -52,15 +47,7 @@ export function AddStaticFieldButton(props: AddFieldDropdownProps) {
         disabled={disabled}
         onSelectField={onSelectField}
         fields={fields}
-        trigger={
-          isInfoDialogSeen && (
-            <Button
-              {...commonTriggerProps}
-              data-testid={triggerDataTestId ?? "add-field"}
-              aria-label="Add a field"
-            />
-          )
-        }
+        trigger={isInfoDialogSeen ? trigger : null}
       />
     </>
   );

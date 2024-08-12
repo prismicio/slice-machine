@@ -224,7 +224,7 @@ export class TypeBuilderPage extends BuilderPage {
   }
 
   async dismissStaticFieldsInfoDialog() {
-    await this.page.getByTestId("static-fields-info-trigger").click();
+    await this.page.getByTestId("add-field").click();
     await this.page
       .getByRole("button", { name: "Got it", exact: true })
       .click();
