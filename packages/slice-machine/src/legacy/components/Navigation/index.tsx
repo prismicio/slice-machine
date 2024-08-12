@@ -2,7 +2,6 @@ import { Box } from "@prismicio/editor-ui";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { type FC, Suspense, useState } from "react";
-import { useSelector } from "react-redux";
 
 import { telemetry } from "@/apiClient";
 import { Divider } from "@/components/Divider";
@@ -25,10 +24,6 @@ import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
 import { MasterSliceLibraryIcon } from "@/icons/MasterSliceLibraryIcon";
 import { SettingsIcon } from "@/icons/SettingsIcon";
-import VideoItem from "@/legacy/components/Navigation/VideoItem";
-import { userHasSeenTutorialsToolTip } from "@/modules/userContext";
-import useSliceMachineActions from "@/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@/redux/type";
 
 import { ChangesItem } from "./ChangesItem";
 import { Environment } from "./Environment";
@@ -37,13 +32,7 @@ import { RunningVersion } from "./RunningVersion";
 import { UpdateBox } from "./UpdateBox";
 
 const Navigation: FC = () => {
-  const { hasSeenTutorialsToolTip } = useSelector(
-    (store: SliceMachineStoreType) => ({
-      hasSeenTutorialsToolTip: userHasSeenTutorialsToolTip(store),
-    }),
-  );
   const router = useRouter();
-  const { setSeenTutorialsToolTip } = useSliceMachineActions();
   const { repositoryName, repositoryDomain, repositoryUrl } =
     useRepositoryInformation();
   const gitIntegrationExperiment = useGitIntegrationExperiment();
@@ -154,15 +143,6 @@ const Navigation: FC = () => {
             />
           </SideNavListItem>
         )}
-
-        <ErrorBoundary>
-          <Suspense>
-            <VideoItem
-              hasSeenTutorialsToolTip={hasSeenTutorialsToolTip}
-              onClose={setSeenTutorialsToolTip}
-            />
-          </Suspense>
-        </ErrorBoundary>
 
         {gitIntegrationExperiment.eligible ? (
           <SideNavListItem>
