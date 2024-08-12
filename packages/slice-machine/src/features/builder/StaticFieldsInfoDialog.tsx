@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Dialog,
   DialogActionButton,
   DialogActions,
@@ -10,22 +9,23 @@ import {
   Text,
   Video,
 } from "@prismicio/editor-ui";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 interface StaticFieldsInfoDialogProps {
   onClose: () => void;
+  trigger?: ReactNode;
 }
 
 export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
-  const { onClose } = props;
+  const { onClose, trigger } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       dismissDialog();
-      return;
+    } else {
+      setIsOpen(open);
     }
-    setIsOpen(open);
   };
 
   function dismissDialog() {
@@ -37,13 +37,7 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
     <Dialog
       open={isOpen}
       onOpenChange={handleOpenChange}
-      trigger={
-        <Button
-          startIcon="add"
-          color="grey"
-          data-testid="static-fields-info-trigger"
-        />
-      }
+      trigger={trigger}
       size="small"
     >
       <DialogHeader title={DIALOG_CONTENT.header} />
