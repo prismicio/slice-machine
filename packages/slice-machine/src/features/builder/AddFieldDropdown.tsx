@@ -37,7 +37,7 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
     disabled,
     onSelectField,
     fields,
-    triggerDataTestId,
+    triggerDataTestId = "add-field",
     trigger,
     ...implicitProps
   } = props;
