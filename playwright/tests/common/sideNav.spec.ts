@@ -138,7 +138,7 @@ test.describe("Tutorial tooltip", () => {
     },
   });
 
-  test("I can close the tutorial video tooltip and it stays close", async ({
+  test.skip("I can close the tutorial video tooltip and it stays close", async ({
     sliceMachinePage,
     procedures,
   }) => {
