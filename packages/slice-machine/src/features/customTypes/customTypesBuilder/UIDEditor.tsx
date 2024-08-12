@@ -11,7 +11,6 @@ import {
   Form,
   FormInput,
   Icon,
-  Text,
 } from "@prismicio/editor-ui";
 import { useCallback, useState } from "react";
 import { z } from "zod";
@@ -91,11 +90,8 @@ export function UIDEditor() {
               value={label}
               onValueChange={handleValueChange}
               error={error}
+              description="A label for the UID"
             />
-            {/* TODO: refactor if change proposed in: https://github.com/prismicio/editor/pull/1151 is released */}
-            {error === undefined && (
-              <Text color="grey11">A label for the UID</Text>
-            )}
           </Box>
           <DialogActions>
             <DialogCancelButton size="medium" />
