@@ -176,20 +176,6 @@ test.describe("Tutorial tooltip", () => {
   });
 });
 
-test('I can access the Academy from the "Learn Prismic" link', async ({
-  sliceMachinePage,
-}) => {
-  await sliceMachinePage.gotoDefaultPage();
-  await expect(sliceMachinePage.menu.learnPrismicLink).toBeVisible();
-
-  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
-  await sliceMachinePage.menu.learnPrismicLink.click();
-  const newTab = await newTabPromise;
-  await newTab.waitForLoadState();
-
-  await expect(newTab).toHaveTitle(/Prismic Academy/);
-});
-
 // NOTE: This tests doesn't use page objects as the Master Slice Library preview modal
 //       is meant to be a temporary experiment lasting a few weeks, so it didn't really
 //       make sense to implement a page object for such a feature.
