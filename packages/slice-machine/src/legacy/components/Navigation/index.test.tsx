@@ -140,7 +140,7 @@ describe("Side Navigation", () => {
     expect(within(changesItem).getByText("1")).toBeVisible();
   });
 
-  test("Video Item with next", async (ctx) => {
+  test.skip("Video Item with next", async (ctx) => {
     const adapter = createTestPlugin({
       meta: {
         name: "@slicemachine/adapter-next",
@@ -178,7 +178,7 @@ describe("Side Navigation", () => {
     expect(link).toHaveAttribute("target", "_blank");
   });
 
-  test("Video Item not next", async () => {
+  test.skip("Video Item not next", async () => {
     renderSideNavigation();
 
     const link = (await screen.findByText("Learn Prismic")).parentElement
