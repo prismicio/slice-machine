@@ -68,7 +68,6 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
           size="medium"
           sx={{ flexGrow: 1 }}
           onClick={dismissDialog}
-          data-testid="static-fields-info-dialog-cta"
         >
           Got it
         </DialogActionButton>
