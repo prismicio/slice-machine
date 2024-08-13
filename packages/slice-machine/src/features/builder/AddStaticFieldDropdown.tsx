@@ -1,6 +1,6 @@
-import { Button } from "@prismicio/editor-ui";
+import { Box, Button } from "@prismicio/editor-ui";
 import { ButtonProps } from "@prismicio/editor-ui/dist/components/Button";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 
 import {
   AddFieldDropdown,
@@ -11,18 +11,22 @@ import { usePersistedState } from "@/hooks/usePersistedState";
 
 const LOCAL_STORAGE_KEY = "staticFieldsInfoDialogDismissed";
 
+const AddTypeButton = forwardRef<
+  HTMLButtonElement,
+  ButtonProps & { "data-testid"?: string }
+>((props, ref) => (
+  <Button
+    {...props}
+    ref={ref}
+    startIcon="add"
+    color="grey"
+    aria-label="Add a field"
+    data-testid={props["data-testid"] ?? "add-field"}
+  />
+));
+
 type AddStaticFieldDropdownProps = AddFieldDropdownProps & {
   zoneTypeFormat: "page" | "custom";
-};
-
-const commonTriggerProps: ButtonProps & {
-  "aria-label": string;
-  "data-testid": string;
-} = {
-  startIcon: "add",
-  color: "grey",
-  "aria-label": "Add a field",
-  "data-testid": "add-field",
 };
 
 export function AddStaticFieldDropdown(props: AddStaticFieldDropdownProps) {
@@ -31,69 +35,69 @@ export function AddStaticFieldDropdown(props: AddStaticFieldDropdownProps) {
   if (zoneTypeFormat === "page") {
     return <PageAddStaticFieldDropdown {...remainingProps} />;
   }
-
   return <CustomTypeAddStaticFieldDropdown {...remainingProps} />;
 }
+
+const hiddenTrigger = (
+  <div style={{ position: "absolute", bottom: 0, right: 0 }} />
+);
 
 function PageAddStaticFieldDropdown(props: AddFieldDropdownProps) {
   const { disabled, fields, triggerDataTestId, onSelectField } = props;
 
-  const [isAddFieldDropdownOpen, setAddFieldDropdownOpen] = useState(false);
+  const [isFieldDropdownOpen, setFieldsDropdownOpen] = useState(false);
+  const [isInfoDialogOpen, setInfoDialogOpen] = useState(false);
   const [isInfoDialogSeen, setInfoDialogSeen] = usePersistedState(
     LOCAL_STORAGE_KEY,
     false,
   );
 
-  const dismissDialog = () => {
-    if (!isInfoDialogSeen) {
-      setInfoDialogSeen(true);
-      setAddFieldDropdownOpen(true);
+  const onAddFieldClick = () => {
+    if (isInfoDialogSeen) {
+      setFieldsDropdownOpen(true);
+    } else {
+      setInfoDialogOpen(true);
     }
   };
 
-  const trigger = (
-    <Button
-      {...commonTriggerProps}
-      {...(triggerDataTestId != null && { "data-testid": triggerDataTestId })}
-    />
-  );
+  const onDialogConfirm = () => setInfoDialogSeen(true);
+  const onDialogOpenChange = (open: boolean) => {
+    setInfoDialogOpen(open);
+    if (!open) setFieldsDropdownOpen(true);
+  };
 
   return (
-    <>
+    <Box position="relative">
+      <AddTypeButton
+        data-testid={triggerDataTestId}
+        onClick={onAddFieldClick}
+      />
       <StaticFieldsInfoDialog
-        onClose={dismissDialog}
-        trigger={!isInfoDialogSeen ? trigger : null}
+        open={isInfoDialogOpen}
+        onOpenChange={onDialogOpenChange}
+        onConfirm={onDialogConfirm}
       />
       <AddFieldDropdown
-        open={isAddFieldDropdownOpen}
-        onOpenChange={setAddFieldDropdownOpen}
+        open={isFieldDropdownOpen}
+        onOpenChange={setFieldsDropdownOpen}
         disabled={disabled}
         onSelectField={onSelectField}
         fields={fields}
-        trigger={isInfoDialogSeen ? trigger : null}
+        trigger={hiddenTrigger}
       />
-    </>
+    </Box>
   );
 }
 
 function CustomTypeAddStaticFieldDropdown(props: AddFieldDropdownProps) {
   const { disabled, fields, triggerDataTestId, onSelectField } = props;
 
-  const trigger = (
-    <Button
-      {...commonTriggerProps}
-      {...(triggerDataTestId != null && { "data-testid": triggerDataTestId })}
-    />
-  );
-
   return (
-    <>
-      <AddFieldDropdown
-        disabled={disabled}
-        onSelectField={onSelectField}
-        fields={fields}
-        trigger={trigger}
-      />
-    </>
+    <AddFieldDropdown
+      disabled={disabled}
+      onSelectField={onSelectField}
+      fields={fields}
+      trigger={<AddTypeButton data-testid={triggerDataTestId} />}
+    />
   );
 }

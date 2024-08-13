@@ -9,37 +9,23 @@ import {
   Text,
   Video,
 } from "@prismicio/editor-ui";
-import { ReactNode, useState } from "react";
 
 interface StaticFieldsInfoDialogProps {
-  onClose: () => void;
-  trigger?: ReactNode;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConfirm: () => void;
 }
 
 export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
-  const { onClose, trigger } = props;
-  const [isOpen, setIsOpen] = useState(false);
+  const { open, onOpenChange, onConfirm } = props;
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      dismissDialog();
-    } else {
-      setIsOpen(open);
-    }
+  const handleConfirm = () => {
+    onConfirm();
+    onOpenChange(false);
   };
 
-  function dismissDialog() {
-    setIsOpen(false);
-    onClose();
-  }
-
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={handleOpenChange}
-      trigger={trigger}
-      size="small"
-    >
+    <Dialog open={open} onOpenChange={onOpenChange} size="small">
       <DialogHeader title="Static zone" />
       <DialogContent>
         <ScrollArea>
@@ -67,7 +53,7 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
         <DialogActionButton
           size="medium"
           sx={{ flexGrow: 1 }}
-          onClick={dismissDialog}
+          onClick={handleConfirm}
         >
           Got it
         </DialogActionButton>
