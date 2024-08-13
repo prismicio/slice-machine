@@ -118,7 +118,13 @@ const Zone = ({
   if (zoneType === "slice" && fields.length > 0) {
     addFieldDropdown = <AddFieldDropdown {...addFieldDropdownProps} />;
   } else if (zoneType === "customType") {
-    addFieldDropdown = <AddStaticFieldDropdown {...addFieldDropdownProps} />;
+    addFieldDropdown = (
+      <AddStaticFieldDropdown
+        {...addFieldDropdownProps}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        zoneTypeFormat={zoneTypeFormat}
+      />
+    );
   }
 
   return (
