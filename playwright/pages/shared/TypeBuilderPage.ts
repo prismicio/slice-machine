@@ -48,6 +48,7 @@ export class TypeBuilderPage extends BuilderPage {
   readonly sliceZoneAddDropdownSelectExistingAction: Locator;
   readonly sliceZoneAddDropdownCreateNewAction: Locator;
   readonly removeSliceButton: Locator;
+  readonly staticZoneInfoDialogConfirmCta: Locator;
 
   constructor(
     page: Page,
@@ -129,6 +130,10 @@ export class TypeBuilderPage extends BuilderPage {
       name: "Remove slice",
       exact: true,
     });
+    this.staticZoneInfoDialogConfirmCta = page.getByRole("button", {
+      name: "Got it",
+      exact: true,
+    });
   }
 
   /**
@@ -192,10 +197,6 @@ export class TypeBuilderPage extends BuilderPage {
     return this.getListItem(fieldId)
       .getByTestId("field-id")
       .getByText(`data.${fieldId}`, { exact: true });
-  }
-
-  getStaticZoneInfoDialogConfirmCta() {
-    return this.page.getByRole("button", { name: "Got it", exact: true });
   }
 
   /**

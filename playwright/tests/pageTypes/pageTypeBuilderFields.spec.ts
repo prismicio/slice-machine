@@ -44,7 +44,7 @@ test.describe("Static zone info modal", () => {
   }) => {
     await pageTypesBuilderPage.goto(reusablePageType.name);
     await pageTypesBuilderPage.staticZoneAddFieldButton.click();
-    await pageTypesBuilderPage.getStaticZoneInfoDialogConfirmCta().click();
+    await pageTypesBuilderPage.staticZoneInfoDialogConfirmCta.click();
     await pageTypesBuilderPage.addFieldDropdown.menu.isVisible();
   });
 });
