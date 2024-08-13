@@ -33,7 +33,7 @@ export function AddStaticFieldDropdown(props: AddStaticFieldDropdownProps) {
   const { zoneTypeFormat, ...remainingProps } = props;
 
   if (zoneTypeFormat === "page") {
-    return <PageAddStaticFieldDropdown {...remainingProps} />;
+    return <PageTypeAddStaticFieldDropdown {...remainingProps} />;
   }
   return <CustomTypeAddStaticFieldDropdown {...remainingProps} />;
 }
@@ -43,7 +43,7 @@ const hiddenTrigger = (
   <div style={{ position: "absolute", bottom: 0, right: 0 }} />
 );
 
-function PageAddStaticFieldDropdown(props: AddFieldDropdownProps) {
+function PageTypeAddStaticFieldDropdown(props: AddFieldDropdownProps) {
   const { disabled, fields, triggerDataTestId, onSelectField } = props;
 
   const [isFieldDropdownOpen, setFieldsDropdownOpen] = useState(false);
