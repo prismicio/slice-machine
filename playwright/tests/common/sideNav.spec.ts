@@ -138,7 +138,7 @@ test.describe("Tutorial tooltip", () => {
     },
   });
 
-  test.skip("I can close the tutorial video tooltip and it stays close", async ({
+  test("I can close the tutorial video tooltip and it stays close", async ({
     sliceMachinePage,
     procedures,
   }) => {
@@ -176,7 +176,7 @@ test.describe("Tutorial tooltip", () => {
   });
 });
 
-test.skip('I can access the Academy from the "Learn Prismic" link', async ({
+test('I can access the Academy from the "Learn Prismic" link', async ({
   sliceMachinePage,
 }) => {
   await sliceMachinePage.gotoDefaultPage();
