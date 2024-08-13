@@ -37,7 +37,7 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
             <Text color="grey11">
               The static zone in Prismic page types contain fields that are
               always present on the page. Use it for essential information like
-              a page's title, page design settings or metadata. Unlike slices,
+              a page's title, page design settings, or metadata. Unlike slices,
               which can be added or removed, static zone fields remain fixed.
             </Text>
             <Video
