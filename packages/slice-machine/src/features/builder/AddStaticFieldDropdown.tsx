@@ -11,7 +11,7 @@ import { usePersistedState } from "@/hooks/usePersistedState";
 
 const LOCAL_STORAGE_KEY = "staticFieldsInfoDialogDismissed";
 
-const AddTypeButton = forwardRef<
+const AddFieldButton = forwardRef<
   HTMLButtonElement,
   ButtonProps & { "data-testid"?: string }
 >((props, ref) => (
@@ -69,7 +69,7 @@ function PageAddStaticFieldDropdown(props: AddFieldDropdownProps) {
 
   return (
     <Box position="relative">
-      <AddTypeButton
+      <AddFieldButton
         onClick={onAddFieldClick}
         data-testid={triggerDataTestId}
       />
@@ -98,7 +98,7 @@ function CustomTypeAddStaticFieldDropdown(props: AddFieldDropdownProps) {
       disabled={disabled}
       onSelectField={onSelectField}
       fields={fields}
-      trigger={<AddTypeButton data-testid={triggerDataTestId} />}
+      trigger={<AddFieldButton data-testid={triggerDataTestId} />}
     />
   );
 }

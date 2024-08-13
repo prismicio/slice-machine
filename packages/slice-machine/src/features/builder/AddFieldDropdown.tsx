@@ -56,12 +56,10 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
   return (
     <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger disabled={disabled}>
-        {trigger === undefined ? (
+        {trigger ?? (
           <Button startIcon="add" color="grey" data-testid={triggerDataTestId}>
             Add a field
           </Button>
-        ) : (
-          trigger
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" maxHeight={400} collisionPadding={8}>
