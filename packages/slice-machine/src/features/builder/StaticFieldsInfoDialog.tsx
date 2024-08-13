@@ -33,7 +33,7 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
             <Text sx={{ marginBottom: 4 }} color="purple9" variant="smallBold">
               About
             </Text>
-            <Text variant="h3">What is the static zone?</Text>
+            <Text variant="h3">What are static fields?</Text>
             <Text color="grey11">
               The static zone in Prismic page types contain fields that are
               always present on the page. Use it for essential information like
