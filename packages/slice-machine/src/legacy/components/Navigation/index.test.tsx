@@ -1,7 +1,5 @@
 // @vitest-environment jsdom
 import { cache } from "@prismicio/editor-support/Suspense";
-import { createSliceMachineManager } from "@slicemachine/manager";
-import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import Router from "next/router";
 import { act } from "react-dom/test-utils";
 import { describe, expect, test, vi } from "vitest";
@@ -10,11 +8,8 @@ import {
   render,
   type RenderReturnType,
   screen,
-  waitFor,
   within,
 } from "@/../test/__testutils__";
-import { createTestPlugin } from "@/../test/__testutils__/createTestPlugin";
-import { createTestProject } from "@/../test/__testutils__/createTestProject";
 import { FrontEndEnvironment } from "@/legacy/lib/models/common/Environment";
 import { AuthStatus, UserContextStoreType } from "@/modules/userContext/types";
 
@@ -81,7 +76,6 @@ function renderSideNavigation(
         },
       } as unknown as FrontEndEnvironment,
       userContext: {
-        hasSeenTutorialsToolTip: false,
         authStatus: authStatus,
       } as unknown as UserContextStoreType,
     },
@@ -138,55 +132,5 @@ describe("Side Navigation", () => {
       .closest("button") as HTMLButtonElement;
 
     expect(within(changesItem).getByText("1")).toBeVisible();
-  });
-
-  test("Video Item with next", async (ctx) => {
-    const adapter = createTestPlugin({
-      meta: {
-        name: "@slicemachine/adapter-next",
-      },
-    });
-    const cwd = await createTestProject({
-      adapter,
-    });
-    const manager = createSliceMachineManager({
-      nativePlugins: { [adapter.meta.name]: adapter },
-      cwd,
-    });
-
-    await manager.plugins.initPlugins();
-
-    ctx.msw.use(
-      createSliceMachineManagerMSWHandler({
-        url: "http://localhost:3000/_manager",
-        sliceMachineManager: manager,
-      }),
-    );
-
-    renderSideNavigation();
-
-    const link = (await screen.findByText("Learn Prismic")).parentElement
-      ?.parentElement as HTMLElement;
-
-    await waitFor(() =>
-      expect(link).toHaveAttribute(
-        "href",
-        "https://prismic.io/academy/prismic-and-nextjs",
-      ),
-    );
-
-    expect(link).toHaveAttribute("target", "_blank");
-  });
-
-  test("Video Item not next", async () => {
-    renderSideNavigation();
-
-    const link = (await screen.findByText("Learn Prismic")).parentElement
-      ?.parentElement as HTMLElement;
-    expect(link).toHaveAttribute(
-      "href",
-      "https://youtube.com/playlist?list=PLUVZjQltoA3wnaQudcqQ3qdZNZ6hyfyhH",
-    );
-    expect(link).toHaveAttribute("target", "_blank");
   });
 });

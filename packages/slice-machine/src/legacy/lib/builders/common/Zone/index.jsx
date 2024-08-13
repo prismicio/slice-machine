@@ -7,6 +7,7 @@ import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { fields as allFields } from "@/domain/fields";
 import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
+import { AddStaticFieldDropdown } from "@/features/builder/AddStaticFieldDropdown";
 import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
@@ -42,11 +43,20 @@ const Zone = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
       ([, { value }]) => value.type === "UID",
     );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const widgets = widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== "UID");
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return hasUid
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        widgetsArray.filter(({ TYPE_NAME }) => TYPE_NAME !== "UID")
-      : widgetsArray;
+    if (hasUid) return widgets;
+
+    // Move UID widget to the end of the array because it is used very rarely
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    const uidField = widgetsArray.find(({ TYPE_NAME }) => TYPE_NAME === "UID");
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    return [...widgets, uidField];
   })();
 
   const [showHints, setShowHints] = useState(false);
@@ -84,63 +94,85 @@ const Zone = ({
   };
 
   const onCancelNewField = () => setNewFieldData(null);
-  const addFieldDropdown = (
-    <AddFieldDropdown
-      disabled={newFieldData !== null}
-      onSelectField={onSelectFieldType}
-      fields={
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        widgetsArrayWithCondUid.filter(Boolean).map((widget) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          const { TYPE_NAME, CUSTOM_NAME } = widget;
-          return allFields.find(
-            (f) =>
-              f.type === TYPE_NAME &&
-              (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
-          );
-        })
-      }
-      triggerDataTestId={
-        Boolean(isRepeatable) ? "add-field-in-items" : undefined
-      }
-    />
-  );
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const addFieldDropdownFields = widgetsArrayWithCondUid
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    .filter(Boolean)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    .map((widget) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { TYPE_NAME, CUSTOM_NAME } = widget;
+      return allFields.find(
+        (f) =>
+          f.type === TYPE_NAME &&
+          (CUSTOM_NAME === undefined || f.variant === CUSTOM_NAME),
+      );
+    });
+
+  const addFieldDropdownProps = {
+    disabled: newFieldData !== null,
+    onSelectField: onSelectFieldType,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    fields: addFieldDropdownFields,
+    triggerDataTestId: Boolean(isRepeatable) ? "add-field-in-items" : undefined,
+  };
+
+  let addFieldDropdown;
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (zoneType === "slice" && fields.length > 0) {
+    addFieldDropdown = <AddFieldDropdown {...addFieldDropdownProps} />;
+  } else if (zoneType === "customType") {
+    addFieldDropdown = (
+      <AddStaticFieldDropdown
+        {...addFieldDropdownProps}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        zoneTypeFormat={zoneTypeFormat}
+      />
+    );
+  }
 
   return (
     <>
       <ListHeader
         actions={
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          fields.length > 0 ? (
-            <>
-              <Text color="grey11" component="span" noWrap>
-                Show code snippets?
-              </Text>
-              <Switch
-                checked={showHints}
-                onCheckedChange={setShowHints}
-                size="small"
-                // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
-                style={{ flexShrink: 0 }}
-                data-testid="code-snippets-switch"
-              />
-              {addFieldDropdown}
-            </>
-          ) : undefined
+          <>
+            {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              fields.length > 0 && (
+                <>
+                  <Text color="grey11" component="span" noWrap>
+                    Show code snippets?
+                  </Text>
+                  <Switch
+                    checked={showHints}
+                    onCheckedChange={setShowHints}
+                    size="small"
+                    // TODO(DT-1710): add the missing `flexShrink: 0` property to the Editor's Switch component.
+                    style={{ flexShrink: 0 }}
+                    data-testid="code-snippets-switch"
+                  />
+                </>
+              )
+            }
+            {addFieldDropdown}
+          </>
         }
       >
         {title}
       </ListHeader>
       {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-        fields.length === 0 && !newFieldData ? (
+        fields.length === 0 && !newFieldData && zoneType === "slice" ? (
           <ZoneEmptyState
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             zoneType={getResolvedZoneType(zoneType, zoneTypeFormat)}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             heading={emptyStateHeading}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            action={addFieldDropdown}
+            action={<AddFieldDropdown {...addFieldDropdownProps} />}
           />
         ) : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
         fields.length > 0 || newFieldData ? (

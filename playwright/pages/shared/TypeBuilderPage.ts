@@ -14,6 +14,7 @@ import { CustomTypesTablePage } from "../CustomTypesTablePage";
 import { PageTypesTablePage } from "../PageTypesTablePage";
 import { BuilderPage } from "./BuilderPage";
 import { FieldTypeLabel } from "../components/AddFieldDropdown";
+import { UIDEditor } from "../components/UIDEditor";
 
 export class TypeBuilderPage extends BuilderPage {
   readonly createTypeDialog: CreateTypeDialog;
@@ -28,6 +29,7 @@ export class TypeBuilderPage extends BuilderPage {
   readonly customTypeTablePage: CustomTypesTablePage;
   readonly pageTypeTablePage: PageTypesTablePage;
   readonly deleteSliceZoneDialog: DeleteSliceZoneDialog;
+  readonly uidEditor: UIDEditor;
   readonly format: "page" | "custom";
   readonly tab: Locator;
   readonly tabList: Locator;
@@ -46,6 +48,7 @@ export class TypeBuilderPage extends BuilderPage {
   readonly sliceZoneAddDropdownSelectExistingAction: Locator;
   readonly sliceZoneAddDropdownCreateNewAction: Locator;
   readonly removeSliceButton: Locator;
+  readonly staticZoneInfoDialogConfirmCta: Locator;
 
   constructor(
     page: Page,
@@ -71,6 +74,7 @@ export class TypeBuilderPage extends BuilderPage {
     this.renameTabDialog = new RenameTabDialog(page);
     this.deleteTabDialog = new DeleteTabDialog(page);
     this.deleteSliceZoneDialog = new DeleteSliceZoneDialog(page);
+    this.uidEditor = new UIDEditor(page);
 
     /**
      * Static locators
@@ -112,10 +116,7 @@ export class TypeBuilderPage extends BuilderPage {
       this.sliceZoneBlankSlate.getByText("Create new", {
         exact: true,
       });
-    this.sliceZoneAddDropdown = page.getByRole("button", {
-      name: "Add slices",
-      exact: true,
-    });
+    this.sliceZoneAddDropdown = page.getByTestId("add-new-slice-dropdown");
     this.sliceZoneAddDropdownUseTemplateAction = page
       .getByRole("menu")
       .getByText("Use template", { exact: true });
@@ -127,6 +128,10 @@ export class TypeBuilderPage extends BuilderPage {
       .getByText("Create new", { exact: true });
     this.removeSliceButton = page.getByRole("button", {
       name: "Remove slice",
+      exact: true,
+    });
+    this.staticZoneInfoDialogConfirmCta = page.getByRole("button", {
+      name: "Got it",
       exact: true,
     });
   }
@@ -235,10 +240,7 @@ export class TypeBuilderPage extends BuilderPage {
 
     if (groupFieldId) {
       await this.getListItem(groupFieldId, grandparentGroupFieldId)
-        .getByRole("button", {
-          name: "Add a field",
-          exact: true,
-        })
+        .getByTestId("add-field")
         .click();
     } else {
       await this.staticZoneAddFieldButton.click();

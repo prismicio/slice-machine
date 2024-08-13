@@ -221,7 +221,6 @@ export const test = baseTest.extend<Options & Fixtures>({
           },
           hasSeenChangesToolTip: true,
           hasSeenSimulatorToolTip: true,
-          hasSeenTutorialsToolTip: true,
           authStatus: "unknown",
           lastSyncChange: null,
           ...reduxStorage,
@@ -233,7 +232,6 @@ export const test = baseTest.extend<Options & Fixtures>({
           },
           hasSeenChangesToolTip: false,
           hasSeenSimulatorToolTip: false,
-          hasSeenTutorialsToolTip: false,
           authStatus: "unknown",
           lastSyncChange: null,
           ...reduxStorage,
@@ -250,6 +248,10 @@ export const test = baseTest.extend<Options & Fixtures>({
           {
             name: `${SLICE_MACHINE_STORAGE_PREFIX}_isInAppGuideOpen`,
             value: "false",
+          },
+          {
+            name: `${SLICE_MACHINE_STORAGE_PREFIX}_staticFieldsInfoDialogDismissed`,
+            value: "true",
           },
         ]
           .filter(

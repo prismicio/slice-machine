@@ -16,6 +16,7 @@ import {
   renameSection,
 } from "@/domain/customType";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { UIDEditor } from "@/features/customTypes/customTypesBuilder/UIDEditor";
 import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 
 import CreateModal from "./TabModal/create";
@@ -40,10 +41,27 @@ export const CustomTypeBuilder = () => {
     customTypeSM.tabs.find((tab) => tab.key === tabValue)?.sliceZone?.value
       .length === 0;
 
+  function isRemoveDisabled(tabKey: string) {
+    if (customTypeSM.tabs.length <= 1) return true;
+
+    const tabWithUID = customTypeSM.tabs.find((tab) =>
+      tab.value.find((field) => field.key === "uid"),
+    );
+    return (
+      customType.format === "page" &&
+      customType.repeatable &&
+      tabWithUID?.key === tabKey
+    );
+  }
+
   return (
     <>
       <Window sx={sliceZoneEmpty ? { flexGrow: 1 } : undefined}>
-        {customType.format === "page" ? <WindowFrame /> : undefined}
+        {customType.format === "page" ? (
+          <WindowFrame
+            title={customType.repeatable ? <UIDEditor /> : undefined}
+          />
+        ) : undefined}
 
         <WindowTabs onValueChange={setTabValue} value={tabValue}>
           <WindowTabsList
@@ -69,7 +87,7 @@ export const CustomTypeBuilder = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       color="tomato"
-                      disabled={customTypeSM.tabs.length <= 1}
+                      disabled={isRemoveDisabled(tab.key)}
                       onSelect={() => {
                         setDialog({
                           type: "DELETE_CUSTOM_TYPE_TAB",
