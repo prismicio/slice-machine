@@ -71,14 +71,13 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
   );
 }
 
-// TODO: add validated content when ready
 const DIALOG_CONTENT = {
-  header: "About static fields",
+  header: "Static zone",
   buttonLabel: "Got it",
   subtitle: "About",
-  title: "Static fields",
+  title: "What is the Static zone",
   description:
-    "Static fields in Prismic page Types represent a dedicated section where editors can edit fields that will always be present on the page. Unlike Slices, which are optional and can be added or removed to customize the content layout, static fields ensures that certain essential information is consistently present for every version of the Page, like page metadata for example.",
+    "The static zone in Prismic page types contain fields that are always present on the page. Use it for essential information like a page's title, page design settings or metadata. Unlike slices, which can be added or removed, static zone fields remain fixed.",
   videoUrl:
-    "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Create_page_type_xdn13j.mp4",
+    "https://res.cloudinary.com/dmtf1daqp/video/upload/v1723540305/DEV_TOOLS/STATES/Explication_vide%CC%81o_zone_statique_phibeq.mp4",
 };
