@@ -34,7 +34,6 @@ import {
   changesPushSuccess,
   hasSeenChangesToolTipCreator,
   hasSeenSimulatorToolTipCreator,
-  hasSeenTutorialsToolTipCreator,
   sendAReviewCreator,
   skipReviewCreator,
 } from "./userContext";
@@ -79,8 +78,6 @@ const useSliceMachineActions = () => {
     );
   const setSeenSimulatorToolTip = () =>
     dispatch(hasSeenSimulatorToolTipCreator());
-  const setSeenTutorialsToolTip = () =>
-    dispatch(hasSeenTutorialsToolTipCreator());
   const setSeenChangesToolTip = () => dispatch(hasSeenChangesToolTipCreator());
 
   // State Action (used by multiple stores)
@@ -194,7 +191,6 @@ const useSliceMachineActions = () => {
     deleteSliceSuccess,
     sendAReview,
     skipReview,
-    setSeenTutorialsToolTip,
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
     openScreenshotPreviewModal,
