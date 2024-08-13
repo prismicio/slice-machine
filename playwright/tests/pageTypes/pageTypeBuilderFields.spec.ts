@@ -512,7 +512,7 @@ test("I cannot see default UID field for single page type", async ({
   ).not.toBeVisible();
 });
 
-test("I cannot see default UID field in Static Fields for reusable page type", async ({
+test("I cannot see default UID field in Static zone for reusable page type", async ({
   pageTypesBuilderPage,
   reusablePageType,
 }) => {
