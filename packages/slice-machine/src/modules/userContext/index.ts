@@ -19,7 +19,6 @@ const initialState: UserContextStoreType = {
     onboarding: false,
     advancedRepository: false,
   },
-  hasSeenTutorialsToolTip: false,
   hasSeenSimulatorToolTip: false,
   hasSeenChangesToolTip: false,
   authStatus: AuthStatus.UNKNOWN,
@@ -62,10 +61,6 @@ export const getUserReview = (state: SliceMachineStoreType): UserReviewState =>
     onboarding: state.userContext.hasSendAReview ?? false,
     advancedRepository: false,
   };
-
-export const userHasSeenTutorialsToolTip = (
-  state: SliceMachineStoreType,
-): boolean => state.userContext.hasSeenTutorialsToolTip || false;
 
 export const userHasSeenSimulatorToolTip = (
   state: SliceMachineStoreType,

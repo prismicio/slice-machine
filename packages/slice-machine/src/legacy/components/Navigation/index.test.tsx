@@ -76,7 +76,6 @@ function renderSideNavigation(
         },
       } as unknown as FrontEndEnvironment,
       userContext: {
-        hasSeenTutorialsToolTip: false,
         authStatus: authStatus,
       } as unknown as UserContextStoreType,
     },

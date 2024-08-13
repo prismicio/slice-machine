@@ -7,7 +7,6 @@ export enum AuthStatus {
 
 export type UserContextStoreType = {
   userReview: UserReviewState;
-  hasSeenTutorialsToolTip: boolean;
   hasSeenSimulatorToolTip: boolean;
   hasSeenChangesToolTip: boolean;
   authStatus: AuthStatus;
