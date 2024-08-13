@@ -138,7 +138,7 @@ test.describe("Tutorial tooltip", () => {
     },
   });
 
-  test.skip("I can close the tutorial video tooltip and it stays close", async ({
+  test("I can close the tutorial video tooltip and it stays close", async ({
     sliceMachinePage,
     procedures,
   }) => {
@@ -174,6 +174,20 @@ test.describe("Tutorial tooltip", () => {
       sliceMachinePage.menu.tutorialVideoTooltipTitle,
     ).not.toBeVisible();
   });
+});
+
+test('I can access the Academy from the "Learn Prismic" link', async ({
+  sliceMachinePage,
+}) => {
+  await sliceMachinePage.gotoDefaultPage();
+  await expect(sliceMachinePage.menu.learnPrismicLink).toBeVisible();
+
+  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
+  await sliceMachinePage.menu.learnPrismicLink.click();
+  const newTab = await newTabPromise;
+  await newTab.waitForLoadState();
+
+  await expect(newTab).toHaveTitle(/Prismic Academy/);
 });
 
 test.skip('I can access the Academy from the "Learn Prismic" link', async ({
