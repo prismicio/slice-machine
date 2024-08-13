@@ -40,17 +40,22 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
       trigger={trigger}
       size="small"
     >
-      <DialogHeader title={DIALOG_CONTENT.header} />
+      <DialogHeader title="Static zone" />
       <DialogContent>
         <ScrollArea>
           <Box as="article" flexDirection="column" padding={16} gap={4}>
             <Text sx={{ marginBottom: 4 }} color="purple9" variant="smallBold">
-              {DIALOG_CONTENT.subtitle}
+              About
             </Text>
-            <Text variant="h3">{DIALOG_CONTENT.title}</Text>
-            <Text color="grey11">{DIALOG_CONTENT.description}</Text>
+            <Text variant="h3">What is the Static zone</Text>
+            <Text color="grey11">
+              The static zone in Prismic page types contain fields that are
+              always present on the page. Use it for essential information like
+              a page's title, page design settings or metadata. Unlike slices,
+              which can be added or removed, static zone fields remain fixed.
+            </Text>
             <Video
-              src={DIALOG_CONTENT.videoUrl}
+              src="https://res.cloudinary.com/dmtf1daqp/video/upload/v1723540305/DEV_TOOLS/STATES/Explication_vide%CC%81o_zone_statique_phibeq.mp4"
               sizing="contain"
               autoPlay
               loop
@@ -63,21 +68,11 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
           size="medium"
           sx={{ flexGrow: 1 }}
           onClick={dismissDialog}
+          data-testid="static-fields-info-dialog-cta"
         >
-          {DIALOG_CONTENT.buttonLabel}
+          Got it
         </DialogActionButton>
       </DialogActions>
     </Dialog>
   );
 }
-
-const DIALOG_CONTENT = {
-  header: "Static zone",
-  buttonLabel: "Got it",
-  subtitle: "About",
-  title: "What is the Static zone",
-  description:
-    "The static zone in Prismic page types contain fields that are always present on the page. Use it for essential information like a page's title, page design settings or metadata. Unlike slices, which can be added or removed, static zone fields remain fixed.",
-  videoUrl:
-    "https://res.cloudinary.com/dmtf1daqp/video/upload/v1723540305/DEV_TOOLS/STATES/Explication_vide%CC%81o_zone_statique_phibeq.mp4",
-};

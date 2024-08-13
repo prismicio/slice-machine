@@ -223,6 +223,15 @@ export class TypeBuilderPage extends BuilderPage {
       .click();
   }
 
+  async dismissStaticFieldsInfoDialog() {
+    await this.page.getByTestId("add-field").click();
+    await this.page
+      .getByRole("button", { name: "Got it", exact: true })
+      .click();
+    await expect(this.addFieldDropdown.menu).toBeVisible();
+    await this.staticZoneAddFieldButton.click();
+  }
+
   async addStaticField(args: {
     type: FieldTypeLabel;
     name: string;

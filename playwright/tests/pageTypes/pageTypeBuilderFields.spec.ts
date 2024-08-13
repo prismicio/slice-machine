@@ -35,6 +35,18 @@ test("I can see default SEO & Metadata tab fields", async ({
   ).toBeVisible();
 });
 
+test.describe("Static zone info modal", () => {
+  test.use({ onboarded: false });
+
+  test("I can see the info modal the first time I try to add a new field", async ({
+    pageTypesBuilderPage,
+    reusablePageType,
+  }) => {
+    await pageTypesBuilderPage.goto(reusablePageType.name);
+    await pageTypesBuilderPage.dismissStaticFieldsInfoDialog();
+  });
+});
+
 test("I can add a rich text field", async ({
   pageTypesBuilderPage,
   reusablePageType,
