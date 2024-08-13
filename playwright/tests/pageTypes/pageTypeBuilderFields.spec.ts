@@ -35,6 +35,20 @@ test("I can see default SEO & Metadata tab fields", async ({
   ).toBeVisible();
 });
 
+test.describe("Static zone info modal", () => {
+  test.use({ onboarded: false });
+
+  test("I can see the info modal the first time I try to add a new field", async ({
+    pageTypesBuilderPage,
+    reusablePageType,
+  }) => {
+    await pageTypesBuilderPage.goto(reusablePageType.name);
+    await pageTypesBuilderPage.staticZoneAddFieldButton.click();
+    await pageTypesBuilderPage.staticZoneInfoDialogConfirmCta.click();
+    await pageTypesBuilderPage.addFieldDropdown.menu.isVisible();
+  });
+});
+
 test("I can add a rich text field", async ({
   pageTypesBuilderPage,
   reusablePageType,
@@ -401,10 +415,7 @@ test("I can't add a nested group if I'm not eligible for the `slicemachine-neste
   });
   await pageTypesBuilderPage
     .getListItem("my_group")
-    .getByRole("button", {
-      name: "Add a field",
-      exact: true,
-    })
+    .getByTestId("add-field")
     .click();
 
   await expect(pageTypesBuilderPage.addFieldDropdown.menu).toBeVisible();
@@ -503,7 +514,7 @@ test("I cannot see default UID field for single page type", async ({
   ).not.toBeVisible();
 });
 
-test("I cannot see default UID field in Static Fields for reusable page type", async ({
+test("I cannot see default UID field in Static zone for reusable page type", async ({
   pageTypesBuilderPage,
   reusablePageType,
 }) => {

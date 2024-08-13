@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "@prismicio/editor-ui";
 import { FieldType } from "@prismicio/types-internal/lib/customtypes";
+import { ReactNode } from "react";
 
 import {
   Field,
@@ -20,19 +21,26 @@ import {
   UIDField,
 } from "@/domain/fields";
 
-interface AddFieldDropdownProps {
+export type AddFieldDropdownProps = {
   disabled: boolean;
   onSelectField: (fieldType: FieldType | FieldVariant) => void;
   fields: Field[];
-  triggerDataTestId?: string;
-}
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+} & (
+  | { trigger: ReactNode; triggerDataTestId?: never }
+  | { trigger?: never; triggerDataTestId: string }
+);
 
 export function AddFieldDropdown(props: AddFieldDropdownProps) {
   const {
+    open,
+    onOpenChange,
     disabled,
     onSelectField,
     fields,
     triggerDataTestId = "add-field",
+    trigger,
   } = props;
 
   const singleFieldsToRender = fields.filter(
@@ -46,11 +54,13 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
   );
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger disabled={disabled}>
-        <Button startIcon="add" color="grey" data-testid={triggerDataTestId}>
-          Add a field
-        </Button>
+        {trigger ?? (
+          <Button startIcon="add" color="grey" data-testid={triggerDataTestId}>
+            Add a field
+          </Button>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" maxHeight={400} collisionPadding={8}>
         <DropdownMenuLabel>Single fields</DropdownMenuLabel>

@@ -254,6 +254,7 @@ const NewField: React.FC<NewField> = ({
                 Cancel
               </Button>
               <Button
+                data-testid="new-field-add-button"
                 onClick={() => {
                   void submitForm();
                 }}

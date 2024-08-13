@@ -196,8 +196,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           sliceZone ? (
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <Button color="grey" startIcon="add">
-                  Add slices
+                <Button
+                  color="purple"
+                  startIcon="add"
+                  data-testid="add-new-slice-dropdown"
+                >
+                  Add
                 </Button>
               </DropdownMenuTrigger>
 
@@ -255,7 +259,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           ) : undefined
         }
       >
-        Slice Zone
+        Slices
       </ListHeader>
 
       {sliceZone ? (

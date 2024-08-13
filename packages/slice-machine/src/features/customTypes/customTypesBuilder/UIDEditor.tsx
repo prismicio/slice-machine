@@ -10,9 +10,9 @@ import {
   DialogHeader,
   Form,
   FormInput,
-  Text,
+  Icon,
 } from "@prismicio/editor-ui";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { z } from "zod";
 
 import {
@@ -55,6 +55,13 @@ export function UIDEditor() {
     setOpen(false);
   }
 
+  const uidIcon = useCallback(
+    () => (
+      <Icon name={field ? "language" : "add"} size="small" color="grey11" />
+    ),
+    [field],
+  );
+
   return (
     <Dialog
       open={isOpen}
@@ -64,7 +71,8 @@ export function UIDEditor() {
         <Button
           color="grey"
           textColor="placeholder"
-          startIcon={field ? "language" : "add"}
+          textWeight="normal"
+          renderStartIcon={uidIcon}
           sx={{ marginInline: "auto" }}
         >
           {field ? uidFieldLabel : "Add an UID"}
@@ -82,11 +90,8 @@ export function UIDEditor() {
               value={label}
               onValueChange={handleValueChange}
               error={error}
+              description="A label for the UID"
             />
-            {/* TODO: refactor if change proposed in: https://github.com/prismicio/editor/pull/1151 is released */}
-            {error === undefined && (
-              <Text color="grey11">A label for the UID</Text>
-            )}
           </Box>
           <DialogActions>
             <DialogCancelButton size="medium" />

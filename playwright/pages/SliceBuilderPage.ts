@@ -204,11 +204,11 @@ export class SliceBuilderPage extends BuilderPage {
     if (zoneType === "static") {
       if (groupFieldId && grandparentGroupFieldId) {
         await this.getListItem(groupFieldId, zoneType, grandparentGroupFieldId)
-          .getByRole("button", { name: "Add a field", exact: true })
+          .getByTestId("add-field")
           .click();
       } else if (groupFieldId) {
         await this.getListItem(groupFieldId, zoneType)
-          .getByRole("button", { name: "Add a field", exact: true })
+          .getByTestId("add-field")
           .click();
       } else {
         await this.staticZoneAddFieldButton.click();
