@@ -10,7 +10,7 @@ import { usePersistedState } from "@/hooks/usePersistedState";
 
 const LOCAL_STORAGE_KEY = "staticFieldsInfoDialogDismissed";
 
-export function AddStaticFieldButton(props: AddFieldDropdownProps) {
+export function AddStaticFieldDropdown(props: AddFieldDropdownProps) {
   const { disabled, fields, triggerDataTestId, onSelectField } = props;
 
   const [isAddFieldDropdownOpen, setAddFieldDropdownOpen] = useState(false);

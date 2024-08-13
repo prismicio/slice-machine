@@ -7,7 +7,7 @@ import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { fields as allFields } from "@/domain/fields";
 import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
-import { AddStaticFieldButton } from "@/features/builder/AddStaticFieldButton";
+import { AddStaticFieldDropdown } from "@/features/builder/AddStaticFieldDropdown";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 import Card from "./Card";
@@ -140,7 +140,7 @@ const Zone = ({
               zoneType === "slice" && fields.length > 0 ? (
                 <AddFieldDropdown {...addFieldDropdownProps} />
               ) : zoneType === "customType" ? (
-                <AddStaticFieldButton {...addFieldDropdownProps} />
+                <AddStaticFieldDropdown {...addFieldDropdownProps} />
               ) : undefined
             }
           </>
