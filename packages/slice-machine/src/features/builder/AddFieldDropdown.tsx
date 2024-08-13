@@ -34,12 +34,13 @@ export type AddFieldDropdownProps = {
 
 export function AddFieldDropdown(props: AddFieldDropdownProps) {
   const {
+    open,
+    onOpenChange,
     disabled,
     onSelectField,
     fields,
     triggerDataTestId = "add-field",
     trigger,
-    ...implicitProps
   } = props;
 
   const singleFieldsToRender = fields.filter(
@@ -53,7 +54,7 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
   );
 
   return (
-    <DropdownMenu {...implicitProps}>
+    <DropdownMenu open={open} onOpenChange={onOpenChange}>
       <DropdownMenuTrigger disabled={disabled}>
         {trigger === undefined ? (
           <Button startIcon="add" color="grey" data-testid={triggerDataTestId}>
