@@ -39,6 +39,7 @@ export function AddStaticFieldDropdown(props: AddStaticFieldDropdownProps) {
 }
 
 const hiddenTrigger = (
+  // DropdownMenu requires the presence of a trigger
   <div style={{ position: "absolute", bottom: 0, right: 0 }} />
 );
 
@@ -69,8 +70,8 @@ function PageAddStaticFieldDropdown(props: AddFieldDropdownProps) {
   return (
     <Box position="relative">
       <AddTypeButton
-        data-testid={triggerDataTestId}
         onClick={onAddFieldClick}
+        data-testid={triggerDataTestId}
       />
       <StaticFieldsInfoDialog
         open={isInfoDialogOpen}

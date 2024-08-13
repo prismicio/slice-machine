@@ -194,6 +194,10 @@ export class TypeBuilderPage extends BuilderPage {
       .getByText(`data.${fieldId}`, { exact: true });
   }
 
+  getStaticZoneInfoDialogConfirmCta() {
+    return this.page.getByRole("button", { name: "Got it", exact: true });
+  }
+
   /**
    * Actions
    */
@@ -221,15 +225,6 @@ export class TypeBuilderPage extends BuilderPage {
     await this.page
       .getByRole("menuitem", { name: action, exact: true })
       .click();
-  }
-
-  async dismissStaticFieldsInfoDialog() {
-    await this.page.getByTestId("add-field").click();
-    await this.page
-      .getByRole("button", { name: "Got it", exact: true })
-      .click();
-    await expect(this.addFieldDropdown.menu).toBeVisible();
-    await this.staticZoneAddFieldButton.click();
   }
 
   async addStaticField(args: {
