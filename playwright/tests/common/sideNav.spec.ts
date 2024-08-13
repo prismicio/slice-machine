@@ -1,11 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import {
-  experimentVariant,
-  generateLibraries,
-  generateTypes,
-} from "../../mocks";
+import { experimentVariant } from "../../mocks";
 
 test("I can navigate through all menu entries", async ({
   procedures,
@@ -128,66 +124,6 @@ test("I cannot see the updates available warning", async ({
   await pageTypesTablePage.goto();
   await expect(pageTypesTablePage.menu.appVersion).toBeVisible();
   await expect(pageTypesTablePage.menu.updatesAvailableTitle).not.toBeVisible();
-});
-
-test.describe("Tutorial tooltip", () => {
-  test.use({
-    onboarded: false,
-    reduxStorage: {
-      lastSyncChange: new Date(new Date().getTime() - 3600000).getTime(),
-    },
-  });
-
-  test.skip("I can close the tutorial video tooltip and it stays close", async ({
-    sliceMachinePage,
-    procedures,
-  }) => {
-    const libraries = generateLibraries({ slicesCount: 1 });
-
-    // We mock a page type with a slice that is a requirement for the review dialog
-    procedures.mock("getState", ({ data }) => ({
-      ...(data as Record<string, unknown>),
-      libraries,
-      customTypes: generateTypes({ typesCount: 1, libraries }),
-      remoteCustomTypes: [],
-      remoteSlices: [],
-      clientError: undefined,
-    }));
-
-    await sliceMachinePage.gotoDefaultPage();
-
-    // We close the in app guide and review dialogs that are requirements for the tutorial tooltip display
-    await sliceMachinePage.inAppGuideDialog.closeButton.click();
-    await sliceMachinePage.reviewDialog.closeButton.click();
-
-    // Then tutorial tooltip open after the review dialog
-    await expect(sliceMachinePage.menu.tutorialVideoTooltipTitle).toBeVisible();
-    await sliceMachinePage.menu.tutorialVideoTooltipCloseButton.click();
-    await expect(
-      sliceMachinePage.menu.tutorialVideoTooltipTitle,
-    ).not.toBeVisible();
-
-    await sliceMachinePage.page.reload();
-    await expect(sliceMachinePage.menu.pageTypesLink).toBeVisible();
-
-    await expect(
-      sliceMachinePage.menu.tutorialVideoTooltipTitle,
-    ).not.toBeVisible();
-  });
-});
-
-test.skip('I can access the Academy from the "Learn Prismic" link', async ({
-  sliceMachinePage,
-}) => {
-  await sliceMachinePage.gotoDefaultPage();
-  await expect(sliceMachinePage.menu.learnPrismicLink).toBeVisible();
-
-  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
-  await sliceMachinePage.menu.learnPrismicLink.click();
-  const newTab = await newTabPromise;
-  await newTab.waitForLoadState();
-
-  await expect(newTab).toHaveTitle(/Prismic Academy/);
 });
 
 // NOTE: This tests doesn't use page objects as the Master Slice Library preview modal

@@ -35,10 +35,6 @@ export const skipReviewCreator = createAction("USER_CONTEXT/SKIP_REVIEW")<{
   reviewType: UserReviewType;
 }>();
 
-export const hasSeenTutorialsToolTipCreator = createAction(
-  "USER_CONTEXT/VIEW_TUTORIALS_TOOL_TIP",
-)();
-
 export const hasSeenSimulatorToolTipCreator = createAction(
   "USER_CONTEXT/VIEW_SIMULATOR_TOOL_TIP",
 )();
@@ -54,7 +50,6 @@ export const changesPushSuccess = createAction(
 type userContextActions = ActionType<
   | typeof sendAReviewCreator
   | typeof skipReviewCreator
-  | typeof hasSeenTutorialsToolTipCreator
   | typeof hasSeenSimulatorToolTipCreator
   | typeof hasSeenChangesToolTipCreator
   | typeof refreshStateCreator
@@ -99,12 +94,6 @@ export const userContextReducer: Reducer<
           [action.payload.reviewType]: true,
         },
       };
-    case getType(hasSeenTutorialsToolTipCreator): {
-      return {
-        ...state,
-        hasSeenTutorialsToolTip: true,
-      };
-    }
     case getType(hasSeenSimulatorToolTipCreator): {
       return {
         ...state,
