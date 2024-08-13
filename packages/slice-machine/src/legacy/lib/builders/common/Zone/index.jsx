@@ -111,6 +111,16 @@ const Zone = ({
     fields: addFieldDropdownFields,
     triggerDataTestId: Boolean(isRepeatable) ? "add-field-in-items" : undefined,
   };
+
+  let addFieldDropdown;
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  if (zoneType === "slice" && fields.length > 0) {
+    addFieldDropdown = <AddFieldDropdown {...addFieldDropdownProps} />;
+  } else if (zoneType === "customType") {
+    addFieldDropdown = <AddStaticFieldDropdown {...addFieldDropdownProps} />;
+  }
+
   return (
     <>
       <ListHeader
@@ -135,14 +145,7 @@ const Zone = ({
                 </>
               )
             }
-            {
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              zoneType === "slice" && fields.length > 0 ? (
-                <AddFieldDropdown {...addFieldDropdownProps} />
-              ) : zoneType === "customType" ? (
-                <AddStaticFieldDropdown {...addFieldDropdownProps} />
-              ) : undefined
-            }
+            {addFieldDropdown}
           </>
         }
       >
