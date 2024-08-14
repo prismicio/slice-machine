@@ -597,7 +597,6 @@ describe("CustomTypeModel test suite", () => {
           uid: {
             config: {
               label: "UID label",
-              placeholder: "Enter a unique identifier",
             },
             type: "UID",
           },
@@ -628,7 +627,6 @@ describe("CustomTypeModel test suite", () => {
           uid: {
             config: {
               label: "UIDFieldUpdated",
-              placeholder: "Enter a unique identifier",
             },
             type: "UID",
           },
