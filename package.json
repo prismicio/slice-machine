@@ -68,7 +68,8 @@
   "resolutions": {
     "connected-next-router/react-redux": "8.0.7",
     "react-beautiful-dnd/react-redux": "8.0.7",
-    "@prismicio/types-internal": "2.5.0"
+    "@prismicio/types-internal": "2.5.0",
+    "@prismicio/editor-support": "0.4.40"
   },
   "workspaces": [
     "e2e-projects/next",
