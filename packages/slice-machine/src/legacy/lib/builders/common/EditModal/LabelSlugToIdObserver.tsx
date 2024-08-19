@@ -1,6 +1,5 @@
-import { useOnChange } from "@prismicio/editor-support/React";
 import { useField } from "formik";
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { slugify } from "@/legacy/lib/utils/str";
 
@@ -16,22 +15,22 @@ export function LabelSlugToIdObserver() {
   const [{ value: label }] = useField<string | undefined>("config.label");
   const [{ value: id }, idMeta, idHelpers] = useField<string | undefined>("id");
 
-  const [isIdManual, setIdManual] = useState(
+  const isIdManualRef = useRef(
     idMeta.initialValue != null && idMeta.initialValue.length > 0, // rule 2
   );
 
-  useOnChange(label, () => {
-    if (isIdManual || label == null) return;
+  useEffect(() => {
+    if (isIdManualRef.current || label == null) return;
     idHelpers.setValue(slugify(label));
-  });
+  }, [label]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useOnChange(id, () => {
+  useEffect(() => {
     const isIdEmpty = id == null || id.length === 0;
-    if (isIdManual) {
+    if (isIdManualRef.current) {
       if (!isIdEmpty) return;
-      setIdManual(false); // rule 3
+      isIdManualRef.current = false; // rule 3
     } else if (!isIdEmpty && (label == null || id !== slugify(label))) {
-      setIdManual(true); // rule 1
+      isIdManualRef.current = true; // rule 1
     }
-  });
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 }
