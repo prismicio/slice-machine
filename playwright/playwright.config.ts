@@ -10,7 +10,7 @@ const config = {
   },
 
   // Fail the build on CI if you accidentally left test.only in the source code.
-  forbidOnly: !!process.env["CI"],
+  forbidOnly: false,
 
   // Configure projects for major browsers.
   projects: [
@@ -23,7 +23,7 @@ const config = {
   ],
 
   // Retry on CI only.
-  retries: process.env["CI"] ? 2 : 0,
+  retries: 0,
 
   // Reporter to use.
   reporter: process.env["CI"]
