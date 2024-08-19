@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { generateRandomString } from "../../utils";
 
-test("I can see default SEO & Metadata tab fields", async ({
+test.only("I can see default SEO & Metadata tab fields", async ({
   pageTypesBuilderPage,
   reusablePageType,
 }) => {
