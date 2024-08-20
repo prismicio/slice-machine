@@ -44,8 +44,12 @@ export const CustomListItem = ({
   const [editModalData, setEditModalData] = useState({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    setNewFieldData({ widgetTypeName });
+    /** `widgetTypeName` might have less keys than `Widgets`, but we lost track 
+    of the types because the `widgetsArray` is not typed and is also filtered into 
+    `widgetsArrayWithCondUid`. Although it's safe to use it to index the `Widgets` 
+    as longs as `widgetsArrayWithCondUid` is a subset of `widgetsArray`.*/
+    const field = Widgets[widgetTypeName].create("");
+    setEditModalData({ isOpen: true, field: ["", field] });
   };
 
   const onCancelNewField = () => {
@@ -56,10 +60,8 @@ export const CustomListItem = ({
     setEditModalData({ isOpen: false });
   };
 
-  const onSaveNewField = ({ id, label, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName];
-    const newField = widget.create(label);
-
+  const onSaveNewField = ({ apiId: id, value: newField }) => {
+    const label = newField.config?.label;
     const newGroupValue = addFieldToGroup({
       group: Groups.fromSM(groupItem.value),
       fieldId: id,
@@ -95,6 +97,13 @@ export const CustomListItem = ({
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
     });
+  };
+
+  const onCreateOrSave = (props) => {
+    if (props.apiId === "") {
+      return onSaveNewField({ ...props, apiId: props.newKey }); // create new
+    }
+    return onSaveField(props); // update existing
   };
 
   const onDragEnd = (result) => {
@@ -297,7 +306,7 @@ export const CustomListItem = ({
       <EditModal
         data={editModalData}
         close={closeEditModal}
-        onSave={onSaveField}
+        onSave={onCreateOrSave}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         fields={groupItem.value.config.fields}
       />
