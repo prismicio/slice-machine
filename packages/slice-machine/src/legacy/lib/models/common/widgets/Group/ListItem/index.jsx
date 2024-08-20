@@ -16,7 +16,6 @@ import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
 import ListItem from "@/legacy/components/ListItem";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
-import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
@@ -40,7 +39,6 @@ export const CustomListItem = ({
   HintElement,
   ...rest
 }) => {
-  const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
@@ -50,10 +48,6 @@ export const CustomListItem = ({
     as longs as `widgetsArrayWithCondUid` is a subset of `widgetsArray`.*/
     const field = Widgets[widgetTypeName].create("");
     setEditModalData({ isOpen: true, field: ["", field] });
-  };
-
-  const onCancelNewField = () => {
-    setNewFieldData(null);
   };
 
   const closeEditModal = () => {
@@ -181,7 +175,6 @@ export const CustomListItem = ({
         CustomEditElements={[
           <AddFieldDropdown
             key="add-field-dropdown"
-            disabled={newFieldData !== null}
             onSelectField={onSelectFieldType}
             fields={widgetsArray.filter(Boolean).map((widget) => {
               const { TYPE_NAME, CUSTOM_NAME } = widget;
@@ -282,20 +275,6 @@ export const CustomListItem = ({
                       })
                     }
                     {provided.placeholder}
-
-                    {newFieldData && (
-                      <NewField
-                        {...newFieldData}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                        fields={groupItem.value.config.fields || []}
-                        onSave={(...args) => {
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                          onSaveNewField(...args);
-                          setNewFieldData(null);
-                        }}
-                        onCancelNewField={onCancelNewField}
-                      />
-                    )}
                   </ul>
                 )}
               </Droppable>

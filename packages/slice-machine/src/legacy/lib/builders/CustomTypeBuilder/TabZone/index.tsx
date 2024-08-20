@@ -241,7 +241,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
             widgetsArray={widgetsArray}
             onDeleteItem={onDeleteItem}
             onSave={onCreateOrSave}
-            onSaveNewField={onSaveNewField}
             onDragEnd={onDragEnd}
             renderHintBase={({ item }) =>
               // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
