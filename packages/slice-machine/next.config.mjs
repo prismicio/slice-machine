@@ -36,12 +36,16 @@ if (parsedPkgVersion.prerelease.length === 0) {
 
 /** @type {import("next").NextConfig} */
 let nextConfig = {
-  output: "export",
   swcMinify: true,
   publicRuntimeConfig: { sentryEnvironment },
 };
 
 if (process.env.NODE_ENV !== "development") {
+  nextConfig = {
+    ...nextConfig,
+    output: "export",
+  };
+
   if (!process.env.SENTRY_AUTH_TOKEN) {
     console.warn("⚠️ Creating a production build with no Sentry config");
     console.warn(
