@@ -7,7 +7,6 @@ import {
 import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
-import type { AnyObjectSchema } from "yup";
 
 import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
@@ -104,16 +103,12 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
   };
 
-  const onSaveNewField = ({ apiId: id, value }: OnSaveFieldProps) => {
-    const label = value.config?.label;
-    if (ensureWidgetTypeExistence(Widgets, value.type) || label == null) {
-      return;
-    }
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const widget: Widget<TabField, AnyObjectSchema> = Widgets[value.type];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-    const field: TabField = widget.create(label);
+  const onSaveNewField = ({
+    apiId: id,
+    value: field,
+  }: OnSaveFieldProps) => {
+    const label = field.config?.label;
+    if (ensureWidgetTypeExistence(Widgets, field.type) || label == null) return;
 
     if (
       field.type === "Range" ||
@@ -132,7 +127,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       throw new Error(`Add field: Model is invalid for field "${field.type}".`);
     }
 
-    const newField: NestableWidget | UID | Group = TabFieldsModel.fromSM(value);
+    const newField: NestableWidget | UID | Group = TabFieldsModel.fromSM(field);
     const newCustomType = addField({
       customType,
       newField,
@@ -194,7 +189,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   };
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {
-    if (props.apiId === "") return onSaveNewField(props); // create new
+    if (props.apiId === "") {
+      return onSaveNewField({ ...props, apiId: props.newKey }); // create new
+    }
     return onSave(props); // update existing
   };
 
