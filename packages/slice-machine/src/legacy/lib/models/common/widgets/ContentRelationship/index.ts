@@ -18,7 +18,10 @@ import Form, { FormFields } from "./Form";
         "customtypes": [
           "page"
         ],
-        "label": "relationship"
+        "label": "relationship",
+        "text": {
+          "type": "Text"
+        }
       }
     }
 */

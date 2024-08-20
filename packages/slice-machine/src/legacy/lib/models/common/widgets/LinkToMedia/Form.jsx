@@ -3,6 +3,8 @@ import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
 
+import { DisplayTextCheckbox } from "../Link/components";
+
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {
   ...DefaultFields,
@@ -10,7 +12,12 @@ const FormFields = {
 
 const Form = (props) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { initialValues, fields } = props;
+  const { initialValues, values: formValues, fields, setFieldValue } = props;
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const {
+    config: { text },
+  } = formValues;
 
   return (
     <FlexGrid>
@@ -30,6 +37,8 @@ const Form = (props) => {
           </Col>
         ))
       }
+      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+      <DisplayTextCheckbox text={text} setFieldValue={setFieldValue} />
     </FlexGrid>
   );
 };

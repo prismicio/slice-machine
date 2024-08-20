@@ -11,7 +11,10 @@ import Form, { FormFields } from "./Form";
     "config": {
       "label": "link",
       "placeholder": "Could be a link to use case, press article, signup...",
-      "allowTargetBlank": true
+      "allowTargetBlank": true,
+      "text": {
+        "type": "Text"
+      }
     }
   }
  */
@@ -23,7 +26,10 @@ import Form, { FormFields } from "./Form";
       "select": "document",
       "customtypes": ["homepage"],
       "label": "contentrrrrr",
-      "placeholder": "dsfdsfsdf"
+      "placeholder": "dsfdsfsdf",
+      "text": {
+        "type": "Text"
+      }
     }
   }
   */
@@ -33,7 +39,10 @@ import Form, { FormFields } from "./Form";
     "config" : {
       "select" : "media",
       "label" : "tomedia",
-      "placeholder" : "qsdqsdqsd"
+      "placeholder" : "qsdqsdqsd",
+      "text": {
+        "type": "Text"
+      }
     }
   } */
 
@@ -70,6 +79,14 @@ export const linkConfigSchema = yup
     masks: yup.array(yup.string()).optional(),
     tags: yup.array(yup.string()).optional(),
     allowTargetBlank: yup.boolean().strict().optional(),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    text: yup
+      .object()
+      .shape({
+        type: yup.string().matches(/^Text$/, { excludeEmptyString: true }),
+      })
+      .strict()
+      .optional(),
   })
   .required()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
