@@ -463,7 +463,6 @@ export function addUIDField(label: string, customType: CustomType): CustomType {
     type: "UID",
     config: {
       label,
-      placeholder: "Enter a unique identifier",
     },
   };
 
@@ -489,7 +488,6 @@ export function updateUIDField(
       config: {
         ...field.config,
         label,
-        placeholder: field.config?.placeholder ?? "Enter a unique identifier",
       },
     },
   });
