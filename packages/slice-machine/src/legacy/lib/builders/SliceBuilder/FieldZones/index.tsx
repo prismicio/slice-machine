@@ -61,6 +61,13 @@ const itemsWidgetsArray = [
 
 const primaryWidgetsArray = [Widgets.Group, ...itemsWidgetsArray];
 
+type OnSaveFieldProps = {
+  apiId: string;
+  newKey: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
+};
+
 const FieldZones: FC = () => {
   const { slice, setSlice, variation } = useSliceState();
   const [
@@ -93,79 +100,77 @@ const FieldZones: FC = () => {
     setSlice(newSlice);
   };
 
-  const _onSave =
-    (widgetArea: WidgetsArea) =>
-    ({
-      apiId: previousKey,
-      newKey,
-      value,
-    }: {
-      apiId: string;
-      newKey: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      value: any;
-    }) => {
-      const newSlice = updateField({
-        slice,
-        variationId: variation.id,
-        widgetArea,
-        previousFieldId: previousKey,
-        newFieldId: newKey,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        newField: value,
-      });
+  const _onSave = (
+    widgetArea: WidgetsArea,
+    { apiId: previousKey, newKey, value }: OnSaveFieldProps,
+  ) => {
+    const newSlice = updateField({
+      slice,
+      variationId: variation.id,
+      widgetArea,
+      previousFieldId: previousKey,
+      newFieldId: newKey,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      newField: value,
+    });
 
-      setSlice(newSlice);
-    };
+    setSlice(newSlice);
+  };
 
-  const _onSaveNewField =
-    (widgetArea: WidgetsArea) =>
-    ({
+  const _onSaveNewField = (
+    widgetArea: WidgetsArea,
+    { apiId: id, value }: OnSaveFieldProps,
+  ) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const label: string = value.config?.label ?? "";
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const widgetTypeName = value.type;
+    const widget = primaryWidgetsArray.find(
+      (sliceBuilderWidget) =>
+        sliceBuilderWidget.CUSTOM_NAME === widgetTypeName ||
+        sliceBuilderWidget.TYPE_NAME === widgetTypeName,
+    );
+    if (!widget) {
+      throw new Error(`Unsupported Field Type: ${widgetTypeName}`);
+    }
+
+    const newField = widget.create(label) as SlicePrimaryFieldSM;
+
+    try {
+      widget.schema.validateSync(newField, { stripUnknown: false });
+    } catch (error) {
+      throw new Error(`Model is invalid for widget "${newField.type}".`);
+    }
+
+    const newSlice = addField({
+      slice,
+      variationId: variation.id,
+      widgetArea,
+      newFieldId: id,
+      newField:
+        newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
+    });
+
+    setSlice(newSlice);
+
+    void telemetry.track({
+      event: "field:added",
       id,
-      label,
-      widgetTypeName,
-    }: {
-      id: string;
-      label: string;
-      widgetTypeName: keyof typeof Widgets;
-    }) => {
-      const widget = primaryWidgetsArray.find(
-        (sliceBuilderWidget) =>
-          sliceBuilderWidget.CUSTOM_NAME === widgetTypeName ||
-          sliceBuilderWidget.TYPE_NAME === widgetTypeName,
-      );
-      if (!widget) {
-        throw new Error(`Unsupported Field Type: ${widgetTypeName}`);
+      name: label,
+      type: newField.type,
+      isInAGroup: false,
+      contentType: getContentTypeForTracking(window.location.pathname),
+    });
+  };
+
+  const onCreateOrSave = (widgetArea: WidgetsArea) => {
+    return (props: OnSaveFieldProps) => {
+      if (props.apiId === "") {
+        return _onSaveNewField(widgetArea, { ...props, apiId: props.newKey }); // create new
       }
-
-      const newField = widget.create(label) as SlicePrimaryFieldSM;
-
-      try {
-        widget.schema.validateSync(newField, { stripUnknown: false });
-      } catch (error) {
-        throw new Error(`Model is invalid for widget "${newField.type}".`);
-      }
-
-      const newSlice = addField({
-        slice,
-        variationId: variation.id,
-        widgetArea,
-        newFieldId: id,
-        newField:
-          newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
-      });
-
-      setSlice(newSlice);
-
-      void telemetry.track({
-        event: "field:added",
-        id,
-        name: label,
-        type: newField.type,
-        isInAGroup: false,
-        contentType: getContentTypeForTracking(window.location.pathname),
-      });
+      return _onSave(widgetArea, props); // update existing
     };
+  };
 
   const _onDragEnd = (widgetArea: WidgetsArea) => (result: DropResult) => {
     if (ensureDnDDestination(result)) return;
@@ -209,8 +214,7 @@ const FieldZones: FC = () => {
         EditModal={EditModal}
         widgetsArray={primaryWidgetsArray}
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
-        onSave={_onSave(WidgetsArea.Primary)}
-        onSaveNewField={_onSaveNewField(WidgetsArea.Primary)}
+        onSave={onCreateOrSave(WidgetsArea.Primary)}
         onDragEnd={_onDragEnd(WidgetsArea.Primary)}
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         poolOfFieldsToCheck={variation.primary || []}
@@ -239,8 +243,7 @@ const FieldZones: FC = () => {
           fields={variation.items}
           EditModal={EditModal}
           onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
-          onSave={_onSave(WidgetsArea.Items)}
-          onSaveNewField={_onSaveNewField(WidgetsArea.Items)}
+          onSave={onCreateOrSave(WidgetsArea.Items)}
           onDragEnd={_onDragEnd(WidgetsArea.Items)}
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           poolOfFieldsToCheck={variation.items || []}
