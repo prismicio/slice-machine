@@ -5978,12 +5978,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:7.6.0, @prismicio/client@npm:^7.1.0, @prismicio/client@npm:^7.5.0, @prismicio/client@npm:^7.6.0":
-  version: 7.6.0
-  resolution: "@prismicio/client@npm:7.6.0"
+"@prismicio/client@npm:7.9.0-alpha.0":
+  version: 7.9.0-alpha.0
+  resolution: "@prismicio/client@npm:7.9.0-alpha.0"
   dependencies:
-    imgix-url-builder: ^0.0.4
-  checksum: 716d9d3f0d920c58d3af74a3558886a090dc12d7ec190761d296bcfb8beda1dd47806681eeebf6543f1fdb24c92411939554517d74c9ac3120c84755b2dd14ad
+    imgix-url-builder: ^0.0.5
+  checksum: ab970d7bcf7c876c4b22222828491709080823b8e03e7200ce26ed42f5b82e4fb5160338036f95deac0784b1205ae3674f8012903344466035d77d3848cc927a
   languageName: node
   linkType: hard
 
@@ -5994,6 +5994,15 @@ __metadata:
     "@prismicio/helpers": ^2.3.8
     "@prismicio/types": ^0.2.7
   checksum: ba76743c89740992c9dfc73958d9b79ab93c40f29147c88c971b6b72091844422ca0d30ec0058d3b14117b6e7d97000bc6893a9457d5d56489dda33eb354c1cd
+  languageName: node
+  linkType: hard
+
+"@prismicio/client@npm:^7.1.0, @prismicio/client@npm:^7.5.0, @prismicio/client@npm:^7.6.0":
+  version: 7.6.0
+  resolution: "@prismicio/client@npm:7.6.0"
+  dependencies:
+    imgix-url-builder: ^0.0.4
+  checksum: 716d9d3f0d920c58d3af74a3558886a090dc12d7ec190761d296bcfb8beda1dd47806681eeebf6543f1fdb24c92411939554517d74c9ac3120c84755b2dd14ad
   languageName: node
   linkType: hard
 
@@ -6300,9 +6309,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:2.5.0":
-  version: 2.5.0
-  resolution: "@prismicio/types-internal@npm:2.5.0"
+"@prismicio/types-internal@npm:2.7.0-alpha.1":
+  version: 2.7.0-alpha.1
+  resolution: "@prismicio/types-internal@npm:2.7.0-alpha.1"
   dependencies:
     monocle-ts: ^2.3.11
     newtype-ts: ^0.3.5
@@ -6313,7 +6322,7 @@ __metadata:
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
     uuid: ^9.0.0
-  checksum: 4cdb6f69cdeb1b197d125c281ffa79c86f4351ef355ebf1ee4d3b066eda49e5092288cccc00b8744f85fcaa30504e6be21fc3eee220a956840ae89e815b0f727
+  checksum: 7d642f2bb27c3ccc414298bad65ed7e0bf3ca1c788dcfcfafe6232d1c38f6a43a40af92bc06791728db4cd44e42e2caa46758266079d5de2b359fdc6a05a778e
   languageName: node
   linkType: hard
 
@@ -21083,6 +21092,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"imgix-url-builder@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "imgix-url-builder@npm:0.0.5"
+  checksum: 5bdb9c8df1ef6eff7f53cb8f84dfc33c4862bb3542d557ee083a1cb213c3acb9464f0216ade00a5ed5d79403d58bb2169a537bb24e705ed05b8c3606902435d7
+  languageName: node
+  linkType: hard
+
 "immediate@npm:~3.0.5":
   version: 3.0.6
   resolution: "immediate@npm:3.0.6"
@@ -31424,14 +31440,14 @@ __metadata:
   dependencies:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
-    "@prismicio/client": 7.6.0
+    "@prismicio/client": 7.9.0-alpha.0
     "@prismicio/editor-fields": 0.4.40
     "@prismicio/editor-support": 0.4.40
     "@prismicio/editor-ui": 0.4.40
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.3
     "@prismicio/simulator": 0.1.4
-    "@prismicio/types-internal": 2.5.0
+    "@prismicio/types-internal": 2.7.0-alpha.1
     "@radix-ui/react-hover-card": 1.0.6
     "@radix-ui/react-tabs": 1.0.4
     "@radix-ui/react-visually-hidden": 1.0.3
