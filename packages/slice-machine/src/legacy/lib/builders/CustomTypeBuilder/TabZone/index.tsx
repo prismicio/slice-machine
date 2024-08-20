@@ -103,10 +103,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
   };
 
-  const onSaveNewField = ({
-    apiId: id,
-    value: field,
-  }: OnSaveFieldProps) => {
+  const onSaveNewField = ({ apiId: id, value: field }: OnSaveFieldProps) => {
     const label = field.config?.label;
     if (ensureWidgetTypeExistence(Widgets, field.type) || label == null) return;
 

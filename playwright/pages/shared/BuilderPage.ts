@@ -51,9 +51,9 @@ export class BuilderPage extends SliceMachinePage {
     // Code snippets
     this.codeSnippetsFieldSwitch = page.getByTestId("code-snippets-switch");
     // New field
-    this.newFieldNameInput = page.getByPlaceholder("Field Name");
-    this.newFieldIdInput = page.getByPlaceholder("e.g. buttonLink");
-    this.newFieldAddButton = page.getByTestId("new-field-add-button");
+    this.newFieldNameInput = page.getByLabel("Label");
+    this.newFieldIdInput = page.getByLabel("API ID*");
+    this.newFieldAddButton = page.getByRole("button", { name: "Done" });
   }
 
   /**
