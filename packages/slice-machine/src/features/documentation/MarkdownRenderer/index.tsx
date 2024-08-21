@@ -1,11 +1,11 @@
-import { Text } from "@prismicio/editor-ui";
+import { CodeBlock, Text } from "@prismicio/editor-ui";
+import { CodeBlockProps } from "@prismicio/editor-ui/dist/components/CodeBlock/CodeBlock";
 import { FC } from "react";
 import ReactMarkdown from "react-markdown";
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import remarkGfm from "remark-gfm";
 
 import { telemetry } from "@/apiClient";
-import { CodeBlock } from "@/components/CodeBlock";
 import { useAdapterName } from "@/hooks/useAdapterName";
 
 import styles from "./MarkdownRenderer.module.css";
@@ -38,12 +38,15 @@ const MarkdownCodeBlock = (props: CodeProps) => {
     });
   };
 
+  const match = /language-(\w+)/.exec(props.className ?? "");
+  const language = (match?.[1] ?? "markdown") as CodeBlockProps["language"];
+
   return (
     <CodeBlock
-      copy
       {...props}
       onCopy={onCopy}
-      code={props.children}
+      language={language}
+      code={String(props.children).replace(/\n$/, "")}
       {...(maybeFileInfo !== null ? { fileInfo: maybeFileInfo } : {})}
     />
   );
