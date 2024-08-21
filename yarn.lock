@@ -5987,12 +5987,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.44-new-codeblock-re-release.3":
-  version: 0.4.44-new-codeblock-re-release.3
-  resolution: "@prismicio/editor-fields@npm:0.4.44-new-codeblock-re-release.3"
+"@prismicio/editor-fields@npm:0.4.44-new-codeblock-re-release.4":
+  version: 0.4.44-new-codeblock-re-release.4
+  resolution: "@prismicio/editor-fields@npm:0.4.44-new-codeblock-re-release.4"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.44-new-codeblock-re-release.3
+    "@prismicio/editor-support": 0.4.44-new-codeblock-re-release.4
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 2.6.0
     "@tiptap/core": 2.3.0
@@ -6023,16 +6023,16 @@ __metadata:
     uuid: 9.0.1
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.44-new-codeblock-re-release.3
+    "@prismicio/editor-ui": ^0.4.44-new-codeblock-re-release.4
     react: 18
     react-dom: 18
-  checksum: be18ec3e5dc04a7e4eae2657ffbbdd269092de905ab508cd519ed81593cae5020768b044a52ca6fc1451d9b6d3e589bfbbf3484db5eed9b7a4a507b1d047e4c6
+  checksum: 606b6176105f0596b38b7933677ca74e046806b39188e72aa75436637c462981e07f43a27b06dc4d55d9272f3eeee7fc42fbea49e23ea51f48c8e946831a8c0b
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.44-new-codeblock-re-release.3":
-  version: 0.4.44-new-codeblock-re-release.3
-  resolution: "@prismicio/editor-support@npm:0.4.44-new-codeblock-re-release.3"
+"@prismicio/editor-support@npm:0.4.44-new-codeblock-re-release.4":
+  version: 0.4.44-new-codeblock-re-release.4
+  resolution: "@prismicio/editor-support@npm:0.4.44-new-codeblock-re-release.4"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6043,16 +6043,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 9c322511d4141013c3a1b963b387fb042948c0fc7e561462cccf4a287b31fb25d2eb3663ee8ba636e179b93e9be138d659975496a3919674b94ba480625b26da
+  checksum: d2c163ed578768b2510724979f9ac3ca4f4e19e48169b1c9b7fb1f48d4540866255b89da740d05315b2e9f906ff0ea8e010e06f24438d9fded6efb392b14a3c2
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.44-new-codeblock-re-release.3":
-  version: 0.4.44-new-codeblock-re-release.3
-  resolution: "@prismicio/editor-ui@npm:0.4.44-new-codeblock-re-release.3"
+"@prismicio/editor-ui@npm:0.4.44-new-codeblock-re-release.4":
+  version: 0.4.44-new-codeblock-re-release.4
+  resolution: "@prismicio/editor-ui@npm:0.4.44-new-codeblock-re-release.4"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.44-new-codeblock-re-release.3
+    "@prismicio/editor-support": 0.4.44-new-codeblock-re-release.4
     "@radix-ui/react-avatar": 1.0.4
     "@radix-ui/react-checkbox": 1.0.4
     "@radix-ui/react-dialog": 1.0.5
@@ -6103,7 +6103,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 59fd3ea210414e9fbbb577dc0d318d4dc9db91d723fbf35a13ed3f12ce561bf7705fc55e9b3939f2ba8fc29edcdf2f9f828095c163ba98f511460d4f96a7cd4f
+  checksum: cb8a31a6e981df43959e1a91427a61e3b939d3dd378beb09bbd158e8b747961c377fb896055f7145fa82c1388da17d52ca582484df148495909f994cd392b794
   languageName: node
   linkType: hard
 
@@ -31375,9 +31375,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.6.0
-    "@prismicio/editor-fields": 0.4.44-new-codeblock-re-release.3
-    "@prismicio/editor-support": 0.4.44-new-codeblock-re-release.3
-    "@prismicio/editor-ui": 0.4.44-new-codeblock-re-release.3
+    "@prismicio/editor-fields": 0.4.44-new-codeblock-re-release.4
+    "@prismicio/editor-support": 0.4.44-new-codeblock-re-release.4
+    "@prismicio/editor-ui": 0.4.44-new-codeblock-re-release.4
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.3
     "@prismicio/simulator": 0.1.4
