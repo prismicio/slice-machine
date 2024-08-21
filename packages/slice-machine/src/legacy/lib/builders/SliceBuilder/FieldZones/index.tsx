@@ -7,7 +7,10 @@ import {
   DialogContent,
   DialogHeader,
 } from "@prismicio/editor-ui";
-import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
+import {
+  GroupFieldType,
+  SlicePrimaryWidget,
+} from "@prismicio/types-internal/lib/customtypes";
 import { FC, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
@@ -64,8 +67,7 @@ const primaryWidgetsArray = [Widgets.Group, ...itemsWidgetsArray];
 type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: any;
+  value: SlicePrimaryFieldSM;
 };
 
 const FieldZones: FC = () => {
@@ -110,8 +112,7 @@ const FieldZones: FC = () => {
       widgetArea,
       previousFieldId: previousKey,
       newFieldId: newKey,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      newField: value,
+      newField: value as SlicePrimaryWidget,
     });
 
     setSlice(newSlice);
@@ -119,12 +120,11 @@ const FieldZones: FC = () => {
 
   const _onSaveNewField = (
     widgetArea: WidgetsArea,
-    { apiId: id, value }: OnSaveFieldProps,
+    { apiId: id, value: newField }: OnSaveFieldProps,
   ) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const label: string = value.config?.label ?? "";
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const widgetTypeName = value.type;
+    const { type: widgetTypeName, config } = newField;
+    const label: string = config?.label ?? "";
+
     const widget = primaryWidgetsArray.find(
       (sliceBuilderWidget) =>
         sliceBuilderWidget.CUSTOM_NAME === widgetTypeName ||
@@ -133,8 +133,6 @@ const FieldZones: FC = () => {
     if (!widget) {
       throw new Error(`Unsupported Field Type: ${widgetTypeName}`);
     }
-
-    const newField = widget.create(label) as SlicePrimaryFieldSM;
 
     try {
       widget.schema.validateSync(newField, { stripUnknown: false });
