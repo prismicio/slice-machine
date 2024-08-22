@@ -43,7 +43,7 @@ const MarkdownCodeBlock = (props: CodeProps) => {
       onCopy={onCopy}
       language="markdown"
       code={String(props.children).replace(/\n$/, "")}
-      {...(maybeFileInfo !== null ? { fileInfo: maybeFileInfo } : {})}
+      title={maybeFileInfo != null ? maybeFileInfo.fileName : undefined}
     />
   );
 };
