@@ -3,7 +3,6 @@ import { PushChangesLimit } from "@slicemachine/manager";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
@@ -17,6 +16,7 @@ import { useUnSyncChanges } from "@/features/sync/useUnSyncChanges";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useNetwork } from "@/hooks/useNetwork";
 import { usePromptToCreateContentExperiment } from "@/hooks/usePromptToCreateContentExperiment";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import {
   AppLayout,
   AppLayoutActions,
@@ -34,10 +34,8 @@ import {
   SoftDeleteDocumentsDrawer,
 } from "@/legacy/components/DeleteDocumentsDrawer";
 import { createDocumentsListEndpointFromRepoName } from "@/legacy/lib/utils/repo";
-import { getRepoName } from "@/modules/environment";
 import { AuthStatus } from "@/modules/userContext/types";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
-import { SliceMachineStoreType } from "@/redux/type";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -60,12 +58,10 @@ const Changes: React.FunctionComponent = () => {
   const [isToastOpen, setIsToastOpen] = useState(false);
   const { eligible: isPromptToCreateContentExperimentEligible } =
     usePromptToCreateContentExperiment();
+  const { repositoryName } = useRepositoryInformation();
 
-  const repoName = getRepoName(
-    useSelector((state: SliceMachineStoreType) => state),
-  );
   const documentsListEndpoint =
-    createDocumentsListEndpointFromRepoName(repoName);
+    createDocumentsListEndpointFromRepoName(repositoryName);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -102,9 +98,11 @@ const Changes: React.FunctionComponent = () => {
 
         setIsPushed(true);
 
-        isPromptToCreateContentExperimentEligible
-          ? setIsToastOpen(true)
-          : toast.success("All slices and types have been pushed");
+        if (isPromptToCreateContentExperimentEligible) {
+          setIsToastOpen(true);
+        } else {
+          toast.success("All slices and types have been pushed");
+        }
       }
     } catch (error) {
       console.error(
@@ -187,7 +185,7 @@ const Changes: React.FunctionComponent = () => {
               }}
             />
             <Toast
-              anchor={<Box position="fixed" top={30} right={32} />}
+              anchor={<Box position="fixed" top={32} right={32} width={288} />} // 288 is a toast width, needed for the toast to be displayed with proper paddings
               open={isToastOpen}
               onOpenChange={setIsToastOpen}
               variant="card"

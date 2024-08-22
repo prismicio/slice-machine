@@ -96,7 +96,7 @@ const experimentBlankSlateContent = {
   img: "/blank-slate-push-success.png",
   title: "Everything is up-to-date",
   description:
-    "No changes are currently staged. Once you save your updates, they'll appear here and be ready to be pushed to the Page Builder.",
+    "No changes are staged. Save your updates, and they'll appear here, ready to be pushed to the Page Builder.",
 };
 
 const experimentPostPushContent = {
