@@ -1,7 +1,6 @@
 import { Button, Image, theme } from "@prismicio/editor-ui";
 import router from "next/router";
 import { FiExternalLink } from "react-icons/fi";
-import { useSelector } from "react-redux";
 
 import {
   BlankSlate,
@@ -12,31 +11,23 @@ import {
   BlankSlateTitle,
 } from "@/components/BlankSlate";
 import { TextLink } from "@/components/TextLink";
-import { usePromptToCreateContentExperiment } from "@/hooks/usePromptToCreateContentExperiment";
-import { createDocumentsListEndpointFromRepoName } from "@/legacy/lib/utils/repo";
-import { getRepoName } from "@/modules/environment";
-import { SliceMachineStoreType } from "@/redux/type";
 
 interface NoChangesBlankSlateProps {
   isPostPush: boolean;
+  documentsListEndpoint: string;
+  isPromptToCreateContentExperimentEligible: boolean;
 }
 export function NoChangesBlankSlate(props: NoChangesBlankSlateProps) {
-  const { isPostPush } = props;
-
-  const { eligible: isPromptToCreateContentExperimentEligible } =
-    usePromptToCreateContentExperiment();
+  const {
+    isPostPush,
+    documentsListEndpoint,
+    isPromptToCreateContentExperimentEligible,
+  } = props;
 
   const content = getBlankSlateContent(
     isPostPush,
     isPromptToCreateContentExperimentEligible,
   );
-
-  const { repoName } = useSelector((state: SliceMachineStoreType) => ({
-    repoName: getRepoName(state),
-  }));
-
-  const documentsListEndpoint =
-    createDocumentsListEndpointFromRepoName(repoName);
 
   return (
     <BlankSlate style={{ alignSelf: "center", marginTop: theme.space[72] }}>

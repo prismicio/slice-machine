@@ -16,6 +16,7 @@ import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useUnSyncChanges } from "@/features/sync/useUnSyncChanges";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useNetwork } from "@/hooks/useNetwork";
+import { usePromptToCreateContentExperiment } from "@/hooks/usePromptToCreateContentExperiment";
 import {
   AppLayout,
   AppLayoutActions,
@@ -57,10 +58,12 @@ const Changes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isPushed, setIsPushed] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
-  const { repoName } = useSelector((state: SliceMachineStoreType) => ({
-    repoName: getRepoName(state),
-  }));
+  const { eligible: isPromptToCreateContentExperimentEligible } =
+    usePromptToCreateContentExperiment();
 
+  const repoName = getRepoName(
+    useSelector((state: SliceMachineStoreType) => state),
+  );
   const documentsListEndpoint =
     createDocumentsListEndpointFromRepoName(repoName);
 
@@ -98,11 +101,10 @@ const Changes: React.FunctionComponent = () => {
         pushChangesSuccess();
 
         setIsPushed(true);
-        // TODO: hide this toast for users in experiment eligible version (DT-2287)
-        setIsToastOpen(true);
 
-        // TODO: display this toast for users in experiment control version (DT-2287)
-        // toast.success("All slices and types have been pushed");
+        isPromptToCreateContentExperimentEligible
+          ? setIsToastOpen(true)
+          : toast.success("All slices and types have been pushed");
       }
     } catch (error) {
       console.error(
@@ -129,7 +131,15 @@ const Changes: React.FunctionComponent = () => {
       return <AuthErrorPage authStatus={authStatus} />;
     }
     if (numberOfChanges === 0) {
-      return <NoChangesBlankSlate isPostPush={isPushed} />;
+      return (
+        <NoChangesBlankSlate
+          isPostPush={isPushed}
+          documentsListEndpoint={documentsListEndpoint}
+          isPromptToCreateContentExperimentEligible={
+            isPromptToCreateContentExperimentEligible
+          }
+        />
+      );
     }
     return (
       <ChangesItems
@@ -148,6 +158,8 @@ const Changes: React.FunctionComponent = () => {
     unSyncedCustomTypes,
     modelsStatuses,
     isPushed,
+    documentsListEndpoint,
+    isPromptToCreateContentExperimentEligible,
   ]);
 
   return (
