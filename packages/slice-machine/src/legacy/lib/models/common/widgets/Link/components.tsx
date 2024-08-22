@@ -1,3 +1,4 @@
+import { Box, Icon, Tooltip } from "@prismicio/editor-ui";
 import React, { useEffect, useState } from "react";
 import { Checkbox, Flex, Label } from "theme-ui";
 
@@ -37,11 +38,27 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
         }}
       >
         <Label variant="label.border">
-          <Checkbox
-            checked={allowDisplayText}
-            onChange={() => setAllowDisplayText(!allowDisplayText)}
-          />
-          Allow display text
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
+          >
+            <Flex>
+              <Checkbox
+                checked={allowDisplayText}
+                onChange={() => setAllowDisplayText(!allowDisplayText)}
+              />
+              Allow display text
+            </Flex>
+            <Tooltip
+              content="Allow editors to customize the link display text"
+              align="end"
+              zIndexHack
+            >
+              <Icon name="alert" size="medium" color="grey11" />
+            </Tooltip>
+          </Box>
         </Label>
       </Flex>
     </Col>
