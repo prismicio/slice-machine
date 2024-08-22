@@ -1,11 +1,10 @@
-import { Text } from "@prismicio/editor-ui";
-import { FC } from "react";
+import { CodeBlock, Text } from "@prismicio/editor-ui";
+import { ComponentProps, FC } from "react";
 import ReactMarkdown from "react-markdown";
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import remarkGfm from "remark-gfm";
 
 import { telemetry } from "@/apiClient";
-import { CodeBlock } from "@/components/CodeBlock";
 import { useAdapterName } from "@/hooks/useAdapterName";
 
 import styles from "./MarkdownRenderer.module.css";
@@ -14,9 +13,13 @@ type MarkdownRenderer = FC<{
   markdown: string;
 }>;
 
-const MarkdownCodeBlock = (props: CodeProps) => {
+type Language = ComponentProps<typeof CodeBlock>["language"];
+
+const MarkdownCodeBlock = (reactMarkdownProps: CodeProps) => {
+  const { inline, ...props } = reactMarkdownProps;
+
   const adapter = useAdapterName();
-  if (props.inline === true) {
+  if (inline === true) {
     return <code {...props} className={styles.inlineCode} />;
   }
   const maybeFileInfo = (() => {
@@ -38,13 +41,15 @@ const MarkdownCodeBlock = (props: CodeProps) => {
     });
   };
 
+  const classNameLanguage = /language-(\w+)/.exec(props.className ?? "")?.[1];
+
   return (
     <CodeBlock
-      copy
       {...props}
       onCopy={onCopy}
-      code={props.children}
-      {...(maybeFileInfo !== null ? { fileInfo: maybeFileInfo } : {})}
+      language={classNameLanguage as Language}
+      code={String(props.children).replace(/\n$/, "")}
+      title={maybeFileInfo?.fileName}
     />
   );
 };

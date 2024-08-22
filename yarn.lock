@@ -5987,12 +5987,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.43":
-  version: 0.4.43
-  resolution: "@prismicio/editor-fields@npm:0.4.43"
+"@prismicio/editor-fields@npm:0.4.44":
+  version: 0.4.44
+  resolution: "@prismicio/editor-fields@npm:0.4.44"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.43
+    "@prismicio/editor-support": 0.4.44
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 2.6.0
     "@tiptap/core": 2.3.0
@@ -6023,16 +6023,16 @@ __metadata:
     uuid: 9.0.1
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.43
+    "@prismicio/editor-ui": ^0.4.44
     react: 18
     react-dom: 18
-  checksum: 62ad8921363596ae93fa610edda647d4bed7855f09810d7dead0e11db2c81a8473905a7752b48b3364d7a91de73e0ede07c2924822e3c5a5a294ce24fe156ade
+  checksum: 1e9d3cbfe4d5166079343f12b04b6a5b19686b9aa38f17f54f76c309b7dadfedfc8d01cc34eb7d59a1cefe93d164956a1e548464d93b69f07a75e2d7188190d7
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.43":
-  version: 0.4.43
-  resolution: "@prismicio/editor-support@npm:0.4.43"
+"@prismicio/editor-support@npm:0.4.44":
+  version: 0.4.44
+  resolution: "@prismicio/editor-support@npm:0.4.44"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6043,16 +6043,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 9e349998cf467dd6d6bc5ad767e7bd19c04392b1e3f0b26a03e6b90fa2cad2a8b62d7f8d42410d8e85f9c1ded4beb619f94991876f85333cc788e238eeb0b11f
+  checksum: 473288f4b2fdc4d722d4d654432f7aacef8c49e1a7b9edc31714654843fcf309bc44f96060a2edaeeab95920b68b62695718b1dd6951d68b5c66e092af3915a1
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.43":
-  version: 0.4.43
-  resolution: "@prismicio/editor-ui@npm:0.4.43"
+"@prismicio/editor-ui@npm:0.4.44":
+  version: 0.4.44
+  resolution: "@prismicio/editor-ui@npm:0.4.44"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.43
+    "@prismicio/editor-support": 0.4.44
     "@radix-ui/react-avatar": 1.0.4
     "@radix-ui/react-checkbox": 1.0.4
     "@radix-ui/react-dialog": 1.0.5
@@ -6097,12 +6097,13 @@ __metadata:
     react-easy-crop: 4.6.1
     react-hotkeys-hook: 4.5.0
     react-remove-scroll: 2.5.6
+    react-syntax-highlighter: 15.5.0
     tslib: 2.4.0
     uuid: 9.0.1
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: c6e872338e6efaf6b7d6afa4f690837687fe39da6775ec24a280f0704e3d6fed741522e32317ad26caab2149db8e1e25f072b8d90d2310f0f6ece0a5e0d57348
+  checksum: 98d9dd4265a03a1b1ef3456fd72b3be734d1fbdef40372c5a61552386de57620a59629a2d48e80d08402b287539931a4716d038152b0013fbb08f26846e3164f
   languageName: node
   linkType: hard
 
@@ -11965,15 +11966,6 @@ __metadata:
     "@types/react-dom": "*"
     "@types/react-transition-group": "*"
   checksum: c247c7fe45cc1d1db1fb0e5a569e288037081ed05d17f377376de82a58a5d334bb7282922ee5eaf3c30957437b028097235be81cb0bed905b3b73f9a5b8c7b58
-  languageName: node
-  linkType: hard
-
-"@types/react-syntax-highlighter@npm:15.5.7":
-  version: 15.5.7
-  resolution: "@types/react-syntax-highlighter@npm:15.5.7"
-  dependencies:
-    "@types/react": "*"
-  checksum: 1918d01baaa9bf485093fb04167d0dc87131be708bd68d32d3f614c0e7dba05de765fc62df139fa1972836b13e27983a2d89552eda5b5a38691a4ec300949648
   languageName: node
   linkType: hard
 
@@ -31383,9 +31375,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.6.0
-    "@prismicio/editor-fields": 0.4.43
-    "@prismicio/editor-support": 0.4.43
-    "@prismicio/editor-ui": 0.4.43
+    "@prismicio/editor-fields": 0.4.44
+    "@prismicio/editor-support": 0.4.44
+    "@prismicio/editor-ui": 0.4.44
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.3
     "@prismicio/simulator": 0.1.4
@@ -31409,7 +31401,6 @@ __metadata:
     "@types/react-beautiful-dnd": 13.1.3
     "@types/react-modal": 3.13.1
     "@types/react-select": 4.0.18
-    "@types/react-syntax-highlighter": 15.5.7
     "@typescript-eslint/eslint-plugin": 7.17.0
     "@typescript-eslint/parser": 7.17.0
     "@vitejs/plugin-react": 3.1.0
@@ -31458,7 +31449,6 @@ __metadata:
     react-modal: 3.16.1
     react-redux: 8.0.7
     react-select: 5.7.3
-    react-syntax-highlighter: 15.5.0
     react-tabs: 5.2.0
     react-tiny-popover: 7.2.4
     react-toastify: 9.1.1
