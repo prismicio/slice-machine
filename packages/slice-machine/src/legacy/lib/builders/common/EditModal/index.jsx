@@ -182,6 +182,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                     fields={fields}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     initialValues={initialValues}
+                    autoFocus={apiId !== "" ? false : undefined}
                   />
                 </Col>
               ))}
