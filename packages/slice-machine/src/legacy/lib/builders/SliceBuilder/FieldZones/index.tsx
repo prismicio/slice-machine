@@ -7,10 +7,7 @@ import {
   DialogContent,
   DialogHeader,
 } from "@prismicio/editor-ui";
-import {
-  GroupFieldType,
-  type SlicePrimaryWidget,
-} from "@prismicio/types-internal/lib/customtypes";
+import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes";
 import { FC, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
@@ -112,7 +109,7 @@ const FieldZones: FC = () => {
       widgetArea,
       previousFieldId: previousKey,
       newFieldId: newKey,
-      newField: value as SlicePrimaryWidget,
+      newField: value,
     });
 
     setSlice(newSlice);
