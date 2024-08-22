@@ -96,7 +96,11 @@ const Changes: React.FunctionComponent = () => {
         // Update last sync value in local storage
         pushChangesSuccess();
 
+        // TODO: hide this toast for users in experiment eligible version (DT-2287)
         setIsToastOpen(true);
+
+        // TODO: display this toast for users in experiment control version (DT-2287)
+        // toast.success("All slices and types have been pushed");
       }
     } catch (error) {
       console.error(
