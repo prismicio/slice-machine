@@ -15,9 +15,11 @@ type MarkdownRenderer = FC<{
 
 type Language = ComponentProps<typeof CodeBlock>["language"];
 
-const MarkdownCodeBlock = (props: CodeProps) => {
+const MarkdownCodeBlock = (reactMarkdownProps: CodeProps) => {
+  const { inline, ...props } = reactMarkdownProps;
+
   const adapter = useAdapterName();
-  if (props.inline === true) {
+  if (inline === true) {
     return <code {...props} className={styles.inlineCode} />;
   }
   const maybeFileInfo = (() => {
