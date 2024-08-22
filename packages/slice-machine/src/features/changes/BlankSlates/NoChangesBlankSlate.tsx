@@ -12,11 +12,27 @@ import {
   BlankSlateTitle,
 } from "@/components/BlankSlate";
 import { TextLink } from "@/components/TextLink";
+import { usePromptToCreateContentExperiment } from "@/hooks/usePromptToCreateContentExperiment";
 import { createDocumentsListEndpointFromRepoName } from "@/legacy/lib/utils/repo";
 import { getRepoName } from "@/modules/environment";
 import { SliceMachineStoreType } from "@/redux/type";
 
-export const NoChangesBlankSlate = () => {
+import { getBlankSlateContent } from "./getBlankSlateContent";
+
+interface NoChangesBlankSlateProps {
+  isPostPush: boolean;
+}
+export function NoChangesBlankSlate(props: NoChangesBlankSlateProps) {
+  const { isPostPush } = props;
+
+  const { eligible: isPromptToCreateContentExperimentEligible } =
+    usePromptToCreateContentExperiment();
+
+  const content = getBlankSlateContent(
+    isPostPush,
+    isPromptToCreateContentExperimentEligible,
+  );
+
   const { repoName } = useSelector((state: SliceMachineStoreType) => ({
     repoName: getRepoName(state),
   }));
@@ -27,28 +43,38 @@ export const NoChangesBlankSlate = () => {
   return (
     <BlankSlate style={{ alignSelf: "center", marginTop: theme.space[72] }}>
       <BlankSlateImage>
-        <Image src="/blank-slate-changes-uptodate.png" sizing="cover" />
+        <Image src={content.img} sizing="cover" />
       </BlankSlateImage>
       <BlankSlateContent>
-        <BlankSlateTitle>Everything up-to-date</BlankSlateTitle>
-        <BlankSlateDescription>
-          You have no changes staged. Your changes appear here after you have
-          saved them, while they're waiting to be pushed to the Page Builder.
-          Ready to get going?
-        </BlankSlateDescription>
-        <BlankSlateActions>
-          <Button onClick={() => void router.push("/")}>
-            Create a page type
-          </Button>
-          <TextLink
-            endIcon={<FiExternalLink />}
-            textVariant="normal"
-            href={documentsListEndpoint}
-          >
-            Create content
-          </TextLink>
-        </BlankSlateActions>
+        <BlankSlateTitle>{content.title}</BlankSlateTitle>
+        <BlankSlateDescription>{content.description}</BlankSlateDescription>
+
+        {isPromptToCreateContentExperimentEligible ? (
+          isPostPush && (
+            <BlankSlateActions>
+              <Button
+                onClick={() => window.open(documentsListEndpoint, "_blank")}
+                size="large"
+              >
+                Create content in the Page Builder
+              </Button>
+            </BlankSlateActions>
+          )
+        ) : (
+          <BlankSlateActions>
+            <Button onClick={() => void router.push("/")}>
+              Create a page type
+            </Button>
+            <TextLink
+              endIcon={<FiExternalLink />}
+              textVariant="normal"
+              href={documentsListEndpoint}
+            >
+              Create content
+            </TextLink>
+          </BlankSlateActions>
+        )}
       </BlankSlateContent>
     </BlankSlate>
   );
-};
+}
