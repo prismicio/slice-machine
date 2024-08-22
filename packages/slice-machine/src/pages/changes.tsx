@@ -1,7 +1,9 @@
+import { Box, Text, Toast } from "@prismicio/editor-ui";
 import { PushChangesLimit } from "@slicemachine/manager";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
@@ -30,8 +32,11 @@ import {
   HardDeleteDocumentsDrawer,
   SoftDeleteDocumentsDrawer,
 } from "@/legacy/components/DeleteDocumentsDrawer";
+import { createDocumentsListEndpointFromRepoName } from "@/legacy/lib/utils/repo";
+import { getRepoName } from "@/modules/environment";
 import { AuthStatus } from "@/modules/userContext/types";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { SliceMachineStoreType } from "@/redux/type";
 
 const Changes: React.FunctionComponent = () => {
   const {
@@ -50,6 +55,13 @@ const Changes: React.FunctionComponent = () => {
   >(undefined);
   const { autoSyncStatus } = useAutoSync();
   const router = useRouter();
+  const [isToastOpen, setIsToastOpen] = useState(false);
+  const { repoName } = useSelector((state: SliceMachineStoreType) => ({
+    repoName: getRepoName(state),
+  }));
+
+  const documentsListEndpoint =
+    createDocumentsListEndpointFromRepoName(repoName);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -84,7 +96,7 @@ const Changes: React.FunctionComponent = () => {
         // Update last sync value in local storage
         pushChangesSuccess();
 
-        toast.success("All slices and types have been pushed");
+        setIsToastOpen(true);
       }
     } catch (error) {
       console.error(
@@ -153,6 +165,28 @@ const Changes: React.FunctionComponent = () => {
               loading={isSyncing}
               onClick={() => {
                 void onPush(false); // not deleting documents by default
+              }}
+            />
+            <Toast
+              anchor={<Box position="fixed" top={30} right={32} />}
+              open={isToastOpen}
+              onOpenChange={setIsToastOpen}
+              variant="card"
+              seconds={20}
+              title={
+                <Box flexDirection="column" alignItems="flex-start" as="span">
+                  <Text variant="bold">Success! 🎉</Text>
+                  <Text>Your changes have been pushed.</Text>
+                </Box>
+              }
+              action={{
+                title: "Create content in the Page Builder",
+                onClick: () => {
+                  void window.open(documentsListEndpoint, "_blank");
+                },
+              }}
+              cancel={{
+                onClick: () => setIsToastOpen(false),
               }}
             />
           </AppLayoutActions>

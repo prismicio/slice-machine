@@ -38,7 +38,7 @@ export class ChangesPage extends SliceMachinePage {
     });
     this.pushChangesButton = page.getByText("Push", { exact: true });
     this.pushedMessaged = page.getByText(
-      "All slices and types have been pushed",
+      "Your changes have been pushed.",
       { exact: true },
     );
     this.notLoggedInTitle = page.getByText("It seems like you are logged out", {
