@@ -9,7 +9,6 @@ import type {
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { Groups } from "@/legacy/lib/models/common/Group";
 import {
-  SlicePrimaryFieldSM,
   type VariationSM,
   WidgetsArea,
 } from "@/legacy/lib/models/common/Slice";
@@ -35,7 +34,7 @@ type UpdateFieldArgs = {
   widgetArea: WidgetsArea;
   previousFieldId: string;
   newFieldId: string;
-  newField: SlicePrimaryWidget | SlicePrimaryFieldSM;
+  newField: SlicePrimaryWidget;
 };
 
 type AddFieldArgs = {
