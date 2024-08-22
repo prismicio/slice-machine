@@ -1,5 +1,5 @@
 import { CodeBlock, Text } from "@prismicio/editor-ui";
-import { FC } from "react";
+import { ComponentProps, FC } from "react";
 import ReactMarkdown from "react-markdown";
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
 import remarkGfm from "remark-gfm";
@@ -12,6 +12,8 @@ import styles from "./MarkdownRenderer.module.css";
 type MarkdownRenderer = FC<{
   markdown: string;
 }>;
+
+type Language = ComponentProps<typeof CodeBlock>["language"];
 
 const MarkdownCodeBlock = (props: CodeProps) => {
   const adapter = useAdapterName();
@@ -37,11 +39,13 @@ const MarkdownCodeBlock = (props: CodeProps) => {
     });
   };
 
+  const classNameLanguage = /language-(\w+)/.exec(props.className ?? "")?.[1];
+
   return (
     <CodeBlock
       {...props}
       onCopy={onCopy}
-      language="markdown"
+      language={classNameLanguage as Language}
       code={String(props.children).replace(/\n$/, "")}
       title={maybeFileInfo?.fileName}
     />
