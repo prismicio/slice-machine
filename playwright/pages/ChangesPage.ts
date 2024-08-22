@@ -48,7 +48,7 @@ export class ChangesPage extends SliceMachinePage {
       "It seems like you don't have access to this repository",
       { exact: true },
     );
-    this.blankSlateTitle = page.getByText("Everything up-to-date", {
+    this.blankSlateTitle = page.getByText("Everything is up-to-date", {
       exact: true,
     });
     this.unknownErrorMessage = page.getByText(

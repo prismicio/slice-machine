@@ -50,6 +50,7 @@ const Changes: React.FunctionComponent = () => {
   >(undefined);
   const { autoSyncStatus } = useAutoSync();
   const router = useRouter();
+  const [isPushed, setIsPushed] = useState(false);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -84,6 +85,7 @@ const Changes: React.FunctionComponent = () => {
         // Update last sync value in local storage
         pushChangesSuccess();
 
+        setIsPushed(true);
         toast.success("All slices and types have been pushed");
       }
     } catch (error) {
@@ -111,7 +113,7 @@ const Changes: React.FunctionComponent = () => {
       return <AuthErrorPage authStatus={authStatus} />;
     }
     if (numberOfChanges === 0) {
-      return <NoChangesBlankSlate />;
+      return <NoChangesBlankSlate isPostPush={isPushed} />;
     }
     return (
       <ChangesItems
@@ -129,6 +131,7 @@ const Changes: React.FunctionComponent = () => {
     unSyncedSlices,
     unSyncedCustomTypes,
     modelsStatuses,
+    isPushed,
   ]);
 
   return (
