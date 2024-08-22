@@ -62,7 +62,6 @@ interface FormFieldInputProps {
   initialValues?: Record<string, string>;
   isDisabled?: boolean;
   variant?: string;
-  autoFocus?: boolean;
 }
 
 export const FormFieldInput = ({

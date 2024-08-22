@@ -9,7 +9,7 @@ import {
 } from "@prismicio/editor-ui";
 import {
   GroupFieldType,
-  SlicePrimaryWidget,
+  type SlicePrimaryWidget,
 } from "@prismicio/types-internal/lib/customtypes";
 import { FC, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
@@ -123,7 +123,7 @@ const FieldZones: FC = () => {
     { apiId: id, value: newField }: OnSaveFieldProps,
   ) => {
     const { type: widgetTypeName, config } = newField;
-    const label: string = config?.label ?? "";
+    const label = config?.label ?? "";
 
     const widget = primaryWidgetsArray.find(
       (sliceBuilderWidget) =>

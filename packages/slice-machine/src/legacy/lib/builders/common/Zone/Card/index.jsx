@@ -19,7 +19,6 @@ const FieldZone = ({
   onDeleteItem,
   onSave,
   showHints,
-  newField,
   renderHintBase,
   isRepeatable,
   testId,
@@ -123,7 +122,6 @@ const FieldZone = ({
               })
             }
             {provided.placeholder}
-            {newField}
           </Box>
         )}
       </Droppable>
