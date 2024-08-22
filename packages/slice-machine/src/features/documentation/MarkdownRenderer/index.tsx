@@ -1,4 +1,8 @@
 import { CodeBlock, Text } from "@prismicio/editor-ui";
+import {
+  CodeBlockProps,
+  supportedLanguages,
+} from "@prismicio/editor-ui/dist/components/CodeBlock/CodeBlock";
 import { FC } from "react";
 import ReactMarkdown from "react-markdown";
 import type { CodeProps } from "react-markdown/lib/ast-to-react";
@@ -37,11 +41,17 @@ const MarkdownCodeBlock = (props: CodeProps) => {
     });
   };
 
+  const classNameLanguage = /language-(\w+)/.exec(props.className ?? "");
+  let language = classNameLanguage?.[1] as CodeBlockProps["language"];
+  if (!supportedLanguages.includes(language)) {
+    language = "plaintext";
+  }
+
   return (
     <CodeBlock
       {...props}
       onCopy={onCopy}
-      language="markdown"
+      language={language}
       code={String(props.children).replace(/\n$/, "")}
       title={maybeFileInfo?.fileName}
     />
