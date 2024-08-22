@@ -96,11 +96,11 @@ const experimentBlankSlateContent = {
   img: "/blank-slate-push-success.png",
   title: "Everything is up-to-date",
   description:
-    "No changes are staged. Save your updates, and they'll appear here, ready to be pushed to the Page Builder.",
+    "No changes are staged. Saved updates will appear here, ready to be pushed to the Page Builder.",
 };
 
 const experimentPostPushContent = {
   img: "/blank-slate-push-success.png",
-  title: "Success! Your changes have been pushed to Prismic.",
+  title: "Success! Your changes have been pushed to the Page Builder.",
   description: "Add content to your website to bring it to life!",
 };
