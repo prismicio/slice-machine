@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
-import { getState } from "@/apiClient";
+import { getState, telemetry } from "@/apiClient";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { NoChangesBlankSlate } from "@/features/changes/BlankSlates";
 import { PushChangesButton } from "@/features/changes/PushChangesButton";
@@ -199,6 +199,9 @@ const Changes: React.FunctionComponent = () => {
               action={{
                 title: "Create content in the Page Builder",
                 onClick: () => {
+                  void telemetry.track({
+                    event: "post-push:toast-cta-clicked",
+                  });
                   void window.open(documentsListEndpoint, "_blank");
                 },
               }}

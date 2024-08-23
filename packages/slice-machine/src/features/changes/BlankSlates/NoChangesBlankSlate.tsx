@@ -2,6 +2,7 @@ import { Button, Image, theme } from "@prismicio/editor-ui";
 import router from "next/router";
 import { FiExternalLink } from "react-icons/fi";
 
+import { telemetry } from "@/apiClient";
 import {
   BlankSlate,
   BlankSlateActions,
@@ -42,7 +43,12 @@ export function NoChangesBlankSlate(props: NoChangesBlankSlateProps) {
           isPostPush && (
             <BlankSlateActions>
               <Button
-                onClick={() => window.open(documentsListEndpoint, "_blank")}
+                onClick={() => {
+                  void telemetry.track({
+                    event: "post-push:empty-state-cta-clicked",
+                  });
+                  window.open(documentsListEndpoint, "_blank");
+                }}
                 size="large"
               >
                 Create content in the Page Builder
