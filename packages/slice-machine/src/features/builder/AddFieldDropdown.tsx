@@ -22,7 +22,7 @@ import {
 } from "@/domain/fields";
 
 export type AddFieldDropdownProps = {
-  disabled: boolean;
+  disabled?: boolean;
   onSelectField: (fieldType: FieldType | FieldVariant) => void;
   fields: Field[];
   open?: boolean;
@@ -36,7 +36,7 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
   const {
     open,
     onOpenChange,
-    disabled,
+    disabled = false,
     onSelectField,
     fields,
     triggerDataTestId = "add-field",

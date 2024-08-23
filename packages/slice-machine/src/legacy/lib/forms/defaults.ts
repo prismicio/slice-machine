@@ -19,7 +19,8 @@ export const validateId = ({
   }
 };
 
-export const DefaultFields: Record<string, InputType> = {
+/** Fields that are common to every field type */
+export const CommonDefaultFields: Record<string, InputType> = {
   label: Input(
     "Label",
     {
@@ -29,6 +30,7 @@ export const DefaultFields: Record<string, InputType> = {
     undefined,
     undefined,
     "Label for content creators (defaults to field type)",
+    true,
   ),
   id: Input(
     "API ID*",
@@ -42,6 +44,14 @@ export const DefaultFields: Record<string, InputType> = {
     undefined,
     "A unique identifier for the field (e.g. buttonLink)",
   ),
+};
+
+/** Fields that are common to every displayable field type.
+ *
+ * Exceptions:
+ * - Group - Does not display a placeholder. */
+export const DefaultFields: Record<string, InputType> = {
+  ...CommonDefaultFields,
   placeholder: Input(
     "Placeholder",
     {
