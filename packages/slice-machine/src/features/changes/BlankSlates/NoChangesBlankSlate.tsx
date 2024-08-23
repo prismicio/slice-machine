@@ -92,14 +92,14 @@ function getBlankSlateContent(
 // control variant content
 const blankSlateContent = {
   img: "/blank-slate-changes-uptodate.png",
-  title: "Everything up-to-date",
+  title: "Everything is up-to-date",
   description:
     "You have no changes staged. Your changes appear here after you have saved them, while they're waiting to be pushed to the Page Builder. Ready to get going?",
 };
 
 // experiment variants content
 const experimentBlankSlateContent = {
-  img: "/blank-slate-push-success.png",
+  img: "/blank-slate-changes-uptodate.png",
   title: "Everything is up-to-date",
   description:
     "No changes are staged. Saved updates will appear here, ready to be pushed to the Page Builder.",
