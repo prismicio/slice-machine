@@ -55,7 +55,7 @@ const Changes: React.FunctionComponent = () => {
   const { autoSyncStatus } = useAutoSync();
   const router = useRouter();
   const [isPushed, setIsPushed] = useState(false);
-  const [isToastOpen, setIsToastOpen] = useState(true);
+  const [isToastOpen, setIsToastOpen] = useState(false);
   const { eligible: isPromptToCreateContentExperimentEligible } =
     usePromptToCreateContentExperiment();
   const { repositoryName } = useRepositoryInformation();
