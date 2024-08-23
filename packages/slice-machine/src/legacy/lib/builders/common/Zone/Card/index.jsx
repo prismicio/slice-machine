@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Box, Text } from "theme-ui";
 
@@ -24,6 +25,8 @@ const FieldZone = ({
   testId,
   isRepeatableCustomType,
 }) => {
+  const { lastItemRef } = useScrollIntoLastAddedItem(fields);
+
   return (
     <DragDropContext
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -118,7 +121,14 @@ const FieldZone = ({
                   );
                 }
 
-                return <ListItem {...props} HintElement={HintElement} />;
+                return (
+                  <ListItem
+                    {...props}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                    ref={index === fields.length - 1 ? lastItemRef : undefined}
+                    HintElement={HintElement}
+                  />
+                );
               })
             }
             {provided.placeholder}
@@ -128,5 +138,29 @@ const FieldZone = ({
     </DragDropContext>
   );
 };
+
+function useScrollIntoLastAddedItem(fields) {
+  const isReadyRef = useRef(false);
+  const lastFieldsRef = useRef([]);
+  const lastItemRef = useRef(null);
+
+  useEffect(() => {
+    if (isReadyRef.current) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (fields != null && fields.length > lastFieldsRef.current.length) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        lastItemRef.current?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [fields]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    lastFieldsRef.current = fields;
+    if (!isReadyRef.current) isReadyRef.current = true;
+  }, [fields]);
+
+  return { lastItemRef };
+}
 
 export default FieldZone;

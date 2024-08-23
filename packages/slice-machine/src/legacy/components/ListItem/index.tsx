@@ -1,5 +1,6 @@
+import { composeRefs } from "@prismicio/editor-support/React";
 import { Menu, MenuButton, MenuItem, MenuList } from "@reach/menu-button";
-import React, { Fragment } from "react";
+import React, { forwardRef, Fragment, Ref } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import { AiOutlineEdit } from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -37,22 +38,25 @@ interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   children: React.ReactNode;
 }
 
-function ListItem<F extends TabField, S extends AnyObjectSchema>({
-  item,
-  index,
-  deleteItem,
-  enterEditMode,
-  modelFieldName,
-  renderFieldAccessor,
-  HintElement,
-  CustomEditElement,
-  CustomEditElements,
-  widget,
-  draggableId,
-  testId,
-  isRepeatableCustomType,
-  children,
-}: ListItemProps<F, S>): JSX.Element {
+function ListItem<F extends TabField, S extends AnyObjectSchema>(
+  {
+    item,
+    index,
+    deleteItem,
+    enterEditMode,
+    modelFieldName,
+    renderFieldAccessor,
+    HintElement,
+    CustomEditElement,
+    CustomEditElements,
+    widget,
+    draggableId,
+    testId,
+    isRepeatableCustomType,
+    children,
+  }: ListItemProps<F, S>,
+  ref: Ref<HTMLDivElement>,
+): JSX.Element {
   const { theme } = useThemeUI();
   const {
     key,
@@ -67,7 +71,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
           <Fragment>
             <Li
               data-testid={testId}
-              ref={provided.innerRef}
+              ref={composeRefs(ref, provided.innerRef)}
               {...provided.draggableProps}
               Component={Box}
               sx={{
@@ -185,4 +189,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
   );
 }
 
-export default ListItem;
+const ForwardedRefListItem = forwardRef(ListItem);
+ForwardedRefListItem.displayName = "ListItem";
+
+export default ForwardedRefListItem;
