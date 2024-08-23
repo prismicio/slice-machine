@@ -21,7 +21,7 @@ export function LabelSlugToIdObserver() {
 
   useEffect(() => {
     if (isIdManualRef.current || label == null) return;
-    idHelpers.setValue(slugify(label));
+    idHelpers.setValue(slugify(label), false);
   }, [label]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
