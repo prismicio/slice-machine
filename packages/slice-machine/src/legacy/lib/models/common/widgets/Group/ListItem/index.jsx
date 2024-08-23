@@ -1,5 +1,5 @@
 import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { Box } from "theme-ui";
@@ -39,6 +39,7 @@ export const CustomListItem = ({
   HintElement,
   ...rest
 }) => {
+  const lastItemRef = useRef(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
@@ -62,11 +63,15 @@ export const CustomListItem = ({
       field: newField,
     });
 
-    saveItem({
-      apiId: groupItem.key,
-      newKey: groupItem.key,
-      value: Groups.toSM(newGroupValue),
+    flushSync(() => {
+      saveItem({
+        apiId: groupItem.key,
+        newKey: groupItem.key,
+        value: Groups.toSM(newGroupValue),
+      });
     });
+
+    lastItemRef.current?.scrollIntoView({ behavior: "smooth" });
 
     void telemetry.track({
       event: "field:added",
@@ -206,7 +211,7 @@ export const CustomListItem = ({
                   <ul ref={provided.innerRef} {...provided.droppableProps}>
                     {
                       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                      groupItem.value.config.fields.map((item, index) => {
+                      groupItem.value.config.fields.map((item, index, arr) => {
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                         const {
                           value: { config, type },
@@ -238,6 +243,8 @@ export const CustomListItem = ({
                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions
                           draggableId: `group-${groupItem.key}-${item.key}-${index}`,
                           testId: `list-item-group-${groupItem.key}-${item.key}`,
+                          ref:
+                            index === arr.length - 1 ? lastItemRef : undefined,
                         };
 
                         const HintElement = (

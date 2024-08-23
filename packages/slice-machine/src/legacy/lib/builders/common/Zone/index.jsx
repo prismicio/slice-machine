@@ -1,6 +1,7 @@
 import { Switch, Text } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
@@ -34,6 +35,7 @@ const Zone = ({
   isRepeatableCustomType,
   emptyStateHeading,
 }) => {
+  const lastListItemRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
@@ -127,6 +129,13 @@ const Zone = ({
     );
   }
 
+  const handleEditModalSave = (props) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return
+    flushSync(() => onSave(props));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    lastListItemRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <>
       <ListHeader
@@ -198,6 +207,8 @@ const Zone = ({
               testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               isRepeatableCustomType={isRepeatableCustomType}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              lastListItemRef={lastListItemRef}
             />
           </BaseStyles>
         ) : undefined
@@ -206,7 +217,7 @@ const Zone = ({
         data={editModalData}
         close={closeEditModal}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        onSave={onSave}
+        onSave={handleEditModalSave}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         fields={poolOfFieldsToCheck}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

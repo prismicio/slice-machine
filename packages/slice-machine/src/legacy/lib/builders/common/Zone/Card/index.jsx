@@ -7,7 +7,6 @@ import { Widgets } from "@/legacy/lib/models/common/widgets";
 
 import { findWidgetByConfigOrType } from "../../../utils";
 import Hint from "./components/Hints";
-import { useScrollIntoAddedListItem } from "./useScrollIntoAddedListItem";
 
 /** @param {{ fields: any[]; [key: string]: any }} */
 const FieldZone = ({
@@ -25,9 +24,8 @@ const FieldZone = ({
   isRepeatable,
   testId,
   isRepeatableCustomType,
+  lastListItemRef: lastItemRef,
 }) => {
-  const { lastItemRef } = useScrollIntoAddedListItem(fields);
-
   return (
     <DragDropContext
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -94,6 +92,8 @@ const FieldZone = ({
                   isRepeatableCustomType,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
                   testId: `list-item-${item.key}`,
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  ref: index === fields.length - 1 ? lastItemRef : undefined,
                 };
 
                 const HintElement = (
@@ -122,14 +122,7 @@ const FieldZone = ({
                   );
                 }
 
-                return (
-                  <ListItem
-                    {...props}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    ref={index === fields.length - 1 ? lastItemRef : undefined}
-                    HintElement={HintElement}
-                  />
-                );
+                return <ListItem {...props} HintElement={HintElement} />;
               })
             }
             {provided.placeholder}
