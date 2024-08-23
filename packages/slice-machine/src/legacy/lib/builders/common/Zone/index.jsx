@@ -8,10 +8,10 @@ import { ListHeader } from "@/components/List";
 import { fields as allFields } from "@/domain/fields";
 import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
 import { AddStaticFieldDropdown } from "@/features/builder/AddStaticFieldDropdown";
+import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 import Card from "./Card";
-import NewField from "./Card/components/NewField";
 import { ZoneEmptyState } from "./components/ZoneEmptyState";
 
 const Zone = ({
@@ -24,7 +24,6 @@ const Zone = ({
   widgetsArray /* Array of available widget fields */,
   isRepeatable /* should we wrap hints in map ? */,
   onDeleteItem /* user clicked on "Delete field" */,
-  onSaveNewField /* user clicked on "Save" (NewField) */,
   onDragEnd /* user dragged item to an end location */,
   EditModal /* temp */,
   onSave /* user clicked on "Save" (EditModal) */,
@@ -60,7 +59,6 @@ const Zone = ({
 
   const [showHints, setShowHints] = useState(false);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
-  const [newFieldData, setNewFieldData] = useState(null);
 
   /** @param {[string, import("@prismicio/types-internal/lib/customtypes").NestableWidget]} field */
   const enterEditMode = (field) => {
@@ -82,12 +80,15 @@ const Zone = ({
     setEditModalData({ isOpen: false });
   };
 
+  /** @param {keyof typeof Widgets} widgetTypeName */
   const onSelectFieldType = (widgetTypeName) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-    setNewFieldData({ widgetTypeName, fields });
+    /** `widgetTypeName` might have less keys than `Widgets`, but we lost track 
+    of the types because the `widgetsArray` is not typed and is also filtered into 
+    `widgetsArrayWithCondUid`. Although, it's safe to use it to index the `Widgets` 
+    as long as `widgetsArrayWithCondUid` is a subset of `widgetsArray`.*/
+    const field = Widgets[widgetTypeName].create("");
+    setEditModalData({ isOpen: true, field: ["", field] });
   };
-
-  const onCancelNewField = () => setNewFieldData(null);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const addFieldDropdownFields = widgetsArrayWithCondUid
@@ -105,7 +106,6 @@ const Zone = ({
     });
 
   const addFieldDropdownProps = {
-    disabled: newFieldData !== null,
     onSelectField: onSelectFieldType,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     fields: addFieldDropdownFields,
@@ -159,7 +159,7 @@ const Zone = ({
       </ListHeader>
       {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-        fields.length === 0 && !newFieldData && zoneType === "slice" ? (
+        fields.length === 0 && zoneType === "slice" ? (
           <ZoneEmptyState
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             zoneType={getResolvedZoneType(zoneType, zoneTypeFormat)}
@@ -169,7 +169,7 @@ const Zone = ({
             action={<AddFieldDropdown {...addFieldDropdownProps} />}
           />
         ) : // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
-        fields.length > 0 || newFieldData ? (
+        fields.length > 0 ? (
           <BaseStyles>
             <Card
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
@@ -198,22 +198,6 @@ const Zone = ({
               testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               isRepeatableCustomType={isRepeatableCustomType}
-              newField={
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                newFieldData && (
-                  <NewField
-                    {...newFieldData}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
-                    fields={poolOfFieldsToCheck || fields}
-                    onSave={(...args) => {
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                      onSaveNewField(...args);
-                      setNewFieldData(null);
-                    }}
-                    onCancelNewField={onCancelNewField}
-                  />
-                )
-              }
             />
           </BaseStyles>
         ) : undefined
@@ -237,7 +221,6 @@ Zone.propTypes = {
   title: string.isRequired,
   dataTip: string.isRequired,
   onSave: func.isRequired,
-  onSaveNewField: func.isRequired,
   onDragEnd: func.isRequired,
   onDeleteItem: func.isRequired,
   poolOfFieldsToCheck: arrayOf(shape({ key: string, value: object })),

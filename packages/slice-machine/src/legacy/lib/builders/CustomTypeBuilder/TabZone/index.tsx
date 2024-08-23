@@ -7,7 +7,6 @@ import {
 import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
-import type { AnyObjectSchema } from "yup";
 
 import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
@@ -68,6 +67,12 @@ interface TabZoneProps {
 
 type PoolOfFields = ReadonlyArray<{ key: string; value: TabField }>;
 
+type OnSaveFieldProps = {
+  apiId: string;
+  newKey: string;
+  value: TabField;
+};
+
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
@@ -98,23 +103,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
   };
 
-  const onSaveNewField = ({
-    id,
-    label,
-    widgetTypeName,
-  }: {
-    id: string;
-    label: string;
-    widgetTypeName: keyof typeof Widgets;
-  }) => {
-    if (ensureWidgetTypeExistence(Widgets, widgetTypeName)) {
-      return;
-    }
-    // @ts-expect-error We have to create a widget map or a service instead of using export name
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const widget: Widget<TabField, AnyObjectSchema> = Widgets[widgetTypeName];
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-    const field: TabField = widget.create(label);
+  const onSaveNewField = ({ apiId: id, value: field }: OnSaveFieldProps) => {
+    const label = field.config?.label;
+    if (ensureWidgetTypeExistence(Widgets, field.type) || label == null) return;
 
     if (
       field.type === "Range" ||
@@ -176,15 +167,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     flushSync(() => setCustomType(newCustomType));
   };
 
-  const onSave = ({
-    apiId: previousKey,
-    newKey,
-    value,
-  }: {
-    apiId: string;
-    newKey: string;
-    value: TabField;
-  }) => {
+  const onSave = ({ apiId: previousKey, newKey, value }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
@@ -200,6 +183,13 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     });
 
     setCustomType(newCustomType);
+  };
+
+  const onCreateOrSave = (props: OnSaveFieldProps) => {
+    if (props.apiId === "") {
+      return onSaveNewField({ ...props, apiId: props.newKey }); // create new
+    }
+    return onSave(props); // update existing
   };
 
   const onCreateSliceZone = () => {
@@ -250,8 +240,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
             EditModal={EditModal}
             widgetsArray={widgetsArray}
             onDeleteItem={onDeleteItem}
-            onSave={onSave}
-            onSaveNewField={onSaveNewField}
+            onSave={onCreateOrSave}
             onDragEnd={onDragEnd}
             renderHintBase={({ item }) =>
               // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access

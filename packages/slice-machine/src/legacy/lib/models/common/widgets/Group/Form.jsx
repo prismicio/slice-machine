@@ -3,12 +3,12 @@ import { Box, Checkbox, Label } from "theme-ui";
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
-import { DefaultFields } from "@/legacy/lib/forms/defaults";
+import { CommonDefaultFields } from "@/legacy/lib/forms/defaults";
 import { CheckBox } from "@/legacy/lib/forms/fields";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {
-  ...DefaultFields,
+  ...CommonDefaultFields,
   repeat: CheckBox("Repeatable", false, true),
 };
 
