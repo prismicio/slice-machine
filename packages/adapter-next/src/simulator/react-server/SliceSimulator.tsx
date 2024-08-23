@@ -13,8 +13,8 @@ import {
 import { compressToEncodedURIComponent } from "lz-string";
 
 import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
-import { revalidatePath } from "./actions";
 import { getSlices } from "./getSlices";
+import { useRouter } from "next/navigation";
 
 const STATE_PARAMS_KEY = "state";
 
@@ -42,7 +42,6 @@ const throttle =
 			}
 		};
 	};
-const throttledRevalidatePath = throttle(revalidatePath, 300);
 
 const simulatorManager = new SimulatorManager();
 
@@ -58,6 +57,12 @@ export const SliceSimulator = ({
 	className,
 }: SliceSimulatorProps): JSX.Element => {
 	const [message, setMessage] = React.useState(() => getDefaultMessage());
+	const router = useRouter();
+
+	const throttledRefreshPage = React.useCallback(
+		() => throttle(() => router.refresh(), 300),
+		[router],
+	);
 
 	const state =
 		typeof window !== "undefined"
@@ -76,11 +81,7 @@ export const SliceSimulator = ({
 				);
 				window.history.pushState(null, "", url);
 
-				// A 0 ms timeout is needed to prevent a bug
-				// where the path is revalidated before the URL
-				// is updated with the new state.
-				const path = window.location.pathname;
-				setTimeout(() => throttledRevalidatePath(path), 0);
+				throttledRefreshPage();
 			},
 			"simulator-slices",
 		);
