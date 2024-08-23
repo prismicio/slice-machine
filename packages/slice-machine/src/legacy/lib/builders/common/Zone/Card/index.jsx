@@ -1,4 +1,3 @@
-import { useEffect, useRef } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Box, Text } from "theme-ui";
 
@@ -8,7 +7,9 @@ import { Widgets } from "@/legacy/lib/models/common/widgets";
 
 import { findWidgetByConfigOrType } from "../../../utils";
 import Hint from "./components/Hints";
+import { useScrollIntoAddedListItem } from "./useScrollIntoAddedListItem";
 
+  /** @param {{ fields: any[]; [key: string]: any }} */
 const FieldZone = ({
   fields,
   title,
@@ -25,7 +26,7 @@ const FieldZone = ({
   testId,
   isRepeatableCustomType,
 }) => {
-  const { lastItemRef } = useScrollIntoLastAddedItem(fields);
+  const { lastItemRef } = useScrollIntoAddedListItem(fields);
 
   return (
     <DragDropContext
@@ -138,29 +139,5 @@ const FieldZone = ({
     </DragDropContext>
   );
 };
-
-function useScrollIntoLastAddedItem(fields) {
-  const isReadyRef = useRef(false);
-  const lastFieldsRef = useRef([]);
-  const lastItemRef = useRef(null);
-
-  useEffect(() => {
-    if (isReadyRef.current) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (fields != null && fields.length > lastFieldsRef.current.length) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        lastItemRef.current?.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  }, [fields]);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    lastFieldsRef.current = fields;
-    if (!isReadyRef.current) isReadyRef.current = true;
-  }, [fields]);
-
-  return { lastItemRef };
-}
 
 export default FieldZone;
