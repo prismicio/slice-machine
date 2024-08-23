@@ -66,15 +66,16 @@ const CustomListItemComponent = (
       field: newField,
     });
 
-    flushSync(() => {
-      saveItem({
-        apiId: groupItem.key,
-        newKey: groupItem.key,
-        value: Groups.toSM(newGroupValue),
-      });
+    saveItem({
+      apiId: groupItem.key,
+      newKey: groupItem.key,
+      value: Groups.toSM(newGroupValue),
     });
 
-    lastGroupItemRef.current?.scrollIntoView({ behavior: "smooth" });
+    lastGroupItemRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
 
     void telemetry.track({
       event: "field:added",
@@ -252,7 +253,7 @@ const CustomListItemComponent = (
                         };
 
                         if (index === fields.length - 1) {
-                          props.ref = lastGroupItemRef;
+                          props["ref"] = lastGroupItemRef;
                         }
 
                         const HintElement = (

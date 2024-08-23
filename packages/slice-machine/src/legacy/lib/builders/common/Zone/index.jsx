@@ -130,10 +130,17 @@ const Zone = ({
     );
   }
 
-  const handleEditModalSave = (props) => {
+  const handleSave = (props) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
     flushSync(() => onSave(props));
-    lastListItemRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleEditModalSave = (props) => {
+    handleSave(props);
+    lastListItemRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
   };
 
   return (
@@ -202,7 +209,7 @@ const Zone = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               onDeleteItem={onDeleteItem}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              onSave={onSave}
+              onSave={handleSave}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

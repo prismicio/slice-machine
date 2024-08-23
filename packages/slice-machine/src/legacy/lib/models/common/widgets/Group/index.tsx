@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { type DroppableStateSnapshot } from "react-beautiful-dnd";
 
 import { useNestedGroupExperiment } from "@/hooks/useNestedGroupExperiment";
@@ -50,20 +51,23 @@ export interface GroupListItemProps<F extends TabField> {
 
 const hintItemName = "item";
 
-const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
-  const nestedGroupExperiment = useNestedGroupExperiment();
-  const maybeFilteredWidgetsArray = nestedGroupExperiment.eligible
-    ? widgetsArray
-    : widgetsArray.filter((widget) => widget.CUSTOM_NAME !== "NestedGroup");
-  return (
-    <CustomListItem
-      Widgets={Widgets}
-      widgetsArray={maybeFilteredWidgetsArray}
-      hintBase={hintItemName}
-      {...props}
-    />
-  );
-};
+const GroupListItem = forwardRef<HTMLDivElement, GroupListItemProps<GroupSM>>(
+  (props, ref): JSX.Element => {
+    const nestedGroupExperiment = useNestedGroupExperiment();
+    const maybeFilteredWidgetsArray = nestedGroupExperiment.eligible
+      ? widgetsArray
+      : widgetsArray.filter((widget) => widget.CUSTOM_NAME !== "NestedGroup");
+    return (
+      <CustomListItem
+        ref={ref}
+        Widgets={Widgets}
+        widgetsArray={maybeFilteredWidgetsArray}
+        hintBase={hintItemName}
+        {...props}
+      />
+    );
+  },
+);
 
 export const GroupWidget = createGroupWidget({
   schemaTypeRegex: /^Group$/,
