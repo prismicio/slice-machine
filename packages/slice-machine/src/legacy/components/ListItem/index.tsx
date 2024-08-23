@@ -71,7 +71,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>(
           <Fragment>
             <Li
               data-testid={testId}
-              ref={composeRefs(ref, provided.innerRef)}
+              ref={composeRefs<HTMLDivElement>(ref, provided.innerRef)}
               {...provided.draggableProps}
               Component={Box}
               sx={{
