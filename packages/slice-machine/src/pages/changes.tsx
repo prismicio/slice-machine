@@ -1,4 +1,4 @@
-import { Box, Text, Toast } from "@prismicio/editor-ui";
+import { Box, Toast } from "@prismicio/editor-ui";
 import { PushChangesLimit } from "@slicemachine/manager";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -55,7 +55,7 @@ const Changes: React.FunctionComponent = () => {
   const { autoSyncStatus } = useAutoSync();
   const router = useRouter();
   const [isPushed, setIsPushed] = useState(false);
-  const [isToastOpen, setIsToastOpen] = useState(false);
+  const [isToastOpen, setIsToastOpen] = useState(true);
   const { eligible: isPromptToCreateContentExperimentEligible } =
     usePromptToCreateContentExperiment();
   const { repositoryName } = useRepositoryInformation();
@@ -185,17 +185,12 @@ const Changes: React.FunctionComponent = () => {
               }}
             />
             <Toast
-              anchor={<Box position="fixed" top={32} right={32} width={288} />} // 288 is a toast width, needed for the toast to be displayed with proper paddings
+              anchor={<Box position="fixed" top={32} right={32} width={322} />} // 322 is a toast width, needed for the toast to be displayed with proper paddings
               open={isToastOpen}
-              onOpenChange={setIsToastOpen}
               variant="card"
               seconds={20}
-              title={
-                <Box flexDirection="column" alignItems="flex-start" as="span">
-                  <Text variant="bold">Success! 🎉</Text>
-                  <Text>Your changes have been pushed.</Text>
-                </Box>
-              }
+              title="Success! 🎉"
+              subtitle="Your changes have been pushed."
               action={{
                 title: "Create content in the Page Builder",
                 onClick: () => {
@@ -208,6 +203,7 @@ const Changes: React.FunctionComponent = () => {
               cancel={{
                 onClick: () => setIsToastOpen(false),
               }}
+              onOpenChange={setIsToastOpen}
             />
           </AppLayoutActions>
         </AppLayoutHeader>
