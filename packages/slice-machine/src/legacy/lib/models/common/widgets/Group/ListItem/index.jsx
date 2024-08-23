@@ -1,5 +1,5 @@
 import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
-import { Fragment, useState } from "react";
+import { forwardRef, Fragment, useRef, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { Box } from "theme-ui";
@@ -23,22 +23,26 @@ import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
 
 /* eslint-disable */
-export const CustomListItem = ({
-  tabId,
-  widget,
-  Widgets,
-  widgetsArray,
-  hintBase,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  parentSnapshot,
-  showHints,
-  isRepeatable,
-  item: groupItem,
-  draggableId,
-  saveItem,
-  HintElement,
-  ...rest
-}) => {
+const CustomListItemComponent = (
+  {
+    tabId,
+    widget,
+    Widgets,
+    widgetsArray,
+    hintBase,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    parentSnapshot,
+    showHints,
+    isRepeatable,
+    item: groupItem,
+    draggableId,
+    saveItem,
+    HintElement,
+    ...rest
+  },
+  ref,
+) => {
+  const lastGroupItemRef = useRef(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
@@ -62,11 +66,15 @@ export const CustomListItem = ({
       field: newField,
     });
 
-    saveItem({
-      apiId: groupItem.key,
-      newKey: groupItem.key,
-      value: Groups.toSM(newGroupValue),
+    flushSync(() => {
+      saveItem({
+        apiId: groupItem.key,
+        newKey: groupItem.key,
+        value: Groups.toSM(newGroupValue),
+      });
     });
+
+    lastGroupItemRef.current?.scrollIntoView({ behavior: "smooth" });
 
     void telemetry.track({
       event: "field:added",
@@ -160,6 +168,8 @@ export const CustomListItem = ({
     });
   };
 
+  const { config } = groupItem.value;
+
   return (
     <Fragment>
       <ListItem
@@ -171,6 +181,7 @@ export const CustomListItem = ({
         draggableId={draggableId}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unused-vars, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
         {...rest}
+        ref={ref}
         HintElement={HintElement}
         CustomEditElements={[
           <AddFieldDropdown
@@ -206,7 +217,7 @@ export const CustomListItem = ({
                   <ul ref={provided.innerRef} {...provided.droppableProps}>
                     {
                       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                      groupItem.value.config.fields.map((item, index) => {
+                      config.fields.map((item, index, fields) => {
                         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                         const {
                           value: { config, type },
@@ -239,6 +250,10 @@ export const CustomListItem = ({
                           draggableId: `group-${groupItem.key}-${item.key}-${index}`,
                           testId: `list-item-group-${groupItem.key}-${item.key}`,
                         };
+
+                        if (index === fields.length - 1) {
+                          props.ref = lastGroupItemRef;
+                        }
 
                         const HintElement = (
                           <Hint
@@ -293,3 +308,5 @@ export const CustomListItem = ({
   );
 };
 /* eslint-enable */
+
+export const CustomListItem = forwardRef(CustomListItemComponent);
