@@ -7,9 +7,8 @@ import { Widgets } from "@/legacy/lib/models/common/widgets";
 
 import { findWidgetByConfigOrType } from "../../../utils";
 import Hint from "./components/Hints";
-import { useScrollIntoAddedListItem } from "./useScrollIntoAddedListItem";
 
-/** @param {{ fields: any[]; [key: string]: any }} */
+/** @param {{ fields: any[]; lastListItemRef?: React.Ref<HTMLDivElement>; [key: string]: any }} */
 const FieldZone = ({
   fields,
   title,
@@ -25,9 +24,8 @@ const FieldZone = ({
   isRepeatable,
   testId,
   isRepeatableCustomType,
+  lastListItemRef,
 }) => {
-  const { lastItemRef } = useScrollIntoAddedListItem(fields);
-
   return (
     <DragDropContext
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -125,8 +123,9 @@ const FieldZone = ({
                 return (
                   <ListItem
                     {...props}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    ref={index === fields.length - 1 ? lastItemRef : undefined}
+                    ref={
+                      index === fields.length - 1 ? lastListItemRef : undefined
+                    }
                     HintElement={HintElement}
                   />
                 );
