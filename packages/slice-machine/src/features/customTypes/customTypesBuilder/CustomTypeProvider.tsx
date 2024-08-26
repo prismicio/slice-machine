@@ -20,7 +20,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 type CustomTypeContext = {
   customType: CustomType;
   actionQueueStatus: ActionQueueStatus;
-  setCustomType: (customType: CustomType) => Promise<void>;
+  setCustomType: (customType: CustomType) => Promise<{ error?: Error }>;
 };
 
 type CustomTypeProviderProps = {
@@ -47,7 +47,7 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
   const setCustomType = useCallback(
     (customType: CustomType) => {
-      return new Promise<void>((resolve) => {
+      return new Promise<{ error?: Error }>((resolve) => {
         setCustomTypeState(customType);
         setNextAction(async () => {
           const { errors } = await updateCustomType(customType);
@@ -59,8 +59,8 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
           // Update available custom types store with new custom type
           stableSaveCustomTypeSuccess(customType);
 
-          await syncChanges();
-          resolve();
+          const { error } = await syncChanges();
+          resolve({ error });
         });
       });
     },

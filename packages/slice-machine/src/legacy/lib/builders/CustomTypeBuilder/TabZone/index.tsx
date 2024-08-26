@@ -134,8 +134,8 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    await setCustomType(newCustomType);
-    toast.success("Field created");
+    const { error } = await setCustomType(newCustomType);
+    if (!error) toast.success("Field created");
 
     void telemetry.track({
       event: "field:added",

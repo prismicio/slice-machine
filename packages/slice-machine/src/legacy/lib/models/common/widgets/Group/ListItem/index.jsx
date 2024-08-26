@@ -63,11 +63,12 @@ export const CustomListItem = ({
       field: newField,
     });
 
-    saveItem({
+    const { error } = saveItem({
       apiId: groupItem.key,
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
     });
+    if (!error) toast.success("Field created");
 
     void telemetry.track({
       event: "field:added",
@@ -97,7 +98,6 @@ export const CustomListItem = ({
   const onCreateOrSave = (props) => {
     if (props.apiId === "") {
       onSaveNewField({ ...props, apiId: props.newKey }); // create new
-      toast.success("Field created");
     } else {
       onSaveField(props); // update existing
     }

@@ -42,7 +42,7 @@ export type AutoSyncStatus =
 
 type AutoSyncContext = {
   autoSyncStatus: AutoSyncStatus;
-  syncChanges: (args?: SyncChangesArgs) => void | Promise<void>;
+  syncChanges: (args?: SyncChangesArgs) => Promise<{ error?: Error }>;
 };
 
 type SyncChangesArgs = {
@@ -50,7 +50,6 @@ type SyncChangesArgs = {
   loggedIn?: boolean;
   changedCustomTypes?: ChangedCustomType[];
   changedSlices?: ChangedSlice[];
-  callback?: () => void;
 };
 
 const AutoSyncContextValue = createContext<AutoSyncContext | undefined>(
@@ -73,8 +72,8 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
   });
 
   const syncChanges = useCallback(
-    (args: SyncChangesArgs = {}): Promise<void> => {
-      return new Promise<void>((resolve, reject) => {
+    (args: SyncChangesArgs = {}) => {
+      return new Promise<{ error?: Error }>((resolve) => {
         const {
           // We default to the active environment if not provided.
           // This is useful when we want to sync changes right after an environment switch.
@@ -86,7 +85,7 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
         } = args;
 
         if (!loggedIn || environment?.kind !== "dev") {
-          resolve?.();
+          resolve?.({ error: undefined });
           return;
         }
 
@@ -135,7 +134,7 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
 
             // Update last sync value in local storage
             stablePushChangesSuccess();
-            resolve?.();
+            resolve?.({ error: undefined });
           } catch (error) {
             if (isUnauthenticatedError(error)) {
               // If the user is not authenticated, we don't want to let the user
@@ -143,12 +142,12 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
               // know that they need to login again.
               // This can easily happen if the the token expires when the user is
               // offline.
+              resolve?.({ error: error as Error });
               return;
             }
 
             // If the sync failed, we want to display the error message with
             // the retry button.
-            reject?.(error);
             throw error;
           }
         });
@@ -217,7 +216,7 @@ export function useAutoSync(): AutoSyncContext {
   // Prevent introducing a lot of implementation details from redux in tests
   if (process.env.NODE_ENV === "test") {
     return {
-      syncChanges: () => Promise.resolve(),
+      syncChanges: () => Promise.resolve({ error: undefined }),
       autoSyncStatus: "not-active",
     };
   }

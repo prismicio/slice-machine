@@ -150,8 +150,8 @@ const FieldZones: FC = () => {
         newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
     });
 
-    await setSlice(newSlice);
-    toast.success("Field created");
+    const { error } = await setSlice(newSlice);
+    if (!error) toast.success("Field created");
 
     void telemetry.track({
       event: "field:added",
