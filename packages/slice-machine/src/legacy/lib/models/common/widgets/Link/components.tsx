@@ -8,6 +8,7 @@ type DisplayTextModel = { type: string };
 
 interface DisplayTextCheckboxProps {
   text?: DisplayTextModel;
+  height?: 130 | 127;
   setFieldValue: (
     a: string,
     b?: DisplayTextModel,
@@ -16,7 +17,7 @@ interface DisplayTextCheckboxProps {
 }
 
 export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
-  const { text, setFieldValue } = props;
+  const { text, height = 130, setFieldValue } = props;
 
   const [allowDisplayText, setAllowDisplayText] = useState(Boolean(text));
 
@@ -34,7 +35,7 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
         sx={{
           mt: 2,
           alignItems: "center",
-          height: "130%",
+          height: `${height}%`,
         }}
       >
         <Label variant="label.border">

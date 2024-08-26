@@ -1,3 +1,5 @@
+import { Box, Label } from "theme-ui";
+
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
@@ -25,7 +27,7 @@ const Form = (props) => {
     <FlexGrid>
       {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        Object.entries(FormFields).map(([key, field]) => (
+        Object.entries(DefaultFields).map(([key, field]) => (
           <Col key={key}>
             <WidgetFormField
               fieldName={createFieldNameFromKey(key)}
@@ -39,8 +41,38 @@ const Form = (props) => {
           </Col>
         ))
       }
-      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <DisplayTextCheckbox text={text} setFieldValue={setFieldValue} />
+      <Col />
+      <Col key="allowTargetBlank">
+        <Box sx={{ mt: 2 }}>
+          <Label
+            htmlFor="allowTargetBlank"
+            variant="label.primary"
+            sx={{
+              // mt: 1,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            Link properties
+          </Label>
+          <WidgetFormField
+            fieldName={createFieldNameFromKey("allowTargetBlank")}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            formField={CheckBox("Allow target blank", false, false)}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            fields={fields}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            initialValues={initialValues}
+          />
+        </Box>
+      </Col>
+      <DisplayTextCheckbox
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        text={text}
+        height={127}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        setFieldValue={setFieldValue}
+      />
     </FlexGrid>
   );
 };
