@@ -42,7 +42,7 @@ export type AutoSyncStatus =
 
 type AutoSyncContext = {
   autoSyncStatus: AutoSyncStatus;
-  syncChanges: (args?: SyncChangesArgs) => void | Promise<void>;
+  syncChanges: (args?: SyncChangesArgs) => Promise<void>;
 };
 
 type SyncChangesArgs = {
@@ -50,7 +50,6 @@ type SyncChangesArgs = {
   loggedIn?: boolean;
   changedCustomTypes?: ChangedCustomType[];
   changedSlices?: ChangedSlice[];
-  callback?: () => void;
 };
 
 const AutoSyncContextValue = createContext<AutoSyncContext | undefined>(
@@ -143,12 +142,12 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
               // know that they need to login again.
               // This can easily happen if the the token expires when the user is
               // offline.
+              reject?.(error);
               return;
             }
 
             // If the sync failed, we want to display the error message with
             // the retry button.
-            reject?.(error);
             throw error;
           }
         });
