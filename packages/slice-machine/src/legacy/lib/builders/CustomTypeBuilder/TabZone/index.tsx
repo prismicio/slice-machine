@@ -21,6 +21,7 @@ import {
 } from "@/domain/customType";
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { useOnSaveWithSuccessOnNewFieldSync } from "@/legacy/lib/builders/common/useOnSaveWithSuccessOnNewField";
 import {
   CustomTypes,
   type TabField,
@@ -74,7 +75,8 @@ type OnSaveFieldProps = {
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
-  const { customType, setCustomType } = useCustomTypeState();
+  const { customType, setCustomType, actionQueueStatus } = useCustomTypeState();
+
   const customTypeSM = CustomTypes.toSM(customType);
   const sliceZone = customTypeSM.tabs.find((tab) => tab.key === tabId)
     ?.sliceZone;
@@ -93,6 +95,12 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     [],
   );
 
+  const saveNewFieldAndDisplaySuccess = useOnSaveWithSuccessOnNewFieldSync(
+    onSaveNewField,
+    fields,
+    actionQueueStatus,
+  );
+
   const onDeleteItem = (fieldId: string) => {
     const newCustomType = deleteField({
       customType,
@@ -103,7 +111,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
   };
 
-  const onSaveNewField = ({ apiId: id, value: field }: OnSaveFieldProps) => {
+  function onSaveNewField({ apiId: id, value: field }: OnSaveFieldProps) {
     const label = field.config?.label;
     if (ensureWidgetTypeExistence(Widgets, field.type) || label == null) return;
 
@@ -142,7 +150,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
     });
-  };
+  }
 
   const onDragEnd = (result: DropResult) => {
     if (ensureDnDDestination(result)) {
@@ -187,7 +195,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {
     if (props.apiId === "") {
-      return onSaveNewField({ ...props, apiId: props.newKey }); // create new
+      return saveNewFieldAndDisplaySuccess({ ...props, apiId: props.newKey }); // create new
     }
     return onSave(props); // update existing
   };

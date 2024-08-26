@@ -26,6 +26,7 @@ import {
 } from "@/domain/slice";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
+import { useOnSaveWithSuccessOnNewFieldSync } from "@/legacy/lib/builders/common/useOnSaveWithSuccessOnNewField";
 import Zone from "@/legacy/lib/builders/common/Zone";
 import { Groups } from "@/legacy/lib/models/common/Group";
 import {
@@ -71,7 +72,14 @@ type OnSaveFieldProps = {
 };
 
 const FieldZones: FC = () => {
-  const { slice, setSlice, variation } = useSliceState();
+  const { slice, setSlice, variation, actionQueueStatus } = useSliceState();
+  const { primary: staticFields, items: slices } = variation;
+
+  const saveNewFieldAndDisplaySuccess = useOnSaveWithSuccessOnNewFieldSync(
+    onSaveNewField,
+    staticFields,
+    actionQueueStatus,
+  );
   const [
     isDeleteRepeatableZoneDialogOpen,
     setIsDeleteRepeatableZoneDialogOpen,
@@ -102,7 +110,7 @@ const FieldZones: FC = () => {
     setSlice(newSlice);
   };
 
-  const _onSave = (
+  const onSave = (
     widgetArea: WidgetsArea,
     { apiId: previousKey, newKey, value }: OnSaveFieldProps,
   ) => {
@@ -118,10 +126,10 @@ const FieldZones: FC = () => {
     setSlice(newSlice);
   };
 
-  const _onSaveNewField = (
+  function onSaveNewField(
     widgetArea: WidgetsArea,
     { apiId: id, value: newField }: OnSaveFieldProps,
-  ) => {
+  ) {
     const { type: widgetTypeName, config } = newField;
     const label = config?.label ?? "";
 
@@ -159,14 +167,17 @@ const FieldZones: FC = () => {
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
     });
-  };
+  }
 
   const _onCreateOrSave = (widgetArea: WidgetsArea) => {
     return (props: OnSaveFieldProps) => {
       if (props.apiId === "") {
-        return _onSaveNewField(widgetArea, { ...props, apiId: props.newKey }); // create new
+        return saveNewFieldAndDisplaySuccess(widgetArea, {
+          ...props,
+          apiId: props.newKey,
+        }); // create new
       }
-      return _onSave(widgetArea, props); // update existing
+      return onSave(widgetArea, props); // update existing
     };
   };
 
@@ -208,7 +219,7 @@ const FieldZones: FC = () => {
         title="Fields"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        fields={variation.primary}
+        fields={staticFields}
         EditModal={EditModal}
         widgetsArray={primaryWidgetsArray}
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
@@ -238,7 +249,7 @@ const FieldZones: FC = () => {
           dataTip={dataTipText2}
           widgetsArray={itemsWidgetsArray}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          fields={variation.items}
+          fields={slices}
           EditModal={EditModal}
           onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
           onSave={_onCreateOrSave(WidgetsArea.Items)}
