@@ -7,6 +7,7 @@ import {
 import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
+import { toast } from "react-toastify";
 
 import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
@@ -21,7 +22,6 @@ import {
 } from "@/domain/customType";
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { useOnSaveWithSuccessOnNewFieldSync } from "@/legacy/lib/builders/common/useOnSaveWithSuccessOnNewField";
 import {
   CustomTypes,
   type TabField,
@@ -75,7 +75,7 @@ type OnSaveFieldProps = {
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
-  const { customType, setCustomType, actionQueueStatus } = useCustomTypeState();
+  const { customType, setCustomType } = useCustomTypeState();
 
   const customTypeSM = CustomTypes.toSM(customType);
   const sliceZone = customTypeSM.tabs.find((tab) => tab.key === tabId)
@@ -93,12 +93,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       return [...acc, ...curr.value];
     },
     [],
-  );
-
-  const saveNewFieldAndDisplaySuccess = useOnSaveWithSuccessOnNewFieldSync(
-    onSaveNewField,
-    fields,
-    actionQueueStatus,
   );
 
   const onDeleteItem = (fieldId: string) => {
@@ -140,7 +134,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType);
+    setCustomType(newCustomType, () => toast.success("Field created"));
 
     void telemetry.track({
       event: "field:added",
@@ -195,7 +189,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {
     if (props.apiId === "") {
-      return saveNewFieldAndDisplaySuccess({ ...props, apiId: props.newKey }); // create new
+      return onSaveNewField({ ...props, apiId: props.newKey }); // create new
     }
     return onSave(props); // update existing
   };

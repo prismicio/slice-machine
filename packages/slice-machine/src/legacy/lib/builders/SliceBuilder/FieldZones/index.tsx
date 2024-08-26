@@ -14,6 +14,7 @@ import {
 import { FC, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
+import { toast } from "react-toastify";
 
 import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
@@ -26,7 +27,6 @@ import {
 } from "@/domain/slice";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
-import { useOnSaveWithSuccessOnNewFieldSync } from "@/legacy/lib/builders/common/useOnSaveWithSuccessOnNewField";
 import Zone from "@/legacy/lib/builders/common/Zone";
 import { Groups } from "@/legacy/lib/models/common/Group";
 import {
@@ -72,14 +72,7 @@ type OnSaveFieldProps = {
 };
 
 const FieldZones: FC = () => {
-  const { slice, setSlice, variation, actionQueueStatus } = useSliceState();
-  const { primary: staticFields, items: slices } = variation;
-
-  const saveNewFieldAndDisplaySuccess = useOnSaveWithSuccessOnNewFieldSync(
-    onSaveNewField,
-    staticFields,
-    actionQueueStatus,
-  );
+  const { slice, setSlice, variation } = useSliceState();
   const [
     isDeleteRepeatableZoneDialogOpen,
     setIsDeleteRepeatableZoneDialogOpen,
@@ -157,7 +150,7 @@ const FieldZones: FC = () => {
         newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
     });
 
-    setSlice(newSlice);
+    setSlice(newSlice, () => toast.success("Field created"));
 
     void telemetry.track({
       event: "field:added",
@@ -172,10 +165,7 @@ const FieldZones: FC = () => {
   const _onCreateOrSave = (widgetArea: WidgetsArea) => {
     return (props: OnSaveFieldProps) => {
       if (props.apiId === "") {
-        return saveNewFieldAndDisplaySuccess(widgetArea, {
-          ...props,
-          apiId: props.newKey,
-        }); // create new
+        return onSaveNewField(widgetArea, { ...props, apiId: props.newKey }); // create new
       }
       return onSave(widgetArea, props); // update existing
     };
@@ -219,7 +209,7 @@ const FieldZones: FC = () => {
         title="Fields"
         dataTip={dataTipText}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        fields={staticFields}
+        fields={variation.primary}
         EditModal={EditModal}
         widgetsArray={primaryWidgetsArray}
         onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
@@ -249,7 +239,7 @@ const FieldZones: FC = () => {
           dataTip={dataTipText2}
           widgetsArray={itemsWidgetsArray}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          fields={slices}
+          fields={variation.items}
           EditModal={EditModal}
           onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
           onSave={_onCreateOrSave(WidgetsArea.Items)}
