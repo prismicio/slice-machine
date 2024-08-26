@@ -296,9 +296,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices,
             });
-            setCustomType(CustomTypes.fromSM(newCustomType));
+            setCustomType(CustomTypes.fromSM(newCustomType), () => {
+              toast.success("Slice(s) added to slice zone");
+            });
             closeUpdateSliceZoneModal();
-            toast.success("Slice(s) added to slice zone");
           }}
           close={closeUpdateSliceZoneModal}
         />
@@ -314,14 +315,15 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices,
             });
-            setCustomType(CustomTypes.fromSM(newCustomType));
+            setCustomType(CustomTypes.fromSM(newCustomType), () => {
+              toast.success(
+                <ToastMessageWithPath
+                  message="Slice template(s) added to slice zone and created at: "
+                  path={`${localLibraries[0].name}/`}
+                />,
+              );
+            });
             closeSlicesTemplatesModal();
-            toast.success(
-              <ToastMessageWithPath
-                message="Slice template(s) added to slice zone and created at: "
-                path={`${localLibraries[0].name}/`}
-              />,
-            );
           }}
           close={closeSlicesTemplatesModal}
         />
@@ -345,14 +347,15 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices: [newSlice],
             });
-            setCustomType(CustomTypes.fromSM(newCustomType));
+            setCustomType(CustomTypes.fromSM(newCustomType), () => {
+              toast.success(
+                <ToastMessageWithPath
+                  message="New slice added to slice zone and created at: "
+                  path={`${localLibraries[0].name}/`}
+                />,
+              );
+            });
             closeCreateSliceModal();
-            toast.success(
-              <ToastMessageWithPath
-                message="New slice added to slice zone and created at: "
-                path={`${localLibraries[0].name}/`}
-              />,
-            );
           }}
           localLibraries={localLibraries}
           remoteSlices={remoteSlices}

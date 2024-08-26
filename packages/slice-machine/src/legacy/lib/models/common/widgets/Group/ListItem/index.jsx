@@ -2,7 +2,6 @@ import { GroupFieldType } from "@prismicio/types-internal/lib/customtypes/widget
 import { Fragment, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
-import { toast } from "react-toastify";
 import { Box } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
@@ -96,11 +95,9 @@ export const CustomListItem = ({
 
   const onCreateOrSave = (props) => {
     if (props.apiId === "") {
-      onSaveNewField({ ...props, apiId: props.newKey }); // create new
-      toast.success("Field added");
-    } else {
-      onSaveField(props); // update existing
+      return onSaveNewField({ ...props, apiId: props.newKey }); // create new
     }
+    return onSaveField(props); // update existing
   };
 
   const onDragEnd = (result) => {
