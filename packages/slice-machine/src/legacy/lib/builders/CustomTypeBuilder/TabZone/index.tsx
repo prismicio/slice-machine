@@ -102,10 +102,10 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType);
+    void setCustomType(newCustomType);
   };
 
-  function onSaveNewField({ apiId: id, value: field }: OnSaveFieldProps) {
+  async function onSaveNewField({ apiId: id, value: field }: OnSaveFieldProps) {
     const label = field.config?.label;
     if (ensureWidgetTypeExistence(Widgets, field.type) || label == null) return;
 
@@ -134,7 +134,8 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType, () => toast.success("Field created"));
+    await setCustomType(newCustomType);
+    toast.success("Field created");
 
     void telemetry.track({
       event: "field:added",
@@ -166,7 +167,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
     // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
     // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
-    flushSync(() => setCustomType(newCustomType));
+    flushSync(() => void setCustomType(newCustomType));
   };
 
   const onSave = ({ apiId: previousKey, newKey, value }: OnSaveFieldProps) => {
@@ -184,7 +185,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType);
+    void setCustomType(newCustomType);
   };
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {
@@ -197,13 +198,13 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const onCreateSliceZone = () => {
     const newCustomType = createSectionSliceZone(customType, tabId);
 
-    setCustomType(newCustomType);
+    void setCustomType(newCustomType);
   };
 
   const onDeleteSliceZone = () => {
     const newCustomType = deleteSectionSliceZone(customType, tabId);
 
-    setCustomType(newCustomType);
+    void setCustomType(newCustomType);
   };
 
   const onRemoveSharedSlice = (sliceId: string) => {
@@ -213,7 +214,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sliceId,
     });
 
-    setCustomType(newCustomType);
+    void setCustomType(newCustomType);
   };
 
   return (

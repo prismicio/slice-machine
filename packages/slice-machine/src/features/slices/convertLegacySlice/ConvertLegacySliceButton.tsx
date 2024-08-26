@@ -148,7 +148,7 @@ export const ConvertLegacySliceButton: FC<ConvertLegacySliceButtonProps> = ({
         break;
     }
 
-    setCustomType(customType);
+    void setCustomType(customType);
   };
 
   const formProps = {

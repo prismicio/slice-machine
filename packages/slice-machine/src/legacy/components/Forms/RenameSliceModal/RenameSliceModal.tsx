@@ -41,7 +41,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
         newSliceName: values.sliceName,
         onSuccess: (renamedSlice) => {
           renameSliceSuccess(renamedSlice.from, renamedSlice.model);
-          syncChanges();
+          void syncChanges();
         },
       });
 

@@ -104,7 +104,7 @@ const LoginModal: React.FunctionComponent = () => {
         activeEnvironment?.kind === "dev" &&
         (changedCustomTypes.length > 0 || changedSlices.length > 0)
       ) {
-        syncChanges({
+        void syncChanges({
           environment: activeEnvironment,
           loggedIn: true,
           changedCustomTypes,

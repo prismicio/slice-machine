@@ -296,7 +296,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices,
             });
-            setCustomType(CustomTypes.fromSM(newCustomType));
+            void setCustomType(CustomTypes.fromSM(newCustomType));
             closeUpdateSliceZoneModal();
             toast.success("Slice(s) added to slice zone");
           }}
@@ -314,7 +314,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices,
             });
-            setCustomType(CustomTypes.fromSM(newCustomType));
+            void setCustomType(CustomTypes.fromSM(newCustomType));
             closeSlicesTemplatesModal();
             toast.success(
               <ToastMessageWithPath
@@ -345,7 +345,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices: [newSlice],
             });
-            setCustomType(CustomTypes.fromSM(newCustomType));
+            void setCustomType(CustomTypes.fromSM(newCustomType));
             closeCreateSliceModal();
             toast.success(
               <ToastMessageWithPath

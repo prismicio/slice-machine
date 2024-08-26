@@ -34,7 +34,7 @@ export const DeleteSliceModal: React.FunctionComponent<
       libraryID: libName,
       onSuccess: () => {
         deleteSliceSuccess(sliceId, libName);
-        syncChanges();
+        void syncChanges();
       },
     });
 
