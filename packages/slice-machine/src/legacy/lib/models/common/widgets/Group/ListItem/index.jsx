@@ -97,7 +97,7 @@ export const CustomListItem = ({
   const onCreateOrSave = (props) => {
     if (props.apiId === "") {
       onSaveNewField({ ...props, apiId: props.newKey }); // create new
-      toast.success("Field created");
+      toast.success("Field added");
     } else {
       onSaveField(props); // update existing
     }
