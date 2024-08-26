@@ -1,6 +1,7 @@
 import { Switch, Text } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
@@ -127,6 +128,12 @@ const Zone = ({
     );
   }
 
+  const onCreateSave = (field) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+    onSave(field);
+    toast.success("Field created!");
+  };
+
   return (
     <>
       <ListHeader
@@ -206,7 +213,7 @@ const Zone = ({
         data={editModalData}
         close={closeEditModal}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        onSave={onSave}
+        onSave={onCreateSave}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         fields={poolOfFieldsToCheck}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
