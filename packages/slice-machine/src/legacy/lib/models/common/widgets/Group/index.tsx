@@ -40,10 +40,12 @@ export interface GroupListItemProps<F extends TabField> {
     apiId,
     newKey,
     value,
+    isNewField,
   }: {
     apiId: string;
     newKey: string;
     value: F;
+    isNewField?: boolean;
   }) => void;
   HintElement: JSX.Element;
 }
