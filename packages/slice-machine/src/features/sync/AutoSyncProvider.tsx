@@ -50,6 +50,7 @@ type SyncChangesArgs = {
   loggedIn?: boolean;
   changedCustomTypes?: ChangedCustomType[];
   changedSlices?: ChangedSlice[];
+  callback?: () => void;
 };
 
 const AutoSyncContextValue = createContext<AutoSyncContext | undefined>(
@@ -81,9 +82,11 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
         // We default to a full user logged in with internet access if not provider.
         // This is useful when we want to sync changes right after the user logs in.
         loggedIn = isOnline && authStatus === AuthStatus.AUTHORIZED,
+        callback,
       } = args;
 
       if (!loggedIn || environment?.kind !== "dev") {
+        callback?.();
         return;
       }
 
@@ -131,6 +134,7 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
 
           // Update last sync value in local storage
           stablePushChangesSuccess();
+          callback?.();
         } catch (error) {
           if (isUnauthenticatedError(error)) {
             // If the user is not authenticated, we don't want to let the user
