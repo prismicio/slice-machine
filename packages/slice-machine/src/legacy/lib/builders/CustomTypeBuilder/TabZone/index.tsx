@@ -72,6 +72,7 @@ type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
   value: TabField;
+  isNewField?: boolean;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -169,7 +170,12 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     flushSync(() => setCustomType(newCustomType));
   };
 
-  const onSave = ({ apiId: previousKey, newKey, value }: OnSaveFieldProps) => {
+  const onSave = ({
+    apiId: previousKey,
+    newKey,
+    value,
+    isNewField,
+  }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
@@ -184,7 +190,11 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType);
+    setCustomType(newCustomType, () => {
+      if (isNewField === true) {
+        toast.success("Field added");
+      }
+    });
   };
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {

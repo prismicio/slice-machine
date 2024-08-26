@@ -50,7 +50,6 @@ type SyncChangesArgs = {
   loggedIn?: boolean;
   changedCustomTypes?: ChangedCustomType[];
   changedSlices?: ChangedSlice[];
-  callback?: () => void;
 };
 
 const AutoSyncContextValue = createContext<AutoSyncContext | undefined>(
@@ -68,6 +67,9 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
   const { activeEnvironment } = useActiveEnvironment();
   const { setNextAction, actionQueueStatus } = useActionQueue({
     actionQueueStatusDelay: 0,
+    // TODO: Fix if we release auto-sync (without feature flag)
+    // When we're creating a new field or adding a slice, the success toast will
+    // prevent the error toast to be visible.
     errorMessage:
       "Failed to sync changes. Check your browser's console for more information.",
   });
@@ -82,11 +84,9 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
         // We default to a full user logged in with internet access if not provider.
         // This is useful when we want to sync changes right after the user logs in.
         loggedIn = isOnline && authStatus === AuthStatus.AUTHORIZED,
-        callback,
       } = args;
 
       if (!loggedIn || environment?.kind !== "dev") {
-        callback?.();
         return;
       }
 
@@ -134,7 +134,6 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
 
           // Update last sync value in local storage
           stablePushChangesSuccess();
-          callback?.();
         } catch (error) {
           if (isUnauthenticatedError(error)) {
             // If the user is not authenticated, we don't want to let the user

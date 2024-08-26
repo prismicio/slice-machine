@@ -69,6 +69,7 @@ type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
   value: SlicePrimaryFieldSM;
+  isNewField?: boolean;
 };
 
 const FieldZones: FC = () => {
@@ -105,7 +106,7 @@ const FieldZones: FC = () => {
 
   const onSave = (
     widgetArea: WidgetsArea,
-    { apiId: previousKey, newKey, value }: OnSaveFieldProps,
+    { apiId: previousKey, newKey, value, isNewField }: OnSaveFieldProps,
   ) => {
     const newSlice = updateField({
       slice,
@@ -116,7 +117,11 @@ const FieldZones: FC = () => {
       newField: value as SlicePrimaryWidget,
     });
 
-    setSlice(newSlice);
+    setSlice(newSlice, () => {
+      if (isNewField === true) {
+        toast.success("Field added");
+      }
+    });
   };
 
   function onSaveNewField(
@@ -164,6 +169,7 @@ const FieldZones: FC = () => {
 
   const _onCreateOrSave = (widgetArea: WidgetsArea) => {
     return (props: OnSaveFieldProps) => {
+      console.log({ props });
       if (props.apiId === "") {
         return onSaveNewField(widgetArea, { ...props, apiId: props.newKey }); // create new
       }
