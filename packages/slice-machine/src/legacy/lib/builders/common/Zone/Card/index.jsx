@@ -8,7 +8,6 @@ import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { findWidgetByConfigOrType } from "../../../utils";
 import Hint from "./components/Hints";
 
-/** @param {{ fields: any[]; lastListItemRef?: React.Ref<HTMLDivElement>; [key: string]: any }} */
 const FieldZone = ({
   fields,
   title,
@@ -24,7 +23,6 @@ const FieldZone = ({
   isRepeatable,
   testId,
   isRepeatableCustomType,
-  lastListItemRef,
 }) => {
   return (
     <DragDropContext
@@ -93,10 +91,6 @@ const FieldZone = ({
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
                   testId: `list-item-${item.key}`,
                 };
-
-                if (index === fields.length - 1) {
-                  props.ref = lastListItemRef;
-                }
 
                 const HintElement = (
                   <Hint

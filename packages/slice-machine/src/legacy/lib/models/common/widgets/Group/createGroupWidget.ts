@@ -1,4 +1,3 @@
-import { FC } from "react";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import * as yup from "yup";
 
@@ -32,8 +31,7 @@ export type SchemaType = ReturnType<typeof createSchema>;
 
 type CreateGroupWidgetArgsBase<T extends TabField> = {
   schemaTypeRegex: RegExp;
-  // function component or function component with forwardRef
-  customListItem: FC<GroupListItemProps<T>>;
+  customListItem: (props: GroupListItemProps<T>) => JSX.Element;
   hintItemName: string;
   customName?: string;
 };

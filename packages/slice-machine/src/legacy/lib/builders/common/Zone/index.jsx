@@ -1,7 +1,6 @@
 import { Switch, Text } from "@prismicio/editor-ui";
 import { array, arrayOf, bool, func, object, shape, string } from "prop-types";
-import { useRef, useState } from "react";
-import { flushSync } from "react-dom";
+import { useState } from "react";
 import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
@@ -35,8 +34,6 @@ const Zone = ({
   isRepeatableCustomType,
   emptyStateHeading,
 }) => {
-  /** @type {React.MutableRefObject<HTMLDivElement>} */
-  const lastListItemRef = useRef(null);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const widgetsArrayWithCondUid = (() => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
@@ -130,19 +127,6 @@ const Zone = ({
     );
   }
 
-  const handleSave = (props) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
-    flushSync(() => onSave(props));
-  };
-
-  const handleEditModalSave = (props) => {
-    handleSave(props);
-    lastListItemRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-  };
-
   return (
     <>
       <ListHeader
@@ -209,13 +193,11 @@ const Zone = ({
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               onDeleteItem={onDeleteItem}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              onSave={handleSave}
+              onSave={onSave}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               testId={testId}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               isRepeatableCustomType={isRepeatableCustomType}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              lastListItemRef={lastListItemRef}
             />
           </BaseStyles>
         ) : undefined
@@ -224,7 +206,7 @@ const Zone = ({
         data={editModalData}
         close={closeEditModal}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        onSave={handleEditModalSave}
+        onSave={onSave}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
         fields={poolOfFieldsToCheck}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
