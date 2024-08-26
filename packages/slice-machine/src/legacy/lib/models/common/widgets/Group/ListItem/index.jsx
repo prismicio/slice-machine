@@ -66,7 +66,7 @@ export const CustomListItem = ({
       apiId: groupItem.key,
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
-      isNewField: true,
+      isNewGroupField: true,
     });
 
     void telemetry.track({

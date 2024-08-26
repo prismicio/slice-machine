@@ -72,7 +72,7 @@ type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
   value: TabField;
-  isNewField?: boolean;
+  isNewGroupField?: boolean;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -174,7 +174,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     apiId: previousKey,
     newKey,
     value,
-    isNewField,
+    isNewGroupField,
   }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
@@ -191,7 +191,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     });
 
     setCustomType(newCustomType, () => {
-      if (isNewField === true) {
+      if (isNewGroupField === true) {
         toast.success("Field added");
       }
     });
