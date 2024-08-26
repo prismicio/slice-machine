@@ -83,7 +83,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           pathname: customTypesConfig.getBuilderPagePathname(id),
         });
 
-        syncChanges();
+        void syncChanges();
       },
     });
 

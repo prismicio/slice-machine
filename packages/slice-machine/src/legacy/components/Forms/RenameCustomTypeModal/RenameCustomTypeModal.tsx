@@ -50,7 +50,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
         newLabel: values.customTypeName,
         onSuccess: (renamedCustomType) => {
           renameCustomTypeSuccess(renamedCustomType);
-          syncChanges();
+          void syncChanges();
         },
       });
     }

@@ -64,7 +64,7 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
                   variation,
                   variationName: values.variationName.trim(),
                 });
-                setSlice(newSlice);
+                void setSlice(newSlice);
               } catch {}
               setRenaming(false);
               onClose();

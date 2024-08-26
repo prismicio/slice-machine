@@ -19,7 +19,7 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 type SliceContext = {
   slice: ComponentUI;
   actionQueueStatus: ActionQueueStatus;
-  setSlice: (slice: ComponentUI, onSyncCallback?: () => void) => void;
+  setSlice: (slice: ComponentUI) => Promise<void>;
   variation: VariationSM;
 };
 
@@ -57,28 +57,31 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
   }, [slice, router]);
 
   const setSlice = useCallback(
-    (slice: ComponentUI, onSyncCallback?: () => void) => {
-      setSliceState(slice);
-      setNextAction(async () => {
-        const { errors: updateSliceErrors } = await updateSlice(slice);
+    (slice: ComponentUI) => {
+      return new Promise<void>((resolve) => {
+        setSliceState(slice);
+        setNextAction(async () => {
+          const { errors: updateSliceErrors } = await updateSlice(slice);
 
-        if (updateSliceErrors.length > 0) {
-          throw updateSliceErrors;
-        }
+          if (updateSliceErrors.length > 0) {
+            throw updateSliceErrors;
+          }
 
-        const { errors: readSliceMockErrors, mocks } = await readSliceMocks({
-          libraryID: slice.from,
-          sliceID: slice.model.id,
+          const { errors: readSliceMockErrors, mocks } = await readSliceMocks({
+            libraryID: slice.from,
+            sliceID: slice.model.id,
+          });
+
+          if (readSliceMockErrors.length > 0) {
+            throw readSliceMockErrors;
+          }
+
+          // Update slices store with new slice
+          stableSaveSliceSuccess({ ...slice, mocks });
+
+          await syncChanges();
+          resolve();
         });
-
-        if (readSliceMockErrors.length > 0) {
-          throw readSliceMockErrors;
-        }
-
-        // Update slices store with new slice
-        stableSaveSliceSuccess({ ...slice, mocks });
-
-        syncChanges({ callback: onSyncCallback });
       });
     },
     [setNextAction, stableSaveSliceSuccess, syncChanges],

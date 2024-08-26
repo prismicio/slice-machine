@@ -48,7 +48,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         // Update Redux store
         createSliceSuccess(serverState.libraries);
         onSuccess(newSlice, libraryName);
-        syncChanges();
+        void syncChanges();
       },
     });
   };

@@ -100,7 +100,7 @@ const FieldZones: FC = () => {
       fieldId: key,
     });
 
-    setSlice(newSlice);
+    void setSlice(newSlice);
   };
 
   const onSave = (
@@ -116,10 +116,10 @@ const FieldZones: FC = () => {
       newField: value as SlicePrimaryWidget,
     });
 
-    setSlice(newSlice);
+    void setSlice(newSlice);
   };
 
-  function onSaveNewField(
+  async function onSaveNewField(
     widgetArea: WidgetsArea,
     { apiId: id, value: newField }: OnSaveFieldProps,
   ) {
@@ -150,7 +150,8 @@ const FieldZones: FC = () => {
         newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
     });
 
-    setSlice(newSlice, () => toast.success("Field created"));
+    await setSlice(newSlice);
+    toast.success("Field created");
 
     void telemetry.track({
       event: "field:added",
@@ -190,13 +191,13 @@ const FieldZones: FC = () => {
     // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
     // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
     // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
-    flushSync(() => setSlice(newSlice));
+    flushSync(() => void setSlice(newSlice));
   };
 
   const onDeleteRepeatableZone = () => {
     const newSlice = deleteRepeatableZone({ slice, variationId: variation.id });
 
-    setSlice(newSlice);
+    void setSlice(newSlice);
     setIsDeleteRepeatableZoneDialogOpen(false);
   };
 

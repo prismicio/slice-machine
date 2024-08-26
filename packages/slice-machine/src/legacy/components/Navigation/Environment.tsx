@@ -67,7 +67,7 @@ export function Environment() {
       environment.kind === "dev" &&
       (changedCustomTypes.length > 0 || changedSlices.length > 0)
     ) {
-      syncChanges({
+      void syncChanges({
         environment,
         changedCustomTypes,
         changedSlices,
