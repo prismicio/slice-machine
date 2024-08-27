@@ -1,5 +1,4 @@
 import { Box, Icon, Tooltip } from "@prismicio/editor-ui";
-import React, { useEffect, useState } from "react";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
@@ -19,16 +18,6 @@ interface DisplayTextCheckboxProps {
 export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
   const { text, height = 130, setFieldValue } = props;
 
-  const [allowDisplayText, setAllowDisplayText] = useState(Boolean(text));
-
-  useEffect(() => {
-    void setFieldValue(
-      "config.text",
-      allowDisplayText ? { type: "Text" } : undefined,
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowDisplayText]);
-
   return (
     <Col>
       <Flex
@@ -47,8 +36,13 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
           >
             <Flex>
               <Checkbox
-                checked={allowDisplayText}
-                onChange={() => setAllowDisplayText((prev) => !prev)}
+                checked={Boolean(text)}
+                onChange={(event) => {
+                  void setFieldValue(
+                    "config.text",
+                    event.target.checked ? { type: "Text" } : undefined,
+                  );
+                }}
               />
               Allow display text
             </Flex>
