@@ -12,8 +12,8 @@ interface DisplayTextCheckboxProps {
   setFieldValue: (
     a: string,
     b?: DisplayTextModel,
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents, @typescript-eslint/no-explicit-any
-  ) => void | Promise<void | any>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ) => void | Promise<any>;
 }
 
 export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
@@ -48,7 +48,7 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
             <Flex>
               <Checkbox
                 checked={allowDisplayText}
-                onChange={() => setAllowDisplayText(!allowDisplayText)}
+                onChange={() => setAllowDisplayText((prev) => !prev)}
               />
               Allow display text
             </Flex>
