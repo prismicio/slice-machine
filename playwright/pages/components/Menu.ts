@@ -25,6 +25,8 @@ export class Menu {
   readonly autoSyncFailed: Locator;
   readonly autoSyncFailedMessage: Locator;
   readonly autoSyncFailedRetry: Locator;
+  readonly fieldAddedSuccessMessage: Locator;
+  readonly groupAddedSuccessMessage: Locator;
 
   constructor(page: Page) {
     /**
@@ -86,6 +88,12 @@ export class Menu {
       { exact: true },
     );
     this.autoSyncFailedRetry = page.getByRole("button", { name: "Retry" });
+    this.fieldAddedSuccessMessage = page.getByText("Field added", {
+      exact: true,
+    });
+    this.groupAddedSuccessMessage = page.getByText("Group added", {
+      exact: true,
+    });
   }
 
   /**

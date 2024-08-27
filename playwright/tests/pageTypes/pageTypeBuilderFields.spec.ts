@@ -61,6 +61,9 @@ test("I can add a rich text field", async ({
   });
 
   await expect(
+    pageTypesBuilderPage.menu.fieldAddedSuccessMessage,
+  ).toBeVisible();
+  await expect(
     pageTypesBuilderPage.getListItemFieldId("my_rich_text"),
   ).toBeVisible();
   await expect(
@@ -125,12 +128,21 @@ test("I can add a sub field within a group field", async ({
     name: "My Group",
     expectedId: "my_group",
   });
+
+  await expect(
+    pageTypesBuilderPage.menu.groupAddedSuccessMessage,
+  ).toBeVisible();
+
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
     name: "My Sub Field",
     expectedId: "my_sub_field",
     groupFieldId: "my_group",
   });
+
+  await expect(
+    pageTypesBuilderPage.menu.fieldAddedSuccessMessage,
+  ).toBeVisible();
 
   await expect(
     pageTypesBuilderPage.getListItemFieldId("my_sub_field", "my_group"),
