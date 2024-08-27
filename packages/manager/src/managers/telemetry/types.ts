@@ -40,6 +40,7 @@ export const SegmentEventType = {
 	onboarding_completed: "onboarding:completed",
 	postPush_emptyStateCtaClicked: "post-push:empty-state-cta-clicked",
 	postPush_toastCtaClicked: "post-push:toast-cta-clicked",
+	experiment_exposure: "experiment:exposure",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -94,6 +95,7 @@ export const HumanSegmentEventType = {
 		"SliceMachine Post Push Empty State CTA Clicked",
 	[SegmentEventType.postPush_toastCtaClicked]:
 		"SliceMachine Post Push Toast CTA Clicked",
+	[SegmentEventType.experiment_exposure]: "$exposure",
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
@@ -360,6 +362,14 @@ type SliceMachinePostPushToastCtaClicked = SegmentEvent<
 	typeof SegmentEventType.postPush_toastCtaClicked
 >;
 
+type SliceMachineExperimentExposure = SegmentEvent<
+	typeof SegmentEventType.experiment_exposure,
+	{
+		flag_key: string;
+		variant: string;
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -394,4 +404,5 @@ export type SegmentEvents =
 	| SliceMachineOnboardingStepCompleted
 	| SliceMachineOnboardingCompleted
 	| SliceMachinePostPushEmptyStateCtaClicked
-	| SliceMachinePostPushToastCtaClicked;
+	| SliceMachinePostPushToastCtaClicked
+	| SliceMachineExperimentExposure;

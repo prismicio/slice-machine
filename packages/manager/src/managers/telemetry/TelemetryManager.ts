@@ -303,6 +303,15 @@ export class TelemetryManager extends BaseManager {
 					},
 				});
 
+				const variantValue = variants[variantKey].value;
+				if (variantValue) {
+					await this.track({
+						event: "experiment:exposure",
+						flag_key: variantKey,
+						variant: variantValue,
+					});
+				}
+
 				return variants[variantKey];
 			} catch (error) {
 				if (import.meta.env.DEV) {
