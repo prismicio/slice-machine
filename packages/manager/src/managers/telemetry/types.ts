@@ -366,7 +366,7 @@ type SliceMachineExperimentExposure = SegmentEvent<
 	typeof SegmentEventType.experiment_exposure,
 	{
 		flag_key: string;
-		variant?: string;
+		variant: string;
 	}
 >;
 
