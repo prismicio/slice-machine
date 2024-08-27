@@ -115,6 +115,9 @@ export const LinkWidget: Widget<Link, typeof schema> = {
       label,
       placeholder: "",
       select: null,
+      text: {
+        type: "Text",
+      },
     },
   }),
   TYPE_NAME: "Link",
