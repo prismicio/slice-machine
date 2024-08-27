@@ -48,7 +48,6 @@ const Form = (props) => {
             htmlFor="allowTargetBlank"
             variant="label.primary"
             sx={{
-              // mt: 1,
               display: "flex",
               alignItems: "center",
             }}

@@ -4,7 +4,7 @@ import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
 
-type DisplayTextModel = { type: string };
+type DisplayTextModel = { type: "Text" };
 
 interface DisplayTextCheckboxProps {
   text?: DisplayTextModel;
