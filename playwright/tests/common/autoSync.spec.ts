@@ -48,7 +48,6 @@ test("I can see the auto-sync succeed when making a change", async ({
 // When we're creating a new field or adding a slice, the success toast will
 // prevent the error toast to be visible.
 test.skip("I can see the auto-sync succeed after a failed attempt", async ({
-  page,
   pageTypesBuilderPage,
   reusablePageType,
   procedures,
@@ -155,4 +154,111 @@ test.skip("I can see the auto-sync fail because of an hard limit", async ({
 
   await expect(pageTypesBuilderPage.menu.autoSyncSyncing).toBeVisible();
   await expect(pageTypesBuilderPage.menu.autoSyncFailed).toBeVisible();
+});
+
+test("I can see a success toast when I create a new field", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+  procedures,
+}) => {
+  procedures.mock(
+    "prismicRepository.fetchEnvironments",
+    () => ({ environments }),
+    { execute: false },
+  );
+  procedures.mock(
+    "project.fetchActiveEnvironment",
+    () => ({
+      // Dev environment
+      activeEnvironment: environments[2],
+    }),
+    { execute: false },
+  );
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    remoteCustomTypes: [],
+    remoteSlices: [],
+    clientError: undefined,
+  }));
+  procedures.mock("prismicRepository.pushChanges", () => undefined, {
+    delay: 1000,
+    execute: false,
+  });
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Rich Text",
+    expectedId: "my_rich_text",
+  });
+
+  await expect(
+    pageTypesBuilderPage.menu.fieldAddedSuccessMessage,
+  ).toBeVisible();
+});
+
+test("I can see a success toast when I create a new field inside a group", async ({
+  pageTypesBuilderPage,
+  reusablePageType,
+  procedures,
+}) => {
+  procedures.mock(
+    "prismicRepository.fetchEnvironments",
+    () => ({ environments }),
+    { execute: false },
+  );
+  procedures.mock(
+    "project.fetchActiveEnvironment",
+    () => ({
+      // Dev environment
+      activeEnvironment: environments[2],
+    }),
+    { execute: false },
+  );
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    remoteCustomTypes: [],
+    remoteSlices: [],
+    clientError: undefined,
+  }));
+  procedures.mock("prismicRepository.pushChanges", () => undefined, {
+    delay: 1000,
+    execute: false,
+  });
+
+  await pageTypesBuilderPage.goto(reusablePageType.name);
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Repeatable Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+
+  await expect(
+    pageTypesBuilderPage.menu.groupAddedSuccessMessage,
+  ).toBeVisible();
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Sub Field",
+    expectedId: "my_sub_field",
+    groupFieldId: "my_group",
+  });
+
+  await expect(
+    pageTypesBuilderPage.menu.fieldAddedSuccessMessage,
+  ).toBeVisible();
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_sub_field", "my_group"),
+  ).toBeVisible();
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldName(
+      "my_sub_field",
+      "My Sub Field",
+      "my_group",
+    ),
+  ).toBeVisible();
 });

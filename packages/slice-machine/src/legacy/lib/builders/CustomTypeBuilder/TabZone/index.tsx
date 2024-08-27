@@ -135,7 +135,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType, () => toast.success("Field added"));
+    setCustomType(newCustomType, () => {
+      toast.success(`${field.type === "Group" ? "Group" : "Field"} added`);
+    });
 
     void telemetry.track({
       event: "field:added",

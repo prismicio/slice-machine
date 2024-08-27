@@ -119,7 +119,7 @@ const FieldZones: FC = () => {
 
     setSlice(newSlice, () => {
       if (isNewGroupField === true) {
-        toast.success("Field added");
+        toast.success("Group added");
       }
     });
   };
@@ -155,7 +155,9 @@ const FieldZones: FC = () => {
         newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
     });
 
-    setSlice(newSlice, () => toast.success("Field added"));
+    setSlice(newSlice, () => {
+      toast.success(`${widgetTypeName === "Group" ? "Group" : "Field"} added`);
+    });
 
     void telemetry.track({
       event: "field:added",
