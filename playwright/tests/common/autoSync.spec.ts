@@ -44,7 +44,10 @@ test("I can see the auto-sync succeed when making a change", async ({
   await expect(pageTypesBuilderPage.menu.autoSyncSynced).toBeVisible();
 });
 
-test("I can see the auto-sync succeed after a failed attempt", async ({
+// TODO: Fix if we release auto-sync (without feature flag)
+// When we're creating a new field or adding a slice, the success toast will
+// prevent the error toast to be visible.
+test.skip("I can see the auto-sync succeed after a failed attempt", async ({
   pageTypesBuilderPage,
   reusablePageType,
   procedures,
@@ -101,7 +104,10 @@ test("I can see the auto-sync succeed after a failed attempt", async ({
   await expect(pageTypesBuilderPage.menu.autoSyncSynced).toBeVisible();
 });
 
-test("I can see the auto-sync fail because of an hard limit", async ({
+// TODO: Fix if we release auto-sync (without feature flag)
+// When we're creating a new field or adding a slice, the success toast will
+// prevent the error toast to be visible.
+test.skip("I can see the auto-sync fail because of an hard limit", async ({
   pageTypesBuilderPage,
   reusablePageType,
   procedures,

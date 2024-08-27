@@ -19,7 +19,7 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 type SliceContext = {
   slice: ComponentUI;
   actionQueueStatus: ActionQueueStatus;
-  setSlice: (slice: ComponentUI) => void;
+  setSlice: (slice: ComponentUI, onSaveCallback?: () => void) => void;
   variation: VariationSM;
 };
 
@@ -57,7 +57,7 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
   }, [slice, router]);
 
   const setSlice = useCallback(
-    (slice: ComponentUI) => {
+    (slice: ComponentUI, onSaveCallback?: () => void) => {
       setSliceState(slice);
       setNextAction(async () => {
         const { errors: updateSliceErrors } = await updateSlice(slice);
@@ -79,6 +79,7 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
         stableSaveSliceSuccess({ ...slice, mocks });
 
         syncChanges();
+        onSaveCallback?.();
       });
     },
     [setNextAction, stableSaveSliceSuccess, syncChanges],

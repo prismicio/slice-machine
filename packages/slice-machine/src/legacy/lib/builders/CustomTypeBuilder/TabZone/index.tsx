@@ -7,6 +7,7 @@ import {
 import { FC, Suspense } from "react";
 import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
+import { toast } from "react-toastify";
 
 import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
@@ -71,6 +72,7 @@ type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
   value: TabField;
+  isNewGroupField?: boolean;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -132,7 +134,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType);
+    setCustomType(newCustomType, () => {
+      toast.success(`${field.type === "Group" ? "Group" : "Field"} added`);
+    });
 
     void telemetry.track({
       event: "field:added",
@@ -167,7 +171,12 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     flushSync(() => setCustomType(newCustomType));
   };
 
-  const onSave = ({ apiId: previousKey, newKey, value }: OnSaveFieldProps) => {
+  const onSave = ({
+    apiId: previousKey,
+    newKey,
+    value,
+    isNewGroupField,
+  }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
       return;
@@ -182,7 +191,11 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType);
+    setCustomType(newCustomType, () => {
+      if (isNewGroupField === true) {
+        toast.success("Field added");
+      }
+    });
   };
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {

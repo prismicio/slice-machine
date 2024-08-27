@@ -14,6 +14,7 @@ import {
 import { FC, useState } from "react";
 import { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
+import { toast } from "react-toastify";
 
 import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
@@ -68,6 +69,7 @@ type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
   value: SlicePrimaryFieldSM;
+  isNewGroupField?: boolean;
 };
 
 const FieldZones: FC = () => {
@@ -104,7 +106,7 @@ const FieldZones: FC = () => {
 
   const _onSave = (
     widgetArea: WidgetsArea,
-    { apiId: previousKey, newKey, value }: OnSaveFieldProps,
+    { apiId: previousKey, newKey, value, isNewGroupField }: OnSaveFieldProps,
   ) => {
     const newSlice = updateField({
       slice,
@@ -115,7 +117,11 @@ const FieldZones: FC = () => {
       newField: value as SlicePrimaryWidget,
     });
 
-    setSlice(newSlice);
+    setSlice(newSlice, () => {
+      if (isNewGroupField === true) {
+        toast.success("Group added");
+      }
+    });
   };
 
   const _onSaveNewField = (
@@ -149,7 +155,9 @@ const FieldZones: FC = () => {
         newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
     });
 
-    setSlice(newSlice);
+    setSlice(newSlice, () => {
+      toast.success(`${widgetTypeName === "Group" ? "Group" : "Field"} added`);
+    });
 
     void telemetry.track({
       event: "field:added",
