@@ -104,7 +104,7 @@ const FieldZones: FC = () => {
     setSlice(newSlice);
   };
 
-  const onSave = (
+  const _onSave = (
     widgetArea: WidgetsArea,
     { apiId: previousKey, newKey, value, isNewGroupField }: OnSaveFieldProps,
   ) => {
@@ -119,15 +119,15 @@ const FieldZones: FC = () => {
 
     setSlice(newSlice, () => {
       if (isNewGroupField === true) {
-        toast.success("Field added");
+        toast.success("Group added");
       }
     });
   };
 
-  function onSaveNewField(
+  const _onSaveNewField = (
     widgetArea: WidgetsArea,
     { apiId: id, value: newField }: OnSaveFieldProps,
-  ) {
+  ) => {
     const { type: widgetTypeName, config } = newField;
     const label = config?.label ?? "";
 
@@ -155,7 +155,9 @@ const FieldZones: FC = () => {
         newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
     });
 
-    setSlice(newSlice, () => toast.success("Field added"));
+    setSlice(newSlice, () => {
+      toast.success(`${widgetTypeName === "Group" ? "Group" : "Field"} added`);
+    });
 
     void telemetry.track({
       event: "field:added",
@@ -165,14 +167,14 @@ const FieldZones: FC = () => {
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
     });
-  }
+  };
 
   const _onCreateOrSave = (widgetArea: WidgetsArea) => {
     return (props: OnSaveFieldProps) => {
       if (props.apiId === "") {
-        return onSaveNewField(widgetArea, { ...props, apiId: props.newKey }); // create new
+        return _onSaveNewField(widgetArea, { ...props, apiId: props.newKey }); // create new
       }
-      return onSave(widgetArea, props); // update existing
+      return _onSave(widgetArea, props); // update existing
     };
   };
 

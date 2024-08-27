@@ -48,7 +48,6 @@ test("I can see the auto-sync succeed when making a change", async ({
 // When we're creating a new field or adding a slice, the success toast will
 // prevent the error toast to be visible.
 test.skip("I can see the auto-sync succeed after a failed attempt", async ({
-  page,
   pageTypesBuilderPage,
   reusablePageType,
   procedures,

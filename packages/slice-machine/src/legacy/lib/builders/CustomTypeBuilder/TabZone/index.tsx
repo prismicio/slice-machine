@@ -77,7 +77,6 @@ type OnSaveFieldProps = {
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const { customType, setCustomType } = useCustomTypeState();
-
   const customTypeSM = CustomTypes.toSM(customType);
   const sliceZone = customTypeSM.tabs.find((tab) => tab.key === tabId)
     ?.sliceZone;
@@ -106,7 +105,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType(newCustomType);
   };
 
-  function onSaveNewField({ apiId: id, value: field }: OnSaveFieldProps) {
+  const onSaveNewField = ({ apiId: id, value: field }: OnSaveFieldProps) => {
     const label = field.config?.label;
     if (ensureWidgetTypeExistence(Widgets, field.type) || label == null) return;
 
@@ -135,7 +134,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType, () => toast.success("Field added"));
+    setCustomType(newCustomType, () => {
+      toast.success(`${field.type === "Group" ? "Group" : "Field"} added`);
+    });
 
     void telemetry.track({
       event: "field:added",
@@ -145,7 +146,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
     });
-  }
+  };
 
   const onDragEnd = (result: DropResult) => {
     if (ensureDnDDestination(result)) {
