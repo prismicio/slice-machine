@@ -4,6 +4,7 @@
 
 import * as React from "react";
 
+import { useRouter } from "next/navigation";
 import {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
 	SimulatorManager,
@@ -14,34 +15,8 @@ import { compressToEncodedURIComponent } from "lz-string";
 
 import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
 import { getSlices } from "./getSlices";
-import { useRouter } from "next/navigation";
 
 const STATE_PARAMS_KEY = "state";
-
-const throttle =
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	<TArgs extends [...any]>(fn: (...args: TArgs) => unknown, wait: number) => {
-		let timeoutId: ReturnType<typeof setTimeout>;
-		let lastCallTime = 0;
-
-		return (...args: TArgs) => {
-			clearTimeout(timeoutId);
-
-			const now = Date.now();
-			const timeSinceLastCall = now - lastCallTime;
-			const delayForNextCall = wait - timeSinceLastCall;
-
-			if (delayForNextCall <= 0) {
-				lastCallTime = now;
-				fn(...args);
-			} else {
-				timeoutId = setTimeout(() => {
-					lastCallTime = Date.now();
-					fn(...args);
-				}, delayForNextCall);
-			}
-		};
-	};
 
 const simulatorManager = new SimulatorManager();
 
@@ -59,11 +34,6 @@ export const SliceSimulator = ({
 	const [message, setMessage] = React.useState(() => getDefaultMessage());
 	const router = useRouter();
 
-	const throttledRefreshPage = React.useCallback(
-		() => throttle(() => router.refresh(), 300),
-		[router],
-	);
-
 	const state =
 		typeof window !== "undefined"
 			? new URL(window.location.href).searchParams.get(STATE_PARAMS_KEY)
@@ -79,9 +49,10 @@ export const SliceSimulator = ({
 					STATE_PARAMS_KEY,
 					compressToEncodedURIComponent(JSON.stringify(newSlices)),
 				);
-				window.history.pushState(null, "", url);
 
-				throttledRefreshPage();
+				window.history.replaceState(null, "", url);
+				// Wait until the next tick to prevent URL state race conditions.
+				setTimeout(() => router.refresh(), 0);
 			},
 			"simulator-slices",
 		);
