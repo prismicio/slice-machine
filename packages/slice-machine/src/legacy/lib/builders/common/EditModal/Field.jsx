@@ -9,7 +9,13 @@ import {
 
 import { FormTypes } from "../../../forms/types";
 
-const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
+const WidgetFormField = ({
+  fieldName,
+  formField,
+  fields,
+  initialValues,
+  autoFocus = undefined,
+}) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [field, meta, helpers] = useField(fieldName);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
@@ -58,6 +64,8 @@ const WidgetFormField = ({ fieldName, formField, fields, initialValues }) => {
                 fieldName={fieldName}
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 initialValues={initialValues}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                autoFocus={autoFocus}
               />
             ) : null
           }

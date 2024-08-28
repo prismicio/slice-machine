@@ -16,7 +16,6 @@ import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
 import ListItem from "@/legacy/components/ListItem";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import Hint from "@/legacy/lib/builders/common/Zone/Card/components/Hints";
-import NewField from "@/legacy/lib/builders/common/Zone/Card/components/NewField";
 import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
@@ -40,26 +39,23 @@ export const CustomListItem = ({
   HintElement,
   ...rest
 }) => {
-  const [newFieldData, setNewFieldData] = useState(null);
   const [editModalData, setEditModalData] = useState({ isOpen: false });
 
   const onSelectFieldType = (widgetTypeName) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    setNewFieldData({ widgetTypeName });
-  };
-
-  const onCancelNewField = () => {
-    setNewFieldData(null);
+    /** `widgetTypeName` might have less keys than `Widgets`, but we lost track 
+    of the types because the `widgetsArray` is not typed and is also filtered into 
+    `widgetsArrayWithCondUid`. Although, it's safe to use it to index the `Widgets` 
+    as long as `widgetsArrayWithCondUid` is a subset of `widgetsArray`.*/
+    const field = Widgets[widgetTypeName].create("");
+    setEditModalData({ isOpen: true, field: ["", field] });
   };
 
   const closeEditModal = () => {
     setEditModalData({ isOpen: false });
   };
 
-  const onSaveNewField = ({ id, label, widgetTypeName }) => {
-    const widget = Widgets[widgetTypeName];
-    const newField = widget.create(label);
-
+  const onSaveNewField = ({ apiId: id, value: newField }) => {
+    const label = newField.config?.label;
     const newGroupValue = addFieldToGroup({
       group: Groups.fromSM(groupItem.value),
       fieldId: id,
@@ -70,6 +66,7 @@ export const CustomListItem = ({
       apiId: groupItem.key,
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
+      isNewGroupField: true,
     });
 
     void telemetry.track({
@@ -95,6 +92,13 @@ export const CustomListItem = ({
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
     });
+  };
+
+  const onCreateOrSave = (props) => {
+    if (props.apiId === "") {
+      return onSaveNewField({ ...props, apiId: props.newKey }); // create new
+    }
+    return onSaveField(props); // update existing
   };
 
   const onDragEnd = (result) => {
@@ -172,7 +176,6 @@ export const CustomListItem = ({
         CustomEditElements={[
           <AddFieldDropdown
             key="add-field-dropdown"
-            disabled={newFieldData !== null}
             onSelectField={onSelectFieldType}
             fields={widgetsArray.filter(Boolean).map((widget) => {
               const { TYPE_NAME, CUSTOM_NAME } = widget;
@@ -273,20 +276,6 @@ export const CustomListItem = ({
                       })
                     }
                     {provided.placeholder}
-
-                    {newFieldData && (
-                      <NewField
-                        {...newFieldData}
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                        fields={groupItem.value.config.fields || []}
-                        onSave={(...args) => {
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-                          onSaveNewField(...args);
-                          setNewFieldData(null);
-                        }}
-                        onCancelNewField={onCancelNewField}
-                      />
-                    )}
                   </ul>
                 )}
               </Droppable>
@@ -297,7 +286,7 @@ export const CustomListItem = ({
       <EditModal
         data={editModalData}
         close={closeEditModal}
-        onSave={onSaveField}
+        onSave={onCreateOrSave}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         fields={groupItem.value.config.fields}
       />

@@ -24,7 +24,6 @@ const createSchema = (typeRegex: RegExp) =>
     config: yup.object().shape({
       fields: yup.array(),
       label: yup.string(),
-      placeholder: yup.string(),
       repeat: yup.boolean().optional(),
     }),
   });

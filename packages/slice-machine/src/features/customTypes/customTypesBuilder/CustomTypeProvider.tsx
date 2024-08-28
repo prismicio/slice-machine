@@ -20,7 +20,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 type CustomTypeContext = {
   customType: CustomType;
   actionQueueStatus: ActionQueueStatus;
-  setCustomType: (customType: CustomType) => void;
+  setCustomType: (customType: CustomType, onSaveCallback?: () => void) => void;
 };
 
 type CustomTypeProviderProps = {
@@ -46,7 +46,7 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
-    (customType: CustomType) => {
+    (customType: CustomType, onSaveCallback?: () => void) => {
       setCustomTypeState(customType);
       setNextAction(async () => {
         const { errors } = await updateCustomType(customType);
@@ -59,6 +59,7 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
         stableSaveCustomTypeSuccess(customType);
 
         syncChanges();
+        onSaveCallback?.();
       });
     },
     [setNextAction, stableSaveCustomTypeSuccess, syncChanges],

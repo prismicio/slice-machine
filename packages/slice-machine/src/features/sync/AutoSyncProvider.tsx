@@ -67,6 +67,9 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
   const { activeEnvironment } = useActiveEnvironment();
   const { setNextAction, actionQueueStatus } = useActionQueue({
     actionQueueStatusDelay: 0,
+    // TODO: Fix if we release auto-sync (without feature flag)
+    // When we're creating a new field or adding a slice, the success toast will
+    // prevent the error toast to be visible.
     errorMessage:
       "Failed to sync changes. Check your browser's console for more information.",
   });

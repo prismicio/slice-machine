@@ -1,3 +1,4 @@
+import { Box, Toast } from "@prismicio/editor-ui";
 import { PushChangesLimit } from "@slicemachine/manager";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -5,7 +6,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
-import { getState } from "@/apiClient";
+import { getState, telemetry } from "@/apiClient";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { NoChangesBlankSlate } from "@/features/changes/BlankSlates";
 import { PushChangesButton } from "@/features/changes/PushChangesButton";
@@ -14,6 +15,8 @@ import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useUnSyncChanges } from "@/features/sync/useUnSyncChanges";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useNetwork } from "@/hooks/useNetwork";
+import { usePromptToCreateContentExperiment } from "@/hooks/usePromptToCreateContentExperiment";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import {
   AppLayout,
   AppLayoutActions,
@@ -30,6 +33,7 @@ import {
   HardDeleteDocumentsDrawer,
   SoftDeleteDocumentsDrawer,
 } from "@/legacy/components/DeleteDocumentsDrawer";
+import { createDocumentsListEndpointFromRepoName } from "@/legacy/lib/utils/repo";
 import { AuthStatus } from "@/modules/userContext/types";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
@@ -50,6 +54,14 @@ const Changes: React.FunctionComponent = () => {
   >(undefined);
   const { autoSyncStatus } = useAutoSync();
   const router = useRouter();
+  const [isPushed, setIsPushed] = useState(false);
+  const [isToastOpen, setIsToastOpen] = useState(false);
+  const { eligible: isPromptToCreateContentExperimentEligible } =
+    usePromptToCreateContentExperiment();
+  const { repositoryName } = useRepositoryInformation();
+
+  const documentsListEndpoint =
+    createDocumentsListEndpointFromRepoName(repositoryName);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -84,7 +96,13 @@ const Changes: React.FunctionComponent = () => {
         // Update last sync value in local storage
         pushChangesSuccess();
 
-        toast.success("All slices and types have been pushed");
+        setIsPushed(true);
+
+        if (isPromptToCreateContentExperimentEligible) {
+          setIsToastOpen(true);
+        } else {
+          toast.success("All slices and types have been pushed");
+        }
       }
     } catch (error) {
       console.error(
@@ -111,7 +129,15 @@ const Changes: React.FunctionComponent = () => {
       return <AuthErrorPage authStatus={authStatus} />;
     }
     if (numberOfChanges === 0) {
-      return <NoChangesBlankSlate />;
+      return (
+        <NoChangesBlankSlate
+          isPostPush={isPushed}
+          documentsListEndpoint={documentsListEndpoint}
+          isPromptToCreateContentExperimentEligible={
+            isPromptToCreateContentExperimentEligible
+          }
+        />
+      );
     }
     return (
       <ChangesItems
@@ -129,6 +155,9 @@ const Changes: React.FunctionComponent = () => {
     unSyncedSlices,
     unSyncedCustomTypes,
     modelsStatuses,
+    isPushed,
+    documentsListEndpoint,
+    isPromptToCreateContentExperimentEligible,
   ]);
 
   return (
@@ -154,6 +183,27 @@ const Changes: React.FunctionComponent = () => {
               onClick={() => {
                 void onPush(false); // not deleting documents by default
               }}
+            />
+            <Toast
+              anchor={<Box position="fixed" top={32} right={32} width={322} />} // 322 is a toast width, needed for the toast to be displayed with proper paddings
+              open={isToastOpen}
+              variant="card"
+              seconds={20}
+              title="Success! 🎉"
+              subtitle="Your changes have been pushed."
+              action={{
+                title: "Create content in the Page Builder",
+                onClick: () => {
+                  void telemetry.track({
+                    event: "post-push:toast-cta-clicked",
+                  });
+                  void window.open(documentsListEndpoint, "_blank");
+                },
+              }}
+              cancel={{
+                onClick: () => setIsToastOpen(false),
+              }}
+              onOpenChange={setIsToastOpen}
             />
           </AppLayoutActions>
         </AppLayoutHeader>

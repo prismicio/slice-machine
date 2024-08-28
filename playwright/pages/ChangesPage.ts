@@ -37,10 +37,9 @@ export class ChangesPage extends SliceMachinePage {
       exact: true,
     });
     this.pushChangesButton = page.getByText("Push", { exact: true });
-    this.pushedMessaged = page.getByText(
-      "All slices and types have been pushed",
-      { exact: true },
-    );
+    this.pushedMessaged = page.getByText("Your changes have been pushed.", {
+      exact: true,
+    });
     this.notLoggedInTitle = page.getByText("It seems like you are logged out", {
       exact: true,
     });
@@ -48,7 +47,7 @@ export class ChangesPage extends SliceMachinePage {
       "It seems like you don't have access to this repository",
       { exact: true },
     );
-    this.blankSlateTitle = page.getByText("Everything up-to-date", {
+    this.blankSlateTitle = page.getByText("Everything is up-to-date", {
       exact: true,
     });
     this.unknownErrorMessage = page.getByText(
