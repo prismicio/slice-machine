@@ -13,6 +13,7 @@ import {
   OnboardingProvider,
   useOnboardingContext,
 } from "@/features/onboarding/OnboardingProvider";
+import { OnboardingTutorial } from "@/features/onboarding/OnboardingTutorial/OnboardingTutorial";
 import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 
@@ -43,6 +44,8 @@ const OnboardingGuideCard = () => {
             getValueLabel={(value, max) => `${value}/${max}`}
           />
           <OnboardingProgressStepper />
+          {/* TODO display only in one of test variants, hook up real props*/}
+          <OnboardingTutorial url="/" variant="light" />
         </CardContent>
       </Card>
     </div>
