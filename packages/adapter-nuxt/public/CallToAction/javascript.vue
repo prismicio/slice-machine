@@ -40,9 +40,7 @@ const alignment = computed(() => {
 				v-if="isFilled.link(slice.primary.buttonLink)"
 				:field="slice.primary.buttonLink"
 				class="es-call-to-action__button"
-			>
-				{{ slice.primary.buttonLabel || "Learn more…" }}
-			</PrismicLink>
+			/>
 		</div>
 	</section>
 </template>

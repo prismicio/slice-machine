@@ -42,12 +42,8 @@ export const mocks: SharedSliceContent[] = [
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://twitter.com/prismicio",
+					text: "Learn more",
 				},
-			},
-			buttonlabel: {
-				__TYPE__: "FieldContent",
-				type: "Text",
-				value: "Click here",
 			},
 			image: {
 				origin: {
@@ -71,11 +67,6 @@ export const mocks: SharedSliceContent[] = [
 				alt: "Example Image",
 				__TYPE__: "ImageContent",
 				thumbnails: {},
-			},
-			buttonLabel: {
-				__TYPE__: "FieldContent",
-				type: "Text",
-				value: "Learn more",
 			},
 		},
 		items: [],
@@ -138,12 +129,8 @@ export const mocks: SharedSliceContent[] = [
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://prismic.io",
+					text: "Learn more",
 				},
-			},
-			buttonLabel: {
-				__TYPE__: "FieldContent",
-				type: "Text",
-				value: "Learn more!",
 			},
 		},
 		items: [],
@@ -194,13 +181,7 @@ export const model: SharedSlice = {
 						placeholder: "Redirect URL for CTA button",
 						allowTargetBlank: true,
 						select: null,
-					},
-				},
-				buttonLabel: {
-					type: "Text",
-					config: {
-						label: "buttonLabel",
-						placeholder: "Label for CTA button",
+						text: { type: "Text" },
 					},
 				},
 			},
@@ -244,13 +225,7 @@ export const model: SharedSlice = {
 						placeholder: "Redirect URL for CTA button",
 						allowTargetBlank: true,
 						select: null,
-					},
-				},
-				buttonLabel: {
-					type: "Text",
-					config: {
-						label: "buttonLabel",
-						placeholder: "Label for CTA button",
+						text: { type: "Text" },
 					},
 				},
 			},
