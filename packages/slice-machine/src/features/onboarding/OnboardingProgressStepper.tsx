@@ -18,12 +18,12 @@ import type { OnboardingStep } from "@/features/onboarding/types";
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
 interface OnboardingProgressStepperProps {
-  hasLargeButton: boolean;
+  buttonSize?: "large" | "medium";
 }
 export function OnboardingProgressStepper(
   props: OnboardingProgressStepperProps,
 ) {
-  const { hasLargeButton } = props;
+  const { buttonSize = "medium" } = props;
   const { completedStepCount, steps, isStepComplete, isComplete } =
     useOnboardingContext();
 
@@ -52,7 +52,7 @@ export function OnboardingProgressStepper(
         <DropdownMenuTrigger>
           <Button
             disabled={isComplete}
-            size={hasLargeButton ? "large" : "medium"}
+            size={buttonSize}
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}

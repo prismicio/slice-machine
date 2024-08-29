@@ -60,6 +60,7 @@ function OnboardingGuideCard() {
     useOnboardingCardVisibilityExperiment();
 
   const {
+    buttonSize,
     cardColor,
     cardVariant,
     cardDescription,
@@ -70,7 +71,7 @@ function OnboardingGuideCard() {
     progressBackgroundColor,
     progressLabelColor,
     titleColor,
-  } = getCardPropsFromExperimentVariant(variant);
+  } = getCardUi({ variant, stepsCount: steps.length });
 
   if (!isVisible) return null;
 
@@ -84,7 +85,7 @@ function OnboardingGuideCard() {
         <CardContent>
           <div>
             <Text variant="bold" color={titleColor}>
-              {cardTitle.replace("{number}", steps.length.toString())}
+              {cardTitle}
             </Text>
             <Text color={descriptionColor} variant={descriptionVariant}>
               {cardDescription}
@@ -99,9 +100,7 @@ function OnboardingGuideCard() {
             displayLabel
             getValueLabel={(value, max) => `${value}/${max}`}
           />
-          <OnboardingProgressStepper
-            hasLargeButton={isOnboardingCardVisibilityExperiment}
-          />
+          <OnboardingProgressStepper buttonSize={buttonSize} />
         </CardContent>
       </Card>
     </div>
@@ -119,7 +118,12 @@ const confettiConfig: ConfettiConfig = {
   duration: 3000,
 };
 
-interface CardProps {
+interface GetCardUiProps {
+  variant?: string;
+  stepsCount: number;
+}
+interface GetCardUiReturnValue {
+  buttonSize: "large" | "medium";
   cardColor?: "grey2";
   cardVariant?: "outlined" | "animated-light" | "animated-dark";
   cardTitle: string;
@@ -131,23 +135,27 @@ interface CardProps {
   progressBackgroundColor?: "purple8";
   progressLabelColor?: "purple3";
 }
+function getCardUi(props: GetCardUiProps): GetCardUiReturnValue {
+  const { variant, stepsCount } = props;
+  const count = stepsCount.toString();
 
-const getCardPropsFromExperimentVariant = (variant?: string): CardProps => {
   switch (variant) {
     case "light":
       return {
+        buttonSize: "large",
         cardDescription:
           "Render a live page with content coming from Prismic in 5 mins",
-        cardTitle: "Build your first Prismic Page in {number} simple steps",
+        cardTitle: `Build your first Prismic Page in ${count} simple steps`,
         cardVariant: "animated-light",
         descriptionColor: "grey11",
         titleColor: "grey12",
       };
     case "dark":
       return {
+        buttonSize: "large",
         cardDescription:
           "Render a live page with content coming from Prismic in 5 mins",
-        cardTitle: "Build your first Prismic Page in {number} simple steps",
+        cardTitle: `Build your first Prismic Page in ${count} simple steps`,
         cardVariant: "animated-dark",
         descriptionColor: "purple6",
         progressColor: "white",
@@ -157,13 +165,14 @@ const getCardPropsFromExperimentVariant = (variant?: string): CardProps => {
       };
     default:
       return {
+        buttonSize: "medium",
         cardColor: "grey2",
         cardVariant: "outlined",
-        cardTitle: "Build a page in {number} steps",
+        cardTitle: `Build a page in ${count} steps`,
         cardDescription: "Render a live page with content coming from Prismic",
         descriptionColor: "grey11",
         descriptionVariant: "small",
         titleColor: "grey12",
       };
   }
-};
+}
