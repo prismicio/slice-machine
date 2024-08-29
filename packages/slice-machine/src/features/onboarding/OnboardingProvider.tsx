@@ -1,19 +1,24 @@
 import { createContext, ReactNode, useContext } from "react";
 
 import { telemetry } from "@/apiClient";
-import { onboardingSteps as steps } from "@/features/onboarding/content";
+import {
+  onboardingExperimentSteps,
+  onboardingSteps,
+} from "@/features/onboarding/content";
 import {
   type OnboardingStep,
+  type OnboardingStepId,
   type OnboardingStepStatuses,
   onboardingStepStatusesSchema,
 } from "@/features/onboarding/types";
+import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
 type OnboardingContext = {
   steps: OnboardingStep[];
   completedStepCount: number;
   toggleStepComplete: (step: OnboardingStep) => void;
-  getStepIndex: (step: OnboardingStep) => number;
+  getStepIndex: (step: OnboardingStepId) => number;
   isStepComplete: (step: OnboardingStep) => boolean;
   isComplete: boolean;
 };
@@ -22,13 +27,13 @@ export const OnboardingContext = createContext<OnboardingContext | undefined>(
   undefined,
 );
 
-const getInitialState = (): OnboardingStepStatuses => {
+const getInitialState = (steps: OnboardingStep[]): OnboardingStepStatuses => {
   // if the old guide was dismissed, all steps start as complete
   const wasOldGuideDismissed =
     localStorage.getItem("slice-machine_isInAppGuideOpen") === "false";
 
   return Object.fromEntries(
-    steps.map((step) => [step.id, wasOldGuideDismissed]),
+    steps.map((step) => [step.id, step.readonly ?? wasOldGuideDismissed]),
   ) as OnboardingStepStatuses;
 };
 
@@ -41,9 +46,12 @@ export const OnboardingProvider = ({
   children,
   onComplete,
 }: OnboardingProviderProps) => {
+  const { eligible } = useOnboardingCardVisibilityExperiment();
+  const steps = eligible ? onboardingExperimentSteps : onboardingSteps;
+
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
-    getInitialState(),
+    getInitialState(steps),
     { schema: onboardingStepStatusesSchema },
   );
 
@@ -65,15 +73,19 @@ export const OnboardingProvider = ({
     }
   };
 
-  const getStepIndex = (step: OnboardingStep) => {
-    return steps.findIndex(({ id }) => id === step.id);
+  const getStepIndex = (stepId: OnboardingStepId) => {
+    return steps.findIndex(({ id }) => id === stepId);
   };
 
   const isStepComplete = (step: OnboardingStep) => {
     return stepStatus[step.id] ?? false;
   };
 
-  const completedStepCount = Object.values(stepStatus).filter(Boolean).length;
+  const stepsIds = steps.map(({ id }) => id);
+  const completedStepCount = Object.entries(stepStatus).filter(
+    // filtering out steps that are not part of the current experiment variant
+    ([key, value]) => stepsIds.includes(key as OnboardingStepId) && value,
+  ).length;
 
   return (
     <OnboardingContext.Provider

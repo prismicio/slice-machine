@@ -14,12 +14,15 @@ import { telemetry } from "@/apiClient";
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 import type { OnboardingStep } from "@/features/onboarding/types";
+import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
-export const OnboardingProgressStepper = () => {
+export function OnboardingProgressStepper() {
   const { completedStepCount, steps, isStepComplete, isComplete } =
     useOnboardingContext();
+  const { eligible: isOnboardingCardVisibilityExperiment } =
+    useOnboardingCardVisibilityExperiment();
 
   const [isListOpen, setListOpen] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -62,7 +65,7 @@ export const OnboardingProgressStepper = () => {
                 Progress
               </Text>
             </DropdownMenuLabel>
-            {steps.map((step) => {
+            {steps.map((step, index) => {
               const isCompleted = isStepComplete(step);
 
               return (
@@ -71,10 +74,14 @@ export const OnboardingProgressStepper = () => {
                   onSelect={() => showStep(step)}
                   description={step.description}
                   completed={isCompleted}
+                  readOnly={step.readonly}
                   endAdornment={
-                    <Icon name="chevronRight" size="small" color="grey11" />
+                    step.readonly !== true && (
+                      <Icon name="chevronRight" size="small" color="grey11" />
+                    )
                   }
                 >
+                  {isOnboardingCardVisibilityExperiment && index + 1 + " "}
                   {step.title}
                 </DropdownMenuItem>
               );
@@ -84,4 +91,4 @@ export const OnboardingProgressStepper = () => {
       </DropdownMenu>
     </>
   );
-};
+}
