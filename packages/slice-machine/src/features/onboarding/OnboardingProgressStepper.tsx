@@ -81,8 +81,9 @@ export function OnboardingProgressStepper() {
                     )
                   }
                 >
-                  {isOnboardingCardVisibilityExperiment && `${index + 1} `}
-                  {step.title}
+                  {isOnboardingCardVisibilityExperiment
+                    ? `${index + 1} ${step.title}`
+                    : step.title}
                 </DropdownMenuItem>
               );
             })}
