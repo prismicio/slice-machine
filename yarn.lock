@@ -6030,23 +6030,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.45":
-  version: 0.4.45
-  resolution: "@prismicio/editor-support@npm:0.4.45"
-  dependencies:
-    tslib: 2.4.0
-  peerDependencies:
-    react: 17 || 18
-    zod: ^3.21.4
-  peerDependenciesMeta:
-    react:
-      optional: true
-    zod:
-      optional: true
-  checksum: de0f90e376c68651522c85998877fd348af8b9528da1cac9e31a78a9a6ebe5d68b1f7f6125bda9023f1e5c9277a26cb5c062e70a146312ecc4f5535dd39cefeb
-  languageName: node
-  linkType: hard
-
 "@prismicio/editor-support@npm:0.4.46":
   version: 0.4.46
   resolution: "@prismicio/editor-support@npm:0.4.46"
@@ -6064,12 +6047,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.45-alpha.feat-animated-card-variant.1":
-  version: 0.4.45-alpha.feat-animated-card-variant.1
-  resolution: "@prismicio/editor-ui@npm:0.4.45-alpha.feat-animated-card-variant.1"
+"@prismicio/editor-ui@npm:0.4.47-alpha.fix-navigator-isse.0":
+  version: 0.4.47-alpha.fix-navigator-isse.0
+  resolution: "@prismicio/editor-ui@npm:0.4.47-alpha.fix-navigator-isse.0"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.45
+    "@prismicio/editor-support": 0.4.46
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6120,7 +6103,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 12d67d075a35a6a6b0dcd63b537fb3a72941c7117254b3caddc6dc13dd74a7841ecb8a992e1c0f580ab4cc502413536880d8f346de3895d0bb236c17c298bc41
+  checksum: 0ee0ec9b2393c7701e42ceade30e3cbd8436ca6228edabbb2946bac818942b2f08d96a5a51f4b21d666287859feb34963913909edd0ff489b50119276d647e2e
   languageName: node
   linkType: hard
 
@@ -31158,7 +31141,7 @@ __metadata:
     "@prismicio/client": 7.6.0
     "@prismicio/editor-fields": 0.4.46
     "@prismicio/editor-support": 0.4.46
-    "@prismicio/editor-ui": 0.4.45-alpha.feat-animated-card-variant.1
+    "@prismicio/editor-ui": 0.4.47-alpha.fix-navigator-isse.0
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.3
     "@prismicio/simulator": 0.1.4

@@ -92,7 +92,7 @@ function OnboardingGuideCard() {
           </div>
           <ProgressBar
             color={progressColor}
-            progressTrackColor={progressBackgroundColor}
+            backgroundColor={progressBackgroundColor}
             labelColor={progressLabelColor}
             value={completedStepCount}
             max={steps.length}
