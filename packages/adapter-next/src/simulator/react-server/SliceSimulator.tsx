@@ -4,6 +4,7 @@
 
 import * as React from "react";
 
+import { useRouter } from "next/navigation";
 import {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
 	SimulatorManager,
@@ -13,36 +14,9 @@ import {
 import { compressToEncodedURIComponent } from "lz-string";
 
 import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
-import { revalidatePath } from "./actions";
 import { getSlices } from "./getSlices";
 
 const STATE_PARAMS_KEY = "state";
-
-const throttle =
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	<TArgs extends [...any]>(fn: (...args: TArgs) => unknown, wait: number) => {
-		let timeoutId: ReturnType<typeof setTimeout>;
-		let lastCallTime = 0;
-
-		return (...args: TArgs) => {
-			clearTimeout(timeoutId);
-
-			const now = Date.now();
-			const timeSinceLastCall = now - lastCallTime;
-			const delayForNextCall = wait - timeSinceLastCall;
-
-			if (delayForNextCall <= 0) {
-				lastCallTime = now;
-				fn(...args);
-			} else {
-				timeoutId = setTimeout(() => {
-					lastCallTime = Date.now();
-					fn(...args);
-				}, delayForNextCall);
-			}
-		};
-	};
-const throttledRevalidatePath = throttle(revalidatePath, 300);
 
 const simulatorManager = new SimulatorManager();
 
@@ -58,6 +32,7 @@ export const SliceSimulator = ({
 	className,
 }: SliceSimulatorProps): JSX.Element => {
 	const [message, setMessage] = React.useState(() => getDefaultMessage());
+	const router = useRouter();
 
 	const state =
 		typeof window !== "undefined"
@@ -74,13 +49,10 @@ export const SliceSimulator = ({
 					STATE_PARAMS_KEY,
 					compressToEncodedURIComponent(JSON.stringify(newSlices)),
 				);
-				window.history.pushState(null, "", url);
 
-				// A 0 ms timeout is needed to prevent a bug
-				// where the path is revalidated before the URL
-				// is updated with the new state.
-				const path = window.location.pathname;
-				setTimeout(() => throttledRevalidatePath(path), 0);
+				window.history.replaceState(null, "", url);
+				// Wait until the next tick to prevent URL state race conditions.
+				setTimeout(() => router.refresh(), 0);
 			},
 			"simulator-slices",
 		);
