@@ -81,7 +81,7 @@ export function OnboardingProgressStepper() {
                     )
                   }
                 >
-                  {isOnboardingCardVisibilityExperiment && index + 1 + " "}
+                  {isOnboardingCardVisibilityExperiment && `${index + 1} `}
                   {step.title}
                 </DropdownMenuItem>
               );
