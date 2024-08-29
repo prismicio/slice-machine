@@ -43,9 +43,7 @@
 			<PrismicLink
 				class="es-call-to-action__button"
 				field={slice.primary.buttonLink}
-			>
-				{slice.primary.buttonLabel || "Learn more…"}
-			</PrismicLink>
+			/>
 		{/if}
 	</div>
 	<style>

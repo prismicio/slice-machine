@@ -56,9 +56,7 @@
 					<PrismicLink
 						field={slice.primary.callToActionLink}
 						class="es-call-to-action__link"
-					>
-						{slice.primary.callToActionLabel || "Learn more…"}
-					</PrismicLink>
+					/>
 				{/if}
 			</div>
 		</div>
