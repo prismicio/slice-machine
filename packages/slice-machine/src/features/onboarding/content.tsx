@@ -92,7 +92,7 @@ export const onboardingExperimentSteps: OnboardingStep[] = [
     id: "createProject",
     title: "Create your Prismic website",
     description: "Create and set up your project",
-    readonly: true,
+    defaultCompleted: true,
   },
   {
     id: "createPageType",

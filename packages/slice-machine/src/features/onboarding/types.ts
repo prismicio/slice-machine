@@ -22,5 +22,5 @@ export interface OnboardingStep {
   description: string;
   content?: () => JSX.Element;
   videoUrl?: string;
-  readonly?: boolean;
+  defaultCompleted?: boolean;
 }

@@ -74,9 +74,9 @@ export function OnboardingProgressStepper() {
                   onSelect={() => showStep(step)}
                   description={step.description}
                   completed={isCompleted}
-                  readOnly={step.readonly}
+                  readOnly={step.defaultCompleted}
                   endAdornment={
-                    step.readonly !== true && (
+                    step.defaultCompleted !== true && (
                       <Icon name="chevronRight" size="small" color="grey11" />
                     )
                   }

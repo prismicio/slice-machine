@@ -33,7 +33,10 @@ const getInitialState = (steps: OnboardingStep[]): OnboardingStepStatuses => {
     localStorage.getItem("slice-machine_isInAppGuideOpen") === "false";
 
   return Object.fromEntries(
-    steps.map((step) => [step.id, step.readonly ?? wasOldGuideDismissed]),
+    steps.map((step) => [
+      step.id,
+      step.defaultCompleted ?? wasOldGuideDismissed,
+    ]),
   ) as OnboardingStepStatuses;
 };
 
