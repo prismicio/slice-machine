@@ -13,6 +13,7 @@ import {
   OnboardingProvider,
   useOnboardingContext,
 } from "@/features/onboarding/OnboardingProvider";
+import { OnboardingTutorial } from "@/features/onboarding/OnboardingTutorial/OnboardingTutorial";
 import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
@@ -101,6 +102,7 @@ function OnboardingGuideCard() {
             getValueLabel={(value, max) => `${value}/${max}`}
           />
           <OnboardingProgressStepper buttonSize={buttonSize} />
+          {isOnboardingCardVisibilityExperiment && <OnboardingTutorial />}
         </CardContent>
       </Card>
     </div>
