@@ -18,7 +18,13 @@ import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/use
 
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
-export function OnboardingProgressStepper() {
+interface OnboardingProgressStepperProps {
+  buttonSize?: "large" | "medium";
+}
+export function OnboardingProgressStepper(
+  props: OnboardingProgressStepperProps,
+) {
+  const { buttonSize = "medium" } = props;
   const { completedStepCount, steps, isStepComplete, isComplete } =
     useOnboardingContext();
   const { eligible: isOnboardingCardVisibilityExperiment } =
@@ -49,6 +55,7 @@ export function OnboardingProgressStepper() {
         <DropdownMenuTrigger>
           <Button
             disabled={isComplete}
+            size={buttonSize}
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
