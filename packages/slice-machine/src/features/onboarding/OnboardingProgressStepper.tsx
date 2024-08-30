@@ -14,6 +14,7 @@ import { telemetry } from "@/apiClient";
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 import type { OnboardingStep } from "@/features/onboarding/types";
+import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
@@ -26,6 +27,8 @@ export function OnboardingProgressStepper(
   const { buttonSize = "medium" } = props;
   const { completedStepCount, steps, isStepComplete, isComplete } =
     useOnboardingContext();
+  const { eligible: isOnboardingCardVisibilityExperiment } =
+    useOnboardingCardVisibilityExperiment();
 
   const [isListOpen, setListOpen] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -69,7 +72,7 @@ export function OnboardingProgressStepper(
                 Progress
               </Text>
             </DropdownMenuLabel>
-            {steps.map((step) => {
+            {steps.map((step, index) => {
               const isCompleted = isStepComplete(step);
 
               return (
@@ -78,11 +81,16 @@ export function OnboardingProgressStepper(
                   onSelect={() => showStep(step)}
                   description={step.description}
                   completed={isCompleted}
+                  readOnly={step.defaultCompleted}
                   endAdornment={
-                    <Icon name="chevronRight" size="small" color="grey11" />
+                    step.defaultCompleted !== true && (
+                      <Icon name="chevronRight" size="small" color="grey11" />
+                    )
                   }
                 >
-                  {step.title}
+                  {isOnboardingCardVisibilityExperiment
+                    ? `${index + 1} ${step.title}`
+                    : step.title}
                 </DropdownMenuItem>
               );
             })}
