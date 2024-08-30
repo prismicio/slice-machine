@@ -13,11 +13,16 @@ export function OnboardingTutorial() {
   if (url === undefined) return null;
 
   return (
-    <Box justifyContent="center" padding={{ block: 6 }} gap={4}>
+    <Box justifyContent="center" padding={{ block: 6 }}>
       <Text href={url} variant="smallBold" color={color}>
         Or watch our full course
+        <Icon
+          name="playCircle"
+          color={color}
+          size="small"
+          sx={{ marginLeft: 4 }}
+        />
       </Text>
-      <Icon name="playCircle" color={color} size="small" />
     </Box>
   );
 }
