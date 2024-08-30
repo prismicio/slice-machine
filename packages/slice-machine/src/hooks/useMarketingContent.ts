@@ -29,7 +29,7 @@ const CONTENT_BY_ADAPTER: Record<string, MarketingContent> = {
       url: "https://prismic.dev/course/nuxt",
     },
   },
-  "@slice-machine/adapter-sveltekit": {
+  "@slicemachine/adapter-sveltekit": {
     tutorial: {
       url: "https://prismic.dev/course/sveltekit",
     },

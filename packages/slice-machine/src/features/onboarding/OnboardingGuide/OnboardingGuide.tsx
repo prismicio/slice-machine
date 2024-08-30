@@ -102,8 +102,7 @@ function OnboardingGuideCard() {
             getValueLabel={(value, max) => `${value}/${max}`}
           />
           <OnboardingProgressStepper buttonSize={buttonSize} />
-          {/* TODO display only in one of test variants, hook up real props*/}
-          <OnboardingTutorial url="/" variant="light" />
+          {isOnboardingCardVisibilityExperiment && <OnboardingTutorial />}
         </CardContent>
       </Card>
     </div>
