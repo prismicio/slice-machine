@@ -97,7 +97,12 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.postPush_toastCtaClicked]:
 		"SliceMachine Post Push Toast CTA Clicked",
 	[SegmentEventType.experiment_exposure]: "$exposure",
+<<<<<<< Updated upstream
 	[SegmentEventType.sliceName_pascalCase]: "Slice Name Pascal Case Error",
+=======
+	[SegmentEventType.sliceName_pascalCase]:
+		"SliceMachine Slice Name Pascal Case Error",
+>>>>>>> Stashed changes
 } as const;
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
