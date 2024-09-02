@@ -13,7 +13,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
       unfetch: path.resolve(
         __dirname,
-        "../../node_modules/unfetch/dist/unfetch.mjs",
+        "../../node_modules/unfetch/dist/unfetch.mjs", // fixes unfetch import issue (https://github.com/developit/unfetch/pull/164)
       ),
     },
   },
