@@ -51,7 +51,12 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
             sliceName: pascalize(slice.key),
           }}
           validate={(values) => {
-            return validateAsNewSliceValues(values, libraries, remoteSlices);
+            return validateAsNewSliceValues(
+              values,
+              libraries,
+              remoteSlices,
+              "create",
+            );
           }}
           onSubmit={(values) => {
             onSubmit({ libraryID: values.from, sliceID: values.sliceName });
