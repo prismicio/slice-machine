@@ -18,7 +18,7 @@ export function validateSliceModalValues(
   { sliceName }: SliceModalValues,
   localLibs: ReadonlyArray<LibraryUI>,
   remoteLibs: ReadonlyArray<SliceSM>,
-  event: string,
+  event: "create" | "update",
 ): SliceModalValuesValidity {
   if (!sliceName) {
     return { sliceName: "Cannot be empty" };
@@ -29,7 +29,7 @@ export function validateSliceModalValues(
   const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");
   if (cased !== sliceName.trim()) {
     void telemetry.track({
-      event: `slice-name:pascal-case`,
+      event: `slice-name-error:pascal-case`,
       errorType: event,
     });
     return { sliceName: "Value has to be PascalCased" };
