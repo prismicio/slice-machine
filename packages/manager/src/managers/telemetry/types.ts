@@ -374,7 +374,7 @@ type SliceMachineExperimentExposure = SegmentEvent<
 >;
 
 type SliceMachineSliceNamePascalCase = SegmentEvent<
-	typeof SegmentEventType.sliceName_pascalCase,
+	typeof SegmentEventType.sliceName_pascalCaseError,
 	{ errorType: "create" | "update" }
 >;
 
