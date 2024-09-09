@@ -20,7 +20,7 @@ const Form = (props) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    config: { text },
+    config: { allowText },
   } = formValues;
 
   return (
@@ -67,7 +67,7 @@ const Form = (props) => {
       </Col>
       <DisplayTextCheckbox
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        text={text}
+        allowText={allowText}
         height={127}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}

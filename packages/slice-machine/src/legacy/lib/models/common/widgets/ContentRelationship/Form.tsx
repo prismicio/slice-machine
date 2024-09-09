@@ -11,7 +11,6 @@ import { DefaultFields } from "@/legacy/lib/forms/defaults";
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 import { hasLocal } from "../../ModelData";
-import { DisplayTextCheckbox } from "../Link/components";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -22,12 +21,7 @@ const FormFields = {
 };
 
 type FormProps = {
-  config: {
-    label: string;
-    select: string;
-    customtypes?: string[];
-    text?: { type: "Text" };
-  };
+  config: { label: string; select: string; customtypes?: string[] };
   id: string;
   // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
@@ -53,10 +47,6 @@ const WidgetForm = ({
         return { value: ct?.local.id, label: ct?.local.label };
       })
     : null;
-
-  const {
-    config: { text },
-  } = formValues;
 
   return (
     <FlexGrid>
@@ -109,7 +99,6 @@ const WidgetForm = ({
           />
         </Box>
       </Col>
-      <DisplayTextCheckbox text={text} setFieldValue={setFieldValue} />
     </FlexGrid>
   );
 };
