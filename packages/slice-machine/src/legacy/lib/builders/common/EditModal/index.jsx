@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Modal from "react-modal";
 import { Box, Button, Close, Flex, useThemeUI } from "theme-ui";
 import * as yup from "yup";
@@ -32,7 +33,6 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     return null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
     field: [apiId, initialModelValues],
   } = data;
@@ -57,11 +57,10 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     schema: widgetSchema,
   } = maybeWidget;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const initialConfig = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ...createInitialValues(removeProp(FormFields, "id")),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
     ...(maybeWidget.prepareInitialValues
       ? // eslint-disable-next-line
         maybeWidget.prepareInitialValues(initialModelValues.config)
@@ -69,23 +68,20 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
         initialModelValues.config),
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
   const { res: validatedSchema, err } = (() => {
     try {
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         res: widgetSchema.validateSync(
           {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             type: initialModelValues.type,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             config: initialConfig,
           },
           { stripUnknown: true },
         ),
       };
     } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       return { err: e };
     }
   })();
@@ -100,18 +96,17 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   }
 
   const initialValues = {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     id: apiId,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
     config: validatedSchema ? validatedSchema.config : initialConfig,
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   const [idMatches, idMessage] = FormFields.id.validate.matches;
   const validationSchema = yup.object().shape({
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-argument
     id: yup.string().matches(idMatches, idMessage).min(3).max(35).required(),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     config: widgetSchema.fields.config,
   });
 
@@ -121,28 +116,24 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     <SliceMachineModal
       isOpen
       shouldCloseOnOverlayClick
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
       onRequestClose={close}
       contentLabel="Widget Form Modal"
     >
       <WidgetForm
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         apiId={apiId}
         formId={formId}
         initialValues={initialValues}
         validationSchema={validationSchema}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         FormFields={FormFields}
         onSave={({ newKey, value }) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           const updatedValue = { ...initialModelValues, ...value };
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           onSave({
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             apiId,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             newKey,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             value: updatedValue,
           });
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
@@ -166,7 +157,6 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
             <CustomForm
               key="field-model-tab-content"
               {...props}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={fields}
             />
           ) : (
@@ -176,11 +166,8 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                 <Col key={key}>
                   <WidgetFormField
                     fieldName={createFieldNameFromKey(key)}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     formField={field}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     fields={fields}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     initialValues={initialValues}
                     autoFocus={apiId !== "" ? false : undefined}
                   />
@@ -219,23 +206,25 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                     bg: "headSection",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
                     borderTopLeftRadius: radius,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     borderTopRightRadius: radius,
                   }}
                 >
                   <ItemHeader
                     theme={theme}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     text={label || id}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     WidgetIcon={WidgetIcon}
                   />
-                  <Close // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-                    onClick={close}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    onMouseDown={close} // will execute the close function before Label input hijacks the focus
+                  <Close
+                    // using onMouseDown and onKeyDown instead of on click to register the event before input validation on blur causes re-render
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                        close();
+                      }
+                    }}
+                    onMouseDown={close}
                     type="button"
                   />
                 </Flex>
@@ -254,7 +243,6 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                   <Button
                     mr={2}
                     type="button"
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     onClick={close}
                     variant="secondary"
                   >
@@ -263,7 +251,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                   <Button
                     form={formId}
                     type="submit"
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     disabled={!isValid && isSubmitting}
                     sx={{
                       fontWeight: "400",
