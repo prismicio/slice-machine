@@ -234,6 +234,8 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                   />
                   <Close // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
                     onClick={close}
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                    onMouseDown={close} // will execute the close function before Label input hijacks the focus
                     type="button"
                   />
                 </Flex>
