@@ -11,6 +11,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      unfetch: path.resolve(
+        __dirname,
+        "../../node_modules/unfetch/dist/unfetch.mjs", // fixes unfetch import issue (https://github.com/developit/unfetch/pull/164)
+      ),
     },
   },
   test: {

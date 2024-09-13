@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const onboardingStepStatusesSchema = z.object({
+  createProject: z.literal(true),
   createPageType: z.boolean(),
   codePage: z.boolean(),
   createSlice: z.boolean(),
@@ -13,21 +14,13 @@ export type OnboardingStepStatuses = z.infer<
   typeof onboardingStepStatusesSchema
 >;
 
-export type OnboardingStepType = keyof OnboardingStepStatuses;
+export type OnboardingStepId = keyof OnboardingStepStatuses;
 
-export type OnboardingStep = {
-  id: OnboardingStepType;
+export interface OnboardingStep {
+  id: OnboardingStepId;
   title: string;
   description: string;
-};
-
-export type OnboardingStepContentDefinition = {
-  title?: string;
-  content: () => JSX.Element;
-  videoUrl: string;
-};
-
-export type OnboardingStepContent = Record<
-  OnboardingStepType,
-  OnboardingStepContentDefinition
->;
+  content?: () => JSX.Element;
+  videoUrl?: string;
+  defaultCompleted?: boolean;
+}
