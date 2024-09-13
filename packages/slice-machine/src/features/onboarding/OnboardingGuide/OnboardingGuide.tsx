@@ -13,54 +13,26 @@ import {
   OnboardingProvider,
   useOnboardingContext,
 } from "@/features/onboarding/OnboardingProvider";
+import { OnboardingTutorial } from "@/features/onboarding/OnboardingTutorial/OnboardingTutorial";
+import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 
 import styles from "./OnboardingGuide.module.css";
 
-const OnboardingGuideCard = () => {
-  const { steps, completedStepCount, isComplete } = useOnboardingContext();
-  const isVisible = useMediaQuery({ min: "medium" });
+export function OnboardingGuide() {
+  const { eligible } = useOnboardingExperiment();
+  const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =
+    useUpdateAvailable();
 
-  if (!isVisible) return null;
+  if (!eligible || sliceMachineUpdateAvailable || adapterUpdateAvailable) {
+    return null;
+  }
 
-  return (
-    <div className={isComplete ? styles.invisible : styles.visible}>
-      <Card color="grey2" variant="outlined" paddingBlock={16}>
-        <CardContent>
-          <div>
-            <Text variant="bold" color="grey12">
-              Build a page in {steps.length} steps
-            </Text>
-            <Text color="grey11" variant="small">
-              Render a live page with content coming from Prismic
-            </Text>
-          </div>
-          <ProgressBar
-            value={completedStepCount}
-            max={steps.length}
-            displayLabel
-            getValueLabel={(value, max) => `${value}/${max}`}
-          />
-          <OnboardingProgressStepper />
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
+  return <OnboardingGuideContent />;
+}
 
-const confettiConfig: ConfettiConfig = {
-  colors: ["#8E44EC", "#E8C7FF", "#59B5F8", "#C3EEFE"],
-  elementCount: 300,
-  width: "8px",
-  height: "8px",
-  stagger: 0.2,
-  startVelocity: 35,
-  spread: 90,
-  duration: 3000,
-};
-
-const OnboardingGuideContent = () => {
+function OnboardingGuideContent() {
   const [isVisible, setVisible] = useState(true);
   const confettiCannonRef = useRef<HTMLDivElement>(null);
 
@@ -80,16 +52,129 @@ const OnboardingGuideContent = () => {
       </div>
     </OnboardingProvider>
   );
+}
+
+function OnboardingGuideCard() {
+  const { steps, completedStepCount, isComplete } = useOnboardingContext();
+  const isVisible = useMediaQuery({ min: "medium" });
+  const { eligible: isOnboardingCardVisibilityExperiment, variant } =
+    useOnboardingCardVisibilityExperiment();
+
+  const {
+    buttonSize,
+    cardColor,
+    cardVariant,
+    cardDescription,
+    cardTitle,
+    descriptionColor,
+    descriptionVariant,
+    progressColor,
+    progressBackgroundColor,
+    progressLabelColor,
+    titleColor,
+  } = getCardUi({ variant, stepsCount: steps.length });
+
+  if (!isVisible) return null;
+
+  return (
+    <div
+      className={isComplete ? styles.invisible : styles.visible}
+      // 1px padding to avoid cliping of animated card while it scales up
+      style={{ padding: isOnboardingCardVisibilityExperiment ? 1 : 0 }}
+    >
+      <Card color={cardColor} variant={cardVariant} paddingBlock={16}>
+        <CardContent>
+          <div>
+            <Text variant="bold" color={titleColor}>
+              {cardTitle}
+            </Text>
+            <Text color={descriptionColor} variant={descriptionVariant}>
+              {cardDescription}
+            </Text>
+          </div>
+          <ProgressBar
+            color={progressColor}
+            backgroundColor={progressBackgroundColor}
+            labelColor={progressLabelColor}
+            value={completedStepCount}
+            max={steps.length}
+            displayLabel
+            getValueLabel={(value, max) => `${value}/${max}`}
+          />
+          <OnboardingProgressStepper buttonSize={buttonSize} />
+          {isOnboardingCardVisibilityExperiment && <OnboardingTutorial />}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+const confettiConfig: ConfettiConfig = {
+  colors: ["#8E44EC", "#E8C7FF", "#59B5F8", "#C3EEFE"],
+  elementCount: 300,
+  width: "8px",
+  height: "8px",
+  stagger: 0.2,
+  startVelocity: 35,
+  spread: 90,
+  duration: 3000,
 };
 
-export const OnboardingGuide = () => {
-  const { eligible } = useOnboardingExperiment();
-  const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =
-    useUpdateAvailable();
+interface GetCardUiProps {
+  variant?: string;
+  stepsCount: number;
+}
+interface GetCardUiReturnValue {
+  buttonSize: "large" | "medium";
+  cardColor?: "grey2";
+  cardVariant?: "outlined" | "animated-light" | "animated-dark";
+  cardTitle: string;
+  cardDescription: string;
+  titleColor?: "grey12" | "purple1";
+  descriptionColor?: "grey11" | "purple6";
+  descriptionVariant?: "small";
+  progressColor?: "white";
+  progressBackgroundColor?: "purple8";
+  progressLabelColor?: "purple3";
+}
+function getCardUi(props: GetCardUiProps): GetCardUiReturnValue {
+  const { variant, stepsCount } = props;
+  const count = stepsCount.toString();
 
-  if (!eligible || sliceMachineUpdateAvailable || adapterUpdateAvailable) {
-    return null;
+  switch (variant) {
+    case "light":
+      return {
+        buttonSize: "large",
+        cardDescription:
+          "Render a live page with content coming from Prismic in 5 mins",
+        cardTitle: `Build your first Prismic Page in ${count} simple steps`,
+        cardVariant: "animated-light",
+        descriptionColor: "grey11",
+        titleColor: "grey12",
+      };
+    case "dark":
+      return {
+        buttonSize: "large",
+        cardDescription:
+          "Render a live page with content coming from Prismic in 5 mins",
+        cardTitle: `Build your first Prismic Page in ${count} simple steps`,
+        cardVariant: "animated-dark",
+        descriptionColor: "purple6",
+        progressColor: "white",
+        progressBackgroundColor: "purple8",
+        progressLabelColor: "purple3",
+        titleColor: "purple1",
+      };
+    default:
+      return {
+        buttonSize: "medium",
+        cardColor: "grey2",
+        cardVariant: "outlined",
+        cardTitle: `Build a page in ${count} steps`,
+        cardDescription: "Render a live page with content coming from Prismic",
+        descriptionColor: "grey11",
+        descriptionVariant: "small",
+        titleColor: "grey12",
+      };
   }
-
-  return <OnboardingGuideContent />;
-};
+}

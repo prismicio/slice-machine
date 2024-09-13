@@ -1,49 +1,12 @@
 import { Text } from "@prismicio/editor-ui";
 
-import type {
-  OnboardingStep,
-  OnboardingStepContentDefinition,
-  OnboardingStepType,
-} from "@/features/onboarding/types";
+import type { OnboardingStep } from "@/features/onboarding/types";
 
 export const onboardingSteps: OnboardingStep[] = [
   {
     id: "createPageType",
     title: "Create a Page Type",
     description: "Build the structure for your page.",
-  },
-  {
-    id: "codePage",
-    title: "Code Your Page Type",
-    description: "Prepare code to fetch content.",
-  },
-  {
-    id: "createSlice",
-    title: "Create a Slice",
-    description: "Build a reusable website section.",
-  },
-  {
-    id: "reviewAndPush",
-    title: "Review and Push Changes",
-    description: "Enable editors to create content.",
-  },
-  {
-    id: "createContent",
-    title: "Create Content",
-    description: "Publish a page to the Prismic API.",
-  },
-  {
-    id: "renderPage",
-    title: "Render your page",
-    description: "View your page in the browser.",
-  },
-];
-
-export const onboardingStepContent: Record<
-  OnboardingStepType,
-  OnboardingStepContentDefinition
-> = {
-  createPageType: {
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Create_page_type_xdn13j.mp4",
     content: () => (
@@ -55,14 +18,20 @@ export const onboardingStepContent: Record<
       </Text>
     ),
   },
-  codePage: {
+  {
+    id: "codePage",
+    title: "Code Your Page Type",
+    description: "Prepare code to fetch content.",
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Step2_code_your_page_jatiur.mp4",
     content: () => (
       <Text>Prepare your code to query the content from the Prismic API.</Text>
     ),
   },
-  createSlice: {
+  {
+    id: "createSlice",
+    title: "Create a Slice",
+    description: "Build a reusable website section.",
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918322/DEV_TOOLS/ONBOARDING_GUIDE/Step3_add_slice_qzmvxf.mp4",
     content: () => (
@@ -74,7 +43,10 @@ export const onboardingStepContent: Record<
       </Text>
     ),
   },
-  reviewAndPush: {
+  {
+    id: "reviewAndPush",
+    title: "Review and Push Changes",
+    description: "Enable editors to create content.",
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/DevTools_Squad_push_changes_ovvmul.mp4",
     content: () => (
@@ -85,7 +57,10 @@ export const onboardingStepContent: Record<
       </Text>
     ),
   },
-  createContent: {
+  {
+    id: "createContent",
+    title: "Create Content",
+    description: "Publish a page to the Prismic API.",
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918324/DEV_TOOLS/ONBOARDING_GUIDE/Cre%CC%81er_contenu_e%CC%81tape_4_z9vlzt.mp4",
     content: () => (
@@ -95,7 +70,10 @@ export const onboardingStepContent: Record<
       </Text>
     ),
   },
-  renderPage: {
+  {
+    id: "renderPage",
+    title: "Render your page",
+    description: "View your page in the browser.",
     videoUrl:
       "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918321/DEV_TOOLS/ONBOARDING_GUIDE/Step_6_Render_Page_tnauh9.mp4",
     content: () => (
@@ -107,4 +85,95 @@ export const onboardingStepContent: Record<
       </Text>
     ),
   },
-};
+];
+
+export const onboardingExperimentSteps: OnboardingStep[] = [
+  {
+    id: "createProject",
+    title: "Create your Prismic website",
+    description: "Create and set up your project",
+    defaultCompleted: true,
+  },
+  {
+    id: "createPageType",
+    title: "Create your first Page Type",
+    description: "Build the structure of your page",
+    videoUrl:
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Create_page_type_xdn13j.mp4",
+    content: () => (
+      <Text>
+        A page type is a base content structure editors will use to create pages
+        in the Page Builder (Prismic's content creation UI). A page type can be
+        reusable (e.g., for multiple blog posts) or single (e.g., for a one-time
+        page like the homepage).
+      </Text>
+    ),
+  },
+  {
+    id: "codePage",
+    title: "Code your Page",
+    description: "Prepare code to fetch content",
+    videoUrl:
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/Step2_code_your_page_jatiur.mp4",
+    content: () => (
+      <Text>Prepare your code to query the content from the Prismic API.</Text>
+    ),
+  },
+  {
+    id: "createSlice",
+    title: "Create your first Slice",
+    description: "Build a reusable section",
+    videoUrl:
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918322/DEV_TOOLS/ONBOARDING_GUIDE/Step3_add_slice_qzmvxf.mp4",
+    content: () => (
+      <Text>
+        Slices are website sections that can be reused on different pages with
+        different content. Each slice has a code component automatically
+        generated by Slice Machine. Start with a template and look at your code
+        to see how it's structured.
+      </Text>
+    ),
+  },
+  {
+    id: "reviewAndPush",
+    title: "Review & push changes",
+    description: "Enable editors to create content",
+    videoUrl:
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918320/DEV_TOOLS/ONBOARDING_GUIDE/DevTools_Squad_push_changes_ovvmul.mp4",
+    content: () => (
+      <Text>
+        Your page types and slices currently exist only in your local project.
+        Push them to your repository to make them available for your content
+        editors.
+      </Text>
+    ),
+  },
+  {
+    id: "createContent",
+    title: "Create content for your page",
+    description: "Publish your page to the API",
+    videoUrl:
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918324/DEV_TOOLS/ONBOARDING_GUIDE/Cre%CC%81er_contenu_e%CC%81tape_4_z9vlzt.mp4",
+    content: () => (
+      <Text>
+        In Prismic, content creation takes place in the Prismic Page Builder UI.
+        Open the Page Builder and start creating your first page.
+      </Text>
+    ),
+  },
+  {
+    id: "renderPage",
+    title: "Preview your page",
+    description: "View your page in the browser",
+    videoUrl:
+      "https://res.cloudinary.com/dmtf1daqp/video/upload/v1721918321/DEV_TOOLS/ONBOARDING_GUIDE/Step_6_Render_Page_tnauh9.mp4",
+    content: () => (
+      <Text>
+        Now that your content is published, you can run your project in your
+        terminal and visit the page on your local server (e.g.,{" "}
+        <Text component="code">localhost:3000/example-page</Text>). Your content
+        should now be visible!
+      </Text>
+    ),
+  },
+];

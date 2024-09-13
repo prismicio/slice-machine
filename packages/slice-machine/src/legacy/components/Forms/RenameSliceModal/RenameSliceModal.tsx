@@ -65,7 +65,7 @@ export const RenameSliceModal: React.FC<RenameSliceModalProps> = ({
         title: "Rename a slice",
       }}
       validate={(values) =>
-        validateSliceModalValues(values, localLibs, remoteLibs)
+        validateSliceModalValues(values, localLibs, remoteLibs, "update")
       }
     >
       {({ touched, errors }) => (
