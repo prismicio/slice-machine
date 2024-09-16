@@ -6282,9 +6282,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:2.7.0-alpha.1":
-  version: 2.7.0-alpha.1
-  resolution: "@prismicio/types-internal@npm:2.7.0-alpha.1"
+"@prismicio/types-internal@npm:2.7.0-alpha.8":
+  version: 2.7.0-alpha.8
+  resolution: "@prismicio/types-internal@npm:2.7.0-alpha.8"
   dependencies:
     monocle-ts: ^2.3.11
     newtype-ts: ^0.3.5
@@ -6295,7 +6295,7 @@ __metadata:
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
     uuid: ^9.0.0
-  checksum: 7d642f2bb27c3ccc414298bad65ed7e0bf3ca1c788dcfcfafe6232d1c38f6a43a40af92bc06791728db4cd44e42e2caa46758266079d5de2b359fdc6a05a778e
+  checksum: eb326b7e48db9880a98438ffced3a8ebc66335769907ad5c57b6a700a20391d4ed92ee517bc8e7b16b6ef5c577f7a1e109e3ae61cb1d551d5963f8a5bbf37c28
   languageName: node
   linkType: hard
 
@@ -31289,7 +31289,7 @@ __metadata:
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.3
     "@prismicio/simulator": 0.1.4
-    "@prismicio/types-internal": 2.7.0-alpha.1
+    "@prismicio/types-internal": 2.7.0-alpha.8
     "@radix-ui/react-hover-card": 1.0.6
     "@radix-ui/react-tabs": 1.0.4
     "@radix-ui/react-visually-hidden": 1.0.3

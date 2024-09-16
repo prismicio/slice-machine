@@ -16,7 +16,7 @@ const Form = (props) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    config: { text },
+    config: { allowText },
   } = formValues;
 
   return (
@@ -37,8 +37,12 @@ const Form = (props) => {
           </Col>
         ))
       }
-      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <DisplayTextCheckbox text={text} setFieldValue={setFieldValue} />
+      <DisplayTextCheckbox
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        allowText={allowText}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        setFieldValue={setFieldValue}
+      />
     </FlexGrid>
   );
 };
