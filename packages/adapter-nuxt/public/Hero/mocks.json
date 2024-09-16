@@ -57,17 +57,13 @@
 				"__TYPE__": "ImageContent",
 				"thumbnails": {}
 			},
-			"callToActionLabel": {
-				"__TYPE__": "FieldContent",
-				"type": "Text",
-				"value": "Call to Action"
-			},
 			"callToActionLink": {
 				"__TYPE__": "LinkContent",
 				"value": {
 					"__TYPE__": "ExternalLink",
 					"url": "https://prismic.io",
-					"target": ""
+					"target": "",
+					"text": "Call to Action"
 				}
 			}
 		},
@@ -139,17 +135,13 @@
 				"__TYPE__": "ImageContent",
 				"thumbnails": {}
 			},
-			"callToActionLabel": {
-				"__TYPE__": "FieldContent",
-				"type": "Text",
-				"value": "Call to Action"
-			},
 			"callToActionLink": {
 				"__TYPE__": "LinkContent",
 				"value": {
 					"__TYPE__": "ExternalLink",
 					"url": "https://prismic.io",
-					"target": ""
+					"target": "",
+					"text": "Call to Action"
 				}
 			}
 		},
