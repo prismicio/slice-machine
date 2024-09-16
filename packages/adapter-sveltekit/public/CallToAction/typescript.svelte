@@ -36,12 +36,10 @@
 				</div>
 			{/if}
 		</div>
-		{#if isFilled.link(slice.primary.buttonLink)}
-			<PrismicLink
-				class="es-call-to-action__button"
-				field={slice.primary.buttonLink}
-			/>
-		{/if}
+		<PrismicLink
+			class="es-call-to-action__button"
+			field={slice.primary.buttonLink}
+		/>
 	</div>
 	<style>
 		.es-bounded {

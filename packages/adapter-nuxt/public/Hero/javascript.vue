@@ -46,7 +46,6 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 						<PrismicRichText :field="slice.primary.description" />
 					</div>
 					<PrismicLink
-						v-if="isFilled.link(slice.primary.callToActionLink)"
 						class="es-call-to-action__link"
 						:field="slice.primary.callToActionLink"
 					/>

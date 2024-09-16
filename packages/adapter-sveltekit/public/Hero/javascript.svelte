@@ -52,12 +52,10 @@
 						<PrismicRichText field={slice.primary.description} />
 					</div>
 				{/if}
-				{#if isFilled.link(slice.primary.callToActionLink)}
-					<PrismicLink
-						field={slice.primary.callToActionLink}
-						class="es-call-to-action__link"
-					/>
-				{/if}
+				<PrismicLink
+					field={slice.primary.callToActionLink}
+					class="es-call-to-action__link"
+				/>
 			</div>
 		</div>
 	</div>

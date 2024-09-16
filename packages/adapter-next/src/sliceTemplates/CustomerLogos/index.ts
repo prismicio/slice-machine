@@ -280,7 +280,7 @@ export const model: SharedSlice = {
 						label: "callToActionLink",
 						placeholder: "",
 						select: null,
-						text: { type: "Text" },
+						allowText: true,
 					},
 				},
 				logos: {

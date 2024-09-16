@@ -37,12 +37,10 @@ const PascalNameToReplace = ({ slice }) => {
 						</div>
 					)}
 				</div>
-				{isFilled.link(slice.primary.buttonLink) && (
-					<PrismicNextLink
-						className="es-call-to-action__button"
-						field={slice.primary.buttonLink}
-					/>
-				)}
+				<PrismicNextLink
+					className="es-call-to-action__button"
+					field={slice.primary.buttonLink}
+				/>
 			</div>
 			<style
 				dangerouslySetInnerHTML={{

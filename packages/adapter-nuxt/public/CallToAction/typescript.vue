@@ -42,7 +42,6 @@ const alignment = computed(() => {
 				</div>
 			</div>
 			<PrismicLink
-				v-if="isFilled.link(slice.primary.buttonLink)"
 				:field="slice.primary.buttonLink"
 				class="es-call-to-action__button"
 			/>
