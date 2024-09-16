@@ -12,9 +12,7 @@ import Form, { FormFields } from "./Form";
       "label": "link",
       "placeholder": "Could be a link to use case, press article, signup...",
       "allowTargetBlank": true,
-      "text": {
-        "type": "Text"
-      }
+      "allowText": true
     }
   }
  */
@@ -27,9 +25,7 @@ import Form, { FormFields } from "./Form";
       "customtypes": ["homepage"],
       "label": "contentrrrrr",
       "placeholder": "dsfdsfsdf",
-      "text": {
-        "type": "Text"
-      }
+      "allowText": true
     }
   }
   */
@@ -40,9 +36,7 @@ import Form, { FormFields } from "./Form";
       "select" : "media",
       "label" : "tomedia",
       "placeholder" : "qsdqsdqsd",
-      "text": {
-        "type": "Text"
-      }
+      "allowText": true
     }
   } */
 
@@ -79,14 +73,7 @@ export const linkConfigSchema = yup
     masks: yup.array(yup.string()).optional(),
     tags: yup.array(yup.string()).optional(),
     allowTargetBlank: yup.boolean().strict().optional(),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    text: yup
-      .object()
-      .shape({
-        type: yup.string().matches(/^Text$/, { excludeEmptyString: true }),
-      })
-      .strict()
-      .optional(),
+    allowText: yup.boolean().strict().optional(),
   })
   .required()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -115,9 +102,7 @@ export const LinkWidget: Widget<Link, typeof schema> = {
       label,
       placeholder: "",
       select: null,
-      text: {
-        type: "Text",
-      },
+      allowText: true,
     },
   }),
   TYPE_NAME: "Link",

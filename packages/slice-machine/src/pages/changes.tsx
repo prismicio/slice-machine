@@ -10,12 +10,12 @@ import { getState, telemetry } from "@/apiClient";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { NoChangesBlankSlate } from "@/features/changes/BlankSlates";
 import { PushChangesButton } from "@/features/changes/PushChangesButton";
+import { usePromptToCreateContentExperiment } from "@/features/changes/usePromptToCreateContentExperiment";
 import { pushChanges } from "@/features/sync/actions/pushChanges";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useUnSyncChanges } from "@/features/sync/useUnSyncChanges";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 import { useNetwork } from "@/hooks/useNetwork";
-import { usePromptToCreateContentExperiment } from "@/hooks/usePromptToCreateContentExperiment";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import {
   AppLayout,

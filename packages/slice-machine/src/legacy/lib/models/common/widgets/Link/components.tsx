@@ -3,20 +3,18 @@ import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
 
-type DisplayTextModel = { type: "Text" };
-
 interface DisplayTextCheckboxProps {
-  text?: DisplayTextModel;
+  allowText?: boolean;
   height?: 130 | 127;
   setFieldValue: (
     a: string,
-    b?: DisplayTextModel,
+    b?: boolean,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => void | Promise<any>;
 }
 
 export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
-  const { text, height = 130, setFieldValue } = props;
+  const { allowText, height = 130, setFieldValue } = props;
 
   return (
     <Col>
@@ -36,12 +34,9 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
           >
             <Flex>
               <Checkbox
-                checked={Boolean(text)}
+                checked={allowText}
                 onChange={(event) => {
-                  void setFieldValue(
-                    "config.text",
-                    event.target.checked ? { type: "Text" } : undefined,
-                  );
+                  void setFieldValue("config.allowText", event.target.checked);
                 }}
               />
               Allow display text

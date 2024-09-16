@@ -18,10 +18,7 @@ import Form, { FormFields } from "./Form";
         "customtypes": [
           "page"
         ],
-        "label": "relationship",
-        "text": {
-          "type": "Text"
-        }
+        "label": "relationship"
       }
     }
 */
@@ -55,9 +52,6 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
     config: {
       label,
       select: "document",
-      text: {
-        type: "Text",
-      },
     },
   }),
   Meta,
