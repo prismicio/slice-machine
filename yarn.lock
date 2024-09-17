@@ -5969,7 +5969,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:^7.1.0, @prismicio/client@npm:^7.6.0":
+"@prismicio/client@npm:^7.1.0":
   version: 7.6.0
   resolution: "@prismicio/client@npm:7.6.0"
   dependencies:
@@ -9283,7 +9283,7 @@ __metadata:
   dependencies:
     "@amplitude/experiment-node-server": 1.8.1
     "@antfu/ni": ^0.20.0
-    "@prismicio/client": ^7.6.0
+    "@prismicio/client": ^7.9.0-alpha.3
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": ^2.3.3
