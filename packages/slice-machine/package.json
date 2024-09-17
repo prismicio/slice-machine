@@ -42,7 +42,7 @@
   "devDependencies": {
     "@emotion/react": "11.11.1",
     "@extractus/oembed-extractor": "3.1.8",
-    "@prismicio/client": "7.9.0-alpha.0",
+    "@prismicio/client": "7.9.0-alpha.3",
     "@prismicio/editor-fields": "0.4.48",
     "@prismicio/editor-support": "0.4.48",
     "@prismicio/editor-ui": "0.4.48",
