@@ -62,7 +62,7 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@prismicio/client": "^7.9.0-alpha.3",
+		"@prismicio/client": "^7.11",
 		"common-tags": "^1.8.2",
 		"defu": "^6.1.2",
 		"dotenv": "16.3.1",
@@ -76,7 +76,7 @@
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.3.7",
-		"@prismicio/types-internal": "2.7.0",
+		"@prismicio/types-internal": "2.8.0",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
 		"@types/fs-extra": "11.0.1",

@@ -12,7 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
-    "@prismicio/client": "^7.9.0-alpha.3",
+    "@prismicio/client": "^7.11",
     "@prismicio/helpers": "^2.3.9",
     "@prismicio/next": "^1.1.0",
     "@prismicio/react": "^2.6.0",
