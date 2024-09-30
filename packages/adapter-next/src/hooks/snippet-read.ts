@@ -63,9 +63,13 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				label,
 				language: "tsx",
 				code: await format(
-					stripIndent`
-						<PrismicNextLink field={${dotPath(fieldPath)}} />
-					`,
+					data.model.config?.allowText
+						? stripIndent`
+							<PrismicNextLink field={${dotPath(fieldPath)}} />
+						`
+						: stripIndent`
+							<PrismicNextLink field={${dotPath(fieldPath)}}>Link</PrismicNextLink>
+						`,
 					helpers,
 				),
 			};
