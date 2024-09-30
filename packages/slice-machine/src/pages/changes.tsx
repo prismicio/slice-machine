@@ -10,7 +10,6 @@ import { getState, telemetry } from "@/apiClient";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { NoChangesBlankSlate } from "@/features/changes/BlankSlates";
 import { PushChangesButton } from "@/features/changes/PushChangesButton";
-import { usePromptToCreateContentExperiment } from "@/features/changes/usePromptToCreateContentExperiment";
 import { pushChanges } from "@/features/sync/actions/pushChanges";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useUnSyncChanges } from "@/features/sync/useUnSyncChanges";
@@ -56,8 +55,6 @@ const Changes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isPushed, setIsPushed] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
-  const { eligible: isPromptToCreateContentExperimentEligible } =
-    usePromptToCreateContentExperiment();
   const { repositoryName } = useRepositoryInformation();
 
   const documentsListEndpoint =
@@ -97,12 +94,7 @@ const Changes: React.FunctionComponent = () => {
         pushChangesSuccess();
 
         setIsPushed(true);
-
-        if (isPromptToCreateContentExperimentEligible) {
-          setIsToastOpen(true);
-        } else {
-          toast.success("All slices and types have been pushed");
-        }
+        setIsToastOpen(true);
       }
     } catch (error) {
       console.error(
@@ -133,9 +125,6 @@ const Changes: React.FunctionComponent = () => {
         <NoChangesBlankSlate
           isPostPush={isPushed}
           documentsListEndpoint={documentsListEndpoint}
-          isPromptToCreateContentExperimentEligible={
-            isPromptToCreateContentExperimentEligible
-          }
         />
       );
     }
@@ -157,7 +146,6 @@ const Changes: React.FunctionComponent = () => {
     modelsStatuses,
     isPushed,
     documentsListEndpoint,
-    isPromptToCreateContentExperimentEligible,
   ]);
 
   return (

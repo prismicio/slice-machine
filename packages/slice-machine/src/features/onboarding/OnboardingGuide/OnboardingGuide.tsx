@@ -14,7 +14,6 @@ import {
   useOnboardingContext,
 } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingTutorial } from "@/features/onboarding/OnboardingTutorial/OnboardingTutorial";
-import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 
@@ -57,22 +56,6 @@ function OnboardingGuideContent() {
 function OnboardingGuideCard() {
   const { steps, completedStepCount, isComplete } = useOnboardingContext();
   const isVisible = useMediaQuery({ min: "medium" });
-  const { eligible: isOnboardingCardVisibilityExperiment, variant } =
-    useOnboardingCardVisibilityExperiment();
-
-  const {
-    buttonSize,
-    cardColor,
-    cardVariant,
-    cardDescription,
-    cardTitle,
-    descriptionColor,
-    descriptionVariant,
-    progressColor,
-    progressBackgroundColor,
-    progressLabelColor,
-    titleColor,
-  } = getCardUi({ variant, stepsCount: steps.length });
 
   if (!isVisible) return null;
 
@@ -80,29 +63,26 @@ function OnboardingGuideCard() {
     <div
       className={isComplete ? styles.invisible : styles.visible}
       // 1px padding to avoid cliping of animated card while it scales up
-      style={{ padding: isOnboardingCardVisibilityExperiment ? 1 : 0 }}
+      style={{ padding: 1 }}
     >
-      <Card color={cardColor} variant={cardVariant} paddingBlock={16}>
+      <Card variant="animated-light" paddingBlock={16}>
         <CardContent>
           <div>
-            <Text variant="bold" color={titleColor}>
-              {cardTitle}
+            <Text variant="bold" color="grey12">
+              {`Build your first Prismic Page in ${steps.length.toString()} simple steps`}
             </Text>
-            <Text color={descriptionColor} variant={descriptionVariant}>
-              {cardDescription}
+            <Text color="grey11">
+              Render a live page with content coming from Prismic in 5 mins
             </Text>
           </div>
           <ProgressBar
-            color={progressColor}
-            backgroundColor={progressBackgroundColor}
-            labelColor={progressLabelColor}
             value={completedStepCount}
             max={steps.length}
             displayLabel
             getValueLabel={(value, max) => `${value}/${max}`}
           />
-          <OnboardingProgressStepper buttonSize={buttonSize} />
-          {isOnboardingCardVisibilityExperiment && <OnboardingTutorial />}
+          <OnboardingProgressStepper buttonSize="large" />
+          <OnboardingTutorial />
         </CardContent>
       </Card>
     </div>
@@ -119,62 +99,3 @@ const confettiConfig: ConfettiConfig = {
   spread: 90,
   duration: 3000,
 };
-
-interface GetCardUiProps {
-  variant?: string;
-  stepsCount: number;
-}
-interface GetCardUiReturnValue {
-  buttonSize: "large" | "medium";
-  cardColor?: "grey2";
-  cardVariant?: "outlined" | "animated-light" | "animated-dark";
-  cardTitle: string;
-  cardDescription: string;
-  titleColor?: "grey12" | "purple1";
-  descriptionColor?: "grey11" | "purple6";
-  descriptionVariant?: "small";
-  progressColor?: "white";
-  progressBackgroundColor?: "purple8";
-  progressLabelColor?: "purple3";
-}
-function getCardUi(props: GetCardUiProps): GetCardUiReturnValue {
-  const { variant, stepsCount } = props;
-  const count = stepsCount.toString();
-
-  switch (variant) {
-    case "light":
-      return {
-        buttonSize: "large",
-        cardDescription:
-          "Render a live page with content coming from Prismic in 5 mins",
-        cardTitle: `Build your first Prismic Page in ${count} simple steps`,
-        cardVariant: "animated-light",
-        descriptionColor: "grey11",
-        titleColor: "grey12",
-      };
-    case "dark":
-      return {
-        buttonSize: "large",
-        cardDescription:
-          "Render a live page with content coming from Prismic in 5 mins",
-        cardTitle: `Build your first Prismic Page in ${count} simple steps`,
-        cardVariant: "animated-dark",
-        descriptionColor: "purple6",
-        progressColor: "white",
-        progressBackgroundColor: "purple8",
-        progressLabelColor: "purple3",
-        titleColor: "purple1",
-      };
-    default:
-      return {
-        buttonSize: "medium",
-        cardColor: "grey2",
-        cardVariant: "outlined",
-        cardTitle: `Build a page in ${count} steps`,
-        cardDescription: "Render a live page with content coming from Prismic",
-        descriptionColor: "grey11",
-        descriptionVariant: "small",
-        titleColor: "grey12",
-      };
-  }
-}

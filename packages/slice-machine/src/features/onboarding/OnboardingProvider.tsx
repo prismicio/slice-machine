@@ -1,17 +1,13 @@
 import { createContext, ReactNode, useContext } from "react";
 
 import { telemetry } from "@/apiClient";
-import {
-  onboardingExperimentSteps,
-  onboardingSteps,
-} from "@/features/onboarding/content";
+import { onboardingSteps } from "@/features/onboarding/content";
 import {
   type OnboardingStep,
   type OnboardingStepId,
   type OnboardingStepStatuses,
   onboardingStepStatusesSchema,
 } from "@/features/onboarding/types";
-import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
 type OnboardingContext = {
@@ -49,8 +45,7 @@ export const OnboardingProvider = ({
   children,
   onComplete,
 }: OnboardingProviderProps) => {
-  const { eligible } = useOnboardingCardVisibilityExperiment();
-  const steps = eligible ? onboardingExperimentSteps : onboardingSteps;
+  const steps = onboardingSteps;
 
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
