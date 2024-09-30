@@ -11,7 +11,7 @@ import { DisplayTextCheckbox } from "./components";
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {
   ...DefaultFields,
-  allowTargetBlank: CheckBox("Allow target blank", false, false),
+  allowTargetBlank: CheckBox("Allow target blank", false, true),
 };
 
 const Form = (props) => {
@@ -57,7 +57,7 @@ const Form = (props) => {
           <WidgetFormField
             fieldName={createFieldNameFromKey("allowTargetBlank")}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            formField={CheckBox("Allow target blank", false, false)}
+            formField={CheckBox("Allow target blank", false, true)}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             fields={fields}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
