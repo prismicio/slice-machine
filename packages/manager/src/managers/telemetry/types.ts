@@ -199,6 +199,7 @@ type FieldAddedSegmentEvent = SegmentEvent<
 		type: FieldType;
 		isInAGroup: boolean;
 		contentType: "page type" | "custom type" | "slice";
+		allowText?: boolean;
 	}
 >;
 

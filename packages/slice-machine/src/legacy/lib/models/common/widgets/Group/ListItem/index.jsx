@@ -76,6 +76,9 @@ export const CustomListItem = ({
       type: newField.type,
       isInAGroup: true,
       contentType: getContentTypeForTracking(window.location.pathname),
+      ...(newField.type === "Link" && {
+        allowText: newField.config?.allowText,
+      }),
     });
   };
 

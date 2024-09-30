@@ -166,6 +166,9 @@ const FieldZones: FC = () => {
       type: newField.type,
       isInAGroup: false,
       contentType: getContentTypeForTracking(window.location.pathname),
+      ...(newField.type === "Link" && {
+        allowText: newField.config?.allowText,
+      }),
     });
   };
 
