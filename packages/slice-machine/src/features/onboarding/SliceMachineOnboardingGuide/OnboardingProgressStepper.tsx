@@ -36,9 +36,10 @@ export function OnboardingProgressStepper(
     setActiveStep(step);
     setDialogOpen(true);
     void telemetry.track({
-      event: "onboarding:step-opened",
+      event: "shared-onboarding-guide:step-open",
       stepId: step.id,
       stepTitle: step.title,
+      source: "SliceMachine",
     });
   };
 
