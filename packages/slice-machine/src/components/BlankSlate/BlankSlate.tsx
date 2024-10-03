@@ -38,11 +38,11 @@ export const BlankSlateContent: FC<PropsWithChildren> = (props) => (
 );
 
 export const BlankSlateTitle: FC<PropsWithChildren> = (props) => (
-  <Text {...props} className={styles.title} />
+  <Text {...props} variant="h3" />
 );
 
 export const BlankSlateDescription: FC<PropsWithChildren> = (props) => (
-  <Text {...props} className={styles.desc} color="grey11" />
+  <Text {...props} color="grey11" />
 );
 
 export const BlankSlateActions: FC<PropsWithChildren> = (props) => (
