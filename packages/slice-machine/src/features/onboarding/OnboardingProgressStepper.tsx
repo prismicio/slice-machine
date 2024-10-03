@@ -59,7 +59,8 @@ export function OnboardingProgressStepper(
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
-            onMouseEnter={() => setListOpen(true)}
+            // TODO: Fix typescript error
+            {...{ onMouseEnter: () => setListOpen(true) }}
           >
             {completedStepCount > 0 ? "Continue" : "Start now"}
           </Button>

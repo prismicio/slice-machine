@@ -46,16 +46,6 @@
   padding: 64px;
 }
 
-.title {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 32px;
-}
-
-.desc {
-  font-weight: 400;
-  line-height: 24px;
-}
 .withBackground .desc {
   max-width: 464px;
   align-self: center;

@@ -1,5 +1,4 @@
 import { Text } from "@prismicio/editor-ui";
-import clsx from "clsx";
 import { Children, FC, PropsWithChildren } from "react";
 
 import styles from "./Breadcrumb.module.css";
@@ -34,7 +33,7 @@ export const BreadcrumbItem: FC<BreadcrumbItemProps> = (props) => {
       <Text
         component="span"
         color={active ? "grey12" : "grey11"}
-        className={clsx(active && styles.active)}
+        variant={active ? "bold" : "normal"}
       >
         {children}
       </Text>
