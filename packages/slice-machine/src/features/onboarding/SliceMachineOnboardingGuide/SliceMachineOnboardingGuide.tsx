@@ -8,30 +8,12 @@ import {
 import { confetti as fireConfetti, ConfettiConfig } from "dom-confetti";
 import { useRef, useState } from "react";
 
-import { OnboardingProgressStepper } from "@/features/onboarding/OnboardingProgressStepper";
-import {
-  OnboardingProvider,
-  useOnboardingContext,
-} from "@/features/onboarding/OnboardingProvider";
-import { OnboardingTutorial } from "@/features/onboarding/OnboardingTutorial/OnboardingTutorial";
-import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
-import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
-
 import styles from "./OnboardingGuide.module.css";
+import { OnboardingProgressStepper } from "./OnboardingProgressStepper";
+import { OnboardingProvider, useOnboardingContext } from "./OnboardingProvider";
+import { OnboardingTutorial } from "./OnboardingTutorial/OnboardingTutorial";
 
-export function OnboardingGuide() {
-  const { eligible } = useOnboardingExperiment();
-  const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =
-    useUpdateAvailable();
-
-  if (!eligible || sliceMachineUpdateAvailable || adapterUpdateAvailable) {
-    return null;
-  }
-
-  return <OnboardingGuideContent />;
-}
-
-function OnboardingGuideContent() {
+export function SliceMachineOnboardingGuide() {
   const [isVisible, setVisible] = useState(true);
   const confettiCannonRef = useRef<HTMLDivElement>(null);
 

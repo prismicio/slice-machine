@@ -8,9 +8,10 @@ import {
 } from "@prismicio/editor-ui";
 import { useState } from "react";
 
-import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
-import { OnboardingStepDialogContent } from "@/features/onboarding/OnboardingStepDialog/OnboardingStepDialogContent";
-import type { OnboardingStep } from "@/features/onboarding/types";
+import { useOnboardingContext } from "@/features/onboarding/SliceMachineOnboardingGuide/OnboardingProvider";
+import type { OnboardingStep } from "@/features/onboarding/SliceMachineOnboardingGuide/types";
+
+import { OnboardingStepDialogContent } from "./OnboardingStepDialogContent";
 
 type OnboardingStepDialogProps = {
   step: OnboardingStep;

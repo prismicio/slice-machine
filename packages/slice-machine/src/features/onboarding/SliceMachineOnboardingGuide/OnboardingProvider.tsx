@@ -1,13 +1,13 @@
 import { createContext, ReactNode, useContext } from "react";
 
 import { telemetry } from "@/apiClient";
-import { onboardingSteps } from "@/features/onboarding/content";
+import { onboardingSteps } from "@/features/onboarding/SliceMachineOnboardingGuide/content";
 import {
   type OnboardingStep,
   type OnboardingStepId,
   type OnboardingStepStatuses,
   onboardingStepStatusesSchema,
-} from "@/features/onboarding/types";
+} from "@/features/onboarding/SliceMachineOnboardingGuide/types";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
 type OnboardingContext = {
