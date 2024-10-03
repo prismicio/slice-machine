@@ -4539,12 +4539,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@heroicons/react@npm:latest":
-  version: 2.1.5
-  resolution: "@heroicons/react@npm:2.1.5"
+"@heroicons/react@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "@heroicons/react@npm:1.0.6"
   peerDependencies:
     react: ">= 16"
-  checksum: 1c793f96443580416eccdb60d72c19f640ce068a95f8568bfe8176c6e8ef1318f3d4d4caa8656b571002fe3a7f2d989d6812429fd6bca4bdff641e4b8998c0cd
+  checksum: 372b1eda3ce735ef069777bc96304f70de585ebb71a6d1cedc121bb695f9bca235619112e3ee14e8779e95a03096813cbbe3b755927a54b7580d1ce084fa4096
   languageName: node
   linkType: hard
 
@@ -15163,7 +15163,7 @@ __metadata:
   resolution: "cimsirp@workspace:e2e-projects/next"
   dependencies:
     "@headlessui/react": ^1.5.0
-    "@heroicons/react": latest
+    "@heroicons/react": ^1.0.6
     "@prismicio/client": latest
     "@prismicio/helpers": latest
     "@prismicio/next": latest
