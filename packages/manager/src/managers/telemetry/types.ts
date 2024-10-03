@@ -35,13 +35,13 @@ export const SegmentEventType = {
 	sliceMachine_start: "slice-machine:start",
 	sliceLibrary_beta_modalOpened: "slice-library:beta:modal-opened",
 	sliceLibrary_beta_codeOpened: "slice-library:beta:code-opened",
-	onboarding_step_opened: "onboarding:step-opened",
-	onboarding_step_completed: "onboarding:step-completed",
-	onboarding_completed: "onboarding:completed",
 	postPush_emptyStateCtaClicked: "post-push:empty-state-cta-clicked",
 	postPush_toastCtaClicked: "post-push:toast-cta-clicked",
 	experiment_exposure: "experiment:exposure",
 	sliceName_pascalCaseError: "slice-name-error:pascal-case",
+	sharedOnboardingGuide_stepCompleted: "shared-onboarding-guide:step-completed",
+	sharedOnboardingGuide_stepOpen: "shared-onboarding-guide:step-open",
+	sharedOnboardingGuide_completed: "shared-onboarding-guide:completed",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -87,11 +87,6 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slice Library [BETA] CTA modal displayed",
 	[SegmentEventType.sliceLibrary_beta_codeOpened]:
 		"SliceMachine Slice Library [BETA] CTA example code opened",
-	[SegmentEventType.onboarding_step_opened]:
-		"SliceMachine Onboarding Step Opened",
-	[SegmentEventType.onboarding_step_completed]:
-		"SliceMachine Onboarding Step Completed",
-	[SegmentEventType.onboarding_completed]: "SliceMachine Onboarding Completed",
 	[SegmentEventType.postPush_emptyStateCtaClicked]:
 		"SliceMachine Post Push Empty State CTA Clicked",
 	[SegmentEventType.postPush_toastCtaClicked]:
@@ -99,7 +94,14 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.experiment_exposure]: "$exposure",
 	[SegmentEventType.sliceName_pascalCaseError]:
 		"SliceMachine Slice Name Pascal Case Error",
+	[SegmentEventType.sharedOnboardingGuide_stepCompleted]:
+		"Prismic Onboarding Guide Step Completed",
+	[SegmentEventType.sharedOnboardingGuide_stepOpen]:
+		"Prismic Onboarding Guide Step Open",
+	[SegmentEventType.sharedOnboardingGuide_completed]:
+		"Prismic Onboarding Guide Completed",
 } as const;
+
 export type HumanSegmentEventTypes =
 	(typeof HumanSegmentEventType)[keyof typeof HumanSegmentEventType];
 
@@ -338,23 +340,28 @@ type SliceLibraryBetaCodeOpened = SegmentEvent<
 >;
 
 type SliceMachineOnboardingStepOpened = SegmentEvent<
-	typeof SegmentEventType.onboarding_step_opened,
+	typeof SegmentEventType.sharedOnboardingGuide_stepOpen,
 	{
 		stepId: string;
 		stepTitle: string;
+		source: "SliceMachine";
 	}
 >;
 
 type SliceMachineOnboardingStepCompleted = SegmentEvent<
-	typeof SegmentEventType.onboarding_step_completed,
+	typeof SegmentEventType.sharedOnboardingGuide_stepCompleted,
 	{
 		stepId: string;
 		stepTitle: string;
+		source: "SliceMachine";
 	}
 >;
 
 type SliceMachineOnboardingCompleted = SegmentEvent<
-	typeof SegmentEventType.onboarding_completed
+	typeof SegmentEventType.sharedOnboardingGuide_completed,
+	{
+		source: "SliceMachine";
+	}
 >;
 
 type SliceMachinePostPushEmptyStateCtaClicked = SegmentEvent<

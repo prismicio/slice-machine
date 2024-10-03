@@ -1,6 +1,6 @@
 import { Text } from "@prismicio/editor-ui";
 
-import type { OnboardingStep } from "@/features/onboarding/types";
+import type { OnboardingStep } from "./types";
 
 export const onboardingSteps: OnboardingStep[] = [
   {

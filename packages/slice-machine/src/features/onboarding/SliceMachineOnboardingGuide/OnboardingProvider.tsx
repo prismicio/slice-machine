@@ -1,13 +1,13 @@
 import { createContext, ReactNode, useContext } from "react";
 
 import { telemetry } from "@/apiClient";
-import { onboardingSteps } from "@/features/onboarding/content";
+import { onboardingSteps } from "@/features/onboarding/SliceMachineOnboardingGuide/content";
 import {
   type OnboardingStep,
   type OnboardingStepId,
   type OnboardingStepStatuses,
   onboardingStepStatusesSchema,
-} from "@/features/onboarding/types";
+} from "@/features/onboarding/SliceMachineOnboardingGuide/types";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
 type OnboardingContext = {
@@ -60,14 +60,18 @@ export const OnboardingProvider = ({
 
     if (isComplete) {
       void telemetry.track({
-        event: "onboarding:step-completed",
+        event: "shared-onboarding-guide:step-completed",
         stepId: step.id,
         stepTitle: step.title,
+        source: "SliceMachine",
       });
     }
     if (Object.values(nextState).every(Boolean)) {
       onComplete?.();
-      void telemetry.track({ event: "onboarding:completed" });
+      void telemetry.track({
+        event: "shared-onboarding-guide:completed",
+        source: "SliceMachine",
+      });
     }
   };
 

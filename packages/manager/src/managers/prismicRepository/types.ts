@@ -167,3 +167,32 @@ export const Environment = t.type({
 	),
 });
 export type Environment = t.TypeOf<typeof Environment>;
+
+export const OnboardingStepId = t.union([
+	t.literal("createPrismicProject"),
+	t.literal("chooseLocale"),
+	t.literal("createProject"),
+	t.literal("setupSliceMachine"),
+	t.literal("createPageType"),
+	t.literal("codePage"),
+	t.literal("createSlice"),
+	t.literal("reviewAndPush"),
+	t.literal("createContent"),
+	t.literal("renderPage"),
+]);
+export type OnboardingStepId = t.TypeOf<typeof OnboardingStepId>;
+
+export const OnboardingState = t.type({
+	completedSteps: t.array(OnboardingStepId),
+	isDismissed: t.boolean,
+	context: t.type({
+		framework: t.union([
+			t.literal("next"),
+			t.literal("nuxt"),
+			t.literal("sveltekit"),
+			t.literal("other"),
+		]),
+		starterId: t.union([t.string, t.null]),
+	}),
+});
+export type OnboardingState = t.TypeOf<typeof OnboardingState>;
