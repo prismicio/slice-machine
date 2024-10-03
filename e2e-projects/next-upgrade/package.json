@@ -9,9 +9,9 @@
     "slicemachine": "NODE_ENV=development SM_ENV=staging start-slicemachine"
   },
   "dependencies": {
-    "@prismicio/client": "^7.5.0",
-    "@prismicio/next": "^1.3.6",
-    "@prismicio/react": "^2.7.3",
+    "@prismicio/client": "latest",
+    "@prismicio/next": "latest",
+    "@prismicio/react": "latest",
     "next": "^13.5.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

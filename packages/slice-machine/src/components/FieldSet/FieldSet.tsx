@@ -38,12 +38,7 @@ export const FieldSetListItem: FC<FieldSetListItemProps> = ({
   ...otherProps
 }) => (
   <li {...otherProps} className={styles.listItem}>
-    <Text
-      className={styles.listItemText}
-      component="span"
-      noWrap
-      variant="bold"
-    >
+    <Text component="span" noWrap variant="bold" sx={{ flexGrow: 1 }}>
       {children}
     </Text>
     {action}
@@ -59,11 +54,11 @@ export const FieldSetFooter: FC<FieldSetFooterProps> = ({
 }) => (
   <div {...otherProps} className={styles.footer}>
     <Text
-      className={styles.footerText}
       color="grey11"
       component="span"
       noWrap
       variant="small"
+      sx={{ flexGrow: 1 }}
     >
       {children}
     </Text>

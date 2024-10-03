@@ -11,7 +11,8 @@ import Form, { FormFields } from "./Form";
     "config": {
       "label": "link",
       "placeholder": "Could be a link to use case, press article, signup...",
-      "allowTargetBlank": true
+      "allowTargetBlank": true,
+      "allowText": true
     }
   }
  */
@@ -23,7 +24,8 @@ import Form, { FormFields } from "./Form";
       "select": "document",
       "customtypes": ["homepage"],
       "label": "contentrrrrr",
-      "placeholder": "dsfdsfsdf"
+      "placeholder": "dsfdsfsdf",
+      "allowText": true
     }
   }
   */
@@ -33,7 +35,8 @@ import Form, { FormFields } from "./Form";
     "config" : {
       "select" : "media",
       "label" : "tomedia",
-      "placeholder" : "qsdqsdqsd"
+      "placeholder" : "qsdqsdqsd",
+      "allowText": true
     }
   } */
 
@@ -70,6 +73,7 @@ export const linkConfigSchema = yup
     masks: yup.array(yup.string()).optional(),
     tags: yup.array(yup.string()).optional(),
     allowTargetBlank: yup.boolean().strict().optional(),
+    allowText: yup.boolean().strict().optional(),
   })
   .required()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -98,6 +102,7 @@ export const LinkWidget: Widget<Link, typeof schema> = {
       label,
       placeholder: "",
       select: null,
+      allowText: true,
     },
   }),
   TYPE_NAME: "Link",

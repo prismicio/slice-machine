@@ -45,19 +45,13 @@
 						"thumbnails": []
 					}
 				},
-				"callToActionLabel": {
-					"type": "Text",
-					"config": {
-						"label": "callToActionLabel",
-						"placeholder": ""
-					}
-				},
 				"callToActionLink": {
 					"type": "Link",
 					"config": {
 						"label": "callToActionLink",
 						"placeholder": "",
-						"select": null
+						"select": null,
+						"allowText": true
 					}
 				}
 			},
@@ -104,19 +98,13 @@
 						"thumbnails": []
 					}
 				},
-				"callToActionLabel": {
-					"type": "Text",
-					"config": {
-						"label": "callToActionLabel",
-						"placeholder": ""
-					}
-				},
 				"callToActionLink": {
 					"type": "Link",
 					"config": {
 						"label": "callToActionLink",
 						"placeholder": "",
-						"select": null
+						"select": null,
+						"allowText": true
 					}
 				}
 			},

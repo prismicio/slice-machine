@@ -61,9 +61,13 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				label,
 				language: "svelte",
 				code: await format(
-					stripIndent`
-						<PrismicLink field={${dotPath(fieldPath)}}>Link</PrismicLink>
-					`,
+					data.model.config?.allowText
+						? stripIndent`
+							<PrismicLink field={${dotPath(fieldPath)}} />
+						`
+						: stripIndent`
+							<PrismicLink field={${dotPath(fieldPath)}}>Link</PrismicLink>
+						`,
 					helpers,
 				),
 			};

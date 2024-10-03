@@ -65,17 +65,13 @@ export const mocks: SharedSliceContent[] = [
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
-			callToActionLabel: {
-				__TYPE__: "FieldContent",
-				type: "Text",
-				value: "Call to Action",
-			},
 			callToActionLink: {
 				__TYPE__: "LinkContent",
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://prismic.io",
 					target: "",
+					text: "Call to Action",
 				},
 			},
 		},
@@ -147,17 +143,13 @@ export const mocks: SharedSliceContent[] = [
 				__TYPE__: "ImageContent",
 				thumbnails: {},
 			},
-			callToActionLabel: {
-				__TYPE__: "FieldContent",
-				type: "Text",
-				value: "Call to Action",
-			},
 			callToActionLink: {
 				__TYPE__: "LinkContent",
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://prismic.io",
 					target: "",
+					text: "Call to Action",
 				},
 			},
 		},
@@ -214,19 +206,13 @@ export const model: SharedSlice = {
 						thumbnails: [],
 					},
 				},
-				callToActionLabel: {
-					type: "Text",
-					config: {
-						label: "callToActionLabel",
-						placeholder: "",
-					},
-				},
 				callToActionLink: {
 					type: "Link",
 					config: {
 						label: "callToActionLink",
 						placeholder: "",
 						select: null,
+						allowText: true,
 					},
 				},
 			},
@@ -275,19 +261,13 @@ export const model: SharedSlice = {
 						thumbnails: [],
 					},
 				},
-				callToActionLabel: {
-					type: "Text",
-					config: {
-						label: "callToActionLabel",
-						placeholder: "",
-					},
-				},
 				callToActionLink: {
 					type: "Link",
 					config: {
 						label: "callToActionLink",
 						placeholder: "",
 						select: null,
+						allowText: true,
 					},
 				},
 			},

@@ -53,12 +53,9 @@ defineProps(
 						<PrismicRichText :field="slice.primary.description" />
 					</div>
 					<PrismicLink
-						v-if="isFilled.link(slice.primary.callToActionLink)"
 						class="es-call-to-action__link"
 						:field="slice.primary.callToActionLink"
-					>
-						{{ slice.primary.callToActionLabel || "Learn more…" }}
-					</PrismicLink>
+					/>
 				</div>
 			</div>
 		</div>
