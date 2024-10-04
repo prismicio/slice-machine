@@ -58,7 +58,7 @@ function unlinkPackages(packages: string[]) {
 }
 
 function printHelp() {
-  console.log(`Slice machine yalc helper script
+  console.log(`Slice machine Yalc helper script
 
 USAGE
   $ ${basename(process.argv[1])} <COMMAND>
