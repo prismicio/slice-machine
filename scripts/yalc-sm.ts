@@ -2,7 +2,7 @@ import { existsSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, basename } from "node:path";
 
-import { green, greenBright, red, bold } from "chalk";
+import { green, greenBright, red, bold, yellow } from "chalk";
 import { execaSync } from "execa";
 
 const cwd = process.cwd();
@@ -13,6 +13,8 @@ const packages = [
   "@prismicio/editor-fields",
   "@prismicio/editor-support",
 ];
+const seeMoreInfoMessage =
+  "see CONTRIBUTING.md section on Local development with editor for more information.";
 
 function fail(message: string) {
   console.error(red(message));
@@ -28,16 +30,23 @@ function getYalcPrismicPackages() {
 async function linkPackages(packages: string[]) {
   const prismicPkgs = getYalcPrismicPackages();
   if (prismicPkgs.length === 0) {
-    fail("No packaged to link");
+    fail(`No packages to link, ${seeMoreInfoMessage}`);
   }
 
+  let someFailed = false;
   for await (const name of packages) {
     if (prismicPkgs.includes(name)) {
       execaSync("yalc", ["link", name, "--dev"], { cwd: smWorkspaceLocation });
       console.log(`${greenBright("✔")} Linked ${bold(green(name))}`);
     } else {
-      console.log(`${red('✘')} Package ${bold(name)} not found in yalc`);
+      someFailed = true;
+      console.log(`${red("✘")} Package ${bold(name)} not found in yalc`);
     }
+  }
+  if (someFailed) {
+    console.error(
+      yellow(`\nSome packages were not found in yalc, ${seeMoreInfoMessage}`),
+    );
   }
 }
 
@@ -58,7 +67,7 @@ COMMANDS
   link          Link slice-machine editor packages to yalc
   clean         Unlink slice-machine editor packages from yalc
 
-  --help, -h    Display help`)
+  --help, -h    Display help`);
 }
 
 const [command, ...options] = process.argv.slice(2);
