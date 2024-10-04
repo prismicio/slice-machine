@@ -886,10 +886,6 @@ const AppTheme = (): Theme =>
         variant: "textStyles.heading",
         fontSize: 5,
       },
-      h3: {
-        variant: "textStyles.heading",
-        fontSize: 4,
-      },
       h4: {
         variant: "textStyles.heading",
         fontSize: 3,
