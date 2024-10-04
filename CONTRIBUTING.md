@@ -129,6 +129,21 @@ gh pr create
 # When ready, PRs should be merged using the "Squash and merge" option.
 ```
 
+## 🏗️ Local development with editor (slice-machine-ui)
+
+In order to be able to develop faster locally, without having to publish new `editor-ui/fields/support` npm packages, you can use yalc (a local package repository). Here how to do it:
+
+#### 1. Check `editor/CONTRIBUTING.md` "Local package publishing" section
+#### 2. Link editor packages to yalc
+```shell
+yarn yalc:editor-packages link
+```
+
+#### _(after developing)_ Unlink to use the installed npm packages
+```shell
+yarn yalc:editor-packages clean
+```
+
 ## :rocket: Publish
 
 > [!CAUTION]
