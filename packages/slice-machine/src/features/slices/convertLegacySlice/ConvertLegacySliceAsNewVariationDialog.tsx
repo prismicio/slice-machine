@@ -46,16 +46,15 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
     variationName: sliceName,
   };
   const [inferIDFromName, setInferIDFromName] = useState(true);
-
   const [values, setValues] = useState<FormValues>(defaultValues);
-
-  const [errors, setErrors] =
-    useState<Partial<Record<keyof FormValues, string>>>();
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof FormValues, string>>
+  >({});
 
   useOnChange(isOpen, () => {
     if (!isOpen) {
       setValues(defaultValues);
-      setErrors(undefined);
+      setErrors({});
     }
   });
 
@@ -65,7 +64,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
   }
 
   function handleSubmit() {
-    if (errors && Object.keys(errors).length > 0) {
+    if (Object.keys(errors).length > 0) {
       return;
     }
 
@@ -90,12 +89,12 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
               <Box display="flex" flexDirection="column" gap={4}>
                 <label className={styles.label}>
                   <Text variant="bold">Target slice *</Text>
-                  {typeof errors?.libraryID === "string" ? (
+                  {typeof errors.libraryID === "string" ? (
                     <Text variant="small" color="tomato10">
                       {errors.libraryID}
                     </Text>
                   ) : null}
-                  {typeof errors?.sliceID === "string" ? (
+                  {typeof errors.sliceID === "string" ? (
                     <Text variant="small" color="tomato10">
                       {errors.sliceID}
                     </Text>
@@ -136,7 +135,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
                 <FormInput
                   label="Variation name *"
                   placeholder={sliceName}
-                  error={errors?.variationName}
+                  error={errors.variationName}
                   value={values.variationName}
                   onValueChange={(value) => {
                     const newValues = {
@@ -159,7 +158,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
                 <FormInput
                   label="ID *"
                   placeholder={camelCase(slice.key)}
-                  error={errors?.variationID}
+                  error={errors.variationID}
                   value={values.variationID}
                   onValueChange={(value) => {
                     setInferIDFromName(false);
@@ -177,7 +176,7 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
               <DialogActionButton
                 size="medium"
                 loading={isLoading}
-                disabled={errors && Object.keys(errors).length > 0}
+                disabled={Object.keys(errors).length > 0}
               >
                 Convert
               </DialogActionButton>

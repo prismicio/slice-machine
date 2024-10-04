@@ -51,7 +51,6 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
   };
 
   const [values, setValues] = useState<FormValues>(defaultValues);
-
   const [errors, setErrors] = useState<SliceModalValuesValidity>();
 
   useOnChange(isOpen, () => {
