@@ -31,7 +31,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				),
 				SliceMachineV1: addTrailingSlash(
 					process.env.slice_machine_v1_endpoint ??
-						"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
+						"https://sm-api.wroom.io/v1/",
 				),
 			};
 
@@ -79,8 +79,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
 				PrismicEmbed: "https://oembed.wroom.io",
 				PrismicUnsplash: "https://unsplash.wroom.io/",
-				SliceMachineV1:
-					"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
+				SliceMachineV1: "https://sm-api.wroom.io/v1/",
 			};
 		}
 
