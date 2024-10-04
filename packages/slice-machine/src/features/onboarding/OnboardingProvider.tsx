@@ -54,11 +54,11 @@ export const OnboardingProvider = ({
   );
 
   const toggleStepComplete = (step: OnboardingStep) => {
-    const isComplete = !(stepStatus[step.id] ?? false);
-    const nextState = { ...stepStatus, [step.id]: isComplete };
+    const newCompleteState = !isStepComplete(step);
+    const nextState = { ...stepStatus, [step.id]: newCompleteState };
     setStepStatus(nextState);
 
-    if (isComplete) {
+    if (newCompleteState) {
       void telemetry.track({
         event: "onboarding:step-completed",
         stepId: step.id,
@@ -76,7 +76,7 @@ export const OnboardingProvider = ({
   };
 
   const isStepComplete = (step: OnboardingStep) => {
-    return (stepStatus[step.id] ?? false) || (step.defaultCompleted ?? false);
+    return Boolean(stepStatus[step.id]) || Boolean(step.defaultCompleted);
   };
 
   const completedStepCount = steps.filter((step) =>
