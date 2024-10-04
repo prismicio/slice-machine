@@ -6024,23 +6024,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.48":
-  version: 0.4.48
-  resolution: "@prismicio/editor-support@npm:0.4.48"
-  dependencies:
-    tslib: 2.4.0
-  peerDependencies:
-    react: 17 || 18
-    zod: ^3.21.4
-  peerDependenciesMeta:
-    react:
-      optional: true
-    zod:
-      optional: true
-  checksum: 3f28fb637af9146e8c209a2918777b331ddb15a9ef1f13c7e851bc8c840de36405746bb3136c9f8b3fc5dc8065e2164450ee796d0affd0fc8cd9f317ee296408
-  languageName: node
-  linkType: hard
-
 "@prismicio/editor-support@npm:0.4.49":
   version: 0.4.49
   resolution: "@prismicio/editor-support@npm:0.4.49"
@@ -6058,12 +6041,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.48":
-  version: 0.4.48
-  resolution: "@prismicio/editor-ui@npm:0.4.48"
+"@prismicio/editor-ui@npm:0.4.49":
+  version: 0.4.49
+  resolution: "@prismicio/editor-ui@npm:0.4.49"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.48
+    "@prismicio/editor-support": 0.4.49
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6078,6 +6061,7 @@ __metadata:
     "@radix-ui/react-select": 2.1.1
     "@radix-ui/react-separator": 1.1.0
     "@radix-ui/react-slider": 1.2.0
+    "@radix-ui/react-slot": 1.1.0
     "@radix-ui/react-switch": 1.1.0
     "@radix-ui/react-tabs": 1.1.0
     "@radix-ui/react-toggle": 1.1.0
@@ -6093,16 +6077,16 @@ __metadata:
     "@react-stately/calendar": 3.5.2
     "@react-stately/color": 3.7.0
     "@react-stately/datepicker": 3.10.0
-    "@tiptap/core": 2.3.0
-    "@tiptap/extension-document": 2.3.0
-    "@tiptap/extension-hard-break": 2.3.0
-    "@tiptap/extension-history": 2.3.0
-    "@tiptap/extension-italic": 2.3.0
-    "@tiptap/extension-paragraph": 2.3.0
-    "@tiptap/extension-placeholder": 2.3.0
-    "@tiptap/extension-text": 2.3.0
-    "@tiptap/pm": 2.3.0
-    "@tiptap/react": 2.3.0
+    "@tiptap/core": 2.6.6
+    "@tiptap/extension-document": 2.6.6
+    "@tiptap/extension-hard-break": 2.6.6
+    "@tiptap/extension-history": 2.6.6
+    "@tiptap/extension-italic": 2.6.6
+    "@tiptap/extension-paragraph": 2.6.6
+    "@tiptap/extension-placeholder": 2.6.6
+    "@tiptap/extension-text": 2.6.6
+    "@tiptap/pm": 2.6.6
+    "@tiptap/react": 2.6.6
     clsx: 1.2.1
     csstype: 3.1.2
     react-easy-crop: 4.6.1
@@ -6110,11 +6094,10 @@ __metadata:
     react-remove-scroll: 2.5.6
     react-syntax-highlighter: 15.5.0
     tslib: 2.4.0
-    uuid: 9.0.1
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 5972d037585aac30c11b88e8df5fcf2f078c53e3d28acd2b53bbcd1c73fae1018ae583daebeceaa323f8a7c60a00302f88ed021d83ed0e255bbf47444994719c
+  checksum: 264cc81b675cd8785b6a088c173d9c9f6ed4cb87857ed276fedcc3d820099f66967e0d388b81c113c361b2f4f4f95024e33118d711424c2c748b28fa682394f9
   languageName: node
   linkType: hard
 
@@ -10770,15 +10753,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/core@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/core@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/pm": ^2.0.0
-  checksum: f45cdf657d31fb38e7737a67994b2e9c6774b3799469e5d799b33d4a7098b3209b45e10722c9c39c1e99e71e31bd60201bc0e6d4804d67c2f00de3b26247d0ac
-  languageName: node
-  linkType: hard
-
 "@tiptap/core@npm:2.6.6":
   version: 2.6.6
   resolution: "@tiptap/core@npm:2.6.6"
@@ -10797,7 +10771,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-bubble-menu@npm:^2.3.0, @tiptap/extension-bubble-menu@npm:^2.6.6":
+"@tiptap/extension-bubble-menu@npm:^2.6.6":
   version: 2.8.0
   resolution: "@tiptap/extension-bubble-menu@npm:2.8.0"
   dependencies:
@@ -10828,15 +10802,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-document@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/extension-document@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-  checksum: b32c26353f81372764e2a628079c29c8efe99406026596e4edf5677ec8b872c148d9945af7833dd17f4b4c14dd061e5f3844ff8a66be158caa49d8e3d432827c
-  languageName: node
-  linkType: hard
-
 "@tiptap/extension-document@npm:2.6.6":
   version: 2.6.6
   resolution: "@tiptap/extension-document@npm:2.6.6"
@@ -10846,7 +10811,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-floating-menu@npm:^2.3.0, @tiptap/extension-floating-menu@npm:^2.6.6":
+"@tiptap/extension-floating-menu@npm:^2.6.6":
   version: 2.8.0
   resolution: "@tiptap/extension-floating-menu@npm:2.8.0"
   dependencies:
@@ -10855,15 +10820,6 @@ __metadata:
     "@tiptap/core": ^2.7.0
     "@tiptap/pm": ^2.7.0
   checksum: a2704027995046a8f1aff9d854b235704789fabaccc389fe015241798f8ced2436326e57f616c57622c63a0cee75f37327b66657a96868806a338cb80766a81e
-  languageName: node
-  linkType: hard
-
-"@tiptap/extension-hard-break@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/extension-hard-break@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-  checksum: afa1f46dbe242a117d37c9278be00f20ebc8c08888f4112930829ae42fee9487a2e2a36741b3cf3cc5c55dcf81101b218a5b2aaafc521475deb9f09fea65def7
   languageName: node
   linkType: hard
 
@@ -10885,16 +10841,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-history@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/extension-history@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-    "@tiptap/pm": ^2.0.0
-  checksum: c7646d5cf7242db5b7616372d5ca4f5eb44c6286256cb09a13c2c8ac7e5ae4242dd2d8f32bbbd0e3e23f0e79ea064b70e644dbbe872d15a52001a8cc042f7635
-  languageName: node
-  linkType: hard
-
 "@tiptap/extension-history@npm:2.6.6":
   version: 2.6.6
   resolution: "@tiptap/extension-history@npm:2.6.6"
@@ -10902,15 +10848,6 @@ __metadata:
     "@tiptap/core": ^2.6.6
     "@tiptap/pm": ^2.6.6
   checksum: 130f6581816d62a42bd8e1d01804103f25b2723c692459d38503af986989a3e1d6282a0a585c7fb1053b8e02045ca71b3b46e85f90494faa4483e00d97d5b8c1
-  languageName: node
-  linkType: hard
-
-"@tiptap/extension-italic@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/extension-italic@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-  checksum: 4083498028a6a60093c5c83e06710a919b61cfb14e3881d780e1d14d7daad2701f4ffcfaa6f03d03ba464be256a40ce53e74aed6416af037f15b98a7ecdf9696
   languageName: node
   linkType: hard
 
@@ -10941,31 +10878,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-paragraph@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/extension-paragraph@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-  checksum: 79d61c6791364f5310821ecca5daa0a3d859122f7342fcb5cb6e69644ded23abc4af9119b2498080ad9a1287464d6b891fc4c4f9ff8965d8ed8afd9e04f1a804
-  languageName: node
-  linkType: hard
-
 "@tiptap/extension-paragraph@npm:2.6.6":
   version: 2.6.6
   resolution: "@tiptap/extension-paragraph@npm:2.6.6"
   peerDependencies:
     "@tiptap/core": ^2.6.6
   checksum: 80fe847d58d417db06122c237ec1a2d096298e35c3de1b5744c77f6061a95e40ac12104c7ca8df532220d023c5fa1b3b85c8b517481abbc1ac093ea31bb2e51a
-  languageName: node
-  linkType: hard
-
-"@tiptap/extension-placeholder@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/extension-placeholder@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-    "@tiptap/pm": ^2.0.0
-  checksum: 1b7638f17f295a3197faf0600371c1ab1733bb52f5b19b389700e4225ea8decc5b08989c5ec4d965aaf724b7e802a3308accce428630ae0d399a4217f455d743
   languageName: node
   linkType: hard
 
@@ -10979,47 +10897,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-text@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/extension-text@npm:2.3.0"
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-  checksum: dbbf6ba42bca5db92adaab144f64f32afae4988d57ac22a80c9a53b840466bbd616c77b7d7031640285e2d57b3524b06411d56fd1576bed878cfb756863ad18f
-  languageName: node
-  linkType: hard
-
 "@tiptap/extension-text@npm:2.6.6":
   version: 2.6.6
   resolution: "@tiptap/extension-text@npm:2.6.6"
   peerDependencies:
     "@tiptap/core": ^2.6.6
   checksum: f75f31b9c70b9fbd1ccf63c17db92bc6da36228aeb560955d26ab506b40c4f9354ac9aa8765c06bfa873323d1e1ed9f07fd94701618f567b9a77486f3d408e5d
-  languageName: node
-  linkType: hard
-
-"@tiptap/pm@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/pm@npm:2.3.0"
-  dependencies:
-    prosemirror-changeset: ^2.2.1
-    prosemirror-collab: ^1.3.1
-    prosemirror-commands: ^1.5.2
-    prosemirror-dropcursor: ^1.8.1
-    prosemirror-gapcursor: ^1.3.2
-    prosemirror-history: ^1.3.2
-    prosemirror-inputrules: ^1.3.0
-    prosemirror-keymap: ^1.2.2
-    prosemirror-markdown: ^1.12.0
-    prosemirror-menu: ^1.2.4
-    prosemirror-model: ^1.19.4
-    prosemirror-schema-basic: ^1.2.2
-    prosemirror-schema-list: ^1.3.0
-    prosemirror-state: ^1.4.3
-    prosemirror-tables: ^1.3.5
-    prosemirror-trailing-node: ^2.0.7
-    prosemirror-transform: ^1.8.0
-    prosemirror-view: ^1.32.7
-  checksum: 4c562cfb6b7ae6ae12903b525aa664a38188f674a16fb2205e784b2ae7b89ecde56598336fd9ee95f6dc96531641f1b6561c330d1bae593a0e2209bb15183bdf
   languageName: node
   linkType: hard
 
@@ -11046,21 +10929,6 @@ __metadata:
     prosemirror-transform: ^1.9.0
     prosemirror-view: ^1.33.9
   checksum: ff0b190fbafa82fbaf2259e0890d59e4fb07fa8fedbe41d86b04ba4c2c50c6a19da4e75f1e3d3e3d403469556cb3f65062b8c54876929259920e385de4a93adb
-  languageName: node
-  linkType: hard
-
-"@tiptap/react@npm:2.3.0":
-  version: 2.3.0
-  resolution: "@tiptap/react@npm:2.3.0"
-  dependencies:
-    "@tiptap/extension-bubble-menu": ^2.3.0
-    "@tiptap/extension-floating-menu": ^2.3.0
-  peerDependencies:
-    "@tiptap/core": ^2.0.0
-    "@tiptap/pm": ^2.0.0
-    react: ^17.0.0 || ^18.0.0
-    react-dom: ^17.0.0 || ^18.0.0
-  checksum: 86b2cdb852a7d2f2ba23cb32980812cbebc950ca86903c3dd5be3d40ab5afcdeed9b6244ae2dcc849c6eef65a5184bf627c2f9d47b165aeff4ef08c84757c8b5
   languageName: node
   linkType: hard
 
@@ -28738,7 +28606,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-history@npm:^1.3.2, prosemirror-history@npm:^1.4.1":
+"prosemirror-history@npm:^1.4.1":
   version: 1.4.1
   resolution: "prosemirror-history@npm:1.4.1"
   dependencies:
@@ -28750,7 +28618,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-inputrules@npm:^1.3.0, prosemirror-inputrules@npm:^1.4.0":
+"prosemirror-inputrules@npm:^1.4.0":
   version: 1.4.0
   resolution: "prosemirror-inputrules@npm:1.4.0"
   dependencies:
@@ -28770,7 +28638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-markdown@npm:^1.12.0, prosemirror-markdown@npm:^1.13.0":
+"prosemirror-markdown@npm:^1.13.0":
   version: 1.13.1
   resolution: "prosemirror-markdown@npm:1.13.1"
   dependencies:
@@ -28811,15 +28679,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-model@npm:^1.19.4, prosemirror-model@npm:^1.21.0, prosemirror-model@npm:^1.22.2":
-  version: 1.22.3
-  resolution: "prosemirror-model@npm:1.22.3"
-  dependencies:
-    orderedmap: ^2.0.0
-  checksum: dfc1f80fadbd4dc839af7fcbf23ff6788988e78b968e8937acf1b658987e351e7a6c880c8ff70f06d7a9ae88efff60bdb31e2daea95bf9eff6db1821001fefac
-  languageName: node
-  linkType: hard
-
 "prosemirror-model@npm:^1.20.0":
   version: 1.20.0
   resolution: "prosemirror-model@npm:1.20.0"
@@ -28829,7 +28688,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-schema-basic@npm:^1.2.2, prosemirror-schema-basic@npm:^1.2.3":
+"prosemirror-model@npm:^1.21.0, prosemirror-model@npm:^1.22.2":
+  version: 1.22.3
+  resolution: "prosemirror-model@npm:1.22.3"
+  dependencies:
+    orderedmap: ^2.0.0
+  checksum: dfc1f80fadbd4dc839af7fcbf23ff6788988e78b968e8937acf1b658987e351e7a6c880c8ff70f06d7a9ae88efff60bdb31e2daea95bf9eff6db1821001fefac
+  languageName: node
+  linkType: hard
+
+"prosemirror-schema-basic@npm:^1.2.3":
   version: 1.2.3
   resolution: "prosemirror-schema-basic@npm:1.2.3"
   dependencies:
@@ -28838,7 +28706,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-schema-list@npm:^1.3.0, prosemirror-schema-list@npm:^1.4.1":
+"prosemirror-schema-list@npm:^1.4.1":
   version: 1.4.1
   resolution: "prosemirror-schema-list@npm:1.4.1"
   dependencies:
@@ -28860,7 +28728,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-tables@npm:^1.3.5, prosemirror-tables@npm:^1.4.0":
+"prosemirror-tables@npm:^1.4.0":
   version: 1.5.0
   resolution: "prosemirror-tables@npm:1.5.0"
   dependencies:
@@ -28873,7 +28741,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-trailing-node@npm:^2.0.7, prosemirror-trailing-node@npm:^2.0.9":
+"prosemirror-trailing-node@npm:^2.0.9":
   version: 2.0.9
   resolution: "prosemirror-trailing-node@npm:2.0.9"
   dependencies:
@@ -28896,7 +28764,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-transform@npm:^1.8.0, prosemirror-transform@npm:^1.9.0":
+"prosemirror-transform@npm:^1.9.0":
   version: 1.10.0
   resolution: "prosemirror-transform@npm:1.10.0"
   dependencies:
@@ -28916,7 +28784,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prosemirror-view@npm:^1.32.7, prosemirror-view@npm:^1.33.9":
+"prosemirror-view@npm:^1.33.9":
   version: 1.34.3
   resolution: "prosemirror-view@npm:1.34.3"
   dependencies:
@@ -31340,7 +31208,7 @@ __metadata:
     "@prismicio/client": 7.11.0
     "@prismicio/editor-fields": 0.4.49
     "@prismicio/editor-support": 0.4.49
-    "@prismicio/editor-ui": 0.4.48
+    "@prismicio/editor-ui": 0.4.49
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.4.0
     "@prismicio/simulator": 0.1.4
@@ -34295,15 +34163,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.1, uuid@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "uuid@npm:9.0.1"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
-  languageName: node
-  linkType: hard
-
 "uuid@npm:^7.0.3":
   version: 7.0.3
   resolution: "uuid@npm:7.0.3"
@@ -34319,6 +34178,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
   languageName: node
   linkType: hard
 

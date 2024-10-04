@@ -1,3 +1,4 @@
+import { useOnChange } from "@prismicio/editor-support/React";
 import {
   Box,
   Dialog,
@@ -6,13 +7,13 @@ import {
   DialogCancelButton,
   DialogContent,
   DialogHeader,
+  Form,
   FormInput,
   ScrollArea,
   Select,
   SelectItem,
   Text,
 } from "@prismicio/editor-ui";
-import { Formik } from "formik";
 import { camelCase } from "lodash";
 import { type FC, useState } from "react";
 
@@ -38,7 +39,38 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
   libraries,
   localSharedSlices,
 }) => {
+  const defaultValues = {
+    libraryID: localSharedSlices[0]?.from,
+    sliceID: localSharedSlices[0]?.model.id,
+    variationID: camelCase(slice.key),
+    variationName: sliceName,
+  };
   const [inferIDFromName, setInferIDFromName] = useState(true);
+
+  const [values, setValues] = useState<FormValues>(defaultValues);
+
+  const [errors, setErrors] =
+    useState<Partial<Record<keyof FormValues, string>>>();
+
+  useOnChange(isOpen, () => {
+    if (!isOpen) {
+      setValues(defaultValues);
+      setErrors(undefined);
+    }
+  });
+
+  function handleValueChange(values: FormValues) {
+    setValues(values);
+    setErrors(validateAsNewVariationValues(values, libraries));
+  }
+
+  function handleSubmit() {
+    if (errors && Object.keys(errors).length > 0) {
+      return;
+    }
+
+    onSubmit(values);
+  }
 
   return (
     <Dialog
@@ -48,147 +80,110 @@ export const ConvertLegacySliceAsNewVariationDialog: FC<DialogProps> = ({
     >
       <DialogHeader title="Convert to slice variation" />
       <DialogContent>
-        <Formik
-          initialValues={{
-            libraryID: localSharedSlices[0]?.from,
-            sliceID: localSharedSlices[0]?.model.id,
-            variationID: camelCase(slice.key),
-            variationName: sliceName,
-          }}
-          validate={(values) => {
-            return validateAsNewVariationValues(values, libraries);
-          }}
-          onSubmit={(values) => {
-            onSubmit(values);
-          }}
-        >
-          {(formik) => {
-            return (
-              <form id="convert-legacy-slice-as-new-variation-dialog">
-                <Box display="flex" flexDirection="column">
-                  <ScrollArea
-                    className={styles.scrollArea}
-                    style={{ width: 448 }}
-                  >
-                    <Text variant="normal" color="grey11">
-                      If you have multiple slices that are similar, you can
-                      combine them as variations of the same slice.
+        <Form onSubmit={handleSubmit}>
+          <Box display="flex" flexDirection="column">
+            <ScrollArea className={styles.scrollArea}>
+              <Text variant="normal" color="grey11">
+                If you have multiple slices that are similar, you can combine
+                them as variations of the same slice.
+              </Text>
+              <Box display="flex" flexDirection="column" gap={4}>
+                <label className={styles.label}>
+                  <Text variant="bold">Target slice *</Text>
+                  {typeof errors?.libraryID === "string" ? (
+                    <Text variant="small" color="tomato10">
+                      {errors.libraryID}
                     </Text>
-                    <Box display="flex" flexDirection="column" gap={4}>
-                      <label className={styles.label}>
-                        <Text variant="bold">Target slice*</Text>
-                        {typeof formik.errors.libraryID === "string" ? (
-                          <Text variant="small" color="tomato10">
-                            {formik.errors.libraryID}
-                          </Text>
-                        ) : null}
-                        {typeof formik.errors.sliceID === "string" ? (
-                          <Text variant="small" color="tomato10">
-                            {formik.errors.sliceID}
-                          </Text>
-                        ) : null}
-                      </label>
-                      <Select
-                        size="medium"
-                        color="grey"
-                        startIcon="viewDay"
-                        flexContent={true}
-                        value={`${formik.values.libraryID}::${formik.values.sliceID}`}
-                        onValueChange={(value) => {
-                          if (value) {
-                            const [libraryID, sliceID] = value.split("::");
-                            void formik.setFieldValue("libraryID", libraryID);
-                            void formik.setFieldValue("sliceID", sliceID);
-                          }
-                        }}
-                      >
-                        {localSharedSlices.map((slice) => (
-                          <SelectItem
-                            key={`${slice.from}::${slice.model.id}`}
-                            value={`${slice.from}::${slice.model.id}`}
-                          >
-                            {slice.from} {">"} {slice.model.name} (
-                            {slice.model.id})
-                          </SelectItem>
-                        ))}
-                      </Select>
-                      <Text variant="normal" color="grey11">
-                        Choose the slice to which you would like to add this
-                        variation.
-                      </Text>
-                    </Box>
-                    <Box display="flex" flexDirection="column" gap={4}>
-                      <label className={styles.label}>
-                        <Text variant="bold">Variation name*</Text>
-                        {typeof formik.errors.variationName === "string" ? (
-                          <Text variant="small" color="tomato10">
-                            {formik.errors.variationName}
-                          </Text>
-                        ) : null}
-                      </label>
-                      <FormInput
-                        placeholder={sliceName}
-                        error={typeof formik.errors.variationName === "string"}
-                        value={formik.values.variationName}
-                        onValueChange={(value) => {
-                          const values = {
-                            ...formik.values,
-                            variationName: value.slice(0, 30),
-                          };
-
-                          if (inferIDFromName) {
-                            values.variationID = camelCase(
-                              values.variationName,
-                            );
-                          }
-
-                          formik.setValues(values, true);
-                        }}
-                        data-testid="variation-name-input"
-                      />
-                    </Box>
-                    <Box display="flex" flexDirection="column" gap={4}>
-                      <label className={styles.label}>
-                        <Text variant="bold">ID*</Text>
-                        {typeof formik.errors.variationID === "string" ? (
-                          <Text variant="small" color="tomato10">
-                            {formik.errors.variationID}
-                          </Text>
-                        ) : null}
-                      </label>
-                      <FormInput
-                        placeholder={camelCase(slice.key)}
-                        error={typeof formik.errors.variationID === "string"}
-                        value={formik.values.variationID}
-                        onValueChange={(value) => {
-                          setInferIDFromName(false);
-                          void formik.setFieldValue(
-                            "variationID",
-                            camelCase(value.slice(0, 30)),
-                          );
-                        }}
-                        data-testid="variation-id-input"
-                      />
-                    </Box>
-                  </ScrollArea>
-                  <DialogActions>
-                    <DialogCancelButton size="medium" />
-                    <DialogActionButton
-                      size="medium"
-                      loading={isLoading}
-                      onClick={() => {
-                        void formik.submitForm();
-                      }}
-                      disabled={!formik.isValid}
+                  ) : null}
+                  {typeof errors?.sliceID === "string" ? (
+                    <Text variant="small" color="tomato10">
+                      {errors.sliceID}
+                    </Text>
+                  ) : null}
+                </label>
+                <Select
+                  size="medium"
+                  color="grey"
+                  startIcon="viewDay"
+                  flexContent={true}
+                  value={`${values.libraryID}::${values.sliceID}`}
+                  onValueChange={(value) => {
+                    if (value) {
+                      const [libraryID, sliceID] = value.split("::");
+                      handleValueChange({
+                        ...values,
+                        libraryID,
+                        sliceID,
+                      });
+                    }
+                  }}
+                >
+                  {localSharedSlices.map((slice) => (
+                    <SelectItem
+                      key={`${slice.from}::${slice.model.id}`}
+                      value={`${slice.from}::${slice.model.id}`}
                     >
-                      Convert
-                    </DialogActionButton>
-                  </DialogActions>
-                </Box>
-              </form>
-            );
-          }}
-        </Formik>
+                      {slice.from} {">"} {slice.model.name} ({slice.model.id})
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Text variant="normal" color="grey11">
+                  Choose the slice to which you would like to add this
+                  variation.
+                </Text>
+              </Box>
+              <Box display="flex" flexDirection="column" gap={4}>
+                <FormInput
+                  label="Variation name *"
+                  placeholder={sliceName}
+                  error={errors?.variationName}
+                  value={values.variationName}
+                  onValueChange={(value) => {
+                    const newValues = {
+                      ...values,
+                      variationName: value.slice(0, 30),
+                    };
+
+                    if (inferIDFromName) {
+                      newValues.variationID = camelCase(
+                        newValues.variationName,
+                      );
+                    }
+
+                    handleValueChange(newValues);
+                  }}
+                  data-testid="variation-name-input"
+                />
+              </Box>
+              <Box display="flex" flexDirection="column" gap={4}>
+                <FormInput
+                  label="ID *"
+                  placeholder={camelCase(slice.key)}
+                  error={errors?.variationID}
+                  value={values.variationID}
+                  onValueChange={(value) => {
+                    setInferIDFromName(false);
+                    handleValueChange({
+                      ...values,
+                      variationID: value.slice(0, 30),
+                    });
+                  }}
+                  data-testid="variation-id-input"
+                />
+              </Box>
+            </ScrollArea>
+            <DialogActions>
+              <DialogCancelButton size="medium" />
+              <DialogActionButton
+                size="medium"
+                loading={isLoading}
+                disabled={errors && Object.keys(errors).length > 0}
+              >
+                Convert
+              </DialogActionButton>
+            </DialogActions>
+          </Box>
+        </Form>
       </DialogContent>
     </Dialog>
   );

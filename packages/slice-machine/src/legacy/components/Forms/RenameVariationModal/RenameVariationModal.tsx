@@ -1,3 +1,4 @@
+import { useOnChange } from "@prismicio/editor-support/React";
 import {
   Box,
   Dialog,
@@ -6,19 +7,18 @@ import {
   DialogCancelButton,
   DialogContent,
   DialogHeader,
+  Form,
   FormInput,
   Text,
 } from "@prismicio/editor-ui";
-import { Formik } from "formik";
 import { type FC, useState } from "react";
+import { z } from "zod";
 
 import { renameVariation } from "@/features/slices/sliceBuilder/actions/renameVariation";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import type { VariationSM } from "@/legacy/lib/models/common/Slice";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
-
-import styles from "./RenameVariationModal.module.css";
 
 type RenameVariationModalProps = {
   isOpen: boolean;
@@ -34,8 +34,46 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
   variation,
 }) => {
   const [isRenaming, setRenaming] = useState(false);
+  const [variationName, setVariationName] = useState<string>("");
+
+  const [error, setError] = useState<string | undefined>();
+
   const { setSlice } = useSliceState();
   const { saveSliceSuccess } = useSliceMachineActions();
+
+  useOnChange(isOpen, () => {
+    if (isOpen && variation?.name !== variationName) {
+      setVariationName(variation?.name ?? "");
+      setError(undefined);
+    }
+  });
+
+  function handleValueChange(value: string) {
+    setVariationName(value);
+    setError(validateVariationName(value));
+  }
+
+  function handleSubmit() {
+    if (Boolean(error) || !variation) {
+      return;
+    }
+
+    setRenaming(true);
+
+    try {
+      void renameVariation({
+        component: slice,
+        saveSliceSuccess,
+        variation,
+        variationName: variationName.trim(),
+      }).then((newSlice) => {
+        setSlice(newSlice);
+      });
+    } catch {}
+
+    setRenaming(false);
+    onClose();
+  }
 
   return (
     <>
@@ -46,76 +84,58 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
       >
         <DialogHeader icon="edit" title="Rename variation" />
         <DialogContent>
-          <Formik
-            validateOnMount
-            initialValues={{ variationName: variation?.name ?? "" }}
-            validate={(values) => {
-              if (values.variationName.length === 0) {
-                return { variationName: "Cannot be empty" };
-              }
-            }}
-            onSubmit={async (values) => {
-              if (!variation) return;
-              setRenaming(true);
-              try {
-                const newSlice = await renameVariation({
-                  component: slice,
-                  saveSliceSuccess,
-                  variation,
-                  variationName: values.variationName.trim(),
-                });
-                setSlice(newSlice);
-              } catch {}
-              setRenaming(false);
-              onClose();
-            }}
-          >
-            {(formik) => (
-              <form>
-                <Box flexDirection="column" gap={8} padding={16}>
-                  <Text variant="normal" color="grey11">
-                    This action will rename the variation in the slice model.
-                    When you push your changes, the variation will be renamed in
-                    your repository.
-                  </Text>
-                  <Box flexDirection="column" gap={4}>
-                    <label className={styles.label}>
-                      <Text variant="bold">Variation name*</Text>
-                      {typeof formik.errors.variationName === "string" ? (
-                        <Text variant="small" color="tomato10">
-                          {formik.errors.variationName}
-                        </Text>
-                      ) : null}
-                    </label>
-                    <FormInput
-                      placeholder="Variation name"
-                      error={typeof formik.errors.variationName === "string"}
-                      value={formik.values.variationName}
-                      onValueChange={(value) =>
-                        void formik.setFieldValue(
-                          "variationName",
-                          value.slice(0, 30),
-                        )
-                      }
-                    />
-                  </Box>
-                </Box>
-                <DialogActions>
-                  <DialogCancelButton size="medium" />
-                  <DialogActionButton
-                    size="medium"
-                    onClick={() => void formik.submitForm()}
-                    loading={isRenaming}
-                    disabled={!formik.isValid}
-                  >
-                    Rename
-                  </DialogActionButton>
-                </DialogActions>
-              </form>
-            )}
-          </Formik>
+          <Form onSubmit={handleSubmit}>
+            <Box flexDirection="column" gap={8} padding={16}>
+              <Text variant="normal" color="grey11">
+                This action will rename the variation in the slice model. When
+                you push your changes, the variation will be renamed in your
+                repository.
+              </Text>
+              <Box flexDirection="column" gap={4}>
+                <FormInput
+                  type="text"
+                  label="Variation name *"
+                  placeholder="Variation name"
+                  error={error}
+                  value={variationName}
+                  onValueChange={handleValueChange}
+                />
+              </Box>
+            </Box>
+            <DialogActions>
+              <DialogCancelButton size="medium" />
+              <DialogActionButton
+                size="medium"
+                loading={isRenaming}
+                disabled={Boolean(error)}
+              >
+                Rename
+              </DialogActionButton>
+            </DialogActions>
+          </Form>
         </DialogContent>
       </Dialog>
     </>
   );
+};
+
+function validateVariationName(value: string): string | undefined {
+  const result = VariationNameFieldSchema.safeParse(value, {
+    errorMap: VariationNameFieldCustomErrorMap,
+  });
+
+  if (result.error) {
+    return result.error.errors[0].message;
+  }
+}
+
+const VariationNameFieldSchema = z.string().min(1);
+
+const VariationNameFieldCustomErrorMap: z.ZodErrorMap = (issue) => {
+  switch (issue.code) {
+    case z.ZodIssueCode.too_small:
+      return { message: "This field is required" };
+    default:
+      return { message: "Invalid value" };
+  }
 };
