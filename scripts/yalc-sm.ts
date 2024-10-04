@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { join, basename } from "node:path";
 
 import { green, greenBright, red, bold } from "chalk";
 import { execaSync } from "execa";
@@ -48,7 +48,25 @@ function unlinkPackages(packages: string[]) {
   }
 }
 
-const [command] = process.argv.slice(2);
+function printHelp() {
+  console.log(`Slice machine yalc helper script
+
+USAGE
+  $ ${basename(process.argv[1])} <COMMAND>
+
+COMMANDS
+  link          Link slice-machine editor packages to yalc
+  clean         Unlink slice-machine editor packages from yalc
+
+  --help, -h    Display help`)
+}
+
+const [command, ...options] = process.argv.slice(2);
+if (options.includes("--help") || options.includes("-h")) {
+  printHelp();
+  process.exit(0);
+}
+
 switch (command) {
   case "link": {
     void linkPackages(packages);
@@ -59,6 +77,7 @@ switch (command) {
     break;
   }
   default: {
-    fail("Command not found");
+    printHelp();
+    process.exit(0);
   }
 }
