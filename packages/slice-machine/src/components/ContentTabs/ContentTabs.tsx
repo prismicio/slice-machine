@@ -27,7 +27,8 @@ export const ContentTabs: FC<ContentTabsProps> = ({ tabs, ...otherProps }) => (
             value={label}
           >
             <Text
-              className={styles.triggerText}
+              // TODO: Stop using className
+              {...{ className: styles.triggerText }}
               component="span"
               color="inherit"
             >
