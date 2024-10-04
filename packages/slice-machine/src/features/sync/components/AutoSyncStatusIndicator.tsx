@@ -49,7 +49,11 @@ export const AutoSyncStatusIndicator: FC<AutoSyncStatusIndicatorProps> = (
     <Tooltip content={autoSaveStatusInfo.tooltipText} side="right">
       <div className={styles.root}>
         {autoSaveStatusInfo.icon}
-        <Text className={styles.text} color="grey11">
+        <Text
+          // TODO: Stop using className
+          {...{ className: styles.text }}
+          color="grey11"
+        >
           {autoSaveStatusInfo.text}
         </Text>
       </div>

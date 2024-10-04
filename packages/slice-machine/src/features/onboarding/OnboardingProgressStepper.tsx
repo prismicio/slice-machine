@@ -14,7 +14,6 @@ import { telemetry } from "@/apiClient";
 import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
 import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
 import type { OnboardingStep } from "@/features/onboarding/types";
-import { useOnboardingCardVisibilityExperiment } from "@/features/onboarding/useOnboardingCardVisibilityExperiment";
 
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
@@ -27,8 +26,6 @@ export function OnboardingProgressStepper(
   const { buttonSize = "medium" } = props;
   const { completedStepCount, steps, isStepComplete, isComplete } =
     useOnboardingContext();
-  const { eligible: isOnboardingCardVisibilityExperiment } =
-    useOnboardingCardVisibilityExperiment();
 
   const [isListOpen, setListOpen] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -59,7 +56,8 @@ export function OnboardingProgressStepper(
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
-            onMouseEnter={() => setListOpen(true)}
+            // TODO: Fix typescript error
+            {...{ onMouseEnter: () => setListOpen(true) }}
           >
             {completedStepCount > 0 ? "Continue" : "Start now"}
           </Button>
@@ -88,9 +86,7 @@ export function OnboardingProgressStepper(
                     )
                   }
                 >
-                  {isOnboardingCardVisibilityExperiment
-                    ? `${index + 1} ${step.title}`
-                    : step.title}
+                  {`${index + 1} ${step.title}`}
                 </DropdownMenuItem>
               );
             })}

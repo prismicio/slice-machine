@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.20.5",
+	"version": "0.20.6",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
@@ -65,10 +65,10 @@
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
-		"@prismicio/client": "^7.6.0",
+		"@prismicio/client": "^7.11.0",
 		"@prismicio/custom-types-client": "2.1.0",
-		"@prismicio/mocks": "^2.3.3",
-		"@prismicio/types-internal": "^2.5.0",
+		"@prismicio/mocks": "^2.4.0",
+		"@prismicio/types-internal": "^2.8.0",
 		"@segment/analytics-node": "^2.1.2",
 		"@slicemachine/plugin-kit": "workspace:*",
 		"cookie": "^0.5.0",
@@ -106,7 +106,7 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
-		"express": "4.18.2",
+		"express": "4.20.0",
 		"hook-std": "3.0.0",
 		"memfs": "3.4.13",
 		"msw": "1.1.0",

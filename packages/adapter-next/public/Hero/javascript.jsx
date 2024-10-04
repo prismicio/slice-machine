@@ -53,14 +53,10 @@ const PascalNameToReplace = ({ slice }) => {
 								<PrismicRichText field={slice.primary.description} />
 							</div>
 						)}
-						{isFilled.link(slice.primary.callToActionLink) && (
-							<PrismicNextLink
-								className="es-call-to-action__link"
-								field={slice.primary.callToActionLink}
-							>
-								{slice.primary.callToActionLabel || "Learn more…"}
-							</PrismicNextLink>
-						)}
+						<PrismicNextLink
+							className="es-call-to-action__link"
+							field={slice.primary.callToActionLink}
+						/>
 					</div>
 				</div>
 			</div>

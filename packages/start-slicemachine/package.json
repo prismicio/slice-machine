@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.12.29",
+	"version": "0.12.30",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
@@ -55,13 +55,13 @@
 	},
 	"bin": "./bin/start-slicemachine.js",
 	"dependencies": {
-		"@prismicio/mocks": "^2.3.3",
-		"@prismicio/types-internal": "^2.5.0",
+		"@prismicio/mocks": "^2.4.0",
+		"@prismicio/types-internal": "^2.8.0",
 		"@slicemachine/manager": "workspace:*",
-		"body-parser": "^1.20.2",
+		"body-parser": "^1.20.3",
 		"chalk": "^4.1.2",
 		"cors": "^2.8.5",
-		"express": "^4.18.2",
+		"express": "^4.20.0",
 		"fp-ts": "^2.13.1",
 		"http-proxy-middleware": "^2.0.6",
 		"io-ts": "^2.2.20",

@@ -41,9 +41,7 @@
 		<PrismicLink
 			field={slice.primary.callToActionLink}
 			class="es-customer-logos__button"
-		>
-			{slice.primary.callToActionLabel || "Learn more..."}
-		</PrismicLink>
+		/>
 	</div>
 
 	<style>

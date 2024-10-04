@@ -10,17 +10,13 @@ export const mocks: SharedSliceContent[] = [
 		__TYPE__: "SharedSliceContent",
 		variation: "default",
 		primary: {
-			callToActionLabel: {
-				__TYPE__: "FieldContent",
-				type: "Text",
-				value: "View customer stories",
-			},
 			callToActionLink: {
 				__TYPE__: "LinkContent",
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://prismic.io",
 					target: "_blank",
+					text: "View customer stories",
 				},
 			},
 			eyebrowHeadline: {
@@ -278,19 +274,13 @@ export const model: SharedSlice = {
 						single: "strong,em,rtl,heading2",
 					},
 				},
-				callToActionLabel: {
-					type: "Text",
-					config: {
-						label: "callToActionLabel",
-						placeholder: "",
-					},
-				},
 				callToActionLink: {
 					type: "Link",
 					config: {
 						label: "callToActionLink",
 						placeholder: "",
 						select: null,
+						allowText: true,
 					},
 				},
 				logos: {
