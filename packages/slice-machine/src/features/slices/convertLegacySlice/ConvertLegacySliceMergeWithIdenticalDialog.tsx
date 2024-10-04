@@ -25,12 +25,13 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
   isLoading,
   identicalSlices,
 }) => {
-  const [path, setPath] = useState<string>(identicalSlices[0]?.path ?? "");
+  const defaultPath = identicalSlices[0]?.path ?? "";
+  const [path, setPath] = useState<string>(defaultPath);
   const [error, setError] = useState<string | undefined>();
 
   useOnChange(isOpen, () => {
     if (!isOpen) {
-      setPath(identicalSlices[0]?.path ?? "");
+      setPath(defaultPath);
       setError(undefined);
     }
   });
