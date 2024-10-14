@@ -61,12 +61,13 @@ function printHelp() {
   console.log(`Slice machine Yalc helper script
 
 USAGE
-  $ ${basename(process.argv[1])} <COMMAND>
+  $ ${basename(process.argv[1])} <COMMAND> [OPTIONS...]
 
 COMMANDS
   link          Link slice-machine editor packages to yalc
   unlink        Unlink slice-machine editor packages from yalc
 
+OPTIONS
   --help, -h    Display help`);
 }
 
