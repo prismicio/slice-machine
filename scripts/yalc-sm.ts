@@ -1,8 +1,14 @@
 import { existsSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, basename } from "node:path";
+import { exit } from "node:process";
 import { green, greenBright, red, bold, yellow } from "chalk";
-import { execSync } from "./utils/commandUtils";
+
+import {
+  CommandError,
+  execSync,
+  handleUncaughtException,
+} from "./utils/commandUtils";
 
 const cwd = process.cwd();
 const smWorkspaceLocation = join(cwd, "packages", "slice-machine");
@@ -15,11 +21,6 @@ const packages = [
 const seeMoreInfoMessage =
   "see CONTRIBUTING.md section on Local development with editor for more information.";
 
-function fail(message: string) {
-  console.error(red(message));
-  process.exit(1);
-}
-
 function getYalcPrismicPackages() {
   const prismicPkgsDir = join(homedir(), ".yalc", "packages", "@prismicio");
   if (!existsSync(prismicPkgsDir)) return [];
@@ -27,9 +28,11 @@ function getYalcPrismicPackages() {
 }
 
 function linkPackages(packages: string[]) {
+  process.on("uncaughtException", handleUncaughtException);
+
   const prismicPkgs = getYalcPrismicPackages();
   if (prismicPkgs.length === 0) {
-    fail(`No packages to link, ${seeMoreInfoMessage}`);
+    throw new CommandError(`No packages to link, ${seeMoreInfoMessage}`);
   }
 
   let someFailed = false;
@@ -47,13 +50,19 @@ function linkPackages(packages: string[]) {
       yellow(`\nSome packages were not found in yalc, ${seeMoreInfoMessage}`),
     );
   }
+
+  process.off("uncaughtException", handleUncaughtException);
 }
 
 function unlinkPackages(packages: string[]) {
+  process.on("uncaughtException", handleUncaughtException);
+
   for (const pkg of packages) {
     execSync("yalc", ["remove", pkg], { cwd: smWorkspaceLocation });
     console.log(`${greenBright("✘")} Unlinked ${bold(green(pkg))}`);
   }
+
+  process.off("uncaughtException", handleUncaughtException);
 }
 
 function printHelp() {
@@ -73,7 +82,7 @@ OPTIONS
 const [command, ...options] = process.argv.slice(2);
 if (options.includes("--help") || options.includes("-h")) {
   printHelp();
-  process.exit(0);
+  exit(0);
 }
 
 switch (command) {
@@ -87,6 +96,6 @@ switch (command) {
   }
   default: {
     printHelp();
-    process.exit(0);
+    exit(0);
   }
 }
