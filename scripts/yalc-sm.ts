@@ -6,8 +6,8 @@ import { green, greenBright, red, bold, yellow } from "chalk";
 import { execaSync } from "execa";
 
 const cwd = process.cwd();
-
 const smWorkspaceLocation = join(cwd, "packages", "slice-machine");
+
 const packages = [
   "@prismicio/editor-ui",
   "@prismicio/editor-fields",
@@ -65,7 +65,7 @@ USAGE
 
 COMMANDS
   link          Link slice-machine editor packages to yalc
-  clean         Unlink slice-machine editor packages from yalc
+  unlink        Unlink slice-machine editor packages from yalc
 
   --help, -h    Display help`);
 }
@@ -81,7 +81,7 @@ switch (command) {
     void linkPackages(packages);
     break;
   }
-  case "clean": {
+  case "unlink": {
     void unlinkPackages(packages);
     break;
   }
