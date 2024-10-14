@@ -131,21 +131,23 @@ gh pr create
 
 ## 🏗️ Local development with editor (slice-machine-ui)
 
-In order to be able to develop faster locally, without having to publish new `editor-ui/fields/support` npm packages, you can use yalc (a local package repository). Here how to do it:
+To accelerate local development without the need to publish new `editor-*` npm packages, you can use [`yalc`](https://github.com/wclr/yalc), a local package repository.
 
-#### 1. Check `editor/CONTRIBUTING.md` "Local package publishing" section
+### How to setup:
 
-#### 2. Link editor packages to yalc
+1️. Check [**`editor/CONTRIBUTING.md` Publish locally**](https://github.com/prismicio/editor/blob/main/CONTRIBUTING.md#%EF%B8%8F-publish-locally) section
 
-```shell
-yarn yalc:editor-packages link
-```
+2️. Link `editor-*` packages to `yalc`
 
-#### _(after developing)_ Unlink to use the installed npm packages
+   ```shell
+   yarn yalc:editor-packages link
+   ```
 
-```shell
-yarn yalc:editor-packages clean
-```
+_(after developing)_ Unlink `yalc` packages to continue using the installed npm ones.
+
+  ```shell
+  yarn yalc:editor-packages unlink
+  ```
 
 ## :rocket: Publish
 
