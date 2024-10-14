@@ -27,14 +27,14 @@ function getYalcPrismicPackages() {
   return readdirSync(prismicPkgsDir).map((name) => `@prismicio/${name}`);
 }
 
-async function linkPackages(packages: string[]) {
+function linkPackages(packages: string[]) {
   const prismicPkgs = getYalcPrismicPackages();
   if (prismicPkgs.length === 0) {
     fail(`No packages to link, ${seeMoreInfoMessage}`);
   }
 
   let someFailed = false;
-  for await (const name of packages) {
+  for (const name of packages) {
     if (prismicPkgs.includes(name)) {
       execaSync("yalc", ["link", name, "--dev"], { cwd: smWorkspaceLocation });
       console.log(`${greenBright("✔")} Linked ${bold(green(name))}`);
