@@ -1,6 +1,9 @@
 import chalk from "chalk";
 import {
+  ExecaSyncReturnValue,
+  SyncOptions,
   execa,
+  execaSync,
   type ExecaChildProcess,
   type Options as ExecaOptions,
   type ExecaReturnValue,
@@ -47,6 +50,29 @@ export async function exec(
     console.log(chalk.blue(escapeCommand(file, args)));
   } else {
     return await execa(file, args, execaOptions);
+  }
+}
+
+export function execSync(
+  file: string,
+  args?: string[],
+  options?: SyncOptions & { dryRun: true },
+): void;
+export function execSync(
+  file: string,
+  args?: string[],
+  options?: SyncOptions & { dryRun?: boolean },
+): ExecaSyncReturnValue | void;
+export function execSync(
+  file: string,
+  args?: string[],
+  options: SyncOptions & { dryRun?: boolean } = {},
+): ExecaSyncReturnValue | void {
+  const { dryRun, ...execaOptions } = options;
+  if (dryRun === true) {
+    console.log(chalk.blue(escapeCommand(file, args)));
+  } else {
+    return execaSync(file, args, execaOptions);
   }
 }
 

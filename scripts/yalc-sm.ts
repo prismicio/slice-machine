@@ -1,9 +1,8 @@
 import { existsSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, basename } from "node:path";
-
 import { green, greenBright, red, bold, yellow } from "chalk";
-import { execaSync } from "execa";
+import { execSync } from "./utils/commandUtils";
 
 const cwd = process.cwd();
 const smWorkspaceLocation = join(cwd, "packages", "slice-machine");
@@ -36,7 +35,7 @@ function linkPackages(packages: string[]) {
   let someFailed = false;
   for (const name of packages) {
     if (prismicPkgs.includes(name)) {
-      execaSync("yalc", ["link", name, "--dev"], { cwd: smWorkspaceLocation });
+      execSync("yalc", ["link", name, "--dev"], { cwd: smWorkspaceLocation });
       console.log(`${greenBright("✔")} Linked ${bold(green(name))}`);
     } else {
       someFailed = true;
@@ -52,7 +51,7 @@ function linkPackages(packages: string[]) {
 
 function unlinkPackages(packages: string[]) {
   for (const pkg of packages) {
-    execaSync("yalc", ["remove", pkg], { cwd: smWorkspaceLocation });
+    execSync("yalc", ["remove", pkg], { cwd: smWorkspaceLocation });
     console.log(`${greenBright("✘")} Unlinked ${bold(green(pkg))}`);
   }
 }
