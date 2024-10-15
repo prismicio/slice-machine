@@ -34,7 +34,10 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 					process.env.slice_machine_v1_endpoint ??
 						"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
 				),
-				RepositoryService: "https://repository.internal.wroom.io/",
+				RepositoryService: addTrailingSlash(
+					process.env.repository_endpoint ??
+						"https://repository.internal.wroom.io/",
+				),
 			};
 
 			const missingAPIEndpoints = Object.keys(apiEndpoints).filter((key) => {
