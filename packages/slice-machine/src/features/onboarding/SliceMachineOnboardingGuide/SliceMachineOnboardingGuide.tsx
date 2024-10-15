@@ -1,3 +1,4 @@
+import { useConfetti } from "@prismicio/editor-support/Animation";
 import {
   Card,
   CardContent,
@@ -5,32 +6,27 @@ import {
   Text,
   useMediaQuery,
 } from "@prismicio/editor-ui";
-import { confetti as fireConfetti, ConfettiConfig } from "dom-confetti";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import styles from "./OnboardingGuide.module.css";
 import { OnboardingProgressStepper } from "./OnboardingProgressStepper";
 import { OnboardingProvider, useOnboardingContext } from "./OnboardingProvider";
 import { OnboardingTutorial } from "./OnboardingTutorial/OnboardingTutorial";
 
-// TODO: Replace confetti with editor-support useConfetti when it's released
 export function SliceMachineOnboardingGuide() {
   const [isVisible, setVisible] = useState(true);
-  const confettiCannonRef = useRef<HTMLDivElement>(null);
-
-  const onComplete = () => {
-    const { current: confettiCannon } = confettiCannonRef;
-    if (confettiCannon) fireConfetti(confettiCannon, confettiConfig);
-    setTimeout(() => setVisible(false), confettiConfig.duration);
-  };
+  const confetti = useConfetti({ onAnimationEnd: () => setVisible(false) });
 
   if (!isVisible) return null;
 
   return (
-    <OnboardingProvider onComplete={onComplete}>
-      <div className={styles.container}>
+    <OnboardingProvider onComplete={confetti.throwConfetti}>
+      <div ref={confetti.confettiContainerRef} className={styles.container}>
         <OnboardingGuideCard />
-        <div ref={confettiCannonRef} className={styles.confettiCannon} />
+        <div
+          ref={confetti.confettiCannonRef}
+          className={styles.confettiCannon}
+        />
       </div>
     </OnboardingProvider>
   );
@@ -71,14 +67,3 @@ function OnboardingGuideCard() {
     </div>
   );
 }
-
-const confettiConfig: ConfettiConfig = {
-  colors: ["#8E44EC", "#E8C7FF", "#59B5F8", "#C3EEFE"],
-  elementCount: 300,
-  width: "8px",
-  height: "8px",
-  stagger: 0.2,
-  startVelocity: 35,
-  spread: 90,
-  duration: 3000,
-};
