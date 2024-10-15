@@ -39,9 +39,12 @@ export const SegmentEventType = {
 	postPush_toastCtaClicked: "post-push:toast-cta-clicked",
 	experiment_exposure: "experiment:exposure",
 	sliceName_pascalCaseError: "slice-name-error:pascal-case",
-	sharedOnboardingGuide_stepCompleted: "shared-onboarding-guide:step-completed",
-	sharedOnboardingGuide_stepOpen: "shared-onboarding-guide:step-open",
-	sharedOnboardingGuide_completed: "shared-onboarding-guide:completed",
+	onboarding_step_opened: "onboarding:step-opened",
+	onboarding_step_completed: "onboarding:step-completed",
+	onboarding_completed: "onboarding:completed",
+	sharedOnboarding_step_opened: "shared-onboarding:step-opened",
+	sharedOnboarding_step_completed: "shared-onboarding:step-completed",
+	sharedOnboarding_completed: "shared-onboarding:completed",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -94,11 +97,16 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.experiment_exposure]: "$exposure",
 	[SegmentEventType.sliceName_pascalCaseError]:
 		"SliceMachine Slice Name Pascal Case Error",
-	[SegmentEventType.sharedOnboardingGuide_stepCompleted]:
+	[SegmentEventType.onboarding_step_opened]:
+		"SliceMachine Onboarding Step Opened",
+	[SegmentEventType.onboarding_step_completed]:
+		"SliceMachine Onboarding Step Completed",
+	[SegmentEventType.onboarding_completed]: "SliceMachine Onboarding Completed",
+	[SegmentEventType.sharedOnboarding_step_completed]:
 		"Prismic Onboarding Guide Step Completed",
-	[SegmentEventType.sharedOnboardingGuide_stepOpen]:
+	[SegmentEventType.sharedOnboarding_step_opened]:
 		"Prismic Onboarding Guide Step Open",
-	[SegmentEventType.sharedOnboardingGuide_completed]:
+	[SegmentEventType.sharedOnboarding_completed]:
 		"Prismic Onboarding Guide Completed",
 } as const;
 
@@ -339,29 +347,32 @@ type SliceLibraryBetaCodeOpened = SegmentEvent<
 	typeof SegmentEventType.sliceLibrary_beta_codeOpened
 >;
 
+type OnboardingCommonPayload = { stepId: string; stepTitle: string };
+type SharedOnboardingProperties<T = {}> = T & { source: "SliceMachine" }; // eslint-disable-line @typescript-eslint/ban-types
+
 type SliceMachineOnboardingStepOpened = SegmentEvent<
-	typeof SegmentEventType.sharedOnboardingGuide_stepOpen,
-	{
-		stepId: string;
-		stepTitle: string;
-		source: "SliceMachine";
-	}
+	typeof SegmentEventType.onboarding_step_opened,
+	OnboardingCommonPayload
 >;
-
 type SliceMachineOnboardingStepCompleted = SegmentEvent<
-	typeof SegmentEventType.sharedOnboardingGuide_stepCompleted,
-	{
-		stepId: string;
-		stepTitle: string;
-		source: "SliceMachine";
-	}
+	typeof SegmentEventType.onboarding_step_completed,
+	OnboardingCommonPayload
+>;
+type SliceMachineOnboardingCompleted = SegmentEvent<
+	typeof SegmentEventType.onboarding_completed
 >;
 
-type SliceMachineOnboardingCompleted = SegmentEvent<
-	typeof SegmentEventType.sharedOnboardingGuide_completed,
-	{
-		source: "SliceMachine";
-	}
+type SliceMachineSharedOnboardingStepOpened = SegmentEvent<
+	typeof SegmentEventType.sharedOnboarding_step_opened,
+	SharedOnboardingProperties<OnboardingCommonPayload>
+>;
+type SliceMachineSharedOnboardingStepCompleted = SegmentEvent<
+	typeof SegmentEventType.sharedOnboarding_step_completed,
+	SharedOnboardingProperties<OnboardingCommonPayload>
+>;
+type SliceMachineSharedOnboardingCompleted = SegmentEvent<
+	typeof SegmentEventType.sharedOnboarding_completed,
+	SharedOnboardingProperties
 >;
 
 type SliceMachinePostPushEmptyStateCtaClicked = SegmentEvent<
@@ -418,6 +429,9 @@ export type SegmentEvents =
 	| SliceMachineOnboardingStepOpened
 	| SliceMachineOnboardingStepCompleted
 	| SliceMachineOnboardingCompleted
+	| SliceMachineSharedOnboardingStepOpened
+	| SliceMachineSharedOnboardingStepCompleted
+	| SliceMachineSharedOnboardingCompleted
 	| SliceMachinePostPushEmptyStateCtaClicked
 	| SliceMachinePostPushToastCtaClicked
 	| SliceMachineExperimentExposure

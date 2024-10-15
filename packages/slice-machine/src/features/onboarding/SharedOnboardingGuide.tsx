@@ -12,7 +12,7 @@ export function SharedOnboardingGuide() {
   return (
     <OnboardingGuide
       tracking={{
-        track: telemetry.track,
+        track: (args) => telemetry.track({ ...args, source: "SliceMachine" }),
         source: "SliceMachine",
       }}
       onboardingState={onboarding}

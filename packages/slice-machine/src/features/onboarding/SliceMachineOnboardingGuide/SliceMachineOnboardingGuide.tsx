@@ -13,6 +13,7 @@ import { OnboardingProgressStepper } from "./OnboardingProgressStepper";
 import { OnboardingProvider, useOnboardingContext } from "./OnboardingProvider";
 import { OnboardingTutorial } from "./OnboardingTutorial/OnboardingTutorial";
 
+// TODO: Replace confetti with editor-support useConfetti when it's released
 export function SliceMachineOnboardingGuide() {
   const [isVisible, setVisible] = useState(true);
   const confettiCannonRef = useRef<HTMLDivElement>(null);
