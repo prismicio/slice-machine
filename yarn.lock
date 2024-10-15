@@ -5987,12 +5987,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.49-alpha.feat-onboarding-guide.11":
-  version: 0.4.49-alpha.feat-onboarding-guide.11
-  resolution: "@prismicio/editor-fields@npm:0.4.49-alpha.feat-onboarding-guide.11"
+"@prismicio/editor-fields@npm:0.4.49-alpha.feat-onboarding-guide.13":
+  version: 0.4.49-alpha.feat-onboarding-guide.13
+  resolution: "@prismicio/editor-fields@npm:0.4.49-alpha.feat-onboarding-guide.13"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.48
+    "@prismicio/editor-support": 0.4.49-alpha.feat-onboarding-guide.2
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 2.8.0
     "@tanstack/react-query": 5.55.4
@@ -6023,16 +6023,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.49-alpha.feat-onboarding-guide.2
+    "@prismicio/editor-ui": ^0.4.49-alpha.feat-onboarding-guide.4
     react: 18
     react-dom: 18
-  checksum: 004fd8766932dd8d689f62011f0cdbc4afbd6c42a2f2d74a50bc08148fd89fa7af3d8220f4c60ef693f71441b57ad413da3191b1ff7c3cbd036bd8182c0b8405
+  checksum: 37e8c76a3ed948b6e6cfb0c46391afcd6b4446fa66987c2e1c93a168feedb372d4f7060a7d26c649de32f95a9c6f73b15b091d887d22ee7d51f16fbfb3432dee
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.48":
-  version: 0.4.48
-  resolution: "@prismicio/editor-support@npm:0.4.48"
+"@prismicio/editor-support@npm:0.4.49-alpha.feat-onboarding-guide.2":
+  version: 0.4.49-alpha.feat-onboarding-guide.2
+  resolution: "@prismicio/editor-support@npm:0.4.49-alpha.feat-onboarding-guide.2"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6043,16 +6043,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 3f28fb637af9146e8c209a2918777b331ddb15a9ef1f13c7e851bc8c840de36405746bb3136c9f8b3fc5dc8065e2164450ee796d0affd0fc8cd9f317ee296408
+  checksum: 0fbdae0e65500133ae6e37f1263f3d1bfcc7a39b3cb6e1bcdda04a1be0929960931042f1d188a1da2722230703de31c4d225c10d60b6e38e57dbb8242e510f87
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.49-alpha.feat-onboarding-guide.2":
-  version: 0.4.49-alpha.feat-onboarding-guide.2
-  resolution: "@prismicio/editor-ui@npm:0.4.49-alpha.feat-onboarding-guide.2"
+"@prismicio/editor-ui@npm:0.4.49-alpha.feat-onboarding-guide.4":
+  version: 0.4.49-alpha.feat-onboarding-guide.4
+  resolution: "@prismicio/editor-ui@npm:0.4.49-alpha.feat-onboarding-guide.4"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.48
+    "@prismicio/editor-support": 0.4.49-alpha.feat-onboarding-guide.2
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6067,6 +6067,7 @@ __metadata:
     "@radix-ui/react-select": 2.1.1
     "@radix-ui/react-separator": 1.1.0
     "@radix-ui/react-slider": 1.2.0
+    "@radix-ui/react-slot": 1.1.0
     "@radix-ui/react-switch": 1.1.0
     "@radix-ui/react-tabs": 1.1.0
     "@radix-ui/react-toggle": 1.1.0
@@ -6099,11 +6100,10 @@ __metadata:
     react-remove-scroll: 2.5.6
     react-syntax-highlighter: 15.5.0
     tslib: 2.4.0
-    uuid: 9.0.1
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 98fa7d3f3e645103a9fb4172836fd78c493f5a9adb41b0079a63f45cc7f53c23f80158f0f0209a9889c2ca49afdb38435574c7cf2c9471003563ca745e11c10b
+  checksum: d46c4c361937d6b9f262be2e87bea55e2cad8d1978ec55ec104902a26557b9894f68c71ec8b4bd9687c8a64541b7000cb4d9097b99ea33d523fb4c9aab22f6ee
   languageName: node
   linkType: hard
 
@@ -31328,9 +31328,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.6.0
-    "@prismicio/editor-fields": 0.4.49-alpha.feat-onboarding-guide.11
-    "@prismicio/editor-support": 0.4.48
-    "@prismicio/editor-ui": 0.4.49-alpha.feat-onboarding-guide.2
+    "@prismicio/editor-fields": 0.4.49-alpha.feat-onboarding-guide.13
+    "@prismicio/editor-support": 0.4.49-alpha.feat-onboarding-guide.2
+    "@prismicio/editor-ui": 0.4.49-alpha.feat-onboarding-guide.4
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.3.3
     "@prismicio/simulator": 0.1.4
@@ -34301,15 +34301,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.1, uuid@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "uuid@npm:9.0.1"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
-  languageName: node
-  linkType: hard
-
 "uuid@npm:^7.0.3":
   version: 7.0.3
   resolution: "uuid@npm:7.0.3"
@@ -34325,6 +34316,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
   languageName: node
   linkType: hard
 
