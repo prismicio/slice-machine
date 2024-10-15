@@ -1,3 +1,5 @@
+import { useMediaQuery } from "@prismicio/editor-ui";
+
 import { useOnboardingExperiment } from "@/features/onboarding/useOnboardingExperiment";
 import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 
@@ -6,19 +8,23 @@ import { SliceMachineOnboardingGuide } from "./SliceMachineOnboardingGuide/Slice
 import { useSharedOnboardingExperiment } from "./useSharedOnboardingExperiment";
 
 export function OnboardingGuide() {
-  const { eligible } = useOnboardingExperiment();
-  const { isSharedOnboardingExperimentEligible } =
-    useSharedOnboardingExperiment();
-  const { sliceMachineUpdateAvailable, adapterUpdateAvailable } =
-    useUpdateAvailable();
+  const isVisible = useIsOnboardingGuideVisible();
+  const isSharedExperimentEligible = useSharedOnboardingExperiment().eligible;
 
-  if (!eligible || sliceMachineUpdateAvailable || adapterUpdateAvailable) {
-    return null;
-  }
+  if (!isVisible) return null;
+  if (isSharedExperimentEligible) return <SharedOnboardingGuide />;
+  return <SliceMachineOnboardingGuide />;
+}
 
-  return isSharedOnboardingExperimentEligible ? (
-    <SharedOnboardingGuide />
-  ) : (
-    <SliceMachineOnboardingGuide />
+function useIsOnboardingGuideVisible() {
+  const isMediaQueryVisible = useMediaQuery({ min: "medium" });
+  const isExperimentEligible = useOnboardingExperiment().eligible;
+  const updates = useUpdateAvailable();
+
+  return (
+    isMediaQueryVisible &&
+    isExperimentEligible &&
+    !updates.sliceMachineUpdateAvailable &&
+    !updates.adapterUpdateAvailable
   );
 }

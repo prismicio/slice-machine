@@ -1,16 +1,13 @@
 import { OnboardingGuide } from "@prismicio/editor-fields";
-import { useMediaQuery } from "@prismicio/editor-ui";
 
 import { telemetry } from "@/apiClient";
 
 import { useOnboarding } from "./useOnboarding";
 
 export function SharedOnboardingGuide() {
-  const isOnboardingVisible = useMediaQuery({ min: "medium" });
-
   const { onboarding, toggleStep, toggleGuide } = useOnboarding();
 
-  if (!onboarding || !isOnboardingVisible) return null;
+  if (!onboarding) return null;
 
   return (
     <OnboardingGuide
