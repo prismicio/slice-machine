@@ -1,4 +1,5 @@
 import * as t from "io-ts";
+import { z } from "zod";
 import fetch, { Response } from "../../lib/fetch";
 import { fold } from "fp-ts/Either";
 
@@ -36,7 +37,6 @@ import {
 	StarterId,
 	Environment,
 	OnboardingState,
-	OnboardingStepId,
 } from "./types";
 import { sortEnvironments } from "./sortEnvironments";
 
@@ -541,8 +541,8 @@ export class PrismicRepositoryManager extends BaseManager {
 	}
 
 	async toggleOnboardingStep(
-		stepId: OnboardingStepId,
-	): Promise<{ completedSteps: OnboardingStepId[] }> {
+		stepId: string,
+	): Promise<{ completedSteps: string[] }> {
 		const repositoryName = await this.project.getRepositoryName();
 
 		const url = new URL(
@@ -555,7 +555,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		if (res.ok) {
 			const json = await res.json();
 			const { value, error } = decode(
-				t.type({ completedSteps: t.array(OnboardingStepId) }),
+				z.object({ completedSteps: z.array(z.string()) }),
 				json,
 			);
 

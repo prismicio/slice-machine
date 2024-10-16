@@ -3,6 +3,7 @@ import {
 	SharedSlice,
 } from "@prismicio/types-internal/lib/customtypes";
 import * as t from "io-ts";
+import { z } from "zod";
 
 export const PrismicRepositoryUserAgent = {
 	SliceMachine: "prismic-cli/sm",
@@ -168,17 +169,17 @@ export const Environment = t.type({
 });
 export type Environment = t.TypeOf<typeof Environment>;
 
-export const OnboardingState = t.type({
-	completedSteps: t.array(t.string),
-	isDismissed: t.boolean,
-	context: t.type({
-		framework: t.union([
-			t.literal("next"),
-			t.literal("nuxt"),
-			t.literal("sveltekit"),
-			t.literal("other"),
+export const OnboardingState = z.object({
+	completedSteps: z.array(z.string()),
+	isDismissed: z.boolean(),
+	context: z.object({
+		framework: z.union([
+			z.literal("next"),
+			z.literal("nuxt"),
+			z.literal("sveltekit"),
+			z.literal("other"),
 		]),
-		starterId: t.union([t.string, t.null]),
+		starterId: z.string().nullable(),
 	}),
 });
-export type OnboardingState = t.TypeOf<typeof OnboardingState>;
+export type OnboardingState = z.infer<typeof OnboardingState>;
