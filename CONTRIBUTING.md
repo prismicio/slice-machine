@@ -139,15 +139,15 @@ To accelerate local development without the need to publish new `editor-*` npm p
 
 2️. Link `editor-*` packages to `yalc`
 
-   ```shell
-   yarn yalc:editor-packages link
-   ```
+```shell
+yarn yalc:editor-packages link
+```
 
 _(after developing)_ Unlink `yalc` packages to continue using the installed npm ones.
 
-  ```shell
-  yarn yalc:editor-packages unlink
-  ```
+```shell
+yarn yalc:editor-packages unlink
+```
 
 ## :rocket: Publish
 
