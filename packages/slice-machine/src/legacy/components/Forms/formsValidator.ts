@@ -8,7 +8,7 @@ import { SliceSM } from "@/legacy/lib/models/common/Slice";
 
 import { SliceModalValues } from "./formsTypes";
 
-type SliceModalValuesValidity =
+export type SliceModalValuesValidity =
   | {
       sliceName?: string;
     }

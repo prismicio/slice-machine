@@ -1,3 +1,4 @@
+import { useOnChange } from "@prismicio/editor-support/React";
 import {
   Box,
   Dialog,
@@ -6,13 +7,13 @@ import {
   DialogCancelButton,
   DialogContent,
   DialogHeader,
+  Form,
   ScrollArea,
   Select,
   SelectItem,
   Text,
 } from "@prismicio/editor-ui";
-import { Formik } from "formik";
-import type { FC } from "react";
+import { type FC, useState } from "react";
 
 import styles from "./ConvertLegacySliceButton.module.css";
 import { DialogProps } from "./types";
@@ -24,6 +25,32 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
   isLoading,
   identicalSlices,
 }) => {
+  const defaultPath = identicalSlices[0]?.path ?? "";
+  const [path, setPath] = useState<string>(defaultPath);
+  const [error, setError] = useState<string | undefined>();
+
+  useOnChange(isOpen, () => {
+    if (!isOpen) {
+      setPath(defaultPath);
+      setError(undefined);
+    }
+  });
+
+  function handleValueChange(value: string) {
+    setPath(value);
+
+    if (!value) setError("Cannot be empty.");
+  }
+
+  function handleSubmit() {
+    if (Boolean(error)) {
+      return;
+    }
+
+    const [libraryID, sliceID, variationID] = path.split("::");
+    onSubmit({ libraryID, sliceID, variationID });
+  }
+
   return (
     <Dialog
       open={isOpen}
@@ -32,77 +59,53 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
     >
       <DialogHeader title="Merge with an existing slice" />
       <DialogContent>
-        <Formik
-          initialValues={{
-            path: identicalSlices[0]?.path ?? "",
-          }}
-          validate={(values) => {
-            if (!values.path) {
-              return { path: "Cannot be empty." };
-            }
-          }}
-          onSubmit={(values) => {
-            const [libraryID, sliceID, variationID] = values.path.split("::");
-            onSubmit({ libraryID, sliceID, variationID });
-          }}
-        >
-          {(formik) => {
-            return (
-              <form id="convert-legacy-slice-merge-with-identical-dialog">
-                <Box display="flex" flexDirection="column">
-                  <ScrollArea className={styles.scrollArea}>
-                    <Text variant="normal" color="grey11">
-                      If you have multiple identical slices, you can merge them.
-                      All of your content will be remapped to the target slice.
+        <Form onSubmit={handleSubmit}>
+          <Box display="flex" flexDirection="column">
+            <ScrollArea className={styles.scrollArea}>
+              <Text variant="normal" color="grey11">
+                If you have multiple identical slices, you can merge them. All
+                of your content will be remapped to the target slice.
+              </Text>
+              <Box display="flex" flexDirection="column" gap={4}>
+                <label className={styles.label}>
+                  <Text variant="bold">Target slice*</Text>
+                  {typeof error === "string" ? (
+                    <Text variant="small" color="tomato10">
+                      {error}
                     </Text>
-                    <Box display="flex" flexDirection="column" gap={4}>
-                      <label className={styles.label}>
-                        <Text variant="bold">Target slice*</Text>
-                        {typeof formik.errors.path === "string" ? (
-                          <Text variant="small" color="tomato10">
-                            {formik.errors.path}
-                          </Text>
-                        ) : null}
-                      </label>
-                      <Select
-                        size="medium"
-                        color="grey"
-                        startIcon="viewDay"
-                        flexContent={true}
-                        value={formik.values.path}
-                        onValueChange={(value) => {
-                          value
-                            ? void formik.setFieldValue("path", value)
-                            : null;
-                        }}
-                      >
-                        {identicalSlices.map((slice) => (
-                          <SelectItem key={slice.path} value={slice.path}>
-                            {slice.path.split("::").join(" > ")}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                      <Text variant="normal" color="grey11">
-                        Choose a slice that you would like to merge this into.
-                      </Text>
-                    </Box>
-                  </ScrollArea>
-                  <DialogActions>
-                    <DialogCancelButton size="medium" />
-                    <DialogActionButton
-                      size="medium"
-                      loading={isLoading}
-                      disabled={!formik.isValid}
-                      onClick={() => void formik.submitForm()}
-                    >
-                      Merge
-                    </DialogActionButton>
-                  </DialogActions>
-                </Box>
-              </form>
-            );
-          }}
-        </Formik>
+                  ) : null}
+                </label>
+                <Select
+                  size="medium"
+                  color="grey"
+                  startIcon="viewDay"
+                  flexContent={true}
+                  value={path}
+                  onValueChange={handleValueChange}
+                >
+                  {identicalSlices.map((slice) => (
+                    <SelectItem key={slice.path} value={slice.path}>
+                      {slice.path.split("::").join(" > ")}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Text variant="normal" color="grey11">
+                  Choose a slice that you would like to merge this into.
+                </Text>
+              </Box>
+            </ScrollArea>
+            <DialogActions>
+              <DialogCancelButton size="medium" />
+              <DialogActionButton
+                size="medium"
+                loading={isLoading}
+                disabled={Boolean(error)}
+              >
+                Merge
+              </DialogActionButton>
+            </DialogActions>
+          </Box>
+        </Form>
       </DialogContent>
     </Dialog>
   );

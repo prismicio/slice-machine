@@ -111,10 +111,10 @@ function AddFieldDropdownItem(props: AddFieldDropdownItemProps) {
             <>
               <Image
                 src={thumbnail}
+                borderRadius={4}
                 sx={{
                   height: 170,
                   width: 278,
-                  borderRadius: 4,
                 }}
                 animateOnLoad={false}
               />

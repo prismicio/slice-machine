@@ -102,7 +102,8 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
             {variant === "default" ? (
               <Text
                 component="span"
-                className={styles.activeEnvironmentName}
+                // TODO: Stop using className
+                {...{ className: styles.activeEnvironmentName }}
                 data-testid="active-environment-name"
               >
                 {isProductionEnvironmentActive ||

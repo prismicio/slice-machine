@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const onboardingStepStatusesSchema = z.object({
-  createProject: z.literal(true),
+  createProject: z.boolean().optional(),
   createPageType: z.boolean(),
   codePage: z.boolean(),
   createSlice: z.boolean(),

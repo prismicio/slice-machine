@@ -8,7 +8,7 @@ import {
   Icon,
   Text,
 } from "@prismicio/editor-ui";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { telemetry } from "@/apiClient";
 
@@ -31,14 +31,6 @@ export function OnboardingProgressStepper(
   const [isListOpen, setListOpen] = useState(false);
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(steps[0]);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // TODO: Even though this is the old guide, check if the onMouseEnter can be added again to avoid doing this
-    if (buttonRef.current) {
-      buttonRef.current.addEventListener("mouseenter", () => setListOpen(true));
-    }
-  }, []);
 
   const showStep = (step: OnboardingStep) => {
     setActiveStep(step);
@@ -60,12 +52,12 @@ export function OnboardingProgressStepper(
       <DropdownMenu open={isListOpen} onOpenChange={setListOpen}>
         <DropdownMenuTrigger>
           <Button
-            ref={buttonRef}
             disabled={isComplete}
             size={buttonSize}
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
+            {...{ onMouseEnter: () => setListOpen(true) }}
           >
             {completedStepCount > 0 ? "Continue" : "Start now"}
           </Button>

@@ -79,7 +79,8 @@ export const MarkdownRenderer: MarkdownRenderer = ({ markdown }) => {
         ),
         p: (props) => (
           <Text
-            className={styles.section}
+            // TODO: Stop using className
+            {...{ className: styles.section }}
             children={props.children}
             component="p"
             variant="normal"
@@ -87,7 +88,8 @@ export const MarkdownRenderer: MarkdownRenderer = ({ markdown }) => {
         ),
         pre: (props) => (
           <Text
-            className={styles.section}
+            // TODO: Stop using className
+            {...{ className: styles.section }}
             children={props.children}
             component="pre"
             variant="normal"

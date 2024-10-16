@@ -39,9 +39,7 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 			<PrismicLink
 				:field="slice.primary.callToActionLink"
 				class="es-customer-logos__button"
-			>
-				{{ slice.primary.callToActionLabel || "Learn more..." }}
-			</PrismicLink>
+			/>
 		</div>
 	</section>
 </template>

@@ -25,6 +25,8 @@ type GitRepositoryConnectDialogProps = {
   trigger: ReactNode;
 };
 
+// TODO: Update form to make it work with editor-ui Form component when
+// we start to work again on Git integration
 export const GitRepositoryConnectDialog: FC<
   GitRepositoryConnectDialogProps
 > = ({ linkRepo, repo, trigger }) => {

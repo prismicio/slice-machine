@@ -44,9 +44,7 @@ const PascalNameToReplace = ({ slice }) => {
 				<PrismicNextLink
 					field={slice.primary.callToActionLink}
 					className="es-customer-logos__button"
-				>
-					{slice.primary.callToActionLabel || "Learn more..."}
-				</PrismicNextLink>
+				/>
 			</div>
 			<style
 				dangerouslySetInnerHTML={{
