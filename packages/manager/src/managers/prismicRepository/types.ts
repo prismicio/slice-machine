@@ -173,12 +173,7 @@ export const OnboardingState = z.object({
 	completedSteps: z.array(z.string()),
 	isDismissed: z.boolean(),
 	context: z.object({
-		framework: z.union([
-			z.literal("next"),
-			z.literal("nuxt"),
-			z.literal("sveltekit"),
-			z.literal("other"),
-		]),
+		framework: z.string(),
 		starterId: z.string().nullable(),
 	}),
 });
