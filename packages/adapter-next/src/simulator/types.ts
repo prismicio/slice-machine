@@ -7,5 +7,6 @@
 export type SliceSimulatorParams = {
 	searchParams: {
 		state?: string;
+		secret?: string;
 	};
 };
