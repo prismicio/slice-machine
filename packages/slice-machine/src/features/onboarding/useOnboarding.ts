@@ -34,10 +34,21 @@ export function useOnboarding() {
 
   async function toggleGuide() {
     if (!onboarding) return;
+
+    const previousIsDismissed = onboarding.isDismissed;
     try {
+      updateData(getOnboarding, [], {
+        ...onboarding,
+        isDismissed: !previousIsDismissed,
+      });
+
       const { isDismissed } = await toggleOnboarding();
       updateData(getOnboarding, [], { ...onboarding, isDismissed });
     } catch (error) {
+      updateData(getOnboarding, [], {
+        ...onboarding,
+        isDismissed: previousIsDismissed,
+      });
       console.error("Error toggling onboarding:", error);
     }
   }

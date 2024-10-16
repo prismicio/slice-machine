@@ -5981,12 +5981,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.49-alpha.feat-onboarding-guide.16":
-  version: 0.4.49-alpha.feat-onboarding-guide.16
-  resolution: "@prismicio/editor-fields@npm:0.4.49-alpha.feat-onboarding-guide.16"
+"@prismicio/editor-fields@npm:0.4.50":
+  version: 0.4.50
+  resolution: "@prismicio/editor-fields@npm:0.4.50"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.49-alpha.feat-onboarding-guide.8
+    "@prismicio/editor-support": 0.4.50
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 2.8.0
     "@tanstack/react-query": 5.55.4
@@ -6017,16 +6017,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.49-alpha.feat-onboarding-guide.6
+    "@prismicio/editor-ui": ^0.4.50
     react: 18
     react-dom: 18
-  checksum: 5e46632216cf688b13fadc4ea038cbb1dc575181fdd1205158baac4e74f20d0da9c561c6ead8e38628db6e61e968263f876feff9058afe4bd160c99d29b9cb92
+  checksum: 09d3c27ed356b3e81ed3b03fbaeaaf8b44a30a091016b330758691ef44611f2542e6f2a58a4a29bf06847d425514fbd106eb1fd2192ddc3b138adf4507ff130d
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.49-alpha.feat-onboarding-guide.8":
-  version: 0.4.49-alpha.feat-onboarding-guide.8
-  resolution: "@prismicio/editor-support@npm:0.4.49-alpha.feat-onboarding-guide.8"
+"@prismicio/editor-support@npm:0.4.50":
+  version: 0.4.50
+  resolution: "@prismicio/editor-support@npm:0.4.50"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6037,16 +6037,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: ea51dd48962b999891c9257b32d2902b46120490d49811e0f5877f8e3946010339a09b03d458dba060788c7ff0949414056a737a4fb839f9e6003a0394990f82
+  checksum: a46feccbefdb2e433f52d6a6d434739d01269e3c2471f609683109b68fd08d5cc22068db4c3daa67e1c3ce90a7c44720d70146c58237d70c4a5d5ce7766ff61b
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.49-alpha.feat-onboarding-guide.6":
-  version: 0.4.49-alpha.feat-onboarding-guide.6
-  resolution: "@prismicio/editor-ui@npm:0.4.49-alpha.feat-onboarding-guide.6"
+"@prismicio/editor-ui@npm:0.4.50":
+  version: 0.4.50
+  resolution: "@prismicio/editor-ui@npm:0.4.50"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.49-alpha.feat-onboarding-guide.8
+    "@prismicio/editor-support": 0.4.50
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6097,7 +6097,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 1ba33469341521f8f3f9f4d92bd7a6d5d9c1437d57f1697e53130b12471bd3eeb258572516a7552c6cc392f63ddcf5027b6d831a8887e5491006194de2196005
+  checksum: 392dc93f0aad1179505e227b7d6c52c306190cca62c4db9bd9e64918104a01478e44b31e183784449231d466766f44ba161236e1f431d7f9e7bfff0dce4e736e
   languageName: node
   linkType: hard
 
@@ -31206,9 +31206,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.11.0
-    "@prismicio/editor-fields": 0.4.49-alpha.feat-onboarding-guide.16
-    "@prismicio/editor-support": 0.4.49-alpha.feat-onboarding-guide.8
-    "@prismicio/editor-ui": 0.4.49-alpha.feat-onboarding-guide.6
+    "@prismicio/editor-fields": 0.4.50
+    "@prismicio/editor-support": 0.4.50
+    "@prismicio/editor-ui": 0.4.50
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.4.0
     "@prismicio/simulator": 0.1.4
