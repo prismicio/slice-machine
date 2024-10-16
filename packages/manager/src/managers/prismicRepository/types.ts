@@ -169,11 +169,38 @@ export const Environment = t.type({
 });
 export type Environment = t.TypeOf<typeof Environment>;
 
+export const supportedSliceMachineFrameworks = [
+	"next",
+	"nuxt",
+	"sveltekit",
+] as const;
+
+type SupportedFramework = (typeof supportedSliceMachineFrameworks)[number];
+
+function isSupportedFramework(value: string): value is SupportedFramework {
+	return supportedSliceMachineFrameworks.includes(value as SupportedFramework);
+}
+
+export const repositoryFramework = z.preprocess(
+	(value) => {
+		// NOTE: we persist a lot of different frameworks in the DB, but only the SM supported are relevant to us
+		// Any other framework is treated like "other"
+		if (typeof value === "string" && isSupportedFramework(value)) {
+			return value;
+		}
+
+		return "other";
+	},
+	z.enum([...supportedSliceMachineFrameworks, "other"]),
+);
+
+export type RepositoryFramework = z.TypeOf<typeof repositoryFramework>;
+
 export const OnboardingState = z.object({
 	completedSteps: z.array(z.string()),
 	isDismissed: z.boolean(),
 	context: z.object({
-		framework: z.string(),
+		framework: repositoryFramework.optional().default("other"),
 		starterId: z.string().nullable(),
 	}),
 });
