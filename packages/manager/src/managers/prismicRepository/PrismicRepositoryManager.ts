@@ -590,7 +590,10 @@ export class PrismicRepositoryManager extends BaseManager {
 
 		if (res.ok) {
 			const json = await res.json();
-			const { value, error } = decode(t.type({ isDismissed: t.boolean }), json);
+			const { value, error } = decode(
+				z.object({ isDismissed: z.boolean() }),
+				json,
+			);
 
 			if (error) {
 				throw new UnexpectedDataError(
