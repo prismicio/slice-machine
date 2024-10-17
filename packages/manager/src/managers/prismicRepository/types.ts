@@ -200,7 +200,7 @@ export const OnboardingState = z.object({
 	completedSteps: z.array(z.string()),
 	isDismissed: z.boolean(),
 	context: z.object({
-		framework: repositoryFramework.optional().default("other"),
+		framework: repositoryFramework,
 		starterId: z.string().nullable(),
 	}),
 });
