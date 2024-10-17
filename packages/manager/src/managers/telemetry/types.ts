@@ -349,7 +349,9 @@ type SliceLibraryBetaCodeOpened = SegmentEvent<
 >;
 
 type OnboardingCommonPayload = { stepId: string; stepTitle: string };
-type SharedOnboardingProperties<T = {}> = T & { source: "SliceMachine" }; // eslint-disable-line @typescript-eslint/ban-types
+type SharedOnboardingProperties<T = Record<string, string>> = T & {
+	source: "SliceMachine";
+};
 
 type SliceMachineOnboardingStepOpened = SegmentEvent<
 	typeof SegmentEventType.onboarding_step_opened,
