@@ -35,8 +35,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 						"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
 				),
 				RepositoryService: addTrailingSlash(
-					process.env.repository_endpoint ??
-						"https://repository.internal.wroom.io/",
+					process.env.repository_api ?? "https://repository.internal.wroom.io/",
 				),
 			};
 
