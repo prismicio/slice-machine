@@ -21,8 +21,8 @@ export function useOnboarding() {
   const onboarding = useRequest(getOnboarding, []);
   const getOnboardingState = useRefGetter(onboarding);
 
-  function updateCache(onboarding: OnboardingState) {
-    updateData(getOnboarding, [], onboarding);
+  function updateCache(newOnboardingState: OnboardingState) {
+    updateData(getOnboarding, [], newOnboardingState);
   }
 
   async function toggleStep(stepId: string) {
