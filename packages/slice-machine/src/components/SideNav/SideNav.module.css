@@ -180,6 +180,10 @@
   }
 }
 
+button.link {
+  width: 100%;
+}
+
 .linkIcon {
   composes: blockWithDisplayRevert;
   /* Not Active */

@@ -5981,12 +5981,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.50":
-  version: 0.4.50
-  resolution: "@prismicio/editor-fields@npm:0.4.50"
+"@prismicio/editor-fields@npm:0.4.50-shared-onboarding-in-page-builder.1":
+  version: 0.4.50-shared-onboarding-in-page-builder.1
+  resolution: "@prismicio/editor-fields@npm:0.4.50-shared-onboarding-in-page-builder.1"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.50
+    "@prismicio/editor-support": 0.4.50-shared-onboarding-in-page-builder.1
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 2.8.0
     "@tanstack/react-query": 5.55.4
@@ -6017,16 +6017,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.21.4
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.50
+    "@prismicio/editor-ui": ^0.4.50-shared-onboarding-in-page-builder.1
     react: 18
     react-dom: 18
-  checksum: 09d3c27ed356b3e81ed3b03fbaeaaf8b44a30a091016b330758691ef44611f2542e6f2a58a4a29bf06847d425514fbd106eb1fd2192ddc3b138adf4507ff130d
+  checksum: bd5e7470d003db2790cf397a655130e6057484b647b2be734f57db29ac073e3848c5e0444df38ac30d1f08a86ced363c13ef3283c24f8ef450a096a68969d63e
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.50":
-  version: 0.4.50
-  resolution: "@prismicio/editor-support@npm:0.4.50"
+"@prismicio/editor-support@npm:0.4.50-shared-onboarding-in-page-builder.1":
+  version: 0.4.50-shared-onboarding-in-page-builder.1
+  resolution: "@prismicio/editor-support@npm:0.4.50-shared-onboarding-in-page-builder.1"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6037,16 +6037,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: a46feccbefdb2e433f52d6a6d434739d01269e3c2471f609683109b68fd08d5cc22068db4c3daa67e1c3ce90a7c44720d70146c58237d70c4a5d5ce7766ff61b
+  checksum: 7cf57c0026931a99c8e460e9bcd6f0425325e1c96e97ef2bb8db4c27d3941230b6326213c93fda1c0aba5ce8c3d9c8798f1451d0e48dbb55f7302811e5806f41
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.50":
-  version: 0.4.50
-  resolution: "@prismicio/editor-ui@npm:0.4.50"
+"@prismicio/editor-ui@npm:0.4.50-shared-onboarding-in-page-builder.1":
+  version: 0.4.50-shared-onboarding-in-page-builder.1
+  resolution: "@prismicio/editor-ui@npm:0.4.50-shared-onboarding-in-page-builder.1"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.50
+    "@prismicio/editor-support": 0.4.50-shared-onboarding-in-page-builder.1
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6097,7 +6097,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 392dc93f0aad1179505e227b7d6c52c306190cca62c4db9bd9e64918104a01478e44b31e183784449231d466766f44ba161236e1f431d7f9e7bfff0dce4e736e
+  checksum: 89bccf0bec66b5e461c9e5389c844e635f7233c09a5315262d2a9e181225ece71b8fcaad9af2f578c5f789c812cb582804df03f1412d5affee2c9f3f8fd6cfb4
   languageName: node
   linkType: hard
 
@@ -31206,9 +31206,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.11.0
-    "@prismicio/editor-fields": 0.4.50
-    "@prismicio/editor-support": 0.4.50
-    "@prismicio/editor-ui": 0.4.50
+    "@prismicio/editor-fields": 0.4.50-shared-onboarding-in-page-builder.1
+    "@prismicio/editor-support": 0.4.50-shared-onboarding-in-page-builder.1
+    "@prismicio/editor-ui": 0.4.50-shared-onboarding-in-page-builder.1
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.4.0
     "@prismicio/simulator": 0.1.4

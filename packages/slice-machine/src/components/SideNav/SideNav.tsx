@@ -3,6 +3,7 @@ import type { UrlObject } from "node:url";
 import { Tooltip, useMediaQuery } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import {
+  ComponentType,
   type FC,
   forwardRef,
   type HTMLAttributes,
@@ -95,42 +96,62 @@ export const SideNavSeparator = () => (
   <Divider color="grey6" className={styles.separator} />
 );
 
-export type SideNavLinkProps = {
+type BaseSideNavCtaProps = {
   title: string;
-  href: string;
   active?: boolean;
-  Icon: FC<SVGProps<SVGSVGElement>>;
-  target?: "_blank";
+  Icon: ComponentType<SVGProps<SVGSVGElement>>;
   RightElement?: ReactNode;
-  component?: "a" | FC<LinkProps>;
-  onClick?: (event: MouseEvent) => void;
 };
 
-type LinkProps = {
-  href: string | UrlObject;
+type SideNavButtonProps = {
+  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 };
 
-export const SideNavLink: FC<SideNavLinkProps> = ({
+type SideNavLinkProps = {
+  href: string;
+  target?: "_blank";
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+};
+
+type ComponentProps<C extends CtaType> = C extends "a"
+  ? SideNavLinkProps
+  : C extends "button"
+  ? SideNavButtonProps
+  : C extends FC<infer P>
+  ? Omit<P, keyof BaseSideNavCtaProps>
+  : never;
+
+export type SideNavCtaProps<C extends CtaType> = BaseSideNavCtaProps & {
+  component?: C;
+} & ComponentProps<C>;
+
+type CtaType = "button" | "a" | FC<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+export function SideNavCta<C extends CtaType = "a">({
   title,
   RightElement,
   Icon,
   active,
-  component: Comp = "a",
+  component,
   ...otherProps
-}) => {
+}: SideNavCtaProps<C>) {
   const visible = useMediaQuery({ max: "medium" });
+  const Comp = component ?? "a";
+
   return (
     <Tooltip content={title} side="right" visible={visible}>
       <Comp {...otherProps} className={styles.link} data-active={active}>
-        <Icon className={styles.linkIcon} />
-        <div className={styles.linkContent}>
-          <span className={styles.linkText}>{title}</span>
-          {RightElement}
-        </div>
+        <>
+          <Icon className={styles.linkIcon} />
+          <div className={styles.linkContent}>
+            <span className={styles.linkText}>{title}</span>
+            {RightElement}
+          </div>
+        </>
       </Comp>
     </Tooltip>
   );
-};
+}
 
 type RightElementProps = PropsWithChildren<
   {
@@ -159,7 +180,7 @@ export const RightElement: FC<RightElementProps> = ({
 type UpdateInfoProps = {
   onClick?: (event: MouseEvent) => void;
   href: string;
-  component?: "a" | FC<LinkProps>;
+  component?: "a" | FC<{ href: string | UrlObject }>;
 };
 
 export const UpdateInfo: FC<UpdateInfoProps> = ({
