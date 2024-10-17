@@ -1,4 +1,7 @@
+import { OnboardingState } from "@prismicio/editor-fields";
+import { useRefGetter } from "@prismicio/editor-support/React";
 import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
+import { toast } from "react-toastify";
 
 import { managerClient } from "@/managerClient";
 
@@ -7,49 +10,51 @@ const { fetchOnboarding, toggleOnboarding, toggleOnboardingStep } =
 
 async function getOnboarding() {
   try {
-    return await fetchOnboarding();
+    return fetchOnboarding();
   } catch (error) {
-    console.error("Error while trying to get onboarding", error);
+    console.error("Failed to fetch onboarding", error);
     return undefined;
   }
 }
 
 export function useOnboarding() {
   const onboarding = useRequest(getOnboarding, []);
+  const getOnboardingState = useRefGetter(onboarding);
+
+  function updateCache(onboarding: OnboardingState) {
+    updateData(getOnboarding, [], onboarding);
+  }
 
   async function toggleStep(stepId: string) {
-    if (!onboarding) return [];
+    const onboardingState = getOnboardingState();
+    if (!onboardingState) return [];
 
     try {
       const { completedSteps } = await toggleOnboardingStep(stepId);
-      updateData(getOnboarding, [], { ...onboarding, completedSteps });
+      updateCache({ ...onboardingState, completedSteps });
 
       return completedSteps;
     } catch (error) {
-      console.error("Error toggling step:", error);
+      toast.error("Failed to complete/undo step");
+      console.error("Error toggling onboarding step", error);
 
-      return onboarding.completedSteps;
+      return onboardingState.completedSteps;
     }
   }
 
   async function toggleGuide() {
-    if (!onboarding) return;
+    const onboardingState = getOnboardingState();
+    if (!onboardingState) return;
 
-    const previousIsDismissed = onboarding.isDismissed;
+    const wasDismissed = onboardingState.isDismissed;
     try {
-      updateData(getOnboarding, [], {
-        ...onboarding,
-        isDismissed: !previousIsDismissed,
-      });
-
+      updateCache({ ...onboardingState, isDismissed: !wasDismissed }); // optimistic
       const { isDismissed } = await toggleOnboarding();
-      updateData(getOnboarding, [], { ...onboarding, isDismissed });
+      updateCache({ ...onboardingState, isDismissed }); // sync with api
     } catch (error) {
-      updateData(getOnboarding, [], {
-        ...onboarding,
-        isDismissed: previousIsDismissed,
-      });
-      console.error("Error toggling onboarding:", error);
+      updateCache({ ...onboardingState, isDismissed: wasDismissed }); // rollback
+      toast.error("Failed to hide/show onboarding");
+      console.error("Error toggling onboarding", error);
     }
   }
 
