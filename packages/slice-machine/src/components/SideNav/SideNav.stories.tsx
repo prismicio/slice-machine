@@ -7,7 +7,7 @@ import { PageLayout, PageLayoutPane } from "../PageLayout";
 import {
   RightElement,
   SideNav,
-  SideNavCta,
+  SideNavLink,
   SideNavList,
   SideNavListItem,
   SideNavListTitle,
@@ -80,11 +80,16 @@ export const Default = {
 
         <SideNavList>
           <SideNavListItem>
-            <SideNavCta title="Active" href="/active" active Icon={RadarIcon} />
+            <SideNavLink
+              title="Active"
+              href="/active"
+              active
+              Icon={RadarIcon}
+            />
           </SideNavListItem>
 
           <SideNavListItem>
-            <SideNavCta
+            <SideNavLink
               title="Not active"
               href="/not-active"
               Icon={RadarIcon}
@@ -94,7 +99,7 @@ export const Default = {
           <SideNavSeparator />
 
           <SideNavListItem>
-            <SideNavCta
+            <SideNavLink
               title="Changes active"
               href="/changes-active"
               Icon={RadarIcon}
@@ -106,7 +111,7 @@ export const Default = {
           <SideNavSeparator />
 
           <SideNavListItem>
-            <SideNavCta
+            <SideNavLink
               title="Changes not active"
               href="/changes-not-active"
               Icon={RadarIcon}
@@ -117,7 +122,7 @@ export const Default = {
           <SideNavSeparator />
 
           <SideNavListItem>
-            <SideNavCta
+            <SideNavLink
               title="Changes active"
               href="/changes-active"
               Icon={RadarIcon}
@@ -129,7 +134,7 @@ export const Default = {
           <SideNavSeparator />
 
           <SideNavListItem>
-            <SideNavCta
+            <SideNavLink
               title="Changes not active"
               href="/changes-not-active"
               Icon={RadarIcon}
@@ -144,7 +149,7 @@ export const Default = {
 
         <SideNavList>
           <SideNavListItem>
-            <SideNavCta title="Slices" href="/slices" Icon={RadarIcon} />
+            <SideNavLink title="Slices" href="/slices" Icon={RadarIcon} />
           </SideNavListItem>
         </SideNavList>
 
@@ -152,7 +157,7 @@ export const Default = {
 
         <SideNavList position="bottom">
           <SideNavListItem>
-            <SideNavCta
+            <SideNavLink
               title="Changelog"
               href="/changelog"
               Icon={LightningIcon}

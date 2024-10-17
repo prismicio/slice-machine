@@ -1,7 +1,7 @@
 import { OnboardingGuide } from "@prismicio/editor-fields";
 
 import { telemetry } from "@/apiClient";
-import { SideNavCta, SideNavListItem } from "@/components/SideNav";
+import { SideNavButton, SideNavListItem } from "@/components/SideNav";
 import { PlayCircleIcon } from "@/icons/PlayCircleIcon";
 
 import { useOnboarding } from "./useOnboarding";
@@ -14,8 +14,7 @@ export function SharedOnboardingGuide() {
   if (onboarding.isDismissed) {
     return (
       <SideNavListItem>
-        <SideNavCta
-          component="button"
+        <SideNavButton
           title="Get Started"
           Icon={PlayCircleIcon}
           onClick={() => void toggleGuide()}

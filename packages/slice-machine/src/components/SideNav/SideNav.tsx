@@ -3,7 +3,6 @@ import type { UrlObject } from "node:url";
 import { Tooltip, useMediaQuery } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import {
-  ComponentType,
   type FC,
   forwardRef,
   type HTMLAttributes,
@@ -96,62 +95,74 @@ export const SideNavSeparator = () => (
   <Divider color="grey6" className={styles.separator} />
 );
 
-type BaseSideNavCtaProps = {
+export type SideNavLinkProps = {
   title: string;
-  active?: boolean;
-  Icon: ComponentType<SVGProps<SVGSVGElement>>;
-  RightElement?: ReactNode;
-};
-
-type SideNavButtonProps = {
-  onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
-};
-
-type SideNavLinkProps = {
   href: string;
+  active?: boolean;
+  Icon: FC<SVGProps<SVGSVGElement>>;
   target?: "_blank";
-  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
+  RightElement?: ReactNode;
+  component?: "a" | FC<LinkProps>;
+  onClick?: (event: MouseEvent) => void;
 };
 
-type ComponentProps<C extends CtaType> = C extends "a"
-  ? SideNavLinkProps
-  : C extends "button"
-  ? SideNavButtonProps
-  : C extends FC<infer P>
-  ? Omit<P, keyof BaseSideNavCtaProps>
-  : never;
+type LinkProps = {
+  href: string | UrlObject;
+};
 
-export type SideNavCtaProps<C extends CtaType> = BaseSideNavCtaProps & {
-  component?: C;
-} & ComponentProps<C>;
-
-type CtaType = "button" | "a" | FC<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
-
-export function SideNavCta<C extends CtaType = "a">({
+export const SideNavLink: FC<SideNavLinkProps> = ({
   title,
   RightElement,
   Icon,
   active,
-  component,
+  component: Comp = "a",
   ...otherProps
-}: SideNavCtaProps<C>) {
+}) => {
   const visible = useMediaQuery({ max: "medium" });
-  const Comp = component ?? "a";
+  return (
+    <Tooltip content={title} side="right" visible={visible}>
+      <Comp {...otherProps} className={styles.link} data-active={active}>
+        <Icon className={styles.linkIcon} />
+        <div className={styles.linkContent}>
+          <span className={styles.linkText}>{title}</span>
+          {RightElement}
+        </div>
+      </Comp>
+    </Tooltip>
+  );
+};
+
+export type SideNavButtonProps = {
+  title: string;
+  active?: boolean;
+  Icon: FC<SVGProps<SVGSVGElement>>;
+  RightElement?: ReactNode;
+  component?: "button" | FC<{ onClick?: (event: MouseEvent) => void }>;
+  onClick?: (event: MouseEvent) => void;
+};
+
+export const SideNavButton: FC<SideNavButtonProps> = ({
+  title,
+  RightElement,
+  Icon,
+  active,
+  component: Comp = "button",
+  ...otherProps
+}) => {
+  const visible = useMediaQuery({ max: "medium" });
 
   return (
     <Tooltip content={title} side="right" visible={visible}>
       <Comp {...otherProps} className={styles.link} data-active={active}>
-        <>
-          <Icon className={styles.linkIcon} />
-          <div className={styles.linkContent}>
-            <span className={styles.linkText}>{title}</span>
-            {RightElement}
-          </div>
-        </>
+        <Icon className={styles.linkIcon} />
+        <div className={styles.linkContent}>
+          <span className={styles.linkText}>{title}</span>
+          {RightElement}
+        </div>
       </Comp>
     </Tooltip>
   );
-}
+};
 
 type RightElementProps = PropsWithChildren<
   {
@@ -180,7 +191,7 @@ export const RightElement: FC<RightElementProps> = ({
 type UpdateInfoProps = {
   onClick?: (event: MouseEvent) => void;
   href: string;
-  component?: "a" | FC<{ href: string | UrlObject }>;
+  component?: "a" | FC<LinkProps>;
 };
 
 export const UpdateInfo: FC<UpdateInfoProps> = ({

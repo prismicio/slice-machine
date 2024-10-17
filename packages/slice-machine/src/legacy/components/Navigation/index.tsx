@@ -7,7 +7,7 @@ import { telemetry } from "@/apiClient";
 import { Divider } from "@/components/Divider";
 import {
   SideNav,
-  SideNavCta,
+  SideNavLink,
   SideNavList,
   SideNavListItem,
   SideNavRepository,
@@ -66,7 +66,7 @@ const Navigation: FC = () => {
 
       <SideNavList>
         <SideNavListItem>
-          <SideNavCta
+          <SideNavLink
             title={CUSTOM_TYPES_MESSAGES["page"].name({
               start: true,
               plural: true,
@@ -81,7 +81,7 @@ const Navigation: FC = () => {
         </SideNavListItem>
 
         <SideNavListItem>
-          <SideNavCta
+          <SideNavLink
             title={CUSTOM_TYPES_MESSAGES["custom"].name({
               start: true,
               plural: true,
@@ -96,7 +96,7 @@ const Navigation: FC = () => {
         </SideNavListItem>
 
         <SideNavListItem>
-          <SideNavCta
+          <SideNavLink
             title="Slices"
             href="/slices"
             Icon={FolderIcon}
@@ -126,7 +126,7 @@ const Navigation: FC = () => {
                 setIsSliceLibraryDialogOpen(false);
               }}
             />
-            <SideNavCta
+            <SideNavLink
               title="Master Slice Library"
               href={"/"}
               Icon={MasterSliceLibraryIcon}
@@ -146,7 +146,7 @@ const Navigation: FC = () => {
 
         {gitIntegrationExperiment.eligible ? (
           <SideNavListItem>
-            <SideNavCta
+            <SideNavLink
               title="Settings"
               href="/settings"
               Icon={SettingsIcon}
@@ -157,7 +157,7 @@ const Navigation: FC = () => {
         ) : undefined}
 
         <SideNavListItem>
-          <SideNavCta
+          <SideNavLink
             title="Changelog"
             href="/changelog"
             Icon={LightningIcon}
