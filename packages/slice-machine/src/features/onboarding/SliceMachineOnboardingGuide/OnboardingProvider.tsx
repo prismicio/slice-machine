@@ -60,17 +60,15 @@ export const OnboardingProvider = ({
 
     if (newCompleteState) {
       void telemetry.track({
-        event: "shared-onboarding:step-completed",
+        event: "onboarding:step-completed",
         stepId: step.id,
         stepTitle: step.title,
-        source: "SliceMachine",
       });
     }
     if (Object.values(nextState).every(Boolean)) {
       onComplete?.();
       void telemetry.track({
-        event: "shared-onboarding:completed",
-        source: "SliceMachine",
+        event: "onboarding:completed",
       });
     }
   };
