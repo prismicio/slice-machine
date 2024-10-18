@@ -29,7 +29,10 @@ export function SharedOnboardingGuide() {
         track: (args) => telemetry.track({ ...args, source: "SliceMachine" }),
         source: "SliceMachine",
       }}
-      onboardingState={onboarding}
+      onboardingState={{
+        ...onboarding,
+        context: { ...onboarding.context, framework: "next" },
+      }}
       onToggleStep={toggleStep}
       onToggleGuide={toggleGuide}
     />
