@@ -137,7 +137,6 @@ export type SideNavButtonProps = {
   active?: boolean;
   Icon: FC<SVGProps<SVGSVGElement>>;
   RightElement?: ReactNode;
-  component?: "button" | FC<{ onClick?: (event: MouseEvent) => void }>;
   onClick?: (event: MouseEvent) => void;
 };
 
@@ -146,20 +145,19 @@ export const SideNavButton: FC<SideNavButtonProps> = ({
   RightElement,
   Icon,
   active,
-  component: Comp = "button",
   ...otherProps
 }) => {
   const visible = useMediaQuery({ max: "medium" });
 
   return (
     <Tooltip content={title} side="right" visible={visible}>
-      <Comp {...otherProps} className={styles.link} data-active={active}>
-        <Icon className={styles.linkIcon} />
-        <div className={styles.linkContent}>
-          <span className={styles.linkText}>{title}</span>
+      <button {...otherProps} className={styles.button} data-active={active}>
+        <Icon className={styles.buttonIcon} />
+        <div className={styles.buttonContent}>
+          <span className={styles.buttonText}>{title}</span>
           {RightElement}
         </div>
-      </Comp>
+      </button>
     </Tooltip>
   );
 };

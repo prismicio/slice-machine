@@ -130,7 +130,8 @@
   margin-top: 8px;
 }
 
-.link {
+.link,
+.button {
   composes: block interactiveElement;
   align-items: center;
   border-radius: 6px;
@@ -184,7 +185,8 @@ button.link {
   width: 100%;
 }
 
-.linkIcon {
+.linkIcon,
+.buttonIcon {
   composes: blockWithDisplayRevert;
   /* Not Active */
   .link:not([data-active="true"]) & {
@@ -196,14 +198,16 @@ button.link {
   }
 }
 
-.linkContent {
+.linkContent,
+.buttonContent {
   composes: block;
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-.linkText {
+.linkText,
+.buttonText {
   composes: blockWithDisplayRevert;
   align-self: baseline;
 }
