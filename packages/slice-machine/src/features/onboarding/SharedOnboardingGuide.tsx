@@ -29,6 +29,7 @@ export function SharedOnboardingGuide() {
         track: (args) => telemetry.track({ ...args, source: "SliceMachine" }),
         source: "SliceMachine",
       }}
+      // TODO: Remove this before merging, only for demo purposes
       onboardingState={{
         ...onboarding,
         context: { ...onboarding.context, framework: "next" },
