@@ -24,7 +24,7 @@ export const dummyServerState: Pick<
       PrismicEmbed: "https://oembed.prismic.io",
       PrismicUnsplash: "https://unsplash.prismic.io/",
       SliceMachineV1: "https://sm-api.prismic.io/v1/",
-      RepositoryService: "https://repository.internal.prismic.io/",
+      RepositoryService: "https://repository.prismic.io/",
     },
     shortId: "shortId",
   },

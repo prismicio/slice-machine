@@ -19,8 +19,8 @@ it("returns onboarding state for the logged in user", async (ctx) => {
 	mockPrismicAuthAPI(ctx);
 
 	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
-	const authenticationToken = await manager.user.getAuthenticationToken();
 	await manager.user.login(prismicAuthLoginResponse);
+	const authenticationToken = await manager.user.getAuthenticationToken();
 
 	const steps = ["reviewAndPush", "codePage", "createContent"];
 	mockRepositoryServiceAPI(ctx, {
@@ -41,4 +41,61 @@ it("returns onboarding state for the logged in user", async (ctx) => {
 			starterId: null,
 		},
 	});
+});
+
+it("toggles an onboarding step and returns the new completedSteps", async (ctx) => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+	const authenticationToken = await manager.user.getAuthenticationToken();
+
+	mockRepositoryServiceAPI(ctx, {
+		toggleStepEndpoint: {
+			steps: ["reviewAndPush", "codePage", "createContent"],
+			expectedAuthenticationToken: authenticationToken,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+		},
+	});
+
+	const res =
+		await manager.prismicRepository.toggleOnboardingStep("reviewAndPush");
+
+	expect(res).toStrictEqual({
+		completedSteps: ["codePage", "createContent"],
+	});
+});
+
+it("toggles onboarding", async (ctx) => {
+	const adapter = createTestPlugin();
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	mockPrismicAuthAPI(ctx);
+
+	const prismicAuthLoginResponse = createPrismicAuthLoginResponse();
+	await manager.user.login(prismicAuthLoginResponse);
+	const authenticationToken = await manager.user.getAuthenticationToken();
+
+	mockRepositoryServiceAPI(ctx, {
+		toggleEndpoint: {
+			isDismissed: true,
+			expectedAuthenticationToken: authenticationToken,
+			expectedCookies: prismicAuthLoginResponse.cookies,
+		},
+	});
+
+	const res = await manager.prismicRepository.toggleOnboarding();
+
+	expect(res).toStrictEqual({ isDismissed: true });
 });

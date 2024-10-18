@@ -24,25 +24,25 @@ export const mockRepositoryServiceAPI = (
 	ctx: TestContext,
 	config: MockRepositoryServiceAPIConfig,
 ): void => {
-	const endpoint = config?.endpoint ?? "https://prismic.io/";
+	const endpoint = config?.endpoint ?? "https://repository.prismic.io/";
 
 	const checkAuth = (
 		expected: {
 			expectedAuthenticationToken: string;
 			expectedCookies: string[];
 		},
-		req: RestRequest<never, PathParams<string>>,
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		req: RestRequest<any, PathParams<string>>,
 	) => {
 		return (
 			req.headers.get("Authorization") ===
-				`Bearer ${config?.fetchEndpoint?.expectedAuthenticationToken}` &&
-			req.headers.get("Cookie") ===
-				config?.fetchEndpoint?.expectedCookies.join("; ")
+				`Bearer ${expected.expectedAuthenticationToken}` &&
+			req.headers.get("Cookie") === expected.expectedCookies.join("; ")
 		);
 	};
 
 	ctx.msw.use(
-		rest.get(new URL(`./onboarding`, endpoint).toString(), (req, res, ctx) => {
+		rest.get(new URL("onboarding", endpoint).toString(), (req, res, ctx) => {
 			if (!config.fetchEndpoint) {
 				return res(ctx.status(418));
 			}
@@ -50,13 +50,11 @@ export const mockRepositoryServiceAPI = (
 			if (checkAuth(config.fetchEndpoint, req)) {
 				return res(
 					ctx.json({
-						onboarding: {
-							completedSteps: config.fetchEndpoint.steps,
-							isDismissed: false,
-							context: {
-								framework: "next",
-								starterId: null,
-							},
+						completedSteps: config.fetchEndpoint.steps,
+						isDismissed: false,
+						context: {
+							framework: "next",
+							starterId: null,
 						},
 					}),
 					ctx.status(200),
@@ -68,15 +66,21 @@ export const mockRepositoryServiceAPI = (
 	);
 
 	ctx.msw.use(
-		rest.get(
-			new URL(`./onboarding/reviewAndPush/toggle`, endpoint).toString(),
+		rest.patch(
+			new URL("onboarding/reviewAndPush/toggle", endpoint).toString(),
 			(req, res, ctx) => {
 				if (!config.toggleStepEndpoint) {
 					return res(ctx.status(418));
 				}
 
 				if (checkAuth(config.toggleStepEndpoint, req)) {
-					res(ctx.json({ completedSteps: config.toggleStepEndpoint.steps }));
+					return res(
+						ctx.json({
+							completedSteps: config.toggleStepEndpoint.steps.filter(
+								(step) => step !== "reviewAndPush",
+							),
+						}),
+					);
 				}
 
 				return res(ctx.status(418));
@@ -85,15 +89,17 @@ export const mockRepositoryServiceAPI = (
 	);
 
 	ctx.msw.use(
-		rest.get(
-			new URL(`./onboarding/toggle`, endpoint).toString(),
+		rest.patch(
+			new URL("onboarding/toggle", endpoint).toString(),
 			(req, res, ctx) => {
 				if (!config.toggleEndpoint) {
 					return res(ctx.status(418));
 				}
 
 				if (checkAuth(config.toggleEndpoint, req)) {
-					res(ctx.json({ isDismissed: config.toggleEndpoint.isDismissed }));
+					return res(
+						ctx.json({ isDismissed: config.toggleEndpoint.isDismissed }),
+					);
 				}
 
 				return res(ctx.status(418));
