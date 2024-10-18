@@ -1,4 +1,5 @@
 import * as t from "io-ts";
+import { z } from "zod";
 import fetch, { Response } from "../../lib/fetch";
 import { fold } from "fp-ts/Either";
 
@@ -35,6 +36,7 @@ import {
 	FrameworkWroomTelemetryID,
 	StarterId,
 	Environment,
+	OnboardingState,
 } from "./types";
 import { sortEnvironments } from "./sortEnvironments";
 
@@ -506,6 +508,115 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
+	async fetchOnboarding(): Promise<OnboardingState> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL("/onboarding", API_ENDPOINTS.RepositoryService);
+		url.searchParams.set("repository", repositoryName);
+		const res = await this._fetch({ url });
+
+		if (res.ok) {
+			const json = await res.json();
+			const { value, error } = decode(OnboardingState, json);
+
+			if (error) {
+				throw new UnexpectedDataError(
+					`Failed to decode onboarding: ${error.errors.join(", ")}`,
+				);
+			}
+			if (value) {
+				return value;
+			}
+		}
+
+		switch (res.status) {
+			case 400:
+			case 401:
+				throw new UnauthenticatedError();
+			case 403:
+				throw new UnauthorizedError();
+			default:
+				throw new Error("Failed to fetch onboarding.");
+		}
+	}
+
+	async toggleOnboardingStep(
+		stepId: string,
+	): Promise<{ completedSteps: string[] }> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL(
+			`/onboarding/${stepId}/toggle`,
+			API_ENDPOINTS.RepositoryService,
+		);
+		url.searchParams.set("repository", repositoryName);
+		const res = await this._fetch({ url, method: "PATCH" });
+
+		if (res.ok) {
+			const json = await res.json();
+			const { value, error } = decode(
+				z.object({ completedSteps: z.array(z.string()) }),
+				json,
+			);
+
+			if (error) {
+				throw new UnexpectedDataError(
+					`Failed to decode onboarding step toggle: ${error.errors.join(", ")}`,
+				);
+			}
+
+			if (value) {
+				return value;
+			}
+		}
+
+		switch (res.status) {
+			case 400:
+			case 401:
+				throw new UnauthenticatedError();
+			case 403:
+				throw new UnauthorizedError();
+			default:
+				throw new Error("Failed to toggle onboarding step.");
+		}
+	}
+
+	async toggleOnboarding(): Promise<{ isDismissed: boolean }> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL("/onboarding/toggle", API_ENDPOINTS.RepositoryService);
+		url.searchParams.set("repository", repositoryName);
+		const res = await this._fetch({ url, method: "PATCH" });
+
+		if (res.ok) {
+			const json = await res.json();
+			const { value, error } = decode(
+				z.object({ isDismissed: z.boolean() }),
+				json,
+			);
+
+			if (error) {
+				throw new UnexpectedDataError(
+					`Failed to decode onboarding toggle: ${error.errors.join(", ")}`,
+				);
+			}
+
+			if (value) {
+				return value;
+			}
+		}
+
+		switch (res.status) {
+			case 400:
+			case 401:
+				throw new UnauthenticatedError();
+			case 403:
+				throw new UnauthorizedError();
+			default:
+				throw new Error("Failed to toggle onboarding guide.");
+		}
+	}
+
 	private _decodeLimitOrThrow(
 		potentialLimit: unknown,
 		statusCode: number,
@@ -531,7 +642,7 @@ export class PrismicRepositoryManager extends BaseManager {
 
 	private async _fetch(args: {
 		url: URL;
-		method?: "GET" | "POST";
+		method?: "GET" | "POST" | "PATCH";
 		body?: unknown;
 		userAgent?: PrismicRepositoryUserAgents;
 		repository?: string;

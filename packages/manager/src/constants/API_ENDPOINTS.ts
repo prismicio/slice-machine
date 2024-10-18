@@ -10,6 +10,7 @@ export type APIEndpoints = {
 	PrismicEmbed: string;
 	PrismicUnsplash: string;
 	SliceMachineV1: string;
+	RepositoryService: string;
 };
 
 export const API_ENDPOINTS: APIEndpoints = (() => {
@@ -32,6 +33,9 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				SliceMachineV1: addTrailingSlash(
 					process.env.slice_machine_v1_endpoint ??
 						"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
+				),
+				RepositoryService: addTrailingSlash(
+					process.env.repository_api ?? "https://repository.wroom.io/",
 				),
 			};
 
@@ -81,6 +85,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicUnsplash: "https://unsplash.wroom.io/",
 				SliceMachineV1:
 					"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
+				RepositoryService: "https://repository.wroom.io/",
 			};
 		}
 
@@ -96,6 +101,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicEmbed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io/",
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",
+				RepositoryService: "https://repository.prismic.io/",
 			};
 		}
 	}
