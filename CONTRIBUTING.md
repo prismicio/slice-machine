@@ -129,6 +129,26 @@ gh pr create
 # When ready, PRs should be merged using the "Squash and merge" option.
 ```
 
+## 🏗️ Local development with editor (slice-machine-ui)
+
+To accelerate local development without the need to publish new `editor-*` npm packages, you can use [`yalc`](https://github.com/wclr/yalc), a local package repository.
+
+### How to setup:
+
+1️. Check [**`editor/CONTRIBUTING.md` Publish locally**](https://github.com/prismicio/editor/blob/main/CONTRIBUTING.md#%EF%B8%8F-publish-locally) section
+
+2️. Link `editor-*` packages to `yalc`
+
+```shell
+yarn yalc:editor-packages link
+```
+
+_(after developing)_ Unlink `yalc` packages to continue using the installed npm ones.
+
+```shell
+yarn yalc:editor-packages unlink
+```
+
 ## :rocket: Publish
 
 > [!CAUTION]

@@ -7,6 +7,12 @@
 !.yarn/sdks
 !.yarn/versions
 
+# Yalc
+.yalc
+yalc.lock
+packages/**/.yalc
+packages/**/yalc.lock
+
 # OS Specific
 .DS_Store
 .DS_Store?
