@@ -130,6 +130,10 @@
   margin-top: 8px;
 }
 
+.button {
+  width: 100%;
+}
+
 .link,
 .button {
   composes: block interactiveElement;
@@ -179,10 +183,6 @@
   &[data-active="true"]:hover {
     background-color: var(--grey1);
   }
-}
-
-button.link {
-  width: 100%;
 }
 
 .linkIcon,
