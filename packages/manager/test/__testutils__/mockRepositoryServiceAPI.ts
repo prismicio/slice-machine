@@ -7,6 +7,7 @@ type MockRepositoryServiceAPIConfig = {
 		steps: string[];
 		expectedAuthenticationToken: string;
 		expectedCookies: string[];
+		invalid?: boolean;
 	};
 	toggleStepEndpoint?: {
 		steps: string[];
@@ -50,7 +51,9 @@ export const mockRepositoryServiceAPI = (
 			if (checkAuth(config.fetchEndpoint, req)) {
 				return res(
 					ctx.json({
-						completedSteps: config.fetchEndpoint.steps,
+						completedSteps: config.fetchEndpoint.invalid
+							? "somethingElse"
+							: config.fetchEndpoint.steps,
 						isDismissed: false,
 						context: {
 							framework: "next",

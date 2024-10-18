@@ -577,7 +577,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			case 403:
 				throw new UnauthorizedError();
 			default:
-				throw new Error("Failed to togggle onboarding step.");
+				throw new Error("Failed to toggle onboarding step.");
 		}
 	}
 
