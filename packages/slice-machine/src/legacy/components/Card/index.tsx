@@ -3,8 +3,13 @@ import { Card as ThemeCard, ThemeUIStyleObject } from "theme-ui";
 
 import { CardBox, CardBoxProps } from "./CardBox";
 
+// passing Header as a function caused a bug in EditModal
+// where the function was re-defined after each state update
+// which led to a bug where context was lost and a modal button was not working as expected
+// TODO: tech debt issue DT-2384
+
 interface CardProps extends Omit<CardBoxProps, "withRadius"> {
-  Header?: React.FC<{ radius: string }> | null;
+  Header?: React.FC<{ radius: string }> | JSX.Element | null;
   SubHeader?: React.FC<{ radius: string }> | null;
   Body?: React.FC | null;
   Footer?: React.FC | JSX.Element | null;
@@ -36,7 +41,13 @@ const Card: React.FC<CardProps> = ({
     }}
     {...rest}
   >
-    {Header ? <Header radius={radius} /> : null}
+    {Header ? (
+      typeof Header === "object" ? (
+        Header
+      ) : (
+        <Header radius={radius} />
+      )
+    ) : null}
     {SubHeader ? <SubHeader radius={radius} /> : null}
     <CardBox bg={bg} background={background} sx={bodySx} withRadius={!Footer}>
       {Body ? <Body /> : null}
