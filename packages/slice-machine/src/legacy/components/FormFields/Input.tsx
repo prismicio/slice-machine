@@ -119,6 +119,7 @@ export const FormFieldInput = ({
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
         disabled={isDisabled || formField.disabled}
         autoFocus={autoFocus ?? formField.autoFocus}
+        onBlur={null}
       />
     </Box>
   );

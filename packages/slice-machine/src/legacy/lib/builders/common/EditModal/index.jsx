@@ -216,17 +216,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                     text={label || id}
                     WidgetIcon={WidgetIcon}
                   />
-                  <Close
-                    // using onMouseDown and onKeyDown instead of on click to register the event before input validation on blur causes re-render
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-                        close();
-                      }
-                    }}
-                    onMouseDown={close}
-                    type="button"
-                  />
+                  <Close onClick={close} type="button" />
                 </Flex>
               )}
               Footer={
