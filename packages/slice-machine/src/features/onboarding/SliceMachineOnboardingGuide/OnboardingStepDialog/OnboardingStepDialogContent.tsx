@@ -1,7 +1,7 @@
 import { Box, ScrollArea, Text, Video } from "@prismicio/editor-ui";
 
-import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
-import { OnboardingStep } from "@/features/onboarding/types";
+import { useOnboardingContext } from "@/features/onboarding/SliceMachineOnboardingGuide/OnboardingProvider";
+import { OnboardingStep } from "@/features/onboarding/SliceMachineOnboardingGuide/types";
 
 type OnboardingStepDialogContentProps = {
   step: OnboardingStep;

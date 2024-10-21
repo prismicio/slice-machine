@@ -132,6 +132,36 @@ export const SideNavLink: FC<SideNavLinkProps> = ({
   );
 };
 
+export type SideNavButtonProps = {
+  title: string;
+  active?: boolean;
+  Icon: FC<SVGProps<SVGSVGElement>>;
+  RightElement?: ReactNode;
+  onClick?: (event: MouseEvent) => void;
+};
+
+export const SideNavButton: FC<SideNavButtonProps> = ({
+  title,
+  RightElement,
+  Icon,
+  active,
+  ...otherProps
+}) => {
+  const visible = useMediaQuery({ max: "medium" });
+
+  return (
+    <Tooltip content={title} side="right" visible={visible}>
+      <button {...otherProps} className={styles.button} data-active={active}>
+        <Icon className={styles.buttonIcon} />
+        <div className={styles.buttonContent}>
+          <span className={styles.buttonText}>{title}</span>
+          {RightElement}
+        </div>
+      </button>
+    </Tooltip>
+  );
+};
+
 type RightElementProps = PropsWithChildren<
   {
     type?: "pill" | "text";

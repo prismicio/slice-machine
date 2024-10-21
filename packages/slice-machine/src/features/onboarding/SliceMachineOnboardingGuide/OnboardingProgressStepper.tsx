@@ -11,9 +11,10 @@ import {
 import { useState } from "react";
 
 import { telemetry } from "@/apiClient";
-import { useOnboardingContext } from "@/features/onboarding/OnboardingProvider";
-import { OnboardingStepDialog } from "@/features/onboarding/OnboardingStepDialog";
-import type { OnboardingStep } from "@/features/onboarding/types";
+
+import { useOnboardingContext } from "./OnboardingProvider";
+import { OnboardingStepDialog } from "./OnboardingStepDialog";
+import type { OnboardingStep } from "./types";
 
 const EndCtaIcon = () => <Icon name="playCircle" size="small" color="grey11" />;
 
@@ -56,7 +57,6 @@ export function OnboardingProgressStepper(
             color="grey"
             sx={{ width: "100%" }}
             renderEndIcon={EndCtaIcon}
-            // TODO: Fix typescript error
             {...{ onMouseEnter: () => setListOpen(true) }}
           >
             {completedStepCount > 0 ? "Continue" : "Start now"}
