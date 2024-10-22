@@ -209,7 +209,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
               borderFooter
               footerSx={{ position: "sticky", bottom: 0, p: 0 }}
               tabs={tabs}
-              Header={({ radius }) => (
+              Header={
                 <Flex
                   sx={{
                     position: "sticky",
@@ -219,10 +219,11 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                     bg: "headSection",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment
-                    borderTopLeftRadius: radius,
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    borderTopRightRadius: radius,
+                    // radius value should match default value in Card component
+                    // hard-coded value is a temporary
+                    // TODO: tech debt issue DT-2384
+                    borderTopLeftRadius: "6px",
+                    borderTopRightRadius: "6px",
                   }}
                 >
                   <ItemHeader
@@ -237,7 +238,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                     type="button"
                   />
                 </Flex>
-              )}
+              }
               Footer={
                 <Flex
                   sx={{
