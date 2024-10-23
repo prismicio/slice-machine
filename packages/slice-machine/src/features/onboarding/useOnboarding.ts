@@ -64,11 +64,11 @@ export function useOnboarding() {
       if (!onboardingState) return;
 
       if (!onboardingState.completedSteps.includes(String(stepId))) {
-        await toggleStep(stepId)
+        await toggleStep(stepId);
       }
     } catch (error) {
-      toast.error("Failed to complete onboarding step")
-      console.error("Failed to complete onboarding step", error)
+      toast.error("Failed to complete onboarding step");
+      console.error("Failed to complete onboarding step", error);
     }
   }
 
@@ -78,11 +78,11 @@ export function useOnboarding() {
       if (!onboardingState) return;
 
       if (onboardingState.completedSteps.includes(String(stepId))) {
-        await toggleStep(stepId)
+        await toggleStep(stepId);
       }
     } catch (error) {
-      toast.error("Failed to undo onboarding step")
-      console.error("Failed to undo onboarding step", error)
+      toast.error("Failed to undo onboarding step");
+      console.error("Failed to undo onboarding step", error);
     }
   }
 
