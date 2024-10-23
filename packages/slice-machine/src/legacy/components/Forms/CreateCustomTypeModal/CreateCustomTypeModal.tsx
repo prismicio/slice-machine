@@ -12,6 +12,7 @@ import {
 } from "@/features/customTypes/actions/createCustomType";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { API_ID_REGEX } from "@/legacy/lib/consts";
@@ -50,6 +51,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   onOpenChange,
 }) => {
   const { createCustomTypeSuccess } = useSliceMachineActions();
+  const { completeStep } = useOnboarding();
 
   const { customTypeIds, customTypeLabels } = useSelector(
     (store: SliceMachineStoreType) => ({
@@ -79,6 +81,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
 
         setIsIdFieldPristine(true);
 
+        if (format === "page") await completeStep("createPageType");
         await router.push({
           pathname: customTypesConfig.getBuilderPagePathname(id),
         });

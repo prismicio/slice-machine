@@ -1,4 +1,4 @@
-import { OnboardingState } from "@prismicio/editor-fields";
+import { OnboardingState, OnboardingStepId } from "@prismicio/editor-fields";
 import { useRefGetter } from "@prismicio/editor-support/React";
 import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
 import { toast } from "react-toastify";
@@ -25,12 +25,12 @@ export function useOnboarding() {
     updateData(getOnboarding, [], newOnboardingState);
   }
 
-  async function toggleStep(stepId: string) {
+  async function toggleStep(stepId: OnboardingStepId) {
     const onboardingState = getOnboardingState();
     if (!onboardingState) return [];
 
     try {
-      const { completedSteps } = await toggleOnboardingStep(stepId);
+      const { completedSteps } = await toggleOnboardingStep(String(stepId));
       updateCache({ ...onboardingState, completedSteps });
 
       return completedSteps;
@@ -58,5 +58,33 @@ export function useOnboarding() {
     }
   }
 
-  return { onboarding, toggleStep, toggleGuide };
+  async function completeStep(stepId: OnboardingStepId) {
+    try {
+      const onboardingState = getOnboardingState();
+      if (!onboardingState) return;
+
+      if (!onboardingState.completedSteps.includes(String(stepId))) {
+        await toggleStep(stepId)
+      }
+    } catch (error) {
+      toast.error("Failed to complete onboarding step")
+      console.error("Failed to complete onboarding step", error)
+    }
+  }
+
+  async function undoStep(stepId: OnboardingStepId) {
+    try {
+      const onboardingState = getOnboardingState();
+      if (!onboardingState) return;
+
+      if (onboardingState.completedSteps.includes(String(stepId))) {
+        await toggleStep(stepId)
+      }
+    } catch (error) {
+      toast.error("Failed to undo onboarding step")
+      console.error("Failed to undo onboarding step", error)
+    }
+  }
+
+  return { onboarding, toggleStep, completeStep, undoStep, toggleGuide };
 }
