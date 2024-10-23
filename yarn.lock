@@ -5981,9 +5981,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.51":
-  version: 0.4.51
-  resolution: "@prismicio/editor-fields@npm:0.4.51"
+"@prismicio/editor-fields@npm:0.4.52-jp-onboarding-guide-triggers.1":
+  version: 0.4.52-jp-onboarding-guide-triggers.1
+  resolution: "@prismicio/editor-fields@npm:0.4.52-jp-onboarding-guide-triggers.1"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/editor-support": 0.4.51
@@ -6020,7 +6020,7 @@ __metadata:
     "@prismicio/editor-ui": ^0.4.51
     react: 18
     react-dom: 18
-  checksum: a416a600b3576dd0448ac1b863b2509914997796900f759dd8f4af86c7d46857ac0a2110e7a07664a98d0f968b71ac9f4d110cc35e0dd5851349078b5cde5e82
+  checksum: 3731bc0004c734d334db5b5f7bbf61659e1d10af9f4f66d9e973893e3bf4eec21ab8cd883d74401dc56ba34ef49d60c08509cbc14dc77b09bae20e2a0eb63ec3
   languageName: node
   linkType: hard
 
@@ -31199,7 +31199,7 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.11.0
-    "@prismicio/editor-fields": 0.4.51
+    "@prismicio/editor-fields": 0.4.52-jp-onboarding-guide-triggers.1
     "@prismicio/editor-support": 0.4.51
     "@prismicio/editor-ui": 0.4.51
     "@prismicio/mock": 0.3.3
