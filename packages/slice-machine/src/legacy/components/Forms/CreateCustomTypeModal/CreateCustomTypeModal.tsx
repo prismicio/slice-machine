@@ -81,12 +81,13 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
 
         setIsIdFieldPristine(true);
 
-        if (format === "page") await completeStep("createPageType");
         await router.push({
           pathname: customTypesConfig.getBuilderPagePathname(id),
         });
 
         syncChanges();
+
+        if (format === "page") await completeStep("createPageType");
       },
     });
 

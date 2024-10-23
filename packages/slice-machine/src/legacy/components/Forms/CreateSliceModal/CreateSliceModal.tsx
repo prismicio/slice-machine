@@ -4,6 +4,7 @@ import Select from "react-select";
 import { Box, Label } from "theme-ui";
 
 import { getState } from "@/apiClient";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { createSlice } from "@/features/slices/actions/createSlice";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
@@ -32,6 +33,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   const { createSliceSuccess } = useSliceMachineActions();
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
   const { syncChanges } = useAutoSync();
+  const { completeStep } = useOnboarding();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
@@ -49,6 +51,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         createSliceSuccess(serverState.libraries);
         onSuccess(newSlice, libraryName);
         syncChanges();
+        await completeStep("createSlice");
       },
     });
   };

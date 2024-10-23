@@ -10,6 +10,7 @@ import { getState, telemetry } from "@/apiClient";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { NoChangesBlankSlate } from "@/features/changes/BlankSlates";
 import { PushChangesButton } from "@/features/changes/PushChangesButton";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { pushChanges } from "@/features/sync/actions/pushChanges";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useUnSyncChanges } from "@/features/sync/useUnSyncChanges";
@@ -56,6 +57,7 @@ const Changes: React.FunctionComponent = () => {
   const [isPushed, setIsPushed] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
   const { repositoryName } = useRepositoryInformation();
+  const { completeStep } = useOnboarding();
 
   const documentsListEndpoint =
     createDocumentsListEndpointFromRepoName(repositoryName);
@@ -95,6 +97,8 @@ const Changes: React.FunctionComponent = () => {
 
         setIsPushed(true);
         setIsToastOpen(true);
+
+        await completeStep("reviewAndPush");
       }
     } catch (error) {
       console.error(
