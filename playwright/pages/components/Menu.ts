@@ -55,7 +55,7 @@ export class Menu {
     this.changesLink = this.menu.getByRole("button", {
       name: "Review changes",
     });
-    this.masterSliceLibraryButton = this.menu.getByRole("link", {
+    this.masterSliceLibraryButton = this.menu.getByRole("button", {
       name: "Master Slice Library",
       exact: true,
     });

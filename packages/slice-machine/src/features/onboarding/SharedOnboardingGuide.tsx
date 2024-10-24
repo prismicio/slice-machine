@@ -1,9 +1,9 @@
 import { OnboardingGuide } from "@prismicio/editor-fields";
 
 import { telemetry } from "@/apiClient";
-import { SideNavButton, SideNavListItem } from "@/components/SideNav";
 import { PlayCircleIcon } from "@/icons/PlayCircleIcon";
 
+import { NavigationItem } from "../navigation/NavigationItem";
 import { useOnboarding } from "./useOnboarding";
 
 export function SharedOnboardingGuide() {
@@ -13,13 +13,11 @@ export function SharedOnboardingGuide() {
 
   if (onboarding.isDismissed) {
     return (
-      <SideNavListItem>
-        <SideNavButton
-          title="Get Started"
-          Icon={PlayCircleIcon}
-          onClick={() => void toggleGuide()}
-        />
-      </SideNavListItem>
+      <NavigationItem
+        title="Get Started"
+        Icon={PlayCircleIcon}
+        onClick={() => void toggleGuide()}
+      />
     );
   }
 
