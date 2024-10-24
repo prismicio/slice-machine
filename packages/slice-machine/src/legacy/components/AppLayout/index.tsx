@@ -11,7 +11,7 @@ import {
 } from "@/components/PageLayout";
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
-import Navigation from "@/legacy/components/Navigation";
+import { Navigation } from "@/features/navigation/Navigation";
 
 export const AppLayout: FC<PropsWithChildren> = ({
   children,

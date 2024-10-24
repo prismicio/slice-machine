@@ -6,7 +6,6 @@ import {
 import { useState } from "react";
 
 import { getState, telemetry } from "@/apiClient";
-import { SideNavEnvironmentSelector } from "@/components/SideNav";
 import { setEnvironment } from "@/features/environments/actions/setEnvironment";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { useEnvironments } from "@/features/environments/useEnvironments";
@@ -17,6 +16,8 @@ import { useNetwork } from "@/hooks/useNetwork";
 import { normalizeFrontendCustomTypes } from "@/legacy/lib/models/common/normalizers/customType";
 import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/slices";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
+
+import { SideNavEnvironmentSelector } from "./SideNavEnvironmentSelector/SideNavEnvironmentSelector";
 
 export function Environment() {
   const { environments, error: useEnvironmentsError } = useEnvironments();
