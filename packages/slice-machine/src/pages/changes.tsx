@@ -98,7 +98,7 @@ const Changes: React.FunctionComponent = () => {
         setIsPushed(true);
         setIsToastOpen(true);
 
-        await completeStep("reviewAndPush");
+        void completeStep("reviewAndPush");
       }
     } catch (error) {
       console.error(

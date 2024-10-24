@@ -87,7 +87,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
 
         syncChanges();
 
-        if (format === "page") await completeStep("createPageType");
+        if (format === "page") void completeStep("createPageType");
       },
     });
 

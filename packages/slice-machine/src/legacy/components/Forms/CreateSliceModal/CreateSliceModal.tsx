@@ -51,7 +51,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         createSliceSuccess(serverState.libraries);
         onSuccess(newSlice, libraryName);
         syncChanges();
-        await completeStep("createSlice");
+        void completeStep("createSlice");
       },
     });
   };
