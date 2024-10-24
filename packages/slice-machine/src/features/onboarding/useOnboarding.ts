@@ -10,7 +10,7 @@ const { fetchOnboarding, toggleOnboarding, toggleOnboardingStep } =
 
 async function getOnboarding() {
   try {
-    return fetchOnboarding();
+    return await fetchOnboarding();
   } catch (error) {
     console.error("Failed to fetch onboarding", error);
     return undefined;
