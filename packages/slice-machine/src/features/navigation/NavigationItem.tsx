@@ -2,14 +2,24 @@ import { ActionListItem, Tooltip, useMediaQuery } from "@prismicio/editor-ui";
 import Link from "next/link";
 import type { FC, MouseEventHandler, ReactNode, SVGProps } from "react";
 
-interface NavigationItemProps {
+type NavigationItemPropsBase = {
   title: string;
-  href?: string;
   active?: boolean;
   Icon: FC<SVGProps<SVGSVGElement>>;
   RightElement?: ReactNode;
-  onClick?: MouseEventHandler<Element>;
-}
+};
+
+type NavigationLinkItemProps = NavigationItemPropsBase & {
+  href: string;
+  onClick?: never;
+};
+
+type NavigationButtonItemProps = NavigationItemPropsBase & {
+  href?: never;
+  onClick: MouseEventHandler<Element>;
+};
+
+type NavigationItemProps = NavigationLinkItemProps | NavigationButtonItemProps;
 
 export function NavigationItem(props: NavigationItemProps) {
   const { title, href, active, Icon, RightElement, onClick, ...otherProps } =
@@ -36,19 +46,17 @@ export function NavigationItem(props: NavigationItemProps) {
           {Content}
         </Link>
       ) : (
-        onClick && (
-          <button
-            style={{
-              backgroundColor: "transparent",
-              border: "none",
-              padding: 0,
-              textAlign: "left",
-            }}
-            onClick={onClick}
-          >
-            {Content}
-          </button>
-        )
+        <button
+          style={{
+            backgroundColor: "transparent",
+            border: "none",
+            padding: 0,
+            textAlign: "left",
+          }}
+          onClick={onClick}
+        >
+          {Content}
+        </button>
       )}
     </Tooltip>
   );
