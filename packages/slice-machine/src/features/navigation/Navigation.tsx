@@ -30,6 +30,25 @@ export function Navigation() {
     useState(false);
   const { masterSliceLibrary } = useMarketingContent();
 
+  interface CustomTypeNavigationItemProps {
+    type: "page" | "custom";
+  }
+  function CustomTypeNavigationItem({ type }: CustomTypeNavigationItemProps) {
+    return (
+      <NavigationItem
+        title={CUSTOM_TYPES_MESSAGES[type].name({
+          start: true,
+          plural: true,
+        })}
+        href={CUSTOM_TYPES_CONFIG[type].tablePagePathname}
+        active={CUSTOM_TYPES_CONFIG[type].matchesTablePagePathname(
+          router.asPath,
+        )}
+        Icon={CUSTOM_TYPES_CONFIG[type].Icon}
+      />
+    );
+  }
+
   return (
     <Box
       as="nav"
@@ -54,29 +73,9 @@ export function Navigation() {
 
       <Box flexDirection="column" flexGrow={1} gap={32}>
         <ActionList variant="compact">
-          <NavigationItem
-            title={CUSTOM_TYPES_MESSAGES["page"].name({
-              start: true,
-              plural: true,
-            })}
-            href={CUSTOM_TYPES_CONFIG["page"].tablePagePathname}
-            active={CUSTOM_TYPES_CONFIG["page"].matchesTablePagePathname(
-              router.asPath,
-            )}
-            Icon={CUSTOM_TYPES_CONFIG.page.Icon}
-          />
+          <CustomTypeNavigationItem type="page" />
 
-          <NavigationItem
-            title={CUSTOM_TYPES_MESSAGES["custom"].name({
-              start: true,
-              plural: true,
-            })}
-            href={CUSTOM_TYPES_CONFIG["custom"].tablePagePathname}
-            active={CUSTOM_TYPES_CONFIG["custom"].matchesTablePagePathname(
-              router.asPath,
-            )}
-            Icon={CUSTOM_TYPES_CONFIG.custom.Icon}
-          />
+          <CustomTypeNavigationItem type="custom" />
 
           <NavigationItem
             title="Slices"
@@ -139,9 +138,7 @@ export function Navigation() {
             RightElement={
               <ErrorBoundary>
                 <Suspense>
-                  <Box>
-                    <SliceMachineVersion />
-                  </Box>
+                  <SliceMachineVersion />
                 </Suspense>
               </ErrorBoundary>
             }
