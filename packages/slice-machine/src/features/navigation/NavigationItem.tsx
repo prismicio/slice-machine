@@ -11,19 +11,20 @@ type NavigationItemPropsBase = {
 
 type NavigationLinkItemProps = NavigationItemPropsBase & {
   href: string;
+  target?: "_blank";
   onClick?: never;
 };
 
 type NavigationButtonItemProps = NavigationItemPropsBase & {
   href?: never;
+  target?: never;
   onClick: MouseEventHandler<Element>;
 };
 
 type NavigationItemProps = NavigationLinkItemProps | NavigationButtonItemProps;
 
 export function NavigationItem(props: NavigationItemProps) {
-  const { title, href, active, Icon, RightElement, onClick, ...otherProps } =
-    props;
+  const { title, href, target, active, Icon, RightElement, onClick } = props;
 
   const isCollapsed = useMediaQuery({ max: "medium" });
 
@@ -42,7 +43,12 @@ export function NavigationItem(props: NavigationItemProps) {
   return (
     <Tooltip content={title} side="right" visible={isCollapsed}>
       {href !== undefined ? (
-        <Link href={href} style={{ textDecoration: "none" }} {...otherProps}>
+        <Link
+          href={href}
+          target={target}
+          style={{ textDecoration: "none" }}
+          data-active={active}
+        >
           {Content}
         </Link>
       ) : (
@@ -54,6 +60,7 @@ export function NavigationItem(props: NavigationItemProps) {
             textAlign: "left",
           }}
           onClick={onClick}
+          data-active={active}
         >
           {Content}
         </button>
