@@ -99,7 +99,8 @@ export function Navigation() {
               <OnboardingGuide />
             </Suspense>
           </ErrorBoundary>
-          {masterSliceLibrary !== undefined && (
+
+          {masterSliceLibrary && (
             <>
               <MasterSliceLibraryPreviewModal
                 isOpen={isSliceLibraryDialogOpen}
@@ -121,14 +122,14 @@ export function Navigation() {
             </>
           )}
 
-          {gitIntegrationExperiment.eligible ? (
+          {gitIntegrationExperiment.eligible && (
             <NavigationItem
               title="Settings"
               href="/settings"
               Icon={SettingsIcon}
               active={router.asPath.startsWith("/settings")}
             />
-          ) : undefined}
+          )}
 
           <NavigationItem
             title="Changelog"
