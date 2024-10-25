@@ -919,6 +919,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							framework: this.context.framework.wroomTelemetryID,
 							starterId: this.context.starterId,
 						});
+
+						this.manager.prismicRepository.completeOnboardingStep(
+							"createProject",
+							"setupSliceMachine",
+						);
 					} catch (error) {
 						// When we have an error here, it's most probably because the user has a stale SESSION cookie
 

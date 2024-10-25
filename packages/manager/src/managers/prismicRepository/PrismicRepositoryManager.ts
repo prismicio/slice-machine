@@ -581,6 +581,60 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
+	async completeOnboardingStep(
+		...stepIds: string[]
+	): Promise<{ completedSteps: string[] }> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const currentState = await this.fetchOnboarding();
+		const incompleteSteps = stepIds.filter(
+			(stepId) => !currentState.completedSteps.includes(stepId),
+		);
+
+		if (incompleteSteps.length > 0) {
+			for await (const stepId of incompleteSteps) {
+				const url = new URL(
+					`/onboarding/${stepId}/toggle`,
+					API_ENDPOINTS.RepositoryService,
+				);
+				url.searchParams.set("repository", repositoryName);
+				const res = await this._fetch({ url, method: "PATCH" });
+
+				if (res.ok) {
+					const json = await res.json();
+					const { value, error } = decode(
+						z.object({ completedSteps: z.array(z.string()) }),
+						json,
+					);
+
+					if (error) {
+						throw new UnexpectedDataError(
+							`Failed to decode onboarding step complete response: ${error.errors.join(
+								", ",
+							)}`,
+						);
+					}
+
+					if (value) {
+						currentState.completedSteps = value.completedSteps;
+					}
+				}
+
+				switch (res.status) {
+					case 400:
+					case 401:
+						throw new UnauthenticatedError();
+					case 403:
+						throw new UnauthorizedError();
+					default:
+						throw new Error("Failed to complete onboarding step.");
+				}
+			}
+		}
+
+		return { completedSteps: currentState.completedSteps };
+	}
+
 	async toggleOnboarding(): Promise<{ isDismissed: boolean }> {
 		const repositoryName = await this.project.getRepositoryName();
 
