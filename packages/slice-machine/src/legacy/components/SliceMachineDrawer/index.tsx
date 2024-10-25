@@ -2,7 +2,7 @@ import Drawer from "rc-drawer";
 import React from "react";
 import { Close, Flex, Heading } from "theme-ui";
 
-import Card from "@/legacy/components/Card";
+import { Card } from "@/legacy/components/Card";
 
 export const SliceMachineDrawerUI: React.FunctionComponent<{
   isOpen: boolean;
@@ -39,7 +39,7 @@ export const SliceMachineDrawerUI: React.FunctionComponent<{
           border: "none",
         }}
         borderFooter
-        Header={() => (
+        Header={
           <Flex
             sx={{
               p: "16px",
@@ -55,7 +55,7 @@ export const SliceMachineDrawerUI: React.FunctionComponent<{
             </Flex>
             <Close type="button" onClick={() => onClose()} />
           </Flex>
-        )}
+        }
         Footer={() => (
           <Flex
             sx={{

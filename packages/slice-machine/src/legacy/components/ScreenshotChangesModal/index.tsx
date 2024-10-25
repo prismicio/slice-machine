@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { AiOutlinePicture } from "react-icons/ai";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import { Box, Close, Flex, Heading, Text } from "theme-ui";
 
 import { Kbd } from "@/components/Kbd";
 import { FigmaIcon } from "@/icons/FigmaIcon";
-import Card from "@/legacy/components/Card";
+import { Card, useCardRadius } from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { isModalOpen } from "@/modules/modal";
@@ -207,25 +207,12 @@ const ScreenshotChangesModal = ({
         radius={"0px"}
         bodySx={{ p: 0, bg: "#FFF", position: "relative" }}
         sx={{ border: "none" }}
-        Header={({ radius }: { radius: string | number }) => (
-          <Flex
-            sx={{
-              position: "sticky",
-              top: 0,
-              zIndex: 1,
-              background: "gray",
-              p: "16px",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderTopLeftRadius: radius,
-              borderTopRightRadius: radius,
-              borderBottom: (t) => `1px solid ${String(t.colors?.borders)}`,
-            }}
-          >
+        Header={
+          <CardHeader>
             <Heading sx={{ fontSize: "20px" }}>Slice screenshots</Heading>
             <Close type="button" onClick={() => closeModals()} />
-          </Flex>
-        )}
+          </CardHeader>
+        }
         Footer={null}
       >
         <Box
@@ -284,5 +271,27 @@ const ScreenshotChangesModal = ({
     </SliceMachineModal>
   );
 };
+
+function CardHeader({ children }: { children: ReactNode }) {
+  const radius = useCardRadius();
+  return (
+    <Flex
+      sx={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1,
+        background: "gray",
+        p: "16px",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: radius,
+        borderBottom: (t) => `1px solid ${String(t.colors?.borders)}`,
+      }}
+    >
+      {children}
+    </Flex>
+  );
+}
 
 export default ScreenshotChangesModal;

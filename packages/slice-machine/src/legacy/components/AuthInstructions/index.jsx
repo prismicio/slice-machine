@@ -1,6 +1,6 @@
 import { Flex, Heading, Text } from "theme-ui";
 
-import Card from "../Card";
+import { Card, useCardRadius } from "../Card";
 
 const AuthInstructions = () => (
   <Card
@@ -8,23 +8,7 @@ const AuthInstructions = () => (
     bg="gray"
     bodySx={{ p: 3 }}
     sx={{ maxWidth: "480px", m: 3 }}
-    Header={({ radius }) => (
-      <Flex
-        sx={{
-          p: 3,
-          pl: 4,
-          bg: "headSection",
-          alignItems: "center",
-          justifyContent: "space-between",
-          borderTopLeftRadius: radius,
-          borderTopRightRadius: radius,
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          borderBottom: (t) => `1px solid ${t.colors?.borders}`,
-        }}
-      >
-        <Heading as="h3">Log in to Prismic</Heading>
-      </Flex>
-    )}
+    Header={<CardHeader />}
   >
     <Text as="p">
       In order to access your builder, you will need to be connected to Prismic.
@@ -46,4 +30,24 @@ const AuthInstructions = () => (
   </Card>
 );
 
+function CardHeader() {
+  const radius = useCardRadius();
+  return (
+    <Flex
+      sx={{
+        p: 3,
+        pl: 4,
+        bg: "headSection",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: radius,
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+      }}
+    >
+      <Heading as="h3">Log in to Prismic</Heading>
+    </Flex>
+  );
+}
 export default AuthInstructions;
