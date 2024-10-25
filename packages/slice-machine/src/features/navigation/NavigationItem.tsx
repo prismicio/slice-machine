@@ -1,6 +1,12 @@
 import { ActionListItem, Tooltip, useMediaQuery } from "@prismicio/editor-ui";
 import Link from "next/link";
-import type { FC, MouseEventHandler, ReactNode, SVGProps } from "react";
+import {
+  type FC,
+  type MouseEventHandler,
+  type ReactNode,
+  type SVGProps,
+  useMemo,
+} from "react";
 
 type NavigationItemPropsBase = {
   title: string;
@@ -28,12 +34,16 @@ export function NavigationItem(props: NavigationItemProps) {
 
   const isCollapsed = useMediaQuery({ max: "medium" });
 
+  const ItemIcon = useMemo(() => {
+    return () => <Icon width={isCollapsed ? 28 : 32} />;
+  }, [Icon, isCollapsed]);
+
   const Content = (
     <ActionListItem
       textVariant="normal"
       backgroundColor="transparent"
-      renderStartIcon={() => <Icon width={isCollapsed ? 28 : 32} />}
-      renderEndIcon={() => RightElement}
+      renderStartIcon={ItemIcon}
+      endAdornment={RightElement}
       selected={active}
     >
       {isCollapsed ? null : title}
