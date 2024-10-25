@@ -34,23 +34,25 @@ export function Navigation() {
     <Box
       as="nav"
       flexDirection="column"
-      padding={{ top: 16, right: 16, left: 16, bottom: 0 }}
-      gap={16}
+      padding={{ block: 16, inline: 16 }}
+      gap={24}
       minWidth={0}
     >
-      <ErrorBoundary>
-        <Suspense>
-          <Environment />
-        </Suspense>
-      </ErrorBoundary>
+      <Box flexDirection="column" gap={16}>
+        <ErrorBoundary>
+          <Suspense>
+            <Environment />
+          </Suspense>
+        </ErrorBoundary>
 
-      <Separator style="dashed" />
+        <Separator style="dashed" />
 
-      <RepositoryInfo />
+        <RepositoryInfo />
 
-      <ChangesItem />
+        <ChangesItem />
+      </Box>
 
-      <Box flexDirection="column" padding={{ top: 8 }} flexGrow={1}>
+      <Box flexDirection="column" flexGrow={1} gap={32}>
         <ActionList variant="compact">
           <NavigationItem
             title={CUSTOM_TYPES_MESSAGES["page"].name({
@@ -91,7 +93,7 @@ export function Navigation() {
         </ErrorBoundary>
       </Box>
 
-      <Box flexDirection="column" padding={{ top: 48, bottom: 16 }}>
+      <Box flexDirection="column">
         <ActionList variant="compact">
           <ErrorBoundary>
             <Suspense>

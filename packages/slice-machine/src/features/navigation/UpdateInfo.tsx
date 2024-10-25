@@ -23,7 +23,7 @@ export function UpdateInfo() {
   }
 
   return (
-    <Card color="grey3" padding={16} sx={{ marginTop: 32 }}>
+    <Card color="grey3" padding={16}>
       <CardContent>
         <Text variant="smallBold" color="grey12">
           Updates Available
