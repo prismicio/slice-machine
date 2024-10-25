@@ -14,13 +14,10 @@ export function RepositoryInfo() {
   const isCollapsed = useMediaQuery({ max: "medium" });
 
   return (
-    <Box
-      justifyContent={isCollapsed ? "center" : "space-between"}
-      padding={{ bottom: isCollapsed ? 16 : 0 }}
-    >
+    <Box justifyContent="center" height={48}>
       {!isCollapsed && (
-        <Box flexGrow={1} flexDirection="column" gap={2}>
-          <Text component="h1" variant="h3">
+        <Box flexGrow={1} flexDirection="column" gap={2} maxWidth="100%">
+          <Text noWrap component="h1" variant="h3">
             {repositoryName}
           </Text>
 
