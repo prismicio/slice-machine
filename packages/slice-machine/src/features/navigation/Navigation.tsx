@@ -1,4 +1,4 @@
-import { ActionList, Box, Separator } from "@prismicio/editor-ui";
+import { ActionList, Box, Separator, Skeleton } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { Suspense, useState } from "react";
 
@@ -59,7 +59,7 @@ export function Navigation() {
     >
       <Box flexDirection="column" gap={16}>
         <ErrorBoundary>
-          <Suspense>
+          <Suspense fallback={<Skeleton height={40} />}>
             <Environment />
           </Suspense>
         </ErrorBoundary>
@@ -138,7 +138,7 @@ export function Navigation() {
             active={router.asPath.startsWith("/changelog")}
             RightElement={
               <ErrorBoundary>
-                <Suspense>
+                <Suspense fallback={<Skeleton height={16} />}>
                   <SliceMachineVersion />
                 </Suspense>
               </ErrorBoundary>
