@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Close, Flex, Heading, Paragraph } from "theme-ui";
 
 import { Button } from "@/legacy/components/Button";
-import Card from "@/legacy/components/Card";
+import { Card } from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 
 type DeleteSliceZoneModalProps = {
@@ -40,7 +40,7 @@ export const DeleteSliceZoneModal: FC<DeleteSliceZoneModalProps> = ({
         }}
         sx={{ border: "none", overflow: "hidden" }}
         borderFooter
-        Header={() => (
+        Header={
           <Flex
             sx={{
               position: "sticky",
@@ -57,7 +57,7 @@ export const DeleteSliceZoneModal: FC<DeleteSliceZoneModalProps> = ({
             </Heading>
             <Close type="button" onClick={closeDeleteSliceZoneModal} />
           </Flex>
-        )}
+        }
         Footer={() => (
           <Flex
             sx={{

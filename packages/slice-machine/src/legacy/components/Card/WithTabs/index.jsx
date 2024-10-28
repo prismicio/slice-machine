@@ -2,7 +2,7 @@ import { Children, memo, useState } from "react";
 import { TabPanel, Tabs } from "react-tabs";
 import { Box } from "theme-ui";
 
-import Card from "../";
+import { Card } from "../";
 import { CustomTab as Tab, CustomTabList as TabList } from "./components";
 
 const WithTabs = ({

@@ -17,7 +17,7 @@ import { Button as ThemeButton, Close, Flex, Heading } from "theme-ui";
 import { Button } from "@/legacy/components/Button";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 
-import Card from "../Card";
+import { Card, useCardRadius } from "../Card";
 
 type ModalCardProps<T extends FormikValues> = {
   children: (props: {
@@ -120,27 +120,12 @@ function ModalCard<Values extends FormikValues>({
                 bodySx={{ px: 4, py: 4 }}
                 sx={{ border: "none" }}
                 {...cardProps}
-                Header={({ radius }: { radius: string | number }) => (
-                  <Flex
-                    sx={{
-                      position: "sticky",
-                      top: 0,
-                      zIndex: 1,
-                      p: "16px",
-                      pl: 4,
-                      bg: "headSection",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      borderTopLeftRadius: radius,
-                      borderTopRightRadius: radius,
-                      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                      borderBottom: (t) => `1px solid ${t.colors?.borders}`,
-                    }}
-                  >
+                Header={
+                  <CardHeader>
                     <Heading sx={{ fontSize: "20px" }}>{title}</Heading>
                     <Close type="button" onClick={close} />
-                  </Flex>
-                )}
+                  </CardHeader>
+                }
                 Footer={
                   !omitFooter ? (
                     <Flex
@@ -197,6 +182,30 @@ function ModalCard<Values extends FormikValues>({
         }}
       </Formik>
     </SliceMachineModal>
+  );
+}
+
+function CardHeader({ children }: { children: ReactNode }) {
+  const radius = useCardRadius();
+  return (
+    <Flex
+      sx={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1,
+        p: "16px",
+        pl: 4,
+        bg: "headSection",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: radius,
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        borderBottom: (t) => `1px solid ${t.colors?.borders}`,
+      }}
+    >
+      {children}
+    </Flex>
   );
 }
 

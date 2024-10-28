@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { Button, Close, Flex, Heading } from "theme-ui";
 
-import Card from "@/legacy/components/Card";
+import { Card } from "@/legacy/components/Card";
 import { ScreenshotPreview } from "@/legacy/components/ScreenshotPreview";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 import { isModalOpen } from "@/modules/modal";
@@ -53,7 +53,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
           p: 0,
         }}
         sx={{ border: "none" }}
-        Header={() => (
+        Header={
           <Flex
             sx={{
               position: "sticky",
@@ -70,7 +70,7 @@ const ScreenshotPreviewModal: React.FunctionComponent<ScreenshotModalProps> = ({
             </Heading>
             <Close type="button" onClick={() => closeModals()} />
           </Flex>
-        )}
+        }
         Footer={() => (
           <Flex
             style={{

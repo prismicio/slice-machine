@@ -7,7 +7,7 @@ import { Close, Flex, Heading, Text, useThemeUI } from "theme-ui";
 import { deleteCustomType } from "@/features/customTypes/actions/deleteCustomType";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import { Button } from "@/legacy/components/Button";
-import Card from "@/legacy/components/Card";
+import { Card } from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
@@ -64,7 +64,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
         }}
         sx={{ border: "none", overflow: "hidden" }}
         borderFooter
-        Header={() => (
+        Header={
           <Flex
             sx={{
               position: "sticky",
@@ -88,7 +88,7 @@ export const DeleteCustomTypeModal: React.FunctionComponent<
             </Flex>
             <Close type="button" onClick={() => onClose()} />
           </Flex>
-        )}
+        }
         Footer={() => (
           <Flex
             sx={{
