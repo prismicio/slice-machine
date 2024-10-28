@@ -6,7 +6,7 @@ import {
   Text,
   useMediaQuery,
 } from "@prismicio/editor-ui";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import styles from "./OnboardingGuide.module.css";
 import { OnboardingProgressStepper } from "./OnboardingProgressStepper";
@@ -22,7 +22,7 @@ export function SliceMachineOnboardingGuide() {
   return (
     <OnboardingProvider onComplete={confetti.throwConfetti}>
       <div ref={confetti.confettiContainerRef} className={styles.container}>
-        <OnboardingGuideCard />
+        <OnboardingGuideCard setVisible={setVisible} />
         <div
           ref={confetti.confettiCannonRef}
           className={styles.confettiCannon}
@@ -32,9 +32,23 @@ export function SliceMachineOnboardingGuide() {
   );
 }
 
-function OnboardingGuideCard() {
+type OnboardingGuideCardProps = {
+  setVisible: (isVisible: boolean) => void;
+};
+
+function OnboardingGuideCard(props: OnboardingGuideCardProps) {
+  const { setVisible } = props;
   const { steps, completedStepCount, isComplete } = useOnboardingContext();
   const isVisible = useMediaQuery({ min: "medium" });
+
+  const isMountedRef = useRef(false);
+  useEffect(() => {
+    // quick fix to prevent having the onboarding invisible but interactive when complete
+    if (!isMountedRef.current) {
+      isMountedRef.current = true;
+      setVisible(false);
+    }
+  }, [isVisible, setVisible]);
 
   if (!isVisible) return null;
 
