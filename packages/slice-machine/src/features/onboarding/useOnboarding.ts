@@ -85,21 +85,5 @@ export function useOnboarding() {
     }
   }
 
-  async function undoStep(stepId: OnboardingStepId) {
-    if (!isSharedExperimentEligible) return;
-
-    const onboardingState = getOnboardingState();
-    if (!onboardingState) return;
-
-    try {
-      if (onboardingState.completedSteps.includes(String(stepId))) {
-        await toggleStep(stepId);
-      }
-    } catch (error) {
-      toast.error("Failed to undo onboarding step");
-      console.error("Failed to undo onboarding step", error);
-    }
-  }
-
-  return { onboarding, toggleStep, completeStep, undoStep, toggleGuide };
+  return { onboarding, toggleStep, completeStep, toggleGuide };
 }
