@@ -70,7 +70,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         from: localLibraries[0].name,
       }}
       validate={(values) =>
-        validateSliceModalValues(values, localLibraries, remoteSlices, "create")
+        validateSliceModalValues(values, localLibraries, remoteSlices)
       }
       content={{
         title: "Create a new slice",

@@ -1,7 +1,6 @@
 import camelCase from "lodash/camelCase";
 import startCase from "lodash/startCase";
 
-import { telemetry } from "@/apiClient";
 import { API_ID_REGEX, RESERVED_SLICE_NAME } from "@/legacy/lib/consts";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
@@ -18,7 +17,6 @@ export function validateSliceModalValues(
   { sliceName }: SliceModalValues,
   localLibs: ReadonlyArray<LibraryUI>,
   remoteLibs: ReadonlyArray<SliceSM>,
-  event: "create" | "update",
 ): SliceModalValuesValidity {
   if (!sliceName) {
     return { sliceName: "Cannot be empty" };
@@ -28,10 +26,6 @@ export function validateSliceModalValues(
   }
   const cased = startCase(camelCase(sliceName)).replace(/\s/gm, "");
   if (cased !== sliceName.trim()) {
-    void telemetry.track({
-      event: `slice-name-error:pascal-case`,
-      errorType: event,
-    });
     return { sliceName: "Value has to be PascalCased" };
   }
   // See: #599
