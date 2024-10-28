@@ -592,6 +592,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		);
 
 		if (incompleteSteps.length > 0) {
+			// TODO: Refactor when the API accepts multiple steps (DT-2389)
 			for await (const stepId of incompleteSteps) {
 				const url = new URL(
 					`/onboarding/${stepId}/toggle`,

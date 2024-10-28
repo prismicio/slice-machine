@@ -76,6 +76,7 @@ export function useOnboarding() {
     if (!onboardingState) return;
 
     try {
+      // TODO: Refactor when the API has complete action (DT-2389)
       if (!onboardingState.completedSteps.includes(String(stepId))) {
         await toggleStep(stepId);
       }
