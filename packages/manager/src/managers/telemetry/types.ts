@@ -38,7 +38,6 @@ export const SegmentEventType = {
 	postPush_emptyStateCtaClicked: "post-push:empty-state-cta-clicked",
 	postPush_toastCtaClicked: "post-push:toast-cta-clicked",
 	experiment_exposure: "experiment:exposure",
-	sliceName_pascalCaseError: "slice-name-error:pascal-case",
 	onboarding_step_opened: "onboarding:step-opened",
 	onboarding_step_completed: "onboarding:step-completed",
 	onboarding_completed: "onboarding:completed",
@@ -95,8 +94,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.postPush_toastCtaClicked]:
 		"SliceMachine Post Push Toast CTA Clicked",
 	[SegmentEventType.experiment_exposure]: "$exposure",
-	[SegmentEventType.sliceName_pascalCaseError]:
-		"SliceMachine Slice Name Pascal Case Error",
 	[SegmentEventType.onboarding_step_opened]:
 		"SliceMachine Onboarding Step Opened",
 	[SegmentEventType.onboarding_step_completed]:
@@ -394,11 +391,6 @@ type SliceMachineExperimentExposure = SegmentEvent<
 	}
 >;
 
-type SliceMachineSliceNamePascalCase = SegmentEvent<
-	typeof SegmentEventType.sliceName_pascalCaseError,
-	{ errorType: "create" | "update" }
->;
-
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -437,5 +429,4 @@ export type SegmentEvents =
 	| SliceMachineSharedOnboardingCompleted
 	| SliceMachinePostPushEmptyStateCtaClicked
 	| SliceMachinePostPushToastCtaClicked
-	| SliceMachineExperimentExposure
-	| SliceMachineSliceNamePascalCase;
+	| SliceMachineExperimentExposure;

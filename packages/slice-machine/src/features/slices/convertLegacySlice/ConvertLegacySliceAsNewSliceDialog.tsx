@@ -62,9 +62,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
 
   function handleValueChange(values: FormValues) {
     setValues(values);
-    setErrors(
-      validateAsNewSliceValues(values, libraries, remoteSlices, "create"),
-    );
+    setErrors(validateAsNewSliceValues(values, libraries, remoteSlices));
   }
 
   function handleSubmit() {
