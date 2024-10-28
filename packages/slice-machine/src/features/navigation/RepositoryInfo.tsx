@@ -21,7 +21,7 @@ export function RepositoryInfo() {
             {repositoryName}
           </Text>
 
-          <Text component="h2" variant="small" color="grey11">
+          <Text noWrap component="h2" variant="small" color="grey11">
             {repositoryDomain}
           </Text>
         </Box>

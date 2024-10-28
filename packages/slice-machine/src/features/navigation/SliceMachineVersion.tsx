@@ -11,7 +11,12 @@ export function SliceMachineVersion() {
   }
 
   return (
-    <Text variant="small" color="grey11" data-testid="slicemachine-version">
+    <Text
+      variant="small"
+      color="grey11"
+      noWrap
+      data-testid="slicemachine-version"
+    >
       v{sliceMachineRunningVersion}
     </Text>
   );
