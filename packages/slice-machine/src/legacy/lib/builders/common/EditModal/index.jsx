@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import { Box, Button, Close, Flex, useThemeUI } from "theme-ui";
 import * as yup from "yup";
 
+import { useCardRadius } from "@/legacy/components/Card";
 import Card from "@/legacy/components/Card/WithTabs";
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import ItemHeader from "@/legacy/components/ItemHeader";
@@ -210,22 +211,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
               footerSx={{ position: "sticky", bottom: 0, p: 0 }}
               tabs={tabs}
               Header={
-                <Flex
-                  sx={{
-                    position: "sticky",
-                    zIndex: 1,
-                    top: 0,
-                    p: 3,
-                    bg: "headSection",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    // radius value should match default value in Card component
-                    // hard-coded value is a temporary
-                    // TODO: tech debt issue DT-2384
-                    borderTopLeftRadius: "6px",
-                    borderTopRightRadius: "6px",
-                  }}
-                >
+                <CardHeader>
                   <ItemHeader
                     theme={theme}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
@@ -237,7 +223,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                     onClick={close}
                     type="button"
                   />
-                </Flex>
+                </CardHeader>
               }
               Footer={
                 <Flex
@@ -285,5 +271,26 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     </SliceMachineModal>
   );
 };
+
+function CardHeader({ children }) {
+  const radius = useCardRadius();
+  return (
+    <Flex
+      sx={{
+        position: "sticky",
+        zIndex: 1,
+        top: 0,
+        p: 3,
+        bg: "headSection",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderTopLeftRadius: radius,
+        borderTopRightRadius: radius,
+      }}
+    >
+      {children}
+    </Flex>
+  );
+}
 
 export default EditModal;

@@ -5,7 +5,7 @@ import { Close, Flex, Heading, Paragraph, Text, useThemeUI } from "theme-ui";
 import { deleteSlice } from "@/features/slices/actions/deleteSlice";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { Button } from "@/legacy/components/Button";
-import Card from "@/legacy/components/Card";
+import { Card } from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
@@ -68,7 +68,7 @@ export const DeleteSliceModal: React.FunctionComponent<
         }}
         sx={{ border: "none" }}
         borderFooter
-        Header={() => (
+        Header={
           <Flex
             sx={{
               position: "sticky",
@@ -92,7 +92,7 @@ export const DeleteSliceModal: React.FunctionComponent<
             </Flex>
             <Close type="button" onClick={onClose} />
           </Flex>
-        )}
+        }
         Footer={() => (
           <Flex
             sx={{
