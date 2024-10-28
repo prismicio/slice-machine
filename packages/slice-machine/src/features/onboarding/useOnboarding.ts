@@ -3,6 +3,7 @@ import { useRefGetter } from "@prismicio/editor-support/React";
 import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
 import { toast } from "react-toastify";
 
+import { useSharedOnboardingExperiment } from "@/features/onboarding/useSharedOnboardingExperiment";
 import { managerClient } from "@/managerClient";
 
 const { fetchOnboarding, toggleOnboarding, toggleOnboardingStep } =
@@ -17,8 +18,14 @@ async function getOnboarding() {
   }
 }
 
+const noop = () => Promise.resolve(undefined);
+
 export function useOnboarding() {
-  const onboarding = useRequest(getOnboarding, []);
+  const isSharedExperimentEligible = useSharedOnboardingExperiment().eligible;
+  const onboarding = useRequest(
+    isSharedExperimentEligible ? getOnboarding : noop,
+    [],
+  );
   const getOnboardingState = useRefGetter(onboarding);
 
   function updateCache(newOnboardingState: OnboardingState) {
@@ -26,6 +33,8 @@ export function useOnboarding() {
   }
 
   async function toggleStep(stepId: OnboardingStepId) {
+    if (!isSharedExperimentEligible) return [];
+
     const onboardingState = getOnboardingState();
     if (!onboardingState) return [];
 
@@ -43,6 +52,8 @@ export function useOnboarding() {
   }
 
   async function toggleGuide() {
+    if (!isSharedExperimentEligible) return;
+
     const onboardingState = getOnboardingState();
     if (!onboardingState) return;
 
@@ -59,10 +70,12 @@ export function useOnboarding() {
   }
 
   async function completeStep(stepId: OnboardingStepId) {
-    try {
-      const onboardingState = getOnboardingState();
-      if (!onboardingState) return;
+    if (!isSharedExperimentEligible) return;
 
+    const onboardingState = getOnboardingState();
+    if (!onboardingState) return;
+
+    try {
       if (!onboardingState.completedSteps.includes(String(stepId))) {
         await toggleStep(stepId);
       }
@@ -73,10 +86,12 @@ export function useOnboarding() {
   }
 
   async function undoStep(stepId: OnboardingStepId) {
-    try {
-      const onboardingState = getOnboardingState();
-      if (!onboardingState) return;
+    if (!isSharedExperimentEligible) return;
 
+    const onboardingState = getOnboardingState();
+    if (!onboardingState) return;
+
+    try {
       if (onboardingState.completedSteps.includes(String(stepId))) {
         await toggleStep(stepId);
       }
