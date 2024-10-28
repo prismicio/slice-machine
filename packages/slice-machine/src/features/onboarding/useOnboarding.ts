@@ -45,7 +45,7 @@ export function useOnboarding() {
       return completedSteps;
     } catch (error) {
       toast.error("Failed to complete/undo step");
-      console.error("Error toggling onboarding step", error);
+      console.error("Failed to toggle onboarding step", error);
 
       return onboardingState.completedSteps;
     }
@@ -65,7 +65,7 @@ export function useOnboarding() {
     } catch (error) {
       updateCache({ ...onboardingState, isDismissed: wasDismissed }); // rollback
       toast.error("Failed to hide/show onboarding");
-      console.error("Error toggling onboarding", error);
+      console.error("Failed to toggle onboarding", error);
     }
   }
 
