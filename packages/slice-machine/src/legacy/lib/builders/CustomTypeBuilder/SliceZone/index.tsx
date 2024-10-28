@@ -19,6 +19,7 @@ import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
 import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplates";
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
@@ -124,6 +125,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     }),
   );
   const { setCustomType } = useCustomTypeState();
+  const { completeStep } = useOnboarding();
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -299,6 +301,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             setCustomType(CustomTypes.fromSM(newCustomType), () => {
               toast.success("Slice(s) added to slice zone");
             });
+            void completeStep("createSlice");
             closeUpdateSliceZoneModal();
           }}
           close={closeUpdateSliceZoneModal}
@@ -323,6 +326,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                 />,
               );
             });
+            void completeStep("createSlice");
             closeSlicesTemplatesModal();
           }}
           close={closeSlicesTemplatesModal}

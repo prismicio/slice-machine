@@ -7,6 +7,7 @@ import { ContentTabs } from "@/components/ContentTabs";
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { MarkdownRenderer } from "@/features/documentation/MarkdownRenderer";
 import { useDocumentation } from "@/features/documentation/useDocumentation";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAdapterName } from "@/hooks/useAdapterName";
 
 import styles from "./PageSnippetDialog.module.css";
@@ -19,12 +20,14 @@ const PageSnippetContent: FC<PageSnippetContentProps> = ({ model }) => {
     kind: "PageSnippet",
     data: { model },
   });
+  const { completeStep } = useOnboarding();
 
   if (documentation.length === 0) {
     return null;
   }
 
   const trackOpenSnippet = () => {
+    void completeStep("codePage");
     void telemetry.track({
       event: "page-type:open-snippet",
       framework: adapter,

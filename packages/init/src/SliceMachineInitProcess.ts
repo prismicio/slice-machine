@@ -919,6 +919,21 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							framework: this.context.framework.wroomTelemetryID,
 							starterId: this.context.starterId,
 						});
+
+						try {
+							const { value: onboardingExperimentVariant } =
+								(await this.manager.telemetry.getExperimentVariant(
+									"shared-onboarding",
+								)) ?? {};
+							if (onboardingExperimentVariant === "with-shared-onboarding") {
+								this.manager.prismicRepository.completeOnboardingStep(
+									"createProject",
+									"setupSliceMachine",
+								);
+							}
+						} catch (error) {
+							await this.trackError(error);
+						}
 					} catch (error) {
 						// When we have an error here, it's most probably because the user has a stale SESSION cookie
 
