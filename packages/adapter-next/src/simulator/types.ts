@@ -5,7 +5,7 @@
  * Server Component.
  */
 export type SliceSimulatorParams = {
-	searchParams: {
+	searchParams: Promise<{
 		state?: string;
-	};
+	}>;
 };
