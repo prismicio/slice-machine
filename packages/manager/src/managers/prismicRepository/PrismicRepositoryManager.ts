@@ -616,7 +616,8 @@ export class PrismicRepositoryManager extends BaseManager {
 					}
 
 					if (value) {
-						return { completedSteps: value.completedSteps };
+						currentState.completedSteps = value.completedSteps;
+						continue;
 					}
 				}
 
