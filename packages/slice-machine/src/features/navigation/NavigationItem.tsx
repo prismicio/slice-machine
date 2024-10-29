@@ -5,7 +5,7 @@ import {
   type MouseEventHandler,
   type ReactNode,
   type SVGProps,
-  useMemo,
+  useCallback,
 } from "react";
 
 type NavigationItemPropsBase = {
@@ -34,8 +34,8 @@ export function NavigationItem(props: NavigationItemProps) {
 
   const isCollapsed = useMediaQuery({ max: "medium" });
 
-  const ItemIcon = useMemo(() => {
-    return () => <Icon width={isCollapsed ? 28 : 32} />;
+  const ItemIcon = useCallback(() => {
+    return <Icon width={isCollapsed ? 28 : 32} />;
   }, [Icon, isCollapsed]);
 
   const Content = (
