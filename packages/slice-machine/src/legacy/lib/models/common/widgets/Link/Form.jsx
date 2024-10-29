@@ -12,6 +12,7 @@ import { DisplayTextCheckbox } from "./components";
 const FormFields = {
   ...DefaultFields,
   allowTargetBlank: CheckBox("Allow target blank", false, true),
+  repeat: CheckBox("Make this link repeatable", false, true),
 };
 
 const Form = (props) => {
@@ -57,7 +58,7 @@ const Form = (props) => {
           <WidgetFormField
             fieldName={createFieldNameFromKey("allowTargetBlank")}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            formField={CheckBox("Allow target blank", false, true)}
+            formField={FormFields.allowTargetBlank}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             fields={fields}
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -72,6 +73,29 @@ const Form = (props) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}
       />
+      <Col key="repeat">
+        <Box sx={{ mt: 2 }}>
+          <Label
+            htmlFor="repeat"
+            variant="label.primary"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            Repeatable
+          </Label>
+          <WidgetFormField
+            fieldName={createFieldNameFromKey("repeat")}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            formField={FormFields.repeat}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            fields={fields}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            initialValues={initialValues}
+          />
+        </Box>
+      </Col>
     </FlexGrid>
   );
 };
