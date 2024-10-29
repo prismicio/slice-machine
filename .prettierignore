@@ -20,3 +20,4 @@ e2e-projects/**
 dist
 packages/init/playground
 coverage/
+playgrounds
