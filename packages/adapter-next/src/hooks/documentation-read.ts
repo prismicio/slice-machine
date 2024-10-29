@@ -41,10 +41,10 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					type Params = { uid: string };
 
-					export default async function Page({ params }: { params: Params }) {
+					export default async function Page({ params }: { params: Promise<Params> }) {
 						const client = createClient();
 						const page = await client
-							.getByUID("${model.id}", params.uid)
+							.getByUID("${model.id}", (await params).uid)
 							.catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
@@ -53,11 +53,11 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					export async function generateMetadata({
 						params,
 					}: {
-						params: Params;
+						params: Promise<Params>;
 					}): Promise<Metadata> {
 						const client = createClient();
 						const page = await client
-							.getByUID("${model.id}", params.uid)
+							.getByUID("${model.id}", (await params).uid)
 							.catch(() => notFound());
 
 						return {
@@ -207,7 +207,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					export default async function Page({ params }) {
 						const client = createClient();
 						const page = await client
-							.getByUID("${model.id}", params.uid)
+							.getByUID("${model.id}", (await params).uid)
 							.catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
@@ -216,7 +216,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					export async function generateMetadata({ params }) {
 						const client = createClient();
 						const page = await client
-							.getByUID("${model.id}", params.uid)
+							.getByUID("${model.id}", (await params).uid)
 							.catch(() => notFound());
 
 						return {
