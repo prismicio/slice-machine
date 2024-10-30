@@ -34,7 +34,7 @@ const Form = (props) => {
       ))}
       <DisplayTextCheckbox
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        allowText={allowText}
+        checked={allowText}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}
       />

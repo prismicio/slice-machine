@@ -6,6 +6,7 @@ import { Col } from "@/legacy/components/Flex";
 interface CommonCheckboxProps {
   checked?: boolean;
   height?: 130 | 127;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setFieldValue: (name: string, checked?: boolean) => void | Promise<any>;
 }
 
@@ -52,7 +53,7 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
 }
 
 export function RepeatableCheckbox(props: CommonCheckboxProps) {
-  const { checked, setFieldValue, height } = props;
+  const { checked, height, setFieldValue } = props;
 
   return (
     <Col>
