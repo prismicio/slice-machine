@@ -850,8 +850,9 @@ describe("Slice Simulator route", () => {
 
 				import { components } from \\"../../slices\\";
 
-				export default function SliceSimulatorPage({ searchParams }) {
-				  const slices = getSlices(searchParams.state);
+				export default async function SliceSimulatorPage({ searchParams }) {
+				  const { state } = await searchParams;
+				  const slices = getSlices(state);
 
 				  return (
 				    <SliceSimulator>
@@ -915,8 +916,9 @@ describe("Slice Simulator route", () => {
 
 				import { components } from \\"../../slices\\";
 
-				export default function SliceSimulatorPage({ searchParams }) {
-				  const slices = getSlices(searchParams.state);
+				export default async function SliceSimulatorPage({ searchParams }) {
+				  const { state } = await searchParams;
+				  const slices = getSlices(state);
 
 				  return (
 				    <SliceSimulator>
@@ -1012,10 +1014,11 @@ describe("Slice Simulator route", () => {
 
 				import { components } from \\"../../slices\\";
 
-				export default function SliceSimulatorPage({
+				export default async function SliceSimulatorPage({
 				  searchParams,
 				}: SliceSimulatorParams) {
-				  const slices = getSlices(searchParams.state);
+				  const { state } = await searchParams;
+				  const slices = getSlices(state);
 
 				  return (
 				    <SliceSimulator>
