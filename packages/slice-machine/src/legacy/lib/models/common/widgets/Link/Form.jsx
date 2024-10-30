@@ -6,7 +6,7 @@ import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
 import { CheckBox } from "@/legacy/lib/forms/fields";
 
-import { DisplayTextCheckbox } from "./components";
+import { DisplayTextCheckbox, RepeatableCheckbox } from "./components";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {
@@ -21,7 +21,7 @@ const Form = (props) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    config: { allowText },
+    config: { allowText, repeat },
   } = formValues;
 
   return (
@@ -68,34 +68,17 @@ const Form = (props) => {
       </Col>
       <DisplayTextCheckbox
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        allowText={allowText}
+        checked={allowText}
         height={127}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}
       />
-      <Col key="repeat">
-        <Box sx={{ mt: 2 }}>
-          <Label
-            htmlFor="repeat"
-            variant="label.primary"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            Repeatable
-          </Label>
-          <WidgetFormField
-            fieldName={createFieldNameFromKey("repeat")}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            formField={FormFields.repeat}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            fields={fields}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            initialValues={initialValues}
-          />
-        </Box>
-      </Col>
+      <RepeatableCheckbox
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        checked={repeat}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        setFieldValue={setFieldValue}
+      />
     </FlexGrid>
   );
 };
