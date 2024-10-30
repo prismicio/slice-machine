@@ -72,10 +72,9 @@ const Form = (props) => {
         setFieldValue={setFieldValue}
       />
       <RepeatableCheckbox
+        label="Make this link repeatable"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         checked={repeat}
-        height={130}
-        label="Make this link repeatable"
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}
       />
