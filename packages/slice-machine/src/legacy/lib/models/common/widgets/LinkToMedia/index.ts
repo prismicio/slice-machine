@@ -40,6 +40,7 @@ export const LinkToMediaWidget: Widget<Link, typeof schema> = {
       label,
       placeholder: "",
       select: "media",
+      allowTargetBlank: true,
       allowText: true,
       repeat: false,
     },
