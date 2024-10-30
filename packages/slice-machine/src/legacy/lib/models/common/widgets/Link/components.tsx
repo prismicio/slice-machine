@@ -10,13 +10,10 @@ interface CommonCheckboxProps {
     b?: boolean,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ) => void | Promise<any>;
-}
-
-interface DisplayTextCheckboxProps extends CommonCheckboxProps {
   height?: 130 | 127;
 }
 
-export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
+export function DisplayTextCheckbox(props: CommonCheckboxProps) {
   const { checked, height = 130, setFieldValue } = props;
 
   return (
@@ -58,8 +55,12 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
   );
 }
 
-export function RepeatableCheckbox(props: CommonCheckboxProps) {
-  const { checked, setFieldValue } = props;
+interface RepeatableCheckboxProps extends CommonCheckboxProps {
+  label: string;
+}
+
+export function RepeatableCheckbox(props: RepeatableCheckboxProps) {
+  const { checked, setFieldValue, height, label } = props;
 
   return (
     <Col>
@@ -67,6 +68,7 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
         sx={{
           mt: 2,
           flexDirection: "column",
+          height: height ? `${height}%` : undefined,
         }}
       >
         <Label
@@ -94,7 +96,7 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
                   void setFieldValue("config.repeat", event.target.checked);
                 }}
               />
-              Make this link repeatable
+              {label}
             </Flex>
             <Tooltip
               content="Allow editors to create lists of links"

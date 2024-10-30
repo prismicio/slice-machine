@@ -12,7 +12,7 @@ import { DisplayTextCheckbox, RepeatableCheckbox } from "./components";
 const FormFields = {
   ...DefaultFields,
   allowTargetBlank: CheckBox("Allow target blank", false, true),
-  repeat: CheckBox("Make this link repeatable", false, true),
+  repeat: CheckBox("Make this link repeatable", false, false),
 };
 
 const Form = (props) => {
@@ -76,6 +76,8 @@ const Form = (props) => {
       <RepeatableCheckbox
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         checked={repeat}
+        height={130}
+        label={FormFields.repeat.label}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}
       />
