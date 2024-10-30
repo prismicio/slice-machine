@@ -5,12 +5,8 @@ import { Col } from "@/legacy/components/Flex";
 
 interface CommonCheckboxProps {
   checked?: boolean;
-  setFieldValue: (
-    a: string,
-    b?: boolean,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => void | Promise<any>;
   height?: 130 | 127;
+  setFieldValue: (name: string, checked?: boolean) => void | Promise<any>;
 }
 
 export function DisplayTextCheckbox(props: CommonCheckboxProps) {
@@ -74,10 +70,7 @@ export function RepeatableCheckbox(props: RepeatableCheckboxProps) {
         <Label
           htmlFor="repeat"
           variant="label.primary"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
+          sx={{ display: "flex", alignItems: "center" }}
         >
           Repeatable
         </Label>

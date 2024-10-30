@@ -7,7 +7,7 @@ import Form, { FormFields } from "./Form";
 
 /**
 * {
-     "type": "Link",
+    "type": "Link",
     "config": {
       "label": "link",
       "placeholder": "Could be a link to use case, press article, signup...",
