@@ -52,7 +52,7 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
 }
 
 export function RepeatableCheckbox(props: CommonCheckboxProps) {
-  const { checked, setFieldValue, height } = props;
+  const { checked, height, setFieldValue } = props;
 
   return (
     <Col>
