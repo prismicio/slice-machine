@@ -11,7 +11,6 @@ import { DisplayTextCheckbox, RepeatableCheckbox } from "./components";
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {
   ...DefaultFields,
-  allowTargetBlank: CheckBox("Allow target blank", false, true),
 };
 
 const Form = (props) => {
