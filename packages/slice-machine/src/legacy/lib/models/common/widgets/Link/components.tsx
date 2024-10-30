@@ -51,12 +51,8 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
   );
 }
 
-interface RepeatableCheckboxProps extends CommonCheckboxProps {
-  label: string;
-}
-
-export function RepeatableCheckbox(props: RepeatableCheckboxProps) {
-  const { checked, setFieldValue, height, label } = props;
+export function RepeatableCheckbox(props: CommonCheckboxProps) {
+  const { checked, setFieldValue, height } = props;
 
   return (
     <Col>
@@ -89,7 +85,7 @@ export function RepeatableCheckbox(props: RepeatableCheckboxProps) {
                   void setFieldValue("config.repeat", event.target.checked);
                 }}
               />
-              {label}
+              Make this link repeatable
             </Flex>
             <Tooltip
               content="Allow editors to create lists of links"
