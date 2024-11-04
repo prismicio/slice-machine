@@ -20,7 +20,7 @@ const Hint: React.FC<HintProps> = ({
 }) => {
   const fieldPathString = renderHintBase({ item });
 
-  const snippetCacheKey = [fieldPathString];
+  const snippetCacheKey = [item.value.type];
   if (item.value.type === "Link") {
     if (item.value.config?.allowText ?? false)
       snippetCacheKey.push("allowText");
