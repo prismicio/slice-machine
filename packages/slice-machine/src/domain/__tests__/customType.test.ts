@@ -582,6 +582,73 @@ describe("CustomTypeModel test suite", () => {
     );
   });
 
+  it("reorderField should exclude UID field from reordering on repeatable page type", () => {
+    expect(
+      JSON.stringify(
+        CustomTypeModel.reorderField({
+          customType: {
+            ...mockCustomType,
+            format: "page",
+            json: {
+              mainSection: {
+                uid: {
+                  config: {
+                    label: "MainSectionField",
+                  },
+                  type: "UID",
+                },
+                booleanField: {
+                  config: {
+                    label: "BooleanField",
+                  },
+                  type: "Boolean",
+                },
+                textField: {
+                  config: {
+                    label: "TextField",
+                  },
+                  type: "Text",
+                },
+              },
+              anotherSection,
+            },
+          },
+          sectionId: "mainSection",
+          sourceIndex: 0,
+          destinationIndex: 1,
+        }),
+      ),
+    ).toEqual(
+      JSON.stringify({
+        ...mockCustomType,
+        format: "page",
+        json: {
+          mainSection: {
+            uid: {
+              config: {
+                label: "MainSectionField",
+              },
+              type: "UID",
+            },
+            textField: {
+              config: {
+                label: "TextField",
+              },
+              type: "Text",
+            },
+            booleanField: {
+              config: {
+                label: "BooleanField",
+              },
+              type: "Boolean",
+            },
+          },
+          anotherSection,
+        },
+      }),
+    );
+  });
+
   it("addUIDField should return the given custom type with the uid field (with default placeholder) added to the first section", () => {
     expect(
       CustomTypeModel.addUIDField("UID label", {
