@@ -20,9 +20,14 @@ const Hint: React.FC<HintProps> = ({
 }) => {
   const fieldPathString = renderHintBase({ item });
 
-  // TODO: Call `swr`'s global `mutate` function when something changes to clear the cache.
+  const snippetCacheKey = [fieldPathString];
+  if (item.value.type === "Link") {
+    if (item.value.config?.allowText ?? false)
+      snippetCacheKey.push("allowText");
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { data, error } = useSWR(fieldPathString, async () => {
+  const { data, error } = useSWR(snippetCacheKey.join("$"), async () => {
     return await managerClient.snippets.readSnippets({
       fieldPath: fieldPathString.split("."),
       model: item.value,
