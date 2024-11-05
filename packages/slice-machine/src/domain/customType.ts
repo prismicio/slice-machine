@@ -430,7 +430,7 @@ export function reorderField(args: ReorderFieldArgs): CustomType {
     ),
   );
 
-  // On repetable pages UID field shouldn't be reordered
+  // On repeatable pages UID field shouldn't be reordered
   const isRepeatablePage =
     customType.format === "page" && customType.repeatable;
 
@@ -455,7 +455,7 @@ export function reorderField(args: ReorderFieldArgs): CustomType {
     updatedSection[sliceZoneKey] = sliceZoneField;
   }
 
-  // Put the UID field back at the begginnig of the reordered fields
+  // Put the UID field back at the beginning of the reordered fields
   const updatedSectionEntries = Object.entries(updatedSection);
   const uidFieldEntry = Object.entries(sectionFields).find(
     ([_, field]) => field.type === "UID",
@@ -562,6 +562,7 @@ export function reorderFields<T>(args: ReorderFieldsArgs<T>) {
   fieldEntries.splice(destinationIndex, 0, removedEntry);
 
   const reorderedFields = Object.fromEntries(fieldEntries);
+
   return reorderedFields;
 }
 
