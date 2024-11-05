@@ -6,7 +6,7 @@ import {
   Text,
   useMediaQuery,
 } from "@prismicio/editor-ui";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import styles from "./OnboardingGuide.module.css";
 import { OnboardingProgressStepper } from "./OnboardingProgressStepper";
@@ -14,43 +14,36 @@ import { OnboardingProvider, useOnboardingContext } from "./OnboardingProvider";
 import { OnboardingTutorial } from "./OnboardingTutorial/OnboardingTutorial";
 
 export function SliceMachineOnboardingGuide() {
-  const [isVisible, setVisible] = useState(true);
+  const [isVisible, setVisible] = useState(false);
   const confetti = useConfetti({ onAnimationEnd: () => setVisible(false) });
 
-  if (!isVisible) return null;
+  function onCompleteChange(isComplete: boolean) {
+    if (!isComplete && !isVisible) setVisible(true);
+  }
 
   return (
-    <OnboardingProvider onComplete={confetti.throwConfetti}>
-      <div ref={confetti.confettiContainerRef} className={styles.container}>
-        <OnboardingGuideCard setVisible={setVisible} />
-        <div
-          ref={confetti.confettiCannonRef}
-          className={styles.confettiCannon}
-        />
-      </div>
+    <OnboardingProvider
+      onComplete={confetti.throwConfetti}
+      onCompleteChange={onCompleteChange}
+    >
+      {isVisible && (
+        <div ref={confetti.confettiContainerRef} className={styles.container}>
+          <OnboardingGuideCard />
+          <div
+            ref={confetti.confettiCannonRef}
+            className={styles.confettiCannon}
+          />
+        </div>
+      )}
     </OnboardingProvider>
   );
 }
 
-type OnboardingGuideCardProps = {
-  setVisible: (isVisible: boolean) => void;
-};
-
-function OnboardingGuideCard(props: OnboardingGuideCardProps) {
-  const { setVisible } = props;
+function OnboardingGuideCard() {
   const { steps, completedStepCount, isComplete } = useOnboardingContext();
-  const isVisible = useMediaQuery({ min: "medium" });
+  const isMediumScreen = useMediaQuery({ min: "medium" });
 
-  const isMountedRef = useRef(false);
-  useEffect(() => {
-    // quick fix to prevent having the onboarding invisible but interactive when complete
-    if (!isMountedRef.current) {
-      isMountedRef.current = true;
-      setVisible(false);
-    }
-  }, [isVisible, setVisible]);
-
-  if (!isVisible) return null;
+  if (!isMediumScreen) return null;
 
   return (
     <div

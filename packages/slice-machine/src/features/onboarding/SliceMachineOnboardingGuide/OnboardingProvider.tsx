@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext, useEffect } from "react";
 
 import { telemetry } from "@/apiClient";
 import { onboardingSteps } from "@/features/onboarding/SliceMachineOnboardingGuide/content";
@@ -39,14 +39,15 @@ const getInitialState = (steps: OnboardingStep[]): OnboardingStepStatuses => {
 type OnboardingProviderProps = {
   children: ReactNode;
   onComplete?: () => void;
+  onCompleteChange?: (isComplete: boolean) => void;
 };
 
 export const OnboardingProvider = ({
   children,
   onComplete,
+  onCompleteChange,
 }: OnboardingProviderProps) => {
   const steps = onboardingSteps;
-
   const [stepStatus, setStepStatus] = usePersistedState(
     "onboardingSteps",
     getInitialState(steps),
@@ -85,6 +86,12 @@ export const OnboardingProvider = ({
     isStepComplete(step),
   ).length;
 
+  const isComplete = completedStepCount === steps.length;
+
+  useEffect(() => {
+    onCompleteChange?.(isComplete);
+  }, [isComplete, onCompleteChange]);
+
   return (
     <OnboardingContext.Provider
       value={{
@@ -93,7 +100,7 @@ export const OnboardingProvider = ({
         isStepComplete,
         getStepIndex,
         completedStepCount,
-        isComplete: completedStepCount === steps.length,
+        isComplete,
       }}
     >
       {children}
