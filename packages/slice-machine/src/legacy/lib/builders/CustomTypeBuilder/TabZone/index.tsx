@@ -79,18 +79,16 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
 
-  const isRepeatablePage =
-    customTypeSM.format === "page" && customTypeSM.repeatable;
-
   const sliceZone = customTypeSM.tabs.find((tab) => tab.key === tabId)
     ?.sliceZone;
 
   const allFields: TabFields =
     customTypeSM.tabs.find((tab) => tab.key === tabId)?.value ?? [];
   // the uid field is moved to the top of the editor on repeatable pages
-  const fields = isRepeatablePage
-    ? allFields.filter((field) => field.key !== "uid")
-    : allFields;
+  const fields =
+    customTypeSM.format === "page" && customTypeSM.repeatable
+      ? allFields.filter((field) => field.key !== "uid")
+      : allFields;
 
   const poolOfFields = customTypeSM.tabs.reduce<PoolOfFields>(
     (acc: PoolOfFields, curr: TabSM) => {
@@ -155,18 +153,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     });
   };
 
-  /**
-   * Adjusts the index of the field to be reordered
-   * taking into account the uid field that is moved
-   * to the top of the editor on repeatable pages
-   */
-  const adjustIndex = (index: number) => {
-    if (!isRepeatablePage) return index;
-    const uidIndex = allFields.findIndex((field) => field.key === "uid");
-    if (uidIndex === -1) return index;
-    return index >= uidIndex ? index + 1 : index;
-  };
-
   const onDragEnd = (result: DropResult) => {
     if (ensureDnDDestination(result)) {
       return;
@@ -179,8 +165,8 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
 
     const newCustomType = reorderField({
       customType,
-      sourceIndex: adjustIndex(source.index),
-      destinationIndex: adjustIndex(destination.index),
+      sourceIndex: source.index,
+      destinationIndex: destination.index,
       sectionId: tabId,
     });
 
