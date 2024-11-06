@@ -41,30 +41,12 @@ type OnboardingProviderProps = {
   onComplete?: () => void;
 };
 
-export function useIsOnboardingCompleted() {
-  const [stepStatus] = usePersistedState(
-    "onboardingSteps",
-    getInitialState(onboardingSteps),
-    { schema: onboardingStepStatusesSchema },
-  );
-
-  const completedStepCount = onboardingSteps.filter(
-    (step) => Boolean(stepStatus[step.id]) || Boolean(step.defaultCompleted),
-  ).length;
-
-  return completedStepCount === onboardingSteps.length;
-}
-
 export const OnboardingProvider = ({
   children,
   onComplete,
 }: OnboardingProviderProps) => {
   const steps = onboardingSteps;
-  const [stepStatus, setStepStatus] = usePersistedState(
-    "onboardingSteps",
-    getInitialState(steps),
-    { schema: onboardingStepStatusesSchema },
-  );
+  const [stepStatus, setStepStatus] = useStepStatus();
 
   const toggleStepComplete = (step: OnboardingStep) => {
     const newCompleteState = !isStepComplete(step);
@@ -113,6 +95,24 @@ export const OnboardingProvider = ({
     </OnboardingContext.Provider>
   );
 };
+
+function useStepStatus() {
+  return usePersistedState(
+    "onboardingSteps",
+    getInitialState(onboardingSteps),
+    { schema: onboardingStepStatusesSchema },
+  );
+}
+
+export function useIsOnboardingCompleted() {
+  const [stepStatus] = useStepStatus();
+
+  const completedStepCount = onboardingSteps.filter(
+    (step) => Boolean(stepStatus[step.id]) || Boolean(step.defaultCompleted),
+  ).length;
+
+  return completedStepCount === onboardingSteps.length;
+}
 
 export const useOnboardingContext = () => {
   const context = useContext(OnboardingContext);
