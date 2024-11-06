@@ -10,31 +10,29 @@ import { useState } from "react";
 
 import styles from "./OnboardingGuide.module.css";
 import { OnboardingProgressStepper } from "./OnboardingProgressStepper";
-import { OnboardingProvider, useOnboardingContext } from "./OnboardingProvider";
+import {
+  OnboardingProvider,
+  useIsOnboardingCompleted,
+  useOnboardingContext,
+} from "./OnboardingProvider";
 import { OnboardingTutorial } from "./OnboardingTutorial/OnboardingTutorial";
 
 export function SliceMachineOnboardingGuide() {
-  const [isVisible, setVisible] = useState(false);
+  const isComplete = useIsOnboardingCompleted();
+  const [isVisible, setVisible] = useState(!isComplete);
   const confetti = useConfetti({ onAnimationEnd: () => setVisible(false) });
 
-  function onCompleteChange(isComplete: boolean) {
-    if (!isComplete && !isVisible) setVisible(true);
-  }
+  if (!isVisible) return null;
 
   return (
-    <OnboardingProvider
-      onComplete={confetti.throwConfetti}
-      onCompleteChange={onCompleteChange}
-    >
-      {isVisible && (
-        <div ref={confetti.confettiContainerRef} className={styles.container}>
-          <OnboardingGuideCard />
-          <div
-            ref={confetti.confettiCannonRef}
-            className={styles.confettiCannon}
-          />
-        </div>
-      )}
+    <OnboardingProvider onComplete={confetti.throwConfetti}>
+      <div ref={confetti.confettiContainerRef} className={styles.container}>
+        <OnboardingGuideCard />
+        <div
+          ref={confetti.confettiCannonRef}
+          className={styles.confettiCannon}
+        />
+      </div>
     </OnboardingProvider>
   );
 }
