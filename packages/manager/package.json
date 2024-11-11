@@ -67,7 +67,7 @@
 		"@antfu/ni": "^0.20.0",
 		"@prismicio/client": "^7.11.0",
 		"@prismicio/custom-types-client": "2.1.0",
-		"@prismicio/mocks": "^2.4.0",
+		"@prismicio/mock": "0.5.0-alpha.0",
 		"@prismicio/types-internal": "^2.8.0",
 		"@segment/analytics-node": "^2.1.2",
 		"@slicemachine/plugin-kit": "workspace:*",
@@ -93,7 +93,7 @@
 	},
 	"devDependencies": {
 		"@amplitude/experiment-node-server": "1.8.1",
-		"@prismicio/mock": "0.2.0",
+		"@prismicio/mock": "0.5.0-alpha.0",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/cookie": "0.5.1",
 		"@types/express": "4.17.17",
