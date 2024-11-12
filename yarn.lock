@@ -6122,6 +6122,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/mock@npm:0.3.3":
+  version: 0.3.3
+  resolution: "@prismicio/mock@npm:0.3.3"
+  dependencies:
+    change-case: ^5.4.4
+  peerDependencies:
+    "@prismicio/client": ^7
+  checksum: 4bcb9a8ae5446b807627e759cde19991d555cc48ba16baaddfe62f466793369ad539bafe3c54264b24395eac6a05267c8b54dfff53b7430045ebece73fa3c704
+  languageName: node
+  linkType: hard
+
+"@prismicio/mock@npm:0.3.7":
+  version: 0.3.7
+  resolution: "@prismicio/mock@npm:0.3.7"
+  dependencies:
+    change-case: ^5.4.4
+  peerDependencies:
+    "@prismicio/client": ^7
+  checksum: f1816247279c6acd42d3d2d39c593317102f18cdbea6cf8022c094df41e12d62816e4613023a0934765e4183e21ddf8b3723b164f9835c50462cdf7eadb584d4
+  languageName: node
+  linkType: hard
+
 "@prismicio/mocks@npm:2.4.0, @prismicio/mocks@npm:^2.4.0":
   version: 2.4.0
   resolution: "@prismicio/mocks@npm:2.4.0"
@@ -9208,6 +9230,7 @@ __metadata:
     "@prismicio/client": ^7.11.0
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.2.0
+    "@prismicio/mocks": ^2.4.0
     "@prismicio/types-internal": ^2.8.0
     "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
@@ -9266,7 +9289,7 @@ __metadata:
   resolution: "@slicemachine/plugin-kit@workspace:packages/plugin-kit"
   dependencies:
     "@prismicio/client": ^7.11.0
-    "@prismicio/mock": 0.2.0
+    "@prismicio/mock": 0.3.7
     "@prismicio/types-internal": 2.8.0
     "@size-limit/preset-small-lib": 8.2.4
     "@types/common-tags": 1.8.1
@@ -15006,6 +15029,13 @@ __metadata:
     snake-case: ^3.0.4
     tslib: ^2.0.3
   checksum: e4bc4a093a1f7cce8b33896665cf9e456e3bc3cc0def2ad7691b1994cfca99b3188d0a513b16855b01a6bd20692fcde12a7d4d87a5615c4c515bbbf0e651f116
+  languageName: node
+  linkType: hard
+
+"change-case@npm:^5.4.4":
+  version: 5.4.4
+  resolution: "change-case@npm:5.4.4"
+  checksum: a22a25a763719658424ffbcd41e931d2d19cc22399cc765dca447fbe1eaf13e179d5e8ab1677af75f2e814dbddf74e42ffdecb526cd5bc906cc859f62aa154b2
   languageName: node
   linkType: hard
 
@@ -31172,7 +31202,7 @@ __metadata:
     "@prismicio/editor-fields": 0.4.54
     "@prismicio/editor-support": 0.4.54
     "@prismicio/editor-ui": 0.4.54
-    "@prismicio/mock": 0.2.0
+    "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.4.0
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 2.9.0-alpha.3
