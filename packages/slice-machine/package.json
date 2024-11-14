@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "2.10.1",
+  "version": "2.10.2",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -43,9 +43,9 @@
     "@emotion/react": "11.11.1",
     "@extractus/oembed-extractor": "3.1.8",
     "@prismicio/client": "7.11.0",
-    "@prismicio/editor-fields": "0.4.54",
-    "@prismicio/editor-support": "0.4.54",
-    "@prismicio/editor-ui": "0.4.54",
+    "@prismicio/editor-fields": "0.4.57",
+    "@prismicio/editor-support": "0.4.57",
+    "@prismicio/editor-ui": "0.4.57",
     "@prismicio/mock": "0.3.3",
     "@prismicio/mocks": "2.4.0",
     "@prismicio/simulator": "0.1.4",

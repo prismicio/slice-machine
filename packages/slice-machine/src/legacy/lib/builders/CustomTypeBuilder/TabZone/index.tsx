@@ -78,8 +78,10 @@ type OnSaveFieldProps = {
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
+
   const sliceZone = customTypeSM.tabs.find((tab) => tab.key === tabId)
     ?.sliceZone;
+
   const allFields: TabFields =
     customTypeSM.tabs.find((tab) => tab.key === tabId)?.value ?? [];
   // the uid field is moved to the top of the editor on repeatable pages
