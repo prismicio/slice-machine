@@ -1,4 +1,4 @@
-import { Box, Icon, Tooltip } from "@prismicio/editor-ui";
+import { Box, Icon, Text, Tooltip } from "@prismicio/editor-ui";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
@@ -53,51 +53,45 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
 }
 
 export function RepeatableCheckbox(props: CommonCheckboxProps) {
-  const { checked, height, setFieldValue } = props;
+  const { checked, setFieldValue } = props;
 
   return (
-    <Col>
-      <Flex
+    <Box flexDirection="column">
+      <Label
+        htmlFor="repeat"
+        variant="label.primary"
         sx={{
           mt: 2,
-          flexDirection: "column",
-          height: height ? `${height}%` : undefined,
         }}
       >
-        <Label
-          htmlFor="repeat"
-          variant="label.primary"
-          sx={{ display: "flex", alignItems: "center" }}
-        >
-          Repeatable
-        </Label>
-        <Label variant="label.border">
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            width="100%"
+        Repeatable
+      </Label>
+      <Label variant="label.border" sx={{ display: "flex" }}>
+        <Checkbox
+          name="repeat"
+          checked={checked}
+          onChange={(event) => {
+            void setFieldValue("config.repeat", event.target.checked);
+          }}
+        />
+        Make this link repeatable - Allow editors to create lists of links
+      </Label>
+      <Box alignItems="center" gap={4}>
+        <Icon name="alert" size="medium" color="grey11" />
+        <Text variant="normal" color="grey11">
+          Repeatable link fields are returned as an array of links by the API.{" "}
+          <a
+            href="https://prismic.io/docs/field"
+            style={{ textDecoration: "none" }}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <Flex>
-              <Checkbox
-                name="repeat"
-                checked={checked}
-                onChange={(event) => {
-                  void setFieldValue("config.repeat", event.target.checked);
-                }}
-              />
-              Make this link repeatable
-            </Flex>
-            <Tooltip
-              content="Allow editors to create lists of links"
-              align="end"
-              zIndexHack
-            >
-              <Icon name="alert" size="medium" color="grey11" />
-            </Tooltip>
-          </Box>
-        </Label>
-      </Flex>
-    </Col>
+            <Text variant="normal" color="indigo11">
+              See documentation.
+            </Text>
+          </a>
+        </Text>
+      </Box>
+    </Box>
   );
 }

@@ -19,32 +19,34 @@ const Form = (props) => {
   } = formValues;
 
   return (
-    <FlexGrid>
-      {Object.entries(FormFields).map(([key, field]) => (
-        <Col key={key}>
-          <WidgetFormField
-            fieldName={createFieldNameFromKey(key)}
-            formField={field}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            fields={fields}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            initialValues={initialValues}
-          />
-        </Col>
-      ))}
-      <DisplayTextCheckbox
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        checked={allowText}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        setFieldValue={setFieldValue}
-      />
+    <>
+      <FlexGrid>
+        {Object.entries(FormFields).map(([key, field]) => (
+          <Col key={key}>
+            <WidgetFormField
+              fieldName={createFieldNameFromKey(key)}
+              formField={field}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              fields={fields}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              initialValues={initialValues}
+            />
+          </Col>
+        ))}
+        <DisplayTextCheckbox
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          checked={allowText}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          setFieldValue={setFieldValue}
+        />
+      </FlexGrid>
       <RepeatableCheckbox
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         checked={repeat}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}
       />
-    </FlexGrid>
+    </>
   );
 };
 

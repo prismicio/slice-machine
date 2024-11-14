@@ -1,4 +1,4 @@
-import { Box, Label } from "theme-ui";
+import { Flex } from "theme-ui";
 
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
@@ -22,57 +22,55 @@ const Form = (props) => {
   } = formValues;
 
   return (
-    <FlexGrid>
-      {Object.entries(FormFields).map(([key, field]) => (
-        <Col key={key}>
-          <WidgetFormField
-            fieldName={createFieldNameFromKey(key)}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            formField={field}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            fields={fields}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            initialValues={initialValues}
-          />
-        </Col>
-      ))}
-      <Col />
-      <Col key="allowTargetBlank">
-        <Box sx={{ mt: 2 }}>
-          <Label
-            htmlFor="allowTargetBlank"
-            variant="label.primary"
-            sx={{
-              display: "flex",
-              alignItems: "center",
+    <>
+      <FlexGrid>
+        {Object.entries(FormFields).map(([key, field]) => (
+          <Col key={key}>
+            <WidgetFormField
+              fieldName={createFieldNameFromKey(key)}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              formField={field}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              fields={fields}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              initialValues={initialValues}
+            />
+          </Col>
+        ))}
+
+        <Col key="allowTargetBlank">
+          <Flex
+            sx={{ gap: 2, marginTop: 3 }}
+            style={{
+              paddingTop: "1px",
             }}
           >
-            Link properties
-          </Label>
-          <WidgetFormField
-            fieldName={createFieldNameFromKey("allowTargetBlank")}
-            formField={CheckBox("Allow target blank", false, true)}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            fields={fields}
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            initialValues={initialValues}
-          />
-        </Box>
-      </Col>
-      <DisplayTextCheckbox
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        checked={allowText}
-        height={127}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        setFieldValue={setFieldValue}
-      />
+            <Col>
+              <WidgetFormField
+                fieldName={createFieldNameFromKey("allowTargetBlank")}
+                formField={CheckBox("Allow target blank", false, true)}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                fields={fields}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                initialValues={initialValues}
+              />
+            </Col>
+            <DisplayTextCheckbox
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              checked={allowText}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              setFieldValue={setFieldValue}
+            />
+          </Flex>
+        </Col>
+      </FlexGrid>
       <RepeatableCheckbox
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         checked={repeat}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         setFieldValue={setFieldValue}
       />
-    </FlexGrid>
+    </>
   );
 };
 
