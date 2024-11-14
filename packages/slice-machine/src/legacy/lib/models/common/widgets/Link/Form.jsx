@@ -1,4 +1,4 @@
-import { Box, Flex, Label } from "theme-ui";
+import { Flex } from "theme-ui";
 
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
