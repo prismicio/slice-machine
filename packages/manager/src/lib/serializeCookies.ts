@@ -4,7 +4,9 @@ const COOKIE_SEPARATOR = "; ";
 
 type Cookies = string | string[] | Record<string, string>;
 
-const castParsedCookies = (cookies: Cookies): Record<string, string> => {
+const castParsedCookies = (
+	cookies: Cookies,
+): Record<string, string | undefined> => {
 	if (Array.isArray(cookies)) {
 		return cookie.parse(cookies.join(COOKIE_SEPARATOR));
 	} else if (typeof cookies === "string") {
@@ -33,12 +35,15 @@ export const serializeCookies = (
 	const items: string[] = [];
 
 	for (const name in cookiesToSerialize) {
-		items.push(
-			cookie.serialize(name, cookiesToSerialize[name], {
-				// Cookies need be stored raw (not encoded or escaped), so that consumers can format them the way they want them to be formatted.
-				encode: (cookie) => cookie,
-			}),
-		);
+		const cookieValue = cookiesToSerialize[name];
+		if (cookieValue) {
+			items.push(
+				cookie.serialize(name, cookieValue, {
+					// Cookies need be stored raw (not encoded or escaped), so that consumers can format them the way they want them to be formatted.
+					encode: (cookie) => cookie,
+				}),
+			);
+		}
 	}
 
 	return items.join(COOKIE_SEPARATOR);

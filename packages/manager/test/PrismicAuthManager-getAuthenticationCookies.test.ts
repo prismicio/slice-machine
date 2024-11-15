@@ -19,7 +19,7 @@ it("returns parsed cookies from the auth state file", async (ctx) => {
 	const authenticationCookies =
 		await prismicAuthManager.getAuthenticationCookies();
 
-	expect(authenticationCookies).toStrictEqual({
+	expect(authenticationCookies).toEqual({
 		"prismic-auth": "token",
 		SESSION: "session",
 	});
