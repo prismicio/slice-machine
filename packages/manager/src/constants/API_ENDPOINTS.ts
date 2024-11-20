@@ -38,9 +38,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				RepositoryService: addTrailingSlash(
 					process.env.repository_api ?? "https://repository.internal.wroom.io/",
 				),
-				LocaleService: addTrailingSlash(
-					process.env.repository_api ?? "https://locale.internal.wroom.io/",
-				),
+				LocaleService: addTrailingSlash("https://locale.internal.wroom.io/"),
 			};
 
 			const missingAPIEndpoints = Object.keys(apiEndpoints).filter((key) => {

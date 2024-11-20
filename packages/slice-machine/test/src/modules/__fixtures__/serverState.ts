@@ -25,6 +25,7 @@ export const dummyServerState: Pick<
       PrismicUnsplash: "https://unsplash.prismic.io/",
       SliceMachineV1: "https://sm-api.prismic.io/v1/",
       RepositoryService: "https://repository.prismic.io/",
+      LocaleService: "https://locale.prismic.io/",
     },
     shortId: "shortId",
   },
