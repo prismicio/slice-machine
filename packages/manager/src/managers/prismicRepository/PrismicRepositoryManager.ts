@@ -687,7 +687,6 @@ export class PrismicRepositoryManager extends BaseManager {
 			body: {
 				id: "en-us",
 				isMaster: true,
-				label: "English - United States",
 			},
 		});
 
