@@ -977,6 +977,20 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					task.title = `Default master language set to ${chalk.cyan(
 						"en-US",
 					)} 🇺🇸. You can change it anytime in your project settings.`;
+
+					try {
+						const { value: onboardingExperimentVariant } =
+							(await this.manager.telemetry.getExperimentVariant(
+								"shared-onboarding",
+							)) ?? {};
+						if (onboardingExperimentVariant === "with-shared-onboarding") {
+							this.manager.prismicRepository.completeOnboardingStep(
+								"chooseLocale",
+							);
+						}
+					} catch (error) {
+						await this.trackError(error);
+					}
 				},
 			},
 		]);
