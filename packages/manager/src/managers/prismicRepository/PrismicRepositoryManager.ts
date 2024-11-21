@@ -676,9 +676,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	async setDefaultMasterLocale(): Promise<void> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const localeServiceBaseUrl = new URL("locale/", API_ENDPOINTS.PrismicWroom);
-		localeServiceBaseUrl.hostname = `${repositoryName}.${localeServiceBaseUrl.hostname}`;
-		const url = new URL("repository/locales", localeServiceBaseUrl);
+		const url = new URL("repository/locales", API_ENDPOINTS.LocaleService);
 		url.searchParams.set("repository", repositoryName);
 
 		const res = await this._fetch({
@@ -687,7 +685,6 @@ export class PrismicRepositoryManager extends BaseManager {
 			body: {
 				id: "en-us",
 				isMaster: true,
-				label: "English - United States",
 			},
 		});
 
