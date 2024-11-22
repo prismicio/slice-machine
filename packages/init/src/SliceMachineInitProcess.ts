@@ -184,9 +184,7 @@ export class SliceMachineInitProcess {
 			}
 			if (!this.context.repository.exists) {
 				await this.createNewRepository();
-				if (!this.options.starter) {
-					await this.setDefaultMasterLocale();
-				}
+				await this.setDefaultMasterLocale();
 			}
 
 			await this.syncDataWithPrismic();
