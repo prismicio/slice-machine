@@ -184,6 +184,7 @@ export class SliceMachineInitProcess {
 			}
 			if (!this.context.repository.exists) {
 				await this.createNewRepository();
+				await this.setDefaultMasterLocale();
 			}
 
 			await this.syncDataWithPrismic();
@@ -892,6 +893,19 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		};
 	}
 
+	protected async completeOnboardingSteps(...steps: string[]): Promise<void> {
+		try {
+			const { value: onboardingExperimentVariant } =
+				(await this.manager.telemetry.getExperimentVariant(
+					"shared-onboarding",
+				)) ?? {};
+			if (onboardingExperimentVariant === "with-shared-onboarding") {
+				this.manager.prismicRepository.completeOnboardingStep(...steps);
+			}
+		} catch (error) {
+			await this.trackError(error);
+		}
+	}
 	protected createNewRepository(): Promise<void> {
 		assertExists(
 			this.context.repository,
@@ -920,20 +934,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							starterId: this.context.starterId,
 						});
 
-						try {
-							const { value: onboardingExperimentVariant } =
-								(await this.manager.telemetry.getExperimentVariant(
-									"shared-onboarding",
-								)) ?? {};
-							if (onboardingExperimentVariant === "with-shared-onboarding") {
-								this.manager.prismicRepository.completeOnboardingStep(
-									"createProject",
-									"setupSliceMachine",
-								);
-							}
-						} catch (error) {
-							await this.trackError(error);
-						}
+						await this.completeOnboardingSteps(
+							"createProject",
+							"setupSliceMachine",
+						);
 					} catch (error) {
 						// When we have an error here, it's most probably because the user has a stale SESSION cookie
 
@@ -960,6 +964,30 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					task.title = `Created new repository ${chalk.cyan(
 						this.context.repository.domain,
 					)}`;
+				},
+			},
+		]);
+	}
+
+	protected async setDefaultMasterLocale(): Promise<void> {
+		const documentsRead = await this.readDocuments();
+
+		if (documentsRead !== undefined && documentsRead.documents.length > 0) {
+			// if there are documents to push,
+			// we assume it's a starter which has a master locale already set
+			return;
+		}
+
+		return listrRun([
+			{
+				title: `Setting main content language...`,
+				task: async (_, task) => {
+					await this.manager.prismicRepository.setDefaultMasterLocale();
+					task.title = `Main content language set to ${chalk.cyan(
+						"English - United States",
+					)} 🇺🇸. You can change it anytime in your project settings.`;
+
+					await this.completeOnboardingSteps("chooseLocale");
 				},
 			},
 		]);

@@ -673,6 +673,37 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
+	async setDefaultMasterLocale(): Promise<void> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL("repository/locales", API_ENDPOINTS.LocaleService);
+		url.searchParams.set("repository", repositoryName);
+
+		const res = await this._fetch({
+			url,
+			method: "POST",
+			body: {
+				id: "en-us",
+				isMaster: true,
+			},
+		});
+
+		if (!res.ok) {
+			switch (res.status) {
+				case 400:
+				case 401:
+					throw new UnauthenticatedError();
+				case 403:
+					throw new UnauthorizedError();
+				default:
+					const text = await res.text();
+					throw new Error("Failed to set main content language.", {
+						cause: text,
+					});
+			}
+		}
+	}
+
 	private _decodeLimitOrThrow(
 		potentialLimit: unknown,
 		statusCode: number,
