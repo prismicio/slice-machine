@@ -106,7 +106,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicEmbed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io/",
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",
-				RepositoryService: "https://repository.prismic.io/",
+				RepositoryService: "https://repository.internal.prismic.io/",
 				LocaleService: "https://locale.internal.prismic.io/",
 			};
 		}
