@@ -49,7 +49,7 @@
     "@prismicio/mock": "0.3.3",
     "@prismicio/mocks": "2.4.0",
     "@prismicio/simulator": "0.1.4",
-    "@prismicio/types-internal": "2.9.0-alpha.3",
+    "@prismicio/types-internal": "3.1.0-alpha.4",
     "@radix-ui/react-hover-card": "1.0.6",
     "@radix-ui/react-tabs": "1.0.4",
     "@reach/menu-button": "0.18.0",

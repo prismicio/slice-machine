@@ -56,7 +56,7 @@
 	"bin": "./bin/start-slicemachine.js",
 	"dependencies": {
 		"@prismicio/mocks": "^2.4.0",
-		"@prismicio/types-internal": "2.9.0-alpha.3",
+		"@prismicio/types-internal": "3.1.0-alpha.4",
 		"@slicemachine/manager": "workspace:*",
 		"body-parser": "^1.20.3",
 		"chalk": "^4.1.2",
