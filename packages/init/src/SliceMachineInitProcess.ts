@@ -971,10 +971,21 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 			{
 				title: `Setting main content language...`,
 				task: async (_, task) => {
-					await this.manager.prismicRepository.setDefaultMasterLocale();
-					task.title = `Main content language set to ${chalk.cyan(
-						"English - United States",
-					)} 🇺🇸. You can change it anytime in your project settings.`;
+					const documentsRead = await this.readDocuments();
+
+					if (
+						documentsRead !== undefined &&
+						documentsRead.documents.length > 0
+					) {
+						// if there are documents to push,
+						// we assume it's a starter which has a master locale already set
+						task.title = `Setting main content language skipped`;
+					} else {
+						await this.manager.prismicRepository.setDefaultMasterLocale();
+						task.title = `Main content language set to ${chalk.cyan(
+							"English - United States",
+						)} 🇺🇸. You can change it anytime in your project settings.`;
+					}
 				},
 			},
 		]);
