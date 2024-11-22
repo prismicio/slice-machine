@@ -184,9 +184,7 @@ export class SliceMachineInitProcess {
 			}
 			if (!this.context.repository.exists) {
 				await this.createNewRepository();
-				if (!this.options.starter) {
-					await this.setDefaultMasterLocale();
-				}
+				await this.setDefaultMasterLocale();
 			}
 
 			await this.syncDataWithPrismic();
@@ -971,11 +969,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 	protected setDefaultMasterLocale(): Promise<void> {
 		return listrRun([
 			{
-				title: `Setting default master language...`,
+				title: `Setting main content language...`,
 				task: async (_, task) => {
 					await this.manager.prismicRepository.setDefaultMasterLocale();
-					task.title = `Default master language set to ${chalk.cyan(
-						"en-US",
+					task.title = `Main content language set to ${chalk.cyan(
+						"English - United States",
 					)} 🇺🇸. You can change it anytime in your project settings.`;
 
 					try {
