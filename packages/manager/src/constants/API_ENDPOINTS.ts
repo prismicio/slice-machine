@@ -38,7 +38,9 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				RepositoryService: addTrailingSlash(
 					process.env.repository_api ?? "https://repository.internal.wroom.io/",
 				),
-				LocaleService: addTrailingSlash("https://locale.internal.wroom.io/"),
+				LocaleService: addTrailingSlash(
+					process.env.locale_api ?? "https://locale.internal.wroom.io/",
+				),
 			};
 
 			const missingAPIEndpoints = Object.keys(apiEndpoints).filter((key) => {
@@ -105,7 +107,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicUnsplash: "https://unsplash.prismic.io/",
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",
 				RepositoryService: "https://repository.prismic.io/",
-				LocaleService: "https://locale.prismic.io/",
+				LocaleService: "https://locale.internal.prismic.io/",
 			};
 		}
 	}

@@ -689,7 +689,18 @@ export class PrismicRepositoryManager extends BaseManager {
 		});
 
 		if (!res.ok) {
-			throw new Error("Failed to set default master locale.");
+			switch (res.status) {
+				case 400:
+				case 401:
+					throw new UnauthenticatedError();
+				case 403:
+					throw new UnauthorizedError();
+				default:
+					const text = await res.text();
+					throw new Error("Failed to set main content language.", {
+						cause: text,
+					});
+			}
 		}
 	}
 
