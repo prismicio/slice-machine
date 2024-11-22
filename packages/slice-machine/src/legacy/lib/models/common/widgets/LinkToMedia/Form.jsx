@@ -3,7 +3,7 @@ import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
 
-import { DisplayTextCheckbox, RepeatableCheckbox } from "../Link/components";
+import { DisplayTextCheckbox } from "../Link/components";
 
 const FormFields = {
   ...DefaultFields,
@@ -15,7 +15,7 @@ const Form = (props) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    config: { allowText, repeat },
+    config: { allowText },
   } = formValues;
 
   return (
@@ -40,12 +40,6 @@ const Form = (props) => {
           setFieldValue={setFieldValue}
         />
       </FlexGrid>
-      <RepeatableCheckbox
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        checked={repeat}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        setFieldValue={setFieldValue}
-      />
     </>
   );
 };
