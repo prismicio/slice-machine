@@ -973,8 +973,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		const documentsRead = await this.readDocuments();
 
 		if (documentsRead !== undefined && documentsRead.documents.length > 0) {
-			// if there are documents to push,
-			// we assume it's a starter which has a master locale already set
+			// if there are documents to push, we assume it's a starter which
+			// has a master locale already set, and we only ensure the onboarding
+			// step is completed.
+			await this.completeOnboardingSteps("chooseLocale");
+
 			return;
 		}
 
