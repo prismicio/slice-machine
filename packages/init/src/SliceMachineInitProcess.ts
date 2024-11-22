@@ -893,6 +893,19 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		};
 	}
 
+	protected async completeOnboardingSteps(...steps: string[]): Promise<void> {
+		try {
+			const { value: onboardingExperimentVariant } =
+				(await this.manager.telemetry.getExperimentVariant(
+					"shared-onboarding",
+				)) ?? {};
+			if (onboardingExperimentVariant === "with-shared-onboarding") {
+				this.manager.prismicRepository.completeOnboardingStep(...steps);
+			}
+		} catch (error) {
+			await this.trackError(error);
+		}
+	}
 	protected createNewRepository(): Promise<void> {
 		assertExists(
 			this.context.repository,
@@ -921,20 +934,10 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							starterId: this.context.starterId,
 						});
 
-						try {
-							const { value: onboardingExperimentVariant } =
-								(await this.manager.telemetry.getExperimentVariant(
-									"shared-onboarding",
-								)) ?? {};
-							if (onboardingExperimentVariant === "with-shared-onboarding") {
-								this.manager.prismicRepository.completeOnboardingStep(
-									"createProject",
-									"setupSliceMachine",
-								);
-							}
-						} catch (error) {
-							await this.trackError(error);
-						}
+						await this.completeOnboardingSteps(
+							"createProject",
+							"setupSliceMachine",
+						);
 					} catch (error) {
 						// When we have an error here, it's most probably because the user has a stale SESSION cookie
 
@@ -984,19 +987,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						"English - United States",
 					)} 🇺🇸. You can change it anytime in your project settings.`;
 
-					try {
-						const { value: onboardingExperimentVariant } =
-							(await this.manager.telemetry.getExperimentVariant(
-								"shared-onboarding",
-							)) ?? {};
-						if (onboardingExperimentVariant === "with-shared-onboarding") {
-							this.manager.prismicRepository.completeOnboardingStep(
-								"chooseLocale",
-							);
-						}
-					} catch (error) {
-						await this.trackError(error);
-					}
+					await this.completeOnboardingSteps("chooseLocale");
 				},
 			},
 		]);
