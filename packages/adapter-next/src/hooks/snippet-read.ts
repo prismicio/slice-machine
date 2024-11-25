@@ -62,25 +62,31 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			const repeat = data.model.config?.repeat ?? false;
 			const allowText = data.model.config?.allowText ?? false;
 
-			let codeText;
+			let code;
 			if (!repeat && !allowText) {
-				codeText = stripIndent`
+				code = await format(
+					stripIndent`
 					<PrismicNextLink field={${dotPath(fieldPath)}}>Link</PrismicNextLink>
-				`;
+				`,
+					helpers,
+				);
 			} else if (!repeat && allowText) {
-				codeText = stripIndent`
+				code = await format(
+					stripIndent`
 					<PrismicNextLink field={${dotPath(fieldPath)}} />
-				`;
+				`,
+					helpers,
+				);
 			} else if (repeat && !allowText) {
-				codeText = stripIndent`
-					{${dotPath(fieldPath)}.map((link, index) => (
-						<PrismicNextLink key={index} field={link}>Link</PrismicNextLink>
+				code = stripIndent`
+					{${dotPath(fieldPath)}.map((link) => (
+						<PrismicNextLink key={link.key} field={link}>Link</PrismicNextLink>
 				))}
 				`;
 			} else if (repeat && allowText) {
-				codeText = stripIndent`
-					{${dotPath(fieldPath)}.map((link, index) => (
-					  <PrismicNextLink key={index} field={link} />
+				code = stripIndent`
+					{${dotPath(fieldPath)}.map((link) => (
+					  <PrismicNextLink key={link.key} field={link} />
 					))}
 				`;
 			} else {
@@ -90,7 +96,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			return {
 				label,
 				language: "tsx",
-				code: await format(codeText, helpers),
+				code,
 			};
 		}
 
