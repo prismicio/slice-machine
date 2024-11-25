@@ -71,13 +71,13 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				`;
 			} else if (repeat && !allowText) {
 				codeText = stripIndent`
-					{#each ${dotPath(fieldPath)} as link, index (index)}
+					{#each ${dotPath(fieldPath)} as link (link.key)}
 						<PrismicLink field={link}>Link</PrismicLink>
 					{/each}
 				`;
 			} else if (repeat && allowText) {
 				codeText = stripIndent`
-					{#each ${dotPath(fieldPath)} as link, index (index)}
+					{#each ${dotPath(fieldPath)} as link (link.key)}
 						<PrismicLink field={link} />
 					{/each}
 				`;
