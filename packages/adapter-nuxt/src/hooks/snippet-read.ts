@@ -72,13 +72,13 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				`;
 			} else if (repeat && !allowText) {
 				codeText = stripIndent`
-					<template v-for="(link, index) in ${dotPath(fieldPath)}" :key="index">
+					<template v-for="link in ${dotPath(fieldPath)}" :key="link.key">
 						<PrismicLink :field="link">Link</PrismicLink>
 					</template>
 				`;
 			} else if (repeat && allowText) {
 				codeText = stripIndent`
-					<template v-for="(link, index) in ${dotPath(fieldPath)}" :key="index">
+					<template v-for="link in ${dotPath(fieldPath)}" :key="link.key">
 						<PrismicLink :field="link" />
 					</template>
 				`;
