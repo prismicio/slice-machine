@@ -9,7 +9,6 @@ import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { toast } from "react-toastify";
 
-import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
 import {
   addField,
@@ -36,7 +35,7 @@ import {
   ensureWidgetTypeExistence,
 } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
-import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
+import { trackFieldAdded } from "@/utils/tracking/trackFieldAdded";
 
 import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
@@ -140,18 +139,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       toast.success(`${field.type === "Group" ? "Group" : "Field"} added`);
     });
 
-    void telemetry.track({
-      event: "field:added",
-      id,
-      name: label,
-      type: newField.type,
-      isInAGroup: false,
-      contentType: getContentTypeForTracking(window.location.pathname),
-      ...(newField.type === "Link" && {
-        allowText: newField.config?.allowText,
-        repeat: newField.config?.repeat,
-      }),
-    });
+    trackFieldAdded(id, newField);
   };
 
   const onDragEnd = (result: DropResult) => {
