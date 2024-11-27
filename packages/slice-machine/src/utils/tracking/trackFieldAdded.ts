@@ -12,17 +12,18 @@ import { getContentTypeForTracking } from "./getContentTypeForTracking";
 type TrackFieldAddedParam = {
   id: string;
   field: SlicePrimaryFieldSM | NestableWidget | UID | Group;
+  isInAGroup?: boolean;
 };
 
 export function trackFieldAdded(params: TrackFieldAddedParam) {
-  const { id, field } = params;
+  const { id, field, isInAGroup = false } = params;
 
   void telemetry.track({
     event: "field:added",
     id,
     name: field.config?.label ?? "",
     type: field.type,
-    isInAGroup: false,
+    isInAGroup,
     contentType: getContentTypeForTracking(window.location.pathname),
     ...(field.type === "Link" && {
       allowText: field.config?.allowText,
