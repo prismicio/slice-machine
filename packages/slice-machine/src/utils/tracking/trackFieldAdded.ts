@@ -9,14 +9,14 @@ import { SlicePrimaryFieldSM } from "@/legacy/lib/models/common/Slice";
 
 import { getContentTypeForTracking } from "./getContentTypeForTracking";
 
-type TrackFieldAddedParam = {
+type TrackFieldAddedArgs = {
   id: string;
   field: SlicePrimaryFieldSM | NestableWidget | UID | Group;
   isInAGroup?: boolean;
 };
 
-export function trackFieldAdded(params: TrackFieldAddedParam) {
-  const { id, field, isInAGroup = false } = params;
+export function trackFieldAdded(args: TrackFieldAddedArgs) {
+  const { id, field, isInAGroup = false } = args;
 
   void telemetry.track({
     event: "field:added",
