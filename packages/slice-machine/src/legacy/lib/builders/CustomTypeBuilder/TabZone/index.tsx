@@ -139,7 +139,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       toast.success(`${field.type === "Group" ? "Group" : "Field"} added`);
     });
 
-    trackFieldAdded(id, newField);
+    trackFieldAdded({ id, field: newField });
   };
 
   const onDragEnd = (result: DropResult) => {

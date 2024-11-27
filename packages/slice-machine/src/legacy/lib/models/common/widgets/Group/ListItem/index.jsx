@@ -70,7 +70,7 @@ export const CustomListItem = ({
       isNewGroupField: true,
     });
 
-    trackFieldAdded(id, newField);
+    trackFieldAdded({ id, field: newField });
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {

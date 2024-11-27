@@ -9,10 +9,14 @@ import { SlicePrimaryFieldSM } from "@/legacy/lib/models/common/Slice";
 
 import { getContentTypeForTracking } from "./getContentTypeForTracking";
 
-export function trackFieldAdded(
-  id: string,
-  field: SlicePrimaryFieldSM | NestableWidget | UID | Group,
-) {
+type TrackFieldAddedParam = {
+  id: string;
+  field: SlicePrimaryFieldSM | NestableWidget | UID | Group;
+};
+
+export function trackFieldAdded(params: TrackFieldAddedParam) {
+  const { id, field } = params;
+
   void telemetry.track({
     event: "field:added",
     id,

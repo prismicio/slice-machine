@@ -157,7 +157,7 @@ const FieldZones: FC = () => {
       toast.success(`${widgetTypeName === "Group" ? "Group" : "Field"} added`);
     });
 
-    trackFieldAdded(id, newField);
+    trackFieldAdded({ id, field: newField });
   };
 
   const _onCreateOrSave = (widgetArea: WidgetsArea) => {
