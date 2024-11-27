@@ -149,6 +149,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       contentType: getContentTypeForTracking(window.location.pathname),
       ...(newField.type === "Link" && {
         allowText: newField.config?.allowText,
+        repeat: newField.config?.repeat,
       }),
     });
   };

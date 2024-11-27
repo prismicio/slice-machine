@@ -78,6 +78,7 @@ export const CustomListItem = ({
       contentType: getContentTypeForTracking(window.location.pathname),
       ...(newField.type === "Link" && {
         allowText: newField.config?.allowText,
+        repeat: newField.config?.repeat,
       }),
     });
   };
