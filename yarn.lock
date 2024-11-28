@@ -9004,7 +9004,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: 0.1.23-alpha.0
+    prismic-ts-codegen: 0.1.23-alpha.2
     react: 18.2.0
     rollup-plugin-preserve-directives: 0.2.0
     size-limit: 8.2.4
@@ -9046,7 +9046,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: 0.1.23-alpha.0
+    prismic-ts-codegen: 0.1.23-alpha.2
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -9088,7 +9088,7 @@ __metadata:
     pascal-case: ^3.1.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: 0.1.23-alpha.0
+    prismic-ts-codegen: 0.1.23-alpha.2
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
@@ -9134,7 +9134,7 @@ __metadata:
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
     prettier-plugin-svelte: ^3.0.3
-    prismic-ts-codegen: 0.1.23-alpha.0
+    prismic-ts-codegen: 0.1.23-alpha.2
     size-limit: 8.2.4
     svelte: 4.2.0
     typescript: 4.9.5
@@ -9313,7 +9313,7 @@ __metadata:
     p-limit: ^4.0.0
     prettier: ^3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prismic-ts-codegen: 0.1.23-alpha.0
+    prismic-ts-codegen: 0.1.23-alpha.2
     size-limit: 8.2.4
     typescript: 4.9.5
     vite: 4.3.9
@@ -28392,9 +28392,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prismic-ts-codegen@npm:0.1.23-alpha.0":
-  version: 0.1.23-alpha.0
-  resolution: "prismic-ts-codegen@npm:0.1.23-alpha.0"
+"prismic-ts-codegen@npm:0.1.23-alpha.2":
+  version: 0.1.23-alpha.2
+  resolution: "prismic-ts-codegen@npm:0.1.23-alpha.2"
   dependencies:
     "@prismicio/custom-types-client": ^1.1.0
     common-tags: ^1.8.2
@@ -28415,7 +28415,7 @@ __metadata:
       optional: true
   bin:
     prismic-ts-codegen: bin/prismic-ts-codegen.js
-  checksum: 02b74976ac04c64f2f1b0bb1d2286d07abf8a1bb667667ea0a1371a8ee45173a8e67ffd2b14b6e25eaa7a34b4a9a0c4f911362690b660a73f6d4e2341e2b1b5e
+  checksum: 39d01dea162e3558c6c26b9d9810dd6db931a54945ad5d5cbcfca3674c2745991fe9f56f01402e32f9b98d5e182b82895a0d4e467b69e5bee398f0a18bf10d47
   languageName: node
   linkType: hard
 
