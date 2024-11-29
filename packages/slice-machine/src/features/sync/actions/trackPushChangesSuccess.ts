@@ -1,3 +1,5 @@
+import { FieldType } from "@prismicio/types-internal/lib/customtypes";
+
 import { telemetry } from "@/apiClient";
 import { countMissingScreenshots } from "@/domain/slice";
 import {
@@ -93,5 +95,83 @@ export function trackPushChangesSuccess(args: TrackPushChangesSuccessArgs) {
     duration: duration,
     hasDeletedDocuments,
     _includeEnvironmentKind: true,
+  });
+
+  trackPushedGroups({ changedCustomTypes, changedSlices });
+}
+
+type TrackPushedGroupsArgs = {
+  changedSlices: ReadonlyArray<ChangedSlice>;
+  changedCustomTypes: ReadonlyArray<ChangedCustomType>;
+};
+
+type FieldStats = {
+  isInStaticZone: boolean;
+  isInSlice: boolean;
+} & {
+  [key in FieldType]?: number;
+};
+
+function trackPushedGroups(args: TrackPushedGroupsArgs) {
+  const { changedCustomTypes, changedSlices } = args;
+
+  const groupsInStaticZone = changedCustomTypes.reduce<FieldStats[]>(
+    (acc, customType) => {
+      if (customType.status !== ModelStatus.New) return acc;
+
+      customType.customType.tabs.forEach((tab) => {
+        tab.value.forEach((field) => {
+          if (field.value.type === "Group" && field.value.config?.fields) {
+            const fieldStats: FieldStats = {
+              isInStaticZone: true,
+              isInSlice: false,
+            };
+            field.value.config.fields.forEach((field) => {
+              if (typeof fieldStats[field.value.type] !== "number") {
+                fieldStats[field.value.type] = 1;
+              } else {
+                fieldStats[field.value.type]! += 1;
+              }
+            });
+            acc.push(fieldStats);
+          }
+        });
+      });
+
+      return acc;
+    },
+    [],
+  );
+
+  const groupsInSlices = changedSlices.reduce<FieldStats[]>((acc, slice) => {
+    if (slice.status !== ModelStatus.New) return acc;
+
+    slice.slice.model.variations.forEach((variation) => {
+      variation.primary?.forEach((field) => {
+        if (field.value.type === "Group" && field.value.config?.fields) {
+          const fieldStats: FieldStats = {
+            isInStaticZone: false,
+            isInSlice: true,
+          };
+          field.value.config.fields.forEach((field) => {
+            if (typeof fieldStats[field.value.type] !== "number") {
+              fieldStats[field.value.type] = 1;
+            } else {
+              fieldStats[field.value.type]! += 1;
+            }
+          });
+          acc.push(fieldStats);
+        }
+      });
+    });
+
+    return acc;
+  }, []);
+
+  [...groupsInSlices, ...groupsInStaticZone].forEach((group) => {
+    void telemetry.track({
+      event: "changes:group-pushed",
+      ...group,
+    });
   });
 }
