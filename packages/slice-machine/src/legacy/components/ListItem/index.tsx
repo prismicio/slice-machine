@@ -61,6 +61,11 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
     value: { config, type },
   } = item;
 
+  const shouldDisplayRepeatableBadge = Boolean(
+    type === "Link" && config?.repeat,
+  ); // for the moment we don't display the badge for repeatable groups
+  // type === "Link" && config && "repeat" in config && Boolean(config.repeat);
+
   return (
     <Fragment>
       <Draggable draggableId={draggableId} index={index}>
@@ -112,16 +117,14 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                       WidgetIcon={widget.Meta.icon}
                     />
                     <Flex sx={{ flex: "0 0 auto" }}>
-                      {config &&
-                        "repeat" in config &&
-                        Boolean(config.repeat) && (
-                          <Badge
-                            title="Repeatable"
-                            color="purple"
-                            size="medium"
-                            sx={{ alignSelf: "center", marginInline: 16 }}
-                          />
-                        )}
+                      {shouldDisplayRepeatableBadge && (
+                        <Badge
+                          title="Repeatable"
+                          color="purple"
+                          size="medium"
+                          sx={{ alignSelf: "center", marginInline: 16 }}
+                        />
+                      )}
                       {CustomEditElements ? CustomEditElements : null}
                       {CustomEditElement ? (
                         CustomEditElement
