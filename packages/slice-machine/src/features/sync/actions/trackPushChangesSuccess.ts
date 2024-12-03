@@ -104,13 +104,13 @@ type TrackPushedGroupsArgs = {
   changedSlices: ReadonlyArray<ChangedSlice>;
   changedCustomTypes: ReadonlyArray<ChangedCustomType>;
 };
-
+type FieldsCount = {
+  [key in FieldType]?: number;
+};
 type FieldStats = {
   isInStaticZone: boolean;
   isInSlice: boolean;
-} & {
-  [key in FieldType]?: number;
-};
+} & FieldsCount;
 
 function trackPushedGroups(args: TrackPushedGroupsArgs) {
   const { changedCustomTypes, changedSlices } = args;
@@ -122,18 +122,16 @@ function trackPushedGroups(args: TrackPushedGroupsArgs) {
       customType.customType.tabs.forEach((tab) => {
         tab.value.forEach((field) => {
           if (field.value.type === "Group" && field.value.config?.fields) {
-            const fieldStats: FieldStats = {
+            const fieldsCount: FieldsCount = {};
+            field.value.config.fields.forEach(({ value: fieldValue }) => {
+              const value = fieldsCount[fieldValue.type] ?? 0;
+              fieldsCount[fieldValue.type] = value + 1;
+            });
+            acc.push({
               isInStaticZone: true,
               isInSlice: false,
-            };
-            field.value.config.fields.forEach((field) => {
-              if (typeof fieldStats[field.value.type] !== "number") {
-                fieldStats[field.value.type] = 1;
-              } else {
-                fieldStats[field.value.type]! += 1;
-              }
+              ...fieldsCount,
             });
-            acc.push(fieldStats);
           }
         });
       });
@@ -149,18 +147,16 @@ function trackPushedGroups(args: TrackPushedGroupsArgs) {
     slice.slice.model.variations.forEach((variation) => {
       variation.primary?.forEach((field) => {
         if (field.value.type === "Group" && field.value.config?.fields) {
-          const fieldStats: FieldStats = {
+          const fieldsCount: FieldsCount = {};
+          field.value.config.fields.forEach(({ value: fieldValue }) => {
+            const value = fieldsCount[fieldValue.type] ?? 0;
+            fieldsCount[fieldValue.type] = value + 1;
+          });
+          acc.push({
             isInStaticZone: false,
             isInSlice: true,
-          };
-          field.value.config.fields.forEach((field) => {
-            if (typeof fieldStats[field.value.type] !== "number") {
-              fieldStats[field.value.type] = 1;
-            } else {
-              fieldStats[field.value.type]! += 1;
-            }
+            ...fieldsCount,
           });
-          acc.push(fieldStats);
         }
       });
     });
