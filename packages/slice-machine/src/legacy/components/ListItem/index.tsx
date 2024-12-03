@@ -62,7 +62,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
   } = item;
 
   const shouldDisplayRepeatableBadge = Boolean(
-    config && "repeat" in config && config.repeat,
+    (type === "Link" || type === "Group") && config?.repeat,
   );
 
   return (
