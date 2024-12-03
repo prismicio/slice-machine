@@ -5930,18 +5930,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/api-renderer@npm:3.4.0":
-  version: 3.4.0
-  resolution: "@prismicio/api-renderer@npm:3.4.0"
+"@prismicio/api-renderer@npm:5.0.0-alpha.6":
+  version: 5.0.0-alpha.6
+  resolution: "@prismicio/api-renderer@npm:5.0.0-alpha.6"
   dependencies:
-    "@prismicio/types-internal": 2.8.0
+    "@prismicio/types-internal": 3.1.0-alpha.5
     tslib: ^2.5.0
     uuid: ^9.0.0
   peerDependencies:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
-  checksum: 0d02b3a1eb6ce48a5a9fad222d72c45304fe34723c3de0d1079ab516d83bd159ccee2ed68a38a0d0bbbf3bde688cdb02a1c59c4ebfa31aa80e6fa93a94a484a7
+  checksum: 4082e46f2e0023f4d82e7353087e391e72a8c54a9fc5074cd3a41b26e01f4d51975ac405bc5a7baaca3731329853cf74471d7f6077287c1661398b2ccdc5387d
   languageName: node
   linkType: hard
 
@@ -6144,12 +6144,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mocks@npm:2.4.0, @prismicio/mocks@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "@prismicio/mocks@npm:2.4.0"
+"@prismicio/mocks@npm:2.5.0-alpha.1":
+  version: 2.5.0-alpha.1
+  resolution: "@prismicio/mocks@npm:2.5.0-alpha.1"
   dependencies:
-    "@prismicio/api-renderer": 3.4.0
-    "@prismicio/types-internal": 2.8.0
+    "@prismicio/api-renderer": 5.0.0-alpha.6
+    "@prismicio/types-internal": 3.1.0-alpha.5
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
@@ -6158,7 +6158,7 @@ __metadata:
     newtype-ts: ^0.3.5
     tslib: ^2.3.1
     uuid: ^9.0.1
-  checksum: d30e8935b9bd80a691cdeb933dd492835b0fb9abe254359599f118b95111b92eed11eedcca8871a99743d69af04aef53e886620c4a6b85cfae559d059037e9d4
+  checksum: e15448942ebb774ba7192cdfba51b3334ccc4d13c12ee11526a56f13bc4c0af24408744ee17decbe9738ad0ffed830ebf6c12095a26dd03fba31b85bd8d33932
   languageName: node
   linkType: hard
 
@@ -6235,9 +6235,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:3.1.0-alpha.4":
-  version: 3.1.0-alpha.4
-  resolution: "@prismicio/types-internal@npm:3.1.0-alpha.4"
+"@prismicio/types-internal@npm:3.1.0":
+  version: 3.1.0
+  resolution: "@prismicio/types-internal@npm:3.1.0"
   dependencies:
     monocle-ts: ^2.3.11
     newtype-ts: ^0.3.5
@@ -6247,7 +6247,7 @@ __metadata:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
-  checksum: 9437cee3833a283ee2071d09462a97d6514b698b9dfd15db1dd230e56580e71806cd94a547774062b0a8d4dc3c11313a66d6d5645d653e75edcb8a3ee353e0ad
+  checksum: dccc03a579fc006908c55c1f014789bbe14d642f3e1b15a4ca2328bc83453c09d5c46fa30b7582c4792b6605559673571ca15820e9357411e0244cfc5daa9876
   languageName: node
   linkType: hard
 
@@ -8979,7 +8979,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/types-internal": 3.1.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -9024,7 +9024,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/types-internal": 3.1.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@typescript-eslint/eslint-plugin": 5.55.0
@@ -9065,7 +9065,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/types-internal": 3.1.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -9107,7 +9107,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.2.0
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/types-internal": 3.1.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@sveltejs/kit": 2.0.0
@@ -9160,7 +9160,7 @@ __metadata:
   dependencies:
     "@msgpack/msgpack": 2.8.0
     "@playwright/test": 1.39.0
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/types-internal": 3.1.0
     "@slicemachine/manager": "workspace:*"
     "@typescript-eslint/eslint-plugin": 7.17.0
     "@typescript-eslint/parser": 7.17.0
@@ -9229,8 +9229,8 @@ __metadata:
     "@prismicio/client": ^7.11.0
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.2.0
-    "@prismicio/mocks": ^2.4.0
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/mocks": 2.5.0-alpha.1
+    "@prismicio/types-internal": 3.1.0
     "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
@@ -9288,7 +9288,7 @@ __metadata:
   dependencies:
     "@prismicio/client": ^7.11.0
     "@prismicio/mock": 0.3.7
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/types-internal": 3.1.0
     "@size-limit/preset-small-lib": 8.2.4
     "@types/common-tags": 1.8.1
     "@types/fs-extra": 11.0.1
@@ -31194,9 +31194,9 @@ __metadata:
     "@prismicio/editor-support": 0.4.57
     "@prismicio/editor-ui": 0.4.57
     "@prismicio/mock": 0.3.3
-    "@prismicio/mocks": 2.4.0
+    "@prismicio/mocks": 2.5.0-alpha.1
     "@prismicio/simulator": 0.1.4
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/types-internal": 3.1.0
     "@radix-ui/react-hover-card": 1.0.6
     "@radix-ui/react-tabs": 1.0.4
     "@radix-ui/react-visually-hidden": 1.0.3
@@ -31673,8 +31673,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
-    "@prismicio/mocks": ^2.4.0
-    "@prismicio/types-internal": 3.1.0-alpha.4
+    "@prismicio/mocks": 2.5.0-alpha.1
+    "@prismicio/types-internal": 3.1.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:*"
     "@types/body-parser": 1.19.2
