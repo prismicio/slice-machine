@@ -1005,7 +1005,7 @@ export class SlicesManager extends BaseManager {
 	async updateSliceModelScreenshotsInPlace(
 		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
 	): Promise<SharedSlice> {
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const repositoryName = await this.project.getResolvedRepositoryName();
 
 		const variations = await Promise.all(
 			args.model.variations.map(async (variation) => {
@@ -1033,7 +1033,7 @@ export class SlicesManager extends BaseManager {
 				}
 
 				const keyPrefix = [
-					sliceMachineConfig.repositoryName,
+					repositoryName,
 					"shared-slices",
 					args.model.id,
 					variation.id,
