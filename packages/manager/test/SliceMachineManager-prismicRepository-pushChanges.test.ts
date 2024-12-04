@@ -145,11 +145,10 @@ it("pushes changes using the bulk API to the selected environment when an enviro
 	await manager.user.login(createPrismicAuthLoginResponse());
 
 	const authenticationToken = await manager.user.getAuthenticationToken();
-	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
 
 	mockAWSACLAPI(ctx, {
 		createEndpoint: {
-			expectedPrismicRepository: sliceMachineConfig.repositoryName,
+			expectedPrismicRepository: "foo",
 			expectedAuthenticationToken: authenticationToken,
 		},
 	});
