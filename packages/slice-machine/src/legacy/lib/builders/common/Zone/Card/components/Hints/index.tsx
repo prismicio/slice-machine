@@ -24,6 +24,7 @@ const Hint: React.FC<HintProps> = ({
   if (item.value.type === "Link") {
     if (item.value.config?.allowText ?? false)
       snippetCacheKey.push("allowText");
+    if (item.value.config?.repeat ?? false) snippetCacheKey.push("repeat");
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

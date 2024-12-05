@@ -57,19 +57,38 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case "Link": {
+			const repeat = data.model.config?.repeat ?? false;
+			const allowText = data.model.config?.allowText ?? false;
+
+			let codeText;
+			if (!repeat && !allowText) {
+				codeText = stripIndent`
+					<PrismicLink field={${dotPath(fieldPath)}}>Link</PrismicLink>
+				`;
+			} else if (!repeat && allowText) {
+				codeText = stripIndent`
+					<PrismicLink field={${dotPath(fieldPath)}} />
+				`;
+			} else if (repeat && !allowText) {
+				codeText = stripIndent`
+					{#each ${dotPath(fieldPath)} as link (link.key)}
+						<PrismicLink field={link}>Link</PrismicLink>
+					{/each}
+				`;
+			} else if (repeat && allowText) {
+				codeText = stripIndent`
+					{#each ${dotPath(fieldPath)} as link (link.key)}
+						<PrismicLink field={link} />
+					{/each}
+				`;
+			} else {
+				throw new Error("Invalid configuration.");
+			}
+
 			return {
 				label,
 				language: "svelte",
-				code: await format(
-					data.model.config?.allowText
-						? stripIndent`
-							<PrismicLink field={${dotPath(fieldPath)}} />
-						`
-						: stripIndent`
-							<PrismicLink field={${dotPath(fieldPath)}}>Link</PrismicLink>
-						`,
-					helpers,
-				),
+				code: await format(codeText, helpers),
 			};
 		}
 

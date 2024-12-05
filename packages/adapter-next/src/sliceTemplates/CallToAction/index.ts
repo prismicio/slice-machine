@@ -39,6 +39,7 @@ export const mocks: SharedSliceContent[] = [
 			},
 			buttonLink: {
 				__TYPE__: "LinkContent",
+				key: "123e4567-e89b-12d3-a456-426614174000",
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://twitter.com/prismicio",
@@ -126,6 +127,7 @@ export const mocks: SharedSliceContent[] = [
 			},
 			buttonLink: {
 				__TYPE__: "LinkContent",
+				key: "123e4567-e89b-12d3-a456-426614174001",
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://prismic.io",

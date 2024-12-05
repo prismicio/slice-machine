@@ -5,7 +5,6 @@ import { DefaultFields } from "@/legacy/lib/forms/defaults";
 
 import { DisplayTextCheckbox } from "../Link/components";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const FormFields = {
   ...DefaultFields,
 };
@@ -20,14 +19,12 @@ const Form = (props) => {
   } = formValues;
 
   return (
-    <FlexGrid>
-      {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        Object.entries(FormFields).map(([key, field]) => (
+    <>
+      <FlexGrid>
+        {Object.entries(FormFields).map(([key, field]) => (
           <Col key={key}>
             <WidgetFormField
               fieldName={createFieldNameFromKey(key)}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               formField={field}
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               fields={fields}
@@ -35,15 +32,15 @@ const Form = (props) => {
               initialValues={initialValues}
             />
           </Col>
-        ))
-      }
-      <DisplayTextCheckbox
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        allowText={allowText}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        setFieldValue={setFieldValue}
-      />
-    </FlexGrid>
+        ))}
+        <DisplayTextCheckbox
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          checked={allowText}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          setFieldValue={setFieldValue}
+        />
+      </FlexGrid>
+    </>
   );
 };
 

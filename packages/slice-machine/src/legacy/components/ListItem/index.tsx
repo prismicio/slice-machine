@@ -1,3 +1,4 @@
+import { Badge } from "@prismicio/editor-ui";
 import { Menu, MenuButton, MenuItem, MenuList } from "@reach/menu-button";
 import React, { Fragment } from "react";
 import { Draggable } from "react-beautiful-dnd";
@@ -60,6 +61,10 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
     value: { config, type },
   } = item;
 
+  const shouldDisplayRepeatableBadge = Boolean(
+    (type === "Link" || type === "Group") && config?.repeat,
+  );
+
   return (
     <Fragment>
       <Draggable draggableId={draggableId} index={index}>
@@ -110,7 +115,15 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                       }
                       WidgetIcon={widget.Meta.icon}
                     />
-                    <Flex>
+                    <Flex sx={{ flex: "0 0 auto" }}>
+                      {shouldDisplayRepeatableBadge && (
+                        <Badge
+                          title="Repeatable"
+                          color="purple"
+                          size="medium"
+                          sx={{ alignSelf: "center", marginInline: 16 }}
+                        />
+                      )}
                       {CustomEditElements ? CustomEditElements : null}
                       {CustomEditElement ? (
                         CustomEditElement
@@ -119,7 +132,11 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                           size={22}
                           Icon={AiOutlineEdit}
                           label="Edit field"
-                          sx={{ cursor: "pointer", color: theme.colors?.icons }}
+                          sx={{
+                            cursor: "pointer",
+                            color: theme.colors?.icons,
+                            flexShrink: 0,
+                          }}
                           onClick={() =>
                             enterEditMode(
                               [key, item.value],

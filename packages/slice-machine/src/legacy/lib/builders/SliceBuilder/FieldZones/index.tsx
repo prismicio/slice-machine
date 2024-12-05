@@ -16,7 +16,6 @@ import { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { toast } from "react-toastify";
 
-import { telemetry } from "@/apiClient";
 import { List } from "@/components/List";
 import {
   addField,
@@ -36,7 +35,7 @@ import {
 import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
-import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
+import { trackFieldAdded } from "@/utils/tracking/trackFieldAdded";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -128,8 +127,7 @@ const FieldZones: FC = () => {
     widgetArea: WidgetsArea,
     { apiId: id, value: newField }: OnSaveFieldProps,
   ) => {
-    const { type: widgetTypeName, config } = newField;
-    const label = config?.label ?? "";
+    const { type: widgetTypeName } = newField;
 
     const widget = primaryWidgetsArray.find(
       (sliceBuilderWidget) =>
@@ -159,17 +157,7 @@ const FieldZones: FC = () => {
       toast.success(`${widgetTypeName === "Group" ? "Group" : "Field"} added`);
     });
 
-    void telemetry.track({
-      event: "field:added",
-      id,
-      name: label,
-      type: newField.type,
-      isInAGroup: false,
-      contentType: getContentTypeForTracking(window.location.pathname),
-      ...(newField.type === "Link" && {
-        allowText: newField.config?.allowText,
-      }),
-    });
+    trackFieldAdded({ id, field: newField });
   };
 
   const _onCreateOrSave = (widgetArea: WidgetsArea) => {

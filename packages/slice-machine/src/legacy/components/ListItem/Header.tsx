@@ -27,6 +27,7 @@ const ItemHeader: React.FC<ItemHeaderProps> = ({
         padding: "4px",
         border: "2px solid",
         borderColor: theme.colors?.primary as CSS.Property.Color,
+        flexShrink: 0,
       }}
     />
     <TextWithTooltip
@@ -42,6 +43,8 @@ const ItemHeader: React.FC<ItemHeaderProps> = ({
         fontSize: "14px",
         ml: 1,
         color: "textClear",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       }}
       data-testid="field-id"
     >

@@ -52,6 +52,7 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
     config: {
       label,
       select: "document",
+      repeat: false,
     },
   }),
   Meta,
