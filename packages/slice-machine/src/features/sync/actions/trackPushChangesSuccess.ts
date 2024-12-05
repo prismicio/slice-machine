@@ -1,7 +1,12 @@
-import { FieldType } from "@prismicio/types-internal/lib/customtypes";
+import {
+  FieldType,
+  NestableWidget,
+  UID,
+} from "@prismicio/types-internal/lib/customtypes";
 
 import { telemetry } from "@/apiClient";
 import { countMissingScreenshots } from "@/domain/slice";
+import { GroupSM } from "@/legacy/lib/models/common/Group";
 import {
   ChangedCustomType,
   ChangedSlice,
@@ -120,20 +125,8 @@ function trackPushedGroups(args: TrackPushedGroupsArgs) {
       if (customType.status !== ModelStatus.New) return acc;
 
       customType.customType.tabs.forEach((tab) => {
-        tab.value.forEach((field) => {
-          if (field.value.type === "Group" && field.value.config?.fields) {
-            const fieldsCount: FieldsCount = {};
-            field.value.config.fields.forEach(({ value: fieldValue }) => {
-              const value = fieldsCount[fieldValue.type] ?? 0;
-              fieldsCount[fieldValue.type] = value + 1;
-            });
-            acc.push({
-              isInStaticZone: true,
-              isInSlice: false,
-              ...fieldsCount,
-            });
-          }
-        });
+        const fieldsCount = countGroupFields(acc, tab.value, "custom-type");
+        acc.push(...fieldsCount);
       });
 
       return acc;
@@ -145,29 +138,48 @@ function trackPushedGroups(args: TrackPushedGroupsArgs) {
     if (slice.status !== ModelStatus.New) return acc;
 
     slice.slice.model.variations.forEach((variation) => {
-      variation.primary?.forEach((field) => {
-        if (field.value.type === "Group" && field.value.config?.fields) {
-          const fieldsCount: FieldsCount = {};
-          field.value.config.fields.forEach(({ value: fieldValue }) => {
-            const value = fieldsCount[fieldValue.type] ?? 0;
-            fieldsCount[fieldValue.type] = value + 1;
-          });
-          acc.push({
-            isInStaticZone: false,
-            isInSlice: true,
-            ...fieldsCount,
-          });
-        }
-      });
+      const fieldsCount = countGroupFields(acc, variation.primary, "slice");
+      acc.push(...fieldsCount);
     });
 
     return acc;
   }, []);
-
   [...groupsInSlices, ...groupsInStaticZone].forEach((group) => {
     void telemetry.track({
       event: "changes:group-pushed",
       ...group,
     });
   });
+}
+
+interface Field {
+  key: string;
+  value: GroupSM | UID | NestableWidget;
+}
+function countGroupFields<TField extends Field>(
+  fieldStats: FieldStats[],
+  fields: TField[] | undefined,
+  groupParent: "custom-type" | "slice",
+) {
+  if (!fields) return fieldStats;
+
+  const newFieldState = fieldStats.slice();
+
+  fields.forEach((field) => {
+    if (field.value.type === "Group" && field.value.config?.fields) {
+      const fieldsCount: FieldsCount = {};
+      field.value.config.fields.forEach(({ value: fieldValue }) => {
+        const value = fieldsCount[fieldValue.type] ?? 0;
+        fieldsCount[fieldValue.type] = value + 1;
+      });
+
+      newFieldState.push({
+        isInStaticZone: groupParent === "custom-type",
+        isInSlice: groupParent === "slice",
+        ...fieldsCount,
+      });
+    }
+  });
+
+  return newFieldState;
 }
