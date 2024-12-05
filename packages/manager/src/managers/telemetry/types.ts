@@ -24,6 +24,7 @@ export const SegmentEventType = {
 	legacySlice_converted: "legacy-slice:converted",
 	screenshotTaken: "screenshot-taken",
 	changes_pushed: "changes:pushed",
+	changes_groupPushed: "changes:group-pushed",
 	changes_limitReach: "changes:limit-reach",
 	editor_widgetUsed: "editor:widget-used",
 	open_page_snippet: "page-type:open-snippet",
@@ -71,6 +72,7 @@ export const HumanSegmentEventType = {
 		"SliceMachine Legacy Slice Converted",
 	[SegmentEventType.screenshotTaken]: "SliceMachine Screenshot Taken",
 	[SegmentEventType.changes_pushed]: "SliceMachine Changes Pushed",
+	[SegmentEventType.changes_groupPushed]: "SliceMachine Group Field Pushed",
 	[SegmentEventType.changes_limitReach]: "SliceMachine Changes Limit Reach",
 	[SegmentEventType.editor_widgetUsed]: "SliceMachine Editor Widget Used",
 	[SegmentEventType.open_page_snippet]:
@@ -295,6 +297,16 @@ type ChangesPushedSegmentEvent = SegmentEvent<
 	}
 >;
 
+type ChangesGroupPushedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.changes_groupPushed,
+	{
+		isInStaticZone: boolean;
+		isInSlice: boolean;
+	} & {
+		[key in FieldType]?: number;
+	}
+>;
+
 type ChangesLimitReachSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.changes_limitReach,
 	{ limitType: PushChangesLimitType }
@@ -411,6 +423,7 @@ export type SegmentEvents =
 	| LegacySliceConvertedSegmentEvent
 	| ScreenshotTakenSegmentEvent
 	| ChangesPushedSegmentEvent
+	| ChangesGroupPushedSegmentEvent
 	| ChangesLimitReachSegmentEvent
 	| EditorWidgetUsedSegmentEvent
 	| OpenPageSnippetSegmentEvent
