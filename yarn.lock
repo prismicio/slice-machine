@@ -5981,12 +5981,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.58-alpha.repeatable-link-base.1":
-  version: 0.4.58-alpha.repeatable-link-base.1
-  resolution: "@prismicio/editor-fields@npm:0.4.58-alpha.repeatable-link-base.1"
+"@prismicio/editor-fields@npm:0.4.58":
+  version: 0.4.58
+  resolution: "@prismicio/editor-fields@npm:0.4.58"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.58-alpha.repeatable-link-base.1
+    "@prismicio/editor-support": 0.4.58
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.2.0
     "@tanstack/react-query": 5.55.4
@@ -6018,16 +6018,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.58-alpha.repeatable-link-base.1
+    "@prismicio/editor-ui": ^0.4.58
     react: 18
     react-dom: 18
-  checksum: bda3bb71e753754044e235e39f495c56b20b88a0e1a4e0e2dc55b27507aa88e232eb7f93a48518c31e93c4fa043f1f7628b6006a9cc6e46f3a3ae3209d6e120c
+  checksum: 080ca8d57e39ddbdefc8a018f82d15179d3ffdfc448baceddc142391afc9bb03e40b22a8550070d9df10ec0d2d63d8b73368cec5093ed51ac3c833fcdc9e8c15
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.58-alpha.repeatable-link-base.1":
-  version: 0.4.58-alpha.repeatable-link-base.1
-  resolution: "@prismicio/editor-support@npm:0.4.58-alpha.repeatable-link-base.1"
+"@prismicio/editor-support@npm:0.4.58":
+  version: 0.4.58
+  resolution: "@prismicio/editor-support@npm:0.4.58"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6038,16 +6038,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: a8929a94666ffb139f246449ca21feb6cd3f0a2735444623ef411ec1f84df6e871d53a508813c30bb1922634fae3a17ef9253fd32d4afcfc997eeb954d823050
+  checksum: dec9776d73df38956bf438ff3523d9230e76c99580a815173bb7bdd098d90623b1049433f55354bcfca50ed494ea0bd5bc1ff7e962da9ef2f256d5fb87b284f9
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.58-alpha.repeatable-link-base.1":
-  version: 0.4.58-alpha.repeatable-link-base.1
-  resolution: "@prismicio/editor-ui@npm:0.4.58-alpha.repeatable-link-base.1"
+"@prismicio/editor-ui@npm:0.4.58":
+  version: 0.4.58
+  resolution: "@prismicio/editor-ui@npm:0.4.58"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.58-alpha.repeatable-link-base.1
+    "@prismicio/editor-support": 0.4.58
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6098,7 +6098,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: d03d611d545839ec4614b378fcb45051868a958b2ae3d308051c078ae44a2d84bc610daa638beb193650ef5194968287d63f37f2ab3b3d597e21d9b1ca4191c3
+  checksum: 21fe78831f27e51f01bee23a0db1acc5063d0dad1253a68d09b9b7cfd3c6f156cc084da5dcea11eeb9060e3bd7f0e300237ae7c88b6dc5f3b635927720ebe876
   languageName: node
   linkType: hard
 
@@ -31221,9 +31221,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.11.0
-    "@prismicio/editor-fields": 0.4.58-alpha.repeatable-link-base.1
-    "@prismicio/editor-support": 0.4.58-alpha.repeatable-link-base.1
-    "@prismicio/editor-ui": 0.4.58-alpha.repeatable-link-base.1
+    "@prismicio/editor-fields": 0.4.58
+    "@prismicio/editor-support": 0.4.58
+    "@prismicio/editor-ui": 0.4.58
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.5.0
     "@prismicio/simulator": 0.1.4
