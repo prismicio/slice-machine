@@ -15,6 +15,7 @@ describe("mockSlice", () => {
 		const link = {
 			"link-2": {
 				__TYPE__: "LinkContent",
+				key: "d567da16-c45e-4a64-b991-ead08bd3b3c7",
 				value: { url: "http://twitter.com", __TYPE__: "ExternalLink" },
 			},
 		};

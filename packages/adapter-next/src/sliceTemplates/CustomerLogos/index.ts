@@ -12,6 +12,7 @@ export const mocks: SharedSliceContent[] = [
 		primary: {
 			callToActionLink: {
 				__TYPE__: "LinkContent",
+				key: "c7a5c0b6-9f0c-4e9f-8e3d-5e4e3f8d3b8b",
 				value: {
 					__TYPE__: "ExternalLink",
 					url: "https://prismic.io",
@@ -68,6 +69,7 @@ export const mocks: SharedSliceContent[] = [
 								"link",
 								{
 									__TYPE__: "LinkContent",
+									key: "d1a5c0b6-9f0c-4e9f-8e3d-5e4e3f8d3b8b",
 									value: {
 										__TYPE__: "ExternalLink",
 										url: "http://twitter.com",
@@ -109,6 +111,7 @@ export const mocks: SharedSliceContent[] = [
 								"link",
 								{
 									__TYPE__: "LinkContent",
+									key: "e2a5c0b6-9f0c-4e9f-8e3d-5e4e3f8d3b8b",
 									value: {
 										__TYPE__: "ExternalLink",
 										url: "https://prismic.io",
@@ -151,6 +154,7 @@ export const mocks: SharedSliceContent[] = [
 								"link",
 								{
 									__TYPE__: "LinkContent",
+									key: "f3a5c0b6-9f0c-4e9f-8e3d-5e4e3f8d3b8b",
 									value: {
 										__TYPE__: "ExternalLink",
 										url: "https://prismic.io",
@@ -193,6 +197,7 @@ export const mocks: SharedSliceContent[] = [
 								"link",
 								{
 									__TYPE__: "LinkContent",
+									key: "20354d7a-e4fe-47af-8ff6-187bca92f3f9",
 									value: {
 										__TYPE__: "ExternalLink",
 										url: "https://prismic.io",
@@ -235,6 +240,7 @@ export const mocks: SharedSliceContent[] = [
 								"link",
 								{
 									__TYPE__: "LinkContent",
+									key: "caa8b54a-eb5e-4134-8ae2-a3946a428ec7",
 									value: {
 										__TYPE__: "ExternalLink",
 										url: "https://prismic.io",

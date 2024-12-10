@@ -1,20 +1,17 @@
-import { Box, Icon, Tooltip } from "@prismicio/editor-ui";
+import { Box, Icon, Text, Tooltip } from "@prismicio/editor-ui";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
 
-interface DisplayTextCheckboxProps {
-  allowText?: boolean;
+interface CommonCheckboxProps {
+  checked?: boolean;
   height?: 130 | 127;
-  setFieldValue: (
-    a: string,
-    b?: boolean,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => void | Promise<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setFieldValue: (name: string, checked?: boolean) => void | Promise<any>;
 }
 
-export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
-  const { allowText, height = 130, setFieldValue } = props;
+export function DisplayTextCheckbox(props: CommonCheckboxProps) {
+  const { checked, height = 130, setFieldValue } = props;
 
   return (
     <Col>
@@ -34,7 +31,7 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
           >
             <Flex>
               <Checkbox
-                checked={allowText}
+                checked={checked}
                 onChange={(event) => {
                   void setFieldValue("config.allowText", event.target.checked);
                 }}
@@ -52,5 +49,49 @@ export function DisplayTextCheckbox(props: DisplayTextCheckboxProps) {
         </Label>
       </Flex>
     </Col>
+  );
+}
+
+export function RepeatableCheckbox(props: CommonCheckboxProps) {
+  const { checked, setFieldValue } = props;
+
+  return (
+    <Box flexDirection="column">
+      <Label
+        htmlFor="repeat"
+        variant="label.primary"
+        sx={{
+          mt: 2,
+        }}
+      >
+        Repeatable
+      </Label>
+      <Label variant="label.border" sx={{ display: "flex" }}>
+        <Checkbox
+          name="repeat"
+          checked={checked}
+          onChange={(event) => {
+            void setFieldValue("config.repeat", event.target.checked);
+          }}
+        />
+        Make this link repeatable - Allow editors to create lists of links
+      </Label>
+      <Box alignItems="center" gap={4}>
+        <Icon name="alert" size="medium" color="grey11" />
+        <Text variant="normal" color="grey11">
+          Repeatable link fields are returned as an array of links by the API.{" "}
+          <a
+            href="https://prismic.io/docs/field"
+            style={{ textDecoration: "none" }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text variant="normal" color="indigo11">
+              See documentation.
+            </Text>
+          </a>
+        </Text>
+      </Box>
+    </Box>
   );
 }

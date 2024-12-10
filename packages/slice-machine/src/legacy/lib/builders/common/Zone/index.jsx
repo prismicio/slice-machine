@@ -9,7 +9,7 @@ import { fields as allFields } from "@/domain/fields";
 import { AddFieldDropdown } from "@/features/builder/AddFieldDropdown";
 import { AddStaticFieldDropdown } from "@/features/builder/AddStaticFieldDropdown";
 import { Widgets } from "@/legacy/lib/models/common/widgets";
-import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
+import { getContentTypeForTracking } from "@/utils/tracking/getContentTypeForTracking";
 
 import Card from "./Card";
 import { ZoneEmptyState } from "./components/ZoneEmptyState";

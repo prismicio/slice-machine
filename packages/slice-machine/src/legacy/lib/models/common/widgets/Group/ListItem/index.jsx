@@ -20,7 +20,8 @@ import { findWidgetByConfigOrType } from "@/legacy/lib/builders/utils";
 import { Groups } from "@/legacy/lib/models/common/Group";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
-import { getContentTypeForTracking } from "@/utils/getContentTypeForTracking";
+import { getContentTypeForTracking } from "@/utils/tracking/getContentTypeForTracking";
+import { trackFieldAdded } from "@/utils/tracking/trackFieldAdded";
 
 /* eslint-disable */
 export const CustomListItem = ({
@@ -69,17 +70,7 @@ export const CustomListItem = ({
       isNewGroupField: true,
     });
 
-    void telemetry.track({
-      event: "field:added",
-      id,
-      name: label,
-      type: newField.type,
-      isInAGroup: true,
-      contentType: getContentTypeForTracking(window.location.pathname),
-      ...(newField.type === "Link" && {
-        allowText: newField.config?.allowText,
-      }),
-    });
+    trackFieldAdded({ id, field: newField, isInAGroup: true });
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {

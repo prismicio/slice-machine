@@ -59,19 +59,44 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 		}
 
 		case "Link": {
+			const repeat = data.model.config?.repeat ?? false;
+			const allowText = data.model.config?.allowText ?? false;
+
+			let code;
+			if (!repeat && !allowText) {
+				code = await format(
+					stripIndent`
+					<PrismicNextLink field={${dotPath(fieldPath)}}>Link</PrismicNextLink>
+				`,
+					helpers,
+				);
+			} else if (!repeat && allowText) {
+				code = await format(
+					stripIndent`
+					<PrismicNextLink field={${dotPath(fieldPath)}} />
+				`,
+					helpers,
+				);
+			} else if (repeat && !allowText) {
+				code = stripIndent`
+					{${dotPath(fieldPath)}.map((link) => (
+						<PrismicNextLink key={link.key} field={link}>Link</PrismicNextLink>
+				))}
+				`;
+			} else if (repeat && allowText) {
+				code = stripIndent`
+					{${dotPath(fieldPath)}.map((link) => (
+					  <PrismicNextLink key={link.key} field={link} />
+					))}
+				`;
+			} else {
+				throw new Error("Invalid configuration.");
+			}
+
 			return {
 				label,
 				language: "tsx",
-				code: await format(
-					data.model.config?.allowText
-						? stripIndent`
-							<PrismicNextLink field={${dotPath(fieldPath)}} />
-						`
-						: stripIndent`
-							<PrismicNextLink field={${dotPath(fieldPath)}}>Link</PrismicNextLink>
-						`,
-					helpers,
-				),
+				code,
 			};
 		}
 
