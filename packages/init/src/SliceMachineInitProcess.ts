@@ -911,6 +911,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 			await this.trackError(error);
 		}
 	}
+
 	protected createNewRepository(): Promise<void> {
 		assertExists(
 			this.context.repository,
