@@ -1,4 +1,4 @@
-import { Box, Icon, Text, Tooltip } from "@prismicio/editor-ui";
+import { Box, Icon, Switch, Text, Tooltip } from "@prismicio/editor-ui";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
@@ -57,13 +57,7 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
 
   return (
     <Box flexDirection="column">
-      <Label
-        htmlFor="repeat"
-        variant="label.primary"
-        sx={{
-          mt: 2,
-        }}
-      >
+      <Label htmlFor="repeat" variant="label.primary">
         Repeatable
       </Label>
       <Label variant="label.border" sx={{ display: "flex" }}>
@@ -89,6 +83,44 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
             <Text variant="normal" color="indigo11">
               See documentation.
             </Text>
+          </a>
+        </Text>
+      </Box>
+    </Box>
+  );
+}
+
+export function Variant() {
+  return (
+    <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
+      <Box
+        border={{ bottom: true }}
+        padding={12}
+        flexDirection="column"
+        gap={8}
+      >
+        <Text variant="h4" color="grey12">
+          Variants
+        </Text>
+        <Text color="grey11">
+          Add variants like "Primary" and "Secondary" to allow editors to choose
+          the link's style by selecting one of them.
+        </Text>
+        <Box gap={8}>
+          <Switch />
+          <Text color="grey11">Disabled</Text>
+        </Box>
+      </Box>
+      <Box backgroundColor="white" flexDirection="column" padding={12}>
+        <Text variant="normal" color="grey11">
+          Need additional properties similar to "Variants"?{" "}
+          <a
+            href="https://prismic.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit", textDecoration: "underline" }}
+          >
+            Please, provide your feedback here.
           </a>
         </Text>
       </Box>
