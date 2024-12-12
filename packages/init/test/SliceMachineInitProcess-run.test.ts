@@ -17,6 +17,7 @@ import { loginUser } from "./__testutils__/loginUser";
 import { watchStd } from "./__testutils__/watchStd";
 import { spyManager, SpyManagerReturnType } from "./__testutils__/spyManager";
 import { prompt } from "prompts";
+import { mockAmplitudeAPI } from "./__testutils__/mockAmplitudeAPI";
 
 const existingRepo = "existing-repo";
 const prepareEnvironment = async (
@@ -162,6 +163,9 @@ const prepareEnvironment = async (
 			documents,
 		},
 	});
+
+	// Mock Amplitude
+	mockAmplitudeAPI(ctx);
 
 	// Mock execa
 	const spiedManager = spyManager(initProcess);

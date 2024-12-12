@@ -190,6 +190,7 @@ export class SliceMachineInitProcess {
 			await this.syncDataWithPrismic();
 			await this.initializeProject();
 			await this.initializePlugins();
+			await this.completeOnboardingSteps();
 		} catch (error) {
 			await this.trackError(error);
 
@@ -893,19 +894,24 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		};
 	}
 
-	protected async completeOnboardingSteps(...steps: string[]): Promise<void> {
+	protected async completeOnboardingSteps(): Promise<void> {
 		try {
 			const { value: onboardingExperimentVariant } =
 				(await this.manager.telemetry.getExperimentVariant(
 					"shared-onboarding",
 				)) ?? {};
 			if (onboardingExperimentVariant === "with-shared-onboarding") {
-				this.manager.prismicRepository.completeOnboardingStep(...steps);
+				this.manager.prismicRepository.completeOnboardingStep(
+					"chooseLocale",
+					"createProject",
+					"setupSliceMachine",
+				);
 			}
 		} catch (error) {
 			await this.trackError(error);
 		}
 	}
+
 	protected createNewRepository(): Promise<void> {
 		assertExists(
 			this.context.repository,
@@ -933,11 +939,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 							framework: this.context.framework.wroomTelemetryID,
 							starterId: this.context.starterId,
 						});
-
-						await this.completeOnboardingSteps(
-							"createProject",
-							"setupSliceMachine",
-						);
 					} catch (error) {
 						// When we have an error here, it's most probably because the user has a stale SESSION cookie
 
@@ -973,11 +974,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		const documentsRead = await this.readDocuments();
 
 		if (documentsRead !== undefined && documentsRead.documents.length > 0) {
-			// if there are documents to push, we assume it's a starter which
-			// has a master locale already set, and we only ensure the onboarding
-			// step is completed.
-			await this.completeOnboardingSteps("chooseLocale");
-
+			// if there are documents to push, we assume it's a starter which has a master locale already set
 			return;
 		}
 
@@ -989,8 +986,6 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 					task.title = `Main content language set to ${chalk.cyan(
 						"English - United States",
 					)} 🇺🇸. You can change it anytime in your project settings.`;
-
-					await this.completeOnboardingSteps("chooseLocale");
 				},
 			},
 		]);
