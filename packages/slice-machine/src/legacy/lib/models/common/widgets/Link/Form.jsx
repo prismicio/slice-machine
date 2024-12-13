@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 import { Box } from "@prismicio/editor-ui";
 import { Flex } from "theme-ui";
 
@@ -7,7 +11,11 @@ import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
 import { CheckBox } from "@/legacy/lib/forms/fields";
 
-import { DisplayTextCheckbox, RepeatableCheckbox, Variant } from "./components";
+import {
+  DisplayTextCheckbox,
+  RepeatableCheckbox,
+  Variants,
+} from "./components";
 
 const FormFields = {
   ...DefaultFields,
@@ -19,7 +27,7 @@ const Form = (props) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    config: { allowText, repeat },
+    config: { allowText, repeat, variants },
   } = formValues;
 
   return (
@@ -73,7 +81,12 @@ const Form = (props) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           setFieldValue={setFieldValue}
         />
-        <Variant />
+        <Variants
+          variants={variants}
+          onVariantsChange={(variants) =>
+            setFieldValue("config.variants", variants)
+          }
+        />
       </Box>
     </>
   );
