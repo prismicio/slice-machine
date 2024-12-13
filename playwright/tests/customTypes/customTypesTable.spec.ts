@@ -70,15 +70,11 @@ test("I cannot create a custom type with a name update or insert", async ({
   await customTypesTablePage.openCreateDialog();
 
   await expect(customTypesTablePage.createTypeDialog.title).toBeVisible();
-  await customTypesTablePage.createTypeDialog.nameInput.fill(
-    "update",
-  );
+  await customTypesTablePage.createTypeDialog.nameInput.fill("update");
   await expect(
     customTypesTablePage.createTypeDialog.submitButton,
   ).toBeDisabled();
-  await customTypesTablePage.createTypeDialog.nameInput.fill(
-    "insert",
-  );
+  await customTypesTablePage.createTypeDialog.nameInput.fill("insert");
   await expect(
     customTypesTablePage.createTypeDialog.submitButton,
   ).toBeDisabled();

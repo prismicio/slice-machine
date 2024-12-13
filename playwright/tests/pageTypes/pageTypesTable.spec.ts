@@ -96,13 +96,9 @@ test("I cannot create a page type with a name update or insert", async ({
   await pageTypesTablePage.openCreateDialog();
 
   await expect(pageTypesTablePage.createTypeDialog.title).toBeVisible();
-  await pageTypesTablePage.createTypeDialog.nameInput.fill(
-    "update",
-  );
+  await pageTypesTablePage.createTypeDialog.nameInput.fill("update");
   await expect(pageTypesTablePage.createTypeDialog.submitButton).toBeDisabled();
-  await pageTypesTablePage.createTypeDialog.nameInput.fill(
-    "insert",
-  );
+  await pageTypesTablePage.createTypeDialog.nameInput.fill("insert");
   await expect(pageTypesTablePage.createTypeDialog.submitButton).toBeDisabled();
 });
 

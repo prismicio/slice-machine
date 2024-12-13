@@ -161,7 +161,6 @@ test("I cannot create a slice with a restricted name ", async ({
   await expect(submitButton).toBeDisabled();
   await nameInput.fill("insert");
   await expect(submitButton).toBeDisabled();
-
 });
 
 test("I cannot create two slices with the same name", async ({
