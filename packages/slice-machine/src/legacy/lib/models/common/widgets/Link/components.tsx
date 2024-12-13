@@ -102,7 +102,7 @@ export function Variant() {
         <Text variant="h4" color="grey12">
           Variants
         </Text>
-        <Text color="grey11">
+        <Text color="grey12">
           Add variants like "Primary" and "Secondary" to allow editors to choose
           the link's style by selecting one of them.
         </Text>
