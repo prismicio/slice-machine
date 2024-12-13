@@ -90,7 +90,21 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
   );
 }
 
-export function Variant() {
+export function Variants({
+  variants,
+  onVariantsChange,
+}: {
+  variants?: string[];
+  onVariantsChange: (variants?: string[]) => void;
+}) {
+  const enabled = Boolean(variants);
+
+  const onCheckedChange = (checked: boolean) => {
+    onVariantsChange(checked ? ["Primary", "Secondary"] : undefined);
+  };
+
+  const switchLabel = enabled ? "Enabled" : "Disabled";
+
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
       <Box
@@ -107,8 +121,8 @@ export function Variant() {
           the link's style by selecting one of them.
         </Text>
         <Box gap={8}>
-          <Switch />
-          <Text color="grey11">Disabled</Text>
+          <Switch checked={enabled} onCheckedChange={onCheckedChange} />
+          <Text color="grey11">{switchLabel}</Text>
         </Box>
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
