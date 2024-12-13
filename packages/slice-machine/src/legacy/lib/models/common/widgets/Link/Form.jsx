@@ -1,3 +1,4 @@
+import { Box } from "@prismicio/editor-ui";
 import { Flex } from "theme-ui";
 
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
@@ -6,7 +7,7 @@ import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
 import { CheckBox } from "@/legacy/lib/forms/fields";
 
-import { DisplayTextCheckbox, RepeatableCheckbox } from "./components";
+import { DisplayTextCheckbox, RepeatableCheckbox, Variant } from "./components";
 
 const FormFields = {
   ...DefaultFields,
@@ -64,12 +65,16 @@ const Form = (props) => {
           </Flex>
         </Col>
       </FlexGrid>
-      <RepeatableCheckbox
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        checked={repeat}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        setFieldValue={setFieldValue}
-      />
+      <Box height={8} />
+      <Box flexDirection="column" gap={16}>
+        <RepeatableCheckbox
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          checked={repeat}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          setFieldValue={setFieldValue}
+        />
+        <Variant />
+      </Box>
     </>
   );
 };
