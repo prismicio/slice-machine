@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 
 import { Box } from "@prismicio/editor-ui";
+import { useField } from "formik";
 import { Flex } from "theme-ui";
 
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
@@ -81,12 +82,7 @@ const Form = (props) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           setFieldValue={setFieldValue}
         />
-        <Variants
-          variants={variants}
-          onVariantsChange={(variants) =>
-            setFieldValue("config.variants", variants)
-          }
-        />
+        <VariantsWrapper variants={variants} setFieldValue={setFieldValue} />
       </Box>
     </>
   );
@@ -94,3 +90,21 @@ const Form = (props) => {
 
 export { FormFields };
 export default Form;
+
+function VariantsWrapper({ variants, setFieldValue }) {
+  const fieldKey = "config.variants";
+
+  const onVariantsChange = (variants) => setFieldValue(fieldKey, variants);
+
+  const [_, meta] = useField(fieldKey);
+
+  const error = meta.error?.find((err) => err);
+
+  return (
+    <Variants
+      variants={variants}
+      onVariantsChange={onVariantsChange}
+      error={error}
+    />
+  );
+}
