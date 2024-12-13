@@ -63,6 +63,27 @@ test("I cannot create a custom type with a name or id already used", async ({
   ).toBeDisabled();
 });
 
+test("I cannot create a custom type with a name update or insert", async ({
+  customTypesTablePage,
+}) => {
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  await expect(customTypesTablePage.createTypeDialog.title).toBeVisible();
+  await customTypesTablePage.createTypeDialog.nameInput.fill(
+    "update",
+  );
+  await expect(
+    customTypesTablePage.createTypeDialog.submitButton,
+  ).toBeDisabled();
+  await customTypesTablePage.createTypeDialog.nameInput.fill(
+    "insert",
+  );
+  await expect(
+    customTypesTablePage.createTypeDialog.submitButton,
+  ).toBeDisabled();
+});
+
 test("I can rename a custom type", async ({
   reusableCustomType,
   customTypesTablePage,

@@ -89,6 +89,23 @@ test("I cannot create a page type with a name or id already used", async ({
   await expect(pageTypesTablePage.createTypeDialog.submitButton).toBeDisabled();
 });
 
+test("I cannot create a page type with a name update or insert", async ({
+  pageTypesTablePage,
+}) => {
+  await pageTypesTablePage.goto();
+  await pageTypesTablePage.openCreateDialog();
+
+  await expect(pageTypesTablePage.createTypeDialog.title).toBeVisible();
+  await pageTypesTablePage.createTypeDialog.nameInput.fill(
+    "update",
+  );
+  await expect(pageTypesTablePage.createTypeDialog.submitButton).toBeDisabled();
+  await pageTypesTablePage.createTypeDialog.nameInput.fill(
+    "insert",
+  );
+  await expect(pageTypesTablePage.createTypeDialog.submitButton).toBeDisabled();
+});
+
 test("I can rename a page type", async ({
   pageTypesTablePage,
   reusablePageType,

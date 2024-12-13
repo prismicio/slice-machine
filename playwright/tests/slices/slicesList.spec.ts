@@ -147,6 +147,23 @@ test("I cannot rename a slice with a name starting with a number", async ({
   await expect(slicesListPage.renameSliceDialog.submitButton).toBeDisabled();
 });
 
+test("I cannot create a slice with a restricted name ", async ({
+  slicesListPage,
+}) => {
+  await slicesListPage.goto();
+  await slicesListPage.openCreateDialog();
+
+  const { nameInput, submitButton } = slicesListPage.createSliceDialog;
+
+  await nameInput.fill("components");
+  await expect(submitButton).toBeDisabled();
+  await nameInput.fill("update");
+  await expect(submitButton).toBeDisabled();
+  await nameInput.fill("insert");
+  await expect(submitButton).toBeDisabled();
+
+});
+
 test("I cannot create two slices with the same name", async ({
   sliceBuilderPage,
   slicesListPage,
