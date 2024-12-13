@@ -1,4 +1,11 @@
-import { Box, Icon, Switch, Text, Tooltip } from "@prismicio/editor-ui";
+import {
+  Box,
+  Icon,
+  Switch,
+  Text,
+  TextInput,
+  Tooltip,
+} from "@prismicio/editor-ui";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
@@ -93,9 +100,11 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
 export function Variants({
   variants,
   onVariantsChange,
+  error,
 }: {
   variants?: string[];
   onVariantsChange: (variants?: string[]) => void;
+  error?: string;
 }) {
   const enabled = Boolean(variants);
 
@@ -104,6 +113,8 @@ export function Variants({
   };
 
   const switchLabel = enabled ? "Enabled" : "Disabled";
+
+  const optionsTitle = `Options (${variants?.length ?? 0}/5)`;
 
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
@@ -125,6 +136,44 @@ export function Variants({
           <Text color="grey11">{switchLabel}</Text>
         </Box>
       </Box>
+      {enabled && (
+        <Box
+          border={{ bottom: true }}
+          padding={12}
+          flexDirection="column"
+          gap={8}
+        >
+          <Text variant="h5" color="grey11">
+            {optionsTitle}
+            {Boolean(error) && (
+              <Text variant="inherit" color="tomato9">{` ${error}`}</Text>
+            )}
+          </Text>
+          {variants?.map((variant, position) => (
+            <Box
+              key={position}
+              backgroundColor="white"
+              padding={{ inline: 12, block: 8 }}
+              flexDirection="column"
+              gap={8}
+              border
+              borderRadius={4}
+            >
+              <TextInput
+                placeholder="Variation option (e.g. Primary)"
+                value={variant}
+                onValueChange={(newVariant) =>
+                  onVariantsChange(
+                    variants?.map((variant, index) =>
+                      index === position ? newVariant : variant,
+                    ),
+                  )
+                }
+              />
+            </Box>
+          ))}
+        </Box>
+      )}
       <Box backgroundColor="white" flexDirection="column" padding={12}>
         <Text variant="normal" color="grey11">
           Need additional properties similar to "Variants"?{" "}

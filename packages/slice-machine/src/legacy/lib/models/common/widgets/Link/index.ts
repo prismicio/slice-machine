@@ -78,7 +78,9 @@ export const linkConfigSchema = yup
     allowTargetBlank: yup.boolean().strict().optional(),
     allowText: yup.boolean().strict().optional(),
     repeat: yup.boolean().strict().optional(),
-    variants: yup.array(yup.string()).optional(),
+    variants: yup
+      .array(yup.string().required("values can't be empty"))
+      .optional(),
   })
   .required()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
