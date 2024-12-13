@@ -94,7 +94,7 @@ export default Form;
 function VariantsWrapper({ variants, setFieldValue }) {
   const fieldKey = "config.variants";
 
-  const onVariantsChange = (variants) => setFieldValue(fieldKey, variants);
+  const onVariantsChange = (newVariants) => setFieldValue(fieldKey, newVariants);
 
   const [_, meta] = useField(fieldKey);
 
