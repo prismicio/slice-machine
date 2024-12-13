@@ -6042,9 +6042,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.58":
-  version: 0.4.58
-  resolution: "@prismicio/editor-ui@npm:0.4.58"
+"@prismicio/editor-ui@npm:0.4.59-alpha.fix-prevent-onclick-on-tablerow.1":
+  version: 0.4.59-alpha.fix-prevent-onclick-on-tablerow.1
+  resolution: "@prismicio/editor-ui@npm:0.4.59-alpha.fix-prevent-onclick-on-tablerow.1"
   dependencies:
     "@internationalized/date": 3.5.5
     "@prismicio/editor-support": 0.4.58
@@ -6098,7 +6098,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 21fe78831f27e51f01bee23a0db1acc5063d0dad1253a68d09b9b7cfd3c6f156cc084da5dcea11eeb9060e3bd7f0e300237ae7c88b6dc5f3b635927720ebe876
+  checksum: 250fc0149f96554b9ea59f7e08a81700d319e43be4ea7dbaf2f55622aa7733d0213aa1bee608c52dae18a3d72318120087f9d3e6e80dc83a24123d749746c2c9
   languageName: node
   linkType: hard
 
@@ -31223,7 +31223,7 @@ __metadata:
     "@prismicio/client": 7.11.0
     "@prismicio/editor-fields": 0.4.58
     "@prismicio/editor-support": 0.4.58
-    "@prismicio/editor-ui": 0.4.58
+    "@prismicio/editor-ui": 0.4.59-alpha.fix-prevent-onclick-on-tablerow.1
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.5.0
     "@prismicio/simulator": 0.1.4
