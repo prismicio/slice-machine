@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Icon,
+  IconButton,
   Switch,
   Text,
   TextInput,
@@ -119,6 +120,8 @@ export function Variants({
 
   const addButtonShown = (variants?.length ?? 0) < 5;
 
+  const deleteButtonShown = (variants?.length ?? 0) > 2;
+
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
       <Box
@@ -153,26 +156,37 @@ export function Variants({
             )}
           </Text>
           {variants?.map((variant, position) => (
-            <Box
-              key={position}
-              backgroundColor="white"
-              padding={{ inline: 12, block: 8 }}
-              flexDirection="column"
-              gap={8}
-              border
-              borderRadius={4}
-            >
-              <TextInput
-                placeholder="Variant option (e.g. Primary)"
-                value={variant}
-                onValueChange={(newVariant) =>
-                  onVariantsChange(
-                    variants?.map((variant, index) =>
-                      index === position ? newVariant : variant,
-                    ),
-                  )
-                }
-              />
+            <Box key={position} gap={4} alignItems="center">
+              <Box
+                flexGrow={1}
+                backgroundColor="white"
+                padding={{ inline: 12, block: 8 }}
+                flexDirection="column"
+                border
+                borderRadius={4}
+              >
+                <TextInput
+                  placeholder="Variant option (e.g. Primary)"
+                  value={variant}
+                  onValueChange={(newVariant) =>
+                    onVariantsChange(
+                      variants?.map((variant, index) =>
+                        index === position ? newVariant : variant,
+                      ),
+                    )
+                  }
+                />
+              </Box>
+              {deleteButtonShown && (
+                <IconButton
+                  icon="delete"
+                  onClick={() =>
+                    onVariantsChange(
+                      variants?.filter((_, index) => index !== position),
+                    )
+                  }
+                />
+              )}
             </Box>
           ))}
           {addButtonShown && (
