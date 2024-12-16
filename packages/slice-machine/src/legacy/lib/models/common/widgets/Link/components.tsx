@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Icon,
   Switch,
   Text,
@@ -116,6 +117,8 @@ export function Variants({
 
   const optionsTitle = `Options (${variants?.length ?? 0}/5)`;
 
+  const addButtonShown = (variants?.length ?? 0) < 5;
+
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
       <Box
@@ -160,7 +163,7 @@ export function Variants({
               borderRadius={4}
             >
               <TextInput
-                placeholder="Variation option (e.g. Primary)"
+                placeholder="Variant option (e.g. Primary)"
                 value={variant}
                 onValueChange={(newVariant) =>
                   onVariantsChange(
@@ -172,6 +175,17 @@ export function Variants({
               />
             </Box>
           ))}
+          {addButtonShown && (
+            <Box>
+              <Button
+                invisible
+                startIcon="add"
+                onClick={() => onVariantsChange([...(variants ?? []), ""])}
+              >
+                Add option
+              </Button>
+            </Box>
+          )}
         </Box>
       )}
       <Box backgroundColor="white" flexDirection="column" padding={12}>
