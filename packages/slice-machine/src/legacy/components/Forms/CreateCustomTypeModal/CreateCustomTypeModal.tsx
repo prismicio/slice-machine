@@ -173,6 +173,10 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           errors.id = "ID cannot be empty.";
         }
 
+        if (["update", "insert"].includes(id.toLowerCase())) {
+          errors.id = `Id "${id}" is reserved for Slice Machine use.`;
+        }
+
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (!errors.id && id && !API_ID_REGEX.exec(id)) {
           errors.id = "Invalid id: No special characters allowed.";
