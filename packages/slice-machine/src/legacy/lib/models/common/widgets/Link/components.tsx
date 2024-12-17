@@ -78,7 +78,7 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
             void setFieldValue("config.repeat", event.target.checked);
           }}
         />
-        Make this link repeatable - Allow editors to create lists of links
+        Make this link repeatable (allows editors to create lists of links)
       </Label>
       <Box alignItems="center" gap={4}>
         <Icon name="alert" size="medium" color="grey11" />
@@ -222,7 +222,7 @@ export function Variants({
             rel="noopener noreferrer"
             style={{ color: "inherit", textDecoration: "underline" }}
           >
-            Please, provide your feedback here.
+            Please provide your feedback here.
           </a>
         </Text>
       </Box>
