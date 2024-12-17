@@ -8,6 +8,7 @@ import {
   TextInput,
   Tooltip,
 } from "@prismicio/editor-ui";
+import { useRef } from "react";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
@@ -122,6 +123,8 @@ export function Variants({
 
   const deleteButtonShown = (variants?.length ?? 0) > 2;
 
+  const focusableInputIndex = useRef<number>();
+
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
       <Box
@@ -166,6 +169,11 @@ export function Variants({
                 borderRadius={4}
               >
                 <TextInput
+                  ref={(ref) => {
+                    if (focusableInputIndex.current !== position) return;
+                    focusableInputIndex.current = undefined;
+                    ref?.focus();
+                  }}
                   placeholder="Variant option (e.g. Primary)"
                   value={variant}
                   onValueChange={(newVariant) =>
@@ -194,7 +202,10 @@ export function Variants({
               <Button
                 invisible
                 startIcon="add"
-                onClick={() => onVariantsChange([...(variants ?? []), ""])}
+                onClick={() => {
+                  focusableInputIndex.current = variants?.length;
+                  onVariantsChange([...(variants ?? []), ""]);
+                }}
               >
                 Add option
               </Button>

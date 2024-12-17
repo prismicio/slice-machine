@@ -79,7 +79,7 @@ export const linkConfigSchema = yup
     allowText: yup.boolean().strict().optional(),
     repeat: yup.boolean().strict().optional(),
     variants: yup
-      .array(yup.string().trim().required("values can't be empty"))
+      .array(yup.string().trim().required("Values can't be empty"))
       .optional(),
   })
   .required()
