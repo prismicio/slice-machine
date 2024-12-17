@@ -165,8 +165,16 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
           })} name is already taken.`;
         }
 
+        if (["update", "insert"].includes(label.toLowerCase())) {
+          errors.label = `Name "${label}" is reserved for Slice Machine use.`;
+        }
+
         if (!id || !id.length) {
           errors.id = "ID cannot be empty.";
+        }
+
+        if (["update", "insert"].includes(id.toLowerCase())) {
+          errors.id = `Id "${id}" is reserved for Slice Machine use.`;
         }
 
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
