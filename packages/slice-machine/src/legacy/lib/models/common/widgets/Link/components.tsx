@@ -217,7 +217,7 @@ export function Variants({
         <Text variant="normal" color="grey11">
           Need additional properties similar to "Variants"?{" "}
           <a
-            href="https://prismic.io/"
+            href="https://community.prismic.io/t/link-field-use-cases-share-your-requests-and-feedback/18146"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: "inherit", textDecoration: "underline" }}
