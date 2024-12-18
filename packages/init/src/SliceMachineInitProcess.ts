@@ -898,7 +898,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 		try {
 			const { value: onboardingExperimentVariant } =
 				(await this.manager.telemetry.getExperimentVariant(
-					"shared-onboarding",
+					"shared-onboarding-new",
 				)) ?? {};
 			if (onboardingExperimentVariant === "with-shared-onboarding") {
 				this.manager.prismicRepository.completeOnboardingStep(
