@@ -78,7 +78,7 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
             void setFieldValue("config.repeat", event.target.checked);
           }}
         />
-        Make this link repeatable - Allow editors to create lists of links
+        Make this link repeatable (allows editors to create lists of links)
       </Label>
       <Box alignItems="center" gap={4}>
         <Icon name="alert" size="medium" color="grey11" />
@@ -217,12 +217,12 @@ export function Variants({
         <Text variant="normal" color="grey11">
           Need additional properties similar to "Variants"?{" "}
           <a
-            href="https://prismic.io/"
+            href="https://community.prismic.io/t/link-field-use-cases-share-your-requests-and-feedback/18146"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: "inherit", textDecoration: "underline" }}
           >
-            Please, provide your feedback here.
+            Please provide your feedback here.
           </a>
         </Text>
       </Box>
