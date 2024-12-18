@@ -60,25 +60,31 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			const repeat = data.model.config?.repeat ?? false;
 			const allowText = data.model.config?.allowText ?? false;
 
+			const allowVariants = Boolean(data.model.config?.variants);
+			const variant = (path: string) =>
+				allowVariants ? ` class={${path}.variant}` : "";
+
+			const path = dotPath(fieldPath);
+
 			let codeText;
 			if (!repeat && !allowText) {
 				codeText = stripIndent`
-					<PrismicLink field={${dotPath(fieldPath)}}>Link</PrismicLink>
+					<PrismicLink field={${path}}${variant(path)}>Link</PrismicLink>
 				`;
 			} else if (!repeat && allowText) {
 				codeText = stripIndent`
-					<PrismicLink field={${dotPath(fieldPath)}} />
+					<PrismicLink field={${path}}${variant(path)} />
 				`;
 			} else if (repeat && !allowText) {
 				codeText = stripIndent`
-					{#each ${dotPath(fieldPath)} as link (link.key)}
-						<PrismicLink field={link}>Link</PrismicLink>
+					{#each ${path} as link (link.key)}
+						<PrismicLink field={link}${variant("link")}>Link</PrismicLink>
 					{/each}
 				`;
 			} else if (repeat && allowText) {
 				codeText = stripIndent`
-					{#each ${dotPath(fieldPath)} as link (link.key)}
-						<PrismicLink field={link} />
+					{#each ${path} as link (link.key)}
+						<PrismicLink field={link}${variant("link")} />
 					{/each}
 				`;
 			} else {
