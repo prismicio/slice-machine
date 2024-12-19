@@ -28,6 +28,7 @@ export function trackFieldAdded(args: TrackFieldAddedArgs) {
     ...(field.type === "Link" && {
       allowText: field.config?.allowText,
       repeat: field.config?.repeat,
+      variants: field.config?.variants,
     }),
   });
 }

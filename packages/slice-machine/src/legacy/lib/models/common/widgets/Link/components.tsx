@@ -1,4 +1,14 @@
-import { Box, Icon, Text, Tooltip } from "@prismicio/editor-ui";
+import {
+  Box,
+  Button,
+  Icon,
+  IconButton,
+  Switch,
+  Text,
+  TextInput,
+  Tooltip,
+} from "@prismicio/editor-ui";
+import { useRef } from "react";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
@@ -57,13 +67,7 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
 
   return (
     <Box flexDirection="column">
-      <Label
-        htmlFor="repeat"
-        variant="label.primary"
-        sx={{
-          mt: 2,
-        }}
-      >
+      <Label htmlFor="repeat" variant="label.primary">
         Repeatable
       </Label>
       <Label variant="label.border" sx={{ display: "flex" }}>
@@ -74,7 +78,7 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
             void setFieldValue("config.repeat", event.target.checked);
           }}
         />
-        Make this link repeatable - Allow editors to create lists of links
+        Make this link repeatable (allows editors to create lists of links)
       </Label>
       <Box alignItems="center" gap={4}>
         <Icon name="alert" size="medium" color="grey11" />
@@ -89,6 +93,136 @@ export function RepeatableCheckbox(props: CommonCheckboxProps) {
             <Text variant="normal" color="indigo11">
               See documentation.
             </Text>
+          </a>
+        </Text>
+      </Box>
+    </Box>
+  );
+}
+
+export function Variants({
+  variants,
+  onVariantsChange,
+  error,
+}: {
+  variants?: string[];
+  onVariantsChange: (variants?: string[]) => void;
+  error?: string;
+}) {
+  const enabled = Boolean(variants);
+
+  const onCheckedChange = (checked: boolean) => {
+    onVariantsChange(checked ? ["Primary", "Secondary"] : undefined);
+  };
+
+  const switchLabel = enabled ? "Enabled" : "Disabled";
+
+  const optionsTitle = `Options (${variants?.length ?? 0}/5)`;
+
+  const addButtonShown = (variants?.length ?? 0) < 5;
+
+  const deleteButtonShown = (variants?.length ?? 0) > 2;
+
+  const focusableInputIndex = useRef<number>();
+
+  return (
+    <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
+      <Box
+        border={{ bottom: true }}
+        padding={12}
+        flexDirection="column"
+        gap={8}
+      >
+        <Text variant="h4" color="grey12">
+          Variants
+        </Text>
+        <Text color="grey12">
+          Add variants like "Primary" and "Secondary" to allow editors to choose
+          the link's style by selecting one of them.
+        </Text>
+        <Box gap={8}>
+          <Switch checked={enabled} onCheckedChange={onCheckedChange} />
+          <Text color="grey11">{switchLabel}</Text>
+        </Box>
+      </Box>
+      {enabled && (
+        <Box
+          border={{ bottom: true }}
+          padding={12}
+          flexDirection="column"
+          gap={8}
+        >
+          <Text variant="h5" color="grey11">
+            {optionsTitle}
+            {Boolean(error) && (
+              <Text variant="inherit" color="tomato9">{` ${error}`}</Text>
+            )}
+          </Text>
+          {variants?.map((variant, position) => (
+            <Box key={position} gap={4} alignItems="center">
+              <Box
+                flexGrow={1}
+                backgroundColor="white"
+                padding={{ inline: 12, block: 8 }}
+                flexDirection="column"
+                border
+                borderRadius={4}
+              >
+                <TextInput
+                  ref={(ref) => {
+                    if (focusableInputIndex.current !== position) return;
+                    focusableInputIndex.current = undefined;
+                    ref?.focus();
+                  }}
+                  placeholder="Variant option (e.g. Primary)"
+                  value={variant}
+                  onValueChange={(newVariant) =>
+                    onVariantsChange(
+                      variants?.map((variant, index) =>
+                        index === position ? newVariant : variant,
+                      ),
+                    )
+                  }
+                />
+              </Box>
+              {deleteButtonShown && (
+                <IconButton
+                  icon="delete"
+                  onClick={() =>
+                    onVariantsChange(
+                      variants?.filter((_, index) => index !== position),
+                    )
+                  }
+                />
+              )}
+            </Box>
+          ))}
+          {addButtonShown && (
+            <Box>
+              <Button
+                invisible
+                startIcon="add"
+                onClick={() => {
+                  focusableInputIndex.current = variants?.length;
+                  onVariantsChange([...(variants ?? []), ""]);
+                }}
+              >
+                Add option
+              </Button>
+            </Box>
+          )}
+        </Box>
+      )}
+      <Box backgroundColor="white" flexDirection="column" padding={12}>
+        <Text variant="normal" color="grey11">
+          Need additional properties similar to "Variants"?{" "}
+          <a
+            href="https://community.prismic.io/t/link-field-use-cases-share-your-requests-and-feedback/18146"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit", textDecoration: "underline" }}
+          >
+            Please provide your feedback here.
           </a>
         </Text>
       </Box>
