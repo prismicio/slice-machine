@@ -585,12 +585,12 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/types@npm:^3.222.0":
-  version: 3.714.0
-  resolution: "@aws-sdk/types@npm:3.714.0"
+  version: 3.713.0
+  resolution: "@aws-sdk/types@npm:3.713.0"
   dependencies:
     "@smithy/types": ^3.7.2
     tslib: ^2.6.2
-  checksum: 2cc6ea0ec3331a24b5cc6dfba0963ff5a673c7149eadbaf9f9ab8bfdfaa56a7a02a7df80f6921108aca3ef022047f931fd8f36b34bfe6c963e8606f72e068143
+  checksum: 4e2d211838da5f64bb04693b0a0ab198e28fa1e1d1e394d96b91c87e07af525211bd88f2b91e9619158b595c23d688f2dc2de44fe2d01e8c21ef9a1d7ba0cece
   languageName: node
   linkType: hard
 

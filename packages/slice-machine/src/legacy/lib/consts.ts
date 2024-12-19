@@ -1,5 +1,5 @@
 // A list of slice names that are reserved for internal uses.
-export const RESERVED_SLICE_NAME = ["components"];
+export const RESERVED_SLICE_NAME = ["components", "update", "insert"];
 
 export const acceptedImagesTypes = ["png", "jpg", "jpeg"];
 
