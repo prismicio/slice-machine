@@ -9,8 +9,9 @@ export function OnboardingGuide() {
   const isVisible = useIsOnboardingGuideVisible();
   const isSharedExperimentEligible = useSharedOnboardingExperiment().eligible;
 
-  if (!isVisible) return null;
-  return isSharedExperimentEligible ? <SharedOnboardingGuide /> : null;
+  return isVisible && isSharedExperimentEligible ? (
+    <SharedOnboardingGuide />
+  ) : null;
 }
 
 function useIsOnboardingGuideVisible() {
