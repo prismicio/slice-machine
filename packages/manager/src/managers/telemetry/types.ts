@@ -45,6 +45,7 @@ export const SegmentEventType = {
 	sharedOnboarding_step_opened: "shared-onboarding:step-opened",
 	sharedOnboarding_step_completed: "shared-onboarding:step-completed",
 	sharedOnboarding_completed: "shared-onboarding:completed",
+	sharedOnboarding_tutorial: "shared-onboarding:follow-tutorial",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -107,6 +108,8 @@ export const HumanSegmentEventType = {
 		"Prismic Onboarding Guide Step Open",
 	[SegmentEventType.sharedOnboarding_completed]:
 		"Prismic Onboarding Guide Completed",
+	[SegmentEventType.sharedOnboarding_tutorial]:
+		"Prismic Onboarding Guide Follow Tutorial",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -387,7 +390,10 @@ type SliceMachineSharedOnboardingCompleted = SegmentEvent<
 	typeof SegmentEventType.sharedOnboarding_completed,
 	SharedOnboardingProperties
 >;
-
+type SliceMachineSharedOnboardingTutorial = SegmentEvent<
+	typeof SegmentEventType.sharedOnboarding_tutorial,
+	SharedOnboardingProperties
+>;
 type SliceMachinePostPushEmptyStateCtaClicked = SegmentEvent<
 	typeof SegmentEventType.postPush_emptyStateCtaClicked
 >;
@@ -441,6 +447,7 @@ export type SegmentEvents =
 	| SliceMachineSharedOnboardingStepOpened
 	| SliceMachineSharedOnboardingStepCompleted
 	| SliceMachineSharedOnboardingCompleted
+	| SliceMachineSharedOnboardingTutorial
 	| SliceMachinePostPushEmptyStateCtaClicked
 	| SliceMachinePostPushToastCtaClicked
 	| SliceMachineExperimentExposure;
