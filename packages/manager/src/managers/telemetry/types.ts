@@ -39,9 +39,6 @@ export const SegmentEventType = {
 	postPush_emptyStateCtaClicked: "post-push:empty-state-cta-clicked",
 	postPush_toastCtaClicked: "post-push:toast-cta-clicked",
 	experiment_exposure: "experiment:exposure",
-	onboarding_step_opened: "onboarding:step-opened",
-	onboarding_step_completed: "onboarding:step-completed",
-	onboarding_completed: "onboarding:completed",
 	sharedOnboarding_step_opened: "shared-onboarding:step-opened",
 	sharedOnboarding_step_completed: "shared-onboarding:step-completed",
 	sharedOnboarding_completed: "shared-onboarding:completed",
@@ -97,11 +94,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.postPush_toastCtaClicked]:
 		"SliceMachine Post Push Toast CTA Clicked",
 	[SegmentEventType.experiment_exposure]: "$exposure",
-	[SegmentEventType.onboarding_step_opened]:
-		"SliceMachine Onboarding Step Opened",
-	[SegmentEventType.onboarding_step_completed]:
-		"SliceMachine Onboarding Step Completed",
-	[SegmentEventType.onboarding_completed]: "SliceMachine Onboarding Completed",
 	[SegmentEventType.sharedOnboarding_step_completed]:
 		"Prismic Onboarding Guide Step Completed",
 	[SegmentEventType.sharedOnboarding_step_opened]:
@@ -366,18 +358,6 @@ type SharedOnboardingProperties<T = Record<string, string>> = T & {
 	source: "SliceMachine";
 };
 
-type SliceMachineOnboardingStepOpened = SegmentEvent<
-	typeof SegmentEventType.onboarding_step_opened,
-	OnboardingCommonPayload
->;
-type SliceMachineOnboardingStepCompleted = SegmentEvent<
-	typeof SegmentEventType.onboarding_step_completed,
-	OnboardingCommonPayload
->;
-type SliceMachineOnboardingCompleted = SegmentEvent<
-	typeof SegmentEventType.onboarding_completed
->;
-
 type SliceMachineSharedOnboardingStepOpened = SegmentEvent<
 	typeof SegmentEventType.sharedOnboarding_step_opened,
 	SharedOnboardingProperties<OnboardingCommonPayload>
@@ -441,9 +421,6 @@ export type SegmentEvents =
 	| SliceMachineStart
 	| SliceLibraryBetaModalOpened
 	| SliceLibraryBetaCodeOpened
-	| SliceMachineOnboardingStepOpened
-	| SliceMachineOnboardingStepCompleted
-	| SliceMachineOnboardingCompleted
 	| SliceMachineSharedOnboardingStepOpened
 	| SliceMachineSharedOnboardingStepCompleted
 	| SliceMachineSharedOnboardingCompleted

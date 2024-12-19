@@ -34,8 +34,6 @@ import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { getState } from "@/apiClient";
 import { ErrorBoundary } from "@/ErrorBoundary";
-import { InAppGuideProvider } from "@/features/inAppGuide/InAppGuideContext";
-import { InAppGuideDialog } from "@/features/inAppGuide/InAppGuideDialog";
 import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
 import { RouteChangeProvider } from "@/hooks/useRouteChange";
 import SliceMachineApp from "@/legacy/components/App";
@@ -146,18 +144,11 @@ function App({
                       >
                         <Suspense fallback={<LoadingPage />}>
                           <AutoSyncProvider>
-                            <InAppGuideProvider>
-                              <RouteChangeProvider>
-                                <ComponentLayout>
-                                  <Component {...pageProps} />
-                                </ComponentLayout>
-                              </RouteChangeProvider>
-                              <ErrorBoundary>
-                                <Suspense>
-                                  <InAppGuideDialog />
-                                </Suspense>
-                              </ErrorBoundary>
-                            </InAppGuideProvider>
+                            <RouteChangeProvider>
+                              <ComponentLayout>
+                                <Component {...pageProps} />
+                              </ComponentLayout>
+                            </RouteChangeProvider>
                           </AutoSyncProvider>
                         </Suspense>
                       </ErrorBoundary>

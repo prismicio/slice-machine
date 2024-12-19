@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
 
-import { useInAppGuide } from "@/features/inAppGuide/InAppGuideContext";
 import { hasLocal } from "@/legacy/lib/models/common/ModelData";
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 import { getLibraries } from "@/modules/slices";
@@ -11,7 +10,6 @@ import { SliceMachineStoreType } from "@/redux/type";
 import { ReviewForm } from "./ReviewForm";
 
 export const ReviewModal: FC = () => {
-  const { isInAppGuideOpen } = useInAppGuide();
   const { userReview, customTypes, libraries, lastSyncChange } = useSelector(
     (store: SliceMachineStoreType) => ({
       userReview: getUserReview(store),
@@ -20,11 +18,6 @@ export const ReviewModal: FC = () => {
       lastSyncChange: getLastSyncChange(store),
     }),
   );
-
-  // Opt out directly if the in-app guide is open
-  if (isInAppGuideOpen) {
-    return null;
-  }
 
   const sliceCount =
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
