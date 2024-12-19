@@ -87,7 +87,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				// We cannot use `format` since this snippet contains invalid syntax.
 				// Please ensure this snippet is manually formatted correctly.
 				// Make sure to use spaces instead of tabs.
-				code = `{${path}.map((link) => (
+				code = stripIndent`{${path}.map((link) => (
   <PrismicNextLink
     key={link.key}
     field={link}${variant("link", "\n    ")}>
@@ -98,8 +98,8 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				// We cannot use `format` since this snippet contains invalid syntax.
 				// Please ensure this snippet is manually formatted correctly.
 				// Make sure to use spaces instead of tabs.
-				code = `{${path}.map((link) => (
-  <PrismicNextLink 
+				code = stripIndent`{${path}.map((link) => (
+  <PrismicNextLink
     key={link.key}
     field={link}${variant("link", "\n    ")}
   />
