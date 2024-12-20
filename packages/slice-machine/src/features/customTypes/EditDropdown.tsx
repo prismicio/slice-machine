@@ -69,7 +69,7 @@ export const EditDropdown: FC<EditDropdownProps> = ({
 
   return (
     <>
-      <DropdownMenu modal>
+      <DropdownMenu>
         <DropdownMenuTrigger disabled={isCustomTypeBeingConverted}>
           <IconButton
             color="grey"

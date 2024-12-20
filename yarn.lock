@@ -585,12 +585,12 @@ __metadata:
   linkType: hard
 
 "@aws-sdk/types@npm:^3.222.0":
-  version: 3.714.0
-  resolution: "@aws-sdk/types@npm:3.714.0"
+  version: 3.713.0
+  resolution: "@aws-sdk/types@npm:3.713.0"
   dependencies:
     "@smithy/types": ^3.7.2
     tslib: ^2.6.2
-  checksum: 2cc6ea0ec3331a24b5cc6dfba0963ff5a673c7149eadbaf9f9ab8bfdfaa56a7a02a7df80f6921108aca3ef022047f931fd8f36b34bfe6c963e8606f72e068143
+  checksum: 4e2d211838da5f64bb04693b0a0ab198e28fa1e1d1e394d96b91c87e07af525211bd88f2b91e9619158b595c23d688f2dc2de44fe2d01e8c21ef9a1d7ba0cece
   languageName: node
   linkType: hard
 
@@ -10054,19 +10054,19 @@ __metadata:
   linkType: hard
 
 "@smithy/middleware-retry@npm:^3.0.30":
-  version: 3.0.31
-  resolution: "@smithy/middleware-retry@npm:3.0.31"
+  version: 3.0.30
+  resolution: "@smithy/middleware-retry@npm:3.0.30"
   dependencies:
     "@smithy/node-config-provider": ^3.1.12
     "@smithy/protocol-http": ^4.1.8
     "@smithy/service-error-classification": ^3.0.11
-    "@smithy/smithy-client": ^3.5.1
+    "@smithy/smithy-client": ^3.5.0
     "@smithy/types": ^3.7.2
     "@smithy/util-middleware": ^3.0.11
     "@smithy/util-retry": ^3.0.11
     tslib: ^2.6.2
     uuid: ^9.0.1
-  checksum: 55b017f7eb29a2a6057385965d095f038af412ef65a2710a4165f7521da3283ba1cd15ff1b6d1ab2c4fff2f4999c5d50ed7f4e198f75220ee5fce5cfa4389454
+  checksum: baab05a68f848ea0e87b21a6ef9d05fc726fa782a480253fdc6a61f8325d2c2476068f8a92a3f9439f4dff5cb32d134818db1231013705e64551ce75549216bb
   languageName: node
   linkType: hard
 
@@ -10191,7 +10191,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@smithy/smithy-client@npm:^3.5.0, @smithy/smithy-client@npm:^3.5.1":
+"@smithy/smithy-client@npm:^3.5.0":
   version: 3.5.1
   resolution: "@smithy/smithy-client@npm:3.5.1"
   dependencies:
@@ -10285,30 +10285,30 @@ __metadata:
   linkType: hard
 
 "@smithy/util-defaults-mode-browser@npm:^3.0.30":
-  version: 3.0.31
-  resolution: "@smithy/util-defaults-mode-browser@npm:3.0.31"
+  version: 3.0.30
+  resolution: "@smithy/util-defaults-mode-browser@npm:3.0.30"
   dependencies:
     "@smithy/property-provider": ^3.1.11
-    "@smithy/smithy-client": ^3.5.1
+    "@smithy/smithy-client": ^3.5.0
     "@smithy/types": ^3.7.2
     bowser: ^2.11.0
     tslib: ^2.6.2
-  checksum: d28e872eaad067ef0094d8ef45df27c9a498853af4e15a578727b172c0b2cbd55a0fe0792d89ce8c1155c131855c1cfb806679ba7839ac218e817768d9426b7e
+  checksum: 6c4e09b906d7196119c85a072c1df633f05ae1c18e6604fccf6c3761923020fad3e38cead9ea969db65478a66d502a15e0a43c764bb693c27aacae2459eb2365
   languageName: node
   linkType: hard
 
 "@smithy/util-defaults-mode-node@npm:^3.0.30":
-  version: 3.0.31
-  resolution: "@smithy/util-defaults-mode-node@npm:3.0.31"
+  version: 3.0.30
+  resolution: "@smithy/util-defaults-mode-node@npm:3.0.30"
   dependencies:
     "@smithy/config-resolver": ^3.0.13
     "@smithy/credential-provider-imds": ^3.2.8
     "@smithy/node-config-provider": ^3.1.12
     "@smithy/property-provider": ^3.1.11
-    "@smithy/smithy-client": ^3.5.1
+    "@smithy/smithy-client": ^3.5.0
     "@smithy/types": ^3.7.2
     tslib: ^2.6.2
-  checksum: a0ddbae6058663e1d8a189925c69ec565aadfb023500f534083abea694cad87a0c6483fc99f77ef40172b182934852a674c10bd8b48e6030a84c5f4d04377d92
+  checksum: 6b295fe984eec80c7ae073b19243c1f7f21785241ee68ff496765230b5d03bdba175b5e9da6cc0df0623d60410ca560bca92bb7005a2e1cf4dc927cffd3cd6b7
   languageName: node
   linkType: hard
 

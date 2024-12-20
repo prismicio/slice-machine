@@ -30,7 +30,7 @@ npx create-next-app@latest my-app
 npx nuxi@latest init my-app
 ```
 ```
-npm create svelte@latest my-app
+npx sv create my-app
 ```
 
 Open the folder:
