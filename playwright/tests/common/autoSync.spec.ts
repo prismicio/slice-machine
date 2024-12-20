@@ -3,7 +3,10 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { environments } from "../../mocks";
 
-test("I can see the auto-sync succeed when making a change", async ({
+// TODO: Fix if we release auto-sync (without feature flag)
+// Test skipped as the feature is not currently maintained, and the test is randomly failing
+// https://linear.app/prismic/issue/DT-2526/aadev-i-dont-want-to-have-flaky-test
+test.skip("I can see the auto-sync succeed when making a change", async ({
   pageTypesBuilderPage,
   reusablePageType,
   procedures,
