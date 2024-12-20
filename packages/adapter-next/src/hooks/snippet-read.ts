@@ -62,33 +62,48 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			const repeat = data.model.config?.repeat ?? false;
 			const allowText = data.model.config?.allowText ?? false;
 
+			const allowVariants = Boolean(data.model.config?.variants);
+			const variant = (path: string, prefix: "" | "\n    " = "") =>
+				allowVariants ? `${prefix}className={${path}.variant}` : "";
+
+			const path = dotPath(fieldPath);
+
 			let code;
 			if (!repeat && !allowText) {
 				code = await format(
 					stripIndent`
-					<PrismicNextLink field={${dotPath(fieldPath)}}>Link</PrismicNextLink>
+					<PrismicNextLink field={${path}} ${variant(path)}>Link</PrismicNextLink>
 				`,
 					helpers,
 				);
 			} else if (!repeat && allowText) {
 				code = await format(
 					stripIndent`
-					<PrismicNextLink field={${dotPath(fieldPath)}} />
+					<PrismicNextLink field={${path}} ${variant(path)}/>
 				`,
 					helpers,
 				);
 			} else if (repeat && !allowText) {
-				code = stripIndent`
-					{${dotPath(fieldPath)}.map((link) => (
-						<PrismicNextLink key={link.key} field={link}>Link</PrismicNextLink>
-				))}
-				`;
+				// We cannot use `format` since this snippet contains invalid syntax.
+				// Please ensure this snippet is manually formatted correctly.
+				// Make sure to use spaces instead of tabs.
+				code = stripIndent`{${path}.map((link) => (
+  <PrismicNextLink
+    key={link.key}
+    field={link}${variant("link", "\n    ")}>
+      Link
+  </PrismicNextLink>
+))}`;
 			} else if (repeat && allowText) {
-				code = stripIndent`
-					{${dotPath(fieldPath)}.map((link) => (
-					  <PrismicNextLink key={link.key} field={link} />
-					))}
-				`;
+				// We cannot use `format` since this snippet contains invalid syntax.
+				// Please ensure this snippet is manually formatted correctly.
+				// Make sure to use spaces instead of tabs.
+				code = stripIndent`{${path}.map((link) => (
+  <PrismicNextLink
+    key={link.key}
+    field={link}${variant("link", "\n    ")}
+  />
+))}`;
 			} else {
 				throw new Error("Invalid configuration.");
 			}
