@@ -103,6 +103,10 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
           })} name is already taken.`;
         }
 
+        if (["update", "insert"].includes(newName.toLowerCase())) {
+          errors.customTypeName = `Name "${newName}" is reserved for Slice Machine use.`;
+        }
+
         return Object.keys(errors).length > 0 ? errors : undefined;
       }}
     >
