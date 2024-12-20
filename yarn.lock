@@ -6523,15 +6523,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.59":
-  version: 0.4.59
-  resolution: "@prismicio/editor-fields@npm:0.4.59"
+"@prismicio/editor-fields@npm:0.4.59-alpha.xru-link-variant-link-style.1":
+  version: 0.4.59-alpha.xru-link-variant-link-style.1
+  resolution: "@prismicio/editor-fields@npm:0.4.59-alpha.xru-link-variant-link-style.1"
   dependencies:
     "@aws-sdk/client-bedrock-runtime": 3.709.0
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.59
+    "@prismicio/editor-support": 0.4.59-alpha.xru-link-variant-link-style.1
     "@prismicio/richtext": 2.1.1
-    "@prismicio/types-internal": 3.2.0
+    "@prismicio/types-internal": 3.3.0
     "@tanstack/react-query": 5.55.4
     "@tiptap/core": 2.10.2
     "@tiptap/extension-bold": 2.10.2
@@ -6561,16 +6561,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.59
+    "@prismicio/editor-ui": ^0.4.59-alpha.xru-link-variant-link-style.1
     react: 18
     react-dom: 18
-  checksum: 3e0aa49c195c51f8db5c253c957206f265647a416d6dcbbbd4b1bc6ee181db2c280e302f416e0093f200560fb7f5d029ceeba17bcaed88246e043ac6c32021e3
+  checksum: 16bc530d6ae43b89c4bbc4ecd2f728d9e6b3b1e7c8cd64b96174de68bf86e957023d04284ef44f9f1f44a75a8ff6c1165f5e25c2c8fd02a176166f649b554991
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.59":
-  version: 0.4.59
-  resolution: "@prismicio/editor-support@npm:0.4.59"
+"@prismicio/editor-support@npm:0.4.59-alpha.xru-link-variant-link-style.1":
+  version: 0.4.59-alpha.xru-link-variant-link-style.1
+  resolution: "@prismicio/editor-support@npm:0.4.59-alpha.xru-link-variant-link-style.1"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6581,16 +6581,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: e841588a6f971e391f33443258a514ec12b5c1483aaef5db4476db067af60227af1485a761ee010309ee5b641dcd89df7e965d5bcb2d3c8bba7f86d1016b9341
+  checksum: 7be4ade2d9e5170079a1e475e35edff56fdff2689a80413da7be99e9383d438673813ecae069f31624a8620da4adae7812916e350eb0a75d4c3cdf35ff09425b
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.59":
-  version: 0.4.59
-  resolution: "@prismicio/editor-ui@npm:0.4.59"
+"@prismicio/editor-ui@npm:0.4.59-alpha.xru-link-variant-link-style.1":
+  version: 0.4.59-alpha.xru-link-variant-link-style.1
+  resolution: "@prismicio/editor-ui@npm:0.4.59-alpha.xru-link-variant-link-style.1"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.59
+    "@prismicio/editor-support": 0.4.59-alpha.xru-link-variant-link-style.1
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6641,7 +6641,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 2514285dcdcfa2e09776e6e09051ad60f37887089ec08204cdfafd99c488db831a9b321f59a6bf1e85deee5281bfab094298d25db04a84d8c27b9eaec08b8a6d
+  checksum: 13e78e5b254ba3cd7795dadcc687baa4e8df7ebb50577787020d7aec42daa65ffbd267d467f9bd5a00c14d572faff50f58a1c8b27d5e5867a24059d7ce89fb5c
   languageName: node
   linkType: hard
 
@@ -10037,9 +10037,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@smithy/middleware-endpoint@npm:^3.2.5":
-  version: 3.2.5
-  resolution: "@smithy/middleware-endpoint@npm:3.2.5"
+"@smithy/middleware-endpoint@npm:^3.2.5, @smithy/middleware-endpoint@npm:^3.2.6":
+  version: 3.2.6
+  resolution: "@smithy/middleware-endpoint@npm:3.2.6"
   dependencies:
     "@smithy/core": ^2.5.5
     "@smithy/middleware-serde": ^3.0.11
@@ -10049,7 +10049,7 @@ __metadata:
     "@smithy/url-parser": ^3.0.11
     "@smithy/util-middleware": ^3.0.11
     tslib: ^2.6.2
-  checksum: d89909c85f608404871a8ef0b6e468840cba8b36656288d5aa53bf93288f010dfbc385f2ba5a1b06e5c3eb63271501142949d65e0bec903521176ab274e76d21
+  checksum: f2fd18bfbd9c229f61043f1c1a930a2a9f8f04a65b9c70f7dc7e65342e55e11ff6b034a23e595a6e0f7f8c897f97f79a3bb922d152a891e0e9d515df34c6fc0a
   languageName: node
   linkType: hard
 
@@ -10192,17 +10192,17 @@ __metadata:
   linkType: hard
 
 "@smithy/smithy-client@npm:^3.5.0":
-  version: 3.5.0
-  resolution: "@smithy/smithy-client@npm:3.5.0"
+  version: 3.5.1
+  resolution: "@smithy/smithy-client@npm:3.5.1"
   dependencies:
     "@smithy/core": ^2.5.5
-    "@smithy/middleware-endpoint": ^3.2.5
+    "@smithy/middleware-endpoint": ^3.2.6
     "@smithy/middleware-stack": ^3.0.11
     "@smithy/protocol-http": ^4.1.8
     "@smithy/types": ^3.7.2
     "@smithy/util-stream": ^3.3.2
     tslib: ^2.6.2
-  checksum: 17c7f5b4b0e722ed345ca0a4ecece31e8c87db133a369bfaac605abfe50d5874a1711cc6836955c74216ba14290dd594a50033ec77b6ea50d5732738391fa6ee
+  checksum: f3df8e92b932d393773a2df5eb2c372bfab40ef516c74420039010d0295277dc2726148fdd42b16bae59a6dcb370e6872aeac9cb4c1c3d662659feff659c3397
   languageName: node
   linkType: hard
 
@@ -32321,9 +32321,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.11.0
-    "@prismicio/editor-fields": 0.4.59
-    "@prismicio/editor-support": 0.4.59
-    "@prismicio/editor-ui": 0.4.59
+    "@prismicio/editor-fields": 0.4.59-alpha.xru-link-variant-link-style.1
+    "@prismicio/editor-support": 0.4.59-alpha.xru-link-variant-link-style.1
+    "@prismicio/editor-ui": 0.4.59-alpha.xru-link-variant-link-style.1
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.7.0-alpha.0
     "@prismicio/simulator": 0.1.4
