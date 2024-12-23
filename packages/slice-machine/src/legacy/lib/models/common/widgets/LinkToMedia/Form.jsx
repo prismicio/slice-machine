@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+import { Box } from "@prismicio/editor-ui";
+
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
 
 import { DisplayTextCheckbox } from "../Link/components";
+import { Variants } from "../Link/Form";
 
 const FormFields = {
   ...DefaultFields,
@@ -15,11 +20,11 @@ const Form = (props) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const {
-    config: { allowText },
+    config: { allowText, variants },
   } = formValues;
 
   return (
-    <>
+    <Box flexDirection="column" gap={16}>
       <FlexGrid>
         {Object.entries(FormFields).map(([key, field]) => (
           <Col key={key}>
@@ -40,7 +45,8 @@ const Form = (props) => {
           setFieldValue={setFieldValue}
         />
       </FlexGrid>
-    </>
+      <Variants variants={variants} setFieldValue={setFieldValue} />
+    </Box>
   );
 };
 
