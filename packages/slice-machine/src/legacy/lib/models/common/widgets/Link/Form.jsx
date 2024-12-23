@@ -15,7 +15,7 @@ import { CheckBox } from "@/legacy/lib/forms/fields";
 import {
   DisplayTextCheckbox,
   RepeatableCheckbox,
-  Variants,
+  Variants as VariantsForm,
 } from "./components";
 
 const FormFields = {
@@ -82,7 +82,7 @@ const Form = (props) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           setFieldValue={setFieldValue}
         />
-        <VariantsWrapper variants={variants} setFieldValue={setFieldValue} />
+        <Variants variants={variants} setFieldValue={setFieldValue} />
       </Box>
     </>
   );
@@ -91,7 +91,7 @@ const Form = (props) => {
 export { FormFields };
 export default Form;
 
-function VariantsWrapper({ variants, setFieldValue }) {
+export function Variants({ variants, setFieldValue }) {
   const fieldKey = "config.variants";
 
   const onVariantsChange = (newVariants) =>
@@ -102,7 +102,7 @@ function VariantsWrapper({ variants, setFieldValue }) {
   const error = meta.error?.find((err) => err);
 
   return (
-    <Variants
+    <VariantsForm
       variants={variants}
       onVariantsChange={onVariantsChange}
       error={error}
