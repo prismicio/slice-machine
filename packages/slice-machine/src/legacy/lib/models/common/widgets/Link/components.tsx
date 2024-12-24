@@ -187,6 +187,7 @@ export function Variants({
               </Box>
               {deleteButtonShown && (
                 <IconButton
+                  type="button"
                   icon="delete"
                   onClick={() =>
                     onVariantsChange(
