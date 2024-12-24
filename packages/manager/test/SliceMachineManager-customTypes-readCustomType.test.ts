@@ -92,7 +92,6 @@ it("ignores plugins that implement `custom-type-library:read`", async (ctx) => {
 	const res = await manager.customTypes.readCustomType({ id: model.id });
 
 	expect(res).toStrictEqual({
-		// TODO: update prismic/mocks
 		model: { ...model, format: "custom" },
 		errors: [],
 	});
