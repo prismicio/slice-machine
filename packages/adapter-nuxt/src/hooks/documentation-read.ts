@@ -45,7 +45,6 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					description: page.value?.data.meta_description,
 					ogDescription: page.value?.data.meta_description,
 					ogImage: computed(() => prismic.asImageSrc(page.value?.data.meta_image)),
-					twitterCard: "summary_large_image",
 				});
 				</script>
 
@@ -73,7 +72,6 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					description: page.value?.data.meta_description,
 					ogDescription: page.value?.data.meta_description,
 					ogImage: computed(() => prismic.asImageSrc(page.value?.data.meta_image)),
-					twitterCard: "summary_large_image",
 				});
 				</script>
 
