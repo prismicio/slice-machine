@@ -1040,7 +1040,7 @@ describe("root layout file", () => {
 			"<script>
 			  import { isFilled, asImageSrc } from \\"@prismicio/client\\";
 			  import { PrismicPreview } from \\"@prismicio/svelte/kit\\";
-			  import { page } from \\"$app/stores\\";
+			  import { page } from \\"$app/state\\";
 			  import { repositoryName } from \\"$lib/prismicio\\";
 			</script>
 
