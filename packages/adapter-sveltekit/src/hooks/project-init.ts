@@ -329,10 +329,23 @@ const createRootLayoutFile = async ({
 
 	const contents = source`
 		<script>
+			import { isFilled, asImageSrc } from '@prismicio/client';
 			import { PrismicPreview } from '@prismicio/svelte/kit';
+			import { page } from '$app/stores';
 			import { repositoryName } from '$lib/prismicio';
 		</script>
 
+		<svelte:head>
+			<title>{$page?.data.title}</title>
+			<meta property="og:title" content={$page?.data.title} />
+			{#if isFilled.keyText($page?.data.meta_description)}
+				<meta name="description" content={$page.data.meta_description} />
+				<meta property="og:description" content={$page.data.meta_description} />
+			{/if}
+			{#if isFilled.image($page?.data.meta_image)}
+				<meta property="og:image" content={asImageSrc($page.data.meta_image)} />
+			{/if}
+		</svelte:head>
 		<slot />
 		<PrismicPreview {repositoryName} />
 	`;
