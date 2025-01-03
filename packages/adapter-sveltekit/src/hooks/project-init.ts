@@ -336,14 +336,14 @@ const createRootLayoutFile = async ({
 		</script>
 
 		<svelte:head>
-			<title>{$page.data.page?.data.meta_title}</title>
-			<meta property="og:title" content={$page.data.page?.data.meta_title} />
-			{#if isFilled.keyText($page.data.page?.data.meta_description)}
-				<meta name="description" content={$page.data.page.data.meta_description} />
-				<meta property="og:description" content={$page.data.page.data.meta_description} />
+			<title>{page.data.page?.data.meta_title}</title>
+			<meta property="og:title" content={page.data.page?.data.meta_title} />
+			{#if isFilled.keyText(page.data.page?.data.meta_description)}
+				<meta name="description" content={page.data.page.data.meta_description} />
+				<meta property="og:description" content={page.data.page.data.meta_description} />
 			{/if}
-			{#if isFilled.image($page.data.page?.data.meta_image)}
-				<meta property="og:image" content={asImageSrc($page.data.page.data.meta_image)} />
+			{#if isFilled.image(page.data.page?.data.meta_image)}
+				<meta property="og:image" content={asImageSrc(page.data.page.data.meta_image)} />
 			{/if}
 		</svelte:head>
 		<slot />
