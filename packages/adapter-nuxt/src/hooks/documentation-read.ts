@@ -39,12 +39,13 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					})
 				);
 
-				useHead({
+				useSeoMeta({
 					title: page.value?.data.meta_title,
-					meta: [{
-						name: "description",
-						content: page.value?.data.meta_description,
-					}],
+					ogTitle: page.value?.data.meta_title,
+					description: page.value?.data.meta_description,
+					ogDescription: page.value?.data.meta_description,
+					ogImage: computed(() => prismic.asImageSrc(page.value?.data.meta_image)),
+					twitterCard: "summary_large_image",
 				});
 				</script>
 
@@ -59,20 +60,21 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		} else {
 			fileContent = stripIndent`
 				<script ${scriptAttributes.join(" ")}>
-					import { components } from "~/slices";
+				import { components } from "~/slices";
 
-					const prismic = usePrismic();
-					const { data: page } = useAsyncData("[${model.id}]", () =>
-						prismic.client.getSingle("${model.id}")
-					);
+				const prismic = usePrismic();
+				const { data: page } = useAsyncData("[${model.id}]", () =>
+					prismic.client.getSingle("${model.id}")
+				);
 
-					useHead({
-						title: page.value?.data.meta_title,
-						meta: [{
-							name: "description",
-							content: page.value?.data.meta_description,
-						}],
-					});
+				useSeoMeta({
+					title: page.value?.data.meta_title,
+					ogTitle: page.value?.data.meta_title,
+					description: page.value?.data.meta_description,
+					ogDescription: page.value?.data.meta_description,
+					ogImage: computed(() => prismic.asImageSrc(page.value?.data.meta_image)),
+					twitterCard: "summary_large_image",
+				});
 				</script>
 
 				<template>
