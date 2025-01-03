@@ -34,7 +34,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				appFileContent = stripIndent`
 					import { Metadata } from "next";
 					import { notFound } from "next/navigation";
-					import { asImageSrc } from "@prismicio/client";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -67,9 +67,9 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: page.data.meta_title,
-								description: page.data.meta_description,
-								images: [asImageSrc(page.data.meta_image)],
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
 							},
 						};
 					}
@@ -148,7 +148,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			} else {
 				appFileContent = stripIndent`
 					import { Metadata } from "next";
-					import { asImageSrc } from "@prismicio/client";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -169,9 +169,9 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: page.data.meta_title,
-								description: page.data.meta_description,
-								images: [asImageSrc(page.data.meta_image)],
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
 							},
 						};
 					}
@@ -226,7 +226,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			if (model.repeatable) {
 				appFileContent = stripIndent`
 					import { notFound } from "next/navigation";
-					import { asImageSrc } from "@prismicio/client";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -254,9 +254,9 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: page.data.meta_title,
-								description: page.data.meta_description,
-								images: [asImageSrc(page.data.meta_image)],
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
 							},
 						};
 					}
@@ -329,7 +329,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				`;
 			} else {
 				appFileContent = stripIndent`
-					import { asImageSrc } from "@prismicio/client";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -350,9 +350,9 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: page.data.meta_title,
-								description: page.data.meta_description,
-								images: [asImageSrc(page.data.meta_image)],
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
 							},
 						};
 					}
