@@ -34,6 +34,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				appFileContent = stripIndent`
 					import { Metadata } from "next";
 					import { notFound } from "next/navigation";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -65,6 +66,11 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						return {
 							title: page.data.meta_title,
 							description: page.data.meta_description,
+							openGraph: {
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+							},
 						};
 					}
 
@@ -80,7 +86,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				pagesFileContent = stripIndent`
 					import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 					import Head from "next/head";
-					import { isFilled, asLink } from "@prismicio/client";
+					import { isFilled, asLink, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { components } from "@/slices";
@@ -95,8 +101,15 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
+									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<meta name="description" content={page.data.meta_description} />
+										<>
+											<meta name="description" content={page.data.meta_description} />
+											<meta property="og:description" content={page.data.meta_description} />
+										</>
+									) : null}
+									{isFilled.image(page.data.meta_image) ? (
+										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
 									) : null}
 								</Head>
 								<SliceZone slices={page.data.slices} components={components} />
@@ -135,6 +148,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			} else {
 				appFileContent = stripIndent`
 					import { Metadata } from "next";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -154,13 +168,18 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						return {
 							title: page.data.meta_title,
 							description: page.data.meta_description,
+							openGraph: {
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+							},
 						};
 					}
 				`;
 				pagesFileContent = stripIndent`
 					import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 					import Head from "next/head";
-					import { isFilled } from "@prismicio/client";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { components } from "@/slices";
@@ -173,8 +192,15 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
+									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<meta name="description" content={page.data.meta_description} />
+										<>
+											<meta name="description" content={page.data.meta_description} />
+											<meta property="og:description" content={page.data.meta_description} />
+										</>
+									) : null}
+									{isFilled.image(page.data.meta_image) ? (
+										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
 									) : null}
 								</Head>
 								<SliceZone slices={page.data.slices} components={components} />
@@ -200,6 +226,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			if (model.repeatable) {
 				appFileContent = stripIndent`
 					import { notFound } from "next/navigation";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -226,6 +253,11 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						return {
 							title: page.data.meta_title,
 							description: page.data.meta_description,
+							openGraph: {
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+							},
 						};
 					}
 
@@ -240,7 +272,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				`;
 				pagesFileContent = stripIndent`
 					import Head from "next/head";
-					import { isFilled, asLink } from "@prismicio/client";
+					import { isFilled, asLink, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { components } from "@/slices";
@@ -251,8 +283,15 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
+									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<meta name="description" content={page.data.meta_description} />
+										<>
+											<meta name="description" content={page.data.meta_description} />
+											<meta property="og:description" content={page.data.meta_description} />
+										</>
+									) : null}
+									{isFilled.image(page.data.meta_image) ? (
+										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
 									) : null}
 								</Head>
 								<SliceZone slices={page.data.slices} components={components} />
@@ -290,6 +329,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				`;
 			} else {
 				appFileContent = stripIndent`
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -309,12 +349,17 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						return {
 							title: page.data.meta_title,
 							description: page.data.meta_description,
+							openGraph: {
+								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
+								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
+								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+							},
 						};
 					}
 				`;
 				pagesFileContent = stripIndent`
 					import Head from "next/head";
-					import { isFilled } from "@prismicio/client";
+					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { components } from "@/slices";
@@ -325,8 +370,15 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
+									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<meta name="description" content={page.data.meta_description} />
+										<>
+											<meta name="description" content={page.data.meta_description} />
+											<meta property="og:description" content={page.data.meta_description} />
+										</>
+									) : null}
+									{isFilled.image(page.data.meta_image) ? (
+										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
 									) : null}
 								</Head>
 								<SliceZone slices={page.data.slices} components={components} />
