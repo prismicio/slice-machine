@@ -23,6 +23,9 @@ interface CommonCheckboxProps {
 export function DisplayTextCheckbox(props: CommonCheckboxProps) {
   const { checked, height = 130, setFieldValue } = props;
 
+  // Ref to the container to position the tooltip inside it.
+  const container = useRef<HTMLDivElement>(null);
+
   return (
     <Col>
       <Flex
@@ -38,6 +41,7 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
             justifyContent="space-between"
             alignItems="center"
             width="100%"
+            ref={container}
           >
             <Flex>
               <Checkbox
@@ -49,8 +53,9 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
               Allow display text
             </Flex>
             <Tooltip
-              content="Allow editors to customize the link display text"
+              containerRef={container}
               align="end"
+              content="Allow editors to customize the link display text"
             >
               <Icon name="alert" size="medium" color="grey11" />
             </Tooltip>
