@@ -51,7 +51,6 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
             <Tooltip
               content="Allow editors to customize the link display text"
               align="end"
-              zIndexHack
             >
               <Icon name="alert" size="medium" color="grey11" />
             </Tooltip>
