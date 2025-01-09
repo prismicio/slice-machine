@@ -6523,13 +6523,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.59-alpha.xru-link-variant-link-style.1":
-  version: 0.4.59-alpha.xru-link-variant-link-style.1
-  resolution: "@prismicio/editor-fields@npm:0.4.59-alpha.xru-link-variant-link-style.1"
+"@prismicio/editor-fields@npm:0.4.60":
+  version: 0.4.60
+  resolution: "@prismicio/editor-fields@npm:0.4.60"
   dependencies:
     "@aws-sdk/client-bedrock-runtime": 3.709.0
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.59-alpha.xru-link-variant-link-style.1
+    "@prismicio/editor-support": 0.4.60
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.3.0
     "@tanstack/react-query": 5.55.4
@@ -6561,16 +6561,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.59-alpha.xru-link-variant-link-style.1
+    "@prismicio/editor-ui": ^0.4.60
     react: 18
     react-dom: 18
-  checksum: 16bc530d6ae43b89c4bbc4ecd2f728d9e6b3b1e7c8cd64b96174de68bf86e957023d04284ef44f9f1f44a75a8ff6c1165f5e25c2c8fd02a176166f649b554991
+  checksum: 7d6988b78653548c7e758c74b10a2e4e9ba90a387875a8671b943d129259ebbc85ea0d942511af5f3ca24af07d1dcfe11beef5eaff6ce4e6e2cff09d5d94e927
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.59-alpha.xru-link-variant-link-style.1":
-  version: 0.4.59-alpha.xru-link-variant-link-style.1
-  resolution: "@prismicio/editor-support@npm:0.4.59-alpha.xru-link-variant-link-style.1"
+"@prismicio/editor-support@npm:0.4.60":
+  version: 0.4.60
+  resolution: "@prismicio/editor-support@npm:0.4.60"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6581,16 +6581,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 7be4ade2d9e5170079a1e475e35edff56fdff2689a80413da7be99e9383d438673813ecae069f31624a8620da4adae7812916e350eb0a75d4c3cdf35ff09425b
+  checksum: 2da25b06dd8f7a9f74c89b9892eb6d00cd48b400b29dc7fcac8d47e752bf215326ea36d7f3cd9bb00ee2f67339ce3b3281defdfb899dcba036ddbc55ecb639a8
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.59-alpha.xru-link-variant-link-style.1":
-  version: 0.4.59-alpha.xru-link-variant-link-style.1
-  resolution: "@prismicio/editor-ui@npm:0.4.59-alpha.xru-link-variant-link-style.1"
+"@prismicio/editor-ui@npm:0.4.60":
+  version: 0.4.60
+  resolution: "@prismicio/editor-ui@npm:0.4.60"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.59-alpha.xru-link-variant-link-style.1
+    "@prismicio/editor-support": 0.4.60
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6641,7 +6641,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 13e78e5b254ba3cd7795dadcc687baa4e8df7ebb50577787020d7aec42daa65ffbd267d467f9bd5a00c14d572faff50f58a1c8b27d5e5867a24059d7ce89fb5c
+  checksum: 1563e7889a513880e84a496404850cc9bf72b4ac758b881da5dc38aa2cd3783c9bb10d85c66aef8a0a6986229cfee9aa96724cd286ddc009d2fde480c2e1ae83
   languageName: node
   linkType: hard
 
@@ -32321,9 +32321,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.11.0
-    "@prismicio/editor-fields": 0.4.59-alpha.xru-link-variant-link-style.1
-    "@prismicio/editor-support": 0.4.59-alpha.xru-link-variant-link-style.1
-    "@prismicio/editor-ui": 0.4.59-alpha.xru-link-variant-link-style.1
+    "@prismicio/editor-fields": 0.4.60
+    "@prismicio/editor-support": 0.4.60
+    "@prismicio/editor-ui": 0.4.60
     "@prismicio/mock": 0.3.3
     "@prismicio/mocks": 2.8.0
     "@prismicio/simulator": 0.1.4
