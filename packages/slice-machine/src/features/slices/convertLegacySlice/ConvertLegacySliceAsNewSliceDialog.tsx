@@ -141,6 +141,7 @@ export const ConvertLegacySliceAsNewSliceDialog: FC<DialogProps> = ({
             <DialogActions>
               <DialogCancelButton size="medium" />
               <DialogActionButton
+                type="submit"
                 size="medium"
                 loading={isLoading}
                 disabled={errors && Object.keys(errors).length > 0}

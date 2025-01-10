@@ -105,6 +105,7 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
             <DialogActions>
               <DialogCancelButton size="medium" />
               <DialogActionButton
+                type="submit"
                 size="medium"
                 loading={isRenaming}
                 disabled={Boolean(error)}

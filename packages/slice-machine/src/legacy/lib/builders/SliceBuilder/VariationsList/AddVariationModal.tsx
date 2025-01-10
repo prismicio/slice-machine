@@ -160,7 +160,9 @@ const AddVariationModal: React.FunctionComponent<{
                   <Button onClick={handleClose} color="grey">
                     Cancel
                   </Button>
-                  <Button loading={isAddingVariation}>Submit</Button>
+                  <Button type="submit" loading={isAddingVariation}>
+                    Submit
+                  </Button>
                 </Box>
               }
               close={handleClose}
