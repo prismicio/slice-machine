@@ -97,6 +97,7 @@ export const ConvertLegacySliceMergeWithIdenticalDialog: FC<DialogProps> = ({
             <DialogActions>
               <DialogCancelButton size="medium" />
               <DialogActionButton
+                type="submit"
                 size="medium"
                 loading={isLoading}
                 disabled={Boolean(error)}
