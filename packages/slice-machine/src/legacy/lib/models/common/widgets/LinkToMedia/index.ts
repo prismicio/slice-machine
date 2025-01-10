@@ -41,7 +41,6 @@ export const LinkToMediaWidget: Widget<Link, typeof schema> = {
       placeholder: "",
       select: "media",
       allowText: true,
-      repeat: false,
     },
   }),
   TYPE_NAME: "Link",

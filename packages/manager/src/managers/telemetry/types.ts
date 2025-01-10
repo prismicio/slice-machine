@@ -205,6 +205,7 @@ type FieldAddedSegmentEvent = SegmentEvent<
 		contentType: "page type" | "custom type" | "slice";
 		allowText?: boolean;
 		repeat?: boolean;
+		variants?: string[];
 	}
 >;
 
