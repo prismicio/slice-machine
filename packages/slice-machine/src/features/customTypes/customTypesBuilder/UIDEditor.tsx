@@ -95,7 +95,11 @@ export function UIDEditor() {
           </Box>
           <DialogActions>
             <DialogCancelButton size="medium" />
-            <DialogActionButton size="medium" disabled={Boolean(error)}>
+            <DialogActionButton
+              type="submit"
+              size="medium"
+              disabled={Boolean(error)}
+            >
               Save
             </DialogActionButton>
           </DialogActions>
