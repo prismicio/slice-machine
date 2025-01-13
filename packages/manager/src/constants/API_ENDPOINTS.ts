@@ -83,8 +83,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicAuthentication: "https://auth.wroom.io/",
 				PrismicModels: "https://customtypes.wroom.io/",
 				PrismicUser: "https://user-service.wroom.io/",
-				AwsAclProvider:
-					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
+				AwsAclProvider: "https://acl-provider.wroom.io/",
 				PrismicEmbed: "https://oembed.wroom.io",
 				PrismicUnsplash: "https://unsplash.wroom.io/",
 				SliceMachineV1: "https://sm-api.wroom.io/v1/",
@@ -100,8 +99,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicAuthentication: "https://auth.prismic.io/",
 				PrismicModels: "https://customtypes.prismic.io/",
 				PrismicUser: "https://user-service.prismic.io/",
-				AwsAclProvider:
-					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
+				AwsAclProvider: "https://acl-provider.prismic.io/",
 				PrismicEmbed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io/",
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",
