@@ -33,7 +33,7 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				),
 				SliceMachineV1: addTrailingSlash(
 					process.env.slice_machine_v1_endpoint ??
-						"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
+						"https://sm-api.wroom.io/v1/",
 				),
 				RepositoryService: addTrailingSlash(
 					process.env.repository_api ?? "https://repository.internal.wroom.io/",
@@ -83,12 +83,10 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicAuthentication: "https://auth.wroom.io/",
 				PrismicModels: "https://customtypes.wroom.io/",
 				PrismicUser: "https://user-service.wroom.io/",
-				AwsAclProvider:
-					"https://2iamcvnxf4.execute-api.us-east-1.amazonaws.com/stage/",
+				AwsAclProvider: "https://acl-provider.wroom.io/",
 				PrismicEmbed: "https://oembed.wroom.io",
 				PrismicUnsplash: "https://unsplash.wroom.io/",
-				SliceMachineV1:
-					"https://mc5qopc07a.execute-api.us-east-1.amazonaws.com/v1/",
+				SliceMachineV1: "https://sm-api.wroom.io/v1/",
 				RepositoryService: "https://repository.internal.wroom.io/",
 				LocaleService: "https://locale.internal.wroom.io/",
 			};
@@ -101,8 +99,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicAuthentication: "https://auth.prismic.io/",
 				PrismicModels: "https://customtypes.prismic.io/",
 				PrismicUser: "https://user-service.prismic.io/",
-				AwsAclProvider:
-					"https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/",
+				AwsAclProvider: "https://acl-provider.prismic.io/",
 				PrismicEmbed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io/",
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",

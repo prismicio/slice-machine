@@ -4,12 +4,12 @@ import { createPrismicAuthLoginResponse } from "./__testutils__/createPrismicAut
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 import { createTestProject } from "./__testutils__/createTestProject";
 import { mockAWSACLAPI } from "./__testutils__/mockAWSACLAPI";
-import { mockCustomTypesAPI } from "./__testutils__/mockCustomTypesAPI";
 import { mockPrismicAuthAPI } from "./__testutils__/mockPrismicAuthAPI";
 import { mockPrismicUserAPI } from "./__testutils__/mockPrismicUserAPI";
+import { mockSliceMachineAPI } from "./__testutils__/mockSliceMachineAPI";
 
 import { createSliceMachineManager } from "../src";
-import { BulkBody, ChangeTypes } from "../src/managers/prismicRepository/types";
+import { PushBody, ChangeTypes } from "../src/managers/prismicRepository/types";
 
 const pushChangesPayload = (
 	sliceIDs = ["slice1"],
@@ -31,7 +31,7 @@ const pushChangesPayload = (
 	],
 });
 
-it("pushes changes using the bulk API", async (ctx) => {
+it("pushes changes using the push API", async (ctx) => {
 	const customTypeModel = ctx.mockPrismic.model.customType();
 	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
@@ -56,8 +56,8 @@ it("pushes changes using the bulk API", async (ctx) => {
 
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
-	mockCustomTypesAPI(ctx, {
-		async onBulk(req, res, ctx) {
+	mockSliceMachineAPI(ctx, {
+		async onPush(req, res, ctx) {
 			if (req.headers.get("user-agent") === "slice-machine") {
 				sentModel = await req.json();
 
@@ -82,7 +82,7 @@ it("pushes changes using the bulk API", async (ctx) => {
 		pushChangesPayload([sharedSliceModel.id], [customTypeModel.id]),
 	);
 
-	const expectedAPIPayload: BulkBody = {
+	const expectedAPIPayload: PushBody = {
 		changes: [
 			{
 				id: sharedSliceModel.id,
@@ -102,7 +102,7 @@ it("pushes changes using the bulk API", async (ctx) => {
 	expect(sentModel).toStrictEqual(expectedAPIPayload);
 });
 
-it("pushes changes using the bulk API to the selected environment when an environment is set", async (ctx) => {
+it("pushes changes using the push API to the selected environment when an environment is set", async (ctx) => {
 	const customTypeModel = ctx.mockPrismic.model.customType();
 	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice();
 	const adapter = createTestPlugin({
@@ -129,8 +129,8 @@ it("pushes changes using the bulk API to the selected environment when an enviro
 
 	mockPrismicUserAPI(ctx);
 	mockPrismicAuthAPI(ctx);
-	mockCustomTypesAPI(ctx, {
-		async onBulk(req, res, ctx) {
+	mockSliceMachineAPI(ctx, {
+		async onPush(req, res, ctx) {
 			if (
 				req.headers.get("user-agent") === "slice-machine" &&
 				req.headers.get("repository") === "foo"
@@ -157,7 +157,7 @@ it("pushes changes using the bulk API to the selected environment when an enviro
 		pushChangesPayload([sharedSliceModel.id], [customTypeModel.id]),
 	);
 
-	const expectedAPIPayload: BulkBody = {
+	const expectedAPIPayload: PushBody = {
 		changes: [
 			{
 				id: sharedSliceModel.id,

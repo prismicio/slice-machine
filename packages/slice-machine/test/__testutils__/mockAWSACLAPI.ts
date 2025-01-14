@@ -42,9 +42,7 @@ export const mockAWSACLAPI = (
   ctx: TestContext,
   config?: MockAWSACLAPIConfig,
 ): MockAWSACLAPIReturnType => {
-  const endpoint =
-    config?.endpoint ??
-    "https://0yyeb2g040.execute-api.us-east-1.amazonaws.com/prod/";
+  const endpoint = config?.endpoint ?? "https://acl-provider.prismic.io/";
 
   const s3ACL = {
     uploadEndpoint:
