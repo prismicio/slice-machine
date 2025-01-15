@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/plugin-kit",
-	"version": "0.4.62",
+	"version": "0.4.63",
 	"description": "A set of helpers to develop and run Slice Machine plugins",
 	"keywords": [
 		"typescript",
