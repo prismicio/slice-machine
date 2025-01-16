@@ -488,7 +488,7 @@ Continue with next steps in Slice Machine.
 							)} ${chalk.cyan(tryAgainCommand)}`,
 						);
 
-						throw error
+						throw error;
 					});
 
 					this.context.installProcess = execaProcess;
