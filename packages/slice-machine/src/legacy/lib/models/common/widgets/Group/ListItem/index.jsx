@@ -22,6 +22,7 @@ import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { getContentTypeForTracking } from "@/utils/tracking/getContentTypeForTracking";
 import { trackFieldAdded } from "@/utils/tracking/trackFieldAdded";
+import { trackFieldUpdated } from "@/utils/tracking/trackFieldUpdated";
 
 /* eslint-disable */
 export const CustomListItem = ({
@@ -67,24 +68,34 @@ export const CustomListItem = ({
       apiId: groupItem.key,
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
-      isNewGroupField: true,
+      inGroupFieldAction: "add",
     });
 
     trackFieldAdded({ id, field: newField, isInAGroup: true });
   };
 
   const onSaveField = ({ apiId: previousKey, newKey, value }) => {
+    const updatedField =
+      value.type === GroupFieldType ? Groups.fromSM(value) : value;
     const newGroupValue = updateFieldInGroup({
       group: Groups.fromSM(groupItem.value),
       previousFieldId: previousKey,
       newFieldId: newKey,
-      field: value.type === GroupFieldType ? Groups.fromSM(value) : value,
+      field: updatedField,
     });
 
     saveItem({
       apiId: groupItem.key,
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
+      inGroupFieldAction: "update",
+    });
+
+    trackFieldUpdated({
+      previousId: previousKey,
+      id: newKey,
+      field: updatedField,
+      isInAGroup: true,
     });
   };
 

@@ -15,6 +15,7 @@ export const SegmentEventType = {
 	pageView: "page-view",
 	openVideoTutorials: "open-video-tutorials",
 	field_added: "field:added",
+	field_updated: "field:updated",
 	field_settingsOpened: "field:settings-opened",
 	customType_created: "custom-type:created",
 	customType_sliceZoneUpdated: "custom-type:slice-zone-updated",
@@ -58,6 +59,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.pageView]: "SliceMachine Page View",
 	[SegmentEventType.openVideoTutorials]: "SliceMachine Open Video Tutorials",
 	[SegmentEventType.field_added]: "SliceMachine Field Added",
+	[SegmentEventType.field_updated]: "SliceMachine Field Updated",
 	[SegmentEventType.field_settingsOpened]: "SliceMachine Field Settings Opened",
 	[SegmentEventType.customType_created]: "SliceMachine Custom Type Created",
 	[SegmentEventType.customType_sliceZoneUpdated]:
@@ -198,6 +200,21 @@ type OpenVideoTutorialsSegmentEvent = SegmentEvent<
 type FieldAddedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.field_added,
 	{
+		id: string;
+		name: string;
+		type: FieldType;
+		isInAGroup: boolean;
+		contentType: "page type" | "custom type" | "slice";
+		allowText?: boolean;
+		repeat?: boolean;
+		variants?: string[];
+	}
+>;
+
+type FieldUpdatedSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.field_updated,
+	{
+		previousId: string;
 		id: string;
 		name: string;
 		type: FieldType;
@@ -401,6 +418,7 @@ export type SegmentEvents =
 	| PageViewSegmentEvent
 	| OpenVideoTutorialsSegmentEvent
 	| FieldAddedSegmentEvent
+	| FieldUpdatedSegmentEvent
 	| FieldSettingsOpenedSegmentEvent
 	| CustomTypeCreatedSegmentEvent
 	| CustomTypeSliceZoneUpdatedSegmentEvent
