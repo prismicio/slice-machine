@@ -488,9 +488,7 @@ Continue with next steps in Slice Machine.
 							)} ${chalk.cyan(tryAgainCommand)}`,
 						);
 
-						process.off("uncaughtException", () => {
-							process.exitCode = 1;
-						});
+						process.exit(1);
 					});
 
 					this.context.installProcess = execaProcess;
