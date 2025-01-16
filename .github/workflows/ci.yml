@@ -195,7 +195,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: e2e-blob-report-${{ matrix.shardIndex }}
+          name: e2e-blob-report-${{ matrix.shard }}
           path: playwright/blob-report
           retention-days: 1
 
