@@ -5,7 +5,7 @@ runs:
   steps:
     - name: Cache node_modules
       id: cache-dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           node_modules
@@ -14,7 +14,7 @@ runs:
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-dependencies
     - name: Cache artifacts
       id: cache-artifacts
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           packages/*/dist
@@ -22,7 +22,7 @@ runs:
         key: ${{ runner.os }}-${{ github.run_id }}-artifacts
     - name: Cache playwright binaries
       id: cache-playwright-binaries
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache/ms-playwright

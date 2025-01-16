@@ -7,7 +7,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache node_modules and artifacts
         uses: ./.github/actions/restore-cache
@@ -25,7 +25,7 @@ jobs:
     runs-on: [windows-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache node_modules and artifacts
         uses: ./.github/actions/restore-cache
@@ -44,7 +44,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -76,7 +76,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -139,7 +139,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -168,7 +168,7 @@ jobs:
         shard: [1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8, 8/8]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -192,7 +192,7 @@ jobs:
           DEBUG: pw:test
 
       - name: Upload blob report to GitHub Actions Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: e2e-all-blob-reports
@@ -205,7 +205,7 @@ jobs:
     if: always()
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -214,7 +214,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Download blob reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: e2e-all-blob-reports
           path: playwright/e2e-all-blob-reports
@@ -223,7 +223,7 @@ jobs:
         run: yarn test:e2e:merge-reports --reporter html ./e2e-all-blob-reports
 
       - name: Upload HTML report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: html-report--attempt-${{ github.run_attempt }}
           path: playwright/playwright-report

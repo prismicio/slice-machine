@@ -12,7 +12,7 @@ jobs:
     if: ${{ !startsWith(github.event.head_commit.message, 'release:') && !github.event.pull_request.draft }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref || github.ref }}
