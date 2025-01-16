@@ -47,7 +47,7 @@ it("catches early core dependencies installation process errors", async () => {
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.installProcess).toBeTypeOf("object");
 
-	vi.stubGlobal("process", { ...process, exit: vi.fn() });
+	vi.stubGlobal("process", { ...process, off: vi.fn() });
 
 	const { stderr } = await watchStd(async () => {
 		// @ts-expect-error - Accessing protected property
@@ -75,7 +75,7 @@ it("catches early core dependencies installation process errors", async () => {
 			error: expect.any(String),
 		}),
 	);
-	expect(process.exit).toHaveBeenCalledOnce();
+	expect(process.off).toHaveBeenCalledOnce();
 	expect(stderr[0]).toMatch(/Dependency installation failed/);
 });
 
@@ -95,7 +95,7 @@ it("appends repository selection to error message when core dependencies install
 	// @ts-expect-error - Accessing protected property
 	expect(initProcess.context.installProcess).toBeTypeOf("object");
 
-	vi.stubGlobal("process", { ...process, exit: vi.fn() });
+	vi.stubGlobal("process", { ...process, off: vi.fn() });
 
 	const { stderr } = await watchStd(async () => {
 		// @ts-expect-error - Accessing protected property
