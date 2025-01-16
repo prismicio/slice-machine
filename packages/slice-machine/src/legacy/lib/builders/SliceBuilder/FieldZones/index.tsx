@@ -36,6 +36,7 @@ import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { ensureDnDDestination } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { trackFieldAdded } from "@/utils/tracking/trackFieldAdded";
+import { trackFieldUpdated } from "@/utils/tracking/trackFieldUpdated";
 
 const dataTipText = ` The non-repeatable zone
   is for fields<br/> that should appear once, like a<br/>
@@ -68,7 +69,7 @@ type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
   value: SlicePrimaryFieldSM;
-  isNewGroupField?: boolean;
+  inGroupFieldAction?: "add" | "update";
 };
 
 const FieldZones: FC = () => {
@@ -105,7 +106,7 @@ const FieldZones: FC = () => {
 
   const _onSave = (
     widgetArea: WidgetsArea,
-    { apiId: previousKey, newKey, value, isNewGroupField }: OnSaveFieldProps,
+    { apiId: previousKey, newKey, value, inGroupFieldAction }: OnSaveFieldProps,
   ) => {
     const newSlice = updateField({
       slice,
@@ -117,10 +118,18 @@ const FieldZones: FC = () => {
     });
 
     setSlice(newSlice, () => {
-      if (isNewGroupField === true) {
-        toast.success("Group added");
+      if (inGroupFieldAction === "add") {
+        toast.success("Field added");
       }
     });
+
+    // We don't want to track the group field update when it's for the management of a
+    // field within a group (add or update).
+    // It would result in double tracking, the one for the field touched within the group
+    // and the group itself.
+    if (!inGroupFieldAction) {
+      trackFieldUpdated({ id: previousKey, field: value });
+    }
   };
 
   const _onSaveNewField = (

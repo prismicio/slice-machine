@@ -36,6 +36,7 @@ import {
 } from "@/legacy/lib/utils";
 import { transformKeyAccessor } from "@/legacy/lib/utils/str";
 import { trackFieldAdded } from "@/utils/tracking/trackFieldAdded";
+import { trackFieldUpdated } from "@/utils/tracking/trackFieldUpdated";
 
 import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
@@ -71,7 +72,7 @@ type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
   value: TabField;
-  isNewGroupField?: boolean;
+  inGroupFieldAction?: "add" | "update";
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -169,7 +170,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     apiId: previousKey,
     newKey,
     value,
-    isNewGroupField,
+    inGroupFieldAction,
   }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
@@ -186,10 +187,18 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     });
 
     setCustomType(newCustomType, () => {
-      if (isNewGroupField === true) {
+      if (inGroupFieldAction === "add") {
         toast.success("Field added");
       }
     });
+
+    // We don't want to track the group field update when it's for the management of a
+    // field within a group (add or update).
+    // It would result in double tracking, the one for the field touched within the group
+    // and the group itself.
+    if (!inGroupFieldAction) {
+      trackFieldUpdated({ id: previousKey, field: newField });
+    }
   };
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {
