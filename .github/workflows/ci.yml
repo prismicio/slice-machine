@@ -193,16 +193,16 @@ jobs:
 
       - name: Upload blob report to GitHub Actions Artifacts
         uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ !cancelled() }}
         with:
-          name: e2e-all-blob-reports
+          name: e2e-blob-report-${{ matrix.shardIndex }}
           path: playwright/blob-report
           retention-days: 1
 
   e2e-merge-reports:
     needs: e2e
     runs-on: ubuntu-latest
-    if: always()
+    if: ${{ !cancelled() }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -216,8 +216,9 @@ jobs:
       - name: Download blob reports from GitHub Actions Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: e2e-all-blob-reports
           path: playwright/e2e-all-blob-reports
+          pattern: e2e-blob-report-*
+          merge-multiple: true
 
       - name: Merge into HTML Report
         run: yarn test:e2e:merge-reports --reporter html ./e2e-all-blob-reports
@@ -225,6 +226,6 @@ jobs:
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         with:
-          name: html-report--attempt-${{ github.run_attempt }}-${{ strategy.job-index }}
+          name: html-report--attempt-${{ github.run_attempt }}
           path: playwright/playwright-report
           retention-days: 14
