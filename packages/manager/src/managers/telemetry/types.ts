@@ -216,6 +216,7 @@ type FieldUpdatedSegmentEvent = SegmentEvent<
 	{
 		previousId: string;
 		id: string;
+		idUpdated: boolean;
 		name: string;
 		type: FieldType;
 		isInAGroup: boolean;

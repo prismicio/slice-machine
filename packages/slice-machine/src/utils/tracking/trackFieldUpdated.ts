@@ -23,6 +23,7 @@ export function trackFieldUpdated(args: TrackFieldUpdatedArgs) {
     event: "field:updated",
     previousId: previousId,
     id,
+    idUpdated: previousId !== id,
     name: field.config?.label ?? "",
     type: field.type,
     isInAGroup,
