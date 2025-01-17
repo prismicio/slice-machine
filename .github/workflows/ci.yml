@@ -7,7 +7,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache node_modules and artifacts
         uses: ./.github/actions/restore-cache
@@ -25,7 +25,7 @@ jobs:
     runs-on: [windows-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache node_modules and artifacts
         uses: ./.github/actions/restore-cache
@@ -44,7 +44,7 @@ jobs:
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -76,7 +76,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -139,7 +139,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -165,10 +165,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8, 8/8]
+        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8]
+        shardTotal: [8]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -187,25 +188,25 @@ jobs:
           echo "telemetry=false" > ./e2e-projects/next/.prismicrc
 
       - name: Running E2E tests
-        run: yarn test:e2e --shard ${{ matrix.shard }}
+        run: yarn test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
           DEBUG: pw:test
 
       - name: Upload blob report to GitHub Actions Artifacts
-        uses: actions/upload-artifact@v3
-        if: always()
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
         with:
-          name: e2e-all-blob-reports
+          name: e2e-blob-report-${{ matrix.shardIndex }}
           path: playwright/blob-report
           retention-days: 1
 
   e2e-merge-reports:
     needs: e2e
     runs-on: ubuntu-latest
-    if: always()
+    if: ${{ !cancelled() }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Restore cache
         uses: ./.github/actions/restore-cache
@@ -214,16 +215,17 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Download blob reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: e2e-all-blob-reports
           path: playwright/e2e-all-blob-reports
+          pattern: e2e-blob-report-*
+          merge-multiple: true
 
       - name: Merge into HTML Report
         run: yarn test:e2e:merge-reports --reporter html ./e2e-all-blob-reports
 
       - name: Upload HTML report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: html-report--attempt-${{ github.run_attempt }}
           path: playwright/playwright-report
