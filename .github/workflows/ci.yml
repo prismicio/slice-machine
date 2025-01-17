@@ -121,6 +121,8 @@ jobs:
   packages-win32:
     needs: prepare-win32
     runs-on: [windows-latest]
+    env:
+      WIN32: true
     strategy:
       fail-fast: false
       matrix:
