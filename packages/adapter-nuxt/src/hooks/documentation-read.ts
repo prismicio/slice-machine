@@ -31,7 +31,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 				const prismic = usePrismic();
 				const route = useRoute();
-				const { data: page } = useAsyncData(\`[${
+				const { data: page } = await useAsyncData(\`[${
 					model.id
 				}-uid-\${route.params.uid}]\`, () =>
 					prismic.client.getByUID("${model.id}", route.params.uid${
@@ -62,7 +62,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 				import { components } from "~/slices";
 
 				const prismic = usePrismic();
-				const { data: page } = useAsyncData("[${model.id}]", () =>
+				const { data: page } = await useAsyncData("[${model.id}]", () =>
 					prismic.client.getSingle("${model.id}")
 				);
 
