@@ -24,6 +24,7 @@ import {
   reorderField,
   updateField,
 } from "@/domain/slice";
+import { useTableFieldExperiment } from "@/features/builder/useTableFieldExperiment";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import Zone from "@/legacy/lib/builders/common/Zone";
@@ -56,6 +57,7 @@ const itemsWidgetsArray = [
   Widgets.Number,
   Widgets.Color,
   Widgets.Date,
+  Widgets.Table,
   Widgets.Embed,
   Widgets.Timestamp,
   Widgets.GeoPoint,
@@ -78,6 +80,11 @@ const FieldZones: FC = () => {
     isDeleteRepeatableZoneDialogOpen,
     setIsDeleteRepeatableZoneDialogOpen,
   ] = useState(false);
+
+  const tableFieldExperiment = useTableFieldExperiment();
+  const maybeFilteredItemsWidgetsArray = tableFieldExperiment.eligible
+    ? itemsWidgetsArray
+    : itemsWidgetsArray.filter((widget) => widget.TYPE_NAME !== "Table");
 
   // We won't show the Repeatable Zone if no items are configured.
   const hasItems = Boolean(
@@ -244,7 +251,7 @@ const FieldZones: FC = () => {
           isRepeatable
           title="Repeatable Zone"
           dataTip={dataTipText2}
-          widgetsArray={itemsWidgetsArray}
+          widgetsArray={maybeFilteredItemsWidgetsArray}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           fields={variation.items}
           EditModal={EditModal}
