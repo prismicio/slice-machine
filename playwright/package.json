@@ -15,7 +15,7 @@
   "devDependencies": {
     "@msgpack/msgpack": "2.8.0",
     "@playwright/test": "^1",
-    "@prismicio/types-internal": "3.4.0-alpha.2",
+    "@prismicio/types-internal": "3.4.0-alpha.3",
     "@slicemachine/manager": "workspace:*",
     "@typescript-eslint/eslint-plugin": "7.17.0",
     "@typescript-eslint/parser": "7.17.0",
