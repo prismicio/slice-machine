@@ -56,16 +56,15 @@ const hintItemName = "item";
 
 const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
   const nestedGroupExperiment = useNestedGroupExperiment();
-  let maybeFilteredWidgetsArray = nestedGroupExperiment.eligible
-    ? widgetsArray
-    : widgetsArray.filter((widget) => widget.CUSTOM_NAME !== "NestedGroup");
-
   const tableFieldExperiment = useTableFieldExperiment();
-  maybeFilteredWidgetsArray = tableFieldExperiment.eligible
-    ? maybeFilteredWidgetsArray
-    : maybeFilteredWidgetsArray.filter(
-        (widget) => widget.TYPE_NAME !== "Table",
-      );
+
+  const maybeFilteredWidgetsArray = widgetsArray.filter((widget) => {
+    if (!nestedGroupExperiment.eligible && widget.CUSTOM_NAME === "NestedGroup")
+      return false;
+    if (!tableFieldExperiment.eligible && widget.TYPE_NAME === "Table")
+      return false;
+    return true;
+  });
 
   return (
     <CustomListItem
