@@ -65,8 +65,6 @@ const itemsWidgetsArray = [
   Widgets.LinkToMedia,
 ];
 
-const primaryWidgetsArray = [Widgets.Group, ...itemsWidgetsArray];
-
 type OnSaveFieldProps = {
   apiId: string;
   newKey: string;
@@ -85,6 +83,11 @@ const FieldZones: FC = () => {
   const maybeFilteredItemsWidgetsArray = tableFieldExperiment.eligible
     ? itemsWidgetsArray
     : itemsWidgetsArray.filter((widget) => widget.TYPE_NAME !== "Table");
+
+  const primaryWidgetsArray = [
+    Widgets.Group,
+    ...maybeFilteredItemsWidgetsArray,
+  ];
 
   // We won't show the Repeatable Zone if no items are configured.
   const hasItems = Boolean(
