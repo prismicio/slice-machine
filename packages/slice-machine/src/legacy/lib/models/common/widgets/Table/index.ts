@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Table } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { FaTable } from "react-icons/fa";
 import * as yup from "yup";
@@ -13,9 +14,7 @@ import { Widget } from "../Widget";
 } */
 
 const FormFields = {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   label: DefaultFields.label,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   id: DefaultFields.id,
 };
 
@@ -24,16 +23,14 @@ const schema = yup.object().shape({
     .string()
     .matches(/^Table$/, { excludeEmptyString: true })
     .required(),
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   config: yup
     .object()
     .shape({
       label: yup.string(),
     })
     .required()
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     .default(undefined)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     .noUnknown(true),
 });
 
