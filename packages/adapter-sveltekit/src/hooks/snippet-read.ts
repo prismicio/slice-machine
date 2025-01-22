@@ -111,6 +111,19 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
+		case "Table": {
+			return {
+				label,
+				language: "svelte",
+				code: await format(
+					stripIndent`
+							<PrismicTable field={${dotPath(fieldPath)}} />
+						`,
+					helpers,
+				),
+			};
+		}
+
 		case "Group": {
 			const code = await format(
 				stripIndent`

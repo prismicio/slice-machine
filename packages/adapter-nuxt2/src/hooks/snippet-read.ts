@@ -112,6 +112,19 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
+		case "Table": {
+			return {
+				label,
+				language: "vue",
+				code: await format(
+					stripIndent`
+							<PrismicTable :field="${dotPath(fieldPath)}" />
+						`,
+					helpers,
+				),
+			};
+		}
+
 		case "Embed": {
 			return {
 				label,
