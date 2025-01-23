@@ -92,6 +92,23 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 			};
 		}
 
+		case APPLICATION_MODE.DevTools:
+		case APPLICATION_MODE.MarketingTools:
+		case APPLICATION_MODE.Platform: {
+			return {
+				PrismicWroom: `https://${process.env.SM_ENV}-wroom.com/`,
+				PrismicAuthentication: `https://auth.${process.env.SM_ENV}-wroom.com/`,
+				PrismicModels: `https://customtypes.${process.env.SM_ENV}-wroom.com/`,
+				PrismicUser: `https://user-service.${process.env.SM_ENV}-wroom.com/`,
+				AwsAclProvider: `https://acl-provider.${process.env.SM_ENV}-wroom.com/`,
+				PrismicEmbed: `https://oembed.${process.env.SM_ENV}-wroom.com`,
+				PrismicUnsplash: `https://unsplash.${process.env.SM_ENV}-wroom.com/`,
+				SliceMachineV1: `https://sm-api.${process.env.SM_ENV}-wroom.com/v1/`,
+				RepositoryService: `https://repository.internal.${process.env.SM_ENV}-wroom.com/`,
+				LocaleService: `https://locale.internal.${process.env.SM_ENV}-wroom.com/`,
+			};
+		}
+
 		case APPLICATION_MODE.Production:
 		default: {
 			return {
