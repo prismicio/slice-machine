@@ -42,7 +42,13 @@ type Args = {
    *
    * @defaultValue `"staging"`
    */
-  environment: "staging" | "production" | "development" | "dev-tools" | "marketing-tools" | "platform";
+  environment:
+    | "staging"
+    | "production"
+    | "development"
+    | "dev-tools"
+    | "marketing-tools"
+    | "platform";
 
   /**
    * If `true`, commands are not executed.
