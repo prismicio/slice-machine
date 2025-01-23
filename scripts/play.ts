@@ -13,7 +13,7 @@ import {
 
 const PLAYGROUNDS_ROOT = new URL("../playgrounds/", import.meta.url);
 const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
-const DEFAULT_ENVIRONMENT = "staging" satisfies Args["environment"];
+const DEFAULT_ENVIRONMENT = "dev-tools" satisfies Args["environment"];
 const DEFAULT_WROOM_URL = "https://cdn.wroom.io";
 const SLICEMACHINE_INIT_SCRIPT = new URL(
   "../packages/init/bin/slicemachine-init.js",
@@ -42,7 +42,7 @@ type Args = {
    *
    * @defaultValue `"staging"`
    */
-  environment: "staging" | "production" | "development";
+  environment: "staging" | "production" | "development" | "dev-tools" | "marketing-tools" | "platform";
 
   /**
    * If `true`, commands are not executed.
@@ -88,7 +88,7 @@ Usage:
 Options:
     --new              Create a new playground
     --framework, -f    Specify the playground's framework (next, nuxt, sveltekit) (default: ${DEFAULT_FRAMEWORK})
-    --environment, -e  Specify the playground's environment (staging, production, development) (default: ${DEFAULT_ENVIRONMENT})
+    --environment, -e  Specify the playground's environment (staging, dev-tools, marketing-tools, platform, production, development) (default: ${DEFAULT_ENVIRONMENT})
     --no-start         Do not start Slice Machine and the website
     --dry-run, -n      Show what would have happened
     --help, -h         Show help text
