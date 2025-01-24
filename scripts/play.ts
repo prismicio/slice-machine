@@ -107,7 +107,16 @@ Arguments:
     return;
   }
 
-  if (!["production", "staging", "development"].includes(args.environment)) {
+  if (
+    ![
+      "production",
+      "staging",
+      "development",
+      "dev-tools",
+      "marketing-tools",
+      "platform",
+    ].includes(args.environment)
+  ) {
     throw new CommandError(`Unsupported environment: ${args.environment}`);
   }
 
