@@ -121,9 +121,7 @@ export function Variants({
 
   const switchLabel = enabled ? "Enabled" : "Disabled";
 
-  const optionsTitle = `Options (${variants?.length ?? 0}/5)`;
-
-  const addButtonShown = (variants?.length ?? 0) < 5;
+  const optionsTitle = `Options (${variants?.length ?? 0})`;
 
   const deleteButtonShown = (variants?.length ?? 0) > 2;
 
@@ -202,20 +200,18 @@ export function Variants({
               )}
             </Box>
           ))}
-          {addButtonShown && (
-            <Box>
-              <Button
-                invisible
-                startIcon="add"
-                onClick={() => {
-                  focusableInputIndex.current = variants?.length;
-                  onVariantsChange([...(variants ?? []), ""]);
-                }}
-              >
-                Add option
-              </Button>
-            </Box>
-          )}
+          <Box>
+            <Button
+              invisible
+              startIcon="add"
+              onClick={() => {
+                focusableInputIndex.current = variants?.length;
+                onVariantsChange([...(variants ?? []), ""]);
+              }}
+            >
+              Add option
+            </Button>
+          </Box>
         </Box>
       )}
       <Box backgroundColor="white" flexDirection="column" padding={12}>
