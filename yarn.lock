@@ -6487,12 +6487,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/client@npm:7.11.0, @prismicio/client@npm:^7.11.0, @prismicio/client@npm:latest":
-  version: 7.11.0
-  resolution: "@prismicio/client@npm:7.11.0"
+"@prismicio/client@npm:7.16.0-alpha.1":
+  version: 7.16.0-alpha.1
+  resolution: "@prismicio/client@npm:7.16.0-alpha.1"
   dependencies:
     imgix-url-builder: ^0.0.5
-  checksum: 658d6a6fefa75d8b3adc1014538de0916ffc6633d463dd4c6af21a75b5e69655d42804e6c6c0b5ba4ee1f96b91486ac572cd17bbdb897275a111b1268146f690
+  checksum: bd84bd265f2afce95d140e11ac78995f24b4cc3545a9ada218b6ff000e21fe504ba433830744c81abae6860a5fcf519c13fd8d93c5a273b2d49c2523eae9ec39
   languageName: node
   linkType: hard
 
@@ -6502,6 +6502,15 @@ __metadata:
   dependencies:
     imgix-url-builder: ^0.0.4
   checksum: 716d9d3f0d920c58d3af74a3558886a090dc12d7ec190761d296bcfb8beda1dd47806681eeebf6543f1fdb24c92411939554517d74c9ac3120c84755b2dd14ad
+  languageName: node
+  linkType: hard
+
+"@prismicio/client@npm:latest":
+  version: 7.11.0
+  resolution: "@prismicio/client@npm:7.11.0"
+  dependencies:
+    imgix-url-builder: ^0.0.5
+  checksum: 658d6a6fefa75d8b3adc1014538de0916ffc6633d463dd4c6af21a75b5e69655d42804e6c6c0b5ba4ee1f96b91486ac572cd17bbdb897275a111b1268146f690
   languageName: node
   linkType: hard
 
@@ -9816,7 +9825,7 @@ __metadata:
   dependencies:
     "@amplitude/experiment-node-server": 1.8.1
     "@antfu/ni": ^0.20.0
-    "@prismicio/client": ^7.11.0
+    "@prismicio/client": 7.16.0-alpha.1
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.2.0
     "@prismicio/mocks": 2.8.0
@@ -9876,7 +9885,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/plugin-kit@workspace:packages/plugin-kit"
   dependencies:
-    "@prismicio/client": ^7.11.0
+    "@prismicio/client": 7.16.0-alpha.1
     "@prismicio/mock": 0.3.7
     "@prismicio/types-internal": 3.4.0-alpha.11
     "@size-limit/preset-small-lib": 8.2.4
@@ -32366,7 +32375,7 @@ __metadata:
   dependencies:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
-    "@prismicio/client": 7.11.0
+    "@prismicio/client": 7.16.0-alpha.1
     "@prismicio/editor-fields": 0.4.61
     "@prismicio/editor-support": 0.4.61
     "@prismicio/editor-ui": 0.4.61
