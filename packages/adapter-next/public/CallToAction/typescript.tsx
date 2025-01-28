@@ -1,11 +1,12 @@
-import { type Content, isFilled } from "@prismicio/client";
+import { FC } from "react";
+import { Content, isFilled } from "@prismicio/client";
+import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
 
 export type PascalNameToReplaceProps =
 	SliceComponentProps<Content.PascalNameToReplaceSlice>;
 
-const PascalNameToReplace = ({ slice }: PascalNameToReplaceProps) => {
+const PascalNameToReplace: FC<PascalNameToReplaceProps> = ({ slice }) => {
 	const alignment = slice.variation === "alignLeft" ? "left" : "center";
 
 	return (
