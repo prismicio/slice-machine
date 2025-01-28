@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import {
 	SliceSimulatorProps,
 	disableEventHandler,
@@ -19,14 +19,14 @@ type SliceSimulatorWrapperProps = {
  * A wrapper for the slice simulator that isolates the given children from the
  * page's layout.
  */
-export const SliceSimulatorWrapper = ({
+export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 	className,
 	children,
 	zIndex,
 	background,
 	message,
 	hasSlices,
-}: SliceSimulatorWrapperProps): JSX.Element => {
+}) => {
 	const defaultProps = getDefaultProps();
 
 	return (

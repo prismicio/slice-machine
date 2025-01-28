@@ -5,9 +5,7 @@ import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 export type PascalNameToReplaceProps =
 	SliceComponentProps<Content.PascalNameToReplaceSlice>;
 
-const PascalNameToReplace = ({
-	slice,
-}: PascalNameToReplaceProps): JSX.Element => {
+const PascalNameToReplace = ({ slice }: PascalNameToReplaceProps) => {
 	return (
 		<section
 			data-slice-type={slice.slice_type}
@@ -65,13 +63,13 @@ const PascalNameToReplace = ({
             background-color: #f4f0ec;
             color: #333;
           }
-          
+
           .es-customer-logos__content {
             display: grid;
             gap: 2rem;
             justify-items: center;
           }
-          
+
           .es-customer-logos__heading {
             color: #8592e0;
             font-size: 1.5rem;
@@ -81,8 +79,8 @@ const PascalNameToReplace = ({
 
           .es-customer-logos__heading * {
             margin: 0;
-          }      
-          
+          }
+
           .es-customer-logos__logos {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -92,29 +90,29 @@ const PascalNameToReplace = ({
             list-style-type: none;
             width: 100%;
           }
-          
+
           @media (min-width: 1200px) {
             .es-customer-logos__logos {
               margin-left: -3rem;
             }
           }
-          
+
           .es-customer-logos__logo {
             margin: 0;
             display: flex;
             justify-content: center;
           }
-          
+
           @media (min-width: 1200px) {
             .es-customer-logos__logo {
               margin-left: 3rem;
             }
           }
-          
+
           .es-customer-logos__logo__link__image {
             max-width: 10rem;
           }
-          
+
           .es-customer-logos__button {
             justify-self: center;
             text-decoration: underline;
