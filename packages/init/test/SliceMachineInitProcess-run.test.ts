@@ -41,8 +41,6 @@ const prepareEnvironment = async (
 		variations: [ctx.mockPrismic.model.sharedSliceVariation()],
 	});
 	const customTypeModel = ctx.mockPrismic.model.customType();
-	// TODO: update @prismicio/mock so that custom-type includes the "format" property
-	const customTypeModelWithFormat = { ...customTypeModel, format: "custom" };
 
 	const sliceLibraryReadHookHandler = vi.fn(({ libraryID }) => {
 		if (libraryID === "./slices") {
@@ -116,7 +114,7 @@ const prepareEnvironment = async (
 			return res(ctx.status(404));
 		},
 		async onCustomTypeInsert(req, res, ctx) {
-			expect(await req.json()).toStrictEqual(customTypeModelWithFormat);
+			expect(await req.json()).toStrictEqual(customTypeModel);
 
 			return res(ctx.status(201));
 		},

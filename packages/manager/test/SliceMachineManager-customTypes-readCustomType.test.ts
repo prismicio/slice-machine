@@ -27,8 +27,7 @@ it("returns the adapter's `custom-type:read` return value", async (ctx) => {
 	const res = await manager.customTypes.readCustomType({ id: model.id });
 
 	expect(res).toStrictEqual({
-		// TODO: update prismic/mock
-		model: { ...model, format: "custom" },
+		model,
 		errors: [],
 	});
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, {
