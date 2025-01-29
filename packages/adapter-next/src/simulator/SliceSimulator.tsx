@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { ComponentType, FC, useEffect, useState } from "react";
 
 import {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
@@ -42,7 +42,7 @@ export type SliceSimulatorProps = {
 				 * />;
 				 * ```
 				 */
-				sliceZone: (props: SliceSimulatorSliceZoneProps) => JSX.Element;
+				sliceZone: ComponentType<SliceSimulatorSliceZoneProps>;
 		  }
 		| {
 				children: React.ReactNode;
@@ -53,22 +53,22 @@ export type SliceSimulatorProps = {
  * Simulate slices in isolation. The slice simulator enables live slice
  * development in Slice Machine and live previews in the Page Builder.
  */
-export const SliceSimulator = ({
+export const SliceSimulator: FC<SliceSimulatorProps> = ({
 	background,
 	zIndex,
 	className,
 	...restProps
-}: SliceSimulatorProps): JSX.Element => {
+}) => {
 	if (!("sliceZone" in restProps)) {
 		throw new Error(
 			"A sliceZone prop must be provided when <SliceZone> is rendered in a Client Component. Add a sliceZone prop or convert your simulator to a Server Component with the getSlices helper.",
 		);
 	}
 
-	const [slices, setSlices] = React.useState(() => getDefaultSlices());
-	const [message, setMessage] = React.useState(() => getDefaultMessage());
+	const [slices, setSlices] = useState(() => getDefaultSlices());
+	const [message, setMessage] = useState(() => getDefaultMessage());
 
-	React.useEffect(() => {
+	useEffect(() => {
 		simulatorManager.state.on(
 			StateEventType.Slices,
 			(_slices) => {

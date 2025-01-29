@@ -43,6 +43,7 @@ const createComponentFile = async ({
 		contents = data.componentContents;
 	} else if (isTypeScriptProject) {
 		contents = stripIndent`
+			import { FC } from "react";
 			import { Content } from "@prismicio/client";
 			import { SliceComponentProps } from "@prismicio/react";
 
@@ -54,7 +55,7 @@ const createComponentFile = async ({
 			/**
 			 * Component for "${data.model.name}" Slices.
 			 */
-			const ${pascalName} = ({ slice }: ${pascalName}Props): JSX.Element => {
+			const ${pascalName}: FC<${pascalName}Props> = ({ slice }) => {
 				return (
 					<section
 						data-slice-type={slice.slice_type}
@@ -72,7 +73,7 @@ const createComponentFile = async ({
 			/**
 			 * @typedef {import("@prismicio/client").Content.${pascalName}Slice} ${pascalName}Slice
 			 * @typedef {import("@prismicio/react").SliceComponentProps<${pascalName}Slice>} ${pascalName}Props
-			 * @param {${pascalName}Props}
+			 * @type {import("react").FC<${pascalName}Props>}
 			 */
 			const ${pascalName} = ({ slice }) => {
 				return (

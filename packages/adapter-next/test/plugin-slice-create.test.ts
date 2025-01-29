@@ -255,7 +255,7 @@ test("component file is correctly typed with JSDoc when TypeScript is disabled",
 	expect(jsDocTags).toStrictEqual([
 		'@typedef {import("@prismicio/client").Content.QuxQuuxSlice} QuxQuuxSlice',
 		'@typedef {import("@prismicio/react").SliceComponentProps<QuxQuuxSlice>} QuxQuuxProps',
-		"@param {QuxQuuxProps}\n ",
+		'@type {import("react").FC<QuxQuuxProps>}\n ',
 	]);
 });
 
@@ -287,9 +287,7 @@ test("component file is correctly typed when TypeScript is enabled", async (ctx)
 	expect(propsTypeAlias.isExported()).toBe(true);
 	expect(
 		file.getVariableDeclarationOrThrow("QuxQuux").getType().getText(),
-	).toBe(
-		"({ slice }: SliceComponentProps<Content.QuxQuuxSlice>) => JSX.Element",
-	);
+	).toBe("FC<SliceComponentProps<Content.QuxQuuxSlice>>");
 });
 
 test("component file writes to .js file by default", async (ctx) => {
