@@ -49,8 +49,7 @@ it("pushes a Custom Type using the Custom Types API", async (ctx) => {
 
 	await manager.user.login(createPrismicAuthLoginResponse());
 	await manager.customTypes.pushCustomType({ id: model.id });
-	// TODO: update prismicio/mock library
-	expect(sentModel).toStrictEqual({ ...model, format: "custom" });
+	expect(sentModel).toStrictEqual(model);
 });
 
 it("pushes a Custom Type using the Custom Types API using the currently set environment", async (ctx) => {
@@ -93,8 +92,8 @@ it("pushes a Custom Type using the Custom Types API using the currently set envi
 
 	await manager.user.login(createPrismicAuthLoginResponse());
 	await manager.customTypes.pushCustomType({ id: model.id });
-	// TODO: update prismicio/mock library
-	expect(sentModel).toStrictEqual({ ...model, format: "custom" });
+
+	expect(sentModel).toStrictEqual(model);
 });
 
 it("uses the update endpoint if the Custom Type already exists", async (ctx) => {
