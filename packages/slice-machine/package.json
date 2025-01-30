@@ -46,7 +46,7 @@
     "@prismicio/editor-fields": "0.4.61",
     "@prismicio/editor-support": "0.4.61",
     "@prismicio/editor-ui": "0.4.61",
-    "@prismicio/mock": "0.7.0-alpha.3",
+    "@prismicio/mock": "0.7.0-alpha.4",
     "@prismicio/mocks": "2.8.0",
     "@prismicio/simulator": "0.1.4",
     "@prismicio/types-internal": "3.4.0-alpha.11",

@@ -31,6 +31,7 @@ const model = mock.model.customType({
 		richText: mock.model.richText(),
 		select: mock.model.select(),
 		sliceZone: mock.model.sliceZone(),
+		table: mock.model.table(),
 		timestamp: mock.model.timestamp(),
 		title: mock.model.title(),
 		uid: mock.model.uid(),
@@ -137,6 +138,8 @@ testSnippet(
 	"sliceZone",
 	`<SliceZone :slices="${model.id}.data.sliceZone" :components="components" />`,
 );
+
+testSnippet("table", `<PrismicTable :field="${model.id}.data.table" />`);
 
 testSnippet("timestamp", `{{${model.id}.data.timestamp}}`);
 
