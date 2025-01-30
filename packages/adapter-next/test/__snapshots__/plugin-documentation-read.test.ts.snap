@@ -2,7 +2,7 @@
 
 exports[`PageSnippet > App Router > return a snippet with JavaScript 1`] = `
 {
-  "content": "## Create your Foo Bar's page component
+  "content": "## Create your Foobar's page component
 
 Add a new route by creating an \`app/[uid]/page.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`app/marketing/[uid]/page.js\`.)
 
@@ -63,7 +63,7 @@ Make sure all of your import paths are correct. See the [install guide](https://
 
 exports[`PageSnippet > App Router > return a snippet with TypeScript for TypeScript projects 1`] = `
 {
-  "content": "## Create your Foo Bar's page component
+  "content": "## Create your Foobar's page component
 
 Add a new route by creating an \`app/[uid]/page.tsx\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`app/marketing/[uid]/page.tsx\`.)
 
@@ -131,7 +131,7 @@ Make sure all of your import paths are correct. See the [install guide](https://
 
 exports[`PageSnippet > Pages Router > return a snippet with JavaScript 1`] = `
 {
-  "content": "## Create your Foo Bar's page component
+  "content": "## Create your Foobar's page component
 
 Add a new route by creating a \`pages/[uid].js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`pages/marketing/[uid].js\`.)
 
@@ -203,7 +203,7 @@ Make sure all of your import paths are correct. See the [install guide](https://
 
 exports[`PageSnippet > Pages Router > return a snippet with TypeScript for TypeScript projects 1`] = `
 {
-  "content": "## Create your Foo Bar's page component
+  "content": "## Create your Foobar's page component
 
 Add a new route by creating a \`pages/[uid].tsx\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`pages/marketing/[uid].tsx\`.)
 
