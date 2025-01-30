@@ -2,7 +2,7 @@
 
 "use client";
 
-import * as React from "react";
+import { FC, useEffect, useState } from "react";
 
 import { useRouter } from "next/navigation";
 import {
@@ -25,13 +25,13 @@ export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
 	className?: string;
 };
 
-export const SliceSimulator = ({
+export const SliceSimulator: FC<SliceSimulatorProps> = ({
 	children,
 	background,
 	zIndex,
 	className,
-}: SliceSimulatorProps): JSX.Element => {
-	const [message, setMessage] = React.useState(() => getDefaultMessage());
+}) => {
+	const [message, setMessage] = useState(() => getDefaultMessage());
 	const router = useRouter();
 
 	const state =
@@ -40,7 +40,7 @@ export const SliceSimulator = ({
 			: undefined;
 	const hasSlices = getSlices(state).length > 0;
 
-	React.useEffect(() => {
+	useEffect(() => {
 		simulatorManager.state.on(
 			StateEventType.Slices,
 			(newSlices) => {

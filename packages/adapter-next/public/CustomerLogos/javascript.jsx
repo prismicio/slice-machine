@@ -7,7 +7,7 @@ import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
  *
  * @typedef {import("@prismicio/react").SliceComponentProps<PascalNameToReplaceSlice>} PascalNameToReplaceProps
  *
- * @param {PascalNameToReplaceProps}
+ * @type {import("react").FC<PascalNameToReplaceProps>}
  */
 const PascalNameToReplace = ({ slice }) => {
 	return (
