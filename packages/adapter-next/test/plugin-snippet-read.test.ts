@@ -23,7 +23,7 @@ const model = mock.model.customType({
 		geoPoint: mock.model.geoPoint(),
 		group: mock.model.group(),
 		image: mock.model.image(),
-		integrationFields: mock.model.integrationFields(),
+		integrationFields: mock.model.integration(),
 		keyText: mock.model.keyText(),
 		link: mock.model.link(),
 		linkToMedia: mock.model.linkToMedia(),
