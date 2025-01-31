@@ -75,7 +75,7 @@
 		"prismic-ts-codegen": "0.1.25-alpha.0"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "0.7.0-alpha.4",
+		"@prismicio/mock": "0.7.0-alpha.5",
 		"@prismicio/types-internal": "3.4.0-alpha.11",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
