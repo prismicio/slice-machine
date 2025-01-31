@@ -182,8 +182,8 @@ it("sends the provided user agent", async (ctx) => {
 
 	await manager.user.login(createPrismicAuthLoginResponse());
 	await manager.customTypes.pushCustomType({ id: model.id, userAgent: "foo" });
-	// TODO: update prismicio/mock library
-	expect(sentModel).toStrictEqual({ ...model, format: "custom" });
+
+	expect(sentModel).toStrictEqual(model);
 });
 
 it("throws if plugins have not been initialized", async () => {

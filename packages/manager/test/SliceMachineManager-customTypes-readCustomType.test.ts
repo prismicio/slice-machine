@@ -91,7 +91,7 @@ it("ignores plugins that implement `custom-type-library:read`", async (ctx) => {
 	const res = await manager.customTypes.readCustomType({ id: model.id });
 
 	expect(res).toStrictEqual({
-		model: { ...model, format: "custom" },
+		model,
 		errors: [],
 	});
 });

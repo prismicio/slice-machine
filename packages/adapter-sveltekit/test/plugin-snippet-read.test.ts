@@ -23,14 +23,15 @@ const model = mock.model.customType({
 		geoPoint: mock.model.geoPoint(),
 		group: mock.model.group(),
 		image: mock.model.image(),
-		integrationFields: mock.model.integrationFields(),
+		integrationFields: mock.model.integration(),
 		keyText: mock.model.keyText(),
-		link: mock.model.link(),
-		linkToMedia: mock.model.linkToMedia(),
+		link: mock.model.link({ repeat: false, allowText: false }),
+		linkToMedia: mock.model.linkToMedia({ allowText: false }),
 		number: mock.model.number(),
 		richText: mock.model.richText(),
 		select: mock.model.select(),
 		sliceZone: mock.model.sliceZone(),
+		table: mock.model.table(),
 		timestamp: mock.model.timestamp(),
 		title: mock.model.title(),
 		uid: mock.model.uid(),
@@ -145,6 +146,8 @@ testSnippet(
 	"sliceZone",
 	`<SliceZone slices={${model.id}.data.sliceZone} {components} />`,
 );
+
+testSnippet("table", `<PrismicTable field={${model.id}.data.table} />`);
 
 testSnippet("timestamp", `{${model.id}.data.timestamp}`);
 
