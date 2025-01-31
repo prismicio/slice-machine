@@ -47,11 +47,13 @@ defineProps(
 						v-if="isFilled.richText(slice.primary.title)"
 						:field="slice.primary.title"
 						class="es-alternate-grid__primary-content__intro__headline"
+						wrapper="div"
 					/>
 					<PrismicRichText
 						v-if="isFilled.richText(slice.primary.description)"
 						:field="slice.primary.description"
 						class="es-alternate-grid__primary-content__intro__description"
+						wrapper="div"
 					/>
 				</div>
 				<div
@@ -67,11 +69,13 @@ defineProps(
 							v-if="isFilled.richText(item.title)"
 							:field="item.title"
 							class="es-alternate-grid__item__heading"
+							wrapper="div"
 						/>
 						<PrismicRichText
 							v-if="isFilled.richText(item.description)"
 							:field="item.description"
 							class="es-alternate-grid__item__description"
+							wrapper="div"
 						/>
 					</div>
 				</div>
