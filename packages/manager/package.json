@@ -93,7 +93,7 @@
 	},
 	"devDependencies": {
 		"@amplitude/experiment-node-server": "1.8.1",
-		"@prismicio/mock": "0.7.0-alpha.4",
+		"@prismicio/mock": "0.7.0-alpha.6",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/express": "4.17.17",
 		"@types/semver": "7.3.13",

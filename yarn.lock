@@ -6665,12 +6665,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mock@npm:0.7.0-alpha.4":
-  version: 0.7.0-alpha.4
-  resolution: "@prismicio/mock@npm:0.7.0-alpha.4"
+"@prismicio/mock@npm:0.7.0-alpha.6":
+  version: 0.7.0-alpha.6
+  resolution: "@prismicio/mock@npm:0.7.0-alpha.6"
   peerDependencies:
     "@prismicio/client": ^7
-  checksum: ed71ea6094f19222a940065b1e36b015dd0e47b8f6200aba763ab60d6644e77638bc828ecfddae7b095dcbbbecd1b83dc3478fc7bafc117f098aeb14712a4d41
+  checksum: cbc9b5d9198eeca3e105d0eef76563d7cd55aab455ffc728c8d43174b6f8d173cc855dfed04f0aea85e30ecb0f47a9368535fedb85182fa5716262d2bce5f2d9
   languageName: node
   linkType: hard
 
@@ -9562,7 +9562,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-next@workspace:packages/adapter-next"
   dependencies:
-    "@prismicio/mock": 0.7.0-alpha.4
+    "@prismicio/mock": 0.7.0-alpha.6
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 3.4.0-alpha.11
     "@size-limit/preset-small-lib": 8.2.4
@@ -9607,7 +9607,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-nuxt2@workspace:packages/adapter-nuxt2"
   dependencies:
-    "@prismicio/mock": 0.7.0-alpha.4
+    "@prismicio/mock": 0.7.0-alpha.6
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 3.4.0-alpha.11
     "@size-limit/preset-small-lib": 8.2.4
@@ -9648,7 +9648,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-nuxt@workspace:packages/adapter-nuxt"
   dependencies:
-    "@prismicio/mock": 0.7.0-alpha.4
+    "@prismicio/mock": 0.7.0-alpha.6
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 3.4.0-alpha.11
     "@size-limit/preset-small-lib": 8.2.4
@@ -9690,7 +9690,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-sveltekit@workspace:packages/adapter-sveltekit"
   dependencies:
-    "@prismicio/mock": 0.7.0-alpha.4
+    "@prismicio/mock": 0.7.0-alpha.6
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 3.4.0-alpha.11
     "@size-limit/preset-small-lib": 8.2.4
@@ -9813,7 +9813,7 @@ __metadata:
     "@antfu/ni": ^0.20.0
     "@prismicio/client": 7.16.0-alpha.1
     "@prismicio/custom-types-client": 2.1.0
-    "@prismicio/mock": 0.7.0-alpha.4
+    "@prismicio/mock": 0.7.0-alpha.6
     "@prismicio/mocks": 2.8.0
     "@prismicio/types-internal": 3.4.0-alpha.11
     "@segment/analytics-node": ^2.1.2
@@ -9872,7 +9872,7 @@ __metadata:
   resolution: "@slicemachine/plugin-kit@workspace:packages/plugin-kit"
   dependencies:
     "@prismicio/client": 7.16.0-alpha.1
-    "@prismicio/mock": 0.7.0-alpha.4
+    "@prismicio/mock": 0.7.0-alpha.6
     "@prismicio/types-internal": 3.4.0-alpha.11
     "@size-limit/preset-small-lib": 8.2.4
     "@types/common-tags": 1.8.1
@@ -32366,7 +32366,7 @@ __metadata:
     "@prismicio/editor-fields": 0.4.61
     "@prismicio/editor-support": 0.4.61
     "@prismicio/editor-ui": 0.4.61
-    "@prismicio/mock": 0.7.0-alpha.4
+    "@prismicio/mock": 0.7.0-alpha.6
     "@prismicio/mocks": 2.8.0
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 3.4.0-alpha.11
