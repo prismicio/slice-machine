@@ -69,7 +69,6 @@
   "resolutions": {
     "connected-next-router/react-redux": "8.0.7",
     "react-beautiful-dnd/react-redux": "8.0.7",
-    "@prismicio/types-internal": "3.4.0-alpha.11",
     "express": "4.20.0"
   },
   "workspaces": [
