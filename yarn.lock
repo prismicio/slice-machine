@@ -6532,15 +6532,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.61":
-  version: 0.4.61
-  resolution: "@prismicio/editor-fields@npm:0.4.61"
+"@prismicio/editor-fields@npm:0.4.62-alpha.jp-table-render-default-layout.2":
+  version: 0.4.62-alpha.jp-table-render-default-layout.2
+  resolution: "@prismicio/editor-fields@npm:0.4.62-alpha.jp-table-render-default-layout.2"
   dependencies:
     "@aws-sdk/client-bedrock-runtime": 3.709.0
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.61
+    "@prismicio/editor-support": 0.4.62-alpha.jp-table-render-default-layout.2
     "@prismicio/richtext": 2.1.1
-    "@prismicio/types-internal": 3.3.0
+    "@prismicio/types-internal": 3.6.0
     "@tanstack/react-query": 5.55.4
     "@tiptap/core": 2.10.2
     "@tiptap/extension-bold": 2.10.2
@@ -6556,6 +6556,10 @@ __metadata:
     "@tiptap/extension-ordered-list": 2.10.2
     "@tiptap/extension-paragraph": 2.10.2
     "@tiptap/extension-placeholder": 2.10.2
+    "@tiptap/extension-table": 2.10.2
+    "@tiptap/extension-table-cell": 2.10.2
+    "@tiptap/extension-table-header": 2.10.2
+    "@tiptap/extension-table-row": 2.10.2
     "@tiptap/extension-text": 2.10.2
     "@tiptap/pm": 2.10.2
     "@tiptap/react": 2.10.2
@@ -6570,16 +6574,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.61
+    "@prismicio/editor-ui": ^0.4.62-alpha.jp-table-render-default-layout.2
     react: 18
     react-dom: 18
-  checksum: 390e2dff88c73c88d036c107273428ae9b0a958a0beedf2c07dd482ae5360b9709a3e9fe60e2f9da8ad5f26993c944fb2e4ee809460d33aeb24d9b1874aa28b0
+  checksum: 40a0ed25e9e8179d9321c3edd8f55653103bc69e579945ce5203ad4b645cfd2ca2393462cfe81ee03a0ecf14efb62baef19920c59be721495faf6a548f47162e
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.61":
-  version: 0.4.61
-  resolution: "@prismicio/editor-support@npm:0.4.61"
+"@prismicio/editor-support@npm:0.4.62-alpha.jp-table-render-default-layout.2":
+  version: 0.4.62-alpha.jp-table-render-default-layout.2
+  resolution: "@prismicio/editor-support@npm:0.4.62-alpha.jp-table-render-default-layout.2"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6590,16 +6594,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 0378189edc5860b337c24bf54c9317c360e03702bf9bc278d77707ee3e6accd4ae6fbfac809da6bfda79ce24356ff2f7ecfa2677be8144fdb456ea1b12210fa3
+  checksum: 071ad1474c815d037a200d46572b9ea7ae51a53e7b79ef0f5395c1c08ce1401700efa20f41aae117011c6e17a3f021487ab6269300cb2bb79992b8be2487756a
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.61":
-  version: 0.4.61
-  resolution: "@prismicio/editor-ui@npm:0.4.61"
+"@prismicio/editor-ui@npm:0.4.62-alpha.jp-table-render-default-layout.2":
+  version: 0.4.62-alpha.jp-table-render-default-layout.2
+  resolution: "@prismicio/editor-ui@npm:0.4.62-alpha.jp-table-render-default-layout.2"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.61
+    "@prismicio/editor-support": 0.4.62-alpha.jp-table-render-default-layout.2
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6650,7 +6654,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 6e649d519667ef57e6d235023f396b22dbffd11ca56fac9dac4ec1a0d342820c12e011ed9be6e6fb907fa600c403195177a7940818245006a3253e2a793149b1
+  checksum: 037b70ceb40b69c5fc960059cfc0aab5958de97b3f98ce3ea89432bcf6c31d1a68821f65921db484f8fabd76cc0d0bda88a3261b46cceafcd215bce6d0d45cb9
   languageName: node
   linkType: hard
 
@@ -6762,22 +6766,6 @@ __metadata:
     "@sveltejs/kit":
       optional: true
   checksum: 5d7a1c4e280130bc03e6e6676fd503646208e891ed3a803020d4e2cd39c32186a6cad011e74c3030ebd05ac874d1049e804e81bcbac7c8453c5f19a3a94e407b
-  languageName: node
-  linkType: hard
-
-"@prismicio/types-internal@npm:3.3.0":
-  version: 3.3.0
-  resolution: "@prismicio/types-internal@npm:3.3.0"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-    uuid: ^9.0.0
-  peerDependencies:
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-  checksum: 898dba5cfd61e428d117f12ec59aa7146920593068222d7d0b0f67f95e0a822ff52b930353ca194c4aee887762e8edad8a11460994479bfb193956104dabe9ff
   languageName: node
   linkType: hard
 
@@ -12034,6 +12022,43 @@ __metadata:
     "@tiptap/core": ^2.7.0
     "@tiptap/pm": ^2.7.0
   checksum: a2564ba40587e09ea4d0234b5af06a20039fd39871aa2ae3dbed26599b1eb0c641b711fe03cffd82e4a7281781baf13ae123de3af65a3517a4e710e7eb521c2b
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-table-cell@npm:2.10.2":
+  version: 2.10.2
+  resolution: "@tiptap/extension-table-cell@npm:2.10.2"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+  checksum: 0f8477861dfc83d4ee40691d593cac7947f73b46195041e6831f51255667ca71c16aead906acff5e53f9c37e4a80beb38076159ee985ccfb703f81089981593f
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-table-header@npm:2.10.2":
+  version: 2.10.2
+  resolution: "@tiptap/extension-table-header@npm:2.10.2"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+  checksum: a3ad0ed22886fd7301d2178f4da66e6bddb892bd63059974d0c41d47f0eeebdecd114f45d6884f844997c8a8ba9afec79e017f55a0309c6980f103e07e97f384
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-table-row@npm:2.10.2":
+  version: 2.10.2
+  resolution: "@tiptap/extension-table-row@npm:2.10.2"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+  checksum: 7b5be1f8c14cc28a0f6b688c7c349a2293af9e1478578abdfe930ce56158f3366dcbe2f119ad8314831bc604470347c19fd1f14dec4f88b3d0c38611011ec2f0
+  languageName: node
+  linkType: hard
+
+"@tiptap/extension-table@npm:2.10.2":
+  version: 2.10.2
+  resolution: "@tiptap/extension-table@npm:2.10.2"
+  peerDependencies:
+    "@tiptap/core": ^2.7.0
+    "@tiptap/pm": ^2.7.0
+  checksum: f517e4170ee627c7af04679c7c5e74fa0931ab7188f28ba27a25b4dcb8c1bf92b7fe36a97333432752504d56c482fa5e139fbabc9e976658a4fed0f405bdfb65
   languageName: node
   linkType: hard
 
@@ -32379,9 +32404,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.16.0
-    "@prismicio/editor-fields": 0.4.61
-    "@prismicio/editor-support": 0.4.61
-    "@prismicio/editor-ui": 0.4.61
+    "@prismicio/editor-fields": 0.4.62-alpha.jp-table-render-default-layout.2
+    "@prismicio/editor-support": 0.4.62-alpha.jp-table-render-default-layout.2
+    "@prismicio/editor-ui": 0.4.62-alpha.jp-table-render-default-layout.2
     "@prismicio/mock": 0.7.0
     "@prismicio/mocks": 2.9.0
     "@prismicio/simulator": 0.1.4
