@@ -92,8 +92,7 @@ it("pushes changes using the push API", async (ctx) => {
 			{
 				id: customTypeModel.id,
 				type: ChangeTypes.CUSTOM_TYPE_UPDATE,
-				// TODO: update prismicio/mock librarys
-				payload: { ...customTypeModel, format: "custom" },
+				payload: customTypeModel,
 			},
 		],
 		confirmDeleteDocuments: false,
@@ -167,8 +166,7 @@ it("pushes changes using the push API to the selected environment when an enviro
 			{
 				id: customTypeModel.id,
 				type: ChangeTypes.CUSTOM_TYPE_UPDATE,
-				// TODO: update prismicio/mock librarys
-				payload: { ...customTypeModel, format: "custom" },
+				payload: customTypeModel,
 			},
 		],
 		confirmDeleteDocuments: false,

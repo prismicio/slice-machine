@@ -128,6 +128,19 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 			};
 		}
 
+		case "Table": {
+			return {
+				label,
+				language: "tsx",
+				code: await format(
+					stripIndent`
+						<PrismicTable field={${dotPath(fieldPath)}} />
+					`,
+					helpers,
+				),
+			};
+		}
+
 		case "Group": {
 			// We cannot use `format` since this snippet contains invalid syntax.
 			// Please ensure this snippet is manually formatted correctly.
