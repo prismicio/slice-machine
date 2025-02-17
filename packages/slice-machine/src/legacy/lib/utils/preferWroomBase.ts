@@ -1,13 +1,23 @@
 export default function preferWroomBase(smApiUrl: string): string {
   try {
-    const urlFromSmJson = new URL(smApiUrl);
-    if (urlFromSmJson.hostname.endsWith(".wroom.io")) {
-      urlFromSmJson.hostname = "wroom.io";
-      return urlFromSmJson.origin;
-    } else if (urlFromSmJson.hostname.endsWith(".wroom.test")) {
-      urlFromSmJson.hostname = "wroom.test";
-      return urlFromSmJson.origin;
+    const url = new URL(smApiUrl);
+    const suffixes = [
+      ".wroom.io",
+      ".wroom.test",
+      ".dev-tools-wroom.com",
+      ".marketing-tools-wroom.com",
+      ".platform-wroom.com",
+    ];
+
+    const matchingSuffix = suffixes.find((suffix) =>
+      url.hostname.endsWith(suffix),
+    );
+
+    if (matchingSuffix !== undefined) {
+      url.hostname = matchingSuffix.slice(1);
+      return url.origin;
     }
+
     return "https://prismic.io";
   } catch {
     return "https://prismic.io";
