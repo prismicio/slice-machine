@@ -1130,6 +1130,30 @@ export class SlicesManager extends BaseManager {
 	): Promise<SliceMachineManagerGenerateSliceReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		const INPUT_TOKEN_PRICE = 0.000003;
+		const OUTPUT_TOKEN_PRICE = 0.000015;
+
+		let totalTokens = {
+			modelGeneration: {
+				input: 0,
+				output: 0,
+				total: 0,
+				price: 0,
+			},
+			mocksGeneration: {
+				input: 0,
+				output: 0,
+				total: 0,
+				price: 0,
+			},
+			codeGeneration: {
+				input: 0,
+				output: 0,
+				total: 0,
+				price: 0,
+			},
+		};
+
 		// Validate AWS credentials
 		const AWS_REGION = "us-east-1";
 		const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env;
@@ -1444,11 +1468,14 @@ type GroupField = {
 `;
 
 		/**
-		 * Builds a clear system prompt to generate a valid Prismic JSON model based
-		 * solely on the image.
+		 * Calls the AI endpoint to generate the slice model.
 		 */
-		function buildModelPrompt(existingSlice: SharedSlice): string {
-			return `
+		async function generateSliceModel(
+			client: BedrockRuntimeClient,
+			existingSlice: SharedSlice,
+			imageFile: Uint8Array,
+		): Promise<SharedSlice> {
+			const systemPrompt = `
 				You are an expert in Prismic content modeling. Using the image provided, generate a valid Prismic JSON model for the slice described below. Follow these rules precisely:
 				- Use the TypeScript schema provided as your reference.
 				- Place all main content fields under the "primary" object.
@@ -1470,17 +1497,6 @@ type GroupField = {
 				Existing Slice:
 				${JSON.stringify(existingSlice)}
 			`.trim();
-		}
-
-		/**
-		 * Calls the AI endpoint to generate the slice model.
-		 */
-		async function generateSliceModel(
-			client: BedrockRuntimeClient,
-			existingSlice: SharedSlice,
-			imageFile: Uint8Array,
-		): Promise<SharedSlice> {
-			const systemPrompt = buildModelPrompt(existingSlice);
 			const command = new ConverseCommand({
 				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
 				system: [{ text: systemPrompt }],
@@ -1497,8 +1513,25 @@ type GroupField = {
 			});
 
 			const response = await client.send(command);
-			const resultText = response.output?.message?.content?.[0]?.text?.trim();
 
+			if (
+				!response.usage ||
+				!response.usage.inputTokens ||
+				!response.usage.outputTokens ||
+				!response.usage.totalTokens
+			) {
+				throw new Error("No usage data was returned.");
+			}
+			totalTokens.modelGeneration = {
+				input: response.usage.inputTokens,
+				output: response.usage.outputTokens,
+				total: response.usage.totalTokens,
+				price:
+					response.usage.inputTokens * INPUT_TOKEN_PRICE +
+					response.usage.outputTokens * OUTPUT_TOKEN_PRICE,
+			};
+
+			const resultText = response.output?.message?.content?.[0]?.text?.trim();
 			if (!resultText) {
 				throw new Error("No valid slice model was generated.");
 			}
@@ -1518,98 +1551,31 @@ type GroupField = {
 		}
 
 		/**
-		 * Builds a system prompt instructing the AI to generate updated slice
-		 * artifacts. The output must be a valid JSON with two keys: "mocks" and
-		 * "componentCode".
+		 * Calls the AI endpoint to generate mocks.
 		 */
-		function buildArtifactPrompt(existingMocks: any): string {
-			return `
+		async function generateSliceMocks(
+			client: BedrockRuntimeClient,
+			imageFile: Uint8Array,
+			existingMocks: SharedSliceContent[],
+		): Promise<SharedSliceContent[]> {
+			// Build a prompt focused solely on updating the mocks.
+			const systemPrompt = `
 				You are a seasoned frontend engineer with deep expertise in Prismic slices.
-				Your task is to generate two outputs based solely on the provided image input and mocks template:
-					1. **Updated Slice Mocks:** Update text fields within the provided mocks template to reflect what is visible in the image.
-						Important guidelines for mocks:
-						- Do not modify the overall structure of the mocks template.
-						- Strictly only update text content.
-						- Do not touch images.
-						- If you see a repetition with a group, you must create the same number of group items that are visible on the image.
-					
-					2. **Fully Isolated Slice Component Code:** Generate a complete React component that uses the updated mocks. The code must:
-						Important guidelines for code:
-						- Be self-contained.
-						- Your goal is to make the code visually looks as close as possible to the image from the user input.
-						- Ensure that the color used for the background is the same as the image provide in the user prompt! It's better no background color than a wrong one.
-						- For links, you must use PrismicNextLink and you must just pass the field, PrismicNextLink will handle the display of the link text, don't do it manually.
-						- Respect the padding and margin visible in the image provide in the user prompt.
-						- Respect the fonts size, color, type visible in the image provide in the user prompt.
-						- Respect the colors visible in the image provide in the user prompt.
-						- Respect the position of elements visible in the image provide in the user prompt.
-						- Respect the size of each elements visible in the image provide in the user prompt.
-						- Respect the overall proportions of the slice from the image provide in the user prompt.
-						- Ensure to strictly respect what is defined on the mocks for each fields ID, do not invent or use something not in the mocks.
-						- Ensure to use all fields provided in the mocks.
-						- Use inline <style> (do not use <style jsx>).
-						- Follow the structure provided in the code example below.
+				Your task is to update the provided mocks template based solely on the visible content in the image.
+				Follow these guidelines strictly:
+					- Do not modify the overall structure of the mocks template.
+					- Strictly only update text content.
+					- Do not touch images.
+					- If you see a repetition with a group, you must create the same number of group items that are visible on the image.
 
 				!IMPORTANT!: 
-					- Only return a valid JSON object with two keys: "mocks" and "componentCode", nothing else before. JSON.parse on your response should not throw an error.
+					- Only return a valid JSON object for mocks, nothing else before. JSON.parse on your response should not throw an error.
 					- All your response should fit in a single return response.
-
-				**Example of a Fully Isolated Slice Component:**
-				-----------------------------------------------------------
-				import { type Content } from "@prismicio/client";
-				import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-				import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
-
-				export type HeroProps = SliceComponentProps<Content.HeroSlice>;
-
-				const Hero = ({ slice }: HeroProps): JSX.Element => {
-				return (
-					<section
-					data-slice-type={slice.slice_type}
-					data-slice-variation={slice.variation}
-					className="hero"
-					>
-					<div className="hero__content">
-						<div className="hero__image-wrapper">
-							<PrismicNextImage field={slice.primary.image} className="hero__image" />
-						</div>
-						
-						<div className="hero__text">
-							<PrismicRichText field={slice.primary.title} />
-							<PrismicRichText field={slice.primary.description} />
-							<PrismicNextLink field={slice.primary.link} />
-						</div>
-					</div>
-					<style>
-						{\`
-							.hero { display: flex; flex-direction: row; padding: 20px; }
-							.hero__content { width: 100%; }
-							.hero__image-wrapper { flex: 1; }
-							.hero__text { flex: 1; padding-left: 20px; }
-						\`}
-					</style>
-					</section>
-				);
-				};
-
-				export default Hero;
-				-----------------------------------------------------------
-
+				
 				Existing Mocks Template:
 				${JSON.stringify(existingMocks, null, 2)}
 			`.trim();
-		}
 
-		/**
-		 * Calls the AI endpoint to generate both updated mocks and the slice React
-		 * component.
-		 */
-		async function generateSliceArtifacts(
-			client: BedrockRuntimeClient,
-			imageFile: Uint8Array,
-			existingMocks: any,
-		): Promise<{ mocks: any; componentCode: string }> {
-			const systemPrompt = buildArtifactPrompt(existingMocks);
 			const command = new ConverseCommand({
 				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
 				system: [{ text: systemPrompt }],
@@ -1624,21 +1590,160 @@ type GroupField = {
 			});
 
 			const response = await client.send(command);
-			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			if (
+				!response.usage ||
+				!response.usage.inputTokens ||
+				!response.usage.outputTokens ||
+				!response.usage.totalTokens
+			) {
+				throw new Error("No usage data was returned.");
+			}
+			totalTokens.mocksGeneration = {
+				input: response.usage.inputTokens,
+				output: response.usage.outputTokens,
+				total: response.usage.totalTokens,
+				price:
+					response.usage.inputTokens * INPUT_TOKEN_PRICE +
+					response.usage.outputTokens * OUTPUT_TOKEN_PRICE,
+			};
 
+			const resultText = response.output?.message?.content?.[0]?.text?.trim();
 			if (!resultText) {
-				throw new Error("No valid slice artifacts were generated.");
+				throw new Error("No valid mocks were generated.");
 			}
 
 			try {
-				console.log("Generated artifacts:", resultText);
-				const artifacts = JSON.parse(resultText);
-				if (!artifacts.mocks || !artifacts.componentCode) {
-					throw new Error("Missing keys in AI response.");
-				}
-				return artifacts;
+				console.log("Generated mocks:", resultText);
+				const updatedMocks = JSON.parse(resultText);
+
+				return updatedMocks;
 			} catch (error) {
-				throw new Error("Failed to parse AI response for artifacts: " + error);
+				throw new Error("Failed to parse AI response for mocks: " + error);
+			}
+		}
+
+		/**
+		 * Calls the AI endpoint to generate the slice React component.
+		 */
+		async function generateSliceComponentCode(
+			client: BedrockRuntimeClient,
+			imageFile: Uint8Array,
+			existingMocks: any,
+		): Promise<string> {
+			// Build a prompt focused solely on generating the React component code.
+			const systemPrompt = `
+				You are a seasoned frontend engineer with deep expertise in Prismic slices.
+				Your task is to generate a fully isolated React component code for a slice based on the provided image input.
+				Follow these guidelines strictly:
+					- Be self-contained.
+					- Your goal is to make the code visually looks as close as possible to the image from the user input.
+					- Ensure that the color used for the background is the same as the image provide in the user prompt! It's better no background color than a wrong one.
+					- For links, you must use PrismicNextLink and you must just pass the field, PrismicNextLink will handle the display of the link text, don't do it manually.
+					- Respect the padding and margin visible in the image provide in the user prompt.
+					- Respect the fonts size, color, type visible in the image provide in the user prompt.
+					- Respect the colors visible in the image provide in the user prompt.
+					- Respect the position of elements visible in the image provide in the user prompt.
+					- Respect the size of each elements visible in the image provide in the user prompt.
+					- Respect the overall proportions of the slice from the image provide in the user prompt.
+					- Ensure to strictly respect what is defined on the mocks for each fields ID, do not invent or use something not in the mocks.
+					- Ensure to use all fields provided in the mocks.
+					- Use inline <style> (do not use <style jsx>).
+					- Follow the structure provided in the code example below.
+
+				!IMPORTANT!: 
+					- Only return a valid JSON object with two keys: "mocks" and "componentCode", nothing else before. JSON.parse on your response should not throw an error.
+					- All your response should fit in a single return response.
+				
+				## Example of a Fully Isolated Slice Component:
+				-----------------------------------------------------------
+				import { type Content } from "@prismicio/client";
+				import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+				import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
+				
+				export type HeroProps = SliceComponentProps<Content.HeroSlice>;
+				
+				const Hero = ({ slice }: HeroProps): JSX.Element => {
+					return (
+						<section
+						data-slice-type={slice.slice_type}
+						data-slice-variation={slice.variation}
+						className="hero"
+						>
+						<div className="hero__content">
+							<div className="hero__image-wrapper">
+								<PrismicNextImage field={slice.primary.image} className="hero__image" />
+							</div>
+							<div className="hero__text">
+								<PrismicRichText field={slice.primary.title} />
+								<PrismicRichText field={slice.primary.description} />
+								<PrismicNextLink field={slice.primary.link} />
+							</div>
+						</div>
+						<style>
+							{\`
+								.hero { display: flex; flex-direction: row; padding: 20px; }
+								.hero__content { width: 100%; }
+								.hero__image-wrapper { flex: 1; }
+								.hero__text { flex: 1; padding-left: 20px; }
+							\`}
+						</style>
+						</section>
+					);
+				};
+				
+				export default Hero;
+				-----------------------------------------------------------
+				Existing Mocks Template:
+				${JSON.stringify(existingMocks, null, 2)}
+			`.trim();
+
+			const command = new ConverseCommand({
+				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				system: [{ text: systemPrompt }],
+				messages: [
+					{
+						role: "user",
+						content: [
+							{ image: { format: "png", source: { bytes: imageFile } } },
+						],
+					},
+				],
+			});
+
+			const response = await client.send(command);
+			if (
+				!response.usage ||
+				!response.usage.inputTokens ||
+				!response.usage.outputTokens ||
+				!response.usage.totalTokens
+			) {
+				throw new Error("No usage data was returned.");
+			}
+			totalTokens.codeGeneration = {
+				input: response.usage.inputTokens,
+				output: response.usage.outputTokens,
+				total: response.usage.totalTokens,
+				price:
+					response.usage.inputTokens * INPUT_TOKEN_PRICE +
+					response.usage.outputTokens * OUTPUT_TOKEN_PRICE,
+			};
+
+			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			if (!resultText) {
+				throw new Error("No valid slice component code was generated.");
+			}
+
+			try {
+				console.log("Generated component code:", resultText);
+				const parsed = JSON.parse(resultText);
+				if (!parsed.componentCode) {
+					throw new Error("Missing key 'componentCode' in AI response.");
+				}
+				return parsed.componentCode;
+			} catch (error) {
+				throw new Error(
+					"Failed to parse AI response for component code: " + error,
+				);
 			}
 		}
 
@@ -1660,15 +1765,15 @@ type GroupField = {
 				args.imageFile,
 			);
 
-			// Persist the updated slice model.
-			console.log("Persist the updated slice model.");
+			// STEP 2: Persist the updated slice model.
+			console.log("STEP 2: Persist the updated slice model.");
 			await this.updateSlice({
 				libraryID: args.libraryID,
 				model: updatedSlice,
 			});
 
-			// STEP 2: Update the slice screenshot.
-			console.log("STEP 2: Update the slice screenshot.");
+			// STEP 3: Update the slice screenshot.
+			console.log("STEP 3: Update the slice screenshot.");
 			await this.updateSliceScreenshot({
 				libraryID: args.libraryID,
 				sliceID: updatedSlice.id,
@@ -1676,30 +1781,46 @@ type GroupField = {
 				data: Buffer.from(args.imageFile),
 			});
 
-			// STEP 3: Generate updated mocks and component code.
-			console.log("STEP 3: Generate updated mocks and component code.");
+			// STEP 4: Generate updated mocks.
+			console.log("STEP 4: Generate updated mocks.");
 			const existingMocks = mockSlice({ model: updatedSlice });
-			const artifacts = await generateSliceArtifacts(
+			const updatedMocks = await generateSliceMocks(
 				bedrockClient,
 				args.imageFile,
 				existingMocks,
 			);
 
-			// Update the slice code.
-			console.log("Update the slice code.");
+			// STEP 5: Generate the isolated slice component code.
+			console.log("STEP 5: Generate updated component code.");
+			const componentCode = await generateSliceComponentCode(
+				bedrockClient,
+				args.imageFile,
+				existingMocks,
+			);
+
+			// STEP 6: Update the slice code.
+			console.log("STEP 6: Update the slice code.");
 			await this.createSlice({
 				libraryID: args.libraryID,
 				model: updatedSlice,
-				componentContents: artifacts.componentCode,
+				componentContents: componentCode,
 			});
 
-			// Persist the generated mocks.
-			console.log("Persist the generated mocks.");
+			// STEP 7: Persist the generated mocks.
+			console.log("STEP 7: Persist the generated mocks.");
 			await this.updateSliceMocks({
 				libraryID: args.libraryID,
 				sliceID: args.slice.id,
-				mocks: artifacts.mocks,
+				mocks: updatedMocks,
 			});
+
+			// Usage
+			console.log("Tokens used:", totalTokens);
+			const totalPrice = Object.values(totalTokens).reduce(
+				(acc, { price }) => acc + price,
+				0,
+			);
+			console.log("Total price:", totalPrice);
 
 			return { slice: updatedSlice };
 		} catch (error) {
