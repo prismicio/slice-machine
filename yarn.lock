@@ -6532,13 +6532,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.62-alpha.jp-table-render-default-layout.2":
-  version: 0.4.62-alpha.jp-table-render-default-layout.2
-  resolution: "@prismicio/editor-fields@npm:0.4.62-alpha.jp-table-render-default-layout.2"
+"@prismicio/editor-fields@npm:0.4.62":
+  version: 0.4.62
+  resolution: "@prismicio/editor-fields@npm:0.4.62"
   dependencies:
     "@aws-sdk/client-bedrock-runtime": 3.709.0
     "@floating-ui/react-dom-interactions": 0.9.3
-    "@prismicio/editor-support": 0.4.62-alpha.jp-table-render-default-layout.2
+    "@prismicio/editor-support": 0.4.62
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.6.0
     "@tanstack/react-query": 5.55.4
@@ -6574,16 +6574,16 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.62-alpha.jp-table-render-default-layout.2
+    "@prismicio/editor-ui": ^0.4.62
     react: 18
     react-dom: 18
-  checksum: 40a0ed25e9e8179d9321c3edd8f55653103bc69e579945ce5203ad4b645cfd2ca2393462cfe81ee03a0ecf14efb62baef19920c59be721495faf6a548f47162e
+  checksum: c3a73e566ce2547d02d301a68ed9d6b2ee1e5c6f2a6b6a579d5fa9753ff9cbab12ca75ed6723bdd15c367d839abd186d301e46a1b7b5b399d2ee95b02e7c1fa7
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.62-alpha.jp-table-render-default-layout.2":
-  version: 0.4.62-alpha.jp-table-render-default-layout.2
-  resolution: "@prismicio/editor-support@npm:0.4.62-alpha.jp-table-render-default-layout.2"
+"@prismicio/editor-support@npm:0.4.62":
+  version: 0.4.62
+  resolution: "@prismicio/editor-support@npm:0.4.62"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6594,16 +6594,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 071ad1474c815d037a200d46572b9ea7ae51a53e7b79ef0f5395c1c08ce1401700efa20f41aae117011c6e17a3f021487ab6269300cb2bb79992b8be2487756a
+  checksum: 2de50a2ad4f195c6f98916b32602cae68812e60603722b30511980abc5461cad46092ee3ba389ce119da77b20379cb71f241dc9f785fb427a0e090399ea54da4
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.62-alpha.jp-table-render-default-layout.2":
-  version: 0.4.62-alpha.jp-table-render-default-layout.2
-  resolution: "@prismicio/editor-ui@npm:0.4.62-alpha.jp-table-render-default-layout.2"
+"@prismicio/editor-ui@npm:0.4.62":
+  version: 0.4.62
+  resolution: "@prismicio/editor-ui@npm:0.4.62"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.62-alpha.jp-table-render-default-layout.2
+    "@prismicio/editor-support": 0.4.62
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6654,7 +6654,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 037b70ceb40b69c5fc960059cfc0aab5958de97b3f98ce3ea89432bcf6c31d1a68821f65921db484f8fabd76cc0d0bda88a3261b46cceafcd215bce6d0d45cb9
+  checksum: 997751f588cd82412ef136b7369da1018c0f7c9500995c49316ba8a60819278d09a48d4bc922d0713646dcafc9bba4ac314c767b0b9b3c1b6d1550d44f572eaa
   languageName: node
   linkType: hard
 
@@ -32404,9 +32404,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.16.0
-    "@prismicio/editor-fields": 0.4.62-alpha.jp-table-render-default-layout.2
-    "@prismicio/editor-support": 0.4.62-alpha.jp-table-render-default-layout.2
-    "@prismicio/editor-ui": 0.4.62-alpha.jp-table-render-default-layout.2
+    "@prismicio/editor-fields": 0.4.62
+    "@prismicio/editor-support": 0.4.62
+    "@prismicio/editor-ui": 0.4.62
     "@prismicio/mock": 0.7.0
     "@prismicio/mocks": 2.9.1
     "@prismicio/simulator": 0.1.4
