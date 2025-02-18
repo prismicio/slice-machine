@@ -87,8 +87,8 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicEmbed: "https://oembed.wroom.io",
 				PrismicUnsplash: "https://unsplash.wroom.io/",
 				SliceMachineV1: "https://sm-api.wroom.io/v1/",
-				RepositoryService: "https://repository.internal.wroom.io/",
-				LocaleService: "https://locale.internal.wroom.io/",
+				RepositoryService: "https://api.internal.wroom.io/repository/",
+				LocaleService: "https://api.internal.wroom.io/locale/",
 			};
 		}
 
@@ -104,8 +104,8 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicEmbed: `https://oembed.${process.env.SM_ENV}-wroom.com`,
 				PrismicUnsplash: `https://unsplash.${process.env.SM_ENV}-wroom.com/`,
 				SliceMachineV1: `https://sm-api.${process.env.SM_ENV}-wroom.com/v1/`,
-				RepositoryService: `https://repository.internal.${process.env.SM_ENV}-wroom.com/`,
-				LocaleService: `https://locale.internal.${process.env.SM_ENV}-wroom.com/`,
+				RepositoryService: `https://api.internal.${process.env.SM_ENV}-wroom.com/repository/`,
+				LocaleService: `https://api.internal.${process.env.SM_ENV}-wroom.com/locale/`,
 			};
 		}
 
@@ -120,8 +120,8 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				PrismicEmbed: "https://oembed.prismic.io",
 				PrismicUnsplash: "https://unsplash.prismic.io/",
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",
-				RepositoryService: "https://repository.internal.prismic.io/",
-				LocaleService: "https://locale.internal.prismic.io/",
+				RepositoryService: "https://api.internal.prismic.io/repository/",
+				LocaleService: "https://api.internal.prismic.io/locale/",
 			};
 		}
 	}
