@@ -65,6 +65,7 @@
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
+		"@aws-sdk/client-bedrock-runtime": "3.744.0",
 		"@prismicio/client": "^7.11.0",
 		"@prismicio/custom-types-client": "2.1.0",
 		"@prismicio/mocks": "2.8.0",
