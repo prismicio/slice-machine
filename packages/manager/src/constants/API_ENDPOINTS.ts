@@ -36,10 +36,11 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 						"https://sm-api.wroom.io/v1/",
 				),
 				RepositoryService: addTrailingSlash(
-					process.env.repository_api ?? "https://repository.internal.wroom.io/",
+					process.env.repository_api ??
+						"https://api.internal.wroom.io/repository/",
 				),
 				LocaleService: addTrailingSlash(
-					process.env.locale_api ?? "https://locale.internal.wroom.io/",
+					process.env.locale_api ?? "https://api.internal.wroom.io/locale/",
 				),
 			};
 
