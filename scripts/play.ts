@@ -319,6 +319,16 @@ async function createPlayground(
       { apiEndpoint: `https://${name}.cdn.wroom.io/api/v2` },
       { dryRun: options.dryRun },
     );
+  } else if (
+    ["dev-tools", "marketing-tools", "platform"].includes(options.environment!)
+  ) {
+    await updateSliceMachineConfig(
+      dir,
+      {
+        apiEndpoint: `https://${name}.cdn.${options.environment}-wroom.com/api/v2`,
+      },
+      { dryRun: options.dryRun },
+    );
   } else if (options.environment === "development") {
     const apiEndpoint = new URL(
       "./api/v2",
