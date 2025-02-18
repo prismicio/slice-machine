@@ -26,7 +26,7 @@ export const mockRepositoryServiceAPI = (
 	config: MockRepositoryServiceAPIConfig,
 ): void => {
 	const endpoint =
-		config?.endpoint ?? "https://repository.internal.prismic.io/";
+		config?.endpoint ?? "https://api.internal.prismic.io/repository/";
 
 	const checkAuth = (
 		expected: {
