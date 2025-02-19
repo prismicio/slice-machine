@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
-import { telemetry } from "@/apiClient";
+import { getState, telemetry } from "@/apiClient";
 import {
   BlankSlate,
   BlankSlateContent,
@@ -29,6 +29,7 @@ import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/Cu
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
 import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplates";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { SliceMachinePrinterIcon } from "@/icons/SliceMachinePrinterIcon";
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
@@ -46,6 +47,7 @@ import {
   getLibraries,
   getRemoteSlices,
 } from "@/modules/slices";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import type { SliceMachineStoreType } from "@/redux/type";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
@@ -135,6 +137,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   );
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
+  const { createSliceSuccess } = useSliceMachineActions();
+  const { syncChanges } = useAutoSync();
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -210,6 +214,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       const response = await managerClient.slices.generateSlicesFromUrl({
         websiteUrl,
       });
+
+      // TODO(DT-1453): Remove the need of the global getState
+      const serverState = await getState();
+      // Update Redux store
+      createSliceSuccess(serverState.libraries);
+      syncChanges();
 
       const newCustomType = addSlicesToSliceZone({
         customType,
@@ -345,7 +355,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     size="large"
                     loading={loading}
                     onClick={() => {
-                      void generateSlices;
+                      void generateSlices();
                     }}
                   >
                     Generate

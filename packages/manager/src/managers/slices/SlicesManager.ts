@@ -2663,25 +2663,34 @@ type GroupField = {
 
 			// Loop in parallel over each slice image and generate the slice model, mocks and code.
 			const updatedSlices = await Promise.all(
-				slices.map(async (sliceImage) => {
+				slices.map(async (sliceImage, index) => {
 					// ----- Q1 scope -----
 
 					// STEP 4: Generate the slice model using the image.
-					console.log("STEP 4: Generate the slice model using the image.");
+					console.log(
+						"STEP 4: Generate the slice model using the image for slice:",
+						index,
+					);
 					const updatedSlice = await generateSliceModel(
 						bedrockClient,
 						sliceImage,
 					);
 
 					// STEP 5: Persist the updated slice model.
-					console.log("STEP 5: Persist the updated slice model.");
+					console.log(
+						"STEP 5: Persist the updated slice model for:",
+						`${index} - ${updatedSlice.name}`,
+					);
 					await this.updateSlice({
 						libraryID: DEFAULT_LIBRARY_ID,
 						model: updatedSlice,
 					});
 
 					// STEP 6: Update the slice screenshot.
-					console.log("STEP 6: Update the slice screenshot.");
+					console.log(
+						"STEP 6: Update the slice screenshot for:",
+						`${index} - ${updatedSlice.name}`,
+					);
 					await this.updateSliceScreenshot({
 						libraryID: DEFAULT_LIBRARY_ID,
 						sliceID: updatedSlice.id,
@@ -2693,7 +2702,10 @@ type GroupField = {
 
 					try {
 						// STEP 7: Generate updated mocks.
-						console.log("STEP 7: Generate updated mocks.");
+						console.log(
+							"STEP 7: Generate updated mocks for:",
+							`${index} - ${updatedSlice.name}`,
+						);
 						const existingMocks = mockSlice({ model: updatedSlice });
 						const updatedMocks = await generateSliceMocks(
 							bedrockClient,
@@ -2702,7 +2714,10 @@ type GroupField = {
 						);
 
 						// STEP 8: Generate the isolated slice component code.
-						console.log("STEP 8: Generate the isolated slice component code..");
+						console.log(
+							"STEP 8: Generate the isolated slice component code for:",
+							`${index} - ${updatedSlice.name}`,
+						);
 						const componentCode = await generateSliceComponentCode(
 							bedrockClient,
 							sliceImage,
@@ -2710,7 +2725,10 @@ type GroupField = {
 						);
 
 						// STEP 9: Update the slice code.
-						console.log("STEP 9: Update the slice code.");
+						console.log(
+							"STEP 9: Update the slice code for:",
+							`${index} - ${updatedSlice.name}`,
+						);
 						await this.createSlice({
 							libraryID: DEFAULT_LIBRARY_ID,
 							model: updatedSlice,
@@ -2718,7 +2736,10 @@ type GroupField = {
 						});
 
 						// STEP 10: Persist the generated mocks.
-						console.log("STEP 10: Persist the generated mocks.");
+						console.log(
+							"STEP 10: Persist the generated mocks for:",
+							`${index} - ${updatedSlice.name}`,
+						);
 						await this.updateSliceMocks({
 							libraryID: DEFAULT_LIBRARY_ID,
 							sliceID: updatedSlice.id,
@@ -2726,7 +2747,7 @@ type GroupField = {
 						});
 					} catch (error) {
 						console.error(
-							`Failed to generate mocks and / or code for slice ${updatedSlice.name}:`,
+							`Failed to generate mocks and / or code for ${index} - ${updatedSlice.name}:`,
 							error,
 						);
 						await this.createSlice({
