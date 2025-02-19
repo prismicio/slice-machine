@@ -1,10 +1,12 @@
 import {
   Badge,
+  Box,
   Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  FormInput,
   Icon,
   Switch,
   Text,
@@ -16,12 +18,18 @@ import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
+import {
+  BlankSlate,
+  BlankSlateContent,
+  BlankSlateDescription,
+  BlankSlateTitle,
+} from "@/components/BlankSlate";
 import { ListHeader } from "@/components/List";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
 import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplates";
+import { SliceMachinePrinterIcon } from "@/icons/SliceMachinePrinterIcon";
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
@@ -32,6 +40,7 @@ import {
 import type { SliceZoneSlice } from "@/legacy/lib/models/common/CustomType/sliceZone";
 import type { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import type { SlicesSM } from "@/legacy/lib/models/common/Slices";
+import { managerClient } from "@/managerClient";
 import {
   getFrontendSlices,
   getLibraries,
@@ -191,6 +200,34 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsSlicesTemplatesModalOpen(false);
   };
 
+  const [websiteUrl, setWebsiteUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
+  async function generateSlices() {
+    setLoading(true);
+
+    try {
+      const response = await managerClient.slices.generateSlicesFromUrl({
+        websiteUrl,
+      });
+
+      const newCustomType = addSlicesToSliceZone({
+        customType,
+        tabId,
+        slices: response.slices,
+      });
+
+      setCustomType(CustomTypes.fromSM(newCustomType), () => {
+        toast.success("Slices generated successfully");
+      });
+    } catch (error) {
+      toast.error("Slices generation failed");
+      console.error("Slices generation failed", error);
+    }
+
+    setLoading(false);
+  }
+
   return (
     <>
       <ListHeader
@@ -279,13 +316,44 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             />
           </BaseStyles>
         ) : (
-          <SliceZoneBlankSlate
-            openUpdateSliceZoneModal={openUpdateSliceZoneModal}
-            openCreateSliceModal={openCreateSliceModal}
-            openSlicesTemplatesModal={openSlicesTemplatesModal}
-            projectHasAvailableSlices={availableSlicesToAdd.length > 0}
-            isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
-          />
+          <Box
+            flexGrow={1}
+            justifyContent="center"
+            data-testid="slice-zone-blank-slate"
+          >
+            <BlankSlate backgroundImage="/blank-slate-slice-zone.png">
+              <BlankSlateContent>
+                <Box justifyContent="center" padding={{ bottom: 16 }}>
+                  <SliceMachinePrinterIcon />
+                </Box>
+                <BlankSlateTitle>Add slices</BlankSlateTitle>
+                <BlankSlateDescription>
+                  Slices are website sections that you can reuse on different
+                  pages with different content. Each slice has its own component
+                  in your code.
+                </BlankSlateDescription>
+                <Box width="100%" gap={12} flexGrow={1} padding={{ top: 16 }}>
+                  <FormInput
+                    value={websiteUrl}
+                    placeholder="Website url..."
+                    onValueChange={(value) => {
+                      setWebsiteUrl(value);
+                    }}
+                    sx={{ width: "100%" }}
+                  />
+                  <Button
+                    size="large"
+                    loading={loading}
+                    onClick={() => {
+                      void generateSlices;
+                    }}
+                  >
+                    Generate
+                  </Button>
+                </Box>
+              </BlankSlateContent>
+            </BlankSlate>
+          </Box>
         )
       ) : undefined}
       {isUpdateSliceZoneModalOpen && (

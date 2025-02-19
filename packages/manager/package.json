@@ -65,7 +65,7 @@
 	},
 	"dependencies": {
 		"@antfu/ni": "^0.20.0",
-		"@aws-sdk/client-bedrock-runtime": "3.744.0",
+		"@aws-sdk/client-bedrock-runtime": "^3.744.0",
 		"@prismicio/client": "^7.11.0",
 		"@prismicio/custom-types-client": "2.1.0",
 		"@prismicio/mocks": "2.8.0",
@@ -86,11 +86,14 @@
 		"newtype-ts": "^0.3.5",
 		"node-fetch": "^3.3.1",
 		"p-limit": "^4.0.0",
+		"playwright": "^1.50.1",
 		"prettier": "^3.0.3",
+		"puppeteer": "^24.2.1",
 		"r19": "0.1.8",
 		"rc9": "^2.0.1",
 		"readable-web-to-node-stream": "^3.0.2",
-		"semver": "^7.3.8"
+		"semver": "^7.3.8",
+		"sharp": "^0.33.5"
 	},
 	"devDependencies": {
 		"@amplitude/experiment-node-server": "1.8.1",
