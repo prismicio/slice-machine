@@ -20,6 +20,8 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 } from "@slicemachine/plugin-kit";
+import { chromium } from "playwright";
+import sharp from "sharp";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -219,6 +221,14 @@ type SliceMachineManagerGenerateSliceArgs = {
 
 type SliceMachineManagerGenerateSliceReturnType = {
 	slice?: SharedSlice;
+};
+
+type SliceMachineManagerGenerateSlicesFromUrlArgs = {
+	websiteUrl: string;
+};
+
+type SliceMachineManagerGenerateSlicesFromUrlReturnType = {
+	slices: SharedSlice[];
 };
 
 export class SlicesManager extends BaseManager {
@@ -1226,10 +1236,10 @@ type PrismicField =
 type UIDField = {
 	type: "UID";
 	config: {
-	label: string;
-	placeholder?: string;
-	customregex?: string;
-	errorMessage?: string;
+		label: string;
+		placeholder?: string;
+		customregex?: string;
+		errorMessage?: string;
 	};
 };
 
@@ -1243,8 +1253,8 @@ type UIDField = {
 type BooleanField = {
 	type: "Boolean";
 	config: {
-	label: string;
-	default_value?: boolean;
+		label: string;
+		default_value?: boolean;
 	};
 };
 
@@ -1257,7 +1267,7 @@ type BooleanField = {
 type ColorField = {
 	type: "Color";
 	config: {
-	label: string;
+		label: string;
 	};
 };
 
@@ -1270,7 +1280,7 @@ type ColorField = {
 type DateField = {
 	type: "Date";
 	config: {
-	label: string;
+		label: string;
 	};
 };
 
@@ -1283,7 +1293,7 @@ type DateField = {
 type TimestampField = {
 	type: "Timestamp";
 	config: {
-	label: string;
+		label: string;
 	};
 };
 
@@ -1299,10 +1309,10 @@ type TimestampField = {
 type NumberField = {
 	type: "Number";
 	config: {
-	label: string;
-	placeholder?: string;
-	min?: number;
-	max?: number;
+		label: string;
+		placeholder?: string;
+		min?: number;
+		max?: number;
 	};
 };
 
@@ -1316,8 +1326,8 @@ type NumberField = {
 type KeyTextField = {
 	type: "Text";
 	config: {
-	label: string;
-	placeholder?: string;
+		label: string;
+		placeholder?: string;
 	};
 };
 
@@ -1331,8 +1341,8 @@ type KeyTextField = {
 type SelectField = {
 	type: "Select";
 	config: {
-	label: string;
-	options: string[];
+		label: string;
+		options: string[];
 	};
 };
 
@@ -1351,13 +1361,13 @@ type SelectField = {
 type StructuredTextField = {
 	type: "StructuredText";
 	config: {
-	label: string;
-	placeholder?: string;
-	single?: string;
-	multi?: string;
-	allowTargetBlank?: boolean;
-	labels?: string[];
-	imageConstraint?: ImageConstraint;
+		label: string;
+		placeholder?: string;
+		single?: string;
+		multi?: string;
+		allowTargetBlank?: boolean;
+		labels?: string[];
+		imageConstraint?: ImageConstraint;
 	};
 };
 
@@ -1385,12 +1395,12 @@ type ImageConstraint = {
 type ImageField = {
 	type: "Image";
 	config: {
-	label: string;
-	constraint?: {
-		width?: number;
-		height?: number;
-	};
-	thumbnails?: Thumbnail[];
+		label: string;
+		constraint?: {
+			width?: number;
+			height?: number;
+		};
+		thumbnails?: Thumbnail[];
 	};
 };
 
@@ -1411,17 +1421,13 @@ type Thumbnail = {
  * @property {"Link"} type - Field type.
  * @property {Object} config - Configuration object.
  * @property {string} config.label - Label displayed in the editor.
- * @property {"web" | "document" | "media"} config.select - Defines the type of link allowed.
- * @property {string[]} [config.customtypes] - Defines which Prismic document types are allowed if select is "document".
- * @property {boolean} config.allowText - Enable the text field for the link.
+* @property {boolean} config.allowText - Enable the text field for the link.
  */
 type LinkField = {
 	type: "Link";
 	config: {
-	label: string;
-	select: "web" | "document" | "media";
-	customtypes?: string[];
-	allowText: boolean;
+		label: string;
+		allowText: boolean;
 	};
 };
 
@@ -1434,7 +1440,7 @@ type LinkField = {
 type EmbedField = {
 	type: "Embed";
 	config: {
-	label: string;
+		label: string;
 	};
 };
 
@@ -1447,7 +1453,7 @@ type EmbedField = {
 type GeoPointField = {
 	type: "GeoPoint";
 	config: {
-	label: string;
+		label: string;
 	};
 };
 
@@ -1461,14 +1467,14 @@ type GeoPointField = {
 type GroupField = {
 	type: "Group";
 	config: {
-	label: string;
-	fields: Record<string, PrismicField>;
+		label: string;
+		fields: Record<string, PrismicField>;
 	};
 };
 `;
 
 		/**
-		 * Calls the AI endpoint to generate the slice model.
+		 * Calls the AI to generate the slice model.
 		 */
 		async function generateSliceModel(
 			client: BedrockRuntimeClient,
@@ -1513,6 +1519,7 @@ type GroupField = {
 			});
 
 			const response = await client.send(command);
+			console.log("Generated model response:", JSON.stringify(response));
 
 			if (
 				!response.usage ||
@@ -1537,7 +1544,6 @@ type GroupField = {
 			}
 
 			try {
-				console.log("Generated model:", resultText);
 				const generatedModel = JSON.parse(resultText);
 				const updatedSlice: SharedSlice = {
 					...args.slice,
@@ -1590,6 +1596,8 @@ type GroupField = {
 			});
 
 			const response = await client.send(command);
+			console.log("Generated mocks response:", JSON.stringify(response));
+
 			if (
 				!response.usage ||
 				!response.usage.inputTokens ||
@@ -1613,7 +1621,6 @@ type GroupField = {
 			}
 
 			try {
-				console.log("Generated mocks:", resultText);
 				const updatedMocks = JSON.parse(resultText);
 
 				return updatedMocks;
@@ -1711,6 +1718,11 @@ type GroupField = {
 			});
 
 			const response = await client.send(command);
+			console.log(
+				"Generated component code response:",
+				JSON.stringify(response),
+			);
+
 			if (
 				!response.usage ||
 				!response.usage.inputTokens ||
@@ -1734,7 +1746,6 @@ type GroupField = {
 			}
 
 			try {
-				console.log("Generated component code:", resultText);
 				const parsed = JSON.parse(resultText);
 				if (!parsed.componentCode) {
 					throw new Error("Missing key 'componentCode' in AI response.");
@@ -1757,6 +1768,8 @@ type GroupField = {
 		});
 
 		try {
+			// ----- Q1 scope -----
+
 			// STEP 1: Generate the slice model using the image.
 			console.log("STEP 1: Generate the slice model using the image.");
 			const updatedSlice = await generateSliceModel(
@@ -1780,6 +1793,8 @@ type GroupField = {
 				variationID: updatedSlice.variations[0].id,
 				data: Buffer.from(args.imageFile),
 			});
+
+			// ----- Q1 scope -----
 
 			// STEP 4: Generate updated mocks.
 			console.log("STEP 4: Generate updated mocks.");
@@ -1823,6 +1838,917 @@ type GroupField = {
 			console.log("Total price:", totalPrice);
 
 			return { slice: updatedSlice };
+		} catch (error) {
+			console.error("Failed to generate slice:", error);
+			throw new Error("Failed to generate slice: " + error);
+		}
+	}
+
+	async generateSlicesFromUrl(
+		args: SliceMachineManagerGenerateSlicesFromUrlArgs,
+	): Promise<SliceMachineManagerGenerateSlicesFromUrlReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const INPUT_TOKEN_PRICE = 0.000003;
+		const OUTPUT_TOKEN_PRICE = 0.000015;
+
+		let totalTokens = {
+			slicesDetection: {
+				input: 0,
+				output: 0,
+				total: 0,
+				price: 0,
+			},
+			modelGeneration: {
+				input: 0,
+				output: 0,
+				total: 0,
+				price: 0,
+			},
+			mocksGeneration: {
+				input: 0,
+				output: 0,
+				total: 0,
+				price: 0,
+			},
+			codeGeneration: {
+				input: 0,
+				output: 0,
+				total: 0,
+				price: 0,
+			},
+		};
+
+		function updateTotalTokens(
+			functionKey:
+				| "slicesDetection"
+				| "modelGeneration"
+				| "mocksGeneration"
+				| "codeGeneration",
+			response: {
+				usage?: {
+					inputTokens?: number;
+					outputTokens?: number;
+					totalTokens?: number;
+				};
+			},
+		) {
+			if (
+				!response.usage ||
+				!response.usage.inputTokens ||
+				!response.usage.outputTokens ||
+				!response.usage.totalTokens
+			) {
+				throw new Error(`No usage data was returned for ${functionKey}.`);
+			}
+			totalTokens[functionKey] = {
+				input: totalTokens[functionKey].input + response.usage.inputTokens,
+				output: totalTokens[functionKey].output + response.usage.outputTokens,
+				total: totalTokens[functionKey].total + response.usage.totalTokens,
+				price:
+					totalTokens[functionKey].price +
+					response.usage.inputTokens * INPUT_TOKEN_PRICE +
+					response.usage.outputTokens * OUTPUT_TOKEN_PRICE,
+			};
+		}
+
+		// Validate AWS credentials
+		const AWS_REGION = "us-east-1";
+		const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env;
+		if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+			throw new Error("AWS credentials are not set.");
+		}
+
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const libraryIDs = sliceMachineConfig.libraries || [];
+		const DEFAULT_LIBRARY_ID = libraryIDs[0];
+
+		/**
+		 * Take a screenshot of a full page.
+		 */
+		async function takePageScreenshot(url: string): Promise<Uint8Array> {
+			const browser = await chromium.launch();
+			const page = await browser.newPage();
+			await page.goto(url);
+			const pageScreenshotBuffer = await page.screenshot({
+				path: "fullpage.png",
+				fullPage: true,
+			});
+			await browser.close();
+			const resizedImage = await sharp(pageScreenshotBuffer)
+				.resize({
+					width: 8000,
+					height: 8000,
+					fit: "inside", // Maintains aspect ratio; scales down only if needed.
+				})
+				.toBuffer();
+
+			const pageScreenshot = new Uint8Array(resizedImage);
+
+			return pageScreenshot;
+		}
+
+		/**
+		 * Call the AI to get the coordinates of each slice found in the image.
+		 */
+		async function getSlicesCoordinates(
+			client: BedrockRuntimeClient,
+			pageScreenshot: Uint8Array,
+		): Promise<
+			{
+				left: number;
+				top: number;
+				width: number;
+				height: number;
+			}[]
+		> {
+			const metadata = await sharp(pageScreenshot).metadata();
+			const systemPrompt = `
+				You are an expert in Prismic slices. Using the image provided, return the coordinates of each slice found in the image.
+				You need to ensure each slice is an isolate reusable part of the website page you are seeing in the image.
+				The definition of a Prismic slice is: Prismic slices are sections of your website. Prismic documents contain a dynamic “slice zone” that allows content creators to add, edit, and rearrange slices to compose dynamic layouts for any page design, such as blog posts, landing pages, and tutorials.
+				It's better to have more smaller size well splitted than big slices with too many things.
+				
+				Requirements:
+				- Provide the coordinates for each slice in the following format: { "left": number, "top": number, "width": number, "height": number }.
+				- The coordinates must always be completely within the image boundaries, leaving a margin (at least 5 pixels) from each edge to ensure that Sharp’s extract tool does not throw an "extract_area: bad extract area" error.
+				- The slices must not overlap and must be valid for use directly with Sharp's extract method.
+				- The output must be a valid JSON with one key "slices" that maps to an array of slice coordinate objects. No additional text, explanations, or metadata should be included. JSON.parse on your response should not throw an error.
+				- The entire output must fit in a single response.
+				- I will use the user image from the input as parameter to sharp function, so ensure the coordinates match the image I give you.
+				- Every time I'm using your result and pass it to sharp function, it's giving me an error "Error: extract_area: bad extract area", ENSURE it cannot happen.
+
+				The coordinates MUST fit in this range:
+				 - width: ${metadata.width}
+				 - height: ${metadata.height}
+
+				Here is the code that will be used to extract from the image each slices using your coordinates:
+				"""
+				const slices = await Promise.all(
+					slicesCoordinates.map(async (slice) => {
+						const sliceScreenshotBuffer = await sharp(pageScreenshot)
+							.extract({
+								left: slice.left,
+								top: slice.top,
+								width: slice.width,
+								height: slice.height,
+							})
+							.toBuffer();
+						const sliceScreenshot = new Uint8Array(sliceScreenshotBuffer);
+
+						return sliceScreenshot;
+					}),
+				);
+				"""
+
+				!IMPORTANT!: 
+					- Only return a valid JSON with one key "slices" and an array of slices coordinates, nothing else before. JSON.parse on your response should not throw an error.
+					- All your response should fit in a single return response.
+					- Never stop the response until you totally finish the full JSON response you wanted.
+			`.trim();
+
+			const command = new ConverseCommand({
+				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				system: [{ text: systemPrompt }],
+				messages: [
+					{
+						role: "user",
+						content: [
+							{
+								image: { format: "png", source: { bytes: pageScreenshot } },
+							},
+						],
+					},
+				],
+			});
+
+			const response = await client.send(command);
+			console.log("Slices coordinates response:", JSON.stringify(response));
+
+			updateTotalTokens("slicesDetection", response);
+
+			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			if (!resultText) {
+				throw new Error("No valid slices coordinates was generated.");
+			}
+
+			try {
+				const slicesCoordinates = JSON.parse(resultText);
+
+				return slicesCoordinates.slices;
+			} catch (error) {
+				throw new Error("Failed to parse AI response for model: " + error);
+			}
+		}
+
+		/**
+		 * Extract slices from the coordinates found in the image.
+		 */
+		async function extractSlicesFromCoordinates(
+			pageScreenshot: Uint8Array,
+			slicesCoordinates: {
+				left: number;
+				top: number;
+				width: number;
+				height: number;
+			}[],
+		): Promise<Uint8Array[]> {
+			const slices = await Promise.all(
+				slicesCoordinates.map(async (slice) => {
+					const sliceScreenshotBuffer = await sharp(pageScreenshot)
+						.extract({
+							left: slice.left,
+							top: slice.top,
+							width: slice.width,
+							height: slice.height,
+						})
+						.toBuffer();
+					const sliceScreenshot = new Uint8Array(sliceScreenshotBuffer);
+
+					return sliceScreenshot;
+				}),
+			);
+
+			return slices;
+		}
+
+		/**
+		 * TypeScript schema for the Shared Slice definition.
+		 */
+		const SHARED_SLICE_SCHEMA = `
+/**
+ * Represents a Prismic Slice.
+ * @property {string} type - Should always be "SharedSlice".
+ * @property {string} id - Unique identifier for the slice in snake_case.
+ * @property {string} name - Human-readable name in PascalCase.
+ * @property {string} description - Brief explanation of the slice's purpose.
+ * @property {SliceVariation[]} variations - Array of variations for the slice.
+ */
+type PrismicSlice = {
+  type: "SharedSlice";
+  id: string;
+  name: string;
+  description: string;
+  variations: SliceVariation[];
+};
+
+/**
+ * Represents a variation of a Prismic Slice.
+ * TIPS: Never use "items" property, you can see it doesn't exist here!
+ */
+type SliceVariation = {
+  id: string;
+  name: string;
+  description: string;
+  primary: Record<string, PrismicField>;
+  docURL: string;
+  version: string;
+};
+
+/**
+ * Union type representing all possible Prismic fields.
+ */
+type PrismicField =
+  | UIDField
+  | BooleanField
+  | ColorField
+  | DateField
+  | TimestampField
+  | NumberField
+  | KeyTextField
+  | SelectField
+  | StructuredTextField
+  | ImageField
+  | LinkField
+  | GeoPointField
+  | EmbedField
+  | GroupField;
+
+/* Definitions for each field type follow... */
+
+/**
+ * Represents a UID Field in Prismic.
+ * @property {"UID"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {string} [config.placeholder] - Placeholder text.
+ * @property {string} [config.customregex] - Custom regex for validation.
+ * @property {string} [config.errorMessage] - Error message for invalid input.
+ */
+type UIDField = {
+	type: "UID";
+	config: {
+		label: string;
+		placeholder?: string;
+		customregex?: string;
+		errorMessage?: string;
+	};
+};
+
+/**
+ * Represents a Boolean Field in Prismic.
+ * @property {"Boolean"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {boolean} [config.default_value] - Default value (true or false).
+ */
+type BooleanField = {
+	type: "Boolean";
+	config: {
+		label: string;
+		default_value?: boolean;
+	};
+};
+
+/**
+ * Represents a Color Field in Prismic.
+ * @property {"Color"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ */
+type ColorField = {
+	type: "Color";
+	config: {
+		label: string;
+	};
+};
+
+/**
+ * Represents a Date Field in Prismic.
+ * @property {"Date"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ */
+type DateField = {
+	type: "Date";
+	config: {
+		label: string;
+	};
+};
+
+/**
+ * Represents a Timestamp Field in Prismic.
+ * @property {"Timestamp"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ */
+type TimestampField = {
+	type: "Timestamp";
+	config: {
+		label: string;
+	};
+};
+
+/**
+ * Represents a Number Field in Prismic.
+ * @property {"Number"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {string} [config.placeholder] - Placeholder text.
+ * @property {number} [config.min] - Minimum allowable value.
+ * @property {number} [config.max] - Maximum allowable value.
+ */
+type NumberField = {
+	type: "Number";
+	config: {
+		label: string;
+		placeholder?: string;
+		min?: number;
+		max?: number;
+	};
+};
+
+/**
+ * Represents a Key Text Field in Prismic.
+ * @property {"Text"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {string} [config.placeholder] - Placeholder text.
+ */
+type KeyTextField = {
+	type: "Text";
+	config: {
+		label: string;
+		placeholder?: string;
+	};
+};
+
+/**
+ * Represents a Select Field in Prismic.
+ * @property {"Select"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {string[]} config.options - Array of options for the select dropdown.
+ */
+type SelectField = {
+	type: "Select";
+	config: {
+		label: string;
+		options: string[];
+	};
+};
+
+/**
+ * Represents a Structured Text Field in Prismic.
+ * @property {"StructuredText"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {string} [config.placeholder] - Placeholder text.
+ * @property {string} [config.single] - A comma-separated list of formatting options that does not allow line breaks. Options: paragraph | preformatted | heading1 | heading2 | heading3 | heading4 | heading5 | heading6 | strong | em | hyperlink | image | embed | list-item | o-list-item | rtl.
+ * @property {string} [config.multi] - A comma-separated list of formatting options, with paragraph breaks allowed. Options: paragraph | preformatted | heading1 | heading2 | heading3 | heading4 | heading5 | heading6 | strong | em | hyperlink | image | embed | list-item | o-list-item | rtl.
+ * @property {boolean} [config.allowTargetBlank] - Allows links to open in a new tab.
+ * @property {string[]} [config.labels] - An array of strings to define labels for custom formatting.
+ * @property {ImageConstraint} [config.imageConstraint] - Constraints for images within the rich text field.
+ */
+type StructuredTextField = {
+	type: "StructuredText";
+	config: {
+		label: string;
+		placeholder?: string;
+		single?: string;
+		multi?: string;
+		allowTargetBlank?: boolean;
+		labels?: string[];
+		imageConstraint?: ImageConstraint;
+	};
+};
+
+/**
+ * Represents constraints for images within a rich text field.
+ * @property {number} [width] - Width constraint in pixels.
+ * @property {number
+ * @property {number} [height] - Height constraint in pixels.
+ */
+type ImageConstraint = {
+	width?: number;
+	height?: number;
+};
+
+/**
+ * Represents an Image Field in Prismic.
+ * @property {"Image"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {Object} [config.constraint] - Constraints for the image dimensions.
+ * @property {number} [config.constraint.width] - Width constraint.
+ * @property {number} [config.constraint.height] - Height constraint.
+ * @property {Thumbnail[]} [config.thumbnails] - Array of thumbnail configurations.
+ */
+type ImageField = {
+	type: "Image";
+	config: {
+		label: string;
+		constraint?: {
+			width?: number;
+			height?: number;
+		};
+		thumbnails?: Thumbnail[];
+	};
+};
+
+/**
+ * Represents a Thumbnail configuration for an Image field.
+ * @property {string} name - Name of the thumbnail.
+ * @property {number} [width] - Width of the thumbnail in pixels.
+ * @property {number} [height] - Height of the thumbnail in pixels.
+ */
+type Thumbnail = {
+	name: string;
+	width?: number;
+	height?: number;
+};
+
+/**
+ * Represents a Link Field in Prismic.
+ * @property {"Link"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+* @property {boolean} config.allowText - Enable the text field for the link.
+ */
+type LinkField = {
+	type: "Link";
+	config: {
+		label: string;
+		allowText: boolean;
+	};
+};
+
+/**
+ * Represents an Embed Field in Prismic.
+ * @property {"Embed"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ */
+type EmbedField = {
+	type: "Embed";
+	config: {
+		label: string;
+	};
+};
+
+/**
+ * Represents a GeoPoint Field in Prismic.
+ * @property {"GeoPoint"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ */
+type GeoPointField = {
+	type: "GeoPoint";
+	config: {
+		label: string;
+	};
+};
+
+/**
+ * Represents a Group Field (Repeatable Fields) in Prismic.
+ * @property {"Group"} type - Field type.
+ * @property {Object} config - Configuration object.
+ * @property {string} config.label - Label displayed in the editor.
+ * @property {Record<string, PrismicField>} config.fields - Defines the fields inside the group.
+ */
+type GroupField = {
+	type: "Group";
+	config: {
+		label: string;
+		fields: Record<string, PrismicField>;
+	};
+};
+`;
+
+		/**
+		 * Default slice model for the SharedSlice.
+		 */
+		const DEFAULT_SLICE_MODEL: SharedSlice = {
+			id: "<ID_TO_CHANGE>",
+			type: "SharedSlice",
+			name: "<NAME_TO_CHANGE>",
+			description: "<DESCRIPTION_TO_CHANGE>",
+			variations: [
+				{
+					id: "<VARIATION_ID_TO_CHANGE>",
+					name: "<NAME_TO_CHANGE>",
+					docURL: "...",
+					version: "initial",
+					description: "<DESCRIPTION_TO_CHANGE>",
+					imageUrl: "",
+				},
+			],
+		};
+
+		/**
+		 * Calls the AI to generate the slice model.
+		 */
+		async function generateSliceModel(
+			client: BedrockRuntimeClient,
+			imageFile: Uint8Array,
+		): Promise<SharedSlice> {
+			const systemPrompt = `
+				You are an expert in Prismic content modeling. Using the image provided, generate a valid Prismic JSON model for the slice described below. Follow these rules precisely:
+				- Use the TypeScript schema provided as your reference.
+				- Place all main content fields under the "primary" object.
+				- Do not create any collections or groups for single-image content (background images should be a single image field).
+				- Ensure that each field has appropriate placeholders, labels, and configurations.
+				- Never generate a Link / Button text field, only the Link / Button field itself is enough. Just enable "allowText" when doing that.
+				- Do not forget any field visible from the image provide in the user prompt.
+				- Ensure to differentiate Prismic fields from just an image with visual inside the image. When that's the case, just add a Prismic image field.
+				- Do not include any decorative fields.
+				- Do not include any extra commentary or formatting.
+				
+				!IMPORTANT!: 
+					- Only return a valid JSON object representing the full slice model, nothing else before. JSON.parse on your response should not throw an error.
+					- All your response should fit in a single return response.
+					- Never stop the response until you totally finish the full JSON response you wanted.
+
+				Reference Schema:
+				${SHARED_SLICE_SCHEMA}
+				
+				Existing Slice to update:
+				${JSON.stringify(DEFAULT_SLICE_MODEL)}
+			`.trim();
+			const command = new ConverseCommand({
+				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				system: [{ text: systemPrompt }],
+				messages: [
+					{
+						role: "user",
+						content: [
+							{
+								image: { format: "png", source: { bytes: imageFile } },
+							},
+						],
+					},
+				],
+			});
+
+			const response = await client.send(command);
+			console.log("Generated model response:", JSON.stringify(response));
+
+			updateTotalTokens("modelGeneration", response);
+
+			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			if (!resultText) {
+				throw new Error("No valid slice model was generated.");
+			}
+
+			try {
+				const generatedModel = JSON.parse(resultText);
+
+				return generatedModel;
+			} catch (error) {
+				throw new Error("Failed to parse AI response for model: " + error);
+			}
+		}
+
+		/**
+		 * Calls the AI endpoint to generate mocks.
+		 */
+		async function generateSliceMocks(
+			client: BedrockRuntimeClient,
+			imageFile: Uint8Array,
+			existingMocks: SharedSliceContent[],
+		): Promise<SharedSliceContent[]> {
+			// Build a prompt focused solely on updating the mocks.
+			const systemPrompt = `
+				You are a seasoned frontend engineer with deep expertise in Prismic slices.
+				Your task is to update the provided mocks template based solely on the visible content in the image.
+				Follow these guidelines strictly:
+					- Do not modify the overall structure of the mocks template.
+					- Strictly only update text content.
+					- Do not touch images.
+					- If you see a repetition with a group, you must create the same number of group items that are visible on the image.
+
+				!IMPORTANT!: 
+					- Only return a valid JSON object for mocks, nothing else before. JSON.parse on your response should not throw an error.
+					- All your response should fit in a single return response.
+					- Never stop the response until you totally finish the full JSON response you wanted.
+				
+				Existing Mocks Template:
+				${JSON.stringify(existingMocks, null, 2)}
+			`.trim();
+
+			const command = new ConverseCommand({
+				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				system: [{ text: systemPrompt }],
+				messages: [
+					{
+						role: "user",
+						content: [
+							{ image: { format: "png", source: { bytes: imageFile } } },
+						],
+					},
+				],
+			});
+
+			const response = await client.send(command);
+			console.log("Generated mocks response:", JSON.stringify(response));
+
+			updateTotalTokens("mocksGeneration", response);
+
+			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			if (!resultText) {
+				throw new Error("No valid mocks were generated.");
+			}
+
+			try {
+				const updatedMocks = JSON.parse(resultText);
+
+				return updatedMocks;
+			} catch (error) {
+				throw new Error("Failed to parse AI response for mocks: " + error);
+			}
+		}
+
+		/**
+		 * Calls the AI endpoint to generate the slice React component.
+		 */
+		async function generateSliceComponentCode(
+			client: BedrockRuntimeClient,
+			imageFile: Uint8Array,
+			existingMocks: any,
+		): Promise<string> {
+			// Build a prompt focused solely on generating the React component code.
+			const systemPrompt = `
+				You are a seasoned frontend engineer with deep expertise in Prismic slices.
+				Your task is to generate a fully isolated React component code for a slice based on the provided image input.
+				Follow these guidelines strictly:
+					- Be self-contained.
+					- Your goal is to make the code visually looks as close as possible to the image from the user input.
+					- Ensure that the color used for the background is the same as the image provide in the user prompt! It's better no background color than a wrong one.
+					- For links, you must use PrismicNextLink and you must just pass the field, PrismicNextLink will handle the display of the link text, don't do it manually.
+					- Respect the padding and margin visible in the image provide in the user prompt.
+					- Respect the fonts size, color, type visible in the image provide in the user prompt.
+					- Respect the colors visible in the image provide in the user prompt.
+					- Respect the position of elements visible in the image provide in the user prompt.
+					- Respect the size of each elements visible in the image provide in the user prompt.
+					- Respect the overall proportions of the slice from the image provide in the user prompt.
+					- Ensure to strictly respect what is defined on the mocks for each fields ID, do not invent or use something not in the mocks.
+					- Ensure to use all fields provided in the mocks.
+					- Use inline <style> (do not use <style jsx>).
+					- Follow the structure provided in the code example below.
+
+				!IMPORTANT!: 
+					- Only return a valid JSON object with two keys: "mocks" and "componentCode", nothing else before. JSON.parse on your response should not throw an error.
+					- All your response should fit in a single return response.
+					- Never stop the response until you totally finish the full JSON response you wanted.
+				
+				## Example of a Fully Isolated Slice Component:
+				-----------------------------------------------------------
+				import { type Content } from "@prismicio/client";
+				import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+				import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
+				
+				export type HeroProps = SliceComponentProps<Content.HeroSlice>;
+				
+				const Hero = ({ slice }: HeroProps): JSX.Element => {
+					return (
+						<section
+						data-slice-type={slice.slice_type}
+						data-slice-variation={slice.variation}
+						className="hero"
+						>
+						<div className="hero__content">
+							<div className="hero__image-wrapper">
+								<PrismicNextImage field={slice.primary.image} className="hero__image" />
+							</div>
+							<div className="hero__text">
+								<PrismicRichText field={slice.primary.title} />
+								<PrismicRichText field={slice.primary.description} />
+								<PrismicNextLink field={slice.primary.link} />
+							</div>
+						</div>
+						<style>
+							{\`
+								.hero { display: flex; flex-direction: row; padding: 20px; }
+								.hero__content { width: 100%; }
+								.hero__image-wrapper { flex: 1; }
+								.hero__text { flex: 1; padding-left: 20px; }
+							\`}
+						</style>
+						</section>
+					);
+				};
+				
+				export default Hero;
+				-----------------------------------------------------------
+				Existing Mocks Template:
+				${JSON.stringify(existingMocks, null, 2)}
+			`.trim();
+
+			const command = new ConverseCommand({
+				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				system: [{ text: systemPrompt }],
+				messages: [
+					{
+						role: "user",
+						content: [
+							{ image: { format: "png", source: { bytes: imageFile } } },
+						],
+					},
+				],
+			});
+
+			const response = await client.send(command);
+			console.log(
+				"Generated component code response:",
+				JSON.stringify(response),
+			);
+
+			updateTotalTokens("codeGeneration", response);
+
+			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			if (!resultText) {
+				throw new Error("No valid slice component code was generated.");
+			}
+
+			try {
+				const parsed = JSON.parse(resultText);
+				if (!parsed.componentCode) {
+					throw new Error("Missing key 'componentCode' in AI response.");
+				}
+				return parsed.componentCode;
+			} catch (error) {
+				throw new Error(
+					"Failed to parse AI response for component code: " + error,
+				);
+			}
+		}
+
+		// Initialize AWS Bedrock client.
+		const bedrockClient = new BedrockRuntimeClient({
+			region: AWS_REGION,
+			credentials: {
+				accessKeyId: AWS_ACCESS_KEY_ID,
+				secretAccessKey: AWS_SECRET_ACCESS_KEY,
+			},
+		});
+
+		try {
+			// STEP 1: From a website url take as screenshot of the whole page.
+			console.log("STEP 1: Take a screenshot of the whole page.");
+			const pageScreenshot = await takePageScreenshot(args.websiteUrl);
+
+			// STEP 2: Ask AI to separate the whole image into individual slices.
+			console.log("STEP 2: Generate the slice model using the image.");
+			const slicesCoordinates = await getSlicesCoordinates(
+				bedrockClient,
+				pageScreenshot,
+			);
+
+			// STEP 3: Extract each slice from the coordinates.
+			console.log("STEP 3: Extract each slice from the coordinates");
+			const slices = await extractSlicesFromCoordinates(
+				pageScreenshot,
+				slicesCoordinates,
+			);
+
+			// Loop in parallel over each slice image and generate the slice model, mocks and code.
+			const updatedSlices = await Promise.all(
+				slices.map(async (sliceImage) => {
+					// ----- Q1 scope -----
+
+					// STEP 4: Generate the slice model using the image.
+					console.log("STEP 4: Generate the slice model using the image.");
+					const updatedSlice = await generateSliceModel(
+						bedrockClient,
+						sliceImage,
+					);
+
+					// STEP 5: Persist the updated slice model.
+					console.log("STEP 5: Persist the updated slice model.");
+					await this.updateSlice({
+						libraryID: DEFAULT_LIBRARY_ID,
+						model: updatedSlice,
+					});
+
+					// STEP 6: Update the slice screenshot.
+					console.log("STEP 6: Update the slice screenshot.");
+					await this.updateSliceScreenshot({
+						libraryID: DEFAULT_LIBRARY_ID,
+						sliceID: updatedSlice.id,
+						variationID: updatedSlice.variations[0].id,
+						data: Buffer.from(sliceImage),
+					});
+
+					// ----- END Q1 scope -----
+
+					try {
+						// STEP 7: Generate updated mocks.
+						console.log("STEP 7: Generate updated mocks.");
+						const existingMocks = mockSlice({ model: updatedSlice });
+						const updatedMocks = await generateSliceMocks(
+							bedrockClient,
+							sliceImage,
+							existingMocks,
+						);
+
+						// STEP 8: Generate the isolated slice component code.
+						console.log("STEP 8: Generate the isolated slice component code..");
+						const componentCode = await generateSliceComponentCode(
+							bedrockClient,
+							sliceImage,
+							existingMocks,
+						);
+
+						// STEP 9: Update the slice code.
+						console.log("STEP 9: Update the slice code.");
+						await this.createSlice({
+							libraryID: DEFAULT_LIBRARY_ID,
+							model: updatedSlice,
+							componentContents: componentCode,
+						});
+
+						// STEP 10: Persist the generated mocks.
+						console.log("STEP 10: Persist the generated mocks.");
+						await this.updateSliceMocks({
+							libraryID: DEFAULT_LIBRARY_ID,
+							sliceID: updatedSlice.id,
+							mocks: updatedMocks,
+						});
+					} catch (error) {
+						console.error(
+							`Failed to generate mocks and / or code for slice ${updatedSlice.name}:`,
+							error,
+						);
+						await this.createSlice({
+							libraryID: DEFAULT_LIBRARY_ID,
+							model: updatedSlice,
+						});
+					}
+
+					return updatedSlice;
+				}),
+			);
+
+			// Usage
+			console.log("STEP 11: THE END");
+			console.log("Tokens used:", totalTokens);
+			const totalPrice = Object.values(totalTokens).reduce(
+				(acc, { price }) => acc + price,
+				0,
+			);
+			console.log("Total price:", totalPrice);
+
+			return { slices: updatedSlices };
 		} catch (error) {
 			console.error("Failed to generate slice:", error);
 			throw new Error("Failed to generate slice: " + error);
