@@ -15,7 +15,8 @@ export type FieldTypeLabel =
   | "Geopoint"
   | "Color"
   | "Key Text"
-  | "Repeatable Group";
+  | "Repeatable Group"
+  | "Table";
 
 export class AddFieldDropdown {
   readonly page: Page;
