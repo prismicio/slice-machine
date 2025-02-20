@@ -10,6 +10,7 @@ import { LinkToMediaWidget } from "./LinkToMedia";
 import { NumberWidget } from "./Number";
 import { SelectWidget } from "./Select";
 import { StructuredTextWidget } from "./StructuredText";
+import { TableWidget } from "./Table";
 import { TextWidget } from "./Text";
 import { TimestampWidget } from "./Timestamp";
 import { UIDWidget } from "./UID";
@@ -27,6 +28,7 @@ export const NonGroupWidgets = {
   Number: NumberWidget,
   Select: SelectWidget,
   StructuredText: StructuredTextWidget,
+  Table: TableWidget,
   Text: TextWidget,
   Timestamp: TimestampWidget,
   UID: UIDWidget,

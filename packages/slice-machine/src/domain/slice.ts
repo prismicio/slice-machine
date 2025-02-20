@@ -71,7 +71,9 @@ export function getNonSharedSliceLabel(
     slice.config?.label ??
     (slice.type === "Group" ||
     slice.type === "Slice" ||
-    (slice.type !== "Boolean" && slice.type !== "Separator")
+    (slice.type !== "Boolean" &&
+      slice.type !== "Separator" &&
+      slice.type !== "Table")
       ? slice.fieldset
       : undefined) ??
     slice.type

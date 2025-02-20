@@ -2,6 +2,7 @@ import { EditorConfig, SharedSliceEditor } from "@prismicio/editor-fields";
 import { DefaultErrorMessage } from "@prismicio/editor-ui";
 import { renderSliceMock } from "@prismicio/mocks";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   FC,
   Suspense,
@@ -44,6 +45,8 @@ type SimulatorProps = {
 
 const IFRAME_CONNECTION_TIMEOUT = 20000;
 
+const queryClient = new QueryClient();
+
 const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
   const { updateSliceMockSuccess } = useSliceMachineActions();
   const { simulatorUrl, endpoints } = useSelector(
@@ -65,7 +68,6 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
 
   useEffect(() => {
     void telemetry.track({ event: "slice-simulator:open" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const startedNewEditorSessionRef = useRef(false);
@@ -294,22 +296,24 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
                 )}
               >
                 <Suspense>
-                  <SharedSliceEditor
-                    /**
-                     * Because of a re-render issue on the richtext /* we
-                     * enforce re-rendering the editor when the variation
-                     * change. /* this change should be removed once the editor
-                     * is fixed.
-                     */
-                    key={variation.id}
-                    config={editorConfig}
-                    content={editorContent}
-                    onContentChange={(c) => {
-                      setEditorState(c);
-                      trackWidgetUsed(slice.model.id);
-                    }}
-                    sharedSlice={sharedSlice}
-                  />
+                  <QueryClientProvider client={queryClient}>
+                    <SharedSliceEditor
+                      /**
+                       * Because of a re-render issue on the richtext /* we
+                       * enforce re-rendering the editor when the variation
+                       * change. /* this change should be removed once the editor
+                       * is fixed.
+                       */
+                      key={variation.id}
+                      config={editorConfig}
+                      content={editorContent}
+                      onContentChange={(c) => {
+                        setEditorState(c);
+                        trackWidgetUsed(slice.model.id);
+                      }}
+                      sharedSlice={sharedSlice}
+                    />
+                  </QueryClientProvider>
                 </Suspense>
               </ErrorBoundary>
             </Flex>

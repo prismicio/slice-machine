@@ -20,6 +20,7 @@ import {
   updateField,
 } from "@/domain/customType";
 import { ErrorBoundary } from "@/ErrorBoundary";
+import { useTableFieldExperiment } from "@/features/builder/useTableFieldExperiment";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import {
   CustomTypes,
@@ -53,6 +54,7 @@ const widgetsArray = [
   Widgets.Number,
   Widgets.Color,
   Widgets.Date,
+  Widgets.Table,
   Widgets.Embed,
   Widgets.Timestamp,
   Widgets.GeoPoint,
@@ -76,6 +78,11 @@ type OnSaveFieldProps = {
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
+  const tableFieldExperiment = useTableFieldExperiment();
+  const maybeFilteredWidgetsArray = tableFieldExperiment.eligible
+    ? widgetsArray
+    : widgetsArray.filter((widget) => widget.TYPE_NAME !== "Table");
+
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
 
@@ -258,7 +265,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
             poolOfFieldsToCheck={poolOfFields}
             showHints={true}
             EditModal={EditModal}
-            widgetsArray={widgetsArray}
+            widgetsArray={maybeFilteredWidgetsArray}
             onDeleteItem={onDeleteItem}
             onSave={onCreateOrSave}
             onDragEnd={onDragEnd}
