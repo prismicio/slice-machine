@@ -41,11 +41,11 @@
   "devDependencies": {
     "@emotion/react": "11.11.1",
     "@extractus/oembed-extractor": "3.1.8",
-    "@prismicio/client": "7.16.0",
+    "@prismicio/client": "7.16.1",
     "@prismicio/editor-fields": "0.4.62",
     "@prismicio/editor-support": "0.4.62",
     "@prismicio/editor-ui": "0.4.62",
-    "@prismicio/mock": "0.7.0",
+    "@prismicio/mock": "0.7.1",
     "@prismicio/mocks": "2.9.1",
     "@prismicio/simulator": "0.1.4",
     "@prismicio/types-internal": "3.6.0",
