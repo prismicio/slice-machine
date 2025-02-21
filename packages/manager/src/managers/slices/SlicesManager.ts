@@ -2722,6 +2722,10 @@ type GroupField = {
 							updatedSlice,
 						);
 
+						console.log(
+							"STEP 8: Generate the branding on the code:",
+							`${index} - ${updatedSlice.name}`,
+						);
 						componentCode = await generateSliceComponentCodeAppearance(
 							sliceImage,
 							codeFile,
@@ -2744,7 +2748,7 @@ type GroupField = {
 				updatedSlices.map(
 					async ({ updatedSlice, componentCode, updatedMock }, index) => {
 						console.log(
-							"STEP 8: Update the slice code for:",
+							"STEP 9: Update the slice code for:",
 							`${index} - ${updatedSlice.name}`,
 						);
 						if (componentCode) {
@@ -2761,7 +2765,7 @@ type GroupField = {
 						}
 
 						console.log(
-							"STEP 9: Persist the generated mocks for:",
+							"STEP 10: Persist the generated mocks for:",
 							`${index} - ${updatedSlice.name}`,
 						);
 						await this.updateSliceMocks({
@@ -2773,7 +2777,7 @@ type GroupField = {
 				),
 			);
 
-			console.log("STEP 10: THE END");
+			console.log("STEP 11: THE END");
 
 			return {
 				slices: updatedSlices.map(({ updatedSlice }) => updatedSlice),
