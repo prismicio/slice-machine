@@ -310,11 +310,12 @@ To run tests with an experiment, enable the experiment in the test directly:
 
 ```ts
 test("does something when the experiment is on", async ({ procedures }) => {
-  procedures.mock("getExperimentVariant", ({ data }) => {
-    if (data === "example-experiment-name") {
-      return { value: "on" };
-    }
-  });
+  procedures.mock(
+    "telemetry.getExperimentVariant",
+    ({ args }) =>
+      args[0] === "example-experiment-name" ? { value: "on" } : undefined,
+    { execute: false },
+  );
 });
 ```
 
