@@ -1,4 +1,6 @@
+import fs from "node:fs";
 import * as t from "io-ts";
+import OpenAI from "openai";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
@@ -20,8 +22,8 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 } from "@slicemachine/plugin-kit";
-import { chromium } from "playwright";
-import sharp from "sharp";
+import path from "node:path";
+import { ChatCompletionMessageParam } from "openai/resources";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -348,6 +350,11 @@ export class SlicesManager extends BaseManager {
 		args: SliceCreateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceCreateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		console.log(
+			`component code to create NOW for ${args.model.name}:`,
+			JSON.stringify(args),
+		);
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"slice:create",
@@ -1492,7 +1499,7 @@ type GroupField = {
 				- Ensure to differentiate Prismic fields from just an image with visual inside the image. When that's the case, just add a Prismic image field.
 				- Do not include any decorative fields.
 				- Do not include any extra commentary or formatting.
-				
+	
 				!IMPORTANT!: 
 					- Only return a valid JSON object representing the full slice model, nothing else before. JSON.parse on your response should not throw an error.
 					- All your response should fit in a single return response.
@@ -1504,7 +1511,7 @@ type GroupField = {
 				${JSON.stringify(existingSlice)}
 			`.trim();
 			const command = new ConverseCommand({
-				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				modelId: "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
 				system: [{ text: systemPrompt }],
 				messages: [
 					{
@@ -1583,7 +1590,7 @@ type GroupField = {
 			`.trim();
 
 			const command = new ConverseCommand({
-				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				modelId: "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
 				system: [{ text: systemPrompt }],
 				messages: [
 					{
@@ -1705,7 +1712,7 @@ type GroupField = {
 			`.trim();
 
 			const command = new ConverseCommand({
-				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
+				modelId: "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
 				system: [{ text: systemPrompt }],
 				messages: [
 					{
@@ -1849,227 +1856,61 @@ type GroupField = {
 	): Promise<SliceMachineManagerGenerateSlicesFromUrlReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const INPUT_TOKEN_PRICE = 0.000003;
-		const OUTPUT_TOKEN_PRICE = 0.000015;
-
-		let totalTokens = {
-			slicesDetection: {
-				input: 0,
-				output: 0,
-				total: 0,
-				price: 0,
-			},
-			modelGeneration: {
-				input: 0,
-				output: 0,
-				total: 0,
-				price: 0,
-			},
-			mocksGeneration: {
-				input: 0,
-				output: 0,
-				total: 0,
-				price: 0,
-			},
-			codeGeneration: {
-				input: 0,
-				output: 0,
-				total: 0,
-				price: 0,
-			},
-		};
-
-		function updateTotalTokens(
-			functionKey:
-				| "slicesDetection"
-				| "modelGeneration"
-				| "mocksGeneration"
-				| "codeGeneration",
-			response: {
-				usage?: {
-					inputTokens?: number;
-					outputTokens?: number;
-					totalTokens?: number;
-				};
-			},
-		) {
-			if (
-				!response.usage ||
-				!response.usage.inputTokens ||
-				!response.usage.outputTokens ||
-				!response.usage.totalTokens
-			) {
-				throw new Error(`No usage data was returned for ${functionKey}.`);
-			}
-			totalTokens[functionKey] = {
-				input: totalTokens[functionKey].input + response.usage.inputTokens,
-				output: totalTokens[functionKey].output + response.usage.outputTokens,
-				total: totalTokens[functionKey].total + response.usage.totalTokens,
-				price:
-					totalTokens[functionKey].price +
-					response.usage.inputTokens * INPUT_TOKEN_PRICE +
-					response.usage.outputTokens * OUTPUT_TOKEN_PRICE,
-			};
+		const { OPENAI_API_KEY } = process.env;
+		if (!OPENAI_API_KEY) {
+			throw new Error("OPENAI_API_KEY is not set.");
 		}
-
-		// Validate AWS credentials
-		const AWS_REGION = "us-east-1";
-		const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env;
-		if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
-			throw new Error("AWS credentials are not set.");
-		}
+		const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 		const libraryIDs = sliceMachineConfig.libraries || [];
 		const DEFAULT_LIBRARY_ID = libraryIDs[0];
 
-		/**
-		 * Take a screenshot of a full page.
-		 */
-		async function takePageScreenshot(url: string): Promise<Uint8Array> {
-			const browser = await chromium.launch();
-			const page = await browser.newPage();
-			await page.goto(url);
-			const pageScreenshotBuffer = await page.screenshot({
-				path: "fullpage.png",
-				fullPage: true,
-			});
-			await browser.close();
-			const resizedImage = await sharp(pageScreenshotBuffer)
-				.resize({
-					width: 8000,
-					height: 8000,
-					fit: "inside", // Maintains aspect ratio; scales down only if needed.
-				})
-				.toBuffer();
+		const KNOWNED_WEBSITE_URLS: { [url: string]: string } = {
+			"https://www.criteo.com/": "./resources/criteo/homepage",
+			"https://www.brevo.com/landing/email-marketing-service/":
+				"./resources/brevo/mail",
+		};
 
-			const pageScreenshot = new Uint8Array(resizedImage);
-
-			return pageScreenshot;
-		}
-
-		/**
-		 * Call the AI to get the coordinates of each slice found in the image.
-		 */
-		async function getSlicesCoordinates(
-			client: BedrockRuntimeClient,
-			pageScreenshot: Uint8Array,
-		): Promise<
-			{
-				left: number;
-				top: number;
-				width: number;
-				height: number;
-			}[]
-		> {
-			const metadata = await sharp(pageScreenshot).metadata();
-			const systemPrompt = `
-				You are an expert in Prismic slices. Using the image provided, return the coordinates of each slice found in the image.
-				You need to ensure each slice is an isolate reusable part of the website page you are seeing in the image.
-				The definition of a Prismic slice is: Prismic slices are sections of your website. Prismic documents contain a dynamic “slice zone” that allows content creators to add, edit, and rearrange slices to compose dynamic layouts for any page design, such as blog posts, landing pages, and tutorials.
-				It's better to have more smaller size well splitted than big slices with too many things.
-				
-				Requirements:
-				- Provide the coordinates for each slice in the following format: { "left": number, "top": number, "width": number, "height": number }.
-				- The coordinates must always be completely within the image boundaries, leaving a margin (at least 5 pixels) from each edge to ensure that Sharp’s extract tool does not throw an "extract_area: bad extract area" error.
-				- The slices must not overlap and must be valid for use directly with Sharp's extract method.
-				- The output must be a valid JSON with one key "slices" that maps to an array of slice coordinate objects. No additional text, explanations, or metadata should be included. JSON.parse on your response should not throw an error.
-				- The entire output must fit in a single response.
-				- I will use the user image from the input as parameter to sharp function, so ensure the coordinates match the image I give you.
-				- Every time I'm using your result and pass it to sharp function, it's giving me an error "Error: extract_area: bad extract area", ENSURE it cannot happen.
-
-				The coordinates MUST fit in this range:
-				 - width: ${metadata.width}
-				 - height: ${metadata.height}
-
-				Here is the code that will be used to extract from the image each slices using your coordinates:
-				"""
-				const slices = await Promise.all(
-					slicesCoordinates.map(async (slice) => {
-						const sliceScreenshotBuffer = await sharp(pageScreenshot)
-							.extract({
-								left: slice.left,
-								top: slice.top,
-								width: slice.width,
-								height: slice.height,
-							})
-							.toBuffer();
-						const sliceScreenshot = new Uint8Array(sliceScreenshotBuffer);
-
-						return sliceScreenshot;
-					}),
-				);
-				"""
-
-				!IMPORTANT!: 
-					- Only return a valid JSON with one key "slices" and an array of slices coordinates, nothing else before. JSON.parse on your response should not throw an error.
-					- All your response should fit in a single return response.
-					- Never stop the response until you totally finish the full JSON response you wanted.
-			`.trim();
-
-			const command = new ConverseCommand({
-				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
-				system: [{ text: systemPrompt }],
-				messages: [
-					{
-						role: "user",
-						content: [
-							{
-								image: { format: "png", source: { bytes: pageScreenshot } },
-							},
-						],
-					},
-				],
-			});
-
-			const response = await client.send(command);
-			console.log("Slices coordinates response:", JSON.stringify(response));
-
-			updateTotalTokens("slicesDetection", response);
-
-			const resultText = response.output?.message?.content?.[0]?.text?.trim();
-			if (!resultText) {
-				throw new Error("No valid slices coordinates was generated.");
-			}
-
-			try {
-				const slicesCoordinates = JSON.parse(resultText);
-
-				return slicesCoordinates.slices;
-			} catch (error) {
-				throw new Error("Failed to parse AI response for model: " + error);
-			}
-		}
-
-		/**
-		 * Extract slices from the coordinates found in the image.
-		 */
-		async function extractSlicesFromCoordinates(
-			pageScreenshot: Uint8Array,
-			slicesCoordinates: {
-				left: number;
-				top: number;
-				width: number;
-				height: number;
-			}[],
+		async function readImagesFromFolder(
+			folderPath: string,
 		): Promise<Uint8Array[]> {
-			const slices = await Promise.all(
-				slicesCoordinates.map(async (slice) => {
-					const sliceScreenshotBuffer = await sharp(pageScreenshot)
-						.extract({
-							left: slice.left,
-							top: slice.top,
-							width: slice.width,
-							height: slice.height,
-						})
-						.toBuffer();
-					const sliceScreenshot = new Uint8Array(sliceScreenshotBuffer);
+			console.log(process.cwd());
 
-					return sliceScreenshot;
+			const files = await fs.promises.readdir(folderPath);
+			const images = await Promise.all(
+				files.map(async (file) => {
+					const buffer = await fs.promises.readFile(
+						path.join(folderPath, file),
+					);
+					return new Uint8Array(buffer);
 				}),
 			);
 
-			return slices;
+			return images;
+		}
+
+		async function readCodeFromFolder(folderPath: string): Promise<string[]> {
+			const files = await fs.promises.readdir(folderPath);
+			const codes = await Promise.all(
+				files.map(async (file) => {
+					const buffer = await fs.promises.readFile(
+						path.join(folderPath, file),
+						"utf-8",
+					);
+					return buffer.toString();
+				}),
+			);
+
+			return codes;
+		}
+
+		async function getGlobalStyle(filePath: string): Promise<string> {
+			const buffer = await fs.promises
+				.readFile(filePath)
+				.catch(() => Buffer.from(""));
+
+			return buffer.toString();
 		}
 
 		/**
@@ -2115,7 +1956,7 @@ type PrismicField =
   | DateField
   | TimestampField
   | NumberField
-  | KeyTextField
+  | TextField
   | SelectField
   | StructuredTextField
   | ImageField
@@ -2219,13 +2060,13 @@ type NumberField = {
 };
 
 /**
- * Represents a Key Text Field in Prismic.
+ * Represents a Text Field in Prismic.
  * @property {"Text"} type - Field type.
  * @property {Object} config - Configuration object.
  * @property {string} config.label - Label displayed in the editor.
  * @property {string} [config.placeholder] - Placeholder text.
  */
-type KeyTextField = {
+type TextField = {
 	type: "Text";
 	config: {
 		label: string;
@@ -2361,6 +2202,7 @@ type GeoPointField = {
 
 /**
  * Represents a Group Field (Repeatable Fields) in Prismic.
+ * It CAN NEVER BE PUT INSIDE ANOTHER FIELD.
  * @property {"Group"} type - Field type.
  * @property {Object} config - Configuration object.
  * @property {string} config.label - Label displayed in the editor.
@@ -2399,11 +2241,11 @@ type GroupField = {
 		 * Calls the AI to generate the slice model.
 		 */
 		async function generateSliceModel(
-			client: BedrockRuntimeClient,
 			imageFile: Uint8Array,
+			codeFile: string,
 		): Promise<SharedSlice> {
 			const systemPrompt = `
-				You are an expert in Prismic content modeling. Using the image provided, generate a valid Prismic JSON model for the slice described below. Follow these rules precisely:
+				You are an expert in Prismic content modeling. Using the image and the code provided, generate a valid Prismic JSON model for the slice described below. Follow these rules precisely:
 				- Use the TypeScript schema provided as your reference.
 				- Place all main content fields under the "primary" object.
 				- Do not create any collections or groups for single-image content (background images should be a single image field).
@@ -2411,9 +2253,19 @@ type GroupField = {
 				- Never generate a Link / Button text field, only the Link / Button field itself is enough. Just enable "allowText" when doing that.
 				- Do not forget any field visible from the image provide in the user prompt.
 				- Ensure to differentiate Prismic fields from just an image with visual inside the image. When that's the case, just add a Prismic image field.
-				- Do not include any decorative fields.
+				- Use the code to know exactly what is a real field and not an image. If in the code it's an image, then the field should also be an image, do a 1-1 mapping thanks to the code.
+				- Do not include any decorative fields. When an element is purely visual, decorative, don't include it att all in the slice model.
 				- Do not include any extra commentary or formatting.
-				
+				- When you see a repetition of an image, a text, a link, etc, NEVER create one field per repeated item, you HAVE to use a group for that.
+				- When you see multiple fields repeated, you MUST use a group for that.
+				- NEVER put a group inside another group field, this is not allowed. In the final JSON a group CANNOT be within another group field. YOU CANNOT NEST GROUP FIELDS! Not for any reason you are allowed to do that! Even for navigation, in header or footer you cannot nest group fields.
+				- The "items" field must not be used under any circumstances. All repeatable fields should be defined using a Group field inside the primary object. If a field represents a collection of items, it must be part of a Group field, and items must never appear in the JSON output.
+				- Don't forget to replace the temporary text in the "Existing Slice to update", like <ID_TO_CHANGE>, <NAME_TO_CHANGE>, <DESCRIPTION_TO_CHANGE>, <VARIATION_ID_TO_CHANGE>, etc.
+				- Field placeholder should be super short, do not put the content from the image inside the placeholder.
+				- Field label and id should define the field's purpose, not its content.
+				- Slice name and id should define the slice's purpose, not its content.
+				- Slice description should be a brief explanation of the slice's purpose not its content.
+			
 				!IMPORTANT!: 
 					- Only return a valid JSON object representing the full slice model, nothing else before. JSON.parse on your response should not throw an error.
 					- All your response should fit in a single return response.
@@ -2425,27 +2277,37 @@ type GroupField = {
 				Existing Slice to update:
 				${JSON.stringify(DEFAULT_SLICE_MODEL)}
 			`.trim();
-			const command = new ConverseCommand({
-				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
-				system: [{ text: systemPrompt }],
-				messages: [
-					{
-						role: "user",
-						content: [
-							{
-								image: { format: "png", source: { bytes: imageFile } },
+
+			const messages: Array<ChatCompletionMessageParam> = [
+				{ role: "system", content: systemPrompt },
+				{
+					role: "user",
+					content: [
+						{
+							type: "image_url",
+							image_url: {
+								url:
+									"data:image/png;base64," +
+									Buffer.from(imageFile).toString("base64"),
 							},
-						],
-					},
-				],
+						},
+						{ type: "text", text: codeFile },
+					],
+				},
+			];
+			const response: OpenAI.Chat.Completions.ChatCompletion & {
+				_request_id?: string | null;
+			} = await openai.chat.completions.create({
+				model: "gpt-4o",
+				messages,
+				response_format: {
+					type: "json_object",
+				},
 			});
 
-			const response = await client.send(command);
 			console.log("Generated model response:", JSON.stringify(response));
 
-			updateTotalTokens("modelGeneration", response);
-
-			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			const resultText = response.choices[0]?.message?.content?.trim();
 			if (!resultText) {
 				throw new Error("No valid slice model was generated.");
 			}
@@ -2463,7 +2325,6 @@ type GroupField = {
 		 * Calls the AI endpoint to generate mocks.
 		 */
 		async function generateSliceMocks(
-			client: BedrockRuntimeClient,
 			imageFile: Uint8Array,
 			existingMocks: SharedSliceContent[],
 		): Promise<SharedSliceContent[]> {
@@ -2476,43 +2337,57 @@ type GroupField = {
 					- Strictly only update text content.
 					- Do not touch images.
 					- If you see a repetition with a group, you must create the same number of group items that are visible on the image.
+					- Absolutely do not touch what is not necessary to be changed, like link "key" property, or the StructureText "direction", spans", etc or the structure, this is really important that you just do a replace of the text.
+					- For structure text content you must alway keep the same structure and properties, even if empty, ONLY replace text content.
+					- Only and strictly update the text content of the fields, nothing else. You should only and strictly update the text that is visible in the image.
+					- Never touch the image fields, nothing should be changed for image fields.
 
-				!IMPORTANT!: 
+				!IMPORTANT!:
 					- Only return a valid JSON object for mocks, nothing else before. JSON.parse on your response should not throw an error.
 					- All your response should fit in a single return response.
 					- Never stop the response until you totally finish the full JSON response you wanted.
-				
+
 				Existing Mocks Template:
-				${JSON.stringify(existingMocks, null, 2)}
+				${JSON.stringify(existingMocks)}
 			`.trim();
 
-			const command = new ConverseCommand({
-				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
-				system: [{ text: systemPrompt }],
-				messages: [
-					{
-						role: "user",
-						content: [
-							{ image: { format: "png", source: { bytes: imageFile } } },
-						],
-					},
-				],
+			const messages: Array<ChatCompletionMessageParam> = [
+				{ role: "system", content: systemPrompt },
+				{
+					role: "user",
+					content: [
+						{
+							type: "image_url",
+							image_url: {
+								url:
+									"data:image/png;base64," +
+									Buffer.from(imageFile).toString("base64"),
+							},
+						},
+					],
+				},
+			];
+			const response: OpenAI.Chat.Completions.ChatCompletion & {
+				_request_id?: string | null;
+			} = await openai.chat.completions.create({
+				model: "gpt-4o",
+				messages,
+				response_format: {
+					type: "json_object",
+				},
 			});
 
-			const response = await client.send(command);
 			console.log("Generated mocks response:", JSON.stringify(response));
 
-			updateTotalTokens("mocksGeneration", response);
-
-			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			const resultText = response.choices[0]?.message?.content?.trim();
 			if (!resultText) {
 				throw new Error("No valid mocks were generated.");
 			}
 
 			try {
-				const updatedMocks = JSON.parse(resultText);
+				const updatedMock: SharedSliceContent = JSON.parse(resultText);
 
-				return updatedMocks;
+				return [updatedMock];
 			} catch (error) {
 				throw new Error("Failed to parse AI response for mocks: " + error);
 			}
@@ -2522,100 +2397,136 @@ type GroupField = {
 		 * Calls the AI endpoint to generate the slice React component.
 		 */
 		async function generateSliceComponentCode(
-			client: BedrockRuntimeClient,
 			imageFile: Uint8Array,
-			existingMocks: any,
+			codeFile: string,
+			updatedSlice: SharedSlice,
 		): Promise<string> {
-			// Build a prompt focused solely on generating the React component code.
 			const systemPrompt = `
 				You are a seasoned frontend engineer with deep expertise in Prismic slices.
-				Your task is to generate a fully isolated React component code for a slice based on the provided image input.
+				Your task is to generate a fully isolated React component code for a slice based on the provided image and code input.
+				The goal is to create the React (HTML) structure of the slice, NO STYLING! Concentrate 100% on the perfect structure of each component.
+
 				Follow these guidelines strictly:
 					- Be self-contained.
-					- Your goal is to make the code visually looks as close as possible to the image from the user input.
-					- Ensure that the color used for the background is the same as the image provide in the user prompt! It's better no background color than a wrong one.
 					- For links, you must use PrismicNextLink and you must just pass the field, PrismicNextLink will handle the display of the link text, don't do it manually.
-					- Respect the padding and margin visible in the image provide in the user prompt.
-					- Respect the fonts size, color, type visible in the image provide in the user prompt.
-					- Respect the colors visible in the image provide in the user prompt.
-					- Respect the position of elements visible in the image provide in the user prompt.
-					- Respect the size of each elements visible in the image provide in the user prompt.
-					- Respect the overall proportions of the slice from the image provide in the user prompt.
-					- Ensure to strictly respect what is defined on the mocks for each fields ID, do not invent or use something not in the mocks.
-					- Ensure to use all fields provided in the mocks.
-					- Use inline <style> (do not use <style jsx>).
+					- PrismicNextLink should never be open, just passing the field is enough like in the code example below. You can use className or inline style directly on the PrismicNextLink component.
+					- Ensure to strictly respect what is defined on the model for each fields ID, do not invent or use something not in the model.
+					- Ensure to use all fields provided in the model.
 					- Follow the structure provided in the code example below.
-
-				!IMPORTANT!: 
-					- Only return a valid JSON object with two keys: "mocks" and "componentCode", nothing else before. JSON.parse on your response should not throw an error.
-					- All your response should fit in a single return response.
-					- Never stop the response until you totally finish the full JSON response you wanted.
+					- Use the provided code to help yourself to create the structure.
+					- As you can see in the example of the code you MUST never access the data with "<field>.value".
+					- You need to really inspire yourself from the code example bellow in order to understand how to access field, write field etc. Do not try to invent something that you didn't see.
+					- You cannot add a style prop to "PrismicRichText" component, it's not allowed.
+					- It's important to respect the same imports as done in the code example bellow, import exactly from the same package.
+					- Never do wrong W3C HTML structure, always respect a correct HTML structure, for example you cannot put a PrismicRichText component inside a <h1>, or a <p>, etc.
+					- Ensure to map the field type to the correct Prismic component, for example, a StructuredText field should be mapped to PrismicRichText, an image field should be mapped to PrismicNextImage, a Text field should just be map to a classic <p> component
 				
+				!IMPORTANT!:
+					- Return a valid JSON object containing only one key: "componentCode". No additional keys, text, or formatting are allowed before, after, or within the JSON object.
+					- Return a valid JSON, meaning you should NEVER start with a sentence, directly the JSON so that I can JSON.parse your response.
+					- All strings must be enclosed in double quotes ("). Do not use single quotes or template literals.
+					- Within the string value for "componentCode", every embedded double quote must be escaped as \". Similarly, every backslash must be escaped as \\.
+					- Ensure that the string value does not contain any raw control characters (such as literal newline, tab, or carriage return characters). Instead, use their escape sequences.
+					- Before finalizing the output, validate that JSON.parse(output) works without throwing an error. No unescaped characters should cause the parser to crash.
+					- The output must not include any markdown formatting, code block fences, or extra text. It should be a single, clean JSON object.
+
 				## Example of a Fully Isolated Slice Component:
 				-----------------------------------------------------------
-				import { type Content } from "@prismicio/client";
-				import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+				import { FC } from "react";
+				import { Content } from "@prismicio/client";
 				import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
-				
-				export type HeroProps = SliceComponentProps<Content.HeroSlice>;
-				
-				const Hero = ({ slice }: HeroProps): JSX.Element => {
+				import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+
+				export type PascalNameToReplaceProps =
+					SliceComponentProps<Content.PascalNameToReplaceSlice>;
+
+				const PascalNameToReplace: FC<PascalNameToReplaceProps> = ({ slice }) => {
 					return (
 						<section
-						data-slice-type={slice.slice_type}
-						data-slice-variation={slice.variation}
-						className="hero"
+							data-slice-type={slice.slice_type}
+							data-slice-variation={slice.variation}
+							className="es-bounded es-alternate-grid"
 						>
-						<div className="hero__content">
-							<div className="hero__image-wrapper">
-								<PrismicNextImage field={slice.primary.image} className="hero__image" />
+							<PrismicNextLink
+								className="es-alternate-grid__button"
+								field={slice.primary.buttonLink}
+							/>
+							<div className="es-alternate-grid__content">
+								<PrismicNextImage
+									field={slice.primary.image}
+									className="es-alternate-grid__image"
+								/>
+								<div className="es-alternate-grid__primary-content">
+									<div className="es-alternate-grid__primary-content__intro">
+										<p className="es-alternate-grid__primary-content__intro__eyebrow">
+											{slice.primary.eyebrowHeadline}
+										</p>
+										<div className="es-alternate-grid__primary-content__intro__headline">
+											<PrismicRichText field={slice.primary.title} />
+										</div>
+										<div className="es-alternate-grid__primary-content__intro__description">
+											<PrismicRichText field={slice.primary.description} />
+										</div>
+									</div>
+
+									<div className="es-alternate-grid__primary-content__stats">
+										{slice.primary.stats.map((stat, i) => (
+											<div key={\`stat-$\{i + 1\}\`} className="es-alternate-grid__stat">
+												<div className="es-alternate-grid__stat__heading">
+													<PrismicRichText field={stat.title} />
+												</div>
+												<div className="es-alternate-grid__stat__description">
+													<PrismicRichText field={stat.description} />
+												</div>
+											</div>
+										))}
+									</div>
+								</div>
 							</div>
-							<div className="hero__text">
-								<PrismicRichText field={slice.primary.title} />
-								<PrismicRichText field={slice.primary.description} />
-								<PrismicNextLink field={slice.primary.link} />
-							</div>
-						</div>
-						<style>
-							{\`
-								.hero { display: flex; flex-direction: row; padding: 20px; }
-								.hero__content { width: 100%; }
-								.hero__image-wrapper { flex: 1; }
-								.hero__text { flex: 1; padding-left: 20px; }
-							\`}
-						</style>
 						</section>
 					);
 				};
-				
-				export default Hero;
+
+				export default PascalNameToReplace;
 				-----------------------------------------------------------
-				Existing Mocks Template:
-				${JSON.stringify(existingMocks, null, 2)}
+
+				Model of the slice:
+				${JSON.stringify(updatedSlice)}
 			`.trim();
 
-			const command = new ConverseCommand({
-				modelId: "anthropic.claude-3-5-sonnet-20240620-v1:0",
-				system: [{ text: systemPrompt }],
-				messages: [
-					{
-						role: "user",
-						content: [
-							{ image: { format: "png", source: { bytes: imageFile } } },
-						],
-					},
-				],
+			const messages: Array<ChatCompletionMessageParam> = [
+				{ role: "system", content: systemPrompt },
+				{
+					role: "user",
+					content: [
+						{
+							type: "image_url",
+							image_url: {
+								url:
+									"data:image/png;base64," +
+									Buffer.from(imageFile).toString("base64"),
+							},
+						},
+						{ type: "text", text: codeFile },
+					],
+				},
+			];
+			const response: OpenAI.Chat.Completions.ChatCompletion & {
+				_request_id?: string | null;
+			} = await openai.chat.completions.create({
+				model: "gpt-4o",
+				messages,
+				response_format: {
+					type: "json_object",
+				},
 			});
 
-			const response = await client.send(command);
 			console.log(
 				"Generated component code response:",
 				JSON.stringify(response),
 			);
 
-			updateTotalTokens("codeGeneration", response);
-
-			const resultText = response.output?.message?.content?.[0]?.text?.trim();
+			const resultText = response.choices[0]?.message?.content?.trim();
 			if (!resultText) {
 				throw new Error("No valid slice component code was generated.");
 			}
@@ -2633,52 +2544,133 @@ type GroupField = {
 			}
 		}
 
-		// Initialize AWS Bedrock client.
-		const bedrockClient = new BedrockRuntimeClient({
-			region: AWS_REGION,
-			credentials: {
-				accessKeyId: AWS_ACCESS_KEY_ID,
-				secretAccessKey: AWS_SECRET_ACCESS_KEY,
-			},
-		});
+		async function generateSliceComponentCodeAppearance(
+			imageFile: Uint8Array,
+			codeFile: string,
+			globalStyle: string,
+			componentCode: string,
+		): Promise<string> {
+			const systemPrompt = `
+				You are a seasoned frontend engineer with deep expertise in Prismic slices.
+				Your task is to apply the branding (appearance) based on the provided image and code input.
+				The branding is SUPER important, and the slice you create should PERFECTLY match the branding (appearance) of the provided slice image and code.
+
+				Follow these guidelines strictly:
+					- Don't change anything related to the structure of the code, ONLY apply styling, PURELY styling is your ONLY task.
+					- Be self-contained, no dependency should be use to do the styling, do inline style.
+					- Your goal is to make the code visually looks as close as possible to the image from the user input.
+					- Ensure that the color used for the background is the same as the image provide in the user prompt! It's better no background color than a wrong one.
+					- Strictly respect the padding and margin visible in the image provide in the user prompt.
+					- Strictly respect the fonts size, color, type visible in the image provide in the user prompt.
+					- Strictly respect the colors visible in the image provide in the user prompt.
+					- Strictly respect the position of elements visible in the image provide in the user prompt.
+					- Strictly respect the size of each elements visible in the image provide in the user prompt.
+					- Strictly respect the overall proportions of the slice from the image provide in the user prompt.
+					- Ensure image are always displayed with the same aspect ratio as the image provide in the user prompt, put constraints on the image with / height to make sure it's the same.
+					- Handle animations, but never make them too long, it should be fast enough to be nice to read.
+					- Use inline <style> (do not use <style jsx>).
+					- Items repetitions should be styled in the same way as the image provided, the direction of the flex should be the same so that the items are vertical or horizontal as in the image.
+
+				!IMPORTANT!:
+					- DO NOT CHANGE anything else than the style BUT return everything as before for the rest, like from the import to the last export line, everything should stay the same BUT you add the styling on top.
+					- Return a valid JSON object containing only one key: "componentCode". No additional keys, text, or formatting are allowed before, after, or within the JSON object.
+					- Return a valid JSON, meaning you should NEVER start with a sentence, directly the JSON so that I can JSON.parse your response.
+					- All strings must be enclosed in double quotes ("). Do not use single quotes or template literals.
+					- Within the string value for "componentCode", every embedded double quote must be escaped as \". Similarly, every backslash must be escaped as \\.
+					- Ensure that the string value does not contain any raw control characters (such as literal newline, tab, or carriage return characters). Instead, use their escape sequences.
+					- Before finalizing the output, validate that JSON.parse(output) works without throwing an error. No unescaped characters should cause the parser to crash.
+					- The output must not include any markdown formatting, code block fences, or extra text. It should be a single, clean JSON object.
+
+				Existing code to apply branding on it:
+				${componentCode}
+			`.trim();
+
+			// INFO: globalStyle is way too big as of today to be included in the prompt.
+			// As the user is providing a slice image and code you miss the global style to help you build the best slice that match the branding, so here is the global style:
+			// ${globalStyle}
+
+			const messages: Array<ChatCompletionMessageParam> = [
+				{ role: "system", content: systemPrompt },
+				{
+					role: "user",
+					content: [
+						{
+							type: "image_url",
+							image_url: {
+								url:
+									"data:image/png;base64," +
+									Buffer.from(imageFile).toString("base64"),
+							},
+						},
+						{ type: "text", text: codeFile },
+					],
+				},
+			];
+			const response: OpenAI.Chat.Completions.ChatCompletion & {
+				_request_id?: string | null;
+			} = await openai.chat.completions.create({
+				model: "gpt-4o",
+				messages,
+				response_format: {
+					type: "json_object",
+				},
+			});
+
+			console.log(
+				"Generated component code appearance response:",
+				JSON.stringify(response),
+			);
+
+			const resultText = response.choices[0]?.message?.content?.trim();
+			if (!resultText) {
+				throw new Error("No valid slice component code was generated.");
+			}
+
+			try {
+				const parsed = JSON.parse(resultText);
+				if (!parsed.componentCode) {
+					throw new Error("Missing key 'componentCode' in AI response.");
+				}
+				return parsed.componentCode;
+			} catch (error) {
+				throw new Error(
+					"Failed to parse AI response for component code appearance: " + error,
+				);
+			}
+		}
 
 		try {
-			// STEP 1: From a website url take as screenshot of the whole page.
-			console.log("STEP 1: Take a screenshot of the whole page.");
-			const pageScreenshot = await takePageScreenshot(args.websiteUrl);
+			let slices: {
+				sliceImage: Uint8Array;
+				codeFile: string;
+			}[] = [];
 
-			// STEP 2: Ask AI to separate the whole image into individual slices.
-			console.log("STEP 2: Generate the slice model using the image.");
-			const slicesCoordinates = await getSlicesCoordinates(
-				bedrockClient,
-				pageScreenshot,
-			);
+			const folderPath = KNOWNED_WEBSITE_URLS[args.websiteUrl];
 
-			// STEP 3: Extract each slice from the coordinates.
-			console.log("STEP 3: Extract each slice from the coordinates");
-			const slices = await extractSlicesFromCoordinates(
-				pageScreenshot,
-				slicesCoordinates,
-			);
+			console.log("STEP 1: Get the slices images from the folder.");
+			const sliceImages = await readImagesFromFolder(`${folderPath}/images`);
 
-			// Loop in parallel over each slice image and generate the slice model, mocks and code.
+			console.log("STEP 2: Get the slices codes from the folder.");
+			const sliceCodes = await readCodeFromFolder(`${folderPath}/code`);
+
+			slices = sliceImages.map((sliceImage, index) => ({
+				sliceImage,
+				codeFile: sliceCodes[index],
+			}));
+
+			// Loop in parallel over each slice image and html code and generate the slice model, mocks and code.
 			const updatedSlices = await Promise.all(
-				slices.map(async (sliceImage, index) => {
+				slices.map(async ({ sliceImage, codeFile }, index) => {
 					// ----- Q1 scope -----
 
-					// STEP 4: Generate the slice model using the image.
 					console.log(
-						"STEP 4: Generate the slice model using the image for slice:",
+						"STEP 3: Generate the slice model using the image for slice:",
 						index,
 					);
-					const updatedSlice = await generateSliceModel(
-						bedrockClient,
-						sliceImage,
-					);
+					const updatedSlice = await generateSliceModel(sliceImage, codeFile);
 
-					// STEP 5: Persist the updated slice model.
 					console.log(
-						"STEP 5: Persist the updated slice model for:",
+						"STEP 4: Persist the updated slice model for:",
 						`${index} - ${updatedSlice.name}`,
 					);
 					await this.updateSlice({
@@ -2686,9 +2678,8 @@ type GroupField = {
 						model: updatedSlice,
 					});
 
-					// STEP 6: Update the slice screenshot.
 					console.log(
-						"STEP 6: Update the slice screenshot for:",
+						"STEP 5: Update the slice screenshot for:",
 						`${index} - ${updatedSlice.name}`,
 					);
 					await this.updateSliceScreenshot({
@@ -2700,76 +2691,93 @@ type GroupField = {
 
 					// ----- END Q1 scope -----
 
+					let updatedMock: SharedSliceContent[];
 					try {
-						// STEP 7: Generate updated mocks.
 						console.log(
-							"STEP 7: Generate updated mocks for:",
+							"STEP 6: Generate updated mocks for:",
 							`${index} - ${updatedSlice.name}`,
 						);
 						const existingMocks = mockSlice({ model: updatedSlice });
-						const updatedMocks = await generateSliceMocks(
-							bedrockClient,
-							sliceImage,
-							existingMocks,
+						updatedMock = await generateSliceMocks(sliceImage, existingMocks);
+					} catch (error) {
+						console.error(
+							`Failed to generate mocks for ${index} - ${updatedSlice.name}:`,
+							error,
 						);
+						updatedMock = mockSlice({ model: updatedSlice });
+					}
 
-						// STEP 8: Generate the isolated slice component code.
+					let componentCode: string | undefined;
+					try {
 						console.log(
-							"STEP 8: Generate the isolated slice component code for:",
+							"STEP 7: Generate the isolated slice component code for:",
 							`${index} - ${updatedSlice.name}`,
 						);
-						const componentCode = await generateSliceComponentCode(
-							bedrockClient,
+						const globalStyle = await getGlobalStyle(
+							`${folderPath}/globalStyle.css`,
+						);
+						const initialCode = await generateSliceComponentCode(
 							sliceImage,
-							existingMocks,
+							codeFile,
+							updatedSlice,
 						);
 
-						// STEP 9: Update the slice code.
+						componentCode = await generateSliceComponentCodeAppearance(
+							sliceImage,
+							codeFile,
+							globalStyle,
+							initialCode,
+						);
+					} catch (error) {
+						console.error(
+							`Failed to generate code for ${index} - ${updatedSlice.name}:`,
+							error,
+						);
+					}
+
+					return { updatedSlice, componentCode, updatedMock };
+				}),
+			);
+
+			// Ensure to wait to have all slices code and mocks before writing on the disk
+			await Promise.all(
+				updatedSlices.map(
+					async ({ updatedSlice, componentCode, updatedMock }, index) => {
 						console.log(
-							"STEP 9: Update the slice code for:",
+							"STEP 8: Update the slice code for:",
 							`${index} - ${updatedSlice.name}`,
 						);
-						await this.createSlice({
-							libraryID: DEFAULT_LIBRARY_ID,
-							model: updatedSlice,
-							componentContents: componentCode,
-						});
+						if (componentCode) {
+							await this.createSlice({
+								libraryID: DEFAULT_LIBRARY_ID,
+								model: updatedSlice,
+								componentContents: componentCode,
+							});
+						} else {
+							await this.createSlice({
+								libraryID: DEFAULT_LIBRARY_ID,
+								model: updatedSlice,
+							});
+						}
 
-						// STEP 10: Persist the generated mocks.
 						console.log(
-							"STEP 10: Persist the generated mocks for:",
+							"STEP 9: Persist the generated mocks for:",
 							`${index} - ${updatedSlice.name}`,
 						);
 						await this.updateSliceMocks({
 							libraryID: DEFAULT_LIBRARY_ID,
 							sliceID: updatedSlice.id,
-							mocks: updatedMocks,
+							mocks: updatedMock,
 						});
-					} catch (error) {
-						console.error(
-							`Failed to generate mocks and / or code for ${index} - ${updatedSlice.name}:`,
-							error,
-						);
-						await this.createSlice({
-							libraryID: DEFAULT_LIBRARY_ID,
-							model: updatedSlice,
-						});
-					}
-
-					return updatedSlice;
-				}),
+					},
+				),
 			);
 
-			// Usage
-			console.log("STEP 11: THE END");
-			console.log("Tokens used:", totalTokens);
-			const totalPrice = Object.values(totalTokens).reduce(
-				(acc, { price }) => acc + price,
-				0,
-			);
-			console.log("Total price:", totalPrice);
+			console.log("STEP 10: THE END");
 
-			return { slices: updatedSlices };
+			return {
+				slices: updatedSlices.map(({ updatedSlice }) => updatedSlice),
+			};
 		} catch (error) {
 			console.error("Failed to generate slice:", error);
 			throw new Error("Failed to generate slice: " + error);

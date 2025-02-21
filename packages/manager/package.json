@@ -85,6 +85,7 @@
 		"monocle-ts": "^2.3.13",
 		"newtype-ts": "^0.3.5",
 		"node-fetch": "^3.3.1",
+		"openai": "^4.85.3",
 		"p-limit": "^4.0.0",
 		"playwright": "^1.50.1",
 		"prettier": "^3.0.3",
