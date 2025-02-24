@@ -81,8 +81,6 @@ const mockAdapter = async (
 		variations: [ctx.mockPrismic.model.sharedSliceVariation()],
 	});
 	const customTypeModel = ctx.mockPrismic.model.customType();
-	// TODO: maybe update @prismic/mock with the new custom-type format
-	const customTypeModelWithFormat = { ...customTypeModel, format: "custom" };
 
 	const sliceLibraryReadHookHandler = vi.fn(({ libraryID }) => {
 		if (options?.throwsOn?.includes("slice-library:read")) {
@@ -131,7 +129,7 @@ const mockAdapter = async (
 		adapter,
 		models: {
 			sharedSliceModel,
-			customTypeModel: customTypeModelWithFormat,
+			customTypeModel,
 		},
 		spiedHookHandlers: {
 			sliceLibraryReadHookHandler,

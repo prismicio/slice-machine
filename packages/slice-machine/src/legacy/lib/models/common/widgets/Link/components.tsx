@@ -8,7 +8,7 @@ import {
   TextInput,
   Tooltip,
 } from "@prismicio/editor-ui";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Checkbox, Flex, Label } from "theme-ui";
 
 import { Col } from "@/legacy/components/Flex";
@@ -23,8 +23,8 @@ interface CommonCheckboxProps {
 export function DisplayTextCheckbox(props: CommonCheckboxProps) {
   const { checked, height = 130, setFieldValue } = props;
 
-  // Ref to the container to position the tooltip inside it.
-  const container = useRef<HTMLDivElement>(null);
+  // Container to position the tooltip inside it.
+  const [container, setContainer] = useState<HTMLElement | null>(null);
 
   return (
     <Col>
@@ -41,7 +41,7 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
             justifyContent="space-between"
             alignItems="center"
             width="100%"
-            ref={container}
+            ref={setContainer}
           >
             <Flex>
               <Checkbox
@@ -53,7 +53,7 @@ export function DisplayTextCheckbox(props: CommonCheckboxProps) {
               Allow display text
             </Flex>
             <Tooltip
-              containerRef={container}
+              container={container}
               align="end"
               content="Allow editors to customize the link display text"
             >

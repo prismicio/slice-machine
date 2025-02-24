@@ -130,6 +130,15 @@ export const numberField: NestableField = {
   type: "Number",
 };
 
+export const richTextField: NestableField = {
+  name: "Rich Text",
+  description: "Text with formatting options.",
+  icon: "textFields",
+  thumbnail:
+    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295530/DEV_TOOLS/SM_FIELDS/Type_Rich_Text_fxdyar.png",
+  type: "StructuredText",
+};
+
 export const selectField: NestableField = {
   name: "Select",
   description: "A dropdown of options.",
@@ -139,13 +148,13 @@ export const selectField: NestableField = {
   type: "Select",
 };
 
-export const richTextField: NestableField = {
-  name: "Rich Text",
-  description: "Text with formatting options.",
-  icon: "textFields",
+export const tableField: NestableField = {
+  name: "Table",
+  description: "A structured table.",
+  icon: "table",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295530/DEV_TOOLS/SM_FIELDS/Type_Rich_Text_fxdyar.png",
-  type: "StructuredText",
+    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1737381854/FIELDS_SM/Table_f47jnq.png",
+  type: "Table",
 };
 
 export const textField: NestableField = {
@@ -177,6 +186,7 @@ export const nestableFields: NestableField[] = [
   LinkToMediaField,
   colorField,
   dateField,
+  tableField,
   timestampField,
   embedField,
   geoPointField,
