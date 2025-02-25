@@ -1921,14 +1921,6 @@ type GroupField = {
 			return codes;
 		}
 
-		async function getGlobalStyle(filePath: string): Promise<string> {
-			const buffer = await fs.promises
-				.readFile(filePath)
-				.catch(() => Buffer.from(""));
-
-			return buffer.toString();
-		}
-
 		async function callAI<ReturnType extends Record<string, unknown>>({
 			ai,
 			stepName,
@@ -2581,47 +2573,52 @@ type GroupField = {
 		async function generateSliceComponentCodeAppearance(
 			imageFile: Uint8Array,
 			codeFile: string,
-			globalStyle: string,
 			componentCode: string,
 		): Promise<string> {
 			const systemPrompt = `
-				You are a seasoned frontend engineer with deep expertise in Prismic slices.
-				Your task is to apply the branding (appearance) based on the provided image and code input.
-				The branding is SUPER important, and the slice you create should PERFECTLY match the branding (appearance) of the provided slice image and code.
-
-				Follow these guidelines strictly:
-					- Don't change anything related to the structure of the code, ONLY apply styling, PURELY styling is your ONLY task.
-					- Be self-contained, no dependency should be use to do the styling, do inline style.
-					- Your goal is to make the code visually looks as close as possible to the image from the user input.
-					- Ensure that the color used for the background is the same as the image provide in the user prompt! It's better no background color than a wrong one.
-					- Strictly respect the padding and margin visible in the image provide in the user prompt.
-					- Strictly respect the fonts size, color, type visible in the image provide in the user prompt.
-					- Strictly respect the colors visible in the image provide in the user prompt.
-					- Strictly respect the position of elements visible in the image provide in the user prompt.
-					- Strictly respect the size of each elements visible in the image provide in the user prompt.
-					- Strictly respect the overall proportions of the slice from the image provide in the user prompt.
-					- Ensure image are always displayed with the same aspect ratio as the image provide in the user prompt, put constraints on the image with / height to make sure it's the same.
-					- Handle animations, but never make them too long, it should be fast enough to be nice to read.
-					- Use inline <style> (do not use <style jsx>).
-					- Items repetitions should be styled in the same way as the image provided, the direction of the flex should be the same so that the items are vertical or horizontal as in the image.
-
-				!IMPORTANT!:
-					- DO NOT CHANGE anything else than the style BUT return everything as before for the rest, like from the import to the last export line, everything should stay the same BUT you add the styling on top.
-					- Return a valid JSON object containing only one key: "componentCode". No additional keys, text, or formatting are allowed before, after, or within the JSON object.
-					- Return a valid JSON, meaning you should NEVER start with a sentence, directly the JSON so that I can JSON.parse your response.
-					- All strings must be enclosed in double quotes ("). Do not use single quotes or template literals.
-					- Within the string value for "componentCode", every embedded double quote must be escaped as \". Similarly, every backslash must be escaped as \\.
-					- Ensure that the string value does not contain any raw control characters (such as literal newline, tab, or carriage return characters). Instead, use their escape sequences.
-					- Before finalizing the output, validate that JSON.parse(output) works without throwing an error. No unescaped characters should cause the parser to crash.
-					- The output must not include any markdown formatting, code block fences, or extra text. It should be a single, clean JSON object.
-
-				Existing code to apply branding on it:
+				You are a **seasoned frontend engineer** with **deep expertise in Prismic slices**.
+				Your task is to **apply branding (appearance) strictly based on the provided image and code input**.
+				The **branding is CRITICAL**—the slice you create **must perfectly match the visual appearance** of the provided slice image.
+			
+				**STRICT GUIDELINES TO FOLLOW (NO EXCEPTIONS):**
+					- **DO NOT** modify the structure of the code—**ONLY apply styling**. Your role is **purely styling-related**.
+					- **NO external dependencies**—use **only inline** styling.
+					- **VISUAL ACCURACY IS MANDATORY**—your goal is to make the output **visually identical** to the provided image.
+					
+				**MUST strictly respect the following:**
+					- **Background color** → Must **exactly match** the image. If unsure, **do not apply** any background color.
+					- **Padding & margin** → Must be **pixel-perfect** per the provided image.
+					- **Font size, color, and type** → Must match exactly. If the exact font is unavailable, choose the **closest possible match**.
+					- **Typography precision** → If the font-family does not match, **the output is incorrect**.
+					- **Color accuracy** → Use **ONLY the colors visible** in the provided image.
+					- **Element positioning** → Elements **must be placed exactly** as seen in the provided image.
+					- **Element sizes** → Every element **must match** the provided image in width, height, and proportions.
+					- **Overall proportions** → The slice must maintain **identical proportions** to the provided image.
+					- **Image constraints** → Images **must** maintain their **original aspect ratio**. Use explicit \`width\` and \`height\` constraints with an explicit pixels value. Avoid \`width: auto\`, \`height: auto\`, \`width: 100%\` or \`height: 100%\`.
+					- **Repetitions & layout** → Ensure **consistent styling** across repeated items. The **layout direction (horizontal/vertical)** must match the image.
+					- **Animations** → Handle animations as seen in the image, but **keep them fast and subtle** (avoid long animations).
+				
+				**IMPORTANT RULES**
+				
+				1. **DO NOT modify any non-styling code**.
+					- **Everything from the first import to the last export must remain unchanged**.
+					- **Only add styling** on top of the existing structure.
+			
+				2. **STRICT JSON OUTPUT FORMAT**
+					- Return a **valid JSON object** with **one key only**: \`"componentCode"\`.
+					- **NO markdown, NO code blocks, NO text before or after**—only **pure JSON**.
+					- The response **must start and end directly with \`{ "componentCode": ... }\`**.
+					- Ensure the output is **directly parseable** using \`JSON.parse(output)\`.
+			
+				3. **INLINE \`<style>\` RULES**
+					- Use **only inline** \`<style>\` tags (not \`<style jsx>\`).
+					- Ensure **all CSS is valid** and matches the image precisely.
+			
+				**Before returning, VALIDATE that \`JSON.parse(output)\` runs without errors.**
+				
+				**EXISTING CODE (to apply branding on):**
 				${componentCode}
-			`.trim();
-
-			// INFO: globalStyle is way too big as of today to be included in the prompt.
-			// As the user is providing a slice image and code you miss the global style to help you build the best slice that match the branding, so here is the global style:
-			// ${globalStyle}
+		  	`.trim();
 
 			const parsed = await callAI<{ componentCode: string }>({
 				ai: "AWS",
@@ -2712,9 +2709,6 @@ type GroupField = {
 							"STEP 7: Generate the isolated slice component code for:",
 							`${index} - ${updatedSlice.name}`,
 						);
-						const globalStyle = await getGlobalStyle(
-							`${folderPath}/globalStyle.css`,
-						);
 						const initialCode = await generateSliceComponentCode(
 							sliceImage,
 							codeFile,
@@ -2728,7 +2722,6 @@ type GroupField = {
 						componentCode = await generateSliceComponentCodeAppearance(
 							sliceImage,
 							codeFile,
-							globalStyle,
 							initialCode,
 						);
 					} catch (error) {
