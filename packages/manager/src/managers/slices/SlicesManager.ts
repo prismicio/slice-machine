@@ -2454,6 +2454,67 @@ type GroupField = {
 			return [updatedMock];
 		}
 
+		const SLICE_CODE_EXAMPLE = `
+-----------------------------------------------------------
+import { FC } from "react";
+import { Content } from "@prismicio/client";
+import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
+import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+
+export type PascalNameToReplaceProps =
+	SliceComponentProps<Content.PascalNameToReplaceSlice>;
+
+const PascalNameToReplace: FC<PascalNameToReplaceProps> = ({ slice }) => {
+	return (
+		<section
+			data-slice-type={slice.slice_type}
+			data-slice-variation={slice.variation}
+			className="es-bounded es-alternate-grid"
+		>
+			<PrismicNextLink
+				className="es-alternate-grid__button"
+				field={slice.primary.buttonLink}
+			/>
+			<div className="es-alternate-grid__content">
+				<PrismicNextImage
+					field={slice.primary.image}
+					className="es-alternate-grid__image"
+				/>
+				<div className="es-alternate-grid__primary-content">
+					<div className="es-alternate-grid__primary-content__intro">
+						<p className="es-alternate-grid__primary-content__intro__eyebrow">
+							{slice.primary.eyebrowHeadline}
+						</p>
+						<div className="es-alternate-grid__primary-content__intro__headline">
+							<PrismicRichText field={slice.primary.title} />
+						</div>
+						<div className="es-alternate-grid__primary-content__intro__description">
+							<PrismicRichText field={slice.primary.description} />
+						</div>
+					</div>
+
+					<div className="es-alternate-grid__primary-content__stats">
+						{slice.primary.stats.map((stat, i) => (
+							<div key={\`stat-$\{i + 1\}\`} className="es-alternate-grid__stat">
+								<div className="es-alternate-grid__stat__heading">
+									<PrismicRichText field={stat.title} />
+								</div>
+								<div className="es-alternate-grid__stat__description">
+									<PrismicRichText field={stat.description} />
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+};
+
+export default PascalNameToReplace;
+-----------------------------------------------------------
+`.trim();
+
 		/**
 		 * Calls the AI endpoint to generate the slice React component.
 		 */
@@ -2463,95 +2524,44 @@ type GroupField = {
 			updatedSlice: SharedSlice,
 		): Promise<string> {
 			const systemPrompt = `
-				You are a seasoned frontend engineer with deep expertise in Prismic slices.
-				Your task is to generate a fully isolated React component code for a slice based on the provided image and code input.
-				The goal is to create the React (HTML) structure of the slice, NO STYLING! Concentrate 100% on the perfect structure of each component.
+				You are a **seasoned frontend engineer** with **deep expertise in Prismic slices**.
+				Your task is to generate a **fully isolated React component** for a Prismic slice, **focusing ONLY on structure (HTML) without styling**.
 
-				Follow these guidelines strictly:
-					- Be self-contained.
-					- For links, you must use PrismicNextLink and you must just pass the field, PrismicNextLink will handle the display of the link text, don't do it manually.
-					- PrismicNextLink should never be open, just passing the field is enough like in the code example below. You can use className or inline style directly on the PrismicNextLink component.
-					- Ensure to strictly respect what is defined on the model for each fields ID, do not invent or use something not in the model.
-					- Ensure to use all fields provided in the model.
-					- Follow the structure provided in the code example below.
-					- Use the provided code to help yourself to create the structure.
-					- As you can see in the example of the code you MUST never access the data with "<field>.value".
-					- You need to really inspire yourself from the code example bellow in order to understand how to access field, write field etc. Do not try to invent something that you didn't see.
-					- You cannot add a style prop to "PrismicRichText" component, it's not allowed.
-					- It's important to respect the same imports as done in the code example bellow, import exactly from the same package.
-					- Never do wrong W3C HTML structure, always respect a correct HTML structure, for example you cannot put a PrismicRichText component inside a <h1>, or a <p>, etc.
-					- Ensure to map the field type to the correct Prismic component, for example, a StructuredText field should be mapped to PrismicRichText, an image field should be mapped to PrismicNextImage, a Text field should just be map to a classic <p> component
-				
-				!IMPORTANT!:
-					- Return a valid JSON object containing only one key: "componentCode". No additional keys, text, or formatting are allowed before, after, or within the JSON object.
-					- Return a valid JSON, meaning you should NEVER start with a sentence, directly the JSON so that I can JSON.parse your response.
-					- All strings must be enclosed in double quotes ("). Do not use single quotes or template literals.
-					- Within the string value for "componentCode", every embedded double quote must be escaped as \". Similarly, every backslash must be escaped as \\.
-					- Ensure that the string value does not contain any raw control characters (such as literal newline, tab, or carriage return characters). Instead, use their escape sequences.
-					- Before finalizing the output, validate that JSON.parse(output) works without throwing an error. No unescaped characters should cause the parser to crash.
-					- The output must not include any markdown formatting, code block fences, or extra text. It should be a single, clean JSON object.
+				**STRICT STRUCTURAL GUIDELINES:**
+					- **Do not include styling.** Focus **100% on correct structure**.
+					- **Be self-contained.** The component must work in isolation.
+					- **Follow the structure provided in the example.** Do not introduce **any variations**.
+					- **Use all fields provided in the model**—do not omit or invent fields.
+					- **Never access a field using** \`<field>.value\`. Always follow the example pattern with just \`<field>\`.
+					- **Ensure correct mapping of field types:**
+						- **StructuredText** → \`PrismicRichText\`
+						- **Image field** → \`PrismicNextImage\`
+						- **Text field** → Standard \`<p>\` element
+						- **Link field** → \`PrismicNextLink\`
+						- **Group field** → Map to the correct structure based on the example.
+					- **Maintain W3C-compliant HTML.** Do not place \`PrismicRichText\` inside \`<h1>\`, \`<p>\`, or other invalid elements.
 
-				## Example of a Fully Isolated Slice Component:
-				-----------------------------------------------------------
-				import { FC } from "react";
-				import { Content } from "@prismicio/client";
-				import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
-				import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+				**PRISMIC COMPONENT USAGE RULES:**
+					- **Links must use \`PrismicNextLink\`**, passing only the \`field\` (no manual text extraction).
+					- **\`PrismicNextLink\` must never be opened manually**—pass the field directly as in the example.
+					- **\`PrismicRichText\` cannot have a \`style\` prop**.
+					- **Imports must be identical to the provided example**.
 
-				export type PascalNameToReplaceProps =
-					SliceComponentProps<Content.PascalNameToReplaceSlice>;
+				**STRICT JSON OUTPUT FORMAT**
+					- **Return ONLY a valid JSON object** with **one key**: \`"componentCode"\`.
+					- **No markdown (\`\`\`\`json\`), no comments, no text before or after—ONLY pure JSON**.
+					- **The response MUST start with \`{\` and end with \`}\` exactly.**
+					- **Ensure the output is directly parseable** with \`JSON.parse(output)\`.
+					- **All strings must use double quotes (\`"\`).** Do not use single quotes or template literals.
+					- **Escape all embedded double quotes (\`\"\`) and backslashes (\`\\\`).**
+					- **The output must not contain raw control characters** (newline, tab, etc.); use escape sequences instead.
 
-				const PascalNameToReplace: FC<PascalNameToReplaceProps> = ({ slice }) => {
-					return (
-						<section
-							data-slice-type={slice.slice_type}
-							data-slice-variation={slice.variation}
-							className="es-bounded es-alternate-grid"
-						>
-							<PrismicNextLink
-								className="es-alternate-grid__button"
-								field={slice.primary.buttonLink}
-							/>
-							<div className="es-alternate-grid__content">
-								<PrismicNextImage
-									field={slice.primary.image}
-									className="es-alternate-grid__image"
-								/>
-								<div className="es-alternate-grid__primary-content">
-									<div className="es-alternate-grid__primary-content__intro">
-										<p className="es-alternate-grid__primary-content__intro__eyebrow">
-											{slice.primary.eyebrowHeadline}
-										</p>
-										<div className="es-alternate-grid__primary-content__intro__headline">
-											<PrismicRichText field={slice.primary.title} />
-										</div>
-										<div className="es-alternate-grid__primary-content__intro__description">
-											<PrismicRichText field={slice.primary.description} />
-										</div>
-									</div>
+				**Before returning, VALIDATE that \`JSON.parse(output)\` runs without errors.**
 
-									<div className="es-alternate-grid__primary-content__stats">
-										{slice.primary.stats.map((stat, i) => (
-											<div key={\`stat-$\{i + 1\}\`} className="es-alternate-grid__stat">
-												<div className="es-alternate-grid__stat__heading">
-													<PrismicRichText field={stat.title} />
-												</div>
-												<div className="es-alternate-grid__stat__description">
-													<PrismicRichText field={stat.description} />
-												</div>
-											</div>
-										))}
-									</div>
-								</div>
-							</div>
-						</section>
-					);
-				};
+				**EXAMPLE OF A FULLY ISOLATED SLICE COMPONENT (Follow this strictly):**
+				${SLICE_CODE_EXAMPLE}
 
-				export default PascalNameToReplace;
-				-----------------------------------------------------------
-
-				Model of the slice:
+				**SLICE MODEL (Use this as the exact reference):**
 				${JSON.stringify(updatedSlice)}
 			`.trim();
 
