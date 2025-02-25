@@ -43,7 +43,9 @@ import { BaseManager } from "../BaseManager";
 import {
 	BedrockRuntimeClient,
 	ConverseCommand,
+	Message,
 } from "@aws-sdk/client-bedrock-runtime";
+import puppeteer from "puppeteer";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -1856,11 +1858,25 @@ type GroupField = {
 	): Promise<SliceMachineManagerGenerateSlicesFromUrlReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const { OPENAI_API_KEY } = process.env;
+		const { OPENAI_API_KEY, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } =
+			process.env;
+
+		if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+			throw new Error("AWS credentials are not set.");
+		}
+		const AWS_REGION = "us-east-1";
+		const bedrockClient = new BedrockRuntimeClient({
+			region: AWS_REGION,
+			credentials: {
+				accessKeyId: AWS_ACCESS_KEY_ID,
+				secretAccessKey: AWS_SECRET_ACCESS_KEY,
+			},
+		});
+
 		if (!OPENAI_API_KEY) {
 			throw new Error("OPENAI_API_KEY is not set.");
 		}
-		const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+		const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 		const libraryIDs = sliceMachineConfig.libraries || [];
@@ -1911,6 +1927,125 @@ type GroupField = {
 				.catch(() => Buffer.from(""));
 
 			return buffer.toString();
+		}
+
+		async function callAI<ReturnType extends Record<string, unknown>>({
+			ai,
+			stepName,
+			systemPrompt,
+			imageFile,
+			textContent,
+		}: {
+			ai: "OPENAI" | "AWS";
+			stepName: string;
+			systemPrompt: string;
+			imageFile?: Uint8Array;
+			textContent?: string;
+		}): Promise<ReturnType> {
+			let resultText: string | undefined;
+
+			if (ai === "OPENAI") {
+				const messages: Array<ChatCompletionMessageParam> = [
+					{ role: "system", content: systemPrompt },
+				];
+
+				const userContent: Array<
+					| {
+							type: "text";
+							text: string;
+					  }
+					| {
+							type: "image_url";
+							image_url: { url: string };
+					  }
+				> = [];
+
+				if (imageFile) {
+					userContent.push({
+						type: "image_url",
+						image_url: {
+							url:
+								"data:image/png;base64," +
+								Buffer.from(imageFile).toString("base64"),
+						},
+					});
+				}
+
+				if (textContent) {
+					userContent.push({ type: "text", text: textContent });
+				}
+
+				if (userContent.length > 0) {
+					messages.push({
+						role: "user",
+						content: userContent,
+					});
+				}
+
+				const response = await openai.chat.completions.create({
+					model: "gpt-4o",
+					messages,
+					response_format: { type: "json_object" },
+				});
+
+				console.log(
+					`Generated model response for ${stepName}:`,
+					JSON.stringify(response),
+				);
+
+				resultText = response.choices[0]?.message?.content?.trim();
+			} else if (ai === "AWS") {
+				const messages: Array<Message> = [];
+
+				if (imageFile) {
+					messages.push({
+						role: "user",
+						content: [
+							{
+								image: { format: "png", source: { bytes: imageFile } },
+							},
+						],
+					});
+				}
+
+				if (textContent) {
+					messages.push({
+						role: "user",
+						content: [
+							{
+								text: textContent,
+							},
+						],
+					});
+				}
+
+				const command = new ConverseCommand({
+					modelId: "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+					system: [{ text: systemPrompt }],
+					messages: messages,
+				});
+
+				const response = await bedrockClient.send(command);
+
+				console.log(
+					`Generated model response for ${stepName}:`,
+					JSON.stringify(response),
+				);
+
+				resultText = response.output?.message?.content?.[0]?.text?.trim();
+			}
+
+			if (!resultText) {
+				throw new Error(`No valid response was generated for ${stepName}.`);
+			}
+
+			try {
+				return JSON.parse(resultText);
+			} catch (error) {
+				throw new Error(
+					`Failed to parse AI response for ${stepName}: ` + error,
+				);
+			}
 		}
 
 		/**
@@ -2268,8 +2403,7 @@ type GroupField = {
 			
 				!IMPORTANT!: 
 					- Only return a valid JSON object representing the full slice model, nothing else before. JSON.parse on your response should not throw an error.
-					- All your response should fit in a single return response.
-					- Never stop the response until you totally finish the full JSON response you wanted.
+					- Don't return the JSON in json\`\` just directly the JSON for JSON.parse
 
 				Reference Schema:
 				${SHARED_SLICE_SCHEMA}
@@ -2278,47 +2412,15 @@ type GroupField = {
 				${JSON.stringify(DEFAULT_SLICE_MODEL)}
 			`.trim();
 
-			const messages: Array<ChatCompletionMessageParam> = [
-				{ role: "system", content: systemPrompt },
-				{
-					role: "user",
-					content: [
-						{
-							type: "image_url",
-							image_url: {
-								url:
-									"data:image/png;base64," +
-									Buffer.from(imageFile).toString("base64"),
-							},
-						},
-						{ type: "text", text: codeFile },
-					],
-				},
-			];
-			const response: OpenAI.Chat.Completions.ChatCompletion & {
-				_request_id?: string | null;
-			} = await openai.chat.completions.create({
-				model: "gpt-4o",
-				messages,
-				response_format: {
-					type: "json_object",
-				},
+			const generatedModel = await callAI<SharedSlice>({
+				ai: "OPENAI",
+				stepName: "MODEL",
+				systemPrompt,
+				imageFile,
+				textContent: codeFile,
 			});
 
-			console.log("Generated model response:", JSON.stringify(response));
-
-			const resultText = response.choices[0]?.message?.content?.trim();
-			if (!resultText) {
-				throw new Error("No valid slice model was generated.");
-			}
-
-			try {
-				const generatedModel = JSON.parse(resultText);
-
-				return generatedModel;
-			} catch (error) {
-				throw new Error("Failed to parse AI response for model: " + error);
-			}
+			return generatedModel;
 		}
 
 		/**
@@ -2344,53 +2446,20 @@ type GroupField = {
 
 				!IMPORTANT!:
 					- Only return a valid JSON object for mocks, nothing else before. JSON.parse on your response should not throw an error.
-					- All your response should fit in a single return response.
-					- Never stop the response until you totally finish the full JSON response you wanted.
+					- Don't return the JSON in json\`\` just directly the JSON for JSON.parse
 
 				Existing Mocks Template:
 				${JSON.stringify(existingMocks)}
 			`.trim();
 
-			const messages: Array<ChatCompletionMessageParam> = [
-				{ role: "system", content: systemPrompt },
-				{
-					role: "user",
-					content: [
-						{
-							type: "image_url",
-							image_url: {
-								url:
-									"data:image/png;base64," +
-									Buffer.from(imageFile).toString("base64"),
-							},
-						},
-					],
-				},
-			];
-			const response: OpenAI.Chat.Completions.ChatCompletion & {
-				_request_id?: string | null;
-			} = await openai.chat.completions.create({
-				model: "gpt-4o",
-				messages,
-				response_format: {
-					type: "json_object",
-				},
+			const updatedMock = await callAI<SharedSliceContent>({
+				ai: "OPENAI",
+				stepName: "MOCKS",
+				systemPrompt,
+				imageFile,
 			});
 
-			console.log("Generated mocks response:", JSON.stringify(response));
-
-			const resultText = response.choices[0]?.message?.content?.trim();
-			if (!resultText) {
-				throw new Error("No valid mocks were generated.");
-			}
-
-			try {
-				const updatedMock: SharedSliceContent = JSON.parse(resultText);
-
-				return [updatedMock];
-			} catch (error) {
-				throw new Error("Failed to parse AI response for mocks: " + error);
-			}
+			return [updatedMock];
 		}
 
 		/**
@@ -2494,54 +2563,19 @@ type GroupField = {
 				${JSON.stringify(updatedSlice)}
 			`.trim();
 
-			const messages: Array<ChatCompletionMessageParam> = [
-				{ role: "system", content: systemPrompt },
-				{
-					role: "user",
-					content: [
-						{
-							type: "image_url",
-							image_url: {
-								url:
-									"data:image/png;base64," +
-									Buffer.from(imageFile).toString("base64"),
-							},
-						},
-						{ type: "text", text: codeFile },
-					],
-				},
-			];
-			const response: OpenAI.Chat.Completions.ChatCompletion & {
-				_request_id?: string | null;
-			} = await openai.chat.completions.create({
-				model: "gpt-4o",
-				messages,
-				response_format: {
-					type: "json_object",
-				},
+			const parsed = await callAI<{ componentCode: string }>({
+				ai: "AWS",
+				stepName: "CODE",
+				systemPrompt,
+				imageFile,
+				textContent: codeFile,
 			});
 
-			console.log(
-				"Generated component code response:",
-				JSON.stringify(response),
-			);
-
-			const resultText = response.choices[0]?.message?.content?.trim();
-			if (!resultText) {
-				throw new Error("No valid slice component code was generated.");
+			if (!parsed.componentCode) {
+				throw new Error("Missing key 'componentCode' in AI response.");
 			}
 
-			try {
-				const parsed = JSON.parse(resultText);
-				if (!parsed.componentCode) {
-					throw new Error("Missing key 'componentCode' in AI response.");
-				}
-				return parsed.componentCode;
-			} catch (error) {
-				throw new Error(
-					"Failed to parse AI response for component code: " + error,
-				);
-			}
+			return parsed.componentCode;
 		}
 
 		async function generateSliceComponentCodeAppearance(
@@ -2589,54 +2623,19 @@ type GroupField = {
 			// As the user is providing a slice image and code you miss the global style to help you build the best slice that match the branding, so here is the global style:
 			// ${globalStyle}
 
-			const messages: Array<ChatCompletionMessageParam> = [
-				{ role: "system", content: systemPrompt },
-				{
-					role: "user",
-					content: [
-						{
-							type: "image_url",
-							image_url: {
-								url:
-									"data:image/png;base64," +
-									Buffer.from(imageFile).toString("base64"),
-							},
-						},
-						{ type: "text", text: codeFile },
-					],
-				},
-			];
-			const response: OpenAI.Chat.Completions.ChatCompletion & {
-				_request_id?: string | null;
-			} = await openai.chat.completions.create({
-				model: "gpt-4o",
-				messages,
-				response_format: {
-					type: "json_object",
-				},
+			const parsed = await callAI<{ componentCode: string }>({
+				ai: "AWS",
+				stepName: "APPEARANCE",
+				systemPrompt,
+				imageFile,
+				textContent: codeFile,
 			});
 
-			console.log(
-				"Generated component code appearance response:",
-				JSON.stringify(response),
-			);
-
-			const resultText = response.choices[0]?.message?.content?.trim();
-			if (!resultText) {
-				throw new Error("No valid slice component code was generated.");
+			if (!parsed.componentCode) {
+				throw new Error("Missing key 'componentCode' in AI response.");
 			}
 
-			try {
-				const parsed = JSON.parse(resultText);
-				if (!parsed.componentCode) {
-					throw new Error("Missing key 'componentCode' in AI response.");
-				}
-				return parsed.componentCode;
-			} catch (error) {
-				throw new Error(
-					"Failed to parse AI response for component code appearance: " + error,
-				);
-			}
+			return parsed.componentCode;
 		}
 
 		try {
