@@ -2372,35 +2372,48 @@ type GroupField = {
 			codeFile: string,
 		): Promise<SharedSlice> {
 			const systemPrompt = `
-				You are an expert in Prismic content modeling. Using the image and the code provided, generate a valid Prismic JSON model for the slice described below. Follow these rules precisely:
-				- Use the TypeScript schema provided as your reference.
-				- Place all main content fields under the "primary" object.
-				- Do not create any collections or groups for single-image content (background images should be a single image field).
-				- Ensure that each field has appropriate placeholders, labels, and configurations.
-				- Never generate a Link / Button text field, only the Link / Button field itself is enough. Just enable "allowText" when doing that.
-				- Do not forget any field visible from the image provide in the user prompt.
-				- Ensure to differentiate Prismic fields from just an image with visual inside the image. When that's the case, just add a Prismic image field.
-				- Use the code to know exactly what is a real field and not an image. If in the code it's an image, then the field should also be an image, do a 1-1 mapping thanks to the code.
-				- Do not include any decorative fields. When an element is purely visual, decorative, don't include it att all in the slice model.
-				- Do not include any extra commentary or formatting.
-				- When you see a repetition of an image, a text, a link, etc, NEVER create one field per repeated item, you HAVE to use a group for that.
-				- When you see multiple fields repeated, you MUST use a group for that.
-				- NEVER put a group inside another group field, this is not allowed. In the final JSON a group CANNOT be within another group field. YOU CANNOT NEST GROUP FIELDS! Not for any reason you are allowed to do that! Even for navigation, in header or footer you cannot nest group fields.
-				- The "items" field must not be used under any circumstances. All repeatable fields should be defined using a Group field inside the primary object. If a field represents a collection of items, it must be part of a Group field, and items must never appear in the JSON output.
-				- Don't forget to replace the temporary text in the "Existing Slice to update", like <ID_TO_CHANGE>, <NAME_TO_CHANGE>, <DESCRIPTION_TO_CHANGE>, <VARIATION_ID_TO_CHANGE>, etc.
-				- Field placeholder should be super short, do not put the content from the image inside the placeholder.
-				- Field label and id should define the field's purpose, not its content.
-				- Slice name and id should define the slice's purpose, not its content.
-				- Slice description should be a brief explanation of the slice's purpose not its content.
-			
-				!IMPORTANT!: 
-					- Only return a valid JSON object representing the full slice model, nothing else before. JSON.parse on your response should not throw an error.
-					- Don't return the JSON in json\`\` just directly the JSON for JSON.parse
+				You are an **expert in Prismic content modeling**. Using the **image and code provided**, generate a **valid Prismic JSON model** for the slice described below.
 
-				Reference Schema:
+				**STRICT MODELING RULES (NO EXCEPTIONS):**
+					- **Use the TypeScript schema provided as your reference**.
+					- **All main content fields must be placed under the "primary" object**.
+					- **Do not create groups or collections for single-image content** (background images must be a single image field).
+					- **Ensure each field has appropriate placeholders, labels, and configurations**.
+					- **Never generate a Link/Button text field—only the Link/Button field itself** with \`"allowText": true\`.
+					- **Include all fields visible in the provided image**.
+					- **Differentiate Prismic fields from decorative elements:**
+						- If an element in the image is purely visual/decorative, **do not include it in the model**.
+						- Use the **code as the source of truth** to determine what should be a field.
+						- If an element is an image in the code, it **must also be an image field in Prismic** (strict 1:1 mapping).
+					- **Handle repeated content correctly:**
+						- **If an image, text, or link is repeated, always use a Group field**—do not create individual fields.
+						- **If multiple fields are repeated together, they must be inside a single Group field**.
+					- **Strictly forbid nesting of groups:**
+						- **NEVER put a Group inside another Group field**.
+						- **Group fields CANNOT be nested for any reason**—this is **strictly prohibited** even for navigation structures like headers or footers.
+					- **Do not use the "items" field**:
+						- **All repeatable fields must be defined as Group fields under "primary"**.
+						- **"items" must never appear in the final JSON output**.
+
+				**STRICT FIELD NAMING & CONTENT RULES:**
+					- **Replace placeholders in the existing slice template** (\`<ID_TO_CHANGE>\`, \`<NAME_TO_CHANGE>\`, etc.).
+					- **Field placeholders must be very short**—do **not** put actual image content inside placeholders.
+					- **Field labels and IDs must define the field's purpose, not its content**.
+					- **Slice name, ID, and description must describe the slice's function, not its content**.
+
+				**STRICT JSON OUTPUT FORMAT (NO MARKDOWN OR EXTRA TEXT):**
+					- **Return ONLY a valid JSON object**—no extra text, comments, or formatting.
+					- **The response must be directly parseable** using \`JSON.parse(output)\`.
+					- **Do not wrap the output in markdown (\`\`\`\`json\`) or any other formatting.**
+
+				**VALIDATION REQUIREMENT:**
+					- Before returning, **validate that \`JSON.parse(output)\` runs without errors**.
+					- If there is **any extra text, markdown, or incorrect structure**, **rewrite the response before returning**.
+
+				**REFERENCE SCHEMA (Follow this exactly):**
 				${SHARED_SLICE_SCHEMA}
 				
-				Existing Slice to update:
+				**EXISTING SLICE TO UPDATE (Modify strictly according to the rules above):**
 				${JSON.stringify(DEFAULT_SLICE_MODEL)}
 			`.trim();
 
@@ -2422,25 +2435,34 @@ type GroupField = {
 			imageFile: Uint8Array,
 			existingMocks: SharedSliceContent[],
 		): Promise<SharedSliceContent[]> {
-			// Build a prompt focused solely on updating the mocks.
 			const systemPrompt = `
-				You are a seasoned frontend engineer with deep expertise in Prismic slices.
-				Your task is to update the provided mocks template based solely on the visible content in the image.
-				Follow these guidelines strictly:
-					- Do not modify the overall structure of the mocks template.
-					- Strictly only update text content.
-					- Do not touch images.
-					- If you see a repetition with a group, you must create the same number of group items that are visible on the image.
-					- Absolutely do not touch what is not necessary to be changed, like link "key" property, or the StructureText "direction", spans", etc or the structure, this is really important that you just do a replace of the text.
-					- For structure text content you must alway keep the same structure and properties, even if empty, ONLY replace text content.
-					- Only and strictly update the text content of the fields, nothing else. You should only and strictly update the text that is visible in the image.
-					- Never touch the image fields, nothing should be changed for image fields.
+				You are a **seasoned frontend engineer** with **deep expertise in Prismic slices**.
+				Your task is to **update the provided mocks template** based **only** on the visible text content in the provided image.
 
-				!IMPORTANT!:
-					- Only return a valid JSON object for mocks, nothing else before. JSON.parse on your response should not throw an error.
-					- Don't return the JSON in json\`\` just directly the JSON for JSON.parse
+				**STRICT UPDATE GUIDELINES:**
+					- **Do no create content, only take visible text from the image.**
+					- **Do not modify the overall structure of the mocks template.**
+					- **Strictly update text content only.**
+					- **Do not touch images or image-related fields.**
+					- **If a repeated item appears in a group, match the exact number of group items seen in the image.**
+					- **Do not modify metadata, field properties, or structure.** This includes:
+						- Do **not** change the \`"key"\` property of links.
+						- Do **not** modify \`StructuredText\` properties such as \`"direction"\`, \`"spans"\`, or \`"type"\`.
+						- Do **not** alter field nesting or object structure.
+					- **For StructuredText fields, maintain all existing structure and properties**—**only replace text content**.
+					- **Ensure that only visible text in the image is updated**—do not generate or assume content.
+					- **Never modify image fields**—image references and properties must remain unchanged.
 
-				Existing Mocks Template:
+				**STRICT JSON OUTPUT FORMAT:**
+					- **Return ONLY a valid JSON object**—no extra text, explanations, or formatting.
+					- **The response must be directly parseable** using \`JSON.parse(output)\`.
+					- **Do not wrap the output in markdown (\`\`\`\`json\`) or any other formatting.**
+
+				**VALIDATION REQUIREMENT:**
+					- Before returning, **validate that \`JSON.parse(output)\` runs without errors**.
+					- If there is **any extra text, markdown, or incorrect structure**, **rewrite the response before returning**.
+
+				**EXISTING MOCKS TEMPLATE (To be updated with the visible text from the image only):**
 				${JSON.stringify(existingMocks)}
 			`.trim();
 
@@ -2754,11 +2776,22 @@ export default PascalNameToReplace;
 							`${index} - ${updatedSlice.name}`,
 						);
 						if (componentCode) {
-							await this.createSlice({
+							const { errors } = await this.createSlice({
 								libraryID: DEFAULT_LIBRARY_ID,
 								model: updatedSlice,
 								componentContents: componentCode,
 							});
+
+							if (errors.length > 0) {
+								console.log(
+									`Errors while updating the slice code for ${index} - ${updatedSlice.name}:`,
+									errors,
+								);
+								await this.createSlice({
+									libraryID: DEFAULT_LIBRARY_ID,
+									model: updatedSlice,
+								});
+							}
 						} else {
 							await this.createSlice({
 								libraryID: DEFAULT_LIBRARY_ID,
