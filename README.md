@@ -16,6 +16,8 @@
 
 <!-- [![Codecov][codecov-src]][codecov-href] -->
 
+For real-time updates on Prismic's system status, visit the [Prismic Status Page](https://status.prismic.io/) 🔔.
+
 ## Quickstart
 
 For the smoothest onboarding experience, go to [Prismic][prismic-dashboard], create an account, create a new repository, and choose a starter project. You will be guided through a full introduction to Slice Machine.
