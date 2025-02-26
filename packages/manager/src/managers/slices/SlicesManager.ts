@@ -45,7 +45,6 @@ import {
 	ConverseCommand,
 	Message,
 } from "@aws-sdk/client-bedrock-runtime";
-import puppeteer from "puppeteer";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -228,7 +227,7 @@ type SliceMachineManagerGenerateSliceReturnType = {
 };
 
 type SliceMachineManagerGenerateSlicesFromUrlArgs = {
-	websiteUrl: string;
+	sliceImages: Uint8Array[];
 };
 
 type SliceMachineManagerGenerateSlicesFromUrlReturnType = {
@@ -1882,54 +1881,26 @@ type GroupField = {
 		const libraryIDs = sliceMachineConfig.libraries || [];
 		const DEFAULT_LIBRARY_ID = libraryIDs[0];
 
-		const KNOWNED_WEBSITE_URLS: { [url: string]: string } = {
-			"https://www.criteo.com/": "./resources/criteo/homepage",
-			"https://www.brevo.com/landing/email-marketing-service/":
-				"./resources/brevo/mail",
-		};
-
-		async function readImagesFromFolder(
-			folderPath: string,
-		): Promise<Uint8Array[]> {
-			console.log(process.cwd());
-
-			const files = await fs.promises.readdir(folderPath);
-			const images = await Promise.all(
-				files.map(async (file) => {
-					const buffer = await fs.promises.readFile(
-						path.join(folderPath, file),
-					);
-					return new Uint8Array(buffer);
-				}),
-			);
-
-			return images;
-		}
-
-		async function readCodeFromFolder(folderPath: string): Promise<string[]> {
-			const files = await fs.promises.readdir(folderPath);
-			const codes = await Promise.all(
-				files.map(async (file) => {
-					const buffer = await fs.promises.readFile(
-						path.join(folderPath, file),
-						"utf-8",
-					);
-					return buffer.toString();
-				}),
-			);
-
-			return codes;
-		}
+		let retry: {
+			[key in "MODEL" | "MOCKS" | "CODE" | "APPEARANCE"]: number;
+		}[] = args.sliceImages.map((_) => ({
+			MODEL: 0,
+			MOCKS: 0,
+			CODE: 0,
+			APPEARANCE: 0,
+		}));
 
 		async function callAI<ReturnType extends Record<string, unknown>>({
 			ai,
+			sliceIndex,
 			stepName,
 			systemPrompt,
 			imageFile,
 			textContent,
 		}: {
 			ai: "OPENAI" | "AWS";
-			stepName: string;
+			sliceIndex: number;
+			stepName: "MODEL" | "MOCKS" | "CODE" | "APPEARANCE";
 			systemPrompt: string;
 			imageFile?: Uint8Array;
 			textContent?: string;
@@ -1981,7 +1952,7 @@ type GroupField = {
 				});
 
 				console.log(
-					`Generated model response for ${stepName}:`,
+					`Generated response for ${stepName} - ${sliceIndex}:`,
 					JSON.stringify(response),
 				);
 
@@ -2020,21 +1991,44 @@ type GroupField = {
 				const response = await bedrockClient.send(command);
 
 				console.log(
-					`Generated model response for ${stepName}:`,
+					`Generated response for ${stepName} - ${sliceIndex}:`,
 					JSON.stringify(response),
 				);
 
 				resultText = response.output?.message?.content?.[0]?.text?.trim();
 			}
 
+			async function retryCall(error: string): Promise<ReturnType> {
+				if (retry[sliceIndex][stepName] < 3) {
+					retry[sliceIndex][stepName]++;
+					console.log(
+						`Retrying ${retry[sliceIndex][stepName]} ${stepName} for slice ${sliceIndex}.`,
+						error,
+					);
+
+					return await callAI({
+						ai,
+						sliceIndex,
+						stepName,
+						systemPrompt,
+						imageFile,
+						textContent,
+					});
+				}
+
+				throw new Error(error);
+			}
+
 			if (!resultText) {
-				throw new Error(`No valid response was generated for ${stepName}.`);
+				return await retryCall(
+					`No valid response was generated for ${stepName}.`,
+				);
 			}
 
 			try {
 				return JSON.parse(resultText);
 			} catch (error) {
-				throw new Error(
+				return await retryCall(
 					`Failed to parse AI response for ${stepName}: ` + error,
 				);
 			}
@@ -2368,19 +2362,22 @@ type GroupField = {
 		 * Calls the AI to generate the slice model.
 		 */
 		async function generateSliceModel(
+			sliceIndex: number,
 			imageFile: Uint8Array,
-			codeFile: string,
 		): Promise<SharedSlice> {
 			const systemPrompt = `
 				You are an **expert in Prismic content modeling**. Using the **image and code provided**, generate a **valid Prismic JSON model** for the slice described below.
 
 				**STRICT MODELING RULES (NO EXCEPTIONS):**
 					- **Use the TypeScript schema provided as your reference**.
-					- **All main content fields must be placed under the "primary" object**.
+					- **Absolutely all fields must be placed under the "primary" object**.
 					- **Do not create groups or collections for single-image content** (background images must be a single image field).
 					- **Ensure each field has appropriate placeholders, labels, and configurations**.
 					- **Never generate a Link/Button text field—only the Link/Button field itself** with \`"allowText": true\`.
-					- **Include all fields visible in the provided image**.
+					- **Include all fields visible in the provided image**, do not forget any field and everything should be covered.
+					- **Repeated fields must always be grouped**:
+						- **Identify when field are part of a group**, when there is a repetition of a field or multiple fields together use a Group field.
+						- **DO NOT** create individually numbered fields like \`feature1\`, \`feature2\`, \`feature3\`. Instead, define a single **Group field** (e.g., \`features\`) and move all repeated items inside it.
 					- **Differentiate Prismic fields from decorative elements:**
 						- If an element in the image is purely visual/decorative, **do not include it in the model**.
 						- Use the **code as the source of truth** to determine what should be a field.
@@ -2394,12 +2391,15 @@ type GroupField = {
 					- **Do not use the "items" field**:
 						- **All repeatable fields must be defined as Group fields under "primary"**.
 						- **"items" must never appear in the final JSON output**.
+					- **Do not create more than one SliceVariation**, only one variation is enough to create the model.
 
 				**STRICT FIELD NAMING & CONTENT RULES:**
 					- **Replace placeholders in the existing slice template** (\`<ID_TO_CHANGE>\`, \`<NAME_TO_CHANGE>\`, etc.).
 					- **Field placeholders must be very short**—do **not** put actual image content inside placeholders.
 					- **Field labels and IDs must define the field's purpose, not its content**.
 					- **Slice name, ID, and description must describe the slice's function, not its content**.
+					- The slice name and ID must be **generic and reusable**, defining what the slice **does**, not what it is used for.
+					- **DO NOT name the slice after a specific topic, content type, or industry. Instead, name it based on its structure and function.
 
 				**STRICT JSON OUTPUT FORMAT (NO MARKDOWN OR EXTRA TEXT):**
 					- **Return ONLY a valid JSON object**—no extra text, comments, or formatting.
@@ -2419,10 +2419,10 @@ type GroupField = {
 
 			const generatedModel = await callAI<SharedSlice>({
 				ai: "OPENAI",
+				sliceIndex,
 				stepName: "MODEL",
 				systemPrompt,
 				imageFile,
-				textContent: codeFile,
 			});
 
 			return generatedModel;
@@ -2432,6 +2432,7 @@ type GroupField = {
 		 * Calls the AI endpoint to generate mocks.
 		 */
 		async function generateSliceMocks(
+			sliceIndex: number,
 			imageFile: Uint8Array,
 			existingMocks: SharedSliceContent[],
 		): Promise<SharedSliceContent[]> {
@@ -2468,6 +2469,7 @@ type GroupField = {
 
 			const updatedMock = await callAI<SharedSliceContent>({
 				ai: "OPENAI",
+				sliceIndex,
 				stepName: "MOCKS",
 				systemPrompt,
 				imageFile,
@@ -2541,8 +2543,8 @@ export default PascalNameToReplace;
 		 * Calls the AI endpoint to generate the slice React component.
 		 */
 		async function generateSliceComponentCode(
+			sliceIndex: number,
 			imageFile: Uint8Array,
-			codeFile: string,
 			updatedSlice: SharedSlice,
 		): Promise<string> {
 			const systemPrompt = `
@@ -2572,7 +2574,7 @@ export default PascalNameToReplace;
 				**STRICT JSON OUTPUT FORMAT**
 					- **Return ONLY a valid JSON object** with **one key**: \`"componentCode"\`.
 					- **No markdown (\`\`\`\`json\`), no comments, no text before or after—ONLY pure JSON**.
-					- **The response MUST start with \`{\` and end with \`}\` exactly.**
+					- **The response MUST start with \`{\` and end with \`}\` exactly, do not start with a sentence explaining what you will do.**
 					- **Ensure the output is directly parseable** with \`JSON.parse(output)\`.
 					- **All strings must use double quotes (\`"\`).** Do not use single quotes or template literals.
 					- **Escape all embedded double quotes (\`\"\`) and backslashes (\`\\\`).**
@@ -2589,10 +2591,10 @@ export default PascalNameToReplace;
 
 			const parsed = await callAI<{ componentCode: string }>({
 				ai: "AWS",
+				sliceIndex,
 				stepName: "CODE",
 				systemPrompt,
 				imageFile,
-				textContent: codeFile,
 			});
 
 			if (!parsed.componentCode) {
@@ -2603,8 +2605,8 @@ export default PascalNameToReplace;
 		}
 
 		async function generateSliceComponentCodeAppearance(
+			sliceIndex: number,
 			imageFile: Uint8Array,
-			codeFile: string,
 			componentCode: string,
 		): Promise<string> {
 			const systemPrompt = `
@@ -2630,22 +2632,23 @@ export default PascalNameToReplace;
 					- **Repetitions & layout** → Ensure **consistent styling** across repeated items. The **layout direction (horizontal/vertical)** must match the image.
 					- **Animations** → Handle animations as seen in the image, but **keep them fast and subtle** (avoid long animations).
 				
-				**IMPORTANT RULES**
+				**IMPORTANT RULES:**
+					1. **DO NOT modify any non-styling code**.
+						- **Everything from the first import to the last export must remain unchanged**.
+						- **Only add styling** on top of the existing structure.
 				
-				1. **DO NOT modify any non-styling code**.
-					- **Everything from the first import to the last export must remain unchanged**.
-					- **Only add styling** on top of the existing structure.
-			
-				2. **STRICT JSON OUTPUT FORMAT**
-					- Return a **valid JSON object** with **one key only**: \`"componentCode"\`.
-					- **NO markdown, NO code blocks, NO text before or after**—only **pure JSON**.
-					- The response **must start and end directly with \`{ "componentCode": ... }\`**.
-					- Ensure the output is **directly parseable** using \`JSON.parse(output)\`.
-			
-				3. **INLINE \`<style>\` RULES**
-					- Use **only inline** \`<style>\` tags (not \`<style jsx>\`).
-					- Ensure **all CSS is valid** and matches the image precisely.
-			
+					2. **STRICT JSON OUTPUT FORMAT**
+						- Return a **valid JSON object** with **one key only**: \`"componentCode"\`.
+						- **NO markdown, NO code blocks, NO text before or after**—only **pure JSON**.
+						- The response **must start and end directly with \`{ "componentCode": ... }\`**.
+						- Ensure the output is **directly parseable** using \`JSON.parse(output)\`.
+				
+					3. **INLINE \`<style>\` RULES**
+						- Use **only inline** \`<style>\` tags (not \`<style jsx>\`).
+						- Ensure **all CSS is valid** and matches the image precisely.
+						- **Use backtick inside the \`<style>\` tag like this: <style>{\`...\`}</style>**.
+						- **Do NOT escape the backtick (\`\`\`) inside the \`<style>\` tag**.
+				
 				**Before returning, VALIDATE that \`JSON.parse(output)\` runs without errors.**
 				
 				**EXISTING CODE (to apply branding on):**
@@ -2654,10 +2657,10 @@ export default PascalNameToReplace;
 
 			const parsed = await callAI<{ componentCode: string }>({
 				ai: "AWS",
+				sliceIndex,
 				stepName: "APPEARANCE",
 				systemPrompt,
 				imageFile,
-				textContent: codeFile,
 			});
 
 			if (!parsed.componentCode) {
@@ -2668,37 +2671,19 @@ export default PascalNameToReplace;
 		}
 
 		try {
-			let slices: {
-				sliceImage: Uint8Array;
-				codeFile: string;
-			}[] = [];
-
-			const folderPath = KNOWNED_WEBSITE_URLS[args.websiteUrl];
-
-			console.log("STEP 1: Get the slices images from the folder.");
-			const sliceImages = await readImagesFromFolder(`${folderPath}/images`);
-
-			console.log("STEP 2: Get the slices codes from the folder.");
-			const sliceCodes = await readCodeFromFolder(`${folderPath}/code`);
-
-			slices = sliceImages.map((sliceImage, index) => ({
-				sliceImage,
-				codeFile: sliceCodes[index],
-			}));
-
 			// Loop in parallel over each slice image and html code and generate the slice model, mocks and code.
 			const updatedSlices = await Promise.all(
-				slices.map(async ({ sliceImage, codeFile }, index) => {
+				args.sliceImages.map(async (sliceImage, index) => {
 					// ----- Q1 scope -----
 
 					console.log(
-						"STEP 3: Generate the slice model using the image for slice:",
+						"STEP 1: Generate the slice model using the image for slice:",
 						index,
 					);
-					const updatedSlice = await generateSliceModel(sliceImage, codeFile);
+					const updatedSlice = await generateSliceModel(index, sliceImage);
 
 					console.log(
-						"STEP 4: Persist the updated slice model for:",
+						"STEP 2: Persist the updated slice model for:",
 						`${index} - ${updatedSlice.name}`,
 					);
 					await this.updateSlice({
@@ -2707,7 +2692,7 @@ export default PascalNameToReplace;
 					});
 
 					console.log(
-						"STEP 5: Update the slice screenshot for:",
+						"STEP 3: Update the slice screenshot for:",
 						`${index} - ${updatedSlice.name}`,
 					);
 					await this.updateSliceScreenshot({
@@ -2722,11 +2707,15 @@ export default PascalNameToReplace;
 					let updatedMock: SharedSliceContent[];
 					try {
 						console.log(
-							"STEP 6: Generate updated mocks for:",
+							"STEP 4: Generate updated mocks for:",
 							`${index} - ${updatedSlice.name}`,
 						);
 						const existingMocks = mockSlice({ model: updatedSlice });
-						updatedMock = await generateSliceMocks(sliceImage, existingMocks);
+						updatedMock = await generateSliceMocks(
+							index,
+							sliceImage,
+							existingMocks,
+						);
 					} catch (error) {
 						console.error(
 							`Failed to generate mocks for ${index} - ${updatedSlice.name}:`,
@@ -2738,22 +2727,22 @@ export default PascalNameToReplace;
 					let componentCode: string | undefined;
 					try {
 						console.log(
-							"STEP 7: Generate the isolated slice component code for:",
+							"STEP 5: Generate the isolated slice component code for:",
 							`${index} - ${updatedSlice.name}`,
 						);
 						const initialCode = await generateSliceComponentCode(
+							index,
 							sliceImage,
-							codeFile,
 							updatedSlice,
 						);
 
 						console.log(
-							"STEP 8: Generate the branding on the code:",
+							"STEP 6: Generate the branding on the code:",
 							`${index} - ${updatedSlice.name}`,
 						);
 						componentCode = await generateSliceComponentCodeAppearance(
+							index,
 							sliceImage,
-							codeFile,
 							initialCode,
 						);
 					} catch (error) {
@@ -2768,51 +2757,49 @@ export default PascalNameToReplace;
 			);
 
 			// Ensure to wait to have all slices code and mocks before writing on the disk
-			await Promise.all(
-				updatedSlices.map(
-					async ({ updatedSlice, componentCode, updatedMock }, index) => {
-						console.log(
-							"STEP 9: Update the slice code for:",
-							`${index} - ${updatedSlice.name}`,
-						);
-						if (componentCode) {
-							const { errors } = await this.createSlice({
-								libraryID: DEFAULT_LIBRARY_ID,
-								model: updatedSlice,
-								componentContents: componentCode,
-							});
+			await updatedSlices.forEach(
+				async ({ updatedSlice, componentCode, updatedMock }, index) => {
+					console.log(
+						"STEP 7: Update the slice code for:",
+						`${index} - ${updatedSlice.name}`,
+					);
+					if (componentCode) {
+						const { errors } = await this.createSlice({
+							libraryID: DEFAULT_LIBRARY_ID,
+							model: updatedSlice,
+							componentContents: componentCode,
+						});
 
-							if (errors.length > 0) {
-								console.log(
-									`Errors while updating the slice code for ${index} - ${updatedSlice.name}:`,
-									errors,
-								);
-								await this.createSlice({
-									libraryID: DEFAULT_LIBRARY_ID,
-									model: updatedSlice,
-								});
-							}
-						} else {
+						if (errors.length > 0) {
+							console.log(
+								`Errors while updating the slice code for ${index} - ${updatedSlice.name}:`,
+								errors,
+							);
 							await this.createSlice({
 								libraryID: DEFAULT_LIBRARY_ID,
 								model: updatedSlice,
 							});
 						}
-
-						console.log(
-							"STEP 10: Persist the generated mocks for:",
-							`${index} - ${updatedSlice.name}`,
-						);
-						await this.updateSliceMocks({
+					} else {
+						await this.createSlice({
 							libraryID: DEFAULT_LIBRARY_ID,
-							sliceID: updatedSlice.id,
-							mocks: updatedMock,
+							model: updatedSlice,
 						});
-					},
-				),
+					}
+
+					console.log(
+						"STEP 8: Persist the generated mocks for:",
+						`${index} - ${updatedSlice.name}`,
+					);
+					await this.updateSliceMocks({
+						libraryID: DEFAULT_LIBRARY_ID,
+						sliceID: updatedSlice.id,
+						mocks: updatedMock,
+					});
+				},
 			);
 
-			console.log("STEP 11: THE END");
+			console.log("STEP 9: THE END");
 
 			return {
 				slices: updatedSlices.map(({ updatedSlice }) => updatedSlice),

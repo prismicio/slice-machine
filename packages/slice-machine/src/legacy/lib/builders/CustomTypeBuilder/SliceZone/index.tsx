@@ -1,13 +1,18 @@
 import {
   Badge,
+  BlankSlate as PBBlankSlate,
+  BlankSlateDescription as PBBlankSlateDescription,
+  BlankSlateIcon as PBBlankSlateIcon,
+  BlankSlateTitle as PBBlankSlateTitle,
   Box,
   Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  FormInput,
+  FileDropZone,
   Icon,
+  ProgressCircle,
   Switch,
   Text,
 } from "@prismicio/editor-ui";
@@ -204,15 +209,24 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsSlicesTemplatesModalOpen(false);
   };
 
-  const [websiteUrl, setWebsiteUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function generateSlices() {
+  const onFilesSelected = (files: File[]) => {
+    void generateSlices(files);
+  };
+
+  async function generateSlices(files: File[]) {
     setLoading(true);
 
     try {
+      const sliceImages = await Promise.all(
+        files.map(async (file) => {
+          const imageFile = new Uint8Array(await file.arrayBuffer());
+          return imageFile;
+        }),
+      );
       const response = await managerClient.slices.generateSlicesFromUrl({
-        websiteUrl,
+        sliceImages,
       });
 
       // TODO(DT-1453): Remove the need of the global getState
@@ -343,23 +357,34 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   in your code.
                 </BlankSlateDescription>
                 <Box width="100%" gap={12} flexGrow={1} padding={{ top: 16 }}>
-                  <FormInput
-                    value={websiteUrl}
-                    placeholder="Website url..."
-                    onValueChange={(value) => {
-                      setWebsiteUrl(value);
-                    }}
-                    sx={{ width: "100%" }}
-                  />
-                  <Button
-                    size="large"
-                    loading={loading}
-                    onClick={() => {
-                      void generateSlices();
-                    }}
+                  <FileDropZone
+                    assetType="image"
+                    onFilesSelected={onFilesSelected}
+                    overlay={<Overlay />}
                   >
-                    Generate
-                  </Button>
+                    <Box
+                      height={200}
+                      backgroundColor="grey3"
+                      justifyContent="center"
+                      alignItems="center"
+                      border={true}
+                      borderStyle="dashed"
+                      borderRadius={8}
+                    >
+                      {loading ? (
+                        <Box gap={12} alignItems="center">
+                          <ProgressCircle />
+                          <Text variant="h4">
+                            We are generating your new slices...
+                          </Text>
+                        </Box>
+                      ) : (
+                        <Text variant="h4">
+                          Drop the slices screenshots you want to add here
+                        </Text>
+                      )}
+                    </Box>
+                  </FileDropZone>
                 </Box>
               </BlankSlateContent>
             </BlankSlate>
@@ -447,5 +472,23 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     </>
   );
 };
+
+function Overlay() {
+  return (
+    <Box justifyContent="center" flexDirection="column" height="100%">
+      <PBBlankSlate>
+        <PBBlankSlateIcon
+          name="cloudUpload"
+          lineColor="purple1"
+          backgroundColor="purple12"
+        />
+        <PBBlankSlateTitle size="big">Drop a slice here</PBBlankSlateTitle>
+        <PBBlankSlateDescription>
+          Drop slice screenshots to generate their model, mocks and code.
+        </PBBlankSlateDescription>
+      </PBBlankSlate>
+    </Box>
+  );
+}
 
 export default SliceZone;
