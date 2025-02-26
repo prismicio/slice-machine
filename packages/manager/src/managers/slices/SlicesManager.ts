@@ -2757,47 +2757,48 @@ export default PascalNameToReplace;
 			);
 
 			// Ensure to wait to have all slices code and mocks before writing on the disk
-			await updatedSlices.forEach(
-				async ({ updatedSlice, componentCode, updatedMock }, index) => {
-					console.log(
-						"STEP 7: Update the slice code for:",
-						`${index} - ${updatedSlice.name}`,
-					);
-					if (componentCode) {
-						const { errors } = await this.createSlice({
-							libraryID: DEFAULT_LIBRARY_ID,
-							model: updatedSlice,
-							componentContents: componentCode,
-						});
+			for (let index = 0; index < updatedSlices.length; index++) {
+				const { updatedSlice, componentCode, updatedMock } =
+					updatedSlices[index];
 
-						if (errors.length > 0) {
-							console.log(
-								`Errors while updating the slice code for ${index} - ${updatedSlice.name}:`,
-								errors,
-							);
-							await this.createSlice({
-								libraryID: DEFAULT_LIBRARY_ID,
-								model: updatedSlice,
-							});
-						}
-					} else {
+				console.log(
+					"STEP 7: Update the slice code for:",
+					`${index} - ${updatedSlice.name}`,
+				);
+				if (componentCode) {
+					const { errors } = await this.createSlice({
+						libraryID: DEFAULT_LIBRARY_ID,
+						model: updatedSlice,
+						componentContents: componentCode,
+					});
+
+					if (errors.length > 0) {
+						console.log(
+							`Errors while updating the slice code for ${index} - ${updatedSlice.name}:`,
+							errors,
+						);
 						await this.createSlice({
 							libraryID: DEFAULT_LIBRARY_ID,
 							model: updatedSlice,
 						});
 					}
-
-					console.log(
-						"STEP 8: Persist the generated mocks for:",
-						`${index} - ${updatedSlice.name}`,
-					);
-					await this.updateSliceMocks({
+				} else {
+					await this.createSlice({
 						libraryID: DEFAULT_LIBRARY_ID,
-						sliceID: updatedSlice.id,
-						mocks: updatedMock,
+						model: updatedSlice,
 					});
-				},
-			);
+				}
+
+				console.log(
+					"STEP 8: Persist the generated mocks for:",
+					`${index} - ${updatedSlice.name}`,
+				);
+				await this.updateSliceMocks({
+					libraryID: DEFAULT_LIBRARY_ID,
+					sliceID: updatedSlice.id,
+					mocks: updatedMock,
+				});
+			}
 
 			console.log("STEP 9: THE END");
 
