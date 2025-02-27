@@ -6677,9 +6677,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mocks@npm:2.9.1":
-  version: 2.9.1
-  resolution: "@prismicio/mocks@npm:2.9.1"
+"@prismicio/mocks@npm:2.10.0":
+  version: 2.10.0
+  resolution: "@prismicio/mocks@npm:2.10.0"
   dependencies:
     "@prismicio/api-renderer": ^6.3.0
     "@prismicio/types-internal": ^3.6.0
@@ -6691,7 +6691,7 @@ __metadata:
     newtype-ts: ^0.3.5
     tslib: ^2.3.1
     uuid: ^9.0.1
-  checksum: 01eec624fa12b4dea4961b90623a0967512d38c2743aa8c933bf48a629621a827897545a9519bb185823859e7c485fbfa50ddd2eb2e9257e3c25fd65fe0fcd5d
+  checksum: b22213544ac473ed49d10d30d4a219d31c5b43c21949d4d61129505130a8d1b9f14d8c15430033ef95e92cda53f6d0e8320d3d22d0ebfc60db723029580005cb
   languageName: node
   linkType: hard
 
@@ -9817,7 +9817,7 @@ __metadata:
     "@prismicio/client": 7.16.1
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.7.1
-    "@prismicio/mocks": 2.9.1
+    "@prismicio/mocks": 2.10.0
     "@prismicio/types-internal": 3.6.0
     "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
@@ -32407,7 +32407,7 @@ __metadata:
     "@prismicio/editor-support": 0.4.64
     "@prismicio/editor-ui": 0.4.64
     "@prismicio/mock": 0.7.1
-    "@prismicio/mocks": 2.9.1
+    "@prismicio/mocks": 2.10.0
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 3.6.0
     "@radix-ui/react-hover-card": 1.0.6
@@ -32877,7 +32877,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
-    "@prismicio/mocks": 2.9.1
+    "@prismicio/mocks": 2.10.0
     "@prismicio/types-internal": 3.6.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:*"
