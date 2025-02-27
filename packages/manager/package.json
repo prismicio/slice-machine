@@ -67,7 +67,7 @@
 		"@antfu/ni": "^0.20.0",
 		"@prismicio/client": "7.16.1",
 		"@prismicio/custom-types-client": "2.1.0",
-		"@prismicio/mocks": "2.9.1",
+		"@prismicio/mocks": "2.10.0",
 		"@prismicio/types-internal": "3.6.0",
 		"@segment/analytics-node": "^2.1.2",
 		"@slicemachine/plugin-kit": "workspace:*",
