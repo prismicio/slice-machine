@@ -67,6 +67,15 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
 };
 
+
+type PrismicRepositoryManagerGenerateSliceTaskArgs = {
+	screenshotUrl: string;
+};
+
+type PrismicRepositoryManagerGetSliceTaskArgs = {
+	executionArn: string;
+};
+
 type PrismicRepositoryManagerFetchEnvironmentsArgs = {
 	/**
 	 * If set to `true`, all environments are returned regardless of the user's
@@ -241,6 +250,71 @@ export class PrismicRepositoryManager extends BaseManager {
 				cause: res,
 			});
 		}
+	}
+
+	//const FRACTAL_URL = "https://lab.internal.marketing-tools-wroom.com/fractal/slice";
+	LAB_BASE_URL = " https://827lckpxa0.execute-api.us-east-1.amazonaws.com/sre";
+
+	async generateSliceTask(args: PrismicRepositoryManagerGenerateSliceTaskArgs): Promise<string> {
+		const res = await this._fetch({
+			url: new URL(this.LAB_BASE_URL + "/fractal/slice"),
+			method: "POST",
+			body: args,
+		});
+
+
+		if (!res.ok) {
+			const reason = await res.text();
+			throw new Error(`Failed to generate slice task`, {
+				cause: reason,
+			});
+		}
+
+		const data = await res.json();
+
+		const { value, error } = decode(z.object({
+			executionArn: z.string(),
+		}), data);
+
+		if (error) {
+			throw new Error(`Failed to generate slice task`, {
+				cause: error.errors.join(", "),
+			});
+		}
+		return value.executionArn;
+	}
+
+	async getSliceTask(args: PrismicRepositoryManagerGetSliceTaskArgs) {
+		const url = new URL(this.LAB_BASE_URL + "/fractal/slice");
+		url.searchParams.set("executionArn", args.executionArn);
+		const res = await this._fetch({
+			url,
+			method: "GET",
+		});
+
+
+		if (!res.ok) {
+			const reason = await res.text();
+			throw new Error(`Failed to generate slice task`, {
+				cause: reason,
+			});
+		}
+
+		const data = await res.json();
+
+		const { value , error } = decode(z.object({
+			codeUrl: z.string().optional(),
+			modelUrl: z.string().optional(),
+			mocksUrl: z.string().optional(),
+			status: z.enum(["RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "ABORTED", "PENDING_REDRIVE"]),
+		}), data);
+
+		if (error) {
+			throw new Error(`Failed to generate slice task`, {
+				cause: error.errors.join(", "),
+			});
+		}
+		return value;
 	}
 
 	async pushDocuments(

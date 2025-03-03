@@ -1056,7 +1056,7 @@ export class SlicesManager extends BaseManager {
 				}
 
 				const hasScreenshotChanged = !variation.imageUrl?.includes(
-					createContentDigest(screenshot.data),
+					createContentDigest(screenshot.data.toString()),
 				);
 
 				// If screenshot hasn't changed, do nothing
@@ -1857,950 +1857,128 @@ type GroupField = {
 	): Promise<SliceMachineManagerGenerateSlicesFromUrlReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const { OPENAI_API_KEY, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } =
-			process.env;
-
-		if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
-			throw new Error("AWS credentials are not set.");
-		}
-		const AWS_REGION = "us-east-1";
-		const bedrockClient = new BedrockRuntimeClient({
-			region: AWS_REGION,
-			credentials: {
-				accessKeyId: AWS_ACCESS_KEY_ID,
-				secretAccessKey: AWS_SECRET_ACCESS_KEY,
-			},
-		});
-
-		if (!OPENAI_API_KEY) {
-			throw new Error("OPENAI_API_KEY is not set.");
-		}
-		const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
-
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 		const libraryIDs = sliceMachineConfig.libraries || [];
 		const DEFAULT_LIBRARY_ID = libraryIDs[0];
 
-		let retry: {
-			[key in "MODEL" | "MOCKS" | "CODE" | "APPEARANCE"]: number;
-		}[] = args.sliceImages.map((_) => ({
-			MODEL: 0,
-			MOCKS: 0,
-			CODE: 0,
-			APPEARANCE: 0,
-		}));
-
-		async function callAI<ReturnType extends Record<string, unknown>>({
-			ai,
-			sliceIndex,
-			stepName,
-			systemPrompt,
-			imageFile,
-			textContent,
-		}: {
-			ai: "OPENAI" | "AWS";
-			sliceIndex: number;
-			stepName: "MODEL" | "MOCKS" | "CODE" | "APPEARANCE";
-			systemPrompt: string;
-			imageFile?: Uint8Array;
-			textContent?: string;
-		}): Promise<ReturnType> {
-			let resultText: string | undefined;
-
-			if (ai === "OPENAI") {
-				const messages: Array<ChatCompletionMessageParam> = [
-					{ role: "system", content: systemPrompt },
-				];
-
-				const userContent: Array<
-					| {
-							type: "text";
-							text: string;
-					  }
-					| {
-							type: "image_url";
-							image_url: { url: string };
-					  }
-				> = [];
-
-				if (imageFile) {
-					userContent.push({
-						type: "image_url",
-						image_url: {
-							url:
-								"data:image/png;base64," +
-								Buffer.from(imageFile).toString("base64"),
-						},
-					});
-				}
-
-				if (textContent) {
-					userContent.push({ type: "text", text: textContent });
-				}
-
-				if (userContent.length > 0) {
-					messages.push({
-						role: "user",
-						content: userContent,
-					});
-				}
-
-				const response = await openai.chat.completions.create({
-					model: "gpt-4o",
-					messages,
-					response_format: { type: "json_object" },
-				});
-
-				console.log(
-					`Generated response for ${stepName} - ${sliceIndex}:`,
-					JSON.stringify(response),
-				);
-
-				resultText = response.choices[0]?.message?.content?.trim();
-			} else if (ai === "AWS") {
-				const messages: Array<Message> = [];
-
-				if (imageFile) {
-					messages.push({
-						role: "user",
-						content: [
-							{
-								image: { format: "png", source: { bytes: imageFile } },
-							},
-						],
-					});
-				}
-
-				if (textContent) {
-					messages.push({
-						role: "user",
-						content: [
-							{
-								text: textContent,
-							},
-						],
-					});
-				}
-
-				const command = new ConverseCommand({
-					modelId: "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-					system: [{ text: systemPrompt }],
-					messages: messages,
-				});
-
-				const response = await bedrockClient.send(command);
-
-				console.log(
-					`Generated response for ${stepName} - ${sliceIndex}:`,
-					JSON.stringify(response),
-				);
-
-				resultText = response.output?.message?.content?.[0]?.text?.trim();
-			}
-
-			async function retryCall(error: string): Promise<ReturnType> {
-				if (retry[sliceIndex][stepName] < 3) {
-					retry[sliceIndex][stepName]++;
-					console.log(
-						`Retrying ${retry[sliceIndex][stepName]} ${stepName} for slice ${sliceIndex}.`,
-						error,
-					);
-
-					return await callAI({
-						ai,
-						sliceIndex,
-						stepName,
-						systemPrompt,
-						imageFile,
-						textContent,
-					});
-				}
-
-				throw new Error(error);
-			}
-
-			if (!resultText) {
-				return await retryCall(
-					`No valid response was generated for ${stepName}.`,
-				);
-			}
-
-			try {
-				return JSON.parse(resultText);
-			} catch (error) {
-				return await retryCall(
-					`Failed to parse AI response for ${stepName}: ` + error,
-				);
+		const fetchSliceModel = async (url: string): Promise<SharedSlice> => {
+			const response = await fetch(url);
+			const data = await response.json();
+			const res = SharedSlice.decode(data)
+			if (res._tag === "Left") {
+				throw new Error("Failed to decode slice model");
+			} else {
+				return res.right;
 			}
 		}
 
-		/**
-		 * TypeScript schema for the Shared Slice definition.
-		 */
-		const SHARED_SLICE_SCHEMA = `
-/**
- * Represents a Prismic Slice.
- * @property {string} type - Should always be "SharedSlice".
- * @property {string} id - Unique identifier for the slice in snake_case.
- * @property {string} name - Human-readable name in PascalCase.
- * @property {string} description - Brief explanation of the slice's purpose.
- * @property {SliceVariation[]} variations - Array of variations for the slice.
- */
-type PrismicSlice = {
-  type: "SharedSlice";
-  id: string;
-  name: string;
-  description: string;
-  variations: SliceVariation[];
-};
-
-/**
- * Represents a variation of a Prismic Slice.
- * TIPS: Never use "items" property, you can see it doesn't exist here!
- */
-type SliceVariation = {
-  id: string;
-  name: string;
-  description: string;
-  primary: Record<string, PrismicField>;
-  docURL: string;
-  version: string;
-};
-
-/**
- * Union type representing all possible Prismic fields.
- */
-type PrismicField =
-  | UIDField
-  | BooleanField
-  | ColorField
-  | DateField
-  | TimestampField
-  | NumberField
-  | TextField
-  | SelectField
-  | StructuredTextField
-  | ImageField
-  | LinkField
-  | GeoPointField
-  | EmbedField
-  | GroupField;
-
-/* Definitions for each field type follow... */
-
-/**
- * Represents a UID Field in Prismic.
- * @property {"UID"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {string} [config.placeholder] - Placeholder text.
- * @property {string} [config.customregex] - Custom regex for validation.
- * @property {string} [config.errorMessage] - Error message for invalid input.
- */
-type UIDField = {
-	type: "UID";
-	config: {
-		label: string;
-		placeholder?: string;
-		customregex?: string;
-		errorMessage?: string;
-	};
-};
-
-/**
- * Represents a Boolean Field in Prismic.
- * @property {"Boolean"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {boolean} [config.default_value] - Default value (true or false).
- */
-type BooleanField = {
-	type: "Boolean";
-	config: {
-		label: string;
-		default_value?: boolean;
-	};
-};
-
-/**
- * Represents a Color Field in Prismic.
- * @property {"Color"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- */
-type ColorField = {
-	type: "Color";
-	config: {
-		label: string;
-	};
-};
-
-/**
- * Represents a Date Field in Prismic.
- * @property {"Date"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- */
-type DateField = {
-	type: "Date";
-	config: {
-		label: string;
-	};
-};
-
-/**
- * Represents a Timestamp Field in Prismic.
- * @property {"Timestamp"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- */
-type TimestampField = {
-	type: "Timestamp";
-	config: {
-		label: string;
-	};
-};
-
-/**
- * Represents a Number Field in Prismic.
- * @property {"Number"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {string} [config.placeholder] - Placeholder text.
- * @property {number} [config.min] - Minimum allowable value.
- * @property {number} [config.max] - Maximum allowable value.
- */
-type NumberField = {
-	type: "Number";
-	config: {
-		label: string;
-		placeholder?: string;
-		min?: number;
-		max?: number;
-	};
-};
-
-/**
- * Represents a Text Field in Prismic.
- * @property {"Text"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {string} [config.placeholder] - Placeholder text.
- */
-type TextField = {
-	type: "Text";
-	config: {
-		label: string;
-		placeholder?: string;
-	};
-};
-
-/**
- * Represents a Select Field in Prismic.
- * @property {"Select"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {string[]} config.options - Array of options for the select dropdown.
- */
-type SelectField = {
-	type: "Select";
-	config: {
-		label: string;
-		options: string[];
-	};
-};
-
-/**
- * Represents a Structured Text Field in Prismic.
- * @property {"StructuredText"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {string} [config.placeholder] - Placeholder text.
- * @property {string} [config.single] - A comma-separated list of formatting options that does not allow line breaks. Options: paragraph | preformatted | heading1 | heading2 | heading3 | heading4 | heading5 | heading6 | strong | em | hyperlink | image | embed | list-item | o-list-item | rtl.
- * @property {string} [config.multi] - A comma-separated list of formatting options, with paragraph breaks allowed. Options: paragraph | preformatted | heading1 | heading2 | heading3 | heading4 | heading5 | heading6 | strong | em | hyperlink | image | embed | list-item | o-list-item | rtl.
- * @property {boolean} [config.allowTargetBlank] - Allows links to open in a new tab.
- * @property {string[]} [config.labels] - An array of strings to define labels for custom formatting.
- * @property {ImageConstraint} [config.imageConstraint] - Constraints for images within the rich text field.
- */
-type StructuredTextField = {
-	type: "StructuredText";
-	config: {
-		label: string;
-		placeholder?: string;
-		single?: string;
-		multi?: string;
-		allowTargetBlank?: boolean;
-		labels?: string[];
-		imageConstraint?: ImageConstraint;
-	};
-};
-
-/**
- * Represents constraints for images within a rich text field.
- * @property {number} [width] - Width constraint in pixels.
- * @property {number
- * @property {number} [height] - Height constraint in pixels.
- */
-type ImageConstraint = {
-	width?: number;
-	height?: number;
-};
-
-/**
- * Represents an Image Field in Prismic.
- * @property {"Image"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {Object} [config.constraint] - Constraints for the image dimensions.
- * @property {number} [config.constraint.width] - Width constraint.
- * @property {number} [config.constraint.height] - Height constraint.
- * @property {Thumbnail[]} [config.thumbnails] - Array of thumbnail configurations.
- */
-type ImageField = {
-	type: "Image";
-	config: {
-		label: string;
-		constraint?: {
-			width?: number;
-			height?: number;
-		};
-		thumbnails?: Thumbnail[];
-	};
-};
-
-/**
- * Represents a Thumbnail configuration for an Image field.
- * @property {string} name - Name of the thumbnail.
- * @property {number} [width] - Width of the thumbnail in pixels.
- * @property {number} [height] - Height of the thumbnail in pixels.
- */
-type Thumbnail = {
-	name: string;
-	width?: number;
-	height?: number;
-};
-
-/**
- * Represents a Link Field in Prismic.
- * @property {"Link"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
-* @property {boolean} config.allowText - Enable the text field for the link.
- */
-type LinkField = {
-	type: "Link";
-	config: {
-		label: string;
-		allowText: boolean;
-	};
-};
-
-/**
- * Represents an Embed Field in Prismic.
- * @property {"Embed"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- */
-type EmbedField = {
-	type: "Embed";
-	config: {
-		label: string;
-	};
-};
-
-/**
- * Represents a GeoPoint Field in Prismic.
- * @property {"GeoPoint"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- */
-type GeoPointField = {
-	type: "GeoPoint";
-	config: {
-		label: string;
-	};
-};
-
-/**
- * Represents a Group Field (Repeatable Fields) in Prismic.
- * It CAN NEVER BE PUT INSIDE ANOTHER FIELD.
- * @property {"Group"} type - Field type.
- * @property {Object} config - Configuration object.
- * @property {string} config.label - Label displayed in the editor.
- * @property {Record<string, PrismicField>} config.fields - Defines the fields inside the group.
- */
-type GroupField = {
-	type: "Group";
-	config: {
-		label: string;
-		fields: Record<string, PrismicField>;
-	};
-};
-`;
-
-		/**
-		 * Default slice model for the SharedSlice.
-		 */
-		const DEFAULT_SLICE_MODEL: SharedSlice = {
-			id: "<ID_TO_CHANGE>",
-			type: "SharedSlice",
-			name: "<NAME_TO_CHANGE>",
-			description: "<DESCRIPTION_TO_CHANGE>",
-			variations: [
-				{
-					id: "<VARIATION_ID_TO_CHANGE>",
-					name: "<NAME_TO_CHANGE>",
-					docURL: "...",
-					version: "initial",
-					description: "<DESCRIPTION_TO_CHANGE>",
-					imageUrl: "",
-				},
-			],
-		};
-
-		/**
-		 * Calls the AI to generate the slice model.
-		 */
-		async function generateSliceModel(
-			sliceIndex: number,
-			imageFile: Uint8Array,
-		): Promise<SharedSlice> {
-			const systemPrompt = `
-				You are an **expert in Prismic content modeling**. Using the **image and code provided**, generate a **valid Prismic JSON model** for the slice described below.
-
-				**STRICT MODELING RULES (NO EXCEPTIONS):**
-					- **Use the TypeScript schema provided as your reference**.
-					- **Absolutely all fields must be placed under the "primary" object**.
-					- **Do not create groups or collections for single-image content** (background images must be a single image field).
-					- **Ensure each field has appropriate placeholders, labels, and configurations**.
-					- **Never generate a Link/Button text field—only the Link/Button field itself** with \`"allowText": true\`.
-					- **Include all fields visible in the provided image**, do not forget any field and everything should be covered.
-					- **Repeated fields must always be grouped**:
-						- **Identify when field are part of a group**, when there is a repetition of a field or multiple fields together use a Group field.
-						- **DO NOT** create individually numbered fields like \`feature1\`, \`feature2\`, \`feature3\`. Instead, define a single **Group field** (e.g., \`features\`) and move all repeated items inside it.
-					- **Differentiate Prismic fields from decorative elements:**
-						- If an element in the image is purely visual/decorative, **do not include it in the model**.
-						- Use the **code as the source of truth** to determine what should be a field.
-						- If an element is an image in the code, it **must also be an image field in Prismic** (strict 1:1 mapping).
-					- **Handle repeated content correctly:**
-						- **If an image, text, or link is repeated, always use a Group field**—do not create individual fields.
-						- **If multiple fields are repeated together, they must be inside a single Group field**.
-					- **Strictly forbid nesting of groups:**
-						- **NEVER put a Group inside another Group field**.
-						- **Group fields CANNOT be nested for any reason**—this is **strictly prohibited** even for navigation structures like headers or footers.
-					- **Do not use the "items" field**:
-						- **All repeatable fields must be defined as Group fields under "primary"**.
-						- **"items" must never appear in the final JSON output**.
-					- **Do not create more than one SliceVariation**, only one variation is enough to create the model.
-
-				**STRICT FIELD NAMING & CONTENT RULES:**
-					- **Replace placeholders in the existing slice template** (\`<ID_TO_CHANGE>\`, \`<NAME_TO_CHANGE>\`, etc.).
-					- **Field placeholders must be very short**—do **not** put actual image content inside placeholders.
-					- **Field labels and IDs must define the field's purpose, not its content**.
-					- **Slice name, ID, and description must describe the slice's function, not its content**.
-					- The slice name and ID must be **generic and reusable**, defining what the slice **does**, not what it is used for.
-					- **DO NOT name the slice after a specific topic, content type, or industry. Instead, name it based on its structure and function.
-
-				**STRICT JSON OUTPUT FORMAT (NO MARKDOWN OR EXTRA TEXT):**
-					- **Return ONLY a valid JSON object**—no extra text, comments, or formatting.
-					- **The response must be directly parseable** using \`JSON.parse(output)\`.
-					- **Do not wrap the output in markdown (\`\`\`\`json\`) or any other formatting.**
-
-				**VALIDATION REQUIREMENT:**
-					- Before returning, **validate that \`JSON.parse(output)\` runs without errors**.
-					- If there is **any extra text, markdown, or incorrect structure**, **rewrite the response before returning**.
-
-				**REFERENCE SCHEMA (Follow this exactly):**
-				${SHARED_SLICE_SCHEMA}
-				
-				**EXISTING SLICE TO UPDATE (Modify strictly according to the rules above):**
-				${JSON.stringify(DEFAULT_SLICE_MODEL)}
-			`.trim();
-
-			const generatedModel = await callAI<SharedSlice>({
-				ai: "OPENAI",
-				sliceIndex,
-				stepName: "MODEL",
-				systemPrompt,
-				imageFile,
-			});
-
-			return generatedModel;
-		}
-
-		/**
-		 * Calls the AI endpoint to generate mocks.
-		 */
-		async function generateSliceMocks(
-			sliceIndex: number,
-			imageFile: Uint8Array,
-			existingMocks: SharedSliceContent[],
-		): Promise<SharedSliceContent[]> {
-			const systemPrompt = `
-				You are a **seasoned frontend engineer** with **deep expertise in Prismic slices**.
-				Your task is to **update the provided mocks template** based **only** on the visible text content in the provided image.
-
-				**STRICT UPDATE GUIDELINES:**
-					- **Do no create content, only take visible text from the image.**
-					- **Do not modify the overall structure of the mocks template.**
-					- **Strictly update text content only.**
-					- **Do not touch images or image-related fields.**
-					- **If a repeated item appears in a group, match the exact number of group items seen in the image.**
-					- **Do not modify metadata, field properties, or structure.** This includes:
-						- Do **not** change the \`"key"\` property of links.
-						- Do **not** modify \`StructuredText\` properties such as \`"direction"\`, \`"spans"\`, or \`"type"\`.
-						- Do **not** alter field nesting or object structure.
-					- **For StructuredText fields, maintain all existing structure and properties**—**only replace text content**.
-					- **Ensure that only visible text in the image is updated**—do not generate or assume content.
-					- **Never modify image fields**—image references and properties must remain unchanged.
-
-				**STRICT JSON OUTPUT FORMAT:**
-					- **Return ONLY a valid JSON object**—no extra text, explanations, or formatting.
-					- **The response must be directly parseable** using \`JSON.parse(output)\`.
-					- **Do not wrap the output in markdown (\`\`\`\`json\`) or any other formatting.**
-
-				**VALIDATION REQUIREMENT:**
-					- Before returning, **validate that \`JSON.parse(output)\` runs without errors**.
-					- If there is **any extra text, markdown, or incorrect structure**, **rewrite the response before returning**.
-
-				**EXISTING MOCKS TEMPLATE (To be updated with the visible text from the image only):**
-				${JSON.stringify(existingMocks)}
-			`.trim();
-
-			const updatedMock = await callAI<SharedSliceContent>({
-				ai: "OPENAI",
-				sliceIndex,
-				stepName: "MOCKS",
-				systemPrompt,
-				imageFile,
-			});
-
-			return [updatedMock];
-		}
-
-		const SLICE_CODE_EXAMPLE = `
------------------------------------------------------------
-import { FC } from "react";
-import { Content } from "@prismicio/client";
-import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
-
-export type PascalNameToReplaceProps =
-	SliceComponentProps<Content.PascalNameToReplaceSlice>;
-
-const PascalNameToReplace: FC<PascalNameToReplaceProps> = ({ slice }) => {
-	return (
-		<section
-			data-slice-type={slice.slice_type}
-			data-slice-variation={slice.variation}
-			className="es-bounded es-alternate-grid"
-		>
-			<PrismicNextLink
-				className="es-alternate-grid__button"
-				field={slice.primary.buttonLink}
-			/>
-			<div className="es-alternate-grid__content">
-				<PrismicNextImage
-					field={slice.primary.image}
-					className="es-alternate-grid__image"
-				/>
-				<div className="es-alternate-grid__primary-content">
-					<div className="es-alternate-grid__primary-content__intro">
-						<p className="es-alternate-grid__primary-content__intro__eyebrow">
-							{slice.primary.eyebrowHeadline}
-						</p>
-						<div className="es-alternate-grid__primary-content__intro__headline">
-							<PrismicRichText field={slice.primary.title} />
-						</div>
-						<div className="es-alternate-grid__primary-content__intro__description">
-							<PrismicRichText field={slice.primary.description} />
-						</div>
-					</div>
-
-					<div className="es-alternate-grid__primary-content__stats">
-						{slice.primary.stats.map((stat, i) => (
-							<div key={\`stat-$\{i + 1\}\`} className="es-alternate-grid__stat">
-								<div className="es-alternate-grid__stat__heading">
-									<PrismicRichText field={stat.title} />
-								</div>
-								<div className="es-alternate-grid__stat__description">
-									<PrismicRichText field={stat.description} />
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</div>
-		</section>
-	);
-};
-
-export default PascalNameToReplace;
------------------------------------------------------------
-`.trim();
-
-		/**
-		 * Calls the AI endpoint to generate the slice React component.
-		 */
-		async function generateSliceComponentCode(
-			sliceIndex: number,
-			imageFile: Uint8Array,
-			updatedSlice: SharedSlice,
-		): Promise<string> {
-			const systemPrompt = `
-				You are a **seasoned frontend engineer** with **deep expertise in Prismic slices**.
-				Your task is to generate a **fully isolated React component** for a Prismic slice, **focusing ONLY on structure (HTML) without styling**.
-
-				**STRICT STRUCTURAL GUIDELINES:**
-					- **Do not include styling.** Focus **100% on correct structure**.
-					- **Be self-contained.** The component must work in isolation.
-					- **Follow the structure provided in the example.** Do not introduce **any variations**.
-					- **Use all fields provided in the model**—do not omit or invent fields.
-					- **Never access a field using** \`<field>.value\`. Always follow the example pattern with just \`<field>\`.
-					- **Ensure correct mapping of field types:**
-						- **StructuredText** → \`PrismicRichText\`
-						- **Image field** → \`PrismicNextImage\`
-						- **Text field** → Standard \`<p>\` element
-						- **Link field** → \`PrismicNextLink\`
-						- **Group field** → Map to the correct structure based on the example.
-					- **Maintain W3C-compliant HTML.** Do not place \`PrismicRichText\` inside \`<h1>\`, \`<p>\`, or other invalid elements.
-
-				**PRISMIC COMPONENT USAGE RULES:**
-					- **Links must use \`PrismicNextLink\`**, passing only the \`field\` (no manual text extraction).
-					- **\`PrismicNextLink\` must never be opened manually**—pass the field directly as in the example.
-					- **\`PrismicRichText\` cannot have a \`style\` prop**.
-					- **Imports must be identical to the provided example**.
-
-				**STRICT JSON OUTPUT FORMAT**
-					- **Return ONLY a valid JSON object** with **one key**: \`"componentCode"\`.
-					- **No markdown (\`\`\`\`json\`), no comments, no text before or after—ONLY pure JSON**.
-					- **The response MUST start with \`{\` and end with \`}\` exactly, do not start with a sentence explaining what you will do.**
-					- **Ensure the output is directly parseable** with \`JSON.parse(output)\`.
-					- **All strings must use double quotes (\`"\`).** Do not use single quotes or template literals.
-					- **Escape all embedded double quotes (\`\"\`) and backslashes (\`\\\`).**
-					- **The output must not contain raw control characters** (newline, tab, etc.); use escape sequences instead.
-
-				**Before returning, VALIDATE that \`JSON.parse(output)\` runs without errors.**
-
-				**EXAMPLE OF A FULLY ISOLATED SLICE COMPONENT (Follow this strictly):**
-				${SLICE_CODE_EXAMPLE}
-
-				**SLICE MODEL (Use this as the exact reference):**
-				${JSON.stringify(updatedSlice)}
-			`.trim();
-
-			const parsed = await callAI<{ componentCode: string }>({
-				ai: "AWS",
-				sliceIndex,
-				stepName: "CODE",
-				systemPrompt,
-				imageFile,
-			});
-
-			if (!parsed.componentCode) {
-				throw new Error("Missing key 'componentCode' in AI response.");
+		const fetchSliceMocks = async (url: string): Promise<SharedSliceContent[]> => {
+			const response = await fetch(url);
+			const data = await response.json();
+			const res = t.array(SharedSliceContent).decode(data)
+			if (res._tag === "Left") {
+				throw new Error("Failed to decode slice mocks");
+			} else {
+				return res.right;
 			}
-
-			return parsed.componentCode;
 		}
 
-		async function generateSliceComponentCodeAppearance(
-			sliceIndex: number,
-			imageFile: Uint8Array,
-			componentCode: string,
-		): Promise<string> {
-			const systemPrompt = `
-				You are a **seasoned frontend engineer** with **deep expertise in Prismic slices**.
-				Your task is to **apply branding (appearance) strictly based on the provided image and code input**.
-				The **branding is CRITICAL**—the slice you create **must perfectly match the visual appearance** of the provided slice image.
-			
-				**STRICT GUIDELINES TO FOLLOW (NO EXCEPTIONS):**
-					- **DO NOT** modify the structure of the code—**ONLY apply styling**. Your role is **purely styling-related**.
-					- **NO external dependencies**—use **only inline** styling.
-					- **VISUAL ACCURACY IS MANDATORY**—your goal is to make the output **visually identical** to the provided image.
-					
-				**MUST strictly respect the following:**
-					- **Background color** → Must **exactly match** the image. If unsure, **do not apply** any background color.
-					- **Padding & margin** → Must be **pixel-perfect** per the provided image.
-					- **Font size, color, and type** → Must match exactly. If the exact font is unavailable, choose the **closest possible match**.
-					- **Typography precision** → If the font-family does not match, **the output is incorrect**.
-					- **Color accuracy** → Use **ONLY the colors visible** in the provided image.
-					- **Element positioning** → Elements **must be placed exactly** as seen in the provided image.
-					- **Element sizes** → Every element **must match** the provided image in width, height, and proportions.
-					- **Overall proportions** → The slice must maintain **identical proportions** to the provided image.
-					- **Image constraints** → Images **must** maintain their **original aspect ratio**. Use explicit \`width\` and \`height\` constraints with an explicit pixels value. Avoid \`width: auto\`, \`height: auto\`, \`width: 100%\` or \`height: 100%\`.
-					- **Repetitions & layout** → Ensure **consistent styling** across repeated items. The **layout direction (horizontal/vertical)** must match the image.
-					- **Animations** → Handle animations as seen in the image, but **keep them fast and subtle** (avoid long animations).
-				
-				**IMPORTANT RULES:**
-					1. **DO NOT modify any non-styling code**.
-						- **Everything from the first import to the last export must remain unchanged**.
-						- **Only add styling** on top of the existing structure.
-				
-					2. **STRICT JSON OUTPUT FORMAT**
-						- Return a **valid JSON object** with **one key only**: \`"componentCode"\`.
-						- **NO markdown, NO code blocks, NO text before or after**—only **pure JSON**.
-						- The response **must start and end directly with \`{ "componentCode": ... }\`**.
-						- Ensure the output is **directly parseable** using \`JSON.parse(output)\`.
-				
-					3. **INLINE \`<style>\` RULES**
-						- Use **only inline** \`<style>\` tags (not \`<style jsx>\`).
-						- Ensure **all CSS is valid** and matches the image precisely.
-						- **Use backtick inside the \`<style>\` tag like this: <style>{\`...\`}</style>**.
-						- **Do NOT escape the backtick (\`\`\`) inside the \`<style>\` tag**.
-				
-				**Before returning, VALIDATE that \`JSON.parse(output)\` runs without errors.**
-				
-				**EXISTING CODE (to apply branding on):**
-				${componentCode}
-		  	`.trim();
+		const fetchSliceCode = async (url: string): Promise<string> => {
+			const response = await fetch(url);
+			const data = await response.text();
+			return data;
+		}
 
-			const parsed = await callAI<{ componentCode: string }>({
-				ai: "AWS",
-				sliceIndex,
-				stepName: "APPEARANCE",
-				systemPrompt,
-				imageFile,
+		const pollSliceTask = async (
+			executionArn: string,
+			intervalMs = 1000,
+		): Promise<{ codeUrl: string, modelUrl: string, mocksUrl: string }> => {
+			return new Promise(async (resolve, reject) => {
+				const step = async () => {
+					const response = await this.prismicRepository.getSliceTask({ executionArn });
+					console.log("Slice task status:", response.status);
+					switch (response.status) {
+						case "FAILED":
+							reject(new Error(`Slice generation task failed`));
+						case "TIMED_OUT":
+							reject(new Error("Slice generation task timed out"));
+						case "ABORTED":
+							reject(new Error("Slice generation task was aborted"));
+						case "RUNNING":
+							setTimeout(step, intervalMs);
+							break;
+						case "SUCCEEDED":
+							if (!response.codeUrl || !response.modelUrl || !response.mocksUrl) {
+								reject(new Error("Slice generation task succeeded but missing URLs"));
+							} else {
+								resolve({
+									codeUrl: response.codeUrl,
+									modelUrl: response.modelUrl,
+									mocksUrl: response.mocksUrl,
+								});
+							}
+							break;
+						default:
+							throw new Error(`Unknown task status: ${response.status}`);
+					}
+				}
+				step();
+			})
+		}
+
+		const uploadSliceImage = async (sliceImage: Uint8Array): Promise<{ url: string }> => {
+			const repositoryName = await this.project.getResolvedRepositoryName();
+
+			const keyPrefix = [
+				repositoryName,
+				"shared-slices",
+				Date.now(),
+			].join("/");
+			await this.screenshots.initS3ACL();
+			return await this.screenshots.uploadScreenshot({
+				data: Buffer.from(sliceImage),
+				keyPrefix,
 			});
-
-			if (!parsed.componentCode) {
-				throw new Error("Missing key 'componentCode' in AI response.");
-			}
-
-			return parsed.componentCode;
 		}
 
 		try {
-			// Loop in parallel over each slice image and html code and generate the slice model, mocks and code.
 			const updatedSlices = await Promise.all(
 				args.sliceImages.map(async (sliceImage, index) => {
 					// ----- Q1 scope -----
+					const sliceImageUrl = await uploadSliceImage(sliceImage);
+					console.log("STEP 1: Slice image uploaded to:", sliceImageUrl);
 
-					console.log(
-						"STEP 1: Generate the slice model using the image for slice:",
-						index,
-					);
-					const updatedSlice = await generateSliceModel(index, sliceImage);
+					const executionArn = await this.prismicRepository.generateSliceTask({
+						screenshotUrl: sliceImageUrl.url,
+					});
+				
+					const { codeUrl, modelUrl, mocksUrl } = await pollSliceTask(executionArn);
+					const sliceCode = await fetchSliceCode(codeUrl);
+					const sliceModel = await fetchSliceModel(modelUrl);
+					const sliceMocks = await fetchSliceMocks(mocksUrl);
 
-					console.log(
-						"STEP 2: Persist the updated slice model for:",
-						`${index} - ${updatedSlice.name}`,
-					);
-					await this.updateSlice({
+					await this.createSlice({
 						libraryID: DEFAULT_LIBRARY_ID,
-						model: updatedSlice,
+						model: sliceModel,
+						componentContents: sliceCode,
 					});
 
-					console.log(
-						"STEP 3: Update the slice screenshot for:",
-						`${index} - ${updatedSlice.name}`,
-					);
 					await this.updateSliceScreenshot({
 						libraryID: DEFAULT_LIBRARY_ID,
-						sliceID: updatedSlice.id,
-						variationID: updatedSlice.variations[0].id,
+						sliceID: sliceModel.id,
+						variationID: sliceModel.variations[0].id,
 						data: Buffer.from(sliceImage),
 					});
 
-					// ----- END Q1 scope -----
+					await this.updateSliceMocks({
+						libraryID: DEFAULT_LIBRARY_ID,
+						sliceID: sliceModel.id,
+						mocks: sliceMocks,
+					});
 
-					let updatedMock: SharedSliceContent[];
-					try {
-						console.log(
-							"STEP 4: Generate updated mocks for:",
-							`${index} - ${updatedSlice.name}`,
-						);
-						const existingMocks = mockSlice({ model: updatedSlice });
-						updatedMock = await generateSliceMocks(
-							index,
-							sliceImage,
-							existingMocks,
-						);
-					} catch (error) {
-						console.error(
-							`Failed to generate mocks for ${index} - ${updatedSlice.name}:`,
-							error,
-						);
-						updatedMock = mockSlice({ model: updatedSlice });
-					}
-
-					let componentCode: string | undefined;
-					try {
-						console.log(
-							"STEP 5: Generate the isolated slice component code for:",
-							`${index} - ${updatedSlice.name}`,
-						);
-						const initialCode = await generateSliceComponentCode(
-							index,
-							sliceImage,
-							updatedSlice,
-						);
-
-						console.log(
-							"STEP 6: Generate the branding on the code:",
-							`${index} - ${updatedSlice.name}`,
-						);
-						componentCode = await generateSliceComponentCodeAppearance(
-							index,
-							sliceImage,
-							initialCode,
-						);
-					} catch (error) {
-						console.error(
-							`Failed to generate code for ${index} - ${updatedSlice.name}:`,
-							error,
-						);
-					}
-
-					return { updatedSlice, componentCode, updatedMock };
+					return { updatedSlice: sliceModel };
 				}),
 			);
-
-			// Ensure to wait to have all slices code and mocks before writing on the disk
-			for (let index = 0; index < updatedSlices.length; index++) {
-				const { updatedSlice, componentCode, updatedMock } =
-					updatedSlices[index];
-
-				console.log(
-					"STEP 7: Update the slice code for:",
-					`${index} - ${updatedSlice.name}`,
-				);
-				if (componentCode) {
-					const { errors } = await this.createSlice({
-						libraryID: DEFAULT_LIBRARY_ID,
-						model: updatedSlice,
-						componentContents: componentCode,
-					});
-
-					if (errors.length > 0) {
-						console.log(
-							`Errors while updating the slice code for ${index} - ${updatedSlice.name}:`,
-							errors,
-						);
-						await this.createSlice({
-							libraryID: DEFAULT_LIBRARY_ID,
-							model: updatedSlice,
-						});
-					}
-				} else {
-					await this.createSlice({
-						libraryID: DEFAULT_LIBRARY_ID,
-						model: updatedSlice,
-					});
-				}
-
-				console.log(
-					"STEP 8: Persist the generated mocks for:",
-					`${index} - ${updatedSlice.name}`,
-				);
-				await this.updateSliceMocks({
-					libraryID: DEFAULT_LIBRARY_ID,
-					sliceID: updatedSlice.id,
-					mocks: updatedMock,
-				});
-			}
-
-			console.log("STEP 9: THE END");
 
 			return {
 				slices: updatedSlices.map(({ updatedSlice }) => updatedSlice),
