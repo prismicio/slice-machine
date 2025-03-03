@@ -1,6 +1,4 @@
-import fs from "node:fs";
 import * as t from "io-ts";
-import OpenAI from "openai";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
@@ -22,8 +20,6 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 } from "@slicemachine/plugin-kit";
-import path from "node:path";
-import { ChatCompletionMessageParam } from "openai/resources";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -228,6 +224,7 @@ type SliceMachineManagerGenerateSliceReturnType = {
 
 type SliceMachineManagerGenerateSlicesFromUrlArgs = {
 	sliceImages: Uint8Array[];
+	sliceMachineUIOrigin: string;
 };
 
 type SliceMachineManagerGenerateSlicesFromUrlReturnType = {
@@ -1864,38 +1861,42 @@ type GroupField = {
 		const fetchSliceModel = async (url: string): Promise<SharedSlice> => {
 			const response = await fetch(url);
 			const data = await response.json();
-			const res = SharedSlice.decode(data)
+			const res = SharedSlice.decode(data);
 			if (res._tag === "Left") {
 				throw new Error("Failed to decode slice model");
 			} else {
 				return res.right;
 			}
-		}
+		};
 
-		const fetchSliceMocks = async (url: string): Promise<SharedSliceContent[]> => {
+		const fetchSliceMocks = async (
+			url: string,
+		): Promise<SharedSliceContent[]> => {
 			const response = await fetch(url);
 			const data = await response.json();
-			const res = t.array(SharedSliceContent).decode(data)
+			const res = t.array(SharedSliceContent).decode(data);
 			if (res._tag === "Left") {
 				throw new Error("Failed to decode slice mocks");
 			} else {
 				return res.right;
 			}
-		}
+		};
 
 		const fetchSliceCode = async (url: string): Promise<string> => {
 			const response = await fetch(url);
 			const data = await response.text();
 			return data;
-		}
+		};
 
 		const pollSliceTask = async (
 			executionArn: string,
 			intervalMs = 1000,
-		): Promise<{ codeUrl: string, modelUrl: string, mocksUrl: string }> => {
+		): Promise<{ codeUrl: string; modelUrl: string; mocksUrl: string }> => {
 			return new Promise(async (resolve, reject) => {
 				const step = async () => {
-					const response = await this.prismicRepository.getSliceTask({ executionArn });
+					const response = await this.prismicRepository.getSliceTask({
+						executionArn,
+					});
 					console.log("Slice task status:", response.status);
 					switch (response.status) {
 						case "FAILED":
@@ -1908,8 +1909,14 @@ type GroupField = {
 							setTimeout(step, intervalMs);
 							break;
 						case "SUCCEEDED":
-							if (!response.codeUrl || !response.modelUrl || !response.mocksUrl) {
-								reject(new Error("Slice generation task succeeded but missing URLs"));
+							if (
+								!response.codeUrl ||
+								!response.modelUrl ||
+								!response.mocksUrl
+							) {
+								reject(
+									new Error("Slice generation task succeeded but missing URLs"),
+								);
 							} else {
 								resolve({
 									codeUrl: response.codeUrl,
@@ -1921,27 +1928,26 @@ type GroupField = {
 						default:
 							throw new Error(`Unknown task status: ${response.status}`);
 					}
-				}
+				};
 				step();
-			})
-		}
+			});
+		};
 
-		const uploadSliceImage = async (sliceImage: Uint8Array): Promise<{ url: string }> => {
+		const uploadSliceImage = async (
+			sliceImage: Uint8Array,
+		): Promise<{ url: string }> => {
 			const repositoryName = await this.project.getResolvedRepositoryName();
 
-			const keyPrefix = [
-				repositoryName,
-				"shared-slices",
-				Date.now(),
-			].join("/");
+			const keyPrefix = [repositoryName, "shared-slices", Date.now()].join("/");
 			await this.screenshots.initS3ACL();
 			return await this.screenshots.uploadScreenshot({
 				data: Buffer.from(sliceImage),
 				keyPrefix,
 			});
-		}
+		};
 
 		try {
+			this.screenshots.initBrowserContext();
 			const updatedSlices = await Promise.all(
 				args.sliceImages.map(async (sliceImage, index) => {
 					// ----- Q1 scope -----
@@ -1951,8 +1957,9 @@ type GroupField = {
 					const executionArn = await this.prismicRepository.generateSliceTask({
 						screenshotUrl: sliceImageUrl.url,
 					});
-				
-					const { codeUrl, modelUrl, mocksUrl } = await pollSliceTask(executionArn);
+
+					const { codeUrl, modelUrl, mocksUrl } =
+						await pollSliceTask(executionArn);
 					const sliceCode = await fetchSliceCode(codeUrl);
 					const sliceModel = await fetchSliceModel(modelUrl);
 					const sliceMocks = await fetchSliceMocks(mocksUrl);
@@ -1975,6 +1982,21 @@ type GroupField = {
 						sliceID: sliceModel.id,
 						mocks: sliceMocks,
 					});
+
+					const screenshot =
+						await this.screenshots.captureSliceSimulatorScreenshot({
+							sliceMachineUIOrigin: args.sliceMachineUIOrigin,
+							libraryID: DEFAULT_LIBRARY_ID,
+							sliceID: sliceModel.id,
+							variationID: sliceModel.variations[0].id,
+						});
+
+					const renderedSliceImageUrl = await uploadSliceImage(screenshot.data);
+
+					console.log(
+						"STEP 8: Slice screenshot captured:",
+						renderedSliceImageUrl,
+					);
 
 					return { updatedSlice: sliceModel };
 				}),

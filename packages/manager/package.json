@@ -89,7 +89,7 @@
 		"p-limit": "^4.0.0",
 		"playwright": "^1.50.1",
 		"prettier": "^3.0.3",
-		"puppeteer": "^24.2.1",
+		"puppeteer": "24.3.0",
 		"r19": "0.1.8",
 		"rc9": "^2.0.1",
 		"readable-web-to-node-stream": "^3.0.2",

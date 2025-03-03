@@ -227,6 +227,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       );
       const response = await managerClient.slices.generateSlicesFromUrl({
         sliceImages,
+        sliceMachineUIOrigin: window.location.origin,
       });
 
       // TODO(DT-1453): Remove the need of the global getState

@@ -122,6 +122,7 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
       {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
       {simulatorUrl ? (
         <iframe
+          id="__iframe-renderer"
           ref={iframeRef}
           src={simulatorUrl}
           style={{
@@ -137,6 +138,8 @@ const IframeRenderer: React.FunctionComponent<IframeRendererProps> = ({
           }}
         />
       ) : null}
+      {/* eslint-disable-next-line @typescript-eslint/strict-boolean-expressions */}
+      {client?.connected ? <div id="__iframe-ready" /> : null}
     </Flex>
   );
 };

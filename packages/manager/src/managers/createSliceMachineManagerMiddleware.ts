@@ -41,6 +41,7 @@ const omitProcedures = defineOmits<SliceMachineManager>()([
 	"git._sliceMachineManager",
 	"getSliceMachinePluginRunner",
 	"getPrismicAuthManager",
+	"screenshots.browserContext",
 ]);
 
 export type SliceMachineManagerMiddleware = RPCMiddleware<

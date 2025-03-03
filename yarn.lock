@@ -10469,7 +10469,7 @@ __metadata:
     playwright: ^1.50.1
     prettier: ^3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    puppeteer: ^24.2.1
+    puppeteer: 24.3.0
     r19: 0.1.8
     rc9: ^2.0.1
     readable-web-to-node-stream: ^3.0.2
@@ -17522,15 +17522,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromium-bidi@npm:1.3.0":
-  version: 1.3.0
-  resolution: "chromium-bidi@npm:1.3.0"
+"chromium-bidi@npm:2.0.0":
+  version: 2.0.0
+  resolution: "chromium-bidi@npm:2.0.0"
   dependencies:
     mitt: ^3.0.1
     zod: ^3.24.1
   peerDependencies:
     devtools-protocol: "*"
-  checksum: a4e1236d91cd3a2017c227623d80cbd48754887f8ef9328ba66a70a1e6ec58737aadee7f9be5b68e449ebbe6ad64831fadf960f7cc4463098190c9ac112638fb
+  checksum: cf2000ee0cffb6fa5b5ed8374fff213c2221e965f2b1570c567004d6a2c6a0f46e7abef1439d75ef297cd4e84f16d9331b9555429f3ca9d9ed84a618dac3f6af
   languageName: node
   linkType: hard
 
@@ -31630,17 +31630,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer-core@npm:24.2.1":
-  version: 24.2.1
-  resolution: "puppeteer-core@npm:24.2.1"
+"puppeteer-core@npm:24.3.0":
+  version: 24.3.0
+  resolution: "puppeteer-core@npm:24.3.0"
   dependencies:
     "@puppeteer/browsers": 2.7.1
-    chromium-bidi: 1.3.0
+    chromium-bidi: 2.0.0
     debug: ^4.4.0
     devtools-protocol: 0.0.1402036
     typed-query-selector: ^2.12.0
-    ws: ^8.18.0
-  checksum: 1c6f144d8b6c7b9faad1c663ade11eb9735202865c7832b24987b32b48b840d7af2612c38005c59f1dbac1ff8a53565eeac4e5fa97ab179e888920f13627acf1
+    ws: ^8.18.1
+  checksum: 39310204371b015f8835a69c1ac6673edd0556948873da8d9bb9d1ee30297bee51acc94c9875737700d1492026118b7fb2b9708d1650b2619b6ed00117e6a8bb
   languageName: node
   linkType: hard
 
@@ -31662,19 +31662,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:^24.2.1":
-  version: 24.2.1
-  resolution: "puppeteer@npm:24.2.1"
+"puppeteer@npm:24.3.0":
+  version: 24.3.0
+  resolution: "puppeteer@npm:24.3.0"
   dependencies:
     "@puppeteer/browsers": 2.7.1
-    chromium-bidi: 1.3.0
+    chromium-bidi: 2.0.0
     cosmiconfig: ^9.0.0
     devtools-protocol: 0.0.1402036
-    puppeteer-core: 24.2.1
+    puppeteer-core: 24.3.0
     typed-query-selector: ^2.12.0
   bin:
     puppeteer: lib/cjs/puppeteer/node/cli.js
-  checksum: 5b6eb843fd29a58550092c2b6684078266cf82173dac454a0547bafe56ae53fcb98cc8508ad8a6c0f2071aeebacb1a61213eff0daa0d4d6b277a9c4daaba2ed3
+  checksum: b79c48da983db88eddbace2852416bf3757c7ac37221176c56273015e6e299f5d4284dce0b92db3715ed1ab1938ba278053287f7e98ad702f77c482b6b35e12a
   languageName: node
   linkType: hard
 
@@ -38280,9 +38280,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.18.0":
-  version: 8.18.0
-  resolution: "ws@npm:8.18.0"
+"ws@npm:^8.18.1":
+  version: 8.18.1
+  resolution: "ws@npm:8.18.1"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -38291,7 +38291,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 91d4d35bc99ff6df483bdf029b9ea4bfd7af1f16fc91231a96777a63d263e1eabf486e13a2353970efc534f9faa43bdbf9ee76525af22f4752cbc5ebda333975
+  checksum: 4658357185d891bc45cc2d42a84f9e192d047e8476fb5cba25b604f7d75ca87ca0dd54cd0b2cc49aeee57c79045a741cb7d0b14501953ac60c790cd105c42f23
   languageName: node
   linkType: hard
 

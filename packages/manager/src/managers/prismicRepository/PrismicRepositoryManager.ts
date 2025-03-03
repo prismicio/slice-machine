@@ -67,7 +67,6 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
 };
 
-
 type PrismicRepositoryManagerGenerateSliceTaskArgs = {
 	screenshotUrl: string;
 };
@@ -255,13 +254,14 @@ export class PrismicRepositoryManager extends BaseManager {
 	//const FRACTAL_URL = "https://lab.internal.marketing-tools-wroom.com/fractal/slice";
 	LAB_BASE_URL = " https://827lckpxa0.execute-api.us-east-1.amazonaws.com/sre";
 
-	async generateSliceTask(args: PrismicRepositoryManagerGenerateSliceTaskArgs): Promise<string> {
+	async generateSliceTask(
+		args: PrismicRepositoryManagerGenerateSliceTaskArgs,
+	): Promise<string> {
 		const res = await this._fetch({
 			url: new URL(this.LAB_BASE_URL + "/fractal/slice"),
 			method: "POST",
 			body: args,
 		});
-
 
 		if (!res.ok) {
 			const reason = await res.text();
@@ -272,9 +272,12 @@ export class PrismicRepositoryManager extends BaseManager {
 
 		const data = await res.json();
 
-		const { value, error } = decode(z.object({
-			executionArn: z.string(),
-		}), data);
+		const { value, error } = decode(
+			z.object({
+				executionArn: z.string(),
+			}),
+			data,
+		);
 
 		if (error) {
 			throw new Error(`Failed to generate slice task`, {
@@ -292,7 +295,6 @@ export class PrismicRepositoryManager extends BaseManager {
 			method: "GET",
 		});
 
-
 		if (!res.ok) {
 			const reason = await res.text();
 			throw new Error(`Failed to generate slice task`, {
@@ -302,12 +304,22 @@ export class PrismicRepositoryManager extends BaseManager {
 
 		const data = await res.json();
 
-		const { value , error } = decode(z.object({
-			codeUrl: z.string().optional(),
-			modelUrl: z.string().optional(),
-			mocksUrl: z.string().optional(),
-			status: z.enum(["RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "ABORTED", "PENDING_REDRIVE"]),
-		}), data);
+		const { value, error } = decode(
+			z.object({
+				codeUrl: z.string().optional(),
+				modelUrl: z.string().optional(),
+				mocksUrl: z.string().optional(),
+				status: z.enum([
+					"RUNNING",
+					"SUCCEEDED",
+					"FAILED",
+					"TIMED_OUT",
+					"ABORTED",
+					"PENDING_REDRIVE",
+				]),
+			}),
+			data,
+		);
 
 		if (error) {
 			throw new Error(`Failed to generate slice task`, {
