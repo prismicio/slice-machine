@@ -1882,6 +1882,27 @@ type GroupField = {
 			}
 		};
 
+		type EvaluateSliceArgs = {
+			originalImageUrl: string;
+			generatedImageUrl: string;
+		};
+
+		const evaluateSlice = async (args: EvaluateSliceArgs): Promise<Number> => {
+			const { originalImageUrl, generatedImageUrl } = args;
+			const response = await fetch(`http://localhost:5000/compare`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					url1: originalImageUrl,
+					url2: generatedImageUrl,
+				}),
+			});
+			const data = await response.json() as { final_score: number };
+			return data["final_score"];
+		};
+
 		const fetchSliceCode = async (url: string): Promise<string> => {
 			const response = await fetch(url);
 			const data = await response.text();
@@ -1948,59 +1969,74 @@ type GroupField = {
 
 		try {
 			this.screenshots.initBrowserContext();
-			const updatedSlices = await Promise.all(
-				args.sliceImages.map(async (sliceImage, index) => {
-					// ----- Q1 scope -----
-					const sliceImageUrl = await uploadSliceImage(sliceImage);
-					console.log("STEP 1: Slice image uploaded to:", sliceImageUrl);
+			const updatedSlices = [];
+			for await (const sliceImage of args.sliceImages) {	
+				// ----- Q1 scope -----
+				const sliceImageUrl = await uploadSliceImage(sliceImage);
+				console.log("STEP 1: Slice image uploaded to:", sliceImageUrl);
 
-					const executionArn = await this.prismicRepository.generateSliceTask({
-						screenshotUrl: sliceImageUrl.url,
-					});
+				const executionArn = await this.prismicRepository.generateSliceTask({
+					screenshotUrl: sliceImageUrl.url,
+				});
 
-					const { codeUrl, modelUrl, mocksUrl } =
-						await pollSliceTask(executionArn);
-					const sliceCode = await fetchSliceCode(codeUrl);
-					const sliceModel = await fetchSliceModel(modelUrl);
-					const sliceMocks = await fetchSliceMocks(mocksUrl);
+				const { codeUrl, modelUrl, mocksUrl } =
+					await pollSliceTask(executionArn);
+				const sliceCode = await fetchSliceCode(codeUrl);
+				const sliceModel = await fetchSliceModel(modelUrl);
+				const sliceMocks = await fetchSliceMocks(mocksUrl);
 
-					await this.createSlice({
-						libraryID: DEFAULT_LIBRARY_ID,
-						model: sliceModel,
-						componentContents: sliceCode,
-					});
+				await this.createSlice({
+					libraryID: DEFAULT_LIBRARY_ID,
+					model: sliceModel,
+					componentContents: sliceCode,
+				});
 
-					await this.updateSliceScreenshot({
+				await this.updateSliceScreenshot({
+					libraryID: DEFAULT_LIBRARY_ID,
+					sliceID: sliceModel.id,
+					variationID: sliceModel.variations[0].id,
+					data: Buffer.from(sliceImage),
+				});
+
+				await this.updateSliceMocks({
+					libraryID: DEFAULT_LIBRARY_ID,
+					sliceID: sliceModel.id,
+					mocks: sliceMocks,
+				});
+
+				const screenshot =
+					await this.screenshots.captureSliceSimulatorScreenshot({
+						sliceMachineUIOrigin: args.sliceMachineUIOrigin,
 						libraryID: DEFAULT_LIBRARY_ID,
 						sliceID: sliceModel.id,
 						variationID: sliceModel.variations[0].id,
-						data: Buffer.from(sliceImage),
 					});
 
-					await this.updateSliceMocks({
-						libraryID: DEFAULT_LIBRARY_ID,
-						sliceID: sliceModel.id,
-						mocks: sliceMocks,
-					});
+				const renderedSliceImageUrl = await uploadSliceImage(screenshot.data);
 
-					const screenshot =
-						await this.screenshots.captureSliceSimulatorScreenshot({
-							sliceMachineUIOrigin: args.sliceMachineUIOrigin,
-							libraryID: DEFAULT_LIBRARY_ID,
-							sliceID: sliceModel.id,
-							variationID: sliceModel.variations[0].id,
-						});
+				console.log(
+					"STEP 8: Slice screenshot captured:",
+					renderedSliceImageUrl,
+				);
 
-					const renderedSliceImageUrl = await uploadSliceImage(screenshot.data);
+				console.log("Evaluating slice with AI...");
 
-					console.log(
-						"STEP 8: Slice screenshot captured:",
-						renderedSliceImageUrl,
-					);
+				const scoreAI = await this.prismicRepository.evaluateSliceWithAI({
+					originalImageUrl: sliceImageUrl.url,
+					generatedImageUrl: renderedSliceImageUrl.url,
+				});
 
-					return { updatedSlice: sliceModel };
-				}),
-			);
+				console.log("STEP 9: Slice AI score:", scoreAI);
+
+				const score = await evaluateSlice({
+					originalImageUrl: sliceImageUrl.url,
+					generatedImageUrl: renderedSliceImageUrl.url,
+				});
+
+				console.log("STEP 10: Slice score:", score);	
+
+				updatedSlices.push({ updatedSlice: sliceModel });
+			}
 
 			return {
 				slices: updatedSlices.map(({ updatedSlice }) => updatedSlice),

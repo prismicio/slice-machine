@@ -91,6 +91,11 @@ type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
 	environments?: Environment[];
 };
 
+type PrismicRepositoryManagerEvaluateSliceWithAIArgs = {
+	originalImageUrl: string;
+	generatedImageUrl: string;
+};
+
 export class PrismicRepositoryManager extends BaseManager {
 	// TODO: Add methods for repository-specific actions. E.g. creating a
 	// new repository.
@@ -285,6 +290,42 @@ export class PrismicRepositoryManager extends BaseManager {
 			});
 		}
 		return value.executionArn;
+	}
+
+	async evaluateSliceWithAI(
+		args: PrismicRepositoryManagerEvaluateSliceWithAIArgs,
+	): Promise<number> {
+		const res = await this._fetch({
+			url: new URL(this.LAB_BASE_URL + "/fractal/slice/evaluate"),
+			method: "POST",
+			body: {
+				imageUrl1: args.originalImageUrl,
+				imageUrl2: args.generatedImageUrl,
+			},
+		});
+
+		if (!res.ok) {
+			const reason = await res.text();
+			throw new Error(`Failed to generate slice task`, {
+				cause: reason,
+			});
+		}
+
+		const data = await res.json();
+
+		const { value, error } = decode(
+			z.object({
+				score: z.number(),
+			}),
+			data,
+		);
+
+		if (error) {
+			throw new Error(`Failed to generate slice task`, {
+				cause: error.errors.join(", "),
+			});
+		}
+		return value.score;
 	}
 
 	async getSliceTask(args: PrismicRepositoryManagerGetSliceTaskArgs) {
