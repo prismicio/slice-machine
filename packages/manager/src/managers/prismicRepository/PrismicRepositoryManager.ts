@@ -510,7 +510,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	async fetchOnboarding(): Promise<OnboardingState> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL("/onboarding", API_ENDPOINTS.RepositoryService);
+		const url = new URL("./onboarding", API_ENDPOINTS.RepositoryService);
 		url.searchParams.set("repository", repositoryName);
 		const res = await this._fetch({ url });
 
@@ -545,7 +545,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		const repositoryName = await this.project.getRepositoryName();
 
 		const url = new URL(
-			`/onboarding/${stepId}/toggle`,
+			`./onboarding/${stepId}/toggle`,
 			API_ENDPOINTS.RepositoryService,
 		);
 		url.searchParams.set("repository", repositoryName);
@@ -594,7 +594,7 @@ export class PrismicRepositoryManager extends BaseManager {
 			// TODO: Refactor when the API accepts multiple steps (DT-2389)
 			for await (const stepId of incompleteSteps) {
 				const url = new URL(
-					`/onboarding/${stepId}/toggle`,
+					`./onboarding/${stepId}/toggle`,
 					API_ENDPOINTS.RepositoryService,
 				);
 				url.searchParams.set("repository", repositoryName);
@@ -639,7 +639,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	async toggleOnboarding(): Promise<{ isDismissed: boolean }> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL("/onboarding/toggle", API_ENDPOINTS.RepositoryService);
+		const url = new URL("./onboarding/toggle", API_ENDPOINTS.RepositoryService);
 		url.searchParams.set("repository", repositoryName);
 		const res = await this._fetch({ url, method: "PATCH" });
 
@@ -675,7 +675,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	async setDefaultMasterLocale(): Promise<void> {
 		const repositoryName = await this.project.getRepositoryName();
 
-		const url = new URL("repository/locales", API_ENDPOINTS.LocaleService);
+		const url = new URL("./repository/locales", API_ENDPOINTS.LocaleService);
 		url.searchParams.set("repository", repositoryName);
 
 		const res = await this._fetch({

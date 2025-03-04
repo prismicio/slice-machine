@@ -26,7 +26,7 @@ export const mockRepositoryServiceAPI = (
 	config: MockRepositoryServiceAPIConfig,
 ): void => {
 	const endpoint =
-		config?.endpoint ?? "https://repository.internal.prismic.io/";
+		config?.endpoint ?? "https://api.internal.prismic.io/repository/";
 
 	const checkAuth = (
 		expected: {
@@ -44,7 +44,7 @@ export const mockRepositoryServiceAPI = (
 	};
 
 	ctx.msw.use(
-		rest.get(new URL("onboarding", endpoint).toString(), (req, res, ctx) => {
+		rest.get(new URL("./onboarding", endpoint).toString(), (req, res, ctx) => {
 			if (!config.fetchEndpoint) {
 				return res(ctx.status(418));
 			}
@@ -71,7 +71,7 @@ export const mockRepositoryServiceAPI = (
 
 	ctx.msw.use(
 		rest.patch(
-			new URL("onboarding/reviewAndPush/toggle", endpoint).toString(),
+			new URL("./onboarding/reviewAndPush/toggle", endpoint).toString(),
 			(req, res, ctx) => {
 				if (!config.toggleStepEndpoint) {
 					return res(ctx.status(418));
@@ -94,7 +94,7 @@ export const mockRepositoryServiceAPI = (
 
 	ctx.msw.use(
 		rest.patch(
-			new URL("onboarding/toggle", endpoint).toString(),
+			new URL("./onboarding/toggle", endpoint).toString(),
 			(req, res, ctx) => {
 				if (!config.toggleEndpoint) {
 					return res(ctx.status(418));
