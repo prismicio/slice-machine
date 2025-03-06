@@ -154,7 +154,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						const page = await client.getSingle("${model.id}").catch(() => notFound());
 
 						return {
-							title: page.data.title,
+							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
 								images: [{ url: asImageSrc(page.data.meta_image) ?? "" }],
@@ -301,7 +301,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						const page = await client.getSingle("${model.id}").catch(() => notFound());
 
 						return {
-							title: page.data.title,
+							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
 								images: [{ url: asImageSrc(page.data.meta_image) ?? "" }],
