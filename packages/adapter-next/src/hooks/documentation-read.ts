@@ -1,4 +1,4 @@
-import { stripIndent, source } from "common-tags";
+import { source } from "common-tags";
 
 import type { DocumentationReadHook } from "@slicemachine/plugin-kit";
 
@@ -20,21 +20,28 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		const { model } = data.data;
 		const extension = await getJSFileExtension({ helpers, options, jsx: true });
 
-		const appFilePath = `${
-			model.repeatable ? "[uid]" : model.id
-		}/page.${extension}`;
-		const pagesFilePath = `${
-			model.repeatable ? "[uid]" : model.id
-		}.${extension}`;
+		let appFilePath;
+		let pagesFilePath;
+
+		if (!model.repeatable && model.id === "homepage") {
+			appFilePath = `page.${extension}`;
+			pagesFilePath = `index.${extension}`;
+		} else if (model.repeatable) {
+			appFilePath = `[uid]/page.${extension}`;
+			pagesFilePath = `[uid].${extension}`;
+		} else {
+			appFilePath = `${model.id}/page.${extension}`;
+			pagesFilePath = `${model.id}.${extension}`;
+		}
 
 		let appFileContent: string;
 		let pagesFileContent: string;
 		if (isTypeScriptProject) {
 			if (model.repeatable) {
-				appFileContent = stripIndent`
+				appFileContent = source`
 					import { Metadata } from "next";
 					import { notFound } from "next/navigation";
-					import { isFilled, asImageSrc } from "@prismicio/client";
+					import { asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -43,11 +50,9 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					type Params = { uid: string };
 
 					export default async function Page({ params }: { params: Promise<Params> }) {
-						const { uid } = await params
+						const { uid } = await params;
 						const client = createClient();
-						const page = await client
-							.getByUID("${model.id}", uid)
-							.catch(() => notFound());
+						const page = await client.getByUID("${model.id}", uid).catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
@@ -57,19 +62,15 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					}: {
 						params: Promise<Params>;
 					}): Promise<Metadata> {
-						const { uid } = await params
+						const { uid } = await params;
 						const client = createClient();
-						const page = await client
-							.getByUID("${model.id}", uid)
-							.catch(() => notFound());
+						const page = await client.getByUID("${model.id}", uid).catch(() => notFound());
 
 						return {
 							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
-								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
-								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+								images: [{ url: asImageSrc(page.data.meta_image) ?? "" }],
 							},
 						};
 					}
@@ -78,12 +79,10 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						const client = createClient();
 						const pages = await client.getAllByType("${model.id}");
 
-						return pages.map((page) => {
-							return { uid: page.uid };
-						});
+						return pages.map((page) => ({ uid: page.uid }));
 					}
 				`;
-				pagesFileContent = stripIndent`
+				pagesFileContent = source`
 					import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 					import Head from "next/head";
 					import { isFilled, asLink, asImageSrc } from "@prismicio/client";
@@ -101,12 +100,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
-									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<>
-											<meta name="description" content={page.data.meta_description} />
-											<meta property="og:description" content={page.data.meta_description} />
-										</>
+										<meta name="description" content={page.data.meta_description} />
 									) : null}
 									{isFilled.image(page.data.meta_image) ? (
 										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
@@ -121,34 +116,27 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						params,
 						previewData,
 					}: GetStaticPropsContext<Params>) {
-						// The \`previewData\` parameter allows your app to preview
-						// drafts from the Page Builder.
 						const client = createClient({ previewData });
-
 						const page = await client.getByUID("${model.id}", params!.uid);
 
-						return {
-							props: { page },
-						};
+						return { props: { page } };
 					}
 
 					export async function getStaticPaths() {
 						const client = createClient();
-
 						const pages = await client.getAllByType("${model.id}");
 
 						return {
-							paths: pages.map((page) => {
-								return asLink(page);
-							}),
+							paths: pages.map((page) => asLink(page)),
 							fallback: false,
 						};
 					}
 				`;
 			} else {
-				appFileContent = stripIndent`
-					import { Metadata } from "next";
-					import { isFilled, asImageSrc } from "@prismicio/client";
+				appFileContent = source`
+					import { type Metadata } from "next";
+					import { notFound } from "next/navigation";
+					import { asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -156,27 +144,25 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					export default async function Page() {
 						const client = createClient();
-						const page = await client.getSingle("${model.id}");
+						const page = await client.getSingle("${model.id}").catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
 
 					export async function generateMetadata(): Promise<Metadata> {
 						const client = createClient();
-						const page = await client.getSingle("${model.id}");
+						const page = await client.getSingle("${model.id}").catch(() => notFound());
 
 						return {
-							title: page.data.meta_title,
+							title: page.data.title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
-								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
-								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+								images: [{ url: asImageSrc(page.data.meta_image) ?? "" }],
 							},
 						};
 					}
 				`;
-				pagesFileContent = stripIndent`
+				pagesFileContent = source`
 					import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 					import Head from "next/head";
 					import { isFilled, asImageSrc } from "@prismicio/client";
@@ -192,12 +178,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
-									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<>
-											<meta name="description" content={page.data.meta_description} />
-											<meta property="og:description" content={page.data.meta_description} />
-										</>
+										<meta name="description" content={page.data.meta_description} />
 									) : null}
 									{isFilled.image(page.data.meta_image) ? (
 										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
@@ -209,54 +191,42 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					}
 
 					export async function getStaticProps({ previewData }: GetStaticPropsContext) {
-						// The \`previewData\` parameter allows your app to preview
-						// drafts from the Page Builder.
 						const client = createClient({ previewData });
-
-						// The query fetches the page's data based on the current URL.
 						const page = await client.getSingle("${model.id}");
 
-						return {
-							props: { page },
-						};
+						return { props: { page } };
 					}
 				`;
 			}
 		} else {
 			if (model.repeatable) {
-				appFileContent = stripIndent`
+				appFileContent = source`
+					import { Metadata } from "next";
 					import { notFound } from "next/navigation";
-					import { isFilled, asImageSrc } from "@prismicio/client";
+					import { asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
 					import { components } from "@/slices";
 
-
 					export default async function Page({ params }) {
-						const { uid } = await params
+						const { uid } = await params;
 						const client = createClient();
-						const page = await client
-							.getByUID("${model.id}", uid)
-							.catch(() => notFound());
+						const page = await client.getByUID("${model.id}", uid).catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
 
 					export async function generateMetadata({ params }) {
-						const { uid } = await params
+						const { uid } = await params;
 						const client = createClient();
-						const page = await client
-							.getByUID("${model.id}", uid)
-							.catch(() => notFound());
+						const page = await client.getByUID("${model.id}", uid).catch(() => notFound());
 
 						return {
 							title: page.data.meta_title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
-								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
-								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+								images: [{ url: asImageSrc(page.data.meta_image) ?? "" }],
 							},
 						};
 					}
@@ -265,12 +235,10 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						const client = createClient();
 						const pages = await client.getAllByType("${model.id}");
 
-						return pages.map((page) => {
-							return { uid: page.uid };
-						});
+						return pages.map((page) => ({ uid: page.uid }));
 					}
 				`;
-				pagesFileContent = stripIndent`
+				pagesFileContent = source`
 					import Head from "next/head";
 					import { isFilled, asLink, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
@@ -283,12 +251,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
-									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<>
-											<meta name="description" content={page.data.meta_description} />
-											<meta property="og:description" content={page.data.meta_description} />
-										</>
+										<meta name="description" content={page.data.meta_description} />
 									) : null}
 									{isFilled.image(page.data.meta_image) ? (
 										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
@@ -299,37 +263,27 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						);
 					}
 
-					export async function getStaticProps({
-						params,
-						previewData,
-					}) {
-						// The \`previewData\` parameter allows your app to preview
-						// drafts from the Page Builder.
+					export async function getStaticProps({ params, previewData }) {
 						const client = createClient({ previewData });
-
 						const page = await client.getByUID("${model.id}", params.uid);
 
-						return {
-							props: { page },
-						};
+						return { props: { page } };
 					}
 
 					export async function getStaticPaths() {
 						const client = createClient();
-
 						const pages = await client.getAllByType("${model.id}");
 
 						return {
-							paths: pages.map((page) => {
-								return asLink(page);
-							}),
+							paths: pages.map((page) => asLink(page)),
 							fallback: false,
 						};
 					}
 				`;
 			} else {
-				appFileContent = stripIndent`
-					import { isFilled, asImageSrc } from "@prismicio/client";
+				appFileContent = source`
+					import { notFound } from "next/navigation";
+					import { asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
 
 					import { createClient } from "@/prismicio";
@@ -337,27 +291,25 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					export default async function Page() {
 						const client = createClient();
-						const page = await client.getSingle("${model.id}");
+						const page = await client.getSingle("${model.id}").catch(() => notFound());
 
 						return <SliceZone slices={page.data.slices} components={components} />;
 					}
 
 					export async function generateMetadata() {
 						const client = createClient();
-						const page = await client.getSingle("${model.id}");
+						const page = await client.getSingle("${model.id}").catch(() => notFound());
 
 						return {
-							title: page.data.meta_title,
+							title: page.data.title,
 							description: page.data.meta_description,
 							openGraph: {
-								title: isFilled.keyText(page.data.meta_title) ? page.data.meta_title : undefined,
-								description: isFilled.keyText(page.data.meta_description) ? page.data.meta_description : undefined,
-								images: isFilled.image(page.data.meta_image) ? [asImageSrc(page.data.meta_image)] : undefined,
+								images: [{ url: asImageSrc(page.data.meta_image) ?? "" }],
 							},
 						};
 					}
 				`;
-				pagesFileContent = stripIndent`
+				pagesFileContent = source`
 					import Head from "next/head";
 					import { isFilled, asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
@@ -370,12 +322,8 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 							<>
 								<Head>
 									<title>{page.data.meta_title}</title>
-									<meta property="og:title" content={page.data.meta_title} />
 									{isFilled.keyText(page.data.meta_description) ? (
-										<>
-											<meta name="description" content={page.data.meta_description} />
-											<meta property="og:description" content={page.data.meta_description} />
-										</>
+										<meta name="description" content={page.data.meta_description} />
 									) : null}
 									{isFilled.image(page.data.meta_image) ? (
 										<meta property="og:image" content={asImageSrc(page.data.meta_image)} />
@@ -386,37 +334,23 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						);
 					}
 
-					export async function getStaticProps({ previewData }) {
-						// The \`previewData\` parameter allows your app to preview
-						// drafts from the Page Builder.
+					export async function getStaticProps({ previewData }: GetStaticPropsContext) {
 						const client = createClient({ previewData });
-
-						// The query fetches the page's data based on the current URL.
 						const page = await client.getSingle("${model.id}");
 
-						return {
-							props: { page },
-						};
+						return { props: { page } };
 					}
 				`;
 			}
 		}
 
 		if (options.format) {
-			appFileContent = await helpers.format(
-				appFileContent,
-				helpers.joinPathFromRoot(`index.${extension}`),
-				{
-					includeNewlineAtEnd: false,
-				},
-			);
-			pagesFileContent = await helpers.format(
-				pagesFileContent,
-				helpers.joinPathFromRoot(`index.${extension}`),
-				{
-					includeNewlineAtEnd: false,
-				},
-			);
+			appFileContent = await helpers.format(appFileContent, appFilePath, {
+				includeNewlineAtEnd: false,
+			});
+			pagesFileContent = await helpers.format(pagesFileContent, pagesFilePath, {
+				includeNewlineAtEnd: false,
+			});
 		}
 
 		return [

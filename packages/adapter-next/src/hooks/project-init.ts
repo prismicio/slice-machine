@@ -14,6 +14,7 @@ import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
+import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
 import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
@@ -60,10 +61,21 @@ const createPrismicIOFile = async ({
 		return;
 	}
 
+	let importsContents: string;
 	let createClientContents: string;
 
 	if (hasAppRouter) {
 		if (isTypeScriptProject) {
+			importsContents = source`
+				import {
+					createClient as baseCreateClient,
+					type ClientConfig,
+					type Route,
+				} from "@prismicio/client";
+				import { enableAutoPreviews } from "@prismicio/next";
+				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+			`;
+
 			createClientContents = source`
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
@@ -71,8 +83,8 @@ const createPrismicIOFile = async ({
 				 *
 				 * @param config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-					const client = prismic.createClient(repositoryName, {
+				export const createClient = (config: ClientConfig = {}) => {
+					const client = baseCreateClient(repositoryName, {
 						routes,
 						fetchOptions:
 							process.env.NODE_ENV === 'production'
@@ -81,25 +93,27 @@ const createPrismicIOFile = async ({
 						...config,
 					});
 
-					prismicNext.enableAutoPreviews({
-						client,
-						previewData: config.previewData,
-						req: config.req,
-					});
+					enableAutoPreviews({ client });
 
 					return client;
 				};
 			`;
 		} else {
+			importsContents = source`
+				import { createClient as baseCreateClient } from "@prismicio/client";
+				import { enableAutoPreviews } from "@prismicio/next";
+				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+			`;
+
 			createClientContents = source`
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 * @param {import("@prismicio/client").ClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
-					const client = prismic.createClient(repositoryName, {
+					const client = baseCreateClient(repositoryName, {
 						routes,
 						fetchOptions:
 							process.env.NODE_ENV === 'production'
@@ -108,11 +122,7 @@ const createPrismicIOFile = async ({
 						...config,
 					});
 
-					prismicNext.enableAutoPreviews({
-						client,
-						previewData: config.previewData,
-						req: config.req,
-					});
+					enableAutoPreviews({ client });
 
 					return client;
 				};
@@ -120,6 +130,12 @@ const createPrismicIOFile = async ({
 		}
 	} else {
 		if (isTypeScriptProject) {
+			importsContents = source`
+				import { createClient as baseCreateClient, type Routes } from "@prismicio/client";
+				import { enableAutoPreviews, type CreateClientConfig } from "@prismicio/next/pages";
+				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+			`;
+
 			createClientContents = source`
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
@@ -127,40 +143,38 @@ const createPrismicIOFile = async ({
 				 *
 				 * @param config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-					const client = prismic.createClient(repositoryName, {
+				export const createClient = ({ previewData, req, ...config }: CreateClientConfig = {}) => {
+					const client = baseCreateClient(repositoryName, {
 						routes,
 						...config,
 					});
 
-					prismicNext.enableAutoPreviews({
-						client,
-						previewData: config.previewData,
-						req: config.req,
-					});
+					enableAutoPreviews({ client, previewData, req });
 
 					return client;
 				};
 			`;
 		} else {
+			importsContents = source`
+				import { createClient as baseCreateClient } from "@prismicio/client";
+				import { enableAutoPreviews } from "@prismicio/next/pages";
+				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+			`;
+
 			createClientContents = source`
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 * @param {import("@prismicio/next/pages").CreateClientConfig} config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config = {}) => {
-					const client = prismic.createClient(repositoryName, {
+				export const createClient = ({ previewData, req, ...config } = {}) => {
+					const client = baseCreateClient(repositoryName, {
 						routes,
 						...config,
 					});
 
-					prismicNext.enableAutoPreviews({
-						client,
-						previewData: config.previewData,
-						req: config.req,
-					});
+					enableAutoPreviews({ client, previewData, req });
 
 					return client;
 				};
@@ -172,9 +186,7 @@ const createPrismicIOFile = async ({
 
 	if (isTypeScriptProject) {
 		contents = source`
-			import * as prismic from "@prismicio/client";
-			import * as prismicNext from "@prismicio/next";
-			import config from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+			${importsContents}
 
 			/**
 			 * The project's Prismic repository name.
@@ -188,25 +200,17 @@ const createPrismicIOFile = async ({
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 */
 			// TODO: Update the routes array to match your project's route structure.
-			const routes: prismic.ClientConfig["routes"] = [
+			const routes: Routes[] = [
 				// Examples:
-				// {
-				// 	type: "homepage",
-				// 	path: "/",
-				// },
-				// {
-				// 	type: "page",
-				// 	path: "/:uid",
-				// },
+				// { type: "homepage", path: "/" },
+				// { type: "page", path: "/:uid" },
 			];
 
 			${createClientContents}
 		`;
 	} else {
 		contents = source`
-			import * as prismic from "@prismicio/client";
-			import * as prismicNext from "@prismicio/next";
-			import config from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+			${importsContents}
 
 			/**
 			 * The project's Prismic repository name.
@@ -219,19 +223,13 @@ const createPrismicIOFile = async ({
 			 *
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 *
-			 * @type {prismic.ClientConfig["routes"]}
+			 * @type {import("@prismicio/client").Route[]}
 			 */
 			// TODO: Update the routes array to match your project's route structure.
 			const routes = [
 				// Examples:
-				// {
-				// 	type: "homepage",
-				// 	path: "/",
-				// },
-				// {
-				// 	type: "page",
-				// 	path: "/:uid",
-				// },
+				// { type: "homepage", path: "/" },
+				// { type: "page", path: "/:uid" },
 			];
 
 			${createClientContents}
@@ -399,7 +397,7 @@ const createPreviewRoute = async ({
 		if (isTypeScriptProject) {
 			contents = source`
 				import { NextApiRequest, NextApiResponse } from "next";
-				import { setPreviewData, redirectToPreviewURL } from "@prismicio/next";
+				import { setPreviewData, redirectToPreviewURL } from "@prismicio/next/pages";
 
 				import { createClient } from "../../prismicio";
 
@@ -413,7 +411,7 @@ const createPreviewRoute = async ({
 			`;
 		} else {
 			contents = source`
-				import { setPreviewData, redirectToPreviewURL } from "@prismicio/next";
+				import { setPreviewData, redirectToPreviewURL } from "@prismicio/next/pages";
 
 				import { createClient } from "../../prismicio";
 
@@ -472,7 +470,7 @@ const createExitPreviewRoute = async ({
 		if (isTypeScriptProject) {
 			contents = source`
 				import { NextApiRequest, NextApiResponse } from "next";
-				import { exitPreview } from "@prismicio/next";
+				import { exitPreview } from "@prismicio/next/pages";
 
 				export default function handler(req: NextApiRequest, res: NextApiResponse) {
 					return exitPreview({ req, res });
@@ -480,7 +478,7 @@ const createExitPreviewRoute = async ({
 			`;
 		} else {
 			contents = source`
-				import { exitPreview } from "@prismicio/next";
+				import { exitPreview } from "@prismicio/next/pages";
 
 				export default function handler(req, res) {
 					return exitPreview({ req, res });
@@ -572,6 +570,28 @@ const createRevalidateRoute = async ({
 	});
 };
 
+const upsertSliceLibraryIndexFiles = async (
+	context: SliceMachineContext<PluginOptions>,
+) => {
+	// We must use the `getProject()` helper to get the latest version of
+	// the project config. The config may have been modified in
+	// `modifySliceMachineConfig()` and will not be relfected in
+	// `context.project`.
+	// TODO: Automatically update the plugin runner's in-memory `project`
+	// object when `updateSliceMachineConfig()` is called.
+	const project = await context.helpers.getProject();
+
+	if (!project.config.libraries) {
+		return;
+	}
+
+	await Promise.all(
+		project.config.libraries.map(async (libraryID) => {
+			await upsertSliceLibraryIndexFile({ libraryID, ...context });
+		}),
+	);
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
@@ -587,4 +607,8 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			createRevalidateRoute(context),
 		]),
 	);
+
+	// This must happen after `modifySliceMachineConfig()` since the
+	// location of the default Slice library may change.
+	await upsertSliceLibraryIndexFiles(context);
 };

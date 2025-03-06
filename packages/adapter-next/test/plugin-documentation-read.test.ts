@@ -49,6 +49,29 @@ describe("PageSnippet", () => {
 
 			expect(item).toMatchSnapshot();
 		});
+
+		it("supports the special single homepage type", async (ctx) => {
+			await fs.writeFile(
+				path.join(ctx.project.root, "tsconfig.json"),
+				JSON.stringify({}),
+			);
+
+			const model = mock.model.customType({
+				id: "homepage",
+				repeatable: false,
+			});
+
+			const res = await ctx.pluginRunner.callHook("documentation:read", {
+				kind: "PageSnippet",
+				data: {
+					model,
+				},
+			});
+
+			const item = res.data.flat().find((item) => item.label === "App Router");
+
+			expect(item).toMatchSnapshot();
+		});
 	});
 
 	describe("Pages Router", () => {
@@ -73,6 +96,31 @@ describe("PageSnippet", () => {
 		});
 
 		it("return a snippet with JavaScript", async (ctx) => {
+			const res = await ctx.pluginRunner.callHook("documentation:read", {
+				kind: "PageSnippet",
+				data: {
+					model,
+				},
+			});
+
+			const item = res.data
+				.flat()
+				.find((item) => item.label === "Pages Router");
+
+			expect(item).toMatchSnapshot();
+		});
+
+		it("supports the special single homepage type", async (ctx) => {
+			await fs.writeFile(
+				path.join(ctx.project.root, "tsconfig.json"),
+				JSON.stringify({}),
+			);
+
+			const model = mock.model.customType({
+				id: "homepage",
+				repeatable: false,
+			});
+
 			const res = await ctx.pluginRunner.callHook("documentation:read", {
 				kind: "PageSnippet",
 				data: {

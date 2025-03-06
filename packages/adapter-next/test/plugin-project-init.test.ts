@@ -21,6 +21,50 @@ test("installs dependencies", async (ctx) => {
 	});
 });
 
+test("creates all Slice library index files", async (ctx) => {
+	await fs.writeFile(
+		path.join(ctx.project.root, "slicemachine.config.json"),
+		JSON.stringify({
+			...ctx.project.config,
+			libraries: ["./foo", "./bar"],
+		}),
+	);
+
+	await ctx.pluginRunner.callHook("project:init", {
+		log: vi.fn(),
+		installDependencies: vi.fn(),
+	});
+
+	expect(await fs.readdir(path.join(ctx.project.root, "foo"))).includes(
+		"index.js",
+	);
+	expect(await fs.readdir(path.join(ctx.project.root, "bar"))).includes(
+		"index.js",
+	);
+});
+
+test("doesn't throw if no Slice libraries are configured", async (ctx) => {
+	ctx.project.config.libraries = undefined;
+	const pluginRunner = createSliceMachinePluginRunner({
+		project: ctx.project,
+		nativePlugins: {
+			[ctx.project.config.adapter.resolve]: adapter,
+		},
+	});
+	await pluginRunner.init();
+
+	await expect(
+		ctx.pluginRunner.callHook("project:init", {
+			log: vi.fn(),
+			installDependencies: vi.fn(),
+		}),
+	).resolves.toStrictEqual(
+		expect.objectContaining({
+			errors: [],
+		}),
+	);
+});
+
 describe("modify slicemachine.config.json", () => {
 	test("adds default localSliceSimulatorURL", async (ctx) => {
 		const log = vi.fn();
@@ -250,9 +294,9 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"./slicemachine.config.json\\";
+				"import { createClient as baseCreateClient } from \\"@prismicio/client\\";
+				import { enableAutoPreviews } from \\"@prismicio/next\\";
+				import sm from \\"./slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -265,29 +309,23 @@ describe("prismicio.js file", () => {
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
-				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 * @type {import(\\"@prismicio/client\\").Route[]}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 * @param {import(\\"@prismicio/client\\").ClientConfig} config - Configuration for the Prismic client.
 				 */
 				export const createClient = (config = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    fetchOptions:
 				      process.env.NODE_ENV === \\"production\\"
@@ -296,11 +334,7 @@ describe("prismicio.js file", () => {
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client });
 
 				  return client;
 				};
@@ -325,9 +359,9 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"../slicemachine.config.json\\";
+				"import { createClient as baseCreateClient } from \\"@prismicio/client\\";
+				import { enableAutoPreviews } from \\"@prismicio/next/pages\\";
+				import sm from \\"../slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -340,38 +374,28 @@ describe("prismicio.js file", () => {
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
-				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 * @type {import(\\"@prismicio/client\\").Route[]}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 * @param {import(\\"@prismicio/next/pages\\").CreateClientConfig} config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				export const createClient = ({ previewData, req, ...config } = {}) => {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client, previewData, req });
 
 				  return client;
 				};
@@ -400,9 +424,13 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"./slicemachine.config.json\\";
+				"import {
+				  createClient as baseCreateClient,
+				  type ClientConfig,
+				  type Route,
+				} from \\"@prismicio/client\\";
+				import { enableAutoPreviews } from \\"@prismicio/next\\";
+				import sm from \\"./slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -416,16 +444,10 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				const routes: Routes[] = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
@@ -434,8 +456,8 @@ describe("prismicio.js file", () => {
 				 *
 				 * @param config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				export const createClient = (config: ClientConfig = {}) => {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    fetchOptions:
 				      process.env.NODE_ENV === \\"production\\"
@@ -444,11 +466,7 @@ describe("prismicio.js file", () => {
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client });
 
 				  return client;
 				};
@@ -476,9 +494,13 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"./slicemachine.config.json\\";
+				"import {
+				  createClient as baseCreateClient,
+				  type ClientConfig,
+				  type Route,
+				} from \\"@prismicio/client\\";
+				import { enableAutoPreviews } from \\"@prismicio/next\\";
+				import sm from \\"./slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -492,16 +514,10 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				const routes: Routes[] = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
@@ -510,8 +526,8 @@ describe("prismicio.js file", () => {
 				 *
 				 * @param config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				export const createClient = (config: ClientConfig = {}) => {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    fetchOptions:
 				      process.env.NODE_ENV === \\"production\\"
@@ -520,11 +536,7 @@ describe("prismicio.js file", () => {
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client });
 
 				  return client;
 				};
@@ -549,9 +561,9 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"./slicemachine.config.json\\";
+				"import { createClient as baseCreateClient } from \\"@prismicio/client\\";
+				import { enableAutoPreviews } from \\"@prismicio/next/pages\\";
+				import sm from \\"./slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -564,38 +576,28 @@ describe("prismicio.js file", () => {
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
-				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 * @type {import(\\"@prismicio/client\\").Route[]}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 * @param {import(\\"@prismicio/next/pages\\").CreateClientConfig} config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				export const createClient = ({ previewData, req, ...config } = {}) => {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client, previewData, req });
 
 				  return client;
 				};
@@ -620,9 +622,9 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"../slicemachine.config.json\\";
+				"import { createClient as baseCreateClient } from \\"@prismicio/client\\";
+				import { enableAutoPreviews } from \\"@prismicio/next/pages\\";
+				import sm from \\"../slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -635,38 +637,28 @@ describe("prismicio.js file", () => {
 				 *
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 *
-				 * @type {prismic.ClientConfig[\\"routes\\"]}
+				 * @type {import(\\"@prismicio/client\\").Route[]}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
 				const routes = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
 				 * Creates a Prismic client for the project's repository. The client is used to
 				 * query content from the Prismic API.
 				 *
-				 * @param {prismicNext.CreateClientConfig} config - Configuration for the Prismic client.
+				 * @param {import(\\"@prismicio/next/pages\\").CreateClientConfig} config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				export const createClient = ({ previewData, req, ...config } = {}) => {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client, previewData, req });
 
 				  return client;
 				};
@@ -695,9 +687,15 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"./slicemachine.config.json\\";
+				"import {
+				  createClient as baseCreateClient,
+				  type Routes,
+				} from \\"@prismicio/client\\";
+				import {
+				  enableAutoPreviews,
+				  type CreateClientConfig,
+				} from \\"@prismicio/next/pages\\";
+				import sm from \\"./slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -711,16 +709,10 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				const routes: Routes[] = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
@@ -729,17 +721,17 @@ describe("prismicio.js file", () => {
 				 *
 				 * @param config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				export const createClient = ({
+				  previewData,
+				  req,
+				  ...config
+				}: CreateClientConfig = {}) => {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client, previewData, req });
 
 				  return client;
 				};
@@ -767,9 +759,15 @@ describe("prismicio.js file", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import * as prismic from \\"@prismicio/client\\";
-				import * as prismicNext from \\"@prismicio/next\\";
-				import config from \\"./slicemachine.config.json\\";
+				"import {
+				  createClient as baseCreateClient,
+				  type Routes,
+				} from \\"@prismicio/client\\";
+				import {
+				  enableAutoPreviews,
+				  type CreateClientConfig,
+				} from \\"@prismicio/next/pages\\";
+				import sm from \\"./slicemachine.config.json\\";
 
 				/**
 				 * The project's Prismic repository name.
@@ -783,16 +781,10 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: prismic.ClientConfig[\\"routes\\"] = [
+				const routes: Routes[] = [
 				  // Examples:
-				  // {
-				  // 	type: \\"homepage\\",
-				  // 	path: \\"/\\",
-				  // },
-				  // {
-				  // 	type: \\"page\\",
-				  // 	path: \\"/:uid\\",
-				  // },
+				  // { type: \\"homepage\\", path: \\"/\\" },
+				  // { type: \\"page\\", path: \\"/:uid\\" },
 				];
 
 				/**
@@ -801,17 +793,17 @@ describe("prismicio.js file", () => {
 				 *
 				 * @param config - Configuration for the Prismic client.
 				 */
-				export const createClient = (config: prismicNext.CreateClientConfig = {}) => {
-				  const client = prismic.createClient(repositoryName, {
+				export const createClient = ({
+				  previewData,
+				  req,
+				  ...config
+				}: CreateClientConfig = {}) => {
+				  const client = baseCreateClient(repositoryName, {
 				    routes,
 				    ...config,
 				  });
 
-				  prismicNext.enableAutoPreviews({
-				    client,
-				    previewData: config.previewData,
-				    req: config.req,
-				  });
+				  enableAutoPreviews({ client, previewData, req });
 
 				  return client;
 				};
@@ -1330,7 +1322,7 @@ describe("/api/preview route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { setPreviewData, redirectToPreviewURL } from \\"@prismicio/next\\";
+				"import { setPreviewData, redirectToPreviewURL } from \\"@prismicio/next/pages\\";
 
 				import { createClient } from \\"../../prismicio\\";
 
@@ -1364,7 +1356,7 @@ describe("/api/preview route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { setPreviewData, redirectToPreviewURL } from \\"@prismicio/next\\";
+				"import { setPreviewData, redirectToPreviewURL } from \\"@prismicio/next/pages\\";
 
 				import { createClient } from \\"../../prismicio\\";
 
@@ -1400,7 +1392,7 @@ describe("/api/preview route", () => {
 
 			expect(contents).toMatchInlineSnapshot(`
 				"import { NextApiRequest, NextApiResponse } from \\"next\\";
-				import { setPreviewData, redirectToPreviewURL } from \\"@prismicio/next\\";
+				import { setPreviewData, redirectToPreviewURL } from \\"@prismicio/next/pages\\";
 
 				import { createClient } from \\"../../prismicio\\";
 
@@ -1531,7 +1523,7 @@ describe("/api/exit-preview route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { exitPreview } from \\"@prismicio/next\\";
+				"import { exitPreview } from \\"@prismicio/next/pages\\";
 
 				export default function handler(req, res) {
 				  return exitPreview({ req, res });
@@ -1559,7 +1551,7 @@ describe("/api/exit-preview route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { exitPreview } from \\"@prismicio/next\\";
+				"import { exitPreview } from \\"@prismicio/next/pages\\";
 
 				export default function handler(req, res) {
 				  return exitPreview({ req, res });
@@ -1589,7 +1581,7 @@ describe("/api/exit-preview route", () => {
 
 			expect(contents).toMatchInlineSnapshot(`
 				"import { NextApiRequest, NextApiResponse } from \\"next\\";
-				import { exitPreview } from \\"@prismicio/next\\";
+				import { exitPreview } from \\"@prismicio/next/pages\\";
 
 				export default function handler(req: NextApiRequest, res: NextApiResponse) {
 				  return exitPreview({ req, res });
