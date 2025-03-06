@@ -41,6 +41,8 @@ import {
 	ConverseCommand,
 	Message,
 } from "@aws-sdk/client-bedrock-runtime";
+import { runEval } from "./generateSliceEval";
+import { fetchSliceCode, fetchSliceModel, pollSliceTask } from "./generateSlice";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -230,6 +232,13 @@ type SliceMachineManagerGenerateSlicesFromUrlArgs = {
 type SliceMachineManagerGenerateSlicesFromUrlReturnType = {
 	slices: SharedSlice[];
 };
+
+type SliceMachineManagerEvaluateSlicesArgs = {
+	sliceMachineUIOrigin: string;
+}
+
+type SliceMachineManagerEvaluateSlicesReturnType = {
+}
 
 export class SlicesManager extends BaseManager {
 	async readSliceLibrary(
@@ -1849,6 +1858,17 @@ type GroupField = {
 		}
 	}
 
+	async uploadSliceImage(sliceImage: Buffer): Promise<{ url: string }> {
+		const repositoryName = await this.project.getResolvedRepositoryName();
+
+		const keyPrefix = [repositoryName, "shared-slices", Date.now()].join("/");
+		await this.screenshots.initS3ACL();
+		return await this.screenshots.uploadScreenshot({
+			data: sliceImage,
+			keyPrefix,
+		});
+	}
+
 	async generateSlicesFromUrl(
 		args: SliceMachineManagerGenerateSlicesFromUrlArgs,
 	): Promise<SliceMachineManagerGenerateSlicesFromUrlReturnType> {
@@ -1857,17 +1877,6 @@ type GroupField = {
 		const sliceMachineConfig = await this.project.getSliceMachineConfig();
 		const libraryIDs = sliceMachineConfig.libraries || [];
 		const DEFAULT_LIBRARY_ID = libraryIDs[0];
-
-		const fetchSliceModel = async (url: string): Promise<SharedSlice> => {
-			const response = await fetch(url);
-			const data = await response.json();
-			const res = SharedSlice.decode(data);
-			if (res._tag === "Left") {
-				throw new Error("Failed to decode slice model");
-			} else {
-				return res.right;
-			}
-		};
 
 		const fetchSliceMocks = async (
 			url: string,
@@ -1887,7 +1896,7 @@ type GroupField = {
 			generatedImageUrl: string;
 		};
 
-		const evaluateSlice = async (args: EvaluateSliceArgs): Promise<Number> => {
+		const evaluateSlice = async (args: EvaluateSliceArgs): Promise<number> => {
 			const { originalImageUrl, generatedImageUrl } = args;
 			const response = await fetch(`http://localhost:5000/compare`, {
 				method: "POST",
@@ -1903,84 +1912,47 @@ type GroupField = {
 			return data["final_score"];
 		};
 
-		const fetchSliceCode = async (url: string): Promise<string> => {
-			const response = await fetch(url);
-			const data = await response.text();
-			return data;
-		};
-
-		const pollSliceTask = async (
-			executionArn: string,
-			intervalMs = 1000,
-		): Promise<{ codeUrl: string; modelUrl: string; mocksUrl: string }> => {
-			return new Promise(async (resolve, reject) => {
-				const step = async () => {
-					const response = await this.prismicRepository.getSliceTask({
-						executionArn,
-					});
-					console.log("Slice task status:", response.status);
-					switch (response.status) {
-						case "FAILED":
-							reject(new Error(`Slice generation task failed`));
-						case "TIMED_OUT":
-							reject(new Error("Slice generation task timed out"));
-						case "ABORTED":
-							reject(new Error("Slice generation task was aborted"));
-						case "RUNNING":
-							setTimeout(step, intervalMs);
-							break;
-						case "SUCCEEDED":
-							if (
-								!response.codeUrl ||
-								!response.modelUrl ||
-								!response.mocksUrl
-							) {
-								reject(
-									new Error("Slice generation task succeeded but missing URLs"),
-								);
-							} else {
-								resolve({
-									codeUrl: response.codeUrl,
-									modelUrl: response.modelUrl,
-									mocksUrl: response.mocksUrl,
-								});
-							}
-							break;
-						default:
-							throw new Error(`Unknown task status: ${response.status}`);
-					}
-				};
-				step();
-			});
-		};
-
-		const uploadSliceImage = async (
-			sliceImage: Uint8Array,
-		): Promise<{ url: string }> => {
-			const repositoryName = await this.project.getResolvedRepositoryName();
-
-			const keyPrefix = [repositoryName, "shared-slices", Date.now()].join("/");
-			await this.screenshots.initS3ACL();
-			return await this.screenshots.uploadScreenshot({
-				data: Buffer.from(sliceImage),
-				keyPrefix,
-			});
-		};
-
 		try {
 			this.screenshots.initBrowserContext();
 			const updatedSlices = [];
+			let index = 0;
+			let summary: {
+				totalSlices: number,
+				scores: number[],
+				aiScores: number[],
+				scoreComparison: {
+					index: number,
+					inputUrl: string,
+					outputUrl: string,
+					score: number,
+					aiScore: number,
+					margin: number,
+					withinMargin: boolean,
+				}[],
+			} = {
+				totalSlices: args.sliceImages.length,
+				scores: [],
+				aiScores: [],
+				scoreComparison: [],
+			}
+
+			const colors = await this.prismicRepository.generateColorPalette({
+				websiteUrl: "https://n26.com",
+			});
+			
 			for await (const sliceImage of args.sliceImages) {	
+				console.log("############################ Generating slice from image index:", index);
 				// ----- Q1 scope -----
-				const sliceImageUrl = await uploadSliceImage(sliceImage);
+				const { url: sliceImageUrl } = await this.uploadSliceImage(Buffer.from(sliceImage));
 				console.log("STEP 1: Slice image uploaded to:", sliceImageUrl);
 
 				const executionArn = await this.prismicRepository.generateSliceTask({
-					screenshotUrl: sliceImageUrl.url,
+					screenshotUrl: sliceImageUrl,
+					colors,
 				});
 
 				const { codeUrl, modelUrl, mocksUrl } =
-					await pollSliceTask(executionArn);
+					await pollSliceTask(this.prismicRepository, executionArn);
 				const sliceCode = await fetchSliceCode(codeUrl);
 				const sliceModel = await fetchSliceModel(modelUrl);
 				const sliceMocks = await fetchSliceMocks(mocksUrl);
@@ -2012,7 +1984,7 @@ type GroupField = {
 						variationID: sliceModel.variations[0].id,
 					});
 
-				const renderedSliceImageUrl = await uploadSliceImage(screenshot.data);
+				const { url: renderedSliceImageUrl } = await this.uploadSliceImage(screenshot.data);
 
 				console.log(
 					"STEP 8: Slice screenshot captured:",
@@ -2022,21 +1994,65 @@ type GroupField = {
 				console.log("Evaluating slice with AI...");
 
 				const scoreAI = await this.prismicRepository.evaluateSliceWithAI({
-					originalImageUrl: sliceImageUrl.url,
-					generatedImageUrl: renderedSliceImageUrl.url,
+					originalImageUrl: sliceImageUrl,
+					generatedImageUrl: renderedSliceImageUrl,
 				});
 
 				console.log("STEP 9: Slice AI score:", scoreAI);
 
 				const score = await evaluateSlice({
-					originalImageUrl: sliceImageUrl.url,
-					generatedImageUrl: renderedSliceImageUrl.url,
+					originalImageUrl: sliceImageUrl,
+					generatedImageUrl: renderedSliceImageUrl,
 				});
 
 				console.log("STEP 10: Slice score:", score);	
 
+				// Update summary with scores
+				summary.scores.push(score);
+				summary.aiScores.push(scoreAI);
+				
+				// Check if AI score is within 10% margin of actual score
+				const margin = Math.abs(score - scoreAI);
+				const withinMargin = margin <= 0.1; // 10% margin
+				
+				if (!summary.scoreComparison) {
+					summary.scoreComparison = [];
+				}
+				
+				summary.scoreComparison.push({
+					index,
+					score,
+					aiScore: scoreAI,
+					margin,
+					withinMargin,
+					inputUrl: sliceImageUrl,
+					outputUrl: renderedSliceImageUrl,
+				});
+				
+				console.log(`Score comparison for slice ${index}:`, {
+					score,
+					aiScore: scoreAI,
+					margin,
+					withinMargin: withinMargin ? "✅" : "❌"
+				});
+
 				updatedSlices.push({ updatedSlice: sliceModel });
+
+				index++;
 			}
+			
+			// Log summary statistics
+			const averageScore = summary.scores.reduce((a, b) => a + b, 0) / summary.scores.length;
+			const averageAIScore = summary.aiScores.reduce((a, b) => a + b, 0) / summary.aiScores.length;
+			const withinMarginCount = summary.scoreComparison.filter(c => c.withinMargin).length;
+			
+
+			console.log("Generation summary:", {
+				totalSlices: summary.totalSlices,
+				averageScore,
+				averageAIScore,
+				withinMarginPercentage: (withinMarginCount / summary.totalSlices) * 100 + "%"
+			});
 
 			return {
 				slices: updatedSlices.map(({ updatedSlice }) => updatedSlice),
@@ -2044,6 +2060,73 @@ type GroupField = {
 		} catch (error) {
 			console.error("Failed to generate slice:", error);
 			throw new Error("Failed to generate slice: " + error);
+		}
+	}
+
+	async evaluateSlices(args: SliceMachineManagerEvaluateSlicesArgs): Promise<SliceMachineManagerEvaluateSlicesReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const { sliceMachineUIOrigin } = args;
+
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const libraryIDs = sliceMachineConfig.libraries || [];
+		const DEFAULT_LIBRARY_ID = libraryIDs[0];
+
+		const onCreateSlice = async (args: { sliceModel: SharedSlice, sliceCode: string }) => {
+			await this.createSlice({
+				libraryID: DEFAULT_LIBRARY_ID,
+				model: args.sliceModel,
+				componentContents: args.sliceCode,
+			});
+		}
+
+		const onUpdateSliceScreenshot = async (args: { sliceModel: SharedSlice, data: Uint8Array }) => {
+			await this.updateSliceScreenshot({
+				libraryID: DEFAULT_LIBRARY_ID,
+				sliceID: args.sliceModel.id,
+				variationID: args.sliceModel.variations[0].id,
+				data: Buffer.from(args.data),
+			});
+		}
+
+		const onUpdateSliceMocks = async (args: { sliceModel: SharedSlice, sliceMocks: SharedSliceContent[] }) => {
+			await this.updateSliceMocks({
+				libraryID: DEFAULT_LIBRARY_ID,
+				sliceID: args.sliceModel.id,
+				mocks: args.sliceMocks,
+			});
+		}
+
+		const onCaptureSliceSimulatorScreenshot = async (args: { sliceModel: SharedSlice }): Promise<Buffer> => {
+			const screenshot = await this.screenshots.captureSliceSimulatorScreenshot({
+				sliceMachineUIOrigin,
+				libraryID: DEFAULT_LIBRARY_ID,
+				sliceID: args.sliceModel.id,
+				variationID: args.sliceModel.variations[0].id,
+			});
+			return screenshot.data;
+		}
+
+		const onUploadSliceImage = async (args: { data: Buffer }) => {
+			return await this.uploadSliceImage(args.data);
+		}
+
+		const colors = await this.prismicRepository.generateColorPalette({
+			websiteUrl: "https://n26.com",
+		});
+
+		await runEval({
+			colors,
+			prismicRepository: this.prismicRepository,
+			onCreateSlice,
+			onUpdateSliceScreenshot,
+			onUpdateSliceMocks,
+			onCaptureSliceSimulatorScreenshot,
+			onUploadSliceImage,
+		});
+
+		return {
+
 		}
 	}
 }

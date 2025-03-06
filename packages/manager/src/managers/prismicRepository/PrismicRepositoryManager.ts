@@ -10,7 +10,7 @@ import { serializeCookies } from "../../lib/serializeCookies";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
-
+import { WebsiteColorPalette, WebsiteColorPaletteSchema } from "./types";
 import {
 	UnauthenticatedError,
 	UnauthorizedError,
@@ -69,6 +69,7 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 
 type PrismicRepositoryManagerGenerateSliceTaskArgs = {
 	screenshotUrl: string;
+	colors: WebsiteColorPalette;
 };
 
 type PrismicRepositoryManagerGetSliceTaskArgs = {
@@ -94,6 +95,10 @@ type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
 type PrismicRepositoryManagerEvaluateSliceWithAIArgs = {
 	originalImageUrl: string;
 	generatedImageUrl: string;
+};
+
+type PrismicRepositoryManagerGenerateColorPaletteArgs = {
+	websiteUrl: string;
 };
 
 export class PrismicRepositoryManager extends BaseManager {
@@ -257,7 +262,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	}
 
 	//const FRACTAL_URL = "https://lab.internal.marketing-tools-wroom.com/fractal/slice";
-	LAB_BASE_URL = " https://827lckpxa0.execute-api.us-east-1.amazonaws.com/sre";
+	LAB_BASE_URL = "https://w3pkrnw099.execute-api.us-east-1.amazonaws.com/sre";
 
 	async generateSliceTask(
 		args: PrismicRepositoryManagerGenerateSliceTaskArgs,
@@ -290,6 +295,38 @@ export class PrismicRepositoryManager extends BaseManager {
 			});
 		}
 		return value.executionArn;
+	}
+
+	async generateColorPalette(
+		args: PrismicRepositoryManagerGenerateColorPaletteArgs,
+	): Promise<WebsiteColorPalette> {
+		const res = await this._fetch({
+			url: new URL(this.LAB_BASE_URL + "/fractal/colors"),
+			method: "POST",
+			body: args,
+		});
+
+		if (!res.ok) {
+			const reason = await res.text();
+			throw new Error(`Failed to generate color palette`, {
+				cause: reason,
+			});
+		}
+
+		const data = await res.json();
+
+		const { value, error } = decode(
+			WebsiteColorPaletteSchema,
+			data,
+		);
+
+		if (error) {
+			throw new Error(`Failed to generate color palette`, {
+				cause: error.errors.join(", "),
+			});
+		}
+
+		return value;
 	}
 
 	async evaluateSliceWithAI(

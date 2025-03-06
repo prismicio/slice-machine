@@ -205,3 +205,34 @@ export const OnboardingState = z.object({
 	}),
 });
 export type OnboardingState = z.infer<typeof OnboardingState>;
+
+export const WebsiteColorPaletteSchema = z.object({
+	color_palette: z.object({
+		color_saturation: z.object({
+			primary_colors: z.array(z.string()).describe("hexadecimal colors"),
+			secondary_colors: z.array(z.string()).describe("hexadecimal colors"),
+			tertiary_colors: z.array(z.string()).describe("hexadecimal colors"),
+			background_colors: z.array(z.string()).describe("hexadecimal colors"),
+		}),
+		black_and_white_palette: z.object({
+			black: z.string().describe("hexadecimal color"),
+			dark_grey: z.string().describe("hexadecimal color"),
+			medium_grey: z.string().describe("hexadecimal color"),
+			light_grey: z.string().describe("hexadecimal color"),
+			white: z.string().describe("hexadecimal color"),
+		}),
+		accent_colors: z.array(z.string()).describe("hexadecimal colors"),
+		font_colors: z.array(z.string()).describe("hexadecimal colors"),
+		call_to_action_colors: z.array(z.string()).describe("hexadecimal colors"),
+		link_colors: z.array(z.string()).describe("hexadecimal colors"),
+		error_colors: z.array(z.string()).describe("hexadecimal colors"),
+		success_colors: z.array(z.string()).describe("hexadecimal colors"),
+		color_style: z.object({
+			type: z.literal("enum"),
+			values: z.array(
+				z.enum(["Plain", "Gradient", "Duotone", "Monochrome", "Dark Mode"]),
+			),
+		}),
+	}),
+});
+export type WebsiteColorPalette = z.infer<typeof WebsiteColorPaletteSchema>;

@@ -35,8 +35,10 @@
     "start-slicemachine": "./bin/start-slicemachine.cjs"
   },
   "dependencies": {
+    "@notionhq/client": "2.2.16",
     "@radix-ui/react-visually-hidden": "1.1.1",
     "@slicemachine/manager": "workspace:*",
+    "langsmith": "0.3.12",
     "start-slicemachine": "workspace:*"
   },
   "devDependencies": {

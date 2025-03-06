@@ -1,7 +1,7 @@
-import { Box } from "@prismicio/editor-ui";
+import { Box, Button } from "@prismicio/editor-ui";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
@@ -25,6 +25,7 @@ import {
   CustomTypeSM,
 } from "@/legacy/lib/models/common/CustomType";
 import { hasLocal } from "@/legacy/lib/models/common/ModelData";
+import { managerClient } from "@/managerClient";
 import { selectCustomTypeById } from "@/modules/availableCustomTypes";
 import type { SliceMachineStoreType } from "@/redux/type";
 
@@ -73,12 +74,32 @@ type CustomTypesBuilderPageWithProviderProps = {
   customType: CustomTypeSM;
 };
 
+// Add a custom hook for evaluation functionality
+const useSliceEvaluation = () => {
+  const [evaluating, setEvaluating] = useState(false);
+
+  const startEvaluation = useCallback(() => {
+    setEvaluating(true);
+    managerClient.slices.evaluateSlices({
+      sliceMachineUIOrigin: window.location.origin,
+    })
+    .finally(() => {
+      setEvaluating(false);
+    });
+  }, []);
+
+  return { evaluating, startEvaluation };
+};
+
 const CustomTypesBuilderPageWithProvider: React.FC<
   CustomTypesBuilderPageWithProviderProps
 > = ({ customType: customTypeFromStore }) => {
+  const { evaluating, startEvaluation } = useSliceEvaluation();
+  
   if (customTypeFromStore === null) {
     return <AppLayout />;
   }
+  
   return (
     <AppLayout>
       <CustomTypeProvider
@@ -103,6 +124,9 @@ const CustomTypesBuilderPageWithProvider: React.FC<
                 </AppLayoutBreadcrumb>
                 <AppLayoutActions>
                   <AutoSaveStatusIndicator status={actionQueueStatus} />
+                  <Button disabled={evaluating} onClick={startEvaluation} color="grey" startIcon="cloud">
+                    {evaluating ? "Evaluating..." : "Evaluate"}
+                  </Button>
                   {customType.format === "page" ? (
                     <PageSnippetDialog model={customType} />
                   ) : undefined}
