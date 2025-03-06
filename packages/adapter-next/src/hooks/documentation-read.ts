@@ -201,7 +201,6 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		} else {
 			if (model.repeatable) {
 				appFileContent = source`
-					import { Metadata } from "next";
 					import { notFound } from "next/navigation";
 					import { asImageSrc } from "@prismicio/client";
 					import { SliceZone } from "@prismicio/react";
@@ -334,7 +333,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 						);
 					}
 
-					export async function getStaticProps({ previewData }: GetStaticPropsContext) {
+					export async function getStaticProps({ previewData }) {
 						const client = createClient({ previewData });
 						const page = await client.getSingle("${model.id}");
 

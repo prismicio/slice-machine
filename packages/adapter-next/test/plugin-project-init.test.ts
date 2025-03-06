@@ -302,7 +302,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -367,7 +367,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -436,7 +436,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -444,7 +444,7 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: Routes[] = [
+				const routes: Route[] = [
 				  // Examples:
 				  // { type: \\"homepage\\", path: \\"/\\" },
 				  // { type: \\"page\\", path: \\"/:uid\\" },
@@ -506,7 +506,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -514,7 +514,7 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: Routes[] = [
+				const routes: Route[] = [
 				  // Examples:
 				  // { type: \\"homepage\\", path: \\"/\\" },
 				  // { type: \\"page\\", path: \\"/:uid\\" },
@@ -569,7 +569,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -630,7 +630,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -701,7 +701,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -709,7 +709,7 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: Routes[] = [
+				const routes: Route[] = [
 				  // Examples:
 				  // { type: \\"homepage\\", path: \\"/\\" },
 				  // { type: \\"page\\", path: \\"/:uid\\" },
@@ -773,7 +773,7 @@ describe("prismicio.js file", () => {
 				 * The project's Prismic repository name.
 				 */
 				export const repositoryName =
-				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || config.repositoryName;
+				  process.env.NEXT_PUBLIC_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 				/**
 				 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -781,7 +781,7 @@ describe("prismicio.js file", () => {
 				 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 				 */
 				// TODO: Update the routes array to match your project's route structure.
-				const routes: Routes[] = [
+				const routes: Route[] = [
 				  // Examples:
 				  // { type: \\"homepage\\", path: \\"/\\" },
 				  // { type: \\"page\\", path: \\"/:uid\\" },
@@ -1329,7 +1329,7 @@ describe("/api/preview route", () => {
 				export default async function handler(req, res) {
 				  const client = createClient({ req });
 
-				  await setPreviewData({ req, res });
+				  setPreviewData({ req, res });
 
 				  return await redirectToPreviewURL({ req, res, client });
 				}
@@ -1363,7 +1363,7 @@ describe("/api/preview route", () => {
 				export default async function handler(req, res) {
 				  const client = createClient({ req });
 
-				  await setPreviewData({ req, res });
+				  setPreviewData({ req, res });
 
 				  return await redirectToPreviewURL({ req, res, client });
 				}
@@ -1402,7 +1402,7 @@ describe("/api/preview route", () => {
 				) {
 				  const client = createClient({ req });
 
-				  await setPreviewData({ req, res });
+				  setPreviewData({ req, res });
 
 				  return await redirectToPreviewURL({ req, res, client });
 				}

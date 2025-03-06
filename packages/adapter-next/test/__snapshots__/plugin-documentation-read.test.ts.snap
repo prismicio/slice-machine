@@ -9,7 +9,6 @@ Add a new route by creating an \`app/[uid]/page.js\` file. (If the route should 
 Paste in this code:
 
 ~~~js [app/[uid]/page.js]
-import { Metadata } from \\"next\\";
 import { notFound } from \\"next/navigation\\";
 import { asImageSrc } from \\"@prismicio/client\\";
 import { SliceZone } from \\"@prismicio/react\\";

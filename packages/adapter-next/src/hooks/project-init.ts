@@ -192,7 +192,7 @@ const createPrismicIOFile = async ({
 			 * The project's Prismic repository name.
 			 */
 			export const repositoryName =
-				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || config.repositoryName;
+				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || sm.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -200,7 +200,7 @@ const createPrismicIOFile = async ({
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 */
 			// TODO: Update the routes array to match your project's route structure.
-			const routes: Routes[] = [
+			const routes: Route[] = [
 				// Examples:
 				// { type: "homepage", path: "/" },
 				// { type: "page", path: "/:uid" },
@@ -216,7 +216,7 @@ const createPrismicIOFile = async ({
 			 * The project's Prismic repository name.
 			 */
 			export const repositoryName =
-				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || config.repositoryName;
+				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || sm.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -404,7 +404,7 @@ const createPreviewRoute = async ({
 				export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 					const client = createClient({ req });
 
-					await setPreviewData({ req, res });
+					setPreviewData({ req, res });
 
 					return await redirectToPreviewURL({ req, res, client });
 				};
@@ -418,7 +418,7 @@ const createPreviewRoute = async ({
 				export default async function handler(req, res) {
 					const client = createClient({ req });
 
-					await setPreviewData({ req, res });
+					setPreviewData({ req, res });
 
 					return await redirectToPreviewURL({ req, res, client });
 				};
