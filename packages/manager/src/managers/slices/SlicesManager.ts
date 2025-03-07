@@ -39,7 +39,6 @@ import { BaseManager } from "../BaseManager";
 import {
 	BedrockRuntimeClient,
 	ConverseCommand,
-	Message,
 } from "@aws-sdk/client-bedrock-runtime";
 import { runEval } from "./generateSliceEval";
 import { fetchSliceCode, fetchSliceModel, pollSliceTask } from "./generateSlice";
@@ -1939,6 +1938,10 @@ type GroupField = {
 			const colors = await this.prismicRepository.generateColorPalette({
 				websiteUrl: "https://n26.com",
 			});
+
+			const layout = await this.prismicRepository.generateLayout({
+				websiteUrl: "https://n26.com",
+			});
 			
 			for await (const sliceImage of args.sliceImages) {	
 				console.log("############################ Generating slice from image index:", index);
@@ -1949,6 +1952,7 @@ type GroupField = {
 				const executionArn = await this.prismicRepository.generateSliceTask({
 					screenshotUrl: sliceImageUrl,
 					colors,
+					layout,
 				});
 
 				const { codeUrl, modelUrl, mocksUrl } =
@@ -2111,12 +2115,19 @@ type GroupField = {
 			return await this.uploadSliceImage(args.data);
 		}
 
+		const websiteUrl = "https://n26.com"
+
 		const colors = await this.prismicRepository.generateColorPalette({
-			websiteUrl: "https://n26.com",
+			websiteUrl,
+		});
+
+		const layout = await this.prismicRepository.generateLayout({
+			websiteUrl,
 		});
 
 		await runEval({
 			colors,
+			layout,
 			prismicRepository: this.prismicRepository,
 			onCreateSlice,
 			onUpdateSliceScreenshot,

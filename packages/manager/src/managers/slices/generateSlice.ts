@@ -3,10 +3,10 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content"
 import { PrismicRepositoryManager } from "../prismicRepository/PrismicRepositoryManager"
 import fetch from "../../lib/fetch"
 import * as t from "io-ts";
-import { WebsiteColorPalette } from "../prismicRepository/types";
-import { B } from "msw/lib/glossary-de6278a9";
+import { WebsiteColorPalette, WebsiteLayout } from "../prismicRepository/types";
 
 export type GenerateSliceArgs = {
+    layout: WebsiteLayout,
     colors: WebsiteColorPalette,
     sliceImageUrl: string
     prismicRepository: PrismicRepositoryManager
@@ -30,6 +30,7 @@ export async function generateSlice(args: GenerateSliceArgs): Promise<{
         onCaptureSliceSimulatorScreenshot,
         onUploadSliceImage,
         colors,
+        layout,
      } = args
 
     // ----- Q1 scope -----
@@ -39,6 +40,7 @@ export async function generateSlice(args: GenerateSliceArgs): Promise<{
     const executionArn = await prismicRepository.generateSliceTask({
         screenshotUrl: sliceImageUrl,
         colors,
+        layout,
     });
 
     const { codeUrl, modelUrl, mocksUrl } =
@@ -123,10 +125,13 @@ export const pollSliceTask = async (
             switch (response.status) {
                 case "FAILED":
                     reject(new Error(`Slice generation task failed`));
+                    break;
                 case "TIMED_OUT":
                     reject(new Error("Slice generation task timed out"));
+                    break;
                 case "ABORTED":
                     reject(new Error("Slice generation task was aborted"));
+                    break;
                 case "RUNNING":
                     setTimeout(step, intervalMs);
                     break;

@@ -236,3 +236,31 @@ export const WebsiteColorPaletteSchema = z.object({
 	}),
 });
 export type WebsiteColorPalette = z.infer<typeof WebsiteColorPaletteSchema>;
+
+export const WebsiteLayoutSchema = z.object({
+	layout_spacing: z.object({
+		grid_system: z.enum([
+			"None",
+			"Bootstrap",
+			"Custom Grid",
+			"12-column",
+			"CSS Grid",
+			"Fluid",
+		]),
+		container_width: z.enum(["Fixed", "Fluid", "Responsive"]),
+		spacing_scale: z.object({
+			xxs: z.string(),
+			xs: z.string(),
+			small: z.string(),
+			medium: z.string(),
+			large: z.string(),
+			xl: z.string(),
+			xxl: z.string(),
+		}),
+		gutter_size: z.string().optional(),
+		border_radius: z.enum(["Square", "Small", "Large", "Fully Circular"]),
+		drop_shadows: z.enum(["None", "Soft", "Hard"]),
+	}),
+})
+
+export type WebsiteLayout = z.infer<typeof WebsiteLayoutSchema>

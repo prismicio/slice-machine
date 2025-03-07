@@ -10,7 +10,7 @@ import { serializeCookies } from "../../lib/serializeCookies";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
-import { WebsiteColorPalette, WebsiteColorPaletteSchema } from "./types";
+import { WebsiteColorPalette, WebsiteColorPaletteSchema, WebsiteLayout, WebsiteLayoutSchema } from "./types";
 import {
 	UnauthenticatedError,
 	UnauthorizedError,
@@ -70,6 +70,7 @@ type PrismicRepositoryManagerPushDocumentsArgs = {
 type PrismicRepositoryManagerGenerateSliceTaskArgs = {
 	screenshotUrl: string;
 	colors: WebsiteColorPalette;
+	layout: WebsiteLayout;
 };
 
 type PrismicRepositoryManagerGetSliceTaskArgs = {
@@ -98,6 +99,10 @@ type PrismicRepositoryManagerEvaluateSliceWithAIArgs = {
 };
 
 type PrismicRepositoryManagerGenerateColorPaletteArgs = {
+	websiteUrl: string;
+};
+
+type PrismicRepositoryManagerGenerateLayoutArgs = {
 	websiteUrl: string;
 };
 
@@ -322,6 +327,38 @@ export class PrismicRepositoryManager extends BaseManager {
 
 		if (error) {
 			throw new Error(`Failed to generate color palette`, {
+				cause: error.errors.join(", "),
+			});
+		}
+
+		return value;
+	}
+
+	async generateLayout(
+		args: PrismicRepositoryManagerGenerateLayoutArgs,
+	): Promise<WebsiteLayout> {
+		const res = await this._fetch({
+			url: new URL(this.LAB_BASE_URL + "/fractal/layout"),
+			method: "POST",
+			body: args,
+		});
+
+		if (!res.ok) {
+			const reason = await res.text();
+			throw new Error(`Failed to generate layout`, {
+				cause: reason,
+			});
+		}
+
+		const data = await res.json();
+
+		const { value, error } = decode(	
+			WebsiteLayoutSchema,
+			data,
+		);
+
+		if (error) {
+			throw new Error(`Failed to generate layout`, {
 				cause: error.errors.join(", "),
 			});
 		}
