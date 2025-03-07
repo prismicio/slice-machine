@@ -10,49 +10,39 @@ Paste in this code:
 
 ~~~js [app/[uid]/page.js]
 import { notFound } from \\"next/navigation\\";
-import { isFilled, asImageSrc } from \\"@prismicio/client\\";
+import { asImageSrc } from \\"@prismicio/client\\";
 import { SliceZone } from \\"@prismicio/react\\";
 
 import { createClient } from \\"@/prismicio\\";
 import { components } from \\"@/slices\\";
 
 export default async function Page({ params }) {
-  const { uid } = await params;
-  const client = createClient();
-  const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
+	const { uid } = await params;
+	const client = createClient();
+	const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
 
-  return <SliceZone slices={page.data.slices} components={components} />;
+	return <SliceZone slices={page.data.slices} components={components} />;
 }
 
 export async function generateMetadata({ params }) {
-  const { uid } = await params;
-  const client = createClient();
-  const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
+	const { uid } = await params;
+	const client = createClient();
+	const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
 
-  return {
-    title: page.data.meta_title,
-    description: page.data.meta_description,
-    openGraph: {
-      title: isFilled.keyText(page.data.meta_title)
-        ? page.data.meta_title
-        : undefined,
-      description: isFilled.keyText(page.data.meta_description)
-        ? page.data.meta_description
-        : undefined,
-      images: isFilled.image(page.data.meta_image)
-        ? [asImageSrc(page.data.meta_image)]
-        : undefined,
-    },
-  };
+	return {
+		title: page.data.meta_title,
+		description: page.data.meta_description,
+		openGraph: {
+			images: [{ url: asImageSrc(page.data.meta_image) ?? \\"\\" }],
+		},
+	};
 }
 
 export async function generateStaticParams() {
-  const client = createClient();
-  const pages = await client.getAllByType(\\"foo_bar\\");
+	const client = createClient();
+	const pages = await client.getAllByType(\\"foo_bar\\");
 
-  return pages.map((page) => {
-    return { uid: page.uid };
-  });
+	return pages.map((page) => ({ uid: page.uid }));
 }
 ~~~
 
@@ -72,7 +62,7 @@ Paste in this code:
 ~~~tsx [app/[uid]/page.tsx]
 import { Metadata } from \\"next\\";
 import { notFound } from \\"next/navigation\\";
-import { isFilled, asImageSrc } from \\"@prismicio/client\\";
+import { asImageSrc } from \\"@prismicio/client\\";
 import { SliceZone } from \\"@prismicio/react\\";
 
 import { createClient } from \\"@/prismicio\\";
@@ -81,46 +71,79 @@ import { components } from \\"@/slices\\";
 type Params = { uid: string };
 
 export default async function Page({ params }: { params: Promise<Params> }) {
-  const { uid } = await params;
-  const client = createClient();
-  const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
+	const { uid } = await params;
+	const client = createClient();
+	const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
 
-  return <SliceZone slices={page.data.slices} components={components} />;
+	return <SliceZone slices={page.data.slices} components={components} />;
 }
 
 export async function generateMetadata({
-  params,
+	params,
 }: {
-  params: Promise<Params>;
+	params: Promise<Params>;
 }): Promise<Metadata> {
-  const { uid } = await params;
-  const client = createClient();
-  const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
+	const { uid } = await params;
+	const client = createClient();
+	const page = await client.getByUID(\\"foo_bar\\", uid).catch(() => notFound());
 
-  return {
-    title: page.data.meta_title,
-    description: page.data.meta_description,
-    openGraph: {
-      title: isFilled.keyText(page.data.meta_title)
-        ? page.data.meta_title
-        : undefined,
-      description: isFilled.keyText(page.data.meta_description)
-        ? page.data.meta_description
-        : undefined,
-      images: isFilled.image(page.data.meta_image)
-        ? [asImageSrc(page.data.meta_image)]
-        : undefined,
-    },
-  };
+	return {
+		title: page.data.meta_title,
+		description: page.data.meta_description,
+		openGraph: {
+			images: [{ url: asImageSrc(page.data.meta_image) ?? \\"\\" }],
+		},
+	};
 }
 
 export async function generateStaticParams() {
-  const client = createClient();
-  const pages = await client.getAllByType(\\"foo_bar\\");
+	const client = createClient();
+	const pages = await client.getAllByType(\\"foo_bar\\");
 
-  return pages.map((page) => {
-    return { uid: page.uid };
-  });
+	return pages.map((page) => ({ uid: page.uid }));
+}
+~~~
+
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.",
+  "label": "App Router",
+}
+`;
+
+exports[`PageSnippet > App Router > supports the special single homepage type 1`] = `
+{
+  "content": "## Create your Homepage's page component
+
+Add a new route by creating an \`app/page.tsx\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`app/marketing/page.tsx\`.)
+
+Paste in this code:
+
+~~~tsx [app/page.tsx]
+import { type Metadata } from \\"next\\";
+import { notFound } from \\"next/navigation\\";
+import { asImageSrc } from \\"@prismicio/client\\";
+import { SliceZone } from \\"@prismicio/react\\";
+
+import { createClient } from \\"@/prismicio\\";
+import { components } from \\"@/slices\\";
+
+export default async function Page() {
+	const client = createClient();
+	const page = await client.getSingle(\\"homepage\\").catch(() => notFound());
+
+	return <SliceZone slices={page.data.slices} components={components} />;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+	const client = createClient();
+	const page = await client.getSingle(\\"homepage\\").catch(() => notFound());
+
+	return {
+		title: page.data.meta_title,
+		description: page.data.meta_description,
+		openGraph: {
+			images: [{ url: asImageSrc(page.data.meta_image) ?? \\"\\" }],
+		},
+	};
 }
 ~~~
 
@@ -144,55 +167,40 @@ import { components } from \\"@/slices\\";
 import { createClient } from \\"@/prismicio\\";
 
 export default function Page({ page }) {
-  return (
-    <>
-      <Head>
-        <title>{page.data.meta_title}</title>
-        <meta property=\\"og:title\\" content={page.data.meta_title} />
-        {isFilled.keyText(page.data.meta_description) ? (
-          <>
-            <meta name=\\"description\\" content={page.data.meta_description} />
-            <meta
-              property=\\"og:description\\"
-              content={page.data.meta_description}
-            />
-          </>
-        ) : null}
-        {isFilled.image(page.data.meta_image) ? (
-          <meta
-            property=\\"og:image\\"
-            content={asImageSrc(page.data.meta_image)}
-          />
-        ) : null}
-      </Head>
-      <SliceZone slices={page.data.slices} components={components} />
-    </>
-  );
+	return (
+		<>
+			<Head>
+				<title>{page.data.meta_title}</title>
+				{isFilled.keyText(page.data.meta_description) ? (
+					<meta name=\\"description\\" content={page.data.meta_description} />
+				) : null}
+				{isFilled.image(page.data.meta_image) ? (
+					<meta
+						property=\\"og:image\\"
+						content={asImageSrc(page.data.meta_image)}
+					/>
+				) : null}
+			</Head>
+			<SliceZone slices={page.data.slices} components={components} />
+		</>
+	);
 }
 
 export async function getStaticProps({ params, previewData }) {
-  // The \`previewData\` parameter allows your app to preview
-  // drafts from the Page Builder.
-  const client = createClient({ previewData });
+	const client = createClient({ previewData });
+	const page = await client.getByUID(\\"foo_bar\\", params.uid);
 
-  const page = await client.getByUID(\\"foo_bar\\", params.uid);
-
-  return {
-    props: { page },
-  };
+	return { props: { page } };
 }
 
 export async function getStaticPaths() {
-  const client = createClient();
+	const client = createClient();
+	const pages = await client.getAllByType(\\"foo_bar\\");
 
-  const pages = await client.getAllByType(\\"foo_bar\\");
-
-  return {
-    paths: pages.map((page) => {
-      return asLink(page);
-    }),
-    fallback: false,
-  };
+	return {
+		paths: pages.map((page) => asLink(page)),
+		fallback: false,
+	};
 }
 ~~~
 
@@ -219,60 +227,95 @@ import { createClient } from \\"@/prismicio\\";
 type Params = { uid: string };
 
 export default function Page({
-  page,
+	page,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  return (
-    <>
-      <Head>
-        <title>{page.data.meta_title}</title>
-        <meta property=\\"og:title\\" content={page.data.meta_title} />
-        {isFilled.keyText(page.data.meta_description) ? (
-          <>
-            <meta name=\\"description\\" content={page.data.meta_description} />
-            <meta
-              property=\\"og:description\\"
-              content={page.data.meta_description}
-            />
-          </>
-        ) : null}
-        {isFilled.image(page.data.meta_image) ? (
-          <meta
-            property=\\"og:image\\"
-            content={asImageSrc(page.data.meta_image)}
-          />
-        ) : null}
-      </Head>
-      <SliceZone slices={page.data.slices} components={components} />
-    </>
-  );
+	return (
+		<>
+			<Head>
+				<title>{page.data.meta_title}</title>
+				{isFilled.keyText(page.data.meta_description) ? (
+					<meta name=\\"description\\" content={page.data.meta_description} />
+				) : null}
+				{isFilled.image(page.data.meta_image) ? (
+					<meta
+						property=\\"og:image\\"
+						content={asImageSrc(page.data.meta_image)}
+					/>
+				) : null}
+			</Head>
+			<SliceZone slices={page.data.slices} components={components} />
+		</>
+	);
 }
 
 export async function getStaticProps({
-  params,
-  previewData,
+	params,
+	previewData,
 }: GetStaticPropsContext<Params>) {
-  // The \`previewData\` parameter allows your app to preview
-  // drafts from the Page Builder.
-  const client = createClient({ previewData });
+	const client = createClient({ previewData });
+	const page = await client.getByUID(\\"foo_bar\\", params!.uid);
 
-  const page = await client.getByUID(\\"foo_bar\\", params!.uid);
-
-  return {
-    props: { page },
-  };
+	return { props: { page } };
 }
 
 export async function getStaticPaths() {
-  const client = createClient();
+	const client = createClient();
+	const pages = await client.getAllByType(\\"foo_bar\\");
 
-  const pages = await client.getAllByType(\\"foo_bar\\");
+	return {
+		paths: pages.map((page) => asLink(page)),
+		fallback: false,
+	};
+}
+~~~
 
-  return {
-    paths: pages.map((page) => {
-      return asLink(page);
-    }),
-    fallback: false,
-  };
+Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/setup-nextjs) for more information.",
+  "label": "Pages Router",
+}
+`;
+
+exports[`PageSnippet > Pages Router > supports the special single homepage type 1`] = `
+{
+  "content": "## Create your Homepage's page component
+
+Add a new route by creating a \`pages/index.tsx\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`pages/marketing/index.tsx\`.)
+
+~~~tsx [pages/index.tsx]
+import { GetStaticPropsContext, InferGetStaticPropsType } from \\"next\\";
+import Head from \\"next/head\\";
+import { isFilled, asImageSrc } from \\"@prismicio/client\\";
+import { SliceZone } from \\"@prismicio/react\\";
+
+import { components } from \\"@/slices\\";
+import { createClient } from \\"@/prismicio\\";
+
+export default function Page({
+	page,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+	return (
+		<>
+			<Head>
+				<title>{page.data.meta_title}</title>
+				{isFilled.keyText(page.data.meta_description) ? (
+					<meta name=\\"description\\" content={page.data.meta_description} />
+				) : null}
+				{isFilled.image(page.data.meta_image) ? (
+					<meta
+						property=\\"og:image\\"
+						content={asImageSrc(page.data.meta_image)}
+					/>
+				) : null}
+			</Head>
+			<SliceZone slices={page.data.slices} components={components} />
+		</>
+	);
+}
+
+export async function getStaticProps({ previewData }: GetStaticPropsContext) {
+	const client = createClient({ previewData });
+	const page = await client.getSingle(\\"homepage\\");
+
+	return { props: { page } };
 }
 ~~~
 
