@@ -141,7 +141,7 @@ type ReviewSegmentEvent = SegmentEvent<
 	{
 		rating: number;
 		comment: string;
-		type: "onboarding" | "advanced repository";
+		type: "onboarding";
 	}
 >;
 

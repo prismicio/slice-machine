@@ -217,7 +217,6 @@ export const test = baseTest.extend<Options & Fixtures>({
       ? {
           userReview: {
             onboarding: false,
-            advancedRepository: true,
           },
           hasSeenChangesToolTip: true,
           hasSeenSimulatorToolTip: true,
@@ -228,7 +227,6 @@ export const test = baseTest.extend<Options & Fixtures>({
       : {
           userReview: {
             onboarding: onboarded,
-            advancedRepository: false,
           },
           hasSeenChangesToolTip: false,
           hasSeenSimulatorToolTip: false,
