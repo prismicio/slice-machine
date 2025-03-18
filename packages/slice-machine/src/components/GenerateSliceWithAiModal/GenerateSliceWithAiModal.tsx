@@ -19,7 +19,6 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
       <DialogHeader title="Generate with AI" />
       <DialogContent gap={0}>
         <Box height="100%" />
-
         <DialogActions>
           <DialogCancelButton />
         </DialogActions>

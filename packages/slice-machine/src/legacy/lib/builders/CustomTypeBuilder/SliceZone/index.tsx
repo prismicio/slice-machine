@@ -18,7 +18,6 @@ import { BaseStyles } from "theme-ui";
 import { telemetry } from "@/apiClient";
 import { GenerateSliceWithAiModal } from "@/components/GenerateSliceWithAiModal";
 import { ListHeader } from "@/components/List";
-import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
@@ -113,8 +112,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
-  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
-
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
@@ -381,10 +378,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           onClose={closeCreateSliceModal}
         />
       )}
-      {aiSliceGenerationExperiment.eligible &&
-        isGenerateSliceWithAiModalOpen && (
-          <GenerateSliceWithAiModal onClose={closeGenerateSliceWithAiModal} />
-        )}
+      {isGenerateSliceWithAiModalOpen && (
+        <GenerateSliceWithAiModal onClose={closeGenerateSliceWithAiModal} />
+      )}
     </>
   );
 };
