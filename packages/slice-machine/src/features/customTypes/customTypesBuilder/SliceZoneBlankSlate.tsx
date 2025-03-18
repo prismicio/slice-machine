@@ -1,4 +1,4 @@
-import { ActionList, ActionListItem, Badge, Box } from "@prismicio/editor-ui";
+import { ActionList, ActionListItem, Box } from "@prismicio/editor-ui";
 import { FC } from "react";
 
 import {
@@ -8,11 +8,13 @@ import {
   BlankSlateDescription,
   BlankSlateTitle,
 } from "@/components/BlankSlate";
+import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { SliceMachinePrinterIcon } from "@/icons/SliceMachinePrinterIcon";
 
 export type SliceZoneBlankSlateProps = {
   openUpdateSliceZoneModal: () => void;
   openCreateSliceModal: () => void;
+  openGenerateSliceWithAiModal: () => void;
   openSlicesTemplatesModal: () => void;
   projectHasAvailableSlices: boolean;
   isSlicesTemplatesSupported: boolean;
@@ -20,11 +22,14 @@ export type SliceZoneBlankSlateProps = {
 
 export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   openCreateSliceModal,
+  openGenerateSliceWithAiModal,
   openUpdateSliceZoneModal,
   openSlicesTemplatesModal,
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
+  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
+
   return (
     <Box
       flexGrow={1}
@@ -44,19 +49,27 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
           </BlankSlateDescription>
           <BlankSlateActions>
             <ActionList>
+              {aiSliceGenerationExperiment.eligible && (
+                <ActionListItem
+                  startIcon="autoFixHigh"
+                  onClick={openGenerateSliceWithAiModal}
+                  description="Let AI instantly create a Slice for you."
+                >
+                  Generate with AI
+                </ActionListItem>
+              )}
               <ActionListItem
                 startIcon="add"
                 onClick={openCreateSliceModal}
-                description="Start from scratch."
+                description="Build a custom Slice your way."
               >
-                Create new
+                Start from scratch
               </ActionListItem>
               {isSlicesTemplatesSupported ? (
                 <ActionListItem
                   startIcon="contentCopy"
                   onClick={openSlicesTemplatesModal}
                   description="Select from premade examples."
-                  endAdornment={<Badge color="purple" title="New" />}
                 >
                   Use template
                 </ActionListItem>
