@@ -1,5 +1,5 @@
 import { findFocusableAncestor } from "@prismicio/editor-support/DOM";
-import { Text } from "@prismicio/editor-ui";
+import { Icon, IconName, ProgressCircle, Text } from "@prismicio/editor-ui";
 import { clsx } from "clsx";
 import { LinkProps } from "next/link";
 import {
@@ -21,13 +21,13 @@ export type CardProps = PropsWithChildren<
     size?: "small" | "medium";
     style?: CSSProperties;
     variant?: "solid" | "outlined";
+    disabled?: boolean;
   } & (
     | // Props for rendering a non-interactive `div` element.
     NarrowedCardProps<{ interactive?: false }>
     // Props for rendering an interactive `div` element.
     | NarrowedCardProps<{
         interactive: true;
-        disabled?: boolean;
         onClick?: (event: MouseEvent) => void;
       }>
     // Props for rendering an `a` element.
@@ -46,7 +46,7 @@ export type CardProps = PropsWithChildren<
 // narrowed down.
 type NarrowedCardProps<T> = NarrowedProps<
   T,
-  "component" | "disabled" | "href" | "interactive" | "onClick" | "replace"
+  "component" | "href" | "interactive" | "onClick" | "replace"
 >;
 
 /**
@@ -75,13 +75,13 @@ export const Card: FC<CardProps> = (props) => {
       [styles.interactive]: props.interactive,
     }),
     "data-state": checked === true ? "checked" : undefined,
+    "data-disabled": props.disabled === true ? "" : undefined,
   };
   if (props.interactive === true && props.href === undefined) {
     return (
       <div
         {...elementProps}
         // TODO: add missing ARIA attributes and keyboard event handlers.
-        data-disabled={props.disabled === true ? "" : undefined}
         onClick={(event) => {
           if (props.disabled === true || props.onClick === undefined) return;
           const target = event.target as HTMLElement;
@@ -136,6 +136,7 @@ export const CardActions: FC<PropsWithChildren> = (props) => (
 );
 
 type CardFooterProps = {
+  startIcon?: IconName | "loading";
   action?: ReactNode;
   subtitle?: ReactNode;
   title?: ReactNode;
@@ -143,11 +144,21 @@ type CardFooterProps = {
 
 export const CardFooter: FC<CardFooterProps> = ({
   action,
+  startIcon,
   subtitle,
   title,
   ...otherProps
 }) => (
   <div {...otherProps} className={styles.footer}>
+    {startIcon && (
+      <div className={styles.startIconBox}>
+        {startIcon === "loading" ? (
+          <ProgressCircle color="grey11" />
+        ) : (
+          <Icon name={startIcon} size="small" />
+        )}
+      </div>
+    )}
     <div className={styles.footerTexts}>
       <Text component="span" noWrap variant="bold">
         {title}

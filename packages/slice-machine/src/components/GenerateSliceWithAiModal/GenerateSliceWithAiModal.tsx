@@ -10,10 +10,15 @@ import {
   DialogActions,
   DialogCancelButton,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   FileDropZone,
   FileUploadButton,
+  ScrollArea,
 } from "@prismicio/editor-ui";
+import { useEffect, useState } from "react";
+
+import { SliceCard } from "./SliceCard";
 
 interface GenerateSliceWithAiModalProps {
   open: boolean;
@@ -22,44 +27,97 @@ interface GenerateSliceWithAiModalProps {
 
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const { open, onClose } = props;
+  const [slices, setSlices] = useState<Slice[]>([]);
 
   const onImagesSelected = (images: File[]) => {
-    console.log(images);
+    setSlices(
+      images.map((image, index) => ({
+        status: "loading",
+        displayName: `Slice ${index + 1}`,
+        image,
+      })),
+    );
   };
+
+  useEffect(() => {
+    if (slices.length > 0 && slices[0].status === "loading") {
+      const timeout = setTimeout(() => {
+        setSlices((slices) =>
+          slices.map((slice, index) => ({
+            ...slice,
+            displayName: `Hero ${index + 1}`,
+            thumbnailUrl:
+              "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?w=512",
+            status: "success",
+          })),
+        );
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [slices]);
+
+  const allSlicesReady = slices.every((slice) => slice.status === "success");
 
   return (
     <Dialog
       open={open}
       onOpenChange={(open) => {
-        if (!open) onClose();
+        if (!open) {
+          onClose();
+          setSlices([]);
+        }
       }}
     >
       <DialogHeader title="Generate with AI" />
       <DialogContent gap={0}>
-        <Box padding={16} height="100%">
-          <FileDropZone
-            onFilesSelected={onImagesSelected}
-            assetType="image"
-            overlay={
-              <UploadBlankSlate
-                onFilesSelected={onImagesSelected}
-                droppingFiles
-              />
-            }
-          >
-            <UploadBlankSlate onFilesSelected={onImagesSelected} />
-          </FileDropZone>
-        </Box>
+        <DialogDescription hidden>
+          Upload images to generate slices with AI
+        </DialogDescription>
+        {slices.length === 0 ? (
+          <Box padding={16} height="100%">
+            <FileDropZone
+              onFilesSelected={onImagesSelected}
+              assetType="image"
+              overlay={
+                <UploadBlankSlate
+                  onFilesSelected={onImagesSelected}
+                  droppingFiles
+                />
+              }
+            >
+              <UploadBlankSlate onFilesSelected={onImagesSelected} />
+            </FileDropZone>
+          </Box>
+        ) : (
+          <ScrollArea>
+            <Box padding={16} height="100%" gap={16}>
+              {slices.map((slice) => (
+                <SliceCard slice={slice} />
+              ))}
+            </Box>
+          </ScrollArea>
+        )}
 
         <DialogActions>
           <DialogCancelButton />
-          <DialogActionButton disabled onClick={() => undefined}>
+          <DialogActionButton
+            disabled={!allSlicesReady}
+            onClick={() => undefined}
+          >
             Add to page
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
     </Dialog>
   );
+}
+
+export interface Slice {
+  status: "loading" | "success" | "error";
+  displayName: string;
+  thumbnailUrl?: string;
+  image: File;
 }
 
 function UploadBlankSlate(props: {

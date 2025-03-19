@@ -1,0 +1,47 @@
+import { Card, CardFooter, CardMedia } from "../Card";
+import { Slice } from "./GenerateSliceWithAiModal";
+
+interface SliceCardProps {
+  slice: Slice;
+}
+
+export function SliceCard(props: SliceCardProps) {
+  const { slice } = props;
+
+  return (
+    <Card disabled={slice.status === "loading"} style={{ width: 394 }}>
+      {Boolean(slice.thumbnailUrl) ? (
+        <CardMedia src={slice.thumbnailUrl} />
+      ) : (
+        <CardMedia component="div" />
+      )}
+      <CardFooter
+        startIcon={getStartIcon(slice.status)}
+        title={slice.displayName}
+        subtitle={getSubtitle(slice.status)}
+      />
+    </Card>
+  );
+}
+
+function getStartIcon(status: Slice["status"]) {
+  switch (status) {
+    case "loading":
+      return "loading";
+    case "success":
+      return "check";
+    case "error":
+      return "warning";
+  }
+}
+
+function getSubtitle(status: Slice["status"]) {
+  switch (status) {
+    case "loading":
+      return "Generating...";
+    case "success":
+      return "Generated";
+    case "error":
+      return "Error";
+  }
+}
