@@ -15,7 +15,6 @@ export type UserContextStoreType = {
 
 export type UserReviewState = {
   onboarding: boolean;
-  advancedRepository: boolean;
 };
 
 export type UserReviewType = keyof UserReviewState;

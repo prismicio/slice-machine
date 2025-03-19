@@ -24,7 +24,6 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         userReview: {
           onboarding: false,
-          advancedRepository: false,
         },
       };
 
@@ -36,7 +35,6 @@ describe("[UserContext module]", () => {
         ...initialState,
         userReview: {
           onboarding: true,
-          advancedRepository: false,
         },
       };
 
@@ -48,7 +46,6 @@ describe("[UserContext module]", () => {
       const initialState: UserContextStoreType = {
         userReview: {
           onboarding: false,
-          advancedRepository: false,
         },
       };
 
@@ -60,7 +57,6 @@ describe("[UserContext module]", () => {
         ...initialState,
         userReview: {
           onboarding: true,
-          advancedRepository: false,
         },
       };
 

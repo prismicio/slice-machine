@@ -17,7 +17,6 @@ import { refreshStateCreator } from "../environment";
 const initialState: UserContextStoreType = {
   userReview: {
     onboarding: false,
-    advancedRepository: false,
   },
   hasSeenSimulatorToolTip: false,
   hasSeenChangesToolTip: false,
@@ -59,7 +58,6 @@ type userContextActions = ActionType<
 export const getUserReview = (state: SliceMachineStoreType): UserReviewState =>
   state.userContext.userReview ?? {
     onboarding: state.userContext.hasSendAReview ?? false,
-    advancedRepository: false,
   };
 
 export const userHasSeenSimulatorToolTip = (

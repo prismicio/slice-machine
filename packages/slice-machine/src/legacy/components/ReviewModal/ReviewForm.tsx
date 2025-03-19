@@ -19,7 +19,6 @@ import { isLoading } from "@/modules/loading";
 import { LoadingKeysEnum } from "@/modules/loading/types";
 import { isModalOpen } from "@/modules/modal";
 import { ModalKeysEnum } from "@/modules/modal/types";
-import { UserReviewType } from "@/modules/userContext/types";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
 
@@ -27,12 +26,9 @@ import { ReviewFormSelect } from "./ReviewFormSelect";
 
 Modal.setAppElement("#__next");
 
-type ReviewFormProps = {
-  reviewType: UserReviewType;
-};
+const reviewType = "onboarding";
 
-export const ReviewForm: FC<ReviewFormProps> = (props) => {
-  const { reviewType } = props;
+export const ReviewForm: FC = () => {
   const { isReviewLoading, isLoginModalOpen } = useSelector(
     (store: SliceMachineStoreType) => ({
       isReviewLoading: isLoading(store, LoadingKeysEnum.REVIEW),
@@ -48,10 +44,7 @@ export const ReviewForm: FC<ReviewFormProps> = (props) => {
       event: "review",
       rating,
       comment,
-      type:
-        reviewType === "advancedRepository"
-          ? "advanced repository"
-          : "onboarding",
+      type: reviewType,
     });
     sendAReview(reviewType);
     stopLoadingReview();

@@ -42,28 +42,14 @@ export const ReviewModal: FC = () => {
     lastSyncChange && Date.now() - lastSyncChange >= 3600000,
   );
 
-  const isAdvancedRepository =
-    sliceCount >= 6 &&
-    customTypes.length >= 6 &&
-    hasSliceWithinCustomType &&
-    hasPushedAnHourAgo;
-
-  if (!userReview.advancedRepository && isAdvancedRepository) {
-    return <ReviewForm reviewType="advancedRepository" />;
-  }
-
   const isOnboardingDone =
     sliceCount >= 1 &&
     customTypes.length >= 1 &&
     hasSliceWithinCustomType &&
     hasPushedAnHourAgo;
 
-  if (
-    !userReview.onboarding &&
-    !userReview.advancedRepository &&
-    isOnboardingDone
-  ) {
-    return <ReviewForm reviewType="onboarding" />;
+  if (!userReview.onboarding && isOnboardingDone) {
+    return <ReviewForm />;
   }
 
   return null;
