@@ -1,7 +1,6 @@
 import { type DroppableStateSnapshot } from "react-beautiful-dnd";
 
 import { useNestedGroupExperiment } from "@/features/builder/useNestedGroupExperiment";
-import { useTableFieldExperiment } from "@/features/builder/useTableFieldExperiment";
 import { type Item } from "@/legacy/components/ListItem";
 import { type TabField } from "@/legacy/lib/models/common/CustomType";
 import { type GroupSM } from "@/legacy/lib/models/common/Group";
@@ -56,12 +55,9 @@ const hintItemName = "item";
 
 const GroupListItem = (props: GroupListItemProps<GroupSM>): JSX.Element => {
   const nestedGroupExperiment = useNestedGroupExperiment();
-  const tableFieldExperiment = useTableFieldExperiment();
 
   const maybeFilteredWidgetsArray = widgetsArray.filter((widget) => {
     if (!nestedGroupExperiment.eligible && widget.CUSTOM_NAME === "NestedGroup")
-      return false;
-    if (!tableFieldExperiment.eligible && widget.TYPE_NAME === "Table")
       return false;
     return true;
   });
