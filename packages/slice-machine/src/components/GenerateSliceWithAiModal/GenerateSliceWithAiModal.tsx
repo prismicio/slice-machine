@@ -8,14 +8,15 @@ import {
 } from "@prismicio/editor-ui";
 
 interface GenerateSliceWithAiModalProps {
+  open: boolean;
   onClose: () => void;
 }
 
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
-  const { onClose } = props;
+  const { open, onClose } = props;
 
   return (
-    <Dialog open onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogHeader title="Generate with AI" />
       <DialogContent gap={0}>
         <Box height="100%" />

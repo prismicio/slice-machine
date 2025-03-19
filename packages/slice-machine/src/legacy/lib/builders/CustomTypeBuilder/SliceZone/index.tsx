@@ -389,9 +389,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           onClose={closeCreateSliceModal}
         />
       )}
-      {isGenerateSliceWithAiModalOpen && (
-        <GenerateSliceWithAiModal onClose={closeGenerateSliceWithAiModal} />
-      )}
+      <GenerateSliceWithAiModal
+        open={isGenerateSliceWithAiModalOpen}
+        onClose={closeGenerateSliceWithAiModal}
+      />
     </>
   );
 };
