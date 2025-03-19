@@ -23,8 +23,8 @@ interface GenerateSliceWithAiModalProps {
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const { open, onClose } = props;
 
-  const onFilesSelected = (files: File[]) => {
-    console.log(files);
+  const onImagesSelected = (images: File[]) => {
+    console.log(images);
   };
 
   return (
@@ -38,16 +38,16 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
       <DialogContent gap={0}>
         <Box padding={16} height="100%">
           <FileDropZone
-            onFilesSelected={onFilesSelected}
+            onFilesSelected={onImagesSelected}
             assetType="image"
             overlay={
               <UploadBlankSlate
-                onFilesSelected={onFilesSelected}
+                onFilesSelected={onImagesSelected}
                 droppingFiles
               />
             }
           >
-            <UploadBlankSlate onFilesSelected={onFilesSelected} />
+            <UploadBlankSlate onFilesSelected={onImagesSelected} />
           </FileDropZone>
         </Box>
 
