@@ -16,7 +16,9 @@ import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
+import { GenerateSliceWithAiModal } from "@/components/GenerateSliceWithAiModal";
 import { ListHeader } from "@/components/List";
+import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
@@ -111,12 +113,15 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
+  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
   const [isUpdateSliceZoneModalOpen, setIsUpdateSliceZoneModalOpen] =
     useState(false);
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
+  const [isGenerateSliceWithAiModalOpen, setIsGenerateSliceWithAiModalOpen] =
+    useState(false);
   const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
@@ -169,6 +174,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsCreateSliceModalOpen(true);
   };
 
+  const openGenerateSliceWithAiModal = () => {
+    setIsGenerateSliceWithAiModalOpen(true);
+  };
+
   const openSlicesTemplatesModal = () => {
     setIsSlicesTemplatesModalOpen(true);
 
@@ -185,6 +194,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const closeCreateSliceModal = () => {
     setIsCreateSliceModalOpen(false);
+  };
+
+  const closeGenerateSliceWithAiModal = () => {
+    setIsGenerateSliceWithAiModalOpen(false);
   };
 
   const closeSlicesTemplatesModal = () => {
@@ -208,12 +221,21 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end">
+                {aiSliceGenerationExperiment.eligible && (
+                  <DropdownMenuItem
+                    startIcon={<Icon name="autoFixHigh" size="large" />}
+                    onSelect={openGenerateSliceWithAiModal}
+                    description="Let AI instantly create a Slice for you."
+                  >
+                    Generate with AI
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem
                   startIcon={<Icon name="add" size="large" />}
                   onSelect={openCreateSliceModal}
-                  description="Start from scratch."
+                  description="Build a custom Slice your way."
                 >
-                  Create new
+                  Start from scratch
                 </DropdownMenuItem>
 
                 {availableSlicesTemplates.length > 0 ? (
@@ -282,6 +304,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           <SliceZoneBlankSlate
             openUpdateSliceZoneModal={openUpdateSliceZoneModal}
             openCreateSliceModal={openCreateSliceModal}
+            openGenerateSliceWithAiModal={openGenerateSliceWithAiModal}
             openSlicesTemplatesModal={openSlicesTemplatesModal}
             projectHasAvailableSlices={availableSlicesToAdd.length > 0}
             isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
@@ -366,6 +389,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           onClose={closeCreateSliceModal}
         />
       )}
+      <GenerateSliceWithAiModal
+        open={isGenerateSliceWithAiModalOpen}
+        onClose={closeGenerateSliceWithAiModal}
+      />
     </>
   );
 };

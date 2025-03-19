@@ -113,7 +113,7 @@ export class TypeBuilderPage extends BuilderPage {
         exact: true,
       });
     this.sliceZoneBlankSlateCreateNewAction =
-      this.sliceZoneBlankSlate.getByText("Create new", {
+      this.sliceZoneBlankSlate.getByText("Start from scratch", {
         exact: true,
       });
     this.sliceZoneAddDropdown = page.getByTestId("add-new-slice-dropdown");
@@ -125,7 +125,7 @@ export class TypeBuilderPage extends BuilderPage {
       .getByText("Select existing", { exact: true });
     this.sliceZoneAddDropdownCreateNewAction = page
       .getByRole("menu")
-      .getByText("Create new", { exact: true });
+      .getByText("Start from scratch", { exact: true });
     this.removeSliceButton = page.getByRole("button", {
       name: "Remove slice",
       exact: true,
