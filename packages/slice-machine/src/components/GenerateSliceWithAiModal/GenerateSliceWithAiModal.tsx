@@ -18,7 +18,7 @@ import {
 } from "@prismicio/editor-ui";
 import { useEffect, useState } from "react";
 
-import { SliceCard } from "./SliceCard";
+import { Slice, SliceCard } from "./SliceCard";
 
 interface GenerateSliceWithAiModalProps {
   open: boolean;
@@ -31,9 +31,9 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
 
   const onImagesSelected = (images: File[]) => {
     setSlices(
-      images.map((image, index) => ({
+      images.map((image) => ({
         status: "loading",
-        displayName: `Slice ${index + 1}`,
+        displayName: image.name,
         image,
       })),
     );
@@ -57,7 +57,8 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     }
   }, [slices]);
 
-  const allSlicesReady = slices.every((slice) => slice.status === "success");
+  const allSlicesReady =
+    slices.length > 0 && slices.every((slice) => slice.status === "success");
 
   return (
     <Dialog
@@ -93,7 +94,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           <ScrollArea>
             <Box padding={16} height="100%" gap={16}>
               {slices.map((slice) => (
-                <SliceCard slice={slice} />
+                <SliceCard slice={slice} key={slice.displayName} />
               ))}
             </Box>
           </ScrollArea>
@@ -111,13 +112,6 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
       </DialogContent>
     </Dialog>
   );
-}
-
-export interface Slice {
-  status: "loading" | "success" | "error";
-  displayName: string;
-  thumbnailUrl?: string;
-  image: File;
 }
 
 function UploadBlankSlate(props: {

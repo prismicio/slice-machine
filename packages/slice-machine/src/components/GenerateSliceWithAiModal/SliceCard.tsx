@@ -1,7 +1,5 @@
 import { Card, CardFooter, CardMedia } from "@/components/Card";
 
-import { Slice } from "./GenerateSliceWithAiModal";
-
 interface SliceCardProps {
   slice: Slice;
 }
@@ -24,6 +22,12 @@ export function SliceCard(props: SliceCardProps) {
       />
     </Card>
   );
+}
+export interface Slice {
+  status: "loading" | "success" | "error";
+  displayName: string;
+  thumbnailUrl?: string;
+  image: File;
 }
 
 function getStartIcon(status: Slice["status"]) {
