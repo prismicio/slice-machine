@@ -12,6 +12,7 @@ export type APIEndpoints = {
 	SliceMachineV1: string;
 	RepositoryService: string;
 	LocaleService: string;
+	CustomTypeService: string;
 };
 
 export const API_ENDPOINTS: APIEndpoints = (() => {
@@ -41,6 +42,10 @@ export const API_ENDPOINTS: APIEndpoints = (() => {
 				),
 				LocaleService: addTrailingSlash(
 					process.env.locale_api ?? "https://api.internal.wroom.io/locale/",
+				),
+				CustomTypeService: addTrailingSlash(
+					process.env.custom_type_api ??
+						"https://api.internal.wroom.io/custom-type/",
 				),
 			};
 
@@ -90,6 +95,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				SliceMachineV1: "https://sm-api.wroom.io/v1/",
 				RepositoryService: "https://api.internal.wroom.io/repository/",
 				LocaleService: "https://api.internal.wroom.io/locale/",
+				CustomTypeService: "https://api.internal.wroom.io/custom-type/",
 			};
 		}
 
@@ -107,6 +113,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				SliceMachineV1: `https://sm-api.${process.env.SM_ENV}-wroom.com/v1/`,
 				RepositoryService: `https://api.internal.${process.env.SM_ENV}-wroom.com/repository/`,
 				LocaleService: `https://api.internal.${process.env.SM_ENV}-wroom.com/locale/`,
+				CustomTypeService: `https://api.internal.${process.env.SM_ENV}-wroom.com/custom-type/`,
 			};
 		}
 
@@ -123,6 +130,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 				SliceMachineV1: "https://sm-api.prismic.io/v1/",
 				RepositoryService: "https://api.internal.prismic.io/repository/",
 				LocaleService: "https://api.internal.prismic.io/locale/",
+				CustomTypeService: "https://api.internal.prismic.io/custom-type/",
 			};
 		}
 	}
