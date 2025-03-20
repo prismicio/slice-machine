@@ -125,7 +125,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
         <DialogActions>
           <DialogCancelButton disabled={isCreatingSlices} />
           <DialogActionButton
-            disabled={!allSlicesReady || isCreatingSlices}
+            disabled={!allSlicesReady}
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
