@@ -16,10 +16,10 @@ import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
-import { GenerateSliceWithAiModal } from "@/components/GenerateSliceWithAiModal";
 import { ListHeader } from "@/components/List";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { GenerateSliceWithAiModal } from "@/features/customTypes/customTypesBuilder/GenerateSliceWithAiModal";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";

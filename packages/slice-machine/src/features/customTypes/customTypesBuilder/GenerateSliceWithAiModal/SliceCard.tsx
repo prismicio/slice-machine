@@ -1,4 +1,5 @@
-import { Card, CardFooter, CardMedia } from "../Card";
+import { Card, CardFooter, CardMedia } from "@/components/Card";
+
 import { Slice } from "./GenerateSliceWithAiModal";
 
 interface SliceCardProps {
