@@ -17,6 +17,7 @@ export function SliceCard(props: SliceCardProps) {
         <CardMedia component="div" />
       )}
       <CardFooter
+        loading={slice.status === "loading"}
         startIcon={getStartIcon(slice.status)}
         title={slice.displayName}
         subtitle={getSubtitle(slice.status)}
@@ -27,12 +28,12 @@ export function SliceCard(props: SliceCardProps) {
 
 function getStartIcon(status: Slice["status"]) {
   switch (status) {
-    case "loading":
-      return "loading";
     case "success":
       return "check";
     case "error":
       return "warning";
+    default:
+      return undefined;
   }
 }
 

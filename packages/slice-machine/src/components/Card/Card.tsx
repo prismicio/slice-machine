@@ -136,7 +136,8 @@ export const CardActions: FC<PropsWithChildren> = (props) => (
 );
 
 type CardFooterProps = {
-  startIcon?: IconName | "loading";
+  loading?: boolean;
+  startIcon?: IconName;
   action?: ReactNode;
   subtitle?: ReactNode;
   title?: ReactNode;
@@ -144,19 +145,17 @@ type CardFooterProps = {
 
 export const CardFooter: FC<CardFooterProps> = ({
   action,
+  loading = false,
   startIcon,
   subtitle,
   title,
   ...otherProps
 }) => (
   <div {...otherProps} className={styles.footer}>
-    {startIcon && (
+    {(startIcon || loading) && (
       <div className={styles.startIconBox}>
-        {startIcon === "loading" ? (
-          <ProgressCircle color="grey11" />
-        ) : (
-          <Icon name={startIcon} size="small" />
-        )}
+        {loading && <ProgressCircle color="grey11" />}
+        {startIcon && <Icon name={startIcon} size="small" />}
       </div>
     )}
     <div className={styles.footerTexts}>
