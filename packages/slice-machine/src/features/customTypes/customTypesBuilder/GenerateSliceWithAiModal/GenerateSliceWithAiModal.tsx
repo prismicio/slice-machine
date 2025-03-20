@@ -14,7 +14,6 @@ import {
   DialogHeader,
   FileDropZone,
   FileUploadButton,
-  ProgressCircle,
   ScrollArea,
 } from "@prismicio/editor-ui";
 import { useState } from "react";
@@ -127,15 +126,10 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           <DialogCancelButton disabled={isCreatingSlices} />
           <DialogActionButton
             disabled={!allSlicesReady || isCreatingSlices}
+            loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            {isCreatingSlices ? (
-              <Box display="flex" alignItems="center">
-                <ProgressCircle color="white" />
-              </Box>
-            ) : (
-              "Add to page"
-            )}
+            Add to page
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
