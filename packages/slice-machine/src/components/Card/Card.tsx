@@ -155,7 +155,7 @@ export const CardFooter: FC<CardFooterProps> = ({
     {(startIcon || loading) && (
       <div className={styles.startIconBox}>
         {loading && <ProgressCircle color="grey11" />}
-        {startIcon && <Icon name={startIcon} size="small" />}
+        {!loading && startIcon && <Icon name={startIcon} size="small" />}
       </div>
     )}
     <div className={styles.footerTexts}>
