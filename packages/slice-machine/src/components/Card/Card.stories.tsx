@@ -75,6 +75,7 @@ export const SolidWithImg = {
           src="https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?w=512"
         />
         <CardFooter
+          startIcon="image"
           action={<IconButton icon="close" />}
           subtitle="Default • Edited 19 minutes ago"
           title="Hello"
