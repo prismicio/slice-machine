@@ -14,6 +14,7 @@ import {
   DialogHeader,
   FileDropZone,
   FileUploadButton,
+  ProgressCircle,
   ScrollArea,
 } from "@prismicio/editor-ui";
 import { useState } from "react";
@@ -28,6 +29,7 @@ interface GenerateSliceWithAiModalProps {
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const { open, onClose } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
+  const [isCreatingSlices, setIsCreatingSlices] = useState(false);
 
   const onImagesSelected = (images: File[]) => {
     setSlices(
@@ -65,6 +67,17 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           console.error("Error uploading image", error);
         });
     });
+  };
+
+  const onSubmit = () => {
+    setIsCreatingSlices(true);
+
+    // Simulate Slice creation call
+    setTimeout(() => {
+      onClose();
+      setSlices([]);
+      setIsCreatingSlices(false);
+    }, 2000);
   };
 
   const allSlicesReady =
@@ -111,12 +124,18 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
         )}
 
         <DialogActions>
-          <DialogCancelButton />
+          <DialogCancelButton disabled={isCreatingSlices} />
           <DialogActionButton
-            disabled={!allSlicesReady}
-            onClick={() => undefined}
+            disabled={!allSlicesReady || isCreatingSlices}
+            onClick={onSubmit}
           >
-            Add to page
+            {isCreatingSlices ? (
+              <Box display="flex" alignItems="center">
+                <ProgressCircle color="white" />
+              </Box>
+            ) : (
+              "Add to page"
+            )}
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
