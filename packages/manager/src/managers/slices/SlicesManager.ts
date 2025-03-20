@@ -344,6 +344,52 @@ export class SlicesManager extends BaseManager {
 		};
 	}
 
+	async addSlices(args: { models: SharedSlice[] }): Promise<void> {
+		const { models } = args;
+
+		// fix duplicate slice ids
+		const existingSlices = await this.readAllSlices();
+		if (existingSlices.errors.length > 0) {
+			throw new Error("Failed to read existing slices.");
+		}
+		const existingSliceIds = new Set(
+			existingSlices.models.map((slice) => slice.model.id),
+		);
+		const updatedModels = models.map((model) => {
+			let newId = model.id;
+			let counter = 2;
+
+			while (existingSliceIds.has(newId)) {
+				newId = `${model.id}${counter}`;
+				counter++;
+			}
+
+			existingSliceIds.add(newId);
+
+			return {
+				...model,
+				id: newId,
+			};
+		});
+
+		// add slices to the first library
+		const { libraries = [] } = await this.project.getSliceMachineConfig();
+		const library = libraries[0];
+		if (!library) {
+			throw new Error("No library found in Slice Machine config.");
+		}
+
+		for (const model of updatedModels) {
+			const { errors } = await this.createSlice({
+				libraryID: library,
+				model,
+			});
+			if (errors.length) {
+				throw new Error(`Failed to create slice ${model.id}.`);
+			}
+		}
+	}
+
 	async readSlice(
 		args: SliceReadHookData,
 	): Promise<SliceMachineManagerReadSliceReturnType> {
