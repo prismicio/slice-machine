@@ -9,7 +9,7 @@ export function SliceCard(props: SliceCardProps) {
 
   return (
     <Card disabled={slice.status === "loading"} style={{ width: 394 }}>
-      {Boolean(slice.thumbnailUrl) ? (
+      {slice.status === "success" ? (
         <CardMedia src={slice.thumbnailUrl} />
       ) : (
         <CardMedia component="div" />
@@ -17,18 +17,21 @@ export function SliceCard(props: SliceCardProps) {
       <CardFooter
         loading={slice.status === "loading"}
         startIcon={getStartIcon(slice.status)}
-        title={slice.displayName}
+        title={slice.image.name}
         subtitle={getSubtitle(slice.status)}
       />
     </Card>
   );
 }
-export interface Slice {
-  status: "loading" | "success" | "error";
-  displayName: string;
-  thumbnailUrl?: string;
-  image: File;
-}
+
+export type Slice =
+  | { status: "loading"; image: File }
+  | {
+      status: "success";
+      thumbnailUrl: string;
+      image: File;
+    }
+  | { status: "error"; image: File };
 
 function getStartIcon(status: Slice["status"]) {
   switch (status) {

@@ -16,7 +16,7 @@ import {
   FileUploadButton,
   ScrollArea,
 } from "@prismicio/editor-ui";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Slice, SliceCard } from "./SliceCard";
 
@@ -33,29 +33,39 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     setSlices(
       images.map((image) => ({
         status: "loading",
-        displayName: image.name,
         image,
       })),
     );
+
+    images.forEach((image, index) => {
+      mockApiCall(image)
+        .then((response) => {
+          setSlices((slices) =>
+            slices.map((slice, i) =>
+              i === index
+                ? {
+                    ...slice,
+                    ...response,
+                  }
+                : slice,
+            ),
+          );
+        })
+        .catch((error) => {
+          setSlices((slices) =>
+            slices.map((slice, i) =>
+              i === index
+                ? {
+                    ...slice,
+                    status: "error",
+                  }
+                : slice,
+            ),
+          );
+          console.error("Error uploading image", error);
+        });
+    });
   };
-
-  useEffect(() => {
-    if (slices.length > 0 && slices[0].status === "loading") {
-      const timeout = setTimeout(() => {
-        setSlices((slices) =>
-          slices.map((slice, index) => ({
-            ...slice,
-            displayName: `Hero ${index + 1}`,
-            thumbnailUrl:
-              "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?w=512",
-            status: "success",
-          })),
-        );
-      }, 2000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [slices]);
 
   const allSlicesReady =
     slices.length > 0 && slices.every((slice) => slice.status === "success");
@@ -93,8 +103,8 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
         ) : (
           <ScrollArea>
             <Box padding={16} height="100%" gap={16}>
-              {slices.map((slice) => (
-                <SliceCard slice={slice} key={slice.displayName} />
+              {slices.map((slice, index) => (
+                <SliceCard slice={slice} key={`slice-${index}`} />
               ))}
             </Box>
           </ScrollArea>
@@ -152,4 +162,20 @@ function UploadBlankSlate(props: {
       </BlankSlate>
     </Box>
   );
+}
+
+function mockApiCall(image: File) {
+  return new Promise<Slice>((resolve) => {
+    setTimeout(
+      () => {
+        resolve({
+          thumbnailUrl:
+            "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?w=512",
+          image,
+          status: "success",
+        });
+      },
+      2000 + Math.random() * 2000,
+    );
+  });
 }
