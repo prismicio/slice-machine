@@ -1,6 +1,9 @@
 import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import {
+	CustomType,
+	SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
 	CustomTypeCreateHook,
@@ -12,6 +15,7 @@ import {
 	CustomTypeUpdateHookData,
 	HookError,
 } from "@slicemachine/plugin-kit";
+import { z } from "zod";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -337,4 +341,54 @@ export class CustomTypesManager extends BaseManager {
 
 		return await client.getAllCustomTypes();
 	}
+
+	async inferSlice({
+		imageUrl,
+	}: {
+		imageUrl: string;
+	}): Promise<InferSliceResponse> {
+		const authToken = await this.user.getAuthenticationToken();
+		const headers = {
+			Authorization: `Bearer ${authToken}`,
+		};
+
+		const repository = await this.project.getResolvedRepositoryName();
+		const searchParams = new URLSearchParams({
+			repository,
+		});
+
+		const url = new URL("./slices/infer", API_ENDPOINTS.CustomTypeService);
+		url.search = searchParams.toString();
+
+		const response = await fetch(url.toString(), {
+			method: "POST",
+			headers: headers,
+			body: JSON.stringify({ imageUrl }),
+		});
+
+		if (!response.ok) {
+			throw new Error(`Failed to infer slice: ${response.statusText}`);
+		}
+
+		const json = await response.json();
+
+		return InferSliceResponse.parse(json);
+	}
 }
+
+type InferSliceResponse = z.infer<typeof InferSliceResponse>;
+
+const InferSliceResponse = z.object({
+	slice: z.custom().transform((value, ctx) => {
+		const result = SharedSlice.decode(value);
+		if (result._tag === "Right") {
+			return result.right;
+		}
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: `Invalid shared slice: ${JSON.stringify(value, null, 2)}`,
+		});
+
+		return z.NEVER;
+	}),
+});
