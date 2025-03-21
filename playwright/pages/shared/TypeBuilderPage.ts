@@ -105,11 +105,11 @@ export class TypeBuilderPage extends BuilderPage {
     );
     this.sliceZoneSharedSliceCard = page.getByTestId("shared-slice-card");
     this.sliceZoneBlankSlateUseTemplateAction =
-      this.sliceZoneBlankSlate.getByText("Use template", {
+      this.sliceZoneBlankSlate.getByText("Use a template", {
         exact: true,
       });
     this.sliceZoneBlankSlateSelectExistingAction =
-      this.sliceZoneBlankSlate.getByText("Select existing", {
+      this.sliceZoneBlankSlate.getByText("Reuse an existing Slice", {
         exact: true,
       });
     this.sliceZoneBlankSlateCreateNewAction =
@@ -119,10 +119,10 @@ export class TypeBuilderPage extends BuilderPage {
     this.sliceZoneAddDropdown = page.getByTestId("add-new-slice-dropdown");
     this.sliceZoneAddDropdownUseTemplateAction = page
       .getByRole("menu")
-      .getByText("Use template", { exact: true });
+      .getByText("Use a template", { exact: true });
     this.sliceZoneAddDropdownSelectExistingAction = page
       .getByRole("menu")
-      .getByText("Select existing", { exact: true });
+      .getByText("Reuse an existing Slice", { exact: true });
     this.sliceZoneAddDropdownCreateNewAction = page
       .getByRole("menu")
       .getByText("Start from scratch", { exact: true });
