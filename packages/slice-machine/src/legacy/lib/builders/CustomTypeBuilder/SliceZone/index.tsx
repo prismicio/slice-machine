@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -294,14 +295,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             />
           </BaseStyles>
         ) : (
-          <SliceZoneBlankSlate
-            openUpdateSliceZoneModal={openUpdateSliceZoneModal}
-            openCreateSliceModal={openCreateSliceModal}
-            openGenerateSliceWithAiModal={openGenerateSliceWithAiModal}
-            openSlicesTemplatesModal={openSlicesTemplatesModal}
-            projectHasAvailableSlices={availableSlicesToAdd.length > 0}
-            isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
-          />
+          <Box padding={{ top: 80, bottom: 32 }}>
+            <SliceZoneBlankSlate
+              openUpdateSliceZoneModal={openUpdateSliceZoneModal}
+              openCreateSliceModal={openCreateSliceModal}
+              openGenerateSliceWithAiModal={openGenerateSliceWithAiModal}
+              openSlicesTemplatesModal={openSlicesTemplatesModal}
+              projectHasAvailableSlices={availableSlicesToAdd.length > 0}
+              isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
+            />
+          </Box>
         )
       ) : undefined}
       {isUpdateSliceZoneModalOpen && (
