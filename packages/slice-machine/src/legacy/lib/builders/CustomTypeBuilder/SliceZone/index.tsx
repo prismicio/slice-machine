@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -7,7 +6,6 @@ import {
   DropdownMenuTrigger,
   Icon,
   Switch,
-  Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect, useMemo, useState } from "react";
@@ -242,14 +240,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   <DropdownMenuItem
                     onSelect={openSlicesTemplatesModal}
                     startIcon={<Icon name="contentCopy" size="large" />}
-                    description="Select from premade examples."
-                    endAdornment={
-                      <Text color="inherit" component="kbd">
-                        <Badge color="purple" title="New" />
-                      </Text>
-                    }
+                    description="Select from your created Slices."
                   >
-                    Use template
+                    Use a template
                   </DropdownMenuItem>
                 ) : undefined}
 
@@ -257,9 +250,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   <DropdownMenuItem
                     onSelect={openUpdateSliceZoneModal}
                     startIcon={<Icon name="folder" size="large" />}
-                    description="Select from your own slices."
+                    description="Select from your created Slices."
                   >
-                    Select existing
+                    Reuse an existing Slice
                   </DropdownMenuItem>
                 ) : undefined}
               </DropdownMenuContent>
