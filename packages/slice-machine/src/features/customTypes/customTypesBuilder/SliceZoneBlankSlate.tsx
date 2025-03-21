@@ -40,14 +40,12 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
       data-testid="slice-zone-blank-slate"
     >
       <BlankSlate>
-        <Box justifyContent="center" padding={{ bottom: 16 }}>
-          <BlankSlateIcon
-            lineColor="purple9"
-            backgroundColor="purple5"
-            name="add"
-            size="large"
-          />
-        </Box>
+        <BlankSlateIcon
+          lineColor="purple9"
+          backgroundColor="purple5"
+          name="add"
+          size="large"
+        />
         <BlankSlateTitle size="big">Add slices</BlankSlateTitle>
         <BlankSlateDescription>
           Slices are website sections that you can reuse on different pages with
@@ -71,7 +69,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
             >
               Start from scratch
             </ActionListItem>
-            {isSlicesTemplatesSupported ? (
+            {isSlicesTemplatesSupported && (
               <ActionListItem
                 startIcon="contentCopy"
                 onClick={openSlicesTemplatesModal}
@@ -79,8 +77,8 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
               >
                 Use a template
               </ActionListItem>
-            ) : undefined}
-            {projectHasAvailableSlices ? (
+            )}
+            {projectHasAvailableSlices && (
               <ActionListItem
                 startIcon="folder"
                 onClick={openUpdateSliceZoneModal}
@@ -88,7 +86,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
               >
                 Reuse an existing Slice
               </ActionListItem>
-            ) : undefined}
+            )}
           </ActionList>
         </BlankSlateActions>
       </BlankSlate>
