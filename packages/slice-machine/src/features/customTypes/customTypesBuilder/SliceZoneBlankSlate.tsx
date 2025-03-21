@@ -31,7 +31,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
 
   return (
-    <BlankSlate data-testid="slice-zone-blank-slate">
+    <BlankSlate data-testid="slice-zone-blank-slate" sx={{ width: 648 }}>
       <BlankSlateIcon
         lineColor="purple9"
         backgroundColor="purple5"

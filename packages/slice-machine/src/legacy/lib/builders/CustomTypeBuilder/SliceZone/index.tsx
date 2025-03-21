@@ -295,7 +295,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             />
           </BaseStyles>
         ) : (
-          <Box padding={{ top: 80, bottom: 32 }}>
+          <Box
+            flexDirection="column"
+            flexGrow={1}
+            justifyContent="center"
+            alignItems="center"
+            padding={{ block: 32 }}
+          >
             <SliceZoneBlankSlate
               openUpdateSliceZoneModal={openUpdateSliceZoneModal}
               openCreateSliceModal={openCreateSliceModal}
