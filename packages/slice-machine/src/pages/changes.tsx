@@ -33,7 +33,6 @@ import {
   HardDeleteDocumentsDrawer,
   SoftDeleteDocumentsDrawer,
 } from "@/legacy/components/DeleteDocumentsDrawer";
-import { createDocumentsListEndpointFromRepoName } from "@/legacy/lib/utils/repo";
 import { AuthStatus } from "@/modules/userContext/types";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
@@ -56,11 +55,8 @@ const Changes: React.FunctionComponent = () => {
   const router = useRouter();
   const [isPushed, setIsPushed] = useState(false);
   const [isToastOpen, setIsToastOpen] = useState(false);
-  const { repositoryName } = useRepositoryInformation();
+  const { repositoryUrl } = useRepositoryInformation();
   const { completeStep } = useOnboarding();
-
-  const documentsListEndpoint =
-    createDocumentsListEndpointFromRepoName(repositoryName);
 
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
@@ -128,7 +124,7 @@ const Changes: React.FunctionComponent = () => {
       return (
         <NoChangesBlankSlate
           isPostPush={isPushed}
-          documentsListEndpoint={documentsListEndpoint}
+          documentsListEndpoint={repositoryUrl}
         />
       );
     }
@@ -149,7 +145,7 @@ const Changes: React.FunctionComponent = () => {
     unSyncedCustomTypes,
     modelsStatuses,
     isPushed,
-    documentsListEndpoint,
+    repositoryUrl,
   ]);
 
   return (
@@ -189,7 +185,7 @@ const Changes: React.FunctionComponent = () => {
                   void telemetry.track({
                     event: "post-push:toast-cta-clicked",
                   });
-                  void window.open(documentsListEndpoint, "_blank");
+                  void window.open(repositoryUrl, "_blank");
                 },
               }}
               cancel={{
