@@ -1,3 +1,5 @@
+import { Button } from "@prismicio/editor-ui";
+
 import { Card, CardFooter, CardMedia } from "@/components/Card";
 
 interface SliceCardProps {
@@ -7,38 +9,49 @@ interface SliceCardProps {
 export function SliceCard(props: SliceCardProps) {
   const { slice } = props;
 
+  const loading = slice.status === "uploading";
+  const error = slice.status === "uploadError";
+
   return (
-    <Card disabled={slice.status === "loading"} style={{ width: 394 }}>
+    <Card disabled={loading} style={{ width: 394 }}>
       {slice.status === "success" ? (
         <CardMedia src={slice.thumbnailUrl} />
       ) : (
         <CardMedia component="div" />
       )}
       <CardFooter
-        loading={slice.status === "loading"}
+        loading={loading}
         startIcon={getStartIcon(slice.status)}
         title={slice.image.name}
         subtitle={getSubtitle(slice.status)}
+        error={error}
+        action={
+          error ? (
+            <Button startIcon="refresh" color="grey" onClick={slice.onRetry}>
+              Retry
+            </Button>
+          ) : undefined
+        }
       />
     </Card>
   );
 }
 
-export type Slice =
-  | { status: "loading"; image: File }
+export type Slice = { image: File } & (
+  | { status: "uploading" }
+  | { status: "uploadError"; onRetry: () => void }
   | {
       status: "success";
       thumbnailUrl: string;
-      image: File;
     }
-  | { status: "error"; image: File };
+);
 
 function getStartIcon(status: Slice["status"]) {
   switch (status) {
+    case "uploadError":
+      return "close";
     case "success":
       return "check";
-    case "error":
-      return "warning";
     default:
       return undefined;
   }
@@ -46,11 +59,11 @@ function getStartIcon(status: Slice["status"]) {
 
 function getSubtitle(status: Slice["status"]) {
   switch (status) {
-    case "loading":
-      return "Generating...";
+    case "uploading":
+      return "Uploading...";
+    case "uploadError":
+      return "Unable to upload image";
     case "success":
       return "Generated";
-    case "error":
-      return "Error";
   }
 }

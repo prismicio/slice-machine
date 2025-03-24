@@ -30,42 +30,57 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
 
+  const setSlice = (args: { index: number; slice: Slice }) => {
+    const { index, slice } = args;
+    setSlices((slices) =>
+      slices.map((s, i) => (i === index ? { ...s, ...slice } : s)),
+    );
+  };
+
+  const uploadImage = (args: { index: number; image: File }) => {
+    const { index, image } = args;
+
+    setSlice({
+      index,
+      slice: {
+        image,
+        status: "uploading",
+      },
+    });
+
+    mockUpload(image)
+      .then((response) => {
+        if (response.status === "error") throw new Error("Upload failed");
+
+        setSlice({
+          index,
+          slice: {
+            image,
+            thumbnailUrl: response.imageUrl,
+            status: "success",
+          },
+        });
+      })
+      .catch(() => {
+        setSlice({
+          index,
+          slice: {
+            image,
+            status: "uploadError",
+            onRetry: () => uploadImage({ index, image }),
+          },
+        });
+      });
+  };
   const onImagesSelected = (images: File[]) => {
     setSlices(
       images.map((image) => ({
-        status: "loading",
+        status: "uploading",
         image,
       })),
     );
 
-    images.forEach((image, index) => {
-      mockApiCall(image)
-        .then((response) => {
-          setSlices((slices) =>
-            slices.map((slice, i) =>
-              i === index
-                ? {
-                    ...slice,
-                    ...response,
-                  }
-                : slice,
-            ),
-          );
-        })
-        .catch((error) => {
-          setSlices((slices) =>
-            slices.map((slice, i) =>
-              i === index
-                ? {
-                    ...slice,
-                    status: "error",
-                  }
-                : slice,
-            ),
-          );
-          console.error("Error uploading image", error);
-        });
-    });
+    images.forEach((image, index) => uploadImage({ index, image }));
   };
 
   const onSubmit = () => {
@@ -79,8 +94,9 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     }, 2000);
   };
 
-  const allSlicesReady =
-    slices.length > 0 && slices.every((slice) => slice.status === "success");
+  const areSlicesLoading = slices.some((slice) => slice.status === "uploading");
+  const readySlices = slices.filter((slice) => slice.status === "success");
+  const someSlicesReady = readySlices.length > 0;
 
   return (
     <Dialog
@@ -114,7 +130,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           </Box>
         ) : (
           <ScrollArea>
-            <Box padding={16} height="100%" gap={16}>
+            <Box padding={16} height="100%" gap={16} flexWrap="wrap">
               {slices.map((slice, index) => (
                 <SliceCard slice={slice} key={`slice-${index}`} />
               ))}
@@ -125,11 +141,11 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
         <DialogActions>
           <DialogCancelButton disabled={isCreatingSlices} />
           <DialogActionButton
-            disabled={!allSlicesReady}
+            disabled={!someSlicesReady || areSlicesLoading}
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            Add to page
+            Add to page ({readySlices.length})
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
@@ -151,6 +167,7 @@ function UploadBlankSlate(props: {
       backgroundColor={droppingFiles ? "purple2" : "grey2"}
       border
       borderStyle="dashed"
+      borderColor={droppingFiles ? "purple9" : "grey6"}
     >
       <BlankSlate>
         <BlankSlateIcon
@@ -177,18 +194,23 @@ function UploadBlankSlate(props: {
   );
 }
 
-function mockApiCall(image: File) {
-  return new Promise<Slice>((resolve) => {
+function mockUpload(_image: File) {
+  return new Promise<
+    { imageUrl: string; status: "success" } | { status: "error" }
+  >((resolve) => {
     setTimeout(
       () => {
-        resolve({
-          thumbnailUrl:
-            "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?w=512",
-          image,
-          status: "success",
-        });
+        resolve(
+          Math.random() > 0.2
+            ? {
+                imageUrl:
+                  "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?w=512",
+                status: "success",
+              }
+            : { status: "error" },
+        );
       },
-      2000 + Math.random() * 2000,
+      1000 + Math.random() * 2000,
     );
   });
 }
