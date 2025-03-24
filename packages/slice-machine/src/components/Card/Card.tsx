@@ -141,6 +141,7 @@ type CardFooterProps = {
   action?: ReactNode;
   subtitle?: ReactNode;
   title?: ReactNode;
+  error?: boolean;
 };
 
 export const CardFooter: FC<CardFooterProps> = ({
@@ -149,26 +150,33 @@ export const CardFooter: FC<CardFooterProps> = ({
   startIcon,
   subtitle,
   title,
+  error = false,
   ...otherProps
-}) => (
-  <div {...otherProps} className={styles.footer}>
-    {(startIcon || loading) && (
-      <div className={styles.startIconBox}>
-        {loading && <ProgressCircle color="grey11" />}
-        {!loading && startIcon && <Icon name={startIcon} size="small" />}
+}) => {
+  const highlightColor = error ? "tomato11" : "grey11";
+
+  return (
+    <div {...otherProps} className={styles.footer}>
+      {(startIcon || loading) && (
+        <div className={styles.startIconBox}>
+          {loading && <ProgressCircle color="grey11" />}
+          {!loading && startIcon && (
+            <Icon name={startIcon} size="small" color={highlightColor} />
+          )}
+        </div>
+      )}
+      <div className={styles.footerTexts}>
+        <Text component="span" noWrap variant="bold">
+          {title}
+        </Text>
+        <Text color={highlightColor} component="span" noWrap variant="small">
+          {subtitle}
+        </Text>
       </div>
-    )}
-    <div className={styles.footerTexts}>
-      <Text component="span" noWrap variant="bold">
-        {title}
-      </Text>
-      <Text color="grey11" component="span" noWrap variant="small">
-        {subtitle}
-      </Text>
+      {action}
     </div>
-    {action}
-  </div>
-);
+  );
+};
 
 export const CardStatus: FC<PropsWithChildren> = ({
   children,
