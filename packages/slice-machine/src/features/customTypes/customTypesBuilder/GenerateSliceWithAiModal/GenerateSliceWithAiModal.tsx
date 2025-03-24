@@ -30,32 +30,44 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
 
-  const setSlice = (index: number, sliceUpdate: Slice) => {
+  const setSlice = (args: { index: number; slice: Slice }) => {
+    const { index, slice } = args;
     setSlices((slices) =>
-      slices.map((s, i) => (i === index ? { ...s, ...sliceUpdate } : s)),
+      slices.map((s, i) => (i === index ? { ...s, ...slice } : s)),
     );
   };
 
-  const uploadImage = (index: number, image: File) => {
-    setSlice(index, {
-      image,
-      status: "uploading",
+  const uploadImage = (args: { index: number; image: File }) => {
+    const { index, image } = args;
+
+    setSlice({
+      index,
+      slice: {
+        image,
+        status: "uploading",
+      },
     });
 
     mockUpload(image)
       .then((response) => {
         if (response.status === "error") throw new Error("Upload failed");
 
-        setSlice(index, {
-          image,
-          thumbnailUrl: response.imageUrl,
-          status: "success",
+        setSlice({
+          index,
+          slice: {
+            image,
+            thumbnailUrl: response.imageUrl,
+            status: "success",
+          },
         });
       })
       .catch(() => {
-        setSlice(index, {
-          image,
-          status: "uploadingError",
+        setSlice({
+          index,
+          slice: {
+            image,
+            status: "uploadError",
+          },
         });
       });
   };
@@ -67,7 +79,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
       })),
     );
 
-    images.forEach((image, index) => uploadImage(index, image));
+    images.forEach((image, index) => uploadImage({ index, image }));
   };
 
   const onSubmit = () => {
@@ -121,7 +133,11 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
                 <SliceCard
                   slice={slice}
                   key={`slice-${index}`}
-                  onRetry={() => uploadImage(index, slice.image)}
+                  onRetry={
+                    slice.status === "uploadError"
+                      ? () => uploadImage({ index, image: slice.image })
+                      : undefined
+                  }
                 />
               ))}
             </Box>

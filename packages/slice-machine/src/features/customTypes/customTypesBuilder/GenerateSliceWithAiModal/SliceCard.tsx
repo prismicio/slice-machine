@@ -11,7 +11,7 @@ export function SliceCard(props: SliceCardProps) {
   const { slice, onRetry } = props;
 
   const loading = slice.status === "uploading";
-  const error = slice.status === "uploadingError";
+  const error = slice.status === "uploadError";
 
   return (
     <Card disabled={loading} style={{ width: 394 }}>
@@ -38,18 +38,18 @@ export function SliceCard(props: SliceCardProps) {
   );
 }
 
-export type Slice =
-  | { status: "uploading"; image: File }
-  | { status: "uploadingError"; image: File }
+export type Slice = { image: File } & (
+  | { status: "uploading" }
+  | { status: "uploadError" }
   | {
       status: "success";
       thumbnailUrl: string;
-      image: File;
-    };
+    }
+);
 
 function getStartIcon(status: Slice["status"]) {
   switch (status) {
-    case "uploadingError":
+    case "uploadError":
       return "close";
     case "success":
       return "check";
@@ -62,7 +62,7 @@ function getSubtitle(status: Slice["status"]) {
   switch (status) {
     case "uploading":
       return "Uploading...";
-    case "uploadingError":
+    case "uploadError":
       return "Unable to upload image";
     case "success":
       return "Generated";
