@@ -93,6 +93,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     }, 2000);
   };
 
+  const areSlicesLoading = slices.some((slice) => slice.status === "uploading");
   const readySlices = slices.filter((slice) => slice.status === "success");
   const someSlicesReady = readySlices.length > 0;
 
@@ -147,7 +148,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
         <DialogActions>
           <DialogCancelButton disabled={isCreatingSlices} />
           <DialogActionButton
-            disabled={!someSlicesReady}
+            disabled={!someSlicesReady || areSlicesLoading}
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
