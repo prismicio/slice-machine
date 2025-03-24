@@ -67,6 +67,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           slice: {
             image,
             status: "uploadError",
+            onRetry: () => uploadImage({ index, image }),
           },
         });
       });
@@ -131,15 +132,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           <ScrollArea>
             <Box padding={16} height="100%" gap={16} flexWrap="wrap">
               {slices.map((slice, index) => (
-                <SliceCard
-                  slice={slice}
-                  key={`slice-${index}`}
-                  onRetry={
-                    slice.status === "uploadError"
-                      ? () => uploadImage({ index, image: slice.image })
-                      : undefined
-                  }
-                />
+                <SliceCard slice={slice} key={`slice-${index}`} />
               ))}
             </Box>
           </ScrollArea>

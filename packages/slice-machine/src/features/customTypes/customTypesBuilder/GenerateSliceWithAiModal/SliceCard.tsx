@@ -4,11 +4,10 @@ import { Card, CardFooter, CardMedia } from "@/components/Card";
 
 interface SliceCardProps {
   slice: Slice;
-  onRetry?: () => void;
 }
 
 export function SliceCard(props: SliceCardProps) {
-  const { slice, onRetry } = props;
+  const { slice } = props;
 
   const loading = slice.status === "uploading";
   const error = slice.status === "uploadError";
@@ -28,7 +27,7 @@ export function SliceCard(props: SliceCardProps) {
         error={error}
         action={
           error ? (
-            <Button startIcon="refresh" color="grey" onClick={onRetry}>
+            <Button startIcon="refresh" color="grey" onClick={slice.onRetry}>
               Retry
             </Button>
           ) : undefined
@@ -40,7 +39,7 @@ export function SliceCard(props: SliceCardProps) {
 
 export type Slice = { image: File } & (
   | { status: "uploading" }
-  | { status: "uploadError" }
+  | { status: "uploadError"; onRetry: () => void }
   | {
       status: "success";
       thumbnailUrl: string;
