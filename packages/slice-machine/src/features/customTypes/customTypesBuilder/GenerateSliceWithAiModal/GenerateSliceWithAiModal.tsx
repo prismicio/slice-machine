@@ -30,11 +30,12 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
 
-  const setSlice = (args: { index: number; slice: Slice }) => {
+  const setSlice = (args: {
+    index: number;
+    slice: (prevSlice: Slice) => Slice;
+  }) => {
     const { index, slice } = args;
-    setSlices((slices) =>
-      slices.map((s, i) => (i === index ? { ...s, ...slice } : s)),
-    );
+    setSlices((slices) => slices.map((s, i) => (i === index ? slice(s) : s)));
   };
 
   const uploadImage = (args: { index: number; image: File }) => {
@@ -42,36 +43,68 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
 
     setSlice({
       index,
-      slice: {
-        image,
+      slice: (prevSlice) => ({
+        ...prevSlice,
         status: "uploading",
-      },
+      }),
     });
 
     mockUpload(image)
       .then((response) => {
         if (response.status === "error") throw new Error("Upload failed");
 
+        generateSlice({ index, imageUrl: response.imageUrl });
+      })
+      .catch(() => {
         setSlice({
           index,
-          slice: {
-            image,
-            thumbnailUrl: response.imageUrl,
+          slice: (prevSlice) => ({
+            ...prevSlice,
+            status: "uploadError",
+            onRetry: () => uploadImage({ index, image }),
+          }),
+        });
+      });
+  };
+
+  const generateSlice = (args: { index: number; imageUrl: string }) => {
+    const { index, imageUrl: thumbnailUrl } = args;
+
+    setSlice({
+      index,
+      slice: (prevSlice) => ({
+        ...prevSlice,
+        thumbnailUrl,
+        status: "generating",
+      }),
+    });
+
+    mockGeneration(thumbnailUrl)
+      .then((response) => {
+        if (response.status === "error") throw new Error("Generation failed");
+
+        setSlice({
+          index,
+          slice: (prevSlice) => ({
+            ...prevSlice,
+            thumbnailUrl,
             status: "success",
-          },
+          }),
         });
       })
       .catch(() => {
         setSlice({
           index,
-          slice: {
-            image,
-            status: "uploadError",
-            onRetry: () => uploadImage({ index, image }),
-          },
+          slice: (prevSlice) => ({
+            ...prevSlice,
+            thumbnailUrl,
+            status: "generateError",
+            onRetry: () => generateSlice({ index, imageUrl: thumbnailUrl }),
+          }),
         });
       });
   };
+
   const onImagesSelected = (images: File[]) => {
     setSlices(
       images.map((image) => ({
@@ -94,7 +127,9 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     }, 2000);
   };
 
-  const areSlicesLoading = slices.some((slice) => slice.status === "uploading");
+  const areSlicesLoading = slices.some(
+    (slice) => slice.status === "uploading" || slice.status === "generating",
+  );
   const readySlices = slices.filter((slice) => slice.status === "success");
   const someSlicesReady = readySlices.length > 0;
 
@@ -208,6 +243,19 @@ function mockUpload(_image: File) {
                 status: "success",
               }
             : { status: "error" },
+        );
+      },
+      1000 + Math.random() * 2000,
+    );
+  });
+}
+
+function mockGeneration(_imageUrl: string) {
+  return new Promise<{ status: "success" | "error" }>((resolve) => {
+    setTimeout(
+      () => {
+        resolve(
+          Math.random() > 0.2 ? { status: "success" } : { status: "error" },
         );
       },
       1000 + Math.random() * 2000,

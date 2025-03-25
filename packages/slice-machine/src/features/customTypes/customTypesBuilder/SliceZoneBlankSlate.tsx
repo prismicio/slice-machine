@@ -1,6 +1,7 @@
 import {
   ActionList,
   ActionListItem,
+  BackgroundIcon,
   BlankSlate,
   BlankSlateActions,
   BlankSlateDescription,
@@ -47,7 +48,16 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
         <ActionList>
           {aiSliceGenerationExperiment.eligible && (
             <ActionListItem
-              startIcon="autoFixHigh"
+              renderStartIcon={() => (
+                <BackgroundIcon
+                  name="autoFixHigh"
+                  size="small"
+                  iconSize="medium"
+                  color="purple"
+                  variant="solid"
+                  radius={6}
+                />
+              )}
               onClick={openGenerateSliceWithAiModal}
               description="Let AI instantly create a Slice for you."
             >
@@ -55,7 +65,16 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
             </ActionListItem>
           )}
           <ActionListItem
-            startIcon="add"
+            renderStartIcon={() => (
+              <BackgroundIcon
+                name="add"
+                size="small"
+                iconSize="medium"
+                color="white"
+                variant="solid"
+                radius={6}
+              />
+            )}
             onClick={openCreateSliceModal}
             description="Build a custom Slice your way."
           >
@@ -63,7 +82,16 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
           </ActionListItem>
           {isSlicesTemplatesSupported && (
             <ActionListItem
-              startIcon="contentCopy"
+              renderStartIcon={() => (
+                <BackgroundIcon
+                  name="contentCopy"
+                  size="small"
+                  iconSize="medium"
+                  color="white"
+                  variant="solid"
+                  radius={6}
+                />
+              )}
               onClick={openSlicesTemplatesModal}
               description="Choose from ready-made examples."
             >
@@ -72,7 +100,16 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
           )}
           {projectHasAvailableSlices && (
             <ActionListItem
-              startIcon="folder"
+              renderStartIcon={() => (
+                <BackgroundIcon
+                  name="folder"
+                  size="small"
+                  iconSize="medium"
+                  color="white"
+                  variant="solid"
+                  radius={6}
+                />
+              )}
               onClick={openUpdateSliceZoneModal}
               description="Select from your created Slices."
             >

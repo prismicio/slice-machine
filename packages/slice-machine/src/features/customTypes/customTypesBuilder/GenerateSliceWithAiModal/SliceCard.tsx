@@ -9,12 +9,19 @@ interface SliceCardProps {
 export function SliceCard(props: SliceCardProps) {
   const { slice } = props;
 
-  const loading = slice.status === "uploading";
-  const error = slice.status === "uploadError";
+  const loading = slice.status === "uploading" || slice.status === "generating";
+
+  const error =
+    slice.status === "uploadError" || slice.status === "generateError";
+
+  const hasThumbnail =
+    slice.status === "generateError" ||
+    slice.status === "generating" ||
+    slice.status === "success";
 
   return (
     <Card disabled={loading} style={{ width: 394 }}>
-      {slice.status === "success" ? (
+      {hasThumbnail ? (
         <CardMedia src={slice.thumbnailUrl} />
       ) : (
         <CardMedia component="div" />
@@ -40,6 +47,8 @@ export function SliceCard(props: SliceCardProps) {
 export type Slice = { image: File } & (
   | { status: "uploading" }
   | { status: "uploadError"; onRetry: () => void }
+  | { status: "generating"; thumbnailUrl: string }
+  | { status: "generateError"; thumbnailUrl: string; onRetry: () => void }
   | {
       status: "success";
       thumbnailUrl: string;
@@ -49,6 +58,7 @@ export type Slice = { image: File } & (
 function getStartIcon(status: Slice["status"]) {
   switch (status) {
     case "uploadError":
+    case "generateError":
       return "close";
     case "success":
       return "check";
@@ -63,6 +73,10 @@ function getSubtitle(status: Slice["status"]) {
       return "Uploading...";
     case "uploadError":
       return "Unable to upload image";
+    case "generating":
+      return "Generating...";
+    case "generateError":
+      return "Something went wrong";
     case "success":
       return "Generated";
   }

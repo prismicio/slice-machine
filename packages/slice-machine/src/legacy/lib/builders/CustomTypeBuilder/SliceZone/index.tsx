@@ -1,11 +1,11 @@
 import {
+  BackgroundIcon,
   Box,
   Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Icon,
   Switch,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
@@ -222,7 +222,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               <DropdownMenuContent align="end">
                 {aiSliceGenerationExperiment.eligible && (
                   <DropdownMenuItem
-                    startIcon={<Icon name="autoFixHigh" size="large" />}
+                    renderStartIcon={() => (
+                      <BackgroundIcon
+                        name="autoFixHigh"
+                        size="extraSmall"
+                        iconSize="small"
+                        radius={6}
+                        variant="solid"
+                        color="purple"
+                      />
+                    )}
                     onSelect={openGenerateSliceWithAiModal}
                     description="Let AI instantly create a Slice for you."
                   >
@@ -230,7 +239,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
-                  startIcon={<Icon name="add" size="large" />}
+                  renderStartIcon={() => (
+                    <BackgroundIcon
+                      name="add"
+                      size="extraSmall"
+                      iconSize="small"
+                      radius={6}
+                      variant="solid"
+                      color="white"
+                    />
+                  )}
                   onSelect={openCreateSliceModal}
                   description="Build a custom Slice your way."
                 >
@@ -240,7 +258,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                 {availableSlicesTemplates.length > 0 ? (
                   <DropdownMenuItem
                     onSelect={openSlicesTemplatesModal}
-                    startIcon={<Icon name="contentCopy" size="large" />}
+                    renderStartIcon={() => (
+                      <BackgroundIcon
+                        name="contentCopy"
+                        size="extraSmall"
+                        iconSize="small"
+                        radius={6}
+                        variant="solid"
+                        color="white"
+                      />
+                    )}
                     description="Select from your created Slices."
                   >
                     Use a template
@@ -250,7 +277,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                 {availableSlicesToAdd.length > 0 ? (
                   <DropdownMenuItem
                     onSelect={openUpdateSliceZoneModal}
-                    startIcon={<Icon name="folder" size="large" />}
+                    renderStartIcon={() => (
+                      <BackgroundIcon
+                        name="folder"
+                        size="extraSmall"
+                        iconSize="small"
+                        radius={6}
+                        variant="solid"
+                        color="white"
+                      />
+                    )}
                     description="Select from your created Slices."
                   >
                     Reuse an existing Slice
