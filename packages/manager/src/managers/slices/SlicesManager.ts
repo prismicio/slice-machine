@@ -364,6 +364,7 @@ export class SlicesManager extends BaseManager {
 			([ids, names], { model }) => {
 				ids.add(model.id);
 				names.add(model.name.toLowerCase());
+
 				return [ids, names];
 			},
 			[new Set(), new Set()],
