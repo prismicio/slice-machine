@@ -165,7 +165,13 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           </Box>
         ) : (
           <ScrollArea>
-            <Box padding={16} height="100%" gap={16} flexWrap="wrap">
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr"
+              gap={16}
+              height="100%"
+              padding={16}
+            >
               {slices.map((slice, index) => (
                 <SliceCard slice={slice} key={`slice-${index}`} />
               ))}

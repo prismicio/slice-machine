@@ -20,7 +20,7 @@ export function SliceCard(props: SliceCardProps) {
     slice.status === "success";
 
   return (
-    <Card disabled={loading} style={{ width: 420 }} size="medium">
+    <Card disabled={loading} size="medium">
       {hasThumbnail ? (
         <CardMedia src={slice.thumbnailUrl} />
       ) : (
