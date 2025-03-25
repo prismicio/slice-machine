@@ -169,7 +169,6 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
               display="grid"
               gridTemplateColumns="1fr 1fr"
               gap={16}
-              height="100%"
               padding={16}
             >
               {slices.map((slice, index) => (
