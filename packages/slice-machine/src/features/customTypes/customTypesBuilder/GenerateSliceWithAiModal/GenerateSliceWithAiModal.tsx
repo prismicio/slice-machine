@@ -138,16 +138,10 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   };
 
   const onSubmit = () => {
-    const newSlices = slices
-      .map((slice) =>
-        slice.status === "success"
-          ? {
-              image: slice.image,
-              model: slice.model,
-            }
-          : undefined,
-      )
-      .filter<NewSlice>((slice) => !!slice);
+    const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
+      if (slice.status === "success") acc.push(slice);
+      return acc;
+    }, []);
     if (!newSlices.length) return;
 
     const currentId = id.current;
