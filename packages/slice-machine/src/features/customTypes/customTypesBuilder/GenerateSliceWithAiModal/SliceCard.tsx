@@ -9,7 +9,7 @@ interface SliceCardProps {
 export function SliceCard(props: SliceCardProps) {
   const { slice } = props;
 
-  const loading = ["uploading", "generating"].includes(slice.status);
+  const loading = slice.status === "uploading" || slice.status === "generating";
 
   const error =
     slice.status === "uploadError" || slice.status === "generateError";
