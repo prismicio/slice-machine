@@ -20,25 +20,20 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
-import { getState } from "@/apiClient";
-import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
-import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { Slice, SliceCard } from "./SliceCard";
 
 interface GenerateSliceWithAiModalProps {
   open: boolean;
-  onSuccess: (models: SharedSlice[]) => void;
+  onSuccess: (models: SharedSlice[]) => Promise<void>;
   onClose: () => void;
 }
 
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const { open, onSuccess, onClose } = props;
-  const { createSliceSuccess } = useSliceMachineActions();
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
-  const { syncChanges } = useAutoSync();
 
   /**
    * Keeps track of the current instance id.
@@ -155,14 +150,9 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     setIsCreatingSlices(true);
 
     try {
-      await addSlices(newSlices);
+      const slicesAdded = await addSlices(newSlices);
       if (currentId !== id.current) return;
-
-      const serverState = await getState();
-      // Update Redux store
-      createSliceSuccess(serverState.libraries);
-      onSuccess(newSlices.map((slice) => slice.model));
-      syncChanges();
+      await onSuccess(slicesAdded);
     } catch (e) {
       if (currentId !== id.current) return;
       const errorMessage = "An unexpected error happened while adding slices.";
