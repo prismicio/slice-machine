@@ -429,6 +429,33 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       <GenerateSliceWithAiModal
         open={isGenerateSliceWithAiModalOpen}
+        onSuccess={(models: SharedSlice[]) => {
+          const newCustomType = addSlicesToSliceZone({
+            customType,
+            tabId,
+            slices: models,
+          });
+          setCustomType(CustomTypes.fromSM(newCustomType), () => {
+            toast.success(
+              <ToastMessageWithPath
+                message="New slices added to slice zone and created at: "
+                path={`${localLibraries[0].name}/`}
+              />,
+            );
+          });
+          void completeStep("createSlice");
+
+          for (const model of models) {
+            void telemetry.track({
+              event: "slice:created",
+              id: model.id,
+              name: model.name,
+              library: localLibraries[0].name,
+            });
+          }
+
+          closeGenerateSliceWithAiModal();
+        }}
         onClose={closeGenerateSliceWithAiModal}
       />
     </>

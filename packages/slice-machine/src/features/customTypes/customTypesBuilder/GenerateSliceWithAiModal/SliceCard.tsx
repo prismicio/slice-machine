@@ -30,7 +30,7 @@ export function SliceCard(props: SliceCardProps) {
       <CardFooter
         loading={loading}
         startIcon={getStartIcon(slice.status)}
-        title={slice.image.name}
+        title={slice.status === "success" ? slice.model.name : slice.image.name}
         subtitle={getSubtitle(slice.status)}
         error={error}
         action={

@@ -18,20 +18,27 @@ import {
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 
+import { getState } from "@/apiClient";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { Slice, SliceCard } from "./SliceCard";
 
 interface GenerateSliceWithAiModalProps {
   open: boolean;
+  onSuccess: (models: SharedSlice[]) => void;
   onClose: () => void;
 }
 
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
-  const { open, onClose } = props;
+  const { open, onSuccess, onClose } = props;
+  const { createSliceSuccess } = useSliceMachineActions();
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
+  const { syncChanges } = useAutoSync();
 
   /**
    * Keeps track of the current instance id.
@@ -137,7 +144,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     );
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
       if (slice.status === "success") acc.push(slice);
       return acc;
@@ -146,17 +153,24 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
 
     const currentId = id.current;
     setIsCreatingSlices(true);
-    addSlices(newSlices)
-      .then(() => {
-        if (currentId !== id.current) return;
-        setIsCreatingSlices(false);
-        // TODO: Execute modal callback.
-      })
-      .catch(() => {
-        if (currentId !== id.current) return;
-        setIsCreatingSlices(false);
-        // TODO: Show error?
-      });
+
+    try {
+      await addSlices(newSlices);
+      if (currentId !== id.current) return;
+
+      const serverState = await getState();
+      // Update Redux store
+      createSliceSuccess(serverState.libraries);
+      onSuccess(newSlices.map((slice) => slice.model));
+      syncChanges();
+    } catch (e) {
+      if (currentId !== id.current) return;
+      const errorMessage = "An unexpected error happened while adding slices.";
+      console.error(errorMessage, e);
+      toast.error(errorMessage);
+    }
+
+    setIsCreatingSlices(false);
   };
 
   const areSlicesLoading = slices.some(
@@ -177,6 +191,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             <FileDropZone
               onFilesSelected={onImagesSelected}
               assetType="image"
+              maxFiles={10}
               overlay={
                 <UploadBlankSlate
                   onFilesSelected={onImagesSelected}
@@ -188,7 +203,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             </FileDropZone>
           </Box>
         ) : (
-          <ScrollArea>
+          <ScrollArea stableScrollbar={false}>
             <Box
               display="grid"
               gridTemplateColumns="1fr 1fr"
@@ -207,7 +222,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           <DialogActionButton
             disabled={!someSlicesReady || areSlicesLoading}
             loading={isCreatingSlices}
-            onClick={onSubmit}
+            onClick={() => void onSubmit()}
           >
             Add to page ({readySlices.length})
           </DialogActionButton>
