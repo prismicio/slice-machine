@@ -75,6 +75,7 @@ test("I can access the repository using the open icon", async ({
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
+  // are you failing, my friend?
   await expect(newTab).toHaveTitle("prismic.io - Example Prismic Repo");
 });
 
