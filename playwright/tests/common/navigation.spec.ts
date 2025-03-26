@@ -75,7 +75,7 @@ test("I can access the repository using the open icon", async ({
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
-  await expect(newTab).toHaveTitle("prismic.io - Example Prismic Repo");
+  await expect(newTab).toHaveURL("https://example-prismic-repo.prismic.io/");
 });
 
 test("I access the changelog from Slice Machine version", async ({
