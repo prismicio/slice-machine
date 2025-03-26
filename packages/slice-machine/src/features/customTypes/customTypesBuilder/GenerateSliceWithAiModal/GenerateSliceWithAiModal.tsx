@@ -16,7 +16,10 @@ import {
   FileUploadButton,
   ScrollArea,
 } from "@prismicio/editor-ui";
-import { useState } from "react";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { useRef, useState } from "react";
+
+import { managerClient } from "@/managerClient";
 
 import { Slice, SliceCard } from "./SliceCard";
 
@@ -30,6 +33,12 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
 
+  /**
+   * Keeps track of the current instance id.
+   * When the modal is closed, the id is reset.
+   */
+  const id = useRef(crypto.randomUUID());
+
   const setSlice = (args: {
     index: number;
     slice: (prevSlice: Slice) => Slice;
@@ -38,71 +47,11 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     setSlices((slices) => slices.map((s, i) => (i === index ? slice(s) : s)));
   };
 
-  const uploadImage = (args: { index: number; image: File }) => {
-    const { index, image } = args;
-
-    setSlice({
-      index,
-      slice: (prevSlice) => ({
-        ...prevSlice,
-        status: "uploading",
-      }),
-    });
-
-    mockUpload(image)
-      .then((response) => {
-        if (response.status === "error") throw new Error("Upload failed");
-
-        generateSlice({ index, imageUrl: response.imageUrl });
-      })
-      .catch(() => {
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
-            ...prevSlice,
-            status: "uploadError",
-            onRetry: () => uploadImage({ index, image }),
-          }),
-        });
-      });
-  };
-
-  const generateSlice = (args: { index: number; imageUrl: string }) => {
-    const { index, imageUrl: thumbnailUrl } = args;
-
-    setSlice({
-      index,
-      slice: (prevSlice) => ({
-        ...prevSlice,
-        thumbnailUrl,
-        status: "generating",
-      }),
-    });
-
-    mockGeneration(thumbnailUrl)
-      .then((response) => {
-        if (response.status === "error") throw new Error("Generation failed");
-
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
-            ...prevSlice,
-            thumbnailUrl,
-            status: "success",
-          }),
-        });
-      })
-      .catch(() => {
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
-            ...prevSlice,
-            thumbnailUrl,
-            status: "generateError",
-            onRetry: () => generateSlice({ index, imageUrl: thumbnailUrl }),
-          }),
-        });
-      });
+  const onOpenChange = (open: boolean) => {
+    if (open || isCreatingSlices) return;
+    id.current = crypto.randomUUID();
+    onClose();
+    setSlices([]);
   };
 
   const onImagesSelected = (images: File[]) => {
@@ -116,15 +65,98 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     images.forEach((image, index) => uploadImage({ index, image }));
   };
 
-  const onSubmit = () => {
-    setIsCreatingSlices(true);
+  const uploadImage = (args: { index: number; image: File }) => {
+    const { index, image } = args;
+    const currentId = id.current;
 
-    // Simulate Slice creation call
-    setTimeout(() => {
-      onClose();
-      setSlices([]);
-      setIsCreatingSlices(false);
-    }, 2000);
+    setSlice({
+      index,
+      slice: (prevSlice) => ({
+        ...prevSlice,
+        status: "uploading",
+      }),
+    });
+
+    getImageUrl({ image }).then(
+      (imageUrl) => {
+        if (currentId !== id.current) return;
+        inferSlice({ index, imageUrl });
+      },
+      () => {
+        if (currentId !== id.current) return;
+        setSlice({
+          index,
+          slice: (prevSlice) => ({
+            ...prevSlice,
+            status: "uploadError",
+            onRetry: () => uploadImage({ index, image }),
+          }),
+        });
+      },
+    );
+  };
+
+  const inferSlice = (args: { index: number; imageUrl: string }) => {
+    const { index, imageUrl } = args;
+    const currentId = id.current;
+
+    setSlice({
+      index,
+      slice: (prevSlice) => ({
+        ...prevSlice,
+        status: "generating",
+        thumbnailUrl: imageUrl,
+      }),
+    });
+
+    managerClient.customTypes.inferSlice({ imageUrl }).then(
+      ({ slice }) => {
+        if (currentId !== id.current) return;
+        setSlice({
+          index,
+          slice: (prevSlice) => ({
+            ...prevSlice,
+            status: "success",
+            thumbnailUrl: imageUrl,
+            model: slice,
+          }),
+        });
+      },
+      () => {
+        if (currentId !== id.current) return;
+        setSlice({
+          index,
+          slice: (prevSlice) => ({
+            ...prevSlice,
+            status: "generateError",
+            thumbnailUrl: imageUrl,
+            onRetry: () => inferSlice({ index, imageUrl }),
+          }),
+        });
+      },
+    );
+  };
+
+  const onSubmit = () => {
+    const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
+      if (slice.status === "success") acc.push(slice);
+      return acc;
+    }, []);
+    if (!newSlices.length) return;
+
+    const currentId = id.current;
+    setIsCreatingSlices(true);
+    addSlices(newSlices)
+      .then(() => {
+        if (currentId !== id.current) return;
+        setIsCreatingSlices(false);
+        // TODO: Execute modal callback.
+      })
+      .catch(() => {
+        if (currentId !== id.current) return;
+        setIsCreatingSlices(false);
+        // TODO: Show error?
+      });
   };
 
   const areSlicesLoading = slices.some(
@@ -134,15 +166,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   const someSlicesReady = readySlices.length > 0;
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(open) => {
-        if (!open) {
-          onClose();
-          setSlices([]);
-        }
-      }}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogHeader title="Generate with AI" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
@@ -234,36 +258,54 @@ function UploadBlankSlate(props: {
   );
 }
 
-function mockUpload(_image: File) {
-  return new Promise<
-    { imageUrl: string; status: "success" } | { status: "error" }
-  >((resolve) => {
-    setTimeout(
-      () => {
-        resolve(
-          Math.random() > 0.2
-            ? {
-                imageUrl:
-                  "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?w=512",
-                status: "success",
-              }
-            : { status: "error" },
-        );
-      },
-      1000 + Math.random() * 2000,
-    );
+async function getImageUrl({ image }: { image: File }) {
+  const repository = await managerClient.project.getResolvedRepositoryName();
+  // ACL provider only allows key prefixes starting with "<repository>/shared-slices/"
+  const keyPrefix = [
+    repository,
+    "shared-slices",
+    "prismic-inferred-slices",
+    crypto.randomUUID(),
+  ].join("/");
+  await managerClient.screenshots.initS3ACL();
+  const { url } = await managerClient.screenshots.uploadScreenshot({
+    keyPrefix,
+    data: image,
   });
+  return url;
 }
 
-function mockGeneration(_imageUrl: string) {
-  return new Promise<{ status: "success" | "error" }>((resolve) => {
-    setTimeout(
-      () => {
-        resolve(
-          Math.random() > 0.2 ? { status: "success" } : { status: "error" },
-        );
-      },
-      1000 + Math.random() * 2000,
-    );
+type NewSlice = {
+  image: File;
+  model: SharedSlice;
+};
+
+async function addSlices(newSlices: NewSlice[]) {
+  // use the first library
+  const { libraries = [] } =
+    await managerClient.project.getSliceMachineConfig();
+  const library = libraries[0];
+  if (!library) {
+    throw new Error("No library found in the config.");
+  }
+
+  // add the slices computing new ids/names if needed
+  const slices = await managerClient.slices.addSlices({
+    library,
+    models: newSlices.map((slice) => slice.model),
   });
+
+  // for each added slice, set the variation screenshot
+  await Promise.all(
+    slices.map((slice, index) =>
+      managerClient.slices.updateSliceScreenshot({
+        libraryID: library,
+        sliceID: slice.id,
+        variationID: slice.variations[0].id,
+        data: newSlices[index].image,
+      }),
+    ),
+  );
+
+  return slices;
 }

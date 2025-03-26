@@ -1,4 +1,5 @@
 import { Button } from "@prismicio/editor-ui";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { Card, CardFooter, CardMedia } from "@/components/Card";
 
@@ -51,6 +52,7 @@ export type Slice = { image: File } & (
   | { status: "generateError"; thumbnailUrl: string; onRetry: () => void }
   | {
       status: "success";
+      model: SharedSlice;
       thumbnailUrl: string;
     }
 );
