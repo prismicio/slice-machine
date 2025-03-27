@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
+import { telemetry } from "@/apiClient";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
@@ -233,6 +234,16 @@ const SlicesIndex: React.FunctionComponent = () => {
                   sliceName: newSlice.name,
                   variationId,
                 });
+
+                void telemetry.track({
+                  event: "slice:created",
+                  id: newSlice.id,
+                  name: newSlice.name,
+                  library: localLibraries[0].name,
+                  location: "slices",
+                  mode: "manual",
+                });
+
                 void router.push(sliceLocation);
                 toast.success(
                   SliceToastMessage({

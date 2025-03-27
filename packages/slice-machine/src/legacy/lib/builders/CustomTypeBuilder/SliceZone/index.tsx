@@ -207,6 +207,45 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsSlicesTemplatesModalOpen(false);
   };
 
+  const addSlices = async (args: {
+    slices: SharedSlice[];
+    libraryName: string;
+    mode: "ai" | "manual" | "template";
+  }) => {
+    const { slices, libraryName, mode } = args;
+
+    const serverState = await getState();
+    createSliceSuccess(serverState.libraries);
+
+    const newCustomType = addSlicesToSliceZone({
+      customType,
+      tabId,
+      slices,
+    });
+    setCustomType(CustomTypes.fromSM(newCustomType), () => {
+      toast.success(
+        <ToastMessageWithPath
+          message="Slice(s) added to slice zone and created at: "
+          path={libraryName}
+        />,
+      );
+    });
+    void completeStep("createSlice");
+
+    for (const slice of slices) {
+      void telemetry.track({
+        event: "slice:created",
+        id: slice.id,
+        name: slice.name,
+        library: libraryName,
+        location: `${customType.format}_type`,
+        mode,
+      });
+    }
+
+    syncChanges();
+  };
+
   return (
     <>
       <ListHeader
@@ -377,21 +416,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           formId={`tab-slicezone-form-${tabId}`}
           availableSlicesTemplates={availableSlicesTemplates}
           localLibraries={localLibraries}
-          onSuccess={(slices: SharedSlice[]) => {
-            const newCustomType = addSlicesToSliceZone({
-              customType,
-              tabId,
+          onSuccess={(slices: SharedSlice[], libraryName: string) => {
+            void addSlices({
               slices,
+              libraryName,
+              mode: "template",
             });
-            setCustomType(CustomTypes.fromSM(newCustomType), () => {
-              toast.success(
-                <ToastMessageWithPath
-                  message="Slice template(s) added to slice zone and created at: "
-                  path={`${localLibraries[0].name}/`}
-                />,
-              );
-            });
-            void completeStep("createSlice");
+
             closeSlicesTemplatesModal();
           }}
           close={closeSlicesTemplatesModal}
@@ -410,20 +441,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       {localLibraries?.length !== 0 && isCreateSliceModalOpen && (
         <CreateSliceModal
-          onSuccess={(newSlice: SharedSlice) => {
-            const newCustomType = addSlicesToSliceZone({
-              customType,
-              tabId,
+          onSuccess={(newSlice: SharedSlice, libraryName: string) => {
+            void addSlices({
               slices: [newSlice],
+              libraryName,
+              mode: "manual",
             });
-            setCustomType(CustomTypes.fromSM(newCustomType), () => {
-              toast.success(
-                <ToastMessageWithPath
-                  message="New slice added to slice zone and created at: "
-                  path={`${localLibraries[0].name}/`}
-                />,
-              );
-            });
+
             closeCreateSliceModal();
           }}
           localLibraries={localLibraries}
@@ -433,36 +457,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       <GenerateSliceWithAiModal
         open={isGenerateSliceWithAiModalOpen}
-        onSuccess={async (slices: SharedSlice[]) => {
-          const serverState = await getState();
-          // Update Redux store
-          createSliceSuccess(serverState.libraries);
-
-          const newCustomType = addSlicesToSliceZone({
-            customType,
-            tabId,
+        onSuccess={(slices: SharedSlice[], libraryName: string) => {
+          void addSlices({
             slices,
+            libraryName,
+            mode: "ai",
           });
-          setCustomType(CustomTypes.fromSM(newCustomType), () => {
-            toast.success(
-              <ToastMessageWithPath
-                message="New slices added to slice zone and created at: "
-                path={`${localLibraries[0].name}/`}
-              />,
-            );
-          });
-          void completeStep("createSlice");
 
-          for (const slice of slices) {
-            void telemetry.track({
-              event: "slice:created",
-              id: slice.id,
-              name: slice.name,
-              library: localLibraries[0].name,
-            });
-          }
-
-          syncChanges();
           closeGenerateSliceWithAiModal();
         }}
         onClose={closeGenerateSliceWithAiModal}

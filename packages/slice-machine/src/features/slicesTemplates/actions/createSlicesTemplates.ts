@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
 
-import { telemetry } from "@/apiClient";
 import { managerClient } from "@/managerClient";
 
 type CreateSlicesTemplatesArgs = {
@@ -11,7 +10,7 @@ type CreateSlicesTemplatesArgs = {
 
 export async function createSlicesTemplates(args: CreateSlicesTemplatesArgs) {
   try {
-    const { templateIDs, localLibrariesNames, onSuccess } = args;
+    const { templateIDs, onSuccess } = args;
 
     const { data, errors } =
       await managerClient.sliceTemplateLibrary.createSlices({
@@ -21,16 +20,6 @@ export async function createSlicesTemplates(args: CreateSlicesTemplatesArgs) {
     if (errors.length > 0 || data === undefined) {
       throw errors;
     }
-
-    data.sliceIDs.forEach((sliceID, index) => {
-      void telemetry.track({
-        event: "slice:created",
-        id: sliceID,
-        name: sliceID,
-        library: localLibrariesNames[0],
-        sliceTemplate: templateIDs[index],
-      });
-    });
 
     await onSuccess(data.sliceIDs);
   } catch (e) {
