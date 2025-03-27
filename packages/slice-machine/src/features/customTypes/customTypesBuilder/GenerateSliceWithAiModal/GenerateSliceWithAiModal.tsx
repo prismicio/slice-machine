@@ -139,7 +139,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     );
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
       if (slice.status === "success") acc.push(slice);
       return acc;
@@ -148,19 +148,21 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
 
     const currentId = id.current;
     setIsCreatingSlices(true);
-
-    try {
-      const slicesAdded = await addSlices(newSlices);
-      if (currentId !== id.current) return;
-      void onSuccess(slicesAdded);
-    } catch (e) {
-      if (currentId !== id.current) return;
-      const errorMessage = "An unexpected error happened while adding slices.";
-      console.error(errorMessage, e);
-      toast.error(errorMessage);
-    }
-
-    setIsCreatingSlices(false);
+    addSlices(newSlices)
+      .then((slicesAdded) => {
+        if (currentId !== id.current) return;
+        setIsCreatingSlices(false);
+        void onSuccess(slicesAdded);
+        setSlices([]);
+      })
+      .catch((e) => {
+        if (currentId !== id.current) return;
+        setIsCreatingSlices(false);
+        const errorMessage =
+          "An unexpected error happened while adding slices.";
+        console.error(errorMessage, e);
+        toast.error(errorMessage);
+      });
   };
 
   const areSlicesLoading = slices.some(
@@ -212,7 +214,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
           <DialogActionButton
             disabled={!someSlicesReady || areSlicesLoading}
             loading={isCreatingSlices}
-            onClick={() => void onSubmit()}
+            onClick={onSubmit}
           >
             Add to page ({readySlices.length})
           </DialogActionButton>
