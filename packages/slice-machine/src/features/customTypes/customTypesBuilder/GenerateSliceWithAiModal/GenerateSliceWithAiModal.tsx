@@ -152,7 +152,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     try {
       const slicesAdded = await addSlices(newSlices);
       if (currentId !== id.current) return;
-      await onSuccess(slicesAdded);
+      void onSuccess(slicesAdded);
     } catch (e) {
       if (currentId !== id.current) return;
       const errorMessage = "An unexpected error happened while adding slices.";
