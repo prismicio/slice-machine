@@ -7,7 +7,7 @@ import { managerClient } from "@/managerClient";
 type CreateSliceArgs = {
   sliceName: string;
   libraryName: string;
-  onSuccess: (newSlice: SharedSlice) => Promise<void>;
+  onSuccess: (newSlice: SharedSlice) => void;
 };
 
 export async function createSlice(args: CreateSliceArgs) {
@@ -24,7 +24,7 @@ export async function createSlice(args: CreateSliceArgs) {
       throw errors;
     }
 
-    await onSuccess(newSlice);
+    onSuccess(newSlice);
   } catch (e) {
     const errorMessage = `An unexpected error happened while creating slice ${sliceName}.`;
     console.error(errorMessage, e);

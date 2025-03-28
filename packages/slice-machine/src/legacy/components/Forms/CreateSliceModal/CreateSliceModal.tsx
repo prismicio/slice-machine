@@ -3,14 +3,10 @@ import { FC, useState } from "react";
 import Select from "react-select";
 import { Box, Label } from "theme-ui";
 
-import { getState } from "@/apiClient";
-import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { createSlice } from "@/features/slices/actions/createSlice";
-import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
-import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { InputBox } from "../components/InputBox";
 import { validateSliceModalValues } from "../formsValidator";
@@ -30,10 +26,10 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   localLibraries,
   remoteSlices,
 }) => {
-  const { createSliceSuccess } = useSliceMachineActions();
+  // const { createSliceSuccess } = useSliceMachineActions();
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
-  const { syncChanges } = useAutoSync();
-  const { completeStep } = useOnboarding();
+  // const { syncChanges } = useAutoSync();
+  // const { completeStep } = useOnboarding();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
@@ -44,14 +40,8 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
     await createSlice({
       sliceName,
       libraryName: library,
-      onSuccess: async (newSlice) => {
-        // TODO(DT-1453): Remove the need of the global getState
-        const serverState = await getState();
-        // Update Redux store
-        createSliceSuccess(serverState.libraries);
+      onSuccess: (newSlice) => {
         onSuccess({ newSlice, library });
-        syncChanges();
-        void completeStep("createSlice");
       },
     });
   };
