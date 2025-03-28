@@ -152,6 +152,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
       .then(({ slices, libraryName }) => {
         if (currentId !== id.current) return;
         setIsCreatingSlices(false);
+        id.current = crypto.randomUUID();
         onSuccess(slices, libraryName);
         setSlices([]);
       })
