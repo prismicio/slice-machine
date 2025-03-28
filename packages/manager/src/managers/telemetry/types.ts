@@ -275,10 +275,12 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 		id: string;
 		name: string;
 		library: string;
-		sliceTemplate?: string;
 		location: "custom_type" | "page_type" | "slices";
-		mode: "ai" | "manual" | "template";
-	}
+	} & (
+		| { mode: "ai" }
+		| { mode: "manual" }
+		| { mode: "template"; sliceTemplate: string }
+	)
 >;
 
 type LegacySliceConvertedSegmentEvent = SegmentEvent<

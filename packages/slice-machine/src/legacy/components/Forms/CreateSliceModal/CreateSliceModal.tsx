@@ -17,7 +17,7 @@ import { validateSliceModalValues } from "../formsValidator";
 
 type CreateSliceModalProps = {
   onClose: () => void;
-  onSuccess: (newSlice: SharedSlice, libraryName: string) => void;
+  onSuccess: (args: { newSlice: SharedSlice; library: string }) => void;
   localLibraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;
 };
@@ -37,19 +37,19 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
-    const libraryName = values.from;
+    const library = values.from;
 
     setIsCreatingSlice(true);
 
     await createSlice({
       sliceName,
-      libraryName,
+      libraryName: library,
       onSuccess: async (newSlice) => {
         // TODO(DT-1453): Remove the need of the global getState
         const serverState = await getState();
         // Update Redux store
         createSliceSuccess(serverState.libraries);
-        onSuccess(newSlice, libraryName);
+        onSuccess({ newSlice, library });
         syncChanges();
         void completeStep("createSlice");
       },

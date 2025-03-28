@@ -26,7 +26,7 @@ import { Slice, SliceCard } from "./SliceCard";
 
 interface GenerateSliceWithAiModalProps {
   open: boolean;
-  onSuccess: (slices: SharedSlice[], libraryName: string) => void;
+  onSuccess: (args: { slices: SharedSlice[]; library: string }) => void;
   onClose: () => void;
 }
 
@@ -149,11 +149,11 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     const currentId = id.current;
     setIsCreatingSlices(true);
     addSlices(newSlices)
-      .then(({ slices, libraryName }) => {
+      .then(({ slices, library }) => {
         if (currentId !== id.current) return;
         setIsCreatingSlices(false);
         id.current = crypto.randomUUID();
-        onSuccess(slices, libraryName);
+        onSuccess({ slices, library });
         setSlices([]);
       })
       .catch(() => {
@@ -314,5 +314,5 @@ async function addSlices(newSlices: NewSlice[]) {
     ),
   );
 
-  return { slices, libraryName: library };
+  return { slices, library };
 }

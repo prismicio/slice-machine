@@ -226,11 +226,15 @@ const SlicesIndex: React.FunctionComponent = () => {
             <CreateSliceModal
               localLibraries={localLibraries}
               remoteSlices={remoteSlices}
-              onSuccess={(newSlice: SharedSliceType, libraryName: string) => {
+              onSuccess={(args: {
+                newSlice: SharedSliceType;
+                library: string;
+              }) => {
+                const { newSlice, library } = args;
                 // Redirect to the slice page
                 const variationId = newSlice.variations[0].id;
                 const sliceLocation = SLICES_CONFIG.getBuilderPagePathname({
-                  libraryName,
+                  libraryName: library,
                   sliceName: newSlice.name,
                   variationId,
                 });
@@ -247,7 +251,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 void router.push(sliceLocation);
                 toast.success(
                   SliceToastMessage({
-                    path: `${libraryName}/${newSlice.name}/model.json`,
+                    path: `${library}/${newSlice.name}/model.json`,
                   }),
                 );
               }}

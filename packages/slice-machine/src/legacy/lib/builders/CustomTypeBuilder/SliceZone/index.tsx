@@ -207,12 +207,17 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsSlicesTemplatesModalOpen(false);
   };
 
-  const addSlices = async (args: {
-    slices: SharedSlice[];
-    libraryName: string;
-    mode: "ai" | "manual" | "template";
-  }) => {
-    const { slices, libraryName, mode } = args;
+  const addSlices = async (
+    args: {
+      slices: SharedSlice[];
+      library: string;
+    } & (
+      | { mode: "ai" }
+      | { mode: "manual" }
+      | { mode: "template"; sliceTemplates: string[] }
+    ),
+  ) => {
+    const { slices, library, mode } = args;
 
     const serverState = await getState();
     createSliceSuccess(serverState.libraries);
@@ -226,24 +231,35 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       toast.success(
         <ToastMessageWithPath
           message="Slice(s) added to slice zone and created at: "
-          path={libraryName}
+          path={library}
         />,
       );
     });
     void completeStep("createSlice");
-
-    for (const slice of slices) {
-      void telemetry.track({
-        event: "slice:created",
-        id: slice.id,
-        name: slice.name,
-        library: libraryName,
-        location: `${customType.format}_type`,
-        mode,
-      });
-    }
-
     syncChanges();
+
+    for (const [index, slice] of slices.entries()) {
+      if (mode === "template") {
+        void telemetry.track({
+          event: "slice:created",
+          id: slice.id,
+          name: slice.name,
+          library,
+          location: `${customType.format}_type`,
+          mode,
+          sliceTemplate: args.sliceTemplates[index],
+        });
+      } else {
+        void telemetry.track({
+          event: "slice:created",
+          id: slice.id,
+          name: slice.name,
+          library,
+          location: `${customType.format}_type`,
+          mode,
+        });
+      }
+    }
   };
 
   return (
@@ -416,10 +432,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           formId={`tab-slicezone-form-${tabId}`}
           availableSlicesTemplates={availableSlicesTemplates}
           localLibraries={localLibraries}
-          onSuccess={(slices: SharedSlice[], libraryName: string) => {
+          onSuccess={(args: {
+            slices: SharedSlice[];
+            library: string;
+            sliceTemplates: string[];
+          }) => {
+            const { slices, library, sliceTemplates } = args;
             void addSlices({
               slices,
-              libraryName,
+              library,
+              sliceTemplates,
               mode: "template",
             });
 
@@ -441,10 +463,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       {localLibraries?.length !== 0 && isCreateSliceModalOpen && (
         <CreateSliceModal
-          onSuccess={(newSlice: SharedSlice, libraryName: string) => {
+          onSuccess={(args: { newSlice: SharedSlice; library: string }) => {
+            const { newSlice, library } = args;
             void addSlices({
               slices: [newSlice],
-              libraryName,
+              library,
               mode: "manual",
             });
 
@@ -457,10 +480,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       <GenerateSliceWithAiModal
         open={isGenerateSliceWithAiModalOpen}
-        onSuccess={(slices: SharedSlice[], libraryName: string) => {
+        onSuccess={(args: { slices: SharedSlice[]; library: string }) => {
+          const { slices, library } = args;
           void addSlices({
             slices,
-            libraryName,
+            library,
             mode: "ai",
           });
 
