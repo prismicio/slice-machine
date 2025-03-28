@@ -276,9 +276,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                       />
                     )}
                     onSelect={openGenerateSliceWithAiModal}
-                    description="Let AI instantly create a Slice for you."
+                    description="Build a Slice based on your design image."
                   >
-                    Generate with AI
+                    Generate from image
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem

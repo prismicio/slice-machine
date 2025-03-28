@@ -173,7 +173,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogHeader title="Generate with AI" />
+      <DialogHeader title="Generate from image" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
           Upload images to generate slices with AI
