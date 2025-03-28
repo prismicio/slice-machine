@@ -239,26 +239,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     syncChanges();
 
     for (const [index, slice] of slices.entries()) {
-      if (mode === "template") {
-        void telemetry.track({
-          event: "slice:created",
-          id: slice.id,
-          name: slice.name,
-          library,
-          location: `${customType.format}_type`,
-          mode,
-          sliceTemplate: args.sliceTemplates[index],
-        });
-      } else {
-        void telemetry.track({
-          event: "slice:created",
-          id: slice.id,
-          name: slice.name,
-          library,
-          location: `${customType.format}_type`,
-          mode,
-        });
-      }
+      void telemetry.track({
+        event: "slice:created",
+        id: slice.id,
+        name: slice.name,
+        library,
+        location: `${customType.format}_type`,
+        ...(mode === "template"
+          ? { mode, sliceTemplate: args.sliceTemplates[index] }
+          : { mode }),
+      });
     }
   };
 
