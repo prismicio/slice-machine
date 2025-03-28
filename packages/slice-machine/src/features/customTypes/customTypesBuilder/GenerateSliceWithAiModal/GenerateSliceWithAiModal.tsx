@@ -156,12 +156,11 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
         onSuccess(slices, libraryName);
         setSlices([]);
       })
-      .catch((e) => {
+      .catch(() => {
         if (currentId !== id.current) return;
         setIsCreatingSlices(false);
         const errorMessage =
           "An unexpected error happened while adding slices.";
-        console.error(errorMessage, e);
         toast.error(errorMessage);
       });
   };
