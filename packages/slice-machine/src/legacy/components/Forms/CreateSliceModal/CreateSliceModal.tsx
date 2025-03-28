@@ -13,7 +13,10 @@ import { validateSliceModalValues } from "../formsValidator";
 
 type CreateSliceModalProps = {
   onClose: () => void;
-  onSuccess: (args: { newSlice: SharedSlice; library: string }) => void;
+  onSuccess: (args: {
+    newSlice: SharedSlice;
+    library: string;
+  }) => void | Promise<void>;
   localLibraries: readonly LibraryUI[];
   remoteSlices: ReadonlyArray<SliceSM>;
 };
@@ -38,7 +41,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
       sliceName,
       libraryName: library,
       onSuccess: (newSlice) => {
-        onSuccess({ newSlice, library });
+        void onSuccess({ newSlice, library });
       },
     });
   };
