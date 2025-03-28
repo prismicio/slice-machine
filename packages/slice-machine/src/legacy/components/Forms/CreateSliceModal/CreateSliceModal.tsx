@@ -26,10 +26,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   localLibraries,
   remoteSlices,
 }) => {
-  // const { createSliceSuccess } = useSliceMachineActions();
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
-  // const { syncChanges } = useAutoSync();
-  // const { completeStep } = useOnboarding();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
