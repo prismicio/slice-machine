@@ -4,8 +4,6 @@ import { Analytics } from "@segment/analytics-node";
 import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import mockRouter from "next-router-mock";
-import { createTestPlugin } from "../__testutils__/createTestPlugin";
-import { createTestProject } from "../__testutils__/createTestProject";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import SlicesIndex from "@/pages/slices";
@@ -19,6 +17,8 @@ import {
   waitFor,
   within,
 } from "../__testutils__";
+import { createTestPlugin } from "../__testutils__/createTestPlugin";
+import { createTestProject } from "../__testutils__/createTestProject";
 
 vi.mock("next/router", () => import("next-router-mock"));
 
@@ -190,9 +190,11 @@ describe("slices", () => {
       expect.objectContaining({
         event: "SliceMachine Slice Created",
         properties: {
-          id: "FooBar",
+          id: "foo_bar",
           name: "FooBar",
           library: "slices",
+          location: "slices",
+          mode: "manual",
           nodeVersion: process.versions.node,
         },
       }),
@@ -200,7 +202,7 @@ describe("slices", () => {
     );
   });
 
-  test("if creation fails it sohuld not send the tracking event", async (ctx) => {
+  test("if creation fails it should not send the tracking event", async (ctx) => {
     const adapter = createTestPlugin({
       setup: ({ hook }) => {
         hook("slice:create", () => {
