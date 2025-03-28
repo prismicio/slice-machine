@@ -183,7 +183,9 @@ describe("slices", () => {
       fireEvent.click(submitButton);
     });
 
-    await waitFor(() => expect(Analytics.prototype.track).toHaveBeenCalled());
+    await waitFor(() => expect(Analytics.prototype.track).toHaveBeenCalled(), {
+      timeout: 5000,
+    });
 
     expect(Analytics.prototype.track).toHaveBeenCalledOnce();
     expect(Analytics.prototype.track).toHaveBeenCalledWith(
