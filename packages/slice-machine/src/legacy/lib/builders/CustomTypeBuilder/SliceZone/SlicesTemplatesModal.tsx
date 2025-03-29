@@ -18,7 +18,11 @@ import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 interface UpdateSliceModalProps {
   formId: string;
   close: () => void;
-  onSuccess: (slices: SharedSlice[]) => void;
+  onSuccess: (args: {
+    slices: SharedSlice[];
+    library: string;
+    sliceTemplates: string[];
+  }) => void;
   availableSlicesTemplates: SliceTemplate[];
   localLibraries: readonly LibraryUI[];
 }
@@ -55,11 +59,13 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
             // Update Redux store
             createSliceSuccess(serverState.libraries);
 
+            const library = localLibraries[0].name;
+
             const slices: SharedSlice[] = await Promise.all(
               slicesIds
                 .map(async (sliceId) => {
                   const slice = await managerClient.slices.readSlice({
-                    libraryID: localLibraries[0].name,
+                    libraryID: library,
                     sliceID: sliceId,
                   });
                   return slice.model;
@@ -69,7 +75,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
                 ) as Promise<SharedSlice>[],
             );
 
-            onSuccess(slices);
+            onSuccess({ slices, library, sliceTemplates: sliceKeys });
           },
         });
       }}

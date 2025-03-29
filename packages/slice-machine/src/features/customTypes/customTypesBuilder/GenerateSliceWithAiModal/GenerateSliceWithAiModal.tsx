@@ -18,6 +18,7 @@ import {
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 import { managerClient } from "@/managerClient";
 
@@ -25,11 +26,12 @@ import { Slice, SliceCard } from "./SliceCard";
 
 interface GenerateSliceWithAiModalProps {
   open: boolean;
+  onSuccess: (args: { slices: SharedSlice[]; library: string }) => void;
   onClose: () => void;
 }
 
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
-  const { open, onClose } = props;
+  const { open, onSuccess, onClose } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
 
@@ -147,15 +149,19 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     const currentId = id.current;
     setIsCreatingSlices(true);
     addSlices(newSlices)
-      .then(() => {
+      .then(({ slices, library }) => {
         if (currentId !== id.current) return;
         setIsCreatingSlices(false);
-        // TODO: Execute modal callback.
+        id.current = crypto.randomUUID();
+        onSuccess({ slices, library });
+        setSlices([]);
       })
       .catch(() => {
         if (currentId !== id.current) return;
         setIsCreatingSlices(false);
-        // TODO: Show error?
+        const errorMessage =
+          "An unexpected error happened while adding slices.";
+        toast.error(errorMessage);
       });
   };
 
@@ -167,7 +173,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogHeader title="Generate with AI" />
+      <DialogHeader title="Generate from image" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
           Upload images to generate slices with AI
@@ -177,6 +183,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             <FileDropZone
               onFilesSelected={onImagesSelected}
               assetType="image"
+              maxFiles={10}
               overlay={
                 <UploadBlankSlate
                   onFilesSelected={onImagesSelected}
@@ -188,7 +195,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             </FileDropZone>
           </Box>
         ) : (
-          <ScrollArea>
+          <ScrollArea stableScrollbar={false}>
             <Box
               display="grid"
               gridTemplateColumns="1fr 1fr"
@@ -307,5 +314,5 @@ async function addSlices(newSlices: NewSlice[]) {
     ),
   );
 
-  return slices;
+  return { slices, library };
 }

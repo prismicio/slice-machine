@@ -59,9 +59,9 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                 />
               )}
               onClick={openGenerateSliceWithAiModal}
-              description="Let AI instantly create a Slice for you."
+              description="Build a Slice based on your design image."
             >
-              Generate with AI
+              Generate from image
             </ActionListItem>
           )}
           <ActionListItem

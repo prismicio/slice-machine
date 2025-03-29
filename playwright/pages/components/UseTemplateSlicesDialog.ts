@@ -16,10 +16,9 @@ export class UseTemplateSlicesDialog extends Dialog {
      * Static locators
      */
     this.sharedSliceCard = this.dialog.getByTestId("shared-slice-card");
-    this.addedMessage = page.getByText(
-      "Slice template(s) added to slice zone",
-      { exact: false },
-    );
+    this.addedMessage = page.getByText("Slice(s) added to slice zone", {
+      exact: false,
+    });
   }
 
   /**

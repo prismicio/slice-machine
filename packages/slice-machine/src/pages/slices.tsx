@@ -7,9 +7,12 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
+import { getState, telemetry } from "@/apiClient";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
 import {
   AppLayout,
@@ -29,6 +32,7 @@ import { VIDEO_WHAT_ARE_SLICES } from "@/legacy/lib/consts";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { getLibraries, getRemoteSlices } from "@/modules/slices";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
 
 const SlicesIndex: React.FunctionComponent = () => {
@@ -46,6 +50,10 @@ const SlicesIndex: React.FunctionComponent = () => {
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isDeleteSliceModalOpen, setIsDeleteSliceModalOpen] = useState(false);
   const [isRenameSliceModalOpen, setIsRenameSliceModalOpen] = useState(false);
+
+  const { completeStep } = useOnboarding();
+  const { createSliceSuccess } = useSliceMachineActions();
+  const { syncChanges } = useAutoSync();
 
   const localLibraries: LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -225,20 +233,40 @@ const SlicesIndex: React.FunctionComponent = () => {
             <CreateSliceModal
               localLibraries={localLibraries}
               remoteSlices={remoteSlices}
-              onSuccess={(newSlice: SharedSliceType, libraryName: string) => {
+              onSuccess={async (args: {
+                newSlice: SharedSliceType;
+                library: string;
+              }) => {
+                const { newSlice, library } = args;
                 // Redirect to the slice page
                 const variationId = newSlice.variations[0].id;
                 const sliceLocation = SLICES_CONFIG.getBuilderPagePathname({
-                  libraryName,
+                  libraryName: library,
                   sliceName: newSlice.name,
                   variationId,
                 });
+
+                const serverState = await getState();
+                createSliceSuccess(serverState.libraries);
+
                 void router.push(sliceLocation);
                 toast.success(
                   SliceToastMessage({
-                    path: `${libraryName}/${newSlice.name}/model.json`,
+                    path: `${library}/${newSlice.name}/model.json`,
                   }),
                 );
+
+                void completeStep("createSlice");
+                syncChanges();
+
+                void telemetry.track({
+                  event: "slice:created",
+                  id: newSlice.id,
+                  name: newSlice.name,
+                  library: localLibraries[0].name,
+                  location: "slices",
+                  mode: "manual",
+                });
               }}
               onClose={() => {
                 setIsCreateSliceModalOpen(false);

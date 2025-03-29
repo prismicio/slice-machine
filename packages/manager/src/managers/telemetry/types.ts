@@ -271,7 +271,16 @@ type CustomTypeSavedSegmentEvent = SegmentEvent<
 
 type SliceCreatedSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.slice_created,
-	{ id: string; name: string; library: string; sliceTemplate?: string }
+	{
+		id: string;
+		name: string;
+		library: string;
+		location: "custom_type" | "page_type" | "slices";
+	} & (
+		| { mode: "ai" }
+		| { mode: "manual" }
+		| { mode: "template"; sliceTemplate: string }
+	)
 >;
 
 type LegacySliceConvertedSegmentEvent = SegmentEvent<

@@ -26,7 +26,7 @@ export class CreateSliceDialog extends Dialog {
       exact: false,
     });
     this.createdMessageFromSliceZone = page.getByText(
-      "New slice added to slice zone",
+      "Slice(s) added to slice zone",
       { exact: false },
     );
     this.nameInput = this.dialog.getByTestId("slice-name-input");
