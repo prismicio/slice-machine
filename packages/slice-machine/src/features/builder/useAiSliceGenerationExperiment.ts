@@ -3,6 +3,6 @@ import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 type useAiSliceGenerationExperimentReturnType = { eligible: boolean };
 
 export function useAiSliceGenerationExperiment(): useAiSliceGenerationExperimentReturnType {
-  const variant = useExperimentVariant("slicemachine-ai-slice-generation");
+  const variant = useExperimentVariant("slicemachine-image-to-slice");
   return { eligible: variant?.value === "on" };
 }
