@@ -9,11 +9,12 @@ import { managerClient } from "@/managerClient";
 type CreateSliceArgs = {
   sliceName: string;
   libraryName: string;
+  location: "custom_type" | "page_type" | "slices";
   onSuccess: (newSlice: SharedSlice) => Promise<void>;
 };
 
 export async function createSlice(args: CreateSliceArgs) {
-  const { sliceName, libraryName, onSuccess } = args;
+  const { sliceName, libraryName, location, onSuccess } = args;
 
   try {
     const newSlice = buildEmptySliceModel(sliceName);
@@ -31,6 +32,8 @@ export async function createSlice(args: CreateSliceArgs) {
       id: pascalize(sliceName),
       name: sliceName,
       library: libraryName,
+      location,
+      mode: "manual",
     });
 
     await onSuccess(newSlice);
