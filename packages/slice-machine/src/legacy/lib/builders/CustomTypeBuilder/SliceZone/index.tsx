@@ -34,6 +34,7 @@ import {
 import type { SliceZoneSlice } from "@/legacy/lib/models/common/CustomType/sliceZone";
 import type { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import type { SlicesSM } from "@/legacy/lib/models/common/Slices";
+import { managerClient } from "@/managerClient";
 import {
   getFrontendSlices,
   getLibraries,
@@ -132,7 +133,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   );
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
-  const { createSliceSuccess } = useSliceMachineActions();
+  const { createSliceSuccess, openLoginModal } = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
@@ -177,8 +178,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsCreateSliceModalOpen(true);
   };
 
-  const openGenerateSliceWithAiModal = () => {
-    setIsGenerateSliceWithAiModalOpen(true);
+  const openGenerateSliceWithAiModal = async () => {
+    const isLoggedIn = await managerClient.user.checkIsLoggedIn();
+
+    if (isLoggedIn) {
+      setIsGenerateSliceWithAiModalOpen(true);
+    } else {
+      openLoginModal();
+    }
   };
 
   const openSlicesTemplatesModal = () => {
@@ -236,7 +243,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         color="purple"
                       />
                     )}
-                    onSelect={openGenerateSliceWithAiModal}
+                    onSelect={() => void openGenerateSliceWithAiModal()}
                     description="Build a Slice based on your design image."
                   >
                     Generate from image
@@ -345,7 +352,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             <SliceZoneBlankSlate
               openUpdateSliceZoneModal={openUpdateSliceZoneModal}
               openCreateSliceModal={openCreateSliceModal}
-              openGenerateSliceWithAiModal={openGenerateSliceWithAiModal}
+              openGenerateSliceWithAiModal={() =>
+                void openGenerateSliceWithAiModal()
+              }
               openSlicesTemplatesModal={openSlicesTemplatesModal}
               projectHasAvailableSlices={availableSlicesToAdd.length > 0}
               isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
