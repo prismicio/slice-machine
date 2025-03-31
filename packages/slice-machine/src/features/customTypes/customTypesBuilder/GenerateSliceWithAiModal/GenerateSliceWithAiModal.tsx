@@ -24,6 +24,8 @@ import { managerClient } from "@/managerClient";
 
 import { Slice, SliceCard } from "./SliceCard";
 
+const IMAGE_UPLOAD_LIMIT = 10;
+
 interface GenerateSliceWithAiModalProps {
   open: boolean;
   onSuccess: (args: {
@@ -60,6 +62,13 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
   };
 
   const onImagesSelected = (images: File[]) => {
+    if (images.length > IMAGE_UPLOAD_LIMIT) {
+      toast.error(
+        `You can only upload ${IMAGE_UPLOAD_LIMIT} images at a time.`,
+      );
+      return;
+    }
+
     setSlices(
       images.map((image) => ({
         status: "uploading",
@@ -184,7 +193,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             <FileDropZone
               onFilesSelected={onImagesSelected}
               assetType="image"
-              maxFiles={10}
+              maxFiles={IMAGE_UPLOAD_LIMIT}
               overlay={
                 <UploadBlankSlate
                   onFilesSelected={onImagesSelected}
