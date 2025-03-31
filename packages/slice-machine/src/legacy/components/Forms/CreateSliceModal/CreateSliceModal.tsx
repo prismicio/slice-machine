@@ -19,6 +19,7 @@ type CreateSliceModalProps = {
   onClose: () => void;
   onSuccess: (newSlice: SharedSlice, libraryName: string) => void;
   localLibraries: readonly LibraryUI[];
+  location: "custom_type" | "page_type" | "slices";
   remoteSlices: ReadonlyArray<SliceSM>;
 };
 
@@ -28,6 +29,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   onClose,
   onSuccess,
   localLibraries,
+  location,
   remoteSlices,
 }) => {
   const { createSliceSuccess } = useSliceMachineActions();
@@ -44,6 +46,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
     await createSlice({
       sliceName,
       libraryName,
+      location,
       onSuccess: async (newSlice) => {
         // TODO(DT-1453): Remove the need of the global getState
         const serverState = await getState();

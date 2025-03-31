@@ -224,6 +224,7 @@ const SlicesIndex: React.FunctionComponent = () => {
           {localLibraries?.length > 0 && isCreateSliceModalOpen && (
             <CreateSliceModal
               localLibraries={localLibraries}
+              location="slices"
               remoteSlices={remoteSlices}
               onSuccess={(newSlice: SharedSliceType, libraryName: string) => {
                 // Redirect to the slice page

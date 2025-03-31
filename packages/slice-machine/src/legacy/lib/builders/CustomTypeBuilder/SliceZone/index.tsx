@@ -377,6 +377,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           formId={`tab-slicezone-form-${tabId}`}
           availableSlicesTemplates={availableSlicesTemplates}
           localLibraries={localLibraries}
+          location={`${customType.format}_type`}
           onSuccess={(slices: SharedSlice[]) => {
             const newCustomType = addSlicesToSliceZone({
               customType,
@@ -427,6 +428,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             closeCreateSliceModal();
           }}
           localLibraries={localLibraries}
+          location={`${customType.format}_type`}
           remoteSlices={remoteSlices}
           onClose={closeCreateSliceModal}
         />
@@ -461,6 +463,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               id: slice.id,
               name: slice.name,
               library,
+              location: `${customType.format}_type`,
+              mode: "ai",
             });
           }
 

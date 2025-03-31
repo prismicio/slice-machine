@@ -6,12 +6,13 @@ import { managerClient } from "@/managerClient";
 type CreateSlicesTemplatesArgs = {
   templateIDs: string[];
   localLibrariesNames: string[];
+  location: "custom_type" | "page_type";
   onSuccess: (slicesIds: string[]) => Promise<void>;
 };
 
 export async function createSlicesTemplates(args: CreateSlicesTemplatesArgs) {
   try {
-    const { templateIDs, localLibrariesNames, onSuccess } = args;
+    const { templateIDs, localLibrariesNames, location, onSuccess } = args;
 
     const { data, errors } =
       await managerClient.sliceTemplateLibrary.createSlices({
@@ -28,6 +29,8 @@ export async function createSlicesTemplates(args: CreateSlicesTemplatesArgs) {
         id: sliceID,
         name: sliceID,
         library: localLibrariesNames[0],
+        location,
+        mode: "template",
         sliceTemplate: templateIDs[index],
       });
     });

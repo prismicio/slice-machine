@@ -21,6 +21,7 @@ interface UpdateSliceModalProps {
   onSuccess: (slices: SharedSlice[]) => void;
   availableSlicesTemplates: SliceTemplate[];
   localLibraries: readonly LibraryUI[];
+  location: "custom_type" | "page_type";
 }
 
 export type SliceZoneFormValues = {
@@ -33,6 +34,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
   onSuccess,
   availableSlicesTemplates,
   localLibraries,
+  location,
 }) => {
   const { createSliceSuccess } = useSliceMachineActions();
 
@@ -48,6 +50,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
         void createSlicesTemplates({
           templateIDs: sliceKeys,
           localLibrariesNames: localLibraries.map((library) => library.name),
+          location,
           onSuccess: async (slicesIds: string[]) => {
             // TODO(DT-1453): Remove the need of the global getState
             const serverState = await getState();
