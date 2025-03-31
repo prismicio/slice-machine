@@ -33,7 +33,7 @@ export const getState = async (): Promise<ServerState> => {
             ...component,
             model: Slices.toSM(component.model),
 
-            // Replace screnshot Blobs with URLs.
+            // Replace screenshot Blobs with URLs.
             screenshots: Object.fromEntries(
               Object.entries(component.screenshots).map(
                 ([variationID, screenshot]) => {

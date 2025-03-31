@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
-import { telemetry } from "@/apiClient";
+import { getState, telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
@@ -23,6 +23,7 @@ import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/S
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
 import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplates";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
@@ -38,6 +39,7 @@ import {
   getLibraries,
   getRemoteSlices,
 } from "@/modules/slices";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import type { SliceMachineStoreType } from "@/redux/type";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
@@ -130,6 +132,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   );
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
+  const { createSliceSuccess } = useSliceMachineActions();
+  const { syncChanges } = useAutoSync();
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -233,9 +237,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                       />
                     )}
                     onSelect={openGenerateSliceWithAiModal}
-                    description="Let AI instantly create a Slice for you."
+                    description="Build a Slice based on your design image."
                   >
-                    Generate with AI
+                    Generate from image
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
@@ -429,6 +433,39 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       <GenerateSliceWithAiModal
         open={isGenerateSliceWithAiModalOpen}
+        onSuccess={async (args: { slices: SharedSlice[]; library: string }) => {
+          const { slices, library } = args;
+
+          const serverState = await getState();
+          createSliceSuccess(serverState.libraries);
+
+          const newCustomType = addSlicesToSliceZone({
+            customType,
+            tabId,
+            slices,
+          });
+          setCustomType(CustomTypes.fromSM(newCustomType), () => {
+            toast.success(
+              <ToastMessageWithPath
+                message="Slice(s) added to slice zone and created at: "
+                path={library}
+              />,
+            );
+          });
+          void completeStep("createSlice");
+          syncChanges();
+
+          for (const slice of slices) {
+            void telemetry.track({
+              event: "slice:created",
+              id: slice.id,
+              name: slice.name,
+              library,
+            });
+          }
+
+          closeGenerateSliceWithAiModal();
+        }}
         onClose={closeGenerateSliceWithAiModal}
       />
     </>
