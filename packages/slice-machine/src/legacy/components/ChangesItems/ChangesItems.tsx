@@ -1,6 +1,6 @@
 import { Box, Button, Text } from "@prismicio/editor-ui";
 import React, { Suspense } from "react";
-import { AiFillCamera, AiOutlineExclamationCircle } from "react-icons/ai";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 import { countMissingScreenshots } from "@/domain/slice";
 import { ErrorBoundary } from "@/ErrorBoundary";
@@ -100,17 +100,9 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                     )}
                     <Button
                       color="dark"
+                      startIcon="photoCamera"
                       onClick={() => onOpenModal({ sliceFilterFn: (s) => s })}
                     >
-                      <AiFillCamera
-                        style={{
-                          color: "#FFF",
-                          fontSize: "15px",
-                          position: "relative",
-                          top: "3px",
-                          marginRight: "4px",
-                        }}
-                      />{" "}
                       Update all screenshots
                     </Button>
                   </Box>
