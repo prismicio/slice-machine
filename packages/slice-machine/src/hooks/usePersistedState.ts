@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { ZodType, ZodTypeDef } from "zod";
 
 type PersistedState<T> = [T, Dispatch<SetStateAction<T>>];
@@ -23,29 +23,64 @@ export function usePersistedState<T>(
   options?: UsePersistedStateOptions<T>,
 ): PersistedState<T | undefined> {
   const { schema } = options ?? {};
-  const computedKey = `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`;
+  const computedKey = getKey(key);
 
-  const [value, setValue] = useState<T | undefined>(() => {
+  const getValue = () => {
     try {
       const value = localStorage.getItem(computedKey);
-
       if (value == null) return defaultValue;
       if (!schema) return JSON.parse(value) as T;
       return schema.parse(JSON.parse(value));
     } catch (error) {
-      console.warn(`Error reading localStorage key “${computedKey}”:`, error);
-
       return defaultValue;
     }
-  });
+  };
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(computedKey, JSON.stringify(value));
-    } catch (error) {
-      console.warn(`Error setting localStorage key “${computedKey}”:`, error);
-    }
-  }, [computedKey, value]);
+  const [value, setValue] = useState<T | undefined>(getValue);
 
-  return [value, setValue];
+  const [prevKey, setPrevKey] = useState<string>(computedKey);
+
+  if (prevKey !== computedKey) {
+    setPrevKey(computedKey);
+    setValue(getValue());
+  }
+
+  const setValueAndStore: Dispatch<SetStateAction<T | undefined>> = useCallback(
+    (newValue) => {
+      setValue((prevValue) => {
+        let resolvedValue: T | undefined;
+        if (typeof newValue === "function") {
+          resolvedValue = (
+            newValue as (prevState: T | undefined) => T | undefined
+          )(prevValue);
+        } else {
+          resolvedValue = newValue;
+        }
+
+        if (resolvedValue === undefined) {
+          try {
+            localStorage.removeItem(computedKey);
+          } catch (error) {
+            return prevValue;
+          }
+          return defaultValue;
+        }
+
+        try {
+          localStorage.setItem(computedKey, JSON.stringify(resolvedValue));
+        } catch (error) {
+          return prevValue;
+        }
+
+        return resolvedValue;
+      });
+    },
+    [computedKey, defaultValue],
+  );
+
+  return [value, setValueAndStore];
+}
+
+export function getKey(key: string) {
+  return `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`;
 }
