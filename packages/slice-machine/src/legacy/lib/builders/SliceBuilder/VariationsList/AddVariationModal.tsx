@@ -197,7 +197,7 @@ const AddVariationModal: React.FunctionComponent<{
                   autoComplete="off"
                   id="id"
                   name="id"
-                  placeholder="e.g. GridWithIcon"
+                  placeholder="e.g. gridWithIcon"
                   as={Input}
                   maxLength={30}
                   value={generatedId}
