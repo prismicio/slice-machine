@@ -212,7 +212,6 @@ const FieldZones: FC = () => {
   return (
     <Box
       flexDirection="column"
-      // backgroundColor="amber10"
       gap={18}
     >
       <List>
