@@ -52,8 +52,9 @@ export type Slice = { image: File } & (
   | { status: "generateError"; thumbnailUrl: string; onRetry: () => void }
   | {
       status: "success";
-      model: SharedSlice;
       thumbnailUrl: string;
+      model: SharedSlice;
+      langSmithUrl?: string;
     }
 );
 
