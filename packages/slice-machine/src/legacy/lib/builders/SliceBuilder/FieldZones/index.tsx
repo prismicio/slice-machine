@@ -210,10 +210,7 @@ const FieldZones: FC = () => {
   };
 
   return (
-    <Box
-      flexDirection="column"
-      gap={18}
-    >
+    <Box flexDirection="column" gap={18}>
       <List>
         <Zone
           zoneType="slice"
