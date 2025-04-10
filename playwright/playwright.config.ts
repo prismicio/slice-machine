@@ -14,6 +14,7 @@ declare const process: {
     MANAGEV2_SECRET: string;
     MANAGEV2_AUDIENCE: string;
     BASE_URL: string;
+    E2E_REPOSITORY: string | undefined;
   };
 };
 

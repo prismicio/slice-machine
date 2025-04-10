@@ -12,7 +12,12 @@ async function globalTeardown() {
 
   console.log("Tearing down E2E repo");
   await testUtils.tearDown();
-  clearRepositoryEnvVar();
+
+  const repository = process.env["E2E_REPOSITORY"];
+  if (repository) {
+    await testUtils.deleteRepository(repository);
+    clearRepositoryEnvVar();
+  }
 }
 
 export default globalTeardown;
