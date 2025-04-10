@@ -37,6 +37,9 @@ assert.ok(auth.password, "Missing PLAYWRIGHT_ADMIN_PASSWORD env variable.");
 
 // See https://playwright.dev/docs/api/class-testconfig
 const config = {
+  globalSetup: require.resolve("./globalSetup.ts"),
+  globalTeardown: require.resolve("./globalTeardown.ts"),
+
   // Configuration for the expect assertion library
   expect: {
     // Maximum time expect() should wait for the condition to be met. For
@@ -46,8 +49,6 @@ const config = {
 
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env["CI"],
-
-  globalSetup: "./globalSetup.ts",
 
   // Configure projects for major browsers.
   projects: [
