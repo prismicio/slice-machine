@@ -1,4 +1,39 @@
 import { type PlaywrightTestConfig, devices } from "@playwright/test";
+import assert from "assert";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env.test" });
+dotenv.config({ path: ".env.test.local", override: true });
+
+declare const process: {
+  env: {
+    CI: boolean;
+    PLAYWRIGHT_ADMIN_USERNAME: string;
+    PLAYWRIGHT_ADMIN_PASSWORD: string;
+    PRISMIC_CLUSTER?: string;
+    MANAGEV2_SECRET: string;
+    MANAGEV2_AUDIENCE: string;
+    BASE_URL: string;
+  };
+};
+
+export const baseUrl = process.env.BASE_URL;
+
+export const prismicCluster = process.env.PRISMIC_CLUSTER;
+
+export const auth = {
+  username: process.env.PLAYWRIGHT_ADMIN_USERNAME,
+  password: process.env.PLAYWRIGHT_ADMIN_PASSWORD,
+  storageState: ".auth/admin.json",
+};
+
+export const manageV2Config = {
+  secret: process.env.MANAGEV2_SECRET,
+  audience: process.env.MANAGEV2_AUDIENCE,
+};
+
+assert.ok(auth.username, "Missing PLAYWRIGHT_ADMIN_USERNAME env variable.");
+assert.ok(auth.password, "Missing PLAYWRIGHT_ADMIN_PASSWORD env variable.");
 
 // See https://playwright.dev/docs/api/class-testconfig
 const config = {
@@ -11,6 +46,8 @@ const config = {
 
   // Fail the build on CI if you accidentally left test.only in the source code.
   forbidOnly: !!process.env["CI"],
+
+  globalSetup: "./globalSetup.ts",
 
   // Configure projects for major browsers.
   projects: [
