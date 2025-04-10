@@ -260,8 +260,8 @@ const FieldZones: FC = () => {
             onDragEnd={_onDragEnd(WidgetsArea.Items)}
             // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
             poolOfFieldsToCheck={variation.items || []}
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
             renderHintBase={({ item }) =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
               `item${transformKeyAccessor(item.key)}`
             }
             renderFieldAccessor={(key) =>
