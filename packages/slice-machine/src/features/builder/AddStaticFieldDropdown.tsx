@@ -9,7 +9,7 @@ import {
 import { StaticFieldsInfoDialog } from "@/features/builder/StaticFieldsInfoDialog";
 import { usePersistedState } from "@/hooks/usePersistedState";
 
-const LOCAL_STORAGE_KEY = "staticFieldsInfoDialogDismissed";
+const LOCAL_STORAGE_KEY = "slice-machine_staticFieldsInfoDialogDismissed";
 
 const AddFieldButton = forwardRef<
   HTMLButtonElement,

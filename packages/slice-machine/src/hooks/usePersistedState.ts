@@ -3,8 +3,6 @@ import { ZodType, ZodTypeDef } from "zod";
 
 type PersistedState<T> = [T, Dispatch<SetStateAction<T>>];
 
-const SLICE_MACHINE_STORAGE_PREFIX = "slice-machine";
-
 type UsePersistedStateOptions<T> = {
   schema?: ZodType<T, ZodTypeDef, unknown>;
 };
@@ -23,11 +21,10 @@ export function usePersistedState<T>(
   options?: UsePersistedStateOptions<T>,
 ): PersistedState<T | undefined> {
   const { schema } = options ?? {};
-  const computedKey = getKey(key);
 
   const getValue = () => {
     try {
-      const value = localStorage.getItem(computedKey);
+      const value = localStorage.getItem(key);
       if (value == null) return defaultValue;
       if (!schema) return JSON.parse(value) as T;
       return schema.parse(JSON.parse(value));
@@ -38,10 +35,10 @@ export function usePersistedState<T>(
 
   const [value, setValue] = useState<T | undefined>(getValue);
 
-  const [prevKey, setPrevKey] = useState<string>(computedKey);
+  const [prevKey, setPrevKey] = useState<string>(key);
 
-  if (prevKey !== computedKey) {
-    setPrevKey(computedKey);
+  if (prevKey !== key) {
+    setPrevKey(key);
     setValue(getValue());
   }
 
@@ -59,7 +56,7 @@ export function usePersistedState<T>(
 
         if (resolvedValue === undefined) {
           try {
-            localStorage.removeItem(computedKey);
+            localStorage.removeItem(key);
           } catch (error) {
             return prevValue;
           }
@@ -67,7 +64,7 @@ export function usePersistedState<T>(
         }
 
         try {
-          localStorage.setItem(computedKey, JSON.stringify(resolvedValue));
+          localStorage.setItem(key, JSON.stringify(resolvedValue));
         } catch (error) {
           return prevValue;
         }
@@ -75,12 +72,8 @@ export function usePersistedState<T>(
         return resolvedValue;
       });
     },
-    [computedKey, defaultValue],
+    [key, defaultValue],
   );
 
   return [value, setValueAndStore];
-}
-
-export function getKey(key: string) {
-  return `${SLICE_MACHINE_STORAGE_PREFIX}_${key}`;
 }

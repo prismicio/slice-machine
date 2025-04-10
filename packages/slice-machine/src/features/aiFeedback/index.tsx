@@ -11,10 +11,7 @@ import { useState } from "react";
 import { z } from "zod";
 
 import { telemetry } from "@/apiClient";
-import {
-  getKey as getPersistingKey,
-  usePersistedState,
-} from "@/hooks/usePersistedState";
+import { usePersistedState } from "@/hooks/usePersistedState";
 
 export function addAiFeedback({
   type,
@@ -29,7 +26,7 @@ export function addAiFeedback({
   variationId: string;
   langSmithUrl?: string;
 }) {
-  const key = getPersistingKey(getKey({ type, library, sliceId, variationId }));
+  const key = getKey({ type, library, sliceId, variationId });
   const feedback = JSON.stringify({ langSmithUrl });
   localStorage.setItem(key, feedback);
 }
