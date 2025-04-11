@@ -15,7 +15,6 @@ declare const process: {
     MANAGEV2_AUDIENCE: string;
     E2E_REPOSITORY: string | undefined;
     SM_ENV:
-      | "development"
       | "dev-tools"
       | "marketing-tools"
       | "platform"
@@ -30,6 +29,8 @@ export const baseUrl = (() => {
     case "marketing-tools":
     case "platform":
       return `https://${process.env.SM_ENV}-wroom.com/`;
+    case "production":
+      return "https://prismic.io";
     default:
       return "https://wroom.io";
   }
