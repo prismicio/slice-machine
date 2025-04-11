@@ -473,6 +473,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               library,
               location: `${customType.format}_type`,
               mode: "ai",
+              langSmithUrl,
             });
 
             addAiFeedback({
