@@ -13,12 +13,11 @@ declare const process: {
     PRISMIC_CLUSTER?: string;
     MANAGEV2_SECRET: string;
     MANAGEV2_AUDIENCE: string;
-    BASE_URL: string;
     E2E_REPOSITORY: string | undefined;
   };
 };
 
-export const baseUrl = process.env.BASE_URL;
+export const baseUrl = "https://wroom.io";
 
 export const prismicCluster = process.env.PRISMIC_CLUSTER;
 
