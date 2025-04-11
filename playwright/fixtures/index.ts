@@ -318,9 +318,10 @@ export const test = baseTest.extend<Options & Fixtures>({
 });
 
 export function setRepositoryEnvVar(repositoryName: string) {
-  process.env["E2E_REPOSITORY"] = repositoryName;
+  process.env["REPOSITORY"] = repositoryName;
+  process.env["PLAYWRIGHT_REPOSITORY"] = repositoryName;
 }
 
 export function clearRepositoryEnvVar() {
-  process.env["E2E_REPOSITORY"] = undefined;
+  process.env["PLAYWRIGHT_REPOSITORY"] = undefined;
 }

@@ -3,16 +3,14 @@ import {
   type RepositoryConfig,
 } from "@prismicio/e2e-tests-utils";
 
-import {
-  auth,
-  baseUrl,
-  manageV2Config,
-  prismicCluster,
-} from "./playwright.config";
+import { auth, baseUrl, prismicCluster } from "./playwright.config";
 
 import { setRepositoryEnvVar } from "./fixtures";
 
 async function globalSetup() {
+  // if E2E_REPOSITORY is set, it's because we want to use an existing repo
+  if (process.env["E2E_REPOSITORY"]) return;
+
   const config: RepositoryConfig = {
     locales: ["en-us"],
     defaultLocale: "en-us",
@@ -23,7 +21,6 @@ async function globalSetup() {
   const testUtils = createRepositoriesManager({
     urlConfig: baseUrl,
     authConfig: { email: auth.username, password: auth.password },
-    manageV2Config,
     cluster: prismicCluster,
   });
 
