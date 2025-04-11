@@ -30,9 +30,11 @@ export const baseUrl = (() => {
     case "platform":
       return `https://${process.env.SM_ENV}-wroom.com/`;
     case "production":
-      return "https://prismic.io";
+      return "https://prismic.io/";
+    case "staging":
+      return "https://wroom.io/";
     default:
-      return "https://wroom.io";
+      return "https://dev-tools-wroom.com/";
   }
 })();
 
