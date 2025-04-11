@@ -52,7 +52,7 @@ export function useAiFeedback({
   return {
     key,
     value,
-    remove: () => setValue(undefined),
+    done: () => setValue(undefined),
   };
 }
 
@@ -67,7 +67,7 @@ export function AiFeedback({
   sliceId: string;
   variationId: string;
 }) {
-  const { key, value, remove } = useAiFeedback({
+  const { key, value, done } = useAiFeedback({
     type,
     library,
     sliceId,
@@ -87,7 +87,7 @@ export function AiFeedback({
       feedback,
       langSmithUrl: value.langSmithUrl,
     });
-    remove();
+    done();
   };
 
   const toastShown = Boolean(toastKey);
