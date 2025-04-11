@@ -182,7 +182,7 @@ jobs:
       - name: Set up Playwright browsers
         run: yarn test:e2e:install
 
-      - name: Set SM_ENV env variable
+      - name: Set SM_ENV
         run: |
           if [[ $GITHUB_REF_NAME == 'main' ]]; then
             echo "SM_ENV=production" >> $GITHUB_ENV
