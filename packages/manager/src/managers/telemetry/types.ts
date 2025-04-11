@@ -279,7 +279,7 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 		library: string;
 		location: "custom_type" | "page_type" | "slices";
 	} & (
-		| { mode: "ai" }
+		| { mode: "ai"; langSmithUrl?: string }
 		| { mode: "manual" }
 		| { mode: "template"; sliceTemplate: string }
 	)

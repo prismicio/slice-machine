@@ -8,8 +8,7 @@ import {
 } from "@/features/builder/AddFieldDropdown";
 import { StaticFieldsInfoDialog } from "@/features/builder/StaticFieldsInfoDialog";
 import { usePersistedState } from "@/hooks/usePersistedState";
-
-const LOCAL_STORAGE_KEY = "slice-machine_staticFieldsInfoDialogDismissed";
+import { staticFieldsInfoDialogDismissedKey } from "@/utils/localStorageKeys";
 
 const AddFieldButton = forwardRef<
   HTMLButtonElement,
@@ -49,7 +48,7 @@ function PageTypeAddStaticFieldDropdown(props: AddFieldDropdownProps) {
   const [isFieldDropdownOpen, setFieldsDropdownOpen] = useState(false);
   const [isInfoDialogOpen, setInfoDialogOpen] = useState(false);
   const [isInfoDialogSeen, setInfoDialogSeen] = usePersistedState(
-    LOCAL_STORAGE_KEY,
+    staticFieldsInfoDialogDismissedKey,
     false,
   );
 

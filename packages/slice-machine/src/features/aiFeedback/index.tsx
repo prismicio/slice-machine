@@ -12,6 +12,7 @@ import { z } from "zod";
 
 import { telemetry } from "@/apiClient";
 import { usePersistedState } from "@/hooks/usePersistedState";
+import { getAiFeedbackKey } from "@/utils/localStorageKeys";
 
 export function addAiFeedback({
   type,
@@ -26,9 +27,24 @@ export function addAiFeedback({
   variationId: string;
   langSmithUrl?: string;
 }) {
-  const key = getKey({ type, library, sliceId, variationId });
+  const key = getAiFeedbackKey({ type, library, sliceId, variationId });
   const feedback = JSON.stringify({ langSmithUrl });
   localStorage.setItem(key, feedback);
+}
+
+export function removeAiFeedback({
+  type,
+  library,
+  sliceId,
+  variationId,
+}: {
+  type: "model";
+  library: string;
+  sliceId: string;
+  variationId: string;
+}) {
+  const key = getAiFeedbackKey({ type, library, sliceId, variationId });
+  localStorage.removeItem(key);
 }
 
 export function useAiFeedback({
@@ -42,7 +58,7 @@ export function useAiFeedback({
   sliceId: string;
   variationId: string;
 }) {
-  const key = getKey({ type, library, sliceId, variationId });
+  const key = getAiFeedbackKey({ type, library, sliceId, variationId });
   const [value, setValue] = usePersistedState(key, undefined, {
     schema: z.object({
       langSmithUrl: z.string().url().optional(),
@@ -51,22 +67,8 @@ export function useAiFeedback({
   return {
     key,
     value,
-    remove: () => setValue(undefined),
+    done: () => setValue(undefined),
   };
-}
-
-function getKey({
-  type,
-  library,
-  sliceId,
-  variationId,
-}: {
-  type: "model";
-  library: string;
-  sliceId: string;
-  variationId: string;
-}) {
-  return ["ai-feedback", type, library, sliceId, variationId].join("#");
 }
 
 export function AiFeedback({
@@ -80,7 +82,7 @@ export function AiFeedback({
   sliceId: string;
   variationId: string;
 }) {
-  const { key, value, remove } = useAiFeedback({
+  const { key, value, done } = useAiFeedback({
     type,
     library,
     sliceId,
@@ -100,7 +102,7 @@ export function AiFeedback({
       feedback,
       langSmithUrl: value.langSmithUrl,
     });
-    remove();
+    done();
   };
 
   const toastShown = Boolean(toastKey);
