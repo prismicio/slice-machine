@@ -32,6 +32,21 @@ export function addAiFeedback({
   localStorage.setItem(key, feedback);
 }
 
+export function removeAiFeedback({
+  type,
+  library,
+  sliceId,
+  variationId,
+}: {
+  type: "model";
+  library: string;
+  sliceId: string;
+  variationId: string;
+}) {
+  const key = getAiFeedbackKey({ type, library, sliceId, variationId });
+  localStorage.removeItem(key);
+}
+
 export function useAiFeedback({
   type,
   library,

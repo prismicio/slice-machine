@@ -14,12 +14,13 @@ type DeleteSliceModalProps = {
   libName: string;
   sliceId: string;
   sliceName: string;
+  variationIds: string[];
   onClose: () => void;
 };
 
 export const DeleteSliceModal: React.FunctionComponent<
   DeleteSliceModalProps
-> = ({ sliceId, sliceName, libName, isOpen, onClose }) => {
+> = ({ isOpen, libName, sliceId, sliceName, variationIds, onClose }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { deleteSliceSuccess } = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
@@ -29,9 +30,10 @@ export const DeleteSliceModal: React.FunctionComponent<
     setIsDeleting(true);
 
     await deleteSlice({
+      libraryID: libName,
       sliceID: sliceId,
       sliceName,
-      libraryID: libName,
+      sliceVariationIds: variationIds,
       onSuccess: () => {
         deleteSliceSuccess(sliceId, libName);
         syncChanges();

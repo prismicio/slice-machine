@@ -7,6 +7,7 @@ import {
   readSliceMocks,
   updateSlice,
 } from "@/apiClient";
+import { removeAiFeedback } from "@/features/aiFeedback";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import type { VariationSM } from "@/legacy/lib/models/common/Slice";
@@ -37,6 +38,14 @@ export async function deleteVariation(
     if (deleteSliceVariationErrors.length > 0) {
       throw deleteSliceVariationErrors;
     }
+
+    removeAiFeedback({
+      type: "model",
+      library: args.component.from,
+      sliceId: args.component.model.id,
+      variationId: args.variation.id,
+    });
+
     const { slice, errors: readSliceErrors } = await readSlice(
       args.component.from,
       args.component.model.id,
