@@ -37,25 +37,21 @@ const FormFields = {
   },
   thumbnails: {
     validate: () =>
-      yup
-        .array()
-        .defined()
-        .of(
-          yup.object().test({
-            name: "Thumbnails",
-            message: "Must set name and width or height at minimum",
-            test: function (value) {
-              if (!value.name) {
-                return false;
-              }
-              const hasWidth = typeof value.width === "number" && value.width;
-              const hasHeight =
-                typeof value.height === "number" && value.height;
-              const hasWidthOrHeight = hasWidth || hasHeight;
-              return value.name && hasWidthOrHeight;
-            },
-          }),
-        ),
+      yup.array().of(
+        yup.object().test({
+          name: "Thumbnails",
+          message: "Must set name and width or height at minimum",
+          test: function (value) {
+            if (!value.name) {
+              return false;
+            }
+            const hasWidth = typeof value.width === "number" && value.width;
+            const hasHeight = typeof value.height === "number" && value.height;
+            const hasWidthOrHeight = hasWidth || hasHeight;
+            return value.name && hasWidthOrHeight;
+          },
+        }),
+      ),
   },
 };
 
@@ -100,7 +96,7 @@ type FieldValues = {
       width?: number;
       height?: number;
     };
-    thumbnails: Array<Thumbnail>;
+    thumbnails?: Array<Thumbnail>;
   };
 };
 
@@ -118,7 +114,7 @@ const Form: React.FC<FormProps> = (props) => {
   const [thumbI, setThumbI] = useState(0);
 
   const {
-    config: { thumbnails, constraint },
+    config: { thumbnails = [], constraint },
   } = formValues;
 
   useEffect(() => {
