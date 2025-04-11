@@ -193,6 +193,11 @@ jobs:
         run: yarn test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
         env:
           DEBUG: pw:test
+          PLAYWRIGHT_ADMIN_USERNAME: ${{ secrets.PLAYWRIGHT_ADMIN_USERNAME }}
+          PLAYWRIGHT_ADMIN_PASSWORD: ${{ secrets.PLAYWRIGHT_ADMIN_PASSWORD }}
+          MANAGEV2_SECRET: ${{ secrets.MANAGEV2_SECRET }}
+          MANAGEV2_AUDIENCE: ${{ secrets.MANAGEV2_AUDIENCE }}
+          PRISMIC_CLUSTER: ${{ secrets.PRISMIC_CLUSTER }}
 
       - name: Upload blob report to GitHub Actions Artifacts
         uses: actions/upload-artifact@v4

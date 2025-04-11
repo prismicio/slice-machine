@@ -316,3 +316,11 @@ export const test = baseTest.extend<Options & Fixtures>({
     await use(procedures);
   },
 });
+
+export function setRepositoryEnvVar(repositoryName: string) {
+  process.env["E2E_REPOSITORY"] = repositoryName;
+}
+
+export function clearRepositoryEnvVar() {
+  process.env["E2E_REPOSITORY"] = undefined;
+}
