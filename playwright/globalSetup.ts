@@ -3,11 +3,7 @@ import {
   type RepositoryConfig,
 } from "@prismicio/e2e-tests-utils";
 
-import {
-  auth,
-  baseUrl,
-  prismicCluster,
-} from "./playwright.config";
+import { auth, baseUrl, prismicCluster } from "./playwright.config";
 
 import { setRepositoryEnvVar } from "./fixtures";
 
