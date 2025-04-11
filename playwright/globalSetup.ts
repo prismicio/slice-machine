@@ -14,13 +14,8 @@ import { setRepositoryEnvVar } from "./fixtures";
 
 async function globalSetup() {
   const config: RepositoryConfig = {
-    locales: ["en-us", "en-pl", "it-it"],
+    locales: ["en-us"],
     defaultLocale: "en-us",
-    preview: {
-      name: "Preview",
-      websiteURL: "https://prismic.io",
-      resolverPath: "/preview",
-    },
     customTypes: [],
     slices: [],
   };
@@ -36,9 +31,6 @@ async function globalSetup() {
 
   // Inject the name of the newly created repo into the Env, so we can run the app pointing to it.
   setRepositoryEnvVar(repository.name);
-
-  // Changing plan to be able to add user
-  await repository.changePlan("platinum");
 }
 
 export default globalSetup;
