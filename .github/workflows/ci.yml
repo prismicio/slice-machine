@@ -203,8 +203,6 @@ jobs:
           DEBUG: pw:test
           PLAYWRIGHT_ADMIN_USERNAME: ${{ secrets.PLAYWRIGHT_ADMIN_USERNAME }}
           PLAYWRIGHT_ADMIN_PASSWORD: ${{ secrets.PLAYWRIGHT_ADMIN_PASSWORD }}
-          MANAGEV2_SECRET: ${{ secrets.MANAGEV2_SECRET }}
-          MANAGEV2_AUDIENCE: ${{ secrets.MANAGEV2_AUDIENCE }}
           PRISMIC_CLUSTER: ${{ secrets.PRISMIC_CLUSTER }}
           SM_ENV: ${{ env.SM_ENV }}
 

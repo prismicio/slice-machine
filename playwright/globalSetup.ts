@@ -6,7 +6,6 @@ import {
 import {
   auth,
   baseUrl,
-  manageV2Config,
   prismicCluster,
 } from "./playwright.config";
 
@@ -26,7 +25,6 @@ async function globalSetup() {
   const testUtils = createRepositoriesManager({
     urlConfig: baseUrl,
     authConfig: { email: auth.username, password: auth.password },
-    manageV2Config,
     cluster: prismicCluster,
   });
 

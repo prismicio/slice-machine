@@ -11,8 +11,6 @@ declare const process: {
     PLAYWRIGHT_ADMIN_USERNAME: string;
     PLAYWRIGHT_ADMIN_PASSWORD: string;
     PRISMIC_CLUSTER?: string;
-    MANAGEV2_SECRET: string;
-    MANAGEV2_AUDIENCE: string;
     E2E_REPOSITORY: string | undefined;
     SM_ENV:
       | "dev-tools"
@@ -44,11 +42,6 @@ export const auth = {
   username: process.env.PLAYWRIGHT_ADMIN_USERNAME,
   password: process.env.PLAYWRIGHT_ADMIN_PASSWORD,
   storageState: ".auth/admin.json",
-};
-
-export const manageV2Config = {
-  secret: process.env.MANAGEV2_SECRET,
-  audience: process.env.MANAGEV2_AUDIENCE,
 };
 
 assert.ok(auth.username, "Missing PLAYWRIGHT_ADMIN_USERNAME env variable.");
