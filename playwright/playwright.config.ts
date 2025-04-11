@@ -14,10 +14,26 @@ declare const process: {
     MANAGEV2_SECRET: string;
     MANAGEV2_AUDIENCE: string;
     E2E_REPOSITORY: string | undefined;
+    SM_ENV:
+      | "development"
+      | "dev-tools"
+      | "marketing-tools"
+      | "platform"
+      | "staging"
+      | "production";
   };
 };
 
-export const baseUrl = "https://wroom.io";
+export const baseUrl = (() => {
+  switch (process.env.SM_ENV) {
+    case "dev-tools":
+    case "marketing-tools":
+    case "platform":
+      return `https://${process.env.SM_ENV}-wroom.com/`;
+    default:
+      return "https://wroom.io";
+  }
+})();
 
 export const prismicCluster = process.env.PRISMIC_CLUSTER;
 
