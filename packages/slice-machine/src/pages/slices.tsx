@@ -259,6 +259,9 @@ const SlicesIndex: React.FunctionComponent = () => {
             libName={sliceForEdit?.from ?? ""}
             sliceId={sliceForEdit?.model.id ?? ""}
             sliceName={sliceForEdit?.model.name ?? ""}
+            sliceVariationIds={(sliceForEdit?.model.variations ?? []).map(
+              (variation) => variation.id,
+            )}
             onClose={() => {
               setIsDeleteSliceModalOpen(false);
             }}
