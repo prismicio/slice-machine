@@ -29,7 +29,10 @@ const IMAGE_UPLOAD_LIMIT = 10;
 interface GenerateSliceWithAiModalProps {
   open: boolean;
   onSuccess: (args: {
-    slices: SharedSlice[];
+    slices: {
+      model: SharedSlice;
+      langSmithUrl?: string;
+    }[];
     library: string;
   }) => Promise<void>;
   onClose: () => void;
@@ -124,7 +127,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     });
 
     managerClient.customTypes.inferSlice({ imageUrl }).then(
-      ({ slice }) => {
+      ({ slice, langSmithUrl }) => {
         if (currentId !== id.current) return;
         setSlice({
           index,
@@ -133,6 +136,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             status: "success",
             thumbnailUrl: imageUrl,
             model: slice,
+            langSmithUrl,
           }),
         });
       },
@@ -295,6 +299,7 @@ async function getImageUrl({ image }: { image: File }) {
 type NewSlice = {
   image: File;
   model: SharedSlice;
+  langSmithUrl?: string;
 };
 
 async function addSlices(newSlices: NewSlice[]) {
@@ -307,22 +312,26 @@ async function addSlices(newSlices: NewSlice[]) {
   }
 
   // add the slices computing new ids/names if needed
-  const slices = await managerClient.slices.addSlices({
+  const models = await managerClient.slices.addSlices({
     library,
     models: newSlices.map((slice) => slice.model),
   });
 
   // for each added slice, set the variation screenshot
-  await Promise.all(
-    slices.map((slice, index) =>
-      managerClient.slices.updateSliceScreenshot({
+  const slices = await Promise.all(
+    models.map(async (model, index) => {
+      await managerClient.slices.updateSliceScreenshot({
         libraryID: library,
-        sliceID: slice.id,
-        variationID: slice.variations[0].id,
+        sliceID: model.id,
+        variationID: model.variations[0].id,
         data: newSlices[index].image,
-      }),
-    ),
+      });
+      return {
+        model,
+        langSmithUrl: newSlices[index].langSmithUrl,
+      };
+    }),
   );
 
-  return { slices, library };
+  return { library, slices };
 }

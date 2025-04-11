@@ -391,4 +391,5 @@ const InferSliceResponse = z.object({
 
 		return z.NEVER;
 	}),
+	langSmithUrl: z.string().url().optional(),
 });

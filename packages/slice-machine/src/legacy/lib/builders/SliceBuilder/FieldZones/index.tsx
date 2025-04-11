@@ -24,6 +24,7 @@ import {
   reorderField,
   updateField,
 } from "@/domain/slice";
+import { AiFeedback } from "@/features/aiFeedback";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 import Zone from "@/legacy/lib/builders/common/Zone";
@@ -209,104 +210,117 @@ const FieldZones: FC = () => {
   };
 
   return (
-    <List>
-      <Zone
-        zoneType="slice"
-        zoneTypeFormat={undefined}
-        tabId={undefined}
-        title="Fields"
-        dataTip={dataTipText}
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        fields={variation.primary}
-        EditModal={EditModal}
-        widgetsArray={primaryWidgetsArray}
-        onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
-        onSave={_onCreateOrSave(WidgetsArea.Primary)}
-        onDragEnd={_onDragEnd(WidgetsArea.Primary)}
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        poolOfFieldsToCheck={variation.primary || []}
-        renderHintBase={({ item }) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-          `slice.primary${transformKeyAccessor(item.key)}`
-        }
-        renderFieldAccessor={(key) =>
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          `slice.primary${transformKeyAccessor(key)}`
-        }
-        testId="static-zone-content"
-        isRepeatableCustomType={undefined}
-        emptyStateHeading={undefined}
-      />
-      {hasItems ? (
+    <Box flexDirection="column" gap={18}>
+      <List>
         <Zone
           zoneType="slice"
           zoneTypeFormat={undefined}
           tabId={undefined}
-          isRepeatable
-          title="Repeatable Zone"
-          dataTip={dataTipText2}
-          widgetsArray={itemsWidgetsArray}
+          title="Fields"
+          dataTip={dataTipText}
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          fields={variation.items}
+          fields={variation.primary}
           EditModal={EditModal}
-          onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
-          onSave={_onCreateOrSave(WidgetsArea.Items)}
-          onDragEnd={_onDragEnd(WidgetsArea.Items)}
+          widgetsArray={primaryWidgetsArray}
+          onDeleteItem={_onDeleteItem(WidgetsArea.Primary)}
+          onSave={_onCreateOrSave(WidgetsArea.Primary)}
+          onDragEnd={_onDragEnd(WidgetsArea.Primary)}
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-          poolOfFieldsToCheck={variation.items || []}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-          renderHintBase={({ item }) => `item${transformKeyAccessor(item.key)}`}
+          poolOfFieldsToCheck={variation.primary || []}
+          renderHintBase={({ item }) =>
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+            `slice.primary${transformKeyAccessor(item.key)}`
+          }
           renderFieldAccessor={(key) =>
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            `slice.items[i]${transformKeyAccessor(key)}`
+            `slice.primary${transformKeyAccessor(key)}`
           }
-          testId="slice-repeatable-zone"
+          testId="static-zone-content"
           isRepeatableCustomType={undefined}
-          emptyStateHeading="No fields"
+          emptyStateHeading={undefined}
         />
-      ) : null}
-      <Dialog
-        size="small"
-        open={isDeleteRepeatableZoneDialogOpen}
-        onOpenChange={(open) => setIsDeleteRepeatableZoneDialogOpen(open)}
-      >
-        <DialogHeader icon="delete" title="Delete field" />
-        <DialogContent>
-          <Box padding={24} gap={12} flexDirection="column">
-            {slice.model.variations.length > 1 ? (
-              <>
-                <strong>
-                  This action will permanently remove the repeatable zone from
-                  the {slice.model.name} slice {variation.name} variation.
-                </strong>
-                <div>
-                  Other variations will be left untouched. To reimplement
-                  repeatable fields later, use a group field instead of the
-                  repeatable zone.
-                </div>
-              </>
-            ) : (
-              <>
-                <strong>
-                  This action will permanently remove the repeatable zone from
-                  the {slice.model.name}.
-                </strong>
-                <div>
-                  To reimplement repeatable fields later, use a group field
-                  instead of the repeatable zone.
-                </div>
-              </>
-            )}
-          </Box>
-          <DialogActions>
-            <DialogCancelButton />
-            <DialogActionButton color="tomato" onClick={onDeleteRepeatableZone}>
-              Delete
-            </DialogActionButton>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
-    </List>
+        {hasItems ? (
+          <Zone
+            zoneType="slice"
+            zoneTypeFormat={undefined}
+            tabId={undefined}
+            isRepeatable
+            title="Repeatable Zone"
+            dataTip={dataTipText2}
+            widgetsArray={itemsWidgetsArray}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            fields={variation.items}
+            EditModal={EditModal}
+            onDeleteItem={_onDeleteItem(WidgetsArea.Items)}
+            onSave={_onCreateOrSave(WidgetsArea.Items)}
+            onDragEnd={_onDragEnd(WidgetsArea.Items)}
+            // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+            poolOfFieldsToCheck={variation.items || []}
+            renderHintBase={({ item }) =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+              `item${transformKeyAccessor(item.key)}`
+            }
+            renderFieldAccessor={(key) =>
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+              `slice.items[i]${transformKeyAccessor(key)}`
+            }
+            testId="slice-repeatable-zone"
+            isRepeatableCustomType={undefined}
+            emptyStateHeading="No fields"
+          />
+        ) : null}
+        <Dialog
+          size="small"
+          open={isDeleteRepeatableZoneDialogOpen}
+          onOpenChange={(open) => setIsDeleteRepeatableZoneDialogOpen(open)}
+        >
+          <DialogHeader icon="delete" title="Delete field" />
+          <DialogContent>
+            <Box padding={24} gap={12} flexDirection="column">
+              {slice.model.variations.length > 1 ? (
+                <>
+                  <strong>
+                    This action will permanently remove the repeatable zone from
+                    the {slice.model.name} slice {variation.name} variation.
+                  </strong>
+                  <div>
+                    Other variations will be left untouched. To reimplement
+                    repeatable fields later, use a group field instead of the
+                    repeatable zone.
+                  </div>
+                </>
+              ) : (
+                <>
+                  <strong>
+                    This action will permanently remove the repeatable zone from
+                    the {slice.model.name}.
+                  </strong>
+                  <div>
+                    To reimplement repeatable fields later, use a group field
+                    instead of the repeatable zone.
+                  </div>
+                </>
+              )}
+            </Box>
+            <DialogActions>
+              <DialogCancelButton />
+              <DialogActionButton
+                color="tomato"
+                onClick={onDeleteRepeatableZone}
+              >
+                Delete
+              </DialogActionButton>
+            </DialogActions>
+          </DialogContent>
+        </Dialog>
+      </List>
+      <AiFeedback
+        type="model"
+        library={slice.from}
+        sliceId={slice.model.id}
+        variationId={variation.id}
+      />
+    </Box>
   );
 };
 

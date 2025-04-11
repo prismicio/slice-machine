@@ -16,6 +16,7 @@ import { BaseStyles } from "theme-ui";
 
 import { getState, telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
+import { addAiFeedback } from "@/features/aiFeedback";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { GenerateSliceWithAiModal } from "@/features/customTypes/customTypesBuilder/GenerateSliceWithAiModal";
@@ -444,16 +445,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       <GenerateSliceWithAiModal
         open={isGenerateSliceWithAiModalOpen}
-        onSuccess={async (args: { slices: SharedSlice[]; library: string }) => {
-          const { slices, library } = args;
-
+        onSuccess={async ({ slices, library }) => {
           const serverState = await getState();
           createSliceSuccess(serverState.libraries);
 
           const newCustomType = addSlicesToSliceZone({
             customType,
             tabId,
-            slices,
+            slices: slices.map((slice) => slice.model),
           });
           setCustomType(CustomTypes.fromSM(newCustomType), () => {
             toast.success(
@@ -466,14 +465,23 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           void completeStep("createSlice");
           syncChanges();
 
-          for (const slice of slices) {
+          for (const { model, langSmithUrl } of slices) {
             void telemetry.track({
               event: "slice:created",
-              id: slice.id,
-              name: slice.name,
+              id: model.id,
+              name: model.name,
               library,
               location: `${customType.format}_type`,
               mode: "ai",
+              langSmithUrl,
+            });
+
+            addAiFeedback({
+              type: "model",
+              library,
+              sliceId: model.id,
+              variationId: model.variations[0].id,
+              langSmithUrl,
             });
           }
 
