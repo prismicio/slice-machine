@@ -12,6 +12,7 @@ import { z } from "zod";
 
 import { telemetry } from "@/apiClient";
 import { usePersistedState } from "@/hooks/usePersistedState";
+import { getAiFeedbackKey } from "@/utils/localStorageKeys";
 
 export function addAiFeedback({
   type,
@@ -26,7 +27,7 @@ export function addAiFeedback({
   variationId: string;
   langSmithUrl?: string;
 }) {
-  const key = getKey({ type, library, sliceId, variationId });
+  const key = getAiFeedbackKey({ type, library, sliceId, variationId });
   const feedback = JSON.stringify({ langSmithUrl });
   localStorage.setItem(key, feedback);
 }
@@ -42,7 +43,7 @@ export function useAiFeedback({
   sliceId: string;
   variationId: string;
 }) {
-  const key = getKey({ type, library, sliceId, variationId });
+  const key = getAiFeedbackKey({ type, library, sliceId, variationId });
   const [value, setValue] = usePersistedState(key, undefined, {
     schema: z.object({
       langSmithUrl: z.string().url().optional(),
@@ -53,20 +54,6 @@ export function useAiFeedback({
     value,
     remove: () => setValue(undefined),
   };
-}
-
-function getKey({
-  type,
-  library,
-  sliceId,
-  variationId,
-}: {
-  type: "model";
-  library: string;
-  sliceId: string;
-  variationId: string;
-}) {
-  return ["ai-feedback", type, library, sliceId, variationId].join("#");
 }
 
 export function AiFeedback({
