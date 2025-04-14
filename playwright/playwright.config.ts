@@ -36,7 +36,8 @@ export const baseUrl = (() => {
   }
 })();
 
-export const prismicCluster = process.env.PRISMIC_CLUSTER;
+export const prismicCluster =
+  process.env.SM_ENV === "staging" ? "exp" : undefined;
 
 export const auth = {
   username: process.env.PLAYWRIGHT_ADMIN_USERNAME,
