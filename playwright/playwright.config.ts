@@ -10,26 +10,37 @@ declare const process: {
     CI: boolean;
     PLAYWRIGHT_ADMIN_USERNAME: string;
     PLAYWRIGHT_ADMIN_PASSWORD: string;
-    PRISMIC_CLUSTER?: string;
-    MANAGEV2_SECRET: string;
-    MANAGEV2_AUDIENCE: string;
     E2E_REPOSITORY: string | undefined;
+    SM_ENV:
+      | "dev-tools"
+      | "marketing-tools"
+      | "platform"
+      | "staging"
+      | "production";
   };
 };
 
-export const baseUrl = "https://wroom.io";
+export const baseUrl = (() => {
+  switch (process.env.SM_ENV) {
+    case "dev-tools":
+    case "marketing-tools":
+    case "platform":
+      return `https://${process.env.SM_ENV}-wroom.com/`;
+    case "production":
+      return "https://prismic.io/";
+    case "staging":
+      return "https://wroom.io/";
+    default:
+      return "https://dev-tools-wroom.com/";
+  }
+})();
 
-export const prismicCluster = process.env.PRISMIC_CLUSTER;
+export const cluster = process.env.SM_ENV === "staging" ? "exp" : undefined;
 
 export const auth = {
   username: process.env.PLAYWRIGHT_ADMIN_USERNAME,
   password: process.env.PLAYWRIGHT_ADMIN_PASSWORD,
   storageState: ".auth/admin.json",
-};
-
-export const manageV2Config = {
-  secret: process.env.MANAGEV2_SECRET,
-  audience: process.env.MANAGEV2_AUDIENCE,
 };
 
 assert.ok(auth.username, "Missing PLAYWRIGHT_ADMIN_USERNAME env variable.");
