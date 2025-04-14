@@ -9,7 +9,13 @@ import { setRepositoryEnvVar } from "./fixtures";
 
 async function globalSetup() {
   // if E2E_REPOSITORY is set, it's because we want to use an existing repo
-  if (process.env["E2E_REPOSITORY"]) return;
+  const existingRepo = process.env["E2E_REPOSITORY"];
+  if (existingRepo) {
+    console.log(
+      `[setup] E2E_REPOSITORY is set, using existing repo (${existingRepo})`,
+    );
+    return;
+  }
 
   const config: RepositoryConfig = {
     locales: ["en-us"],
