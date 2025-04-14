@@ -5,6 +5,13 @@ import dotenv from "dotenv";
 dotenv.config({ path: ".env.test" });
 dotenv.config({ path: ".env.test.local", override: true });
 
+declare global {
+  interface Window {
+    /** If specified, it represents the target repository. This is useful for running E2E tests in specific, temporary repositories */
+    __repository__?: string;
+  }
+}
+
 declare const process: {
   env: {
     CI: boolean;
@@ -19,6 +26,8 @@ declare const process: {
       | "production";
   };
 };
+
+const setup = { name: "setup", testMatch: /.*\.setup\.ts/ };
 
 export const baseUrl = (() => {
   switch (process.env.SM_ENV) {
@@ -63,11 +72,14 @@ const config = {
 
   // Configure projects for major browsers.
   projects: [
+    setup,
     {
       name: "chromium",
       use: {
         ...devices["Desktop Chrome"],
+        storageState: auth.storageState,
       },
+      dependencies: ["setup"],
     },
   ],
 

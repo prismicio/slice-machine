@@ -25,6 +25,7 @@
     ".eslintrc.js",
     "playwright.config.ts",
     "globalSetup.ts",
-    "globalTeardown.ts"
+    "globalTeardown.ts",
+    "*.setup.ts"
   ]
 }

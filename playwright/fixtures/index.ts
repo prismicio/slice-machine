@@ -1,7 +1,7 @@
 import * as fs from "fs/promises";
 import * as os from "os";
 import * as path from "path";
-import { test as baseTest, expect } from "@playwright/test";
+import { BrowserContext, test as baseTest, expect } from "@playwright/test";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import {
   createSliceMachineManagerClient,
@@ -315,6 +315,10 @@ export const test = baseTest.extend<Options & Fixtures>({
 
     await use(procedures);
   },
+  context: async ({ context }, use) => {
+    await useE2eRepository(context);
+    await use(context);
+  },
 });
 
 export function setRepositoryEnvVar(repositoryName: string) {
@@ -325,3 +329,20 @@ export function setRepositoryEnvVar(repositoryName: string) {
 export function clearRepositoryEnvVar() {
   process.env["PLAYWRIGHT_REPOSITORY"] = undefined;
 }
+
+// NOTE: The PLAYWRIGHT_REPOSITORY env var is used to wire the globalSetup with the
+// playwright runtime, given that we don't have access to the test context there.
+// When the tests run with this custom test override, we inject the PLAYWRIGHT_REPOSITORY
+// into window.__repository__.
+export async function useE2eRepository(context: BrowserContext) {
+  const e2eRepository = process.env["E2E_REPOSITORY"];
+
+  await context.addInitScript(
+    ({ e2eRepository }) => {
+      window.__repository__ = e2eRepository;
+    },
+    { e2eRepository },
+  );
+}
+
+export * from "@playwright/test";

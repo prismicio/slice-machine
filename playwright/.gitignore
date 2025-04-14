@@ -2,3 +2,4 @@
 /playwright-report/
 .env.test
 .env.test.local
+/.auth/
