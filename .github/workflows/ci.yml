@@ -203,7 +203,6 @@ jobs:
           DEBUG: pw:test
           PLAYWRIGHT_ADMIN_USERNAME: ${{ secrets.PLAYWRIGHT_ADMIN_USERNAME }}
           PLAYWRIGHT_ADMIN_PASSWORD: ${{ secrets.PLAYWRIGHT_ADMIN_PASSWORD }}
-          PRISMIC_CLUSTER: ${{ secrets.PRISMIC_CLUSTER }}
           SM_ENV: ${{ env.SM_ENV }}
 
       - name: Upload blob report to GitHub Actions Artifacts

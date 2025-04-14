@@ -3,7 +3,7 @@ import {
   type RepositoryConfig,
 } from "@prismicio/e2e-tests-utils";
 
-import { auth, baseUrl, prismicCluster } from "./playwright.config";
+import { auth, baseUrl, cluster } from "./playwright.config";
 
 import { setRepositoryEnvVar } from "./fixtures";
 
@@ -21,7 +21,7 @@ async function globalSetup() {
   const testUtils = createRepositoriesManager({
     urlConfig: baseUrl,
     authConfig: { email: auth.username, password: auth.password },
-    cluster: prismicCluster,
+    cluster,
   });
 
   const repository = await testUtils.createRepository(config);

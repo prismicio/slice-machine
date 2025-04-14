@@ -10,7 +10,6 @@ declare const process: {
     CI: boolean;
     PLAYWRIGHT_ADMIN_USERNAME: string;
     PLAYWRIGHT_ADMIN_PASSWORD: string;
-    PRISMIC_CLUSTER?: string;
     E2E_REPOSITORY: string | undefined;
     SM_ENV:
       | "dev-tools"
@@ -36,8 +35,7 @@ export const baseUrl = (() => {
   }
 })();
 
-export const prismicCluster =
-  process.env.SM_ENV === "staging" ? "exp" : undefined;
+export const cluster = process.env.SM_ENV === "staging" ? "exp" : undefined;
 
 export const auth = {
   username: process.env.PLAYWRIGHT_ADMIN_USERNAME,
