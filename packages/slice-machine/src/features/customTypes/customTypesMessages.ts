@@ -9,7 +9,7 @@ export const CUSTOM_TYPES_MESSAGES = {
       `${start ? "Page" : "page"} ${plural ? "types" : "type"}`,
     hintSingle: "e.g. home, privacy policy, sign up",
     hintRepeatable: "e.g. product, landing page, blog post",
-    inputPlaceholder: `ID to query the page type in the API (e.g. 'BlogPost')`,
+    inputPlaceholder: `ID to query the page type in the API (e.g. 'blogPost')`,
     blankSlateDescription:
       "Page types are models that your editors will use to create website pages in the Page Builder.",
     autoSaveFailed:
@@ -20,7 +20,7 @@ export const CUSTOM_TYPES_MESSAGES = {
       `${start ? "Custom" : "custom"} ${plural ? "types" : "type"}`,
     hintSingle: "e.g. global nav, settings, footer",
     hintRepeatable: "e.g. side menu, testimonial, author",
-    inputPlaceholder: `ID to query the custom type in the API (e.g. 'Author')`,
+    inputPlaceholder: `ID to query the custom type in the API (e.g. 'author')`,
     blankSlateDescription:
       "Custom types are models that your editors can use to create menus or objects in the Page Builder.",
     autoSaveFailed:
