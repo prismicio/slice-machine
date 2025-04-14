@@ -335,7 +335,7 @@ export function clearRepositoryEnvVar() {
 // When the tests run with this custom test override, we inject the PLAYWRIGHT_REPOSITORY
 // into window.__repository__.
 export async function useE2eRepository(context: BrowserContext) {
-  const e2eRepository = process.env["E2E_REPOSITORY"];
+  const e2eRepository = process.env["PLAYWRIGHT_REPOSITORY"];
 
   await context.addInitScript(
     ({ e2eRepository }) => {
