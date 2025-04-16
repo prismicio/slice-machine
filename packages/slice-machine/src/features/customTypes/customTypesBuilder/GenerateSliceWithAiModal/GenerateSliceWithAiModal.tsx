@@ -20,7 +20,12 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
+import { getState, telemetry } from "@/apiClient";
+import { addAiFeedback } from "@/features/aiFeedback";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { Slice, SliceCard } from "./SliceCard";
 
@@ -28,20 +33,24 @@ const IMAGE_UPLOAD_LIMIT = 10;
 
 interface GenerateSliceWithAiModalProps {
   open: boolean;
+  location: "custom_type" | "page_type" | "slices";
   onSuccess: (args: {
     slices: {
       model: SharedSlice;
       langSmithUrl?: string;
     }[];
     library: string;
-  }) => Promise<void>;
+  }) => void;
   onClose: () => void;
 }
 
 export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
-  const { open, onSuccess, onClose } = props;
+  const { open, location, onSuccess, onClose } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
+  const { syncChanges } = useAutoSync();
+  const { createSliceSuccess } = useSliceMachineActions();
+  const { completeStep } = useOnboarding();
 
   /**
    * Keeps track of the current instance id.
@@ -168,9 +177,33 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
       .then(async ({ slices, library }) => {
         if (currentId !== id.current) return;
         id.current = crypto.randomUUID();
-        await onSuccess({ slices, library });
+        const serverState = await getState();
+        createSliceSuccess(serverState.libraries);
+        onSuccess({ slices, library });
+        void completeStep("createSlice");
+        syncChanges();
         setIsCreatingSlices(false);
         setSlices([]);
+
+        for (const { model, langSmithUrl } of slices) {
+          void telemetry.track({
+            event: "slice:created",
+            id: model.id,
+            name: model.name,
+            library,
+            location,
+            mode: "ai",
+            langSmithUrl,
+          });
+
+          addAiFeedback({
+            type: "model",
+            library,
+            sliceId: model.id,
+            variationId: model.variations[0].id,
+            langSmithUrl,
+          });
+        }
       })
       .catch(() => {
         if (currentId !== id.current) return;

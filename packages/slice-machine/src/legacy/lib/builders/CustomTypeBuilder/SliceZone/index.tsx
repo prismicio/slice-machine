@@ -14,9 +14,8 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { BaseStyles } from "theme-ui";
 
-import { getState, telemetry } from "@/apiClient";
+import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
-import { addAiFeedback } from "@/features/aiFeedback";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { GenerateSliceWithAiModal } from "@/features/customTypes/customTypesBuilder/GenerateSliceWithAiModal";
@@ -24,7 +23,6 @@ import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/S
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
 import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplates";
-import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
 import type { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
@@ -134,8 +132,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   );
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
-  const { createSliceSuccess, openLoginModal } = useSliceMachineActions();
-  const { syncChanges } = useAutoSync();
+  const { openLoginModal } = useSliceMachineActions();
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -280,7 +277,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         color="white"
                       />
                     )}
-                    description="Select from your created Slices."
+                    description="Choose from ready-made examples."
                   >
                     Use a template
                   </DropdownMenuItem>
@@ -445,10 +442,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       )}
       <GenerateSliceWithAiModal
         open={isGenerateSliceWithAiModalOpen}
-        onSuccess={async ({ slices, library }) => {
-          const serverState = await getState();
-          createSliceSuccess(serverState.libraries);
-
+        location={`${customType.format}_type`}
+        onSuccess={({ slices, library }) => {
           const newCustomType = addSlicesToSliceZone({
             customType,
             tabId,
@@ -462,29 +457,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               />,
             );
           });
-          void completeStep("createSlice");
-          syncChanges();
-
-          for (const { model, langSmithUrl } of slices) {
-            void telemetry.track({
-              event: "slice:created",
-              id: model.id,
-              name: model.name,
-              library,
-              location: `${customType.format}_type`,
-              mode: "ai",
-              langSmithUrl,
-            });
-
-            addAiFeedback({
-              type: "model",
-              library,
-              sliceId: model.id,
-              variationId: model.variations[0].id,
-              langSmithUrl,
-            });
-          }
-
           closeGenerateSliceWithAiModal();
         }}
         onClose={closeGenerateSliceWithAiModal}
