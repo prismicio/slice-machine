@@ -263,7 +263,7 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            Add to page ({readySlices.length})
+            {getSubmitButtonLabel(location)} ({readySlices.length})
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
@@ -368,3 +368,16 @@ async function addSlices(newSlices: NewSlice[]) {
 
   return { library, slices };
 }
+
+const getSubmitButtonLabel = (
+  location: "custom_type" | "page_type" | "slices",
+) => {
+  switch (location) {
+    case "custom_type":
+      return "Add to type";
+    case "page_type":
+      return "Add to page";
+    case "slices":
+      return "Add to slices";
+  }
+};
