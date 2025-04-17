@@ -15,7 +15,7 @@ import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGen
 export type SliceZoneBlankSlateProps = {
   openUpdateSliceZoneModal: () => void;
   openCreateSliceModal: () => void;
-  openGenerateSliceWithAiModal: () => void;
+  openCreateSliceFromImageModal: () => void;
   openSlicesTemplatesModal: () => void;
   projectHasAvailableSlices: boolean;
   isSlicesTemplatesSupported: boolean;
@@ -23,7 +23,7 @@ export type SliceZoneBlankSlateProps = {
 
 export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   openCreateSliceModal,
-  openGenerateSliceWithAiModal,
+  openCreateSliceFromImageModal,
   openUpdateSliceZoneModal,
   openSlicesTemplatesModal,
   projectHasAvailableSlices,
@@ -58,7 +58,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                   radius={6}
                 />
               )}
-              onClick={openGenerateSliceWithAiModal}
+              onClick={openCreateSliceFromImageModal}
               description="Build a Slice based on your design image."
             >
               Generate from image

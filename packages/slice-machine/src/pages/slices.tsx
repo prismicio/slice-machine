@@ -16,7 +16,7 @@ import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
-import { GenerateSliceWithAiModal } from "@/features/customTypes/customTypesBuilder/GenerateSliceWithAiModal";
+import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
@@ -61,7 +61,7 @@ const SlicesIndex: React.FunctionComponent = () => {
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isDeleteSliceModalOpen, setIsDeleteSliceModalOpen] = useState(false);
   const [isRenameSliceModalOpen, setIsRenameSliceModalOpen] = useState(false);
-  const [isGenerateSliceWithAiModalOpen, setIsGenerateSliceWithAiModalOpen] =
+  const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
     useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
@@ -89,18 +89,18 @@ const SlicesIndex: React.FunctionComponent = () => {
     setIsRenameSliceModalOpen(true);
   };
 
-  const openGenerateSliceWithAiModal = async () => {
+  const openCreateSliceFromImageModal = async () => {
     const isLoggedIn = await managerClient.user.checkIsLoggedIn();
 
     if (isLoggedIn) {
-      setIsGenerateSliceWithAiModalOpen(true);
+      setIsCreateSliceFromImageModalOpen(true);
     } else {
       openLoginModal();
     }
   };
 
-  const closeGenerateSliceWithAiModal = () => {
-    setIsGenerateSliceWithAiModalOpen(false);
+  const closeCreateSliceFromImageModal = () => {
+    setIsCreateSliceFromImageModalOpen(false);
   };
 
   return (
@@ -138,7 +138,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                         color="purple"
                       />
                     )}
-                    onSelect={() => void openGenerateSliceWithAiModal()}
+                    onSelect={() => void openCreateSliceFromImageModal()}
                     description="Build a Slice based on your design image."
                   >
                     Generate from image
@@ -334,8 +334,8 @@ const SlicesIndex: React.FunctionComponent = () => {
               setIsDeleteSliceModalOpen(false);
             }}
           />
-          <GenerateSliceWithAiModal
-            open={isGenerateSliceWithAiModalOpen}
+          <CreateSliceFromImageModal
+            open={isCreateSliceFromImageModalOpen}
             location="slices"
             onSuccess={({ library }) => {
               toast.success(
@@ -344,9 +344,9 @@ const SlicesIndex: React.FunctionComponent = () => {
                   path={library}
                 />,
               );
-              closeGenerateSliceWithAiModal();
+              closeCreateSliceFromImageModal();
             }}
-            onClose={closeGenerateSliceWithAiModal}
+            onClose={closeCreateSliceFromImageModal}
           />
         </AppLayoutContent>
       </AppLayout>

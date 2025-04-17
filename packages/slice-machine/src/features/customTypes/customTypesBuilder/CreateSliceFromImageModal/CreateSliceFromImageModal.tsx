@@ -31,7 +31,7 @@ import { Slice, SliceCard } from "./SliceCard";
 
 const IMAGE_UPLOAD_LIMIT = 10;
 
-interface GenerateSliceWithAiModalProps {
+interface CreateSliceFromImageModalProps {
   open: boolean;
   location: "custom_type" | "page_type" | "slices";
   onSuccess: (args: {
@@ -44,7 +44,9 @@ interface GenerateSliceWithAiModalProps {
   onClose: () => void;
 }
 
-export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
+export function CreateSliceFromImageModal(
+  props: CreateSliceFromImageModalProps,
+) {
   const { open, location, onSuccess, onClose } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);

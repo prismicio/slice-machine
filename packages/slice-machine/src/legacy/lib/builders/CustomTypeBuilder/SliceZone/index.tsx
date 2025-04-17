@@ -17,8 +17,8 @@ import { BaseStyles } from "theme-ui";
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
+import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { GenerateSliceWithAiModal } from "@/features/customTypes/customTypesBuilder/GenerateSliceWithAiModal";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
@@ -121,7 +121,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const [isUpdateSliceZoneModalOpen, setIsUpdateSliceZoneModalOpen] =
     useState(false);
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
-  const [isGenerateSliceWithAiModalOpen, setIsGenerateSliceWithAiModalOpen] =
+  const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
     useState(false);
   const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
@@ -176,11 +176,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsCreateSliceModalOpen(true);
   };
 
-  const openGenerateSliceWithAiModal = async () => {
+  const openCreateSliceFromImageModal = async () => {
     const isLoggedIn = await managerClient.user.checkIsLoggedIn();
 
     if (isLoggedIn) {
-      setIsGenerateSliceWithAiModalOpen(true);
+      setIsCreateSliceFromImageModalOpen(true);
     } else {
       openLoginModal();
     }
@@ -204,8 +204,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsCreateSliceModalOpen(false);
   };
 
-  const closeGenerateSliceWithAiModal = () => {
-    setIsGenerateSliceWithAiModalOpen(false);
+  const closeCreateSliceFromImageModal = () => {
+    setIsCreateSliceFromImageModalOpen(false);
   };
 
   const closeSlicesTemplatesModal = () => {
@@ -241,7 +241,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         color="purple"
                       />
                     )}
-                    onSelect={() => void openGenerateSliceWithAiModal()}
+                    onSelect={() => void openCreateSliceFromImageModal()}
                     description="Build a Slice based on your design image."
                   >
                     Generate from image
@@ -350,8 +350,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             <SliceZoneBlankSlate
               openUpdateSliceZoneModal={openUpdateSliceZoneModal}
               openCreateSliceModal={openCreateSliceModal}
-              openGenerateSliceWithAiModal={() =>
-                void openGenerateSliceWithAiModal()
+              openCreateSliceFromImageModal={() =>
+                void openCreateSliceFromImageModal()
               }
               openSlicesTemplatesModal={openSlicesTemplatesModal}
               projectHasAvailableSlices={availableSlicesToAdd.length > 0}
@@ -440,8 +440,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           onClose={closeCreateSliceModal}
         />
       )}
-      <GenerateSliceWithAiModal
-        open={isGenerateSliceWithAiModalOpen}
+      <CreateSliceFromImageModal
+        open={isCreateSliceFromImageModalOpen}
         location={`${customType.format}_type`}
         onSuccess={({ slices, library }) => {
           const newCustomType = addSlicesToSliceZone({
@@ -457,9 +457,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               />,
             );
           });
-          closeGenerateSliceWithAiModal();
+          closeCreateSliceFromImageModal();
         }}
-        onClose={closeGenerateSliceWithAiModal}
+        onClose={closeCreateSliceFromImageModal}
       />
     </>
   );
