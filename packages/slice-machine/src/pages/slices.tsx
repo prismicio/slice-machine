@@ -1,11 +1,3 @@
-import {
-  BackgroundIcon,
-  Button,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@prismicio/editor-ui";
 import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/customtypes";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -15,8 +7,8 @@ import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
+import { AddSliceDropdown } from "@/features/slices/AddSliceDropdown";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
@@ -45,7 +37,6 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
@@ -89,6 +80,14 @@ const SlicesIndex: React.FunctionComponent = () => {
     setIsRenameSliceModalOpen(true);
   };
 
+  const openCreateSliceModal = () => {
+    setIsCreateSliceModalOpen(true);
+  };
+
+  const closeCreateSliceModal = () => {
+    setIsCreateSliceModalOpen(false);
+  };
+
   const openCreateSliceFromImageModal = async () => {
     const isLoggedIn = await managerClient.user.checkIsLoggedIn();
 
@@ -114,54 +113,10 @@ const SlicesIndex: React.FunctionComponent = () => {
             <BreadcrumbItem>Slices</BreadcrumbItem>
           </AppLayoutBreadcrumb>
           {localLibraries?.length !== 0 && sliceCount !== 0 ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button
-                  color="purple"
-                  startIcon="add"
-                  data-testid="add-new-slice-dropdown"
-                >
-                  Add
-                </Button>
-              </DropdownMenuTrigger>
-
-              <DropdownMenuContent align="end">
-                {aiSliceGenerationExperiment.eligible && (
-                  <DropdownMenuItem
-                    renderStartIcon={() => (
-                      <BackgroundIcon
-                        name="autoFixHigh"
-                        size="extraSmall"
-                        iconSize="small"
-                        radius={6}
-                        variant="solid"
-                        color="purple"
-                      />
-                    )}
-                    onSelect={() => void openCreateSliceFromImageModal()}
-                    description="Build a Slice based on your design image."
-                  >
-                    Generate from image
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem
-                  renderStartIcon={() => (
-                    <BackgroundIcon
-                      name="add"
-                      size="extraSmall"
-                      iconSize="small"
-                      radius={6}
-                      variant="solid"
-                      color="white"
-                    />
-                  )}
-                  onSelect={() => setIsCreateSliceModalOpen(true)}
-                  description="Build a custom Slice your way."
-                >
-                  Start from scratch
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <AddSliceDropdown
+              onOpenCreateSliceFromImageModal={openCreateSliceFromImageModal}
+              onOpenCreateSliceModal={openCreateSliceModal}
+            />
           ) : undefined}
         </AppLayoutHeader>
         <AppLayoutContent>
@@ -183,9 +138,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   >
                     <EmptyState
                       title={"What are Slices?"}
-                      onCreateNew={() => {
-                        setIsCreateSliceModalOpen(true);
-                      }}
+                      onCreateNew={openCreateSliceModal}
                       buttonText={"Create one"}
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                       documentationComponent={
@@ -309,9 +262,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   }),
                 );
               }}
-              onClose={() => {
-                setIsCreateSliceModalOpen(false);
-              }}
+              onClose={closeCreateSliceModal}
             />
           )}
           <RenameSliceModal
