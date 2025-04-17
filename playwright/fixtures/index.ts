@@ -163,7 +163,8 @@ export const test = baseTest.extend<Options & Fixtures>({
   slice: async ({ slicesListPage }, use) => {
     await slicesListPage.goto();
     await expect(slicesListPage.breadcrumbLabel).toBeVisible();
-    await slicesListPage.openCreateDialog();
+    await slicesListPage.addSliceDropdown.click();
+    await slicesListPage.addSliceDropdownCreateNewAction.click();
 
     const sliceName = "Slice" + generateRandomId();
     await slicesListPage.createSliceDialog.createSlice(sliceName);

@@ -1,4 +1,11 @@
-import { Button } from "@prismicio/editor-ui";
+import {
+  BackgroundIcon,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@prismicio/editor-ui";
 import { SharedSlice as SharedSliceType } from "@prismicio/types-internal/lib/customtypes";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -8,12 +15,13 @@ import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
+import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
+import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
 import {
   AppLayout,
-  AppLayoutActions,
   AppLayoutBreadcrumb,
   AppLayoutContent,
   AppLayoutHeader,
@@ -24,16 +32,23 @@ import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { RenameSliceModal } from "@/legacy/components/Forms/RenameSliceModal";
 import Grid from "@/legacy/components/Grid";
 import ScreenshotChangesModal from "@/legacy/components/ScreenshotChangesModal";
-import { SliceToastMessage } from "@/legacy/components/ToasterContainer";
+import {
+  SliceToastMessage,
+  ToastMessageWithPath,
+} from "@/legacy/components/ToasterContainer";
 import { VIDEO_WHAT_ARE_SLICES } from "@/legacy/lib/consts";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { managerClient } from "@/managerClient";
 import { getLibraries, getRemoteSlices } from "@/modules/slices";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
 
 const SlicesIndex: React.FunctionComponent = () => {
+  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
+  const { openLoginModal } = useSliceMachineActions();
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
@@ -46,6 +61,8 @@ const SlicesIndex: React.FunctionComponent = () => {
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isDeleteSliceModalOpen, setIsDeleteSliceModalOpen] = useState(false);
   const [isRenameSliceModalOpen, setIsRenameSliceModalOpen] = useState(false);
+  const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
+    useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -72,6 +89,20 @@ const SlicesIndex: React.FunctionComponent = () => {
     setIsRenameSliceModalOpen(true);
   };
 
+  const openCreateSliceFromImageModal = async () => {
+    const isLoggedIn = await managerClient.user.checkIsLoggedIn();
+
+    if (isLoggedIn) {
+      setIsCreateSliceFromImageModalOpen(true);
+    } else {
+      openLoginModal();
+    }
+  };
+
+  const closeCreateSliceFromImageModal = () => {
+    setIsCreateSliceFromImageModalOpen(false);
+  };
+
   return (
     <>
       <Head>
@@ -83,17 +114,54 @@ const SlicesIndex: React.FunctionComponent = () => {
             <BreadcrumbItem>Slices</BreadcrumbItem>
           </AppLayoutBreadcrumb>
           {localLibraries?.length !== 0 && sliceCount !== 0 ? (
-            <AppLayoutActions>
-              <Button
-                data-testid="create-slice"
-                onClick={() => {
-                  setIsCreateSliceModalOpen(true);
-                }}
-                startIcon="add"
-              >
-                Create
-              </Button>
-            </AppLayoutActions>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button
+                  color="purple"
+                  startIcon="add"
+                  data-testid="add-new-slice-dropdown"
+                >
+                  Add
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end">
+                {aiSliceGenerationExperiment.eligible && (
+                  <DropdownMenuItem
+                    renderStartIcon={() => (
+                      <BackgroundIcon
+                        name="autoFixHigh"
+                        size="extraSmall"
+                        iconSize="small"
+                        radius={6}
+                        variant="solid"
+                        color="purple"
+                      />
+                    )}
+                    onSelect={() => void openCreateSliceFromImageModal()}
+                    description="Build a Slice based on your design image."
+                  >
+                    Generate from image
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem
+                  renderStartIcon={() => (
+                    <BackgroundIcon
+                      name="add"
+                      size="extraSmall"
+                      iconSize="small"
+                      radius={6}
+                      variant="solid"
+                      color="white"
+                    />
+                  )}
+                  onSelect={() => setIsCreateSliceModalOpen(true)}
+                  description="Build a custom Slice your way."
+                >
+                  Start from scratch
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : undefined}
         </AppLayoutHeader>
         <AppLayoutContent>
@@ -265,6 +333,20 @@ const SlicesIndex: React.FunctionComponent = () => {
             onClose={() => {
               setIsDeleteSliceModalOpen(false);
             }}
+          />
+          <CreateSliceFromImageModal
+            open={isCreateSliceFromImageModalOpen}
+            location="slices"
+            onSuccess={({ library }) => {
+              toast.success(
+                <ToastMessageWithPath
+                  message="Slice(s) added to slice zone and created at: "
+                  path={library}
+                />,
+              );
+              closeCreateSliceFromImageModal();
+            }}
+            onClose={closeCreateSliceFromImageModal}
           />
         </AppLayoutContent>
       </AppLayout>

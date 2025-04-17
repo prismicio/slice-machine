@@ -6,7 +6,8 @@ import { generateRandomId } from "../../utils/generateRandomId";
 
 test("I can create a slice", async ({ sliceBuilderPage, slicesListPage }) => {
   await slicesListPage.goto();
-  await slicesListPage.openCreateDialog();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
 
   const sliceName = "Slice" + generateRandomId();
   await slicesListPage.createSliceDialog.createSlice(sliceName);
@@ -22,7 +23,8 @@ test("I can only create a slice by using Pascal case for the slice name", async 
   slicesListPage,
 }) => {
   await slicesListPage.goto();
-  await slicesListPage.openCreateDialog();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
 
   const { nameInput, submitButton } = slicesListPage.createSliceDialog;
 
@@ -47,7 +49,8 @@ test("I cannot create a slice with a name that already exists", async ({
   slice,
 }) => {
   await slicesListPage.goto();
-  await slicesListPage.openCreateDialog();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
 
   const { nameInput, submitButton } = slicesListPage.createSliceDialog;
 
@@ -125,7 +128,8 @@ test("I cannot create a slice with a name starting with a number", async ({
   slicesListPage,
 }) => {
   await slicesListPage.goto();
-  await slicesListPage.openCreateDialog();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
 
   const sliceName = "1Slice" + generateRandomId();
   await expect(slicesListPage.createSliceDialog.title).toBeVisible();
@@ -151,7 +155,8 @@ test("I cannot create a slice with a restricted name ", async ({
   slicesListPage,
 }) => {
   await slicesListPage.goto();
-  await slicesListPage.openCreateDialog();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
 
   const { nameInput, submitButton } = slicesListPage.createSliceDialog;
 
@@ -168,14 +173,16 @@ test("I cannot create two slices with the same name", async ({
   slicesListPage,
 }) => {
   await slicesListPage.goto();
-  await slicesListPage.openCreateDialog();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
 
   const sliceName = "Slice" + generateRandomId();
   await slicesListPage.createSliceDialog.createSlice(sliceName);
   await sliceBuilderPage.checkBreadcrumb(sliceName);
 
   await slicesListPage.goto();
-  await slicesListPage.openCreateDialog();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
   await expect(slicesListPage.createSliceDialog.title).toBeVisible();
   await slicesListPage.createSliceDialog.nameInput.fill(sliceName);
   await expect(slicesListPage.createSliceDialog.submitButton).toBeDisabled();
@@ -234,4 +241,43 @@ test("I can update the screenshot", async ({ slicesListPage, slice }) => {
   await expect(
     slicesListPage.updateScreenshotDialog.screenshotPlaceholder,
   ).not.toBeVisible();
+});
+
+test("I will send a tracking event when I create a slice", async ({
+  slicesListPage,
+  sliceBuilderPage,
+  procedures,
+}) => {
+  let trackCallCount = 0;
+  procedures.mock("telemetry.track", ({ args }) => {
+    const [arg] = args as [{ event: string }];
+    if (arg.event === "slice:created") trackCallCount++;
+  });
+
+  await slicesListPage.goto();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
+
+  const sliceName = "Slice" + generateRandomId();
+  await slicesListPage.createSliceDialog.createSlice(sliceName);
+
+  await sliceBuilderPage.checkBreadcrumb(sliceName);
+  expect(trackCallCount).toBe(1);
+
+  trackCallCount = 0;
+
+  procedures.mock("slices.createSlice", () => {
+    throw new Error("forced failure");
+  });
+
+  await slicesListPage.goto();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
+
+  const failedSliceName = "Slice" + generateRandomId();
+  await slicesListPage.createSliceDialog.nameInput.fill(failedSliceName);
+  await slicesListPage.createSliceDialog.submitButton.click();
+  await slicesListPage.createSliceDialog.checkSliceCreationErrorMessage();
+
+  expect(trackCallCount).toBe(0);
 });
