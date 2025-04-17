@@ -242,3 +242,50 @@ test("I can update the screenshot", async ({ slicesListPage, slice }) => {
     slicesListPage.updateScreenshotDialog.screenshotPlaceholder,
   ).not.toBeVisible();
 });
+
+test("I will send a tracking event when I create a slice", async ({
+  slicesListPage,
+  sliceBuilderPage,
+  procedures,
+}) => {
+  let trackCallCount = 0;
+  procedures.mock("telemetry.track", ({ args }) => {
+    const [arg] = args as [{ event: string }];
+    if (arg.event === "slice:created") trackCallCount++;
+  });
+
+  await slicesListPage.goto();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
+
+  const sliceName = "Slice" + generateRandomId();
+  await slicesListPage.createSliceDialog.createSlice(sliceName);
+
+  await sliceBuilderPage.checkBreadcrumb(sliceName);
+  expect(trackCallCount).toBe(1);
+});
+
+test("I will not send a tracking event when I fail to create a slice", async ({
+  slicesListPage,
+  procedures,
+}) => {
+  let trackCallCount = 0;
+  procedures.mock("telemetry.track", ({ args }) => {
+    const [arg] = args as [{ event: string }];
+    if (arg.event === "slice:created") trackCallCount++;
+  });
+
+  procedures.mock("slices.createSlice", () => {
+    throw new Error("forced failure");
+  });
+
+  await slicesListPage.goto();
+  await slicesListPage.addSliceDropdown.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
+
+  const sliceName = "Slice" + generateRandomId();
+  await slicesListPage.createSliceDialog.nameInput.fill(sliceName);
+  await slicesListPage.createSliceDialog.submitButton.click();
+
+  expect(trackCallCount).toBe(0);
+});
