@@ -54,6 +54,7 @@ type Args = {
    * If `true`, commands are not executed.
    */
   "dry-run": boolean;
+  noPrefix: boolean;
 };
 
 type DryRunOption = {
@@ -72,9 +73,14 @@ async function main(): Promise<void> {
   }
 
   const args = mri<Args>(process.argv.slice(2), {
-    boolean: ["help", "dry-run", "start", "new"],
+    boolean: ["help", "dry-run", "start", "new", "no-prefix"],
     string: ["framework", "environment"],
-    alias: { h: "help", n: "dry-run", f: "framework", e: "environment" },
+    alias: {
+      h: "help",
+      n: "dry-run",
+      f: "framework",
+      e: "environment",
+    },
     default: {
       "dry-run": false,
       help: false,
@@ -82,6 +88,7 @@ async function main(): Promise<void> {
       new: false,
       framework: DEFAULT_FRAMEWORK,
       environment: DEFAULT_ENVIRONMENT,
+      prefix: true,
     },
   });
 
@@ -98,6 +105,7 @@ Options:
     --no-start         Do not start Slice Machine and the website
     --dry-run, -n      Show what would have happened
     --help, -h         Show help text
+    --no-prefix         Do not prefix the repository with "play-"
 
 Arguments:
     [name]           The name of the playground to create or start
@@ -139,7 +147,7 @@ Arguments:
     }
   }
 
-  if (!playgroundName.startsWith("play-")) {
+  if (!playgroundName.startsWith("play-") && args["prefix"]) {
     playgroundName = `play-${playgroundName}`;
   }
 

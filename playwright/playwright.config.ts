@@ -29,18 +29,30 @@ declare const process: {
 
 const setup = { name: "setup", testMatch: /.*\.setup\.ts/ };
 
-export const baseUrl = (() => {
+export const { baseUrl, env } = (() => {
   switch (process.env.SM_ENV) {
     case "dev-tools":
     case "marketing-tools":
     case "platform":
-      return `https://${process.env.SM_ENV}-wroom.com/`;
+      return {
+        baseUrl: `https://${process.env.SM_ENV}-wroom.com/`,
+        env: "dev-tools",
+      };
     case "production":
-      return "https://prismic.io/";
+      return {
+        baseUrl: "https://prismic.io/",
+        env: "production",
+      };
     case "staging":
-      return "https://wroom.io/";
+      return {
+        baseUrl: "https://wroom.io/",
+        env: "staging",
+      };
     default:
-      return "https://dev-tools-wroom.com/";
+      return {
+        baseUrl: "https://dev-tools-wroom.com/",
+        env: "dev-tools",
+      };
   }
 })();
 
@@ -136,7 +148,7 @@ const config = {
     },
     {
       cwd: "../e2e-projects/next",
-      command: "yarn slicemachine:dev",
+      command: `SM_ENV=${env} yarn slicemachine:dev`,
       url: "http://localhost:9999/",
       reuseExistingServer: !process.env["CI"],
       stdout: "pipe",
