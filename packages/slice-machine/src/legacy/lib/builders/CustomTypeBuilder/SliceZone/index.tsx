@@ -1,4 +1,13 @@
-import { Box, Switch } from "@prismicio/editor-ui";
+import {
+  BackgroundIcon,
+  Box,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  Switch,
+} from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -7,12 +16,12 @@ import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
+import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
-import { AddSliceDropdown } from "@/features/slices/AddSliceDropdown";
 import { useSlicesTemplates } from "@/features/slicesTemplates/useSlicesTemplates";
 import { CreateSliceModal } from "@/legacy/components/Forms/CreateSliceModal";
 import { ToastMessageWithPath } from "@/legacy/components/ToasterContainer";
@@ -105,6 +114,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
+  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
@@ -207,14 +217,92 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <ListHeader
         actions={
           sliceZone ? (
-            <AddSliceDropdown
-              availableSlicesTemplates={availableSlicesTemplates}
-              availableSlicesToAdd={availableSlicesToAdd}
-              onOpenCreateSliceFromImageModal={openCreateSliceFromImageModal}
-              onOpenCreateSliceModal={openCreateSliceModal}
-              onOpenSlicesTemplatesModal={openSlicesTemplatesModal}
-              onOpenUpdateSliceZoneModal={openUpdateSliceZoneModal}
-            />
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Button
+                  color="purple"
+                  startIcon="add"
+                  data-testid="add-new-slice-dropdown"
+                >
+                  Add
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end">
+                {aiSliceGenerationExperiment.eligible && (
+                  <DropdownMenuItem
+                    renderStartIcon={() => (
+                      <BackgroundIcon
+                        name="autoFixHigh"
+                        size="extraSmall"
+                        iconSize="small"
+                        radius={6}
+                        variant="solid"
+                        color="purple"
+                      />
+                    )}
+                    onSelect={() => void openCreateSliceFromImageModal()}
+                    description="Build a Slice based on your design image."
+                  >
+                    Generate from image
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem
+                  renderStartIcon={() => (
+                    <BackgroundIcon
+                      name="add"
+                      size="extraSmall"
+                      iconSize="small"
+                      radius={6}
+                      variant="solid"
+                      color="white"
+                    />
+                  )}
+                  onSelect={openCreateSliceModal}
+                  description="Build a custom Slice your way."
+                >
+                  Start from scratch
+                </DropdownMenuItem>
+
+                {availableSlicesTemplates.length > 0 ? (
+                  <DropdownMenuItem
+                    onSelect={openSlicesTemplatesModal}
+                    renderStartIcon={() => (
+                      <BackgroundIcon
+                        name="contentCopy"
+                        size="extraSmall"
+                        iconSize="small"
+                        radius={6}
+                        variant="solid"
+                        color="white"
+                      />
+                    )}
+                    description="Choose from ready-made examples."
+                  >
+                    Use a template
+                  </DropdownMenuItem>
+                ) : undefined}
+
+                {availableSlicesToAdd.length > 0 ? (
+                  <DropdownMenuItem
+                    onSelect={openUpdateSliceZoneModal}
+                    renderStartIcon={() => (
+                      <BackgroundIcon
+                        name="folder"
+                        size="extraSmall"
+                        iconSize="small"
+                        radius={6}
+                        variant="solid"
+                        color="white"
+                      />
+                    )}
+                    description="Select from your created Slices."
+                  >
+                    Reuse an existing Slice
+                  </DropdownMenuItem>
+                ) : undefined}
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : undefined
         }
         toggle={
