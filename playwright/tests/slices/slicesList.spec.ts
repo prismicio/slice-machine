@@ -263,17 +263,8 @@ test("I will send a tracking event when I create a slice", async ({
 
   await sliceBuilderPage.checkBreadcrumb(sliceName);
   expect(trackCallCount).toBe(1);
-});
 
-test("I will not send a tracking event when I fail to create a slice", async ({
-  slicesListPage,
-  procedures,
-}) => {
-  let trackCallCount = 0;
-  procedures.mock("telemetry.track", ({ args }) => {
-    const [arg] = args as [{ event: string }];
-    if (arg.event === "slice:created") trackCallCount++;
-  });
+  trackCallCount = 0;
 
   procedures.mock("slices.createSlice", () => {
     throw new Error("forced failure");
@@ -283,9 +274,10 @@ test("I will not send a tracking event when I fail to create a slice", async ({
   await slicesListPage.addSliceDropdown.click();
   await slicesListPage.addSliceDropdownCreateNewAction.click();
 
-  const sliceName = "Slice" + generateRandomId();
-  await slicesListPage.createSliceDialog.nameInput.fill(sliceName);
+  const failedSliceName = "Slice" + generateRandomId();
+  await slicesListPage.createSliceDialog.nameInput.fill(failedSliceName);
   await slicesListPage.createSliceDialog.submitButton.click();
+  await slicesListPage.createSliceDialog.checkSliceCreationErrorMessage();
 
   expect(trackCallCount).toBe(0);
 });
