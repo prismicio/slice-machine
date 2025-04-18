@@ -17,7 +17,7 @@ import {
   ScrollArea,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
@@ -70,8 +70,8 @@ export function CreateSliceFromImageModal(
 
   const onOpenChange = (open: boolean) => {
     if (open || isCreatingSlices) return;
-    id.current = crypto.randomUUID();
     onClose();
+    id.current = crypto.randomUUID();
     setSlices([]);
   };
 
@@ -124,6 +124,8 @@ export function CreateSliceFromImageModal(
     );
   };
 
+  const existingSlices = useExistingSlices({ open });
+
   const inferSlice = (args: { index: number; imageUrl: string }) => {
     const { index, imageUrl } = args;
     const currentId = id.current;
@@ -140,16 +142,24 @@ export function CreateSliceFromImageModal(
     managerClient.customTypes.inferSlice({ imageUrl }).then(
       ({ slice, langSmithUrl }) => {
         if (currentId !== id.current) return;
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
-            ...prevSlice,
-            status: "success",
-            thumbnailUrl: imageUrl,
-            model: slice,
-            langSmithUrl,
-          }),
-        });
+
+        setSlices((prevSlices) =>
+          prevSlices.map((prevSlice, i) =>
+            i === index
+              ? {
+                  ...prevSlice,
+                  status: "success",
+                  thumbnailUrl: imageUrl,
+                  model: sliceWithoutConflicts({
+                    existingSlices: existingSlices.current,
+                    newSlices: prevSlices,
+                    slice,
+                  }),
+                  langSmithUrl,
+                }
+              : prevSlice,
+          ),
+        );
       },
       () => {
         if (currentId !== id.current) return;
@@ -178,14 +188,18 @@ export function CreateSliceFromImageModal(
     addSlices(newSlices)
       .then(async ({ slices, library }) => {
         if (currentId !== id.current) return;
-        id.current = crypto.randomUUID();
+
         const serverState = await getState();
         createSliceSuccess(serverState.libraries);
-        onSuccess({ slices, library });
-        void completeStep("createSlice");
         syncChanges();
+
+        onSuccess({ slices, library });
+
         setIsCreatingSlices(false);
+        id.current = crypto.randomUUID();
         setSlices([]);
+
+        void completeStep("createSlice");
 
         for (const { model, langSmithUrl } of slices) {
           void telemetry.track({
@@ -337,6 +351,77 @@ type NewSlice = {
   langSmithUrl?: string;
 };
 
+/**
+ * Keeps track of the existing slices in the project.
+ * Re-fetches them when the modal is opened.
+ */
+function useExistingSlices({ open }: { open: boolean }) {
+  const ref = useRef<SharedSlice[]>([]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    ref.current = [];
+    managerClient.slices
+      .readAllSlices()
+      .then((slices) => {
+        ref.current = slices.models.map(({ model }) => model);
+      })
+      .catch(() => null);
+  }, [open]);
+
+  return ref;
+}
+
+/**
+ * If needed, assigns new ids and names to avoid conflicts with existing slices.
+ * Names are compared case-insensitively to avoid conflicts
+ * between folder names with different casing.
+ */
+function sliceWithoutConflicts({
+  existingSlices,
+  newSlices,
+  slice,
+}: {
+  existingSlices: SharedSlice[];
+  newSlices: Slice[];
+  slice: SharedSlice;
+}): SharedSlice {
+  const existingIds = new Set<string>();
+  const existingNames = new Set<string>();
+
+  for (const { id, name } of existingSlices) {
+    existingIds.add(id);
+    existingNames.add(name.toLowerCase());
+  }
+
+  for (const slice of newSlices) {
+    if (slice.status !== "success") continue;
+    existingIds.add(slice.model.id);
+    existingNames.add(slice.model.name.toLowerCase());
+  }
+
+  let id = slice.id;
+  let counter = 2;
+  while (existingIds.has(id)) {
+    id = `${slice.id}_${counter}`;
+    counter++;
+  }
+
+  let name = slice.name;
+  counter = 2;
+  while (existingNames.has(name.toLowerCase())) {
+    name = `${slice.name}${counter}`;
+    counter++;
+  }
+
+  return {
+    ...slice,
+    id,
+    name,
+  };
+}
+
 async function addSlices(newSlices: NewSlice[]) {
   // use the first library
   const { libraries = [] } =
@@ -346,24 +431,28 @@ async function addSlices(newSlices: NewSlice[]) {
     throw new Error("No library found in the config.");
   }
 
-  // add the slices computing new ids/names if needed
-  const models = await managerClient.slices.addSlices({
-    library,
-    models: newSlices.map((slice) => slice.model),
-  });
+  for (const { model } of newSlices) {
+    const { errors } = await managerClient.slices.createSlice({
+      libraryID: library,
+      model,
+    });
+    if (errors.length) {
+      throw new Error(`Failed to create slice ${model.id}.`);
+    }
+  }
 
   // for each added slice, set the variation screenshot
   const slices = await Promise.all(
-    models.map(async (model, index) => {
+    newSlices.map(async ({ model, image, langSmithUrl }) => {
       await managerClient.slices.updateSliceScreenshot({
         libraryID: library,
         sliceID: model.id,
         variationID: model.variations[0].id,
-        data: newSlices[index].image,
+        data: image,
       });
       return {
         model,
-        langSmithUrl: newSlices[index].langSmithUrl,
+        langSmithUrl,
       };
     }),
   );
