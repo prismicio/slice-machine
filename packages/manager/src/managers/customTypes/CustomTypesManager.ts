@@ -180,6 +180,10 @@ export class CustomTypesManager extends BaseManager {
 			newPath &&
 			previousPath.join(".") !== newPath.join(".")
 		) {
+			console.log("Updating custom type", {
+				previousPath,
+				newPath,
+			});
 			// Find existing content relationships that link to the renamed field id in
 			// any custom type and update them to use the one.
 

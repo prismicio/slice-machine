@@ -67,7 +67,7 @@ export const RenameVariationModal: FC<RenameVariationModalProps> = ({
         variation,
         variationName: variationName.trim(),
       }).then((newSlice) => {
-        setSlice(newSlice);
+        setSlice({ slice: newSlice });
       });
     } catch {}
 

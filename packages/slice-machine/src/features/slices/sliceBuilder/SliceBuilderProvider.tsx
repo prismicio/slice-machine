@@ -16,10 +16,17 @@ import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { VariationSM } from "@/legacy/lib/models/common/Slice";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
+interface SetSliceArgs {
+  slice: ComponentUI;
+  onSaveCallback?: () => void;
+  newPath?: string[];
+  previousPath?: string[];
+}
+
 type SliceContext = {
   slice: ComponentUI;
   actionQueueStatus: ActionQueueStatus;
-  setSlice: (slice: ComponentUI, onSaveCallback?: () => void) => void;
+  setSlice: (args: SetSliceArgs) => void;
   variation: VariationSM;
 };
 
@@ -57,10 +64,16 @@ export function SliceBuilderProvider(props: SliceBuilderProviderProps) {
   }, [slice, router]);
 
   const setSlice = useCallback(
-    (slice: ComponentUI, onSaveCallback?: () => void) => {
-      setSliceState(slice);
+    (args: SetSliceArgs) => {
+      const { slice, onSaveCallback, newPath, previousPath } = args;
+
+      setSliceState(args.slice);
       setNextAction(async () => {
-        const { errors: updateSliceErrors } = await updateSlice(slice);
+        const { errors: updateSliceErrors } = await updateSlice(
+          slice,
+          newPath,
+          previousPath,
+        );
 
         if (updateSliceErrors.length > 0) {
           throw updateSliceErrors;

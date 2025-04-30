@@ -11,6 +11,8 @@ import type {
  */
 export type CustomTypeUpdateHookData = {
 	model: CustomType;
+	previousPath?: string[];
+	newPath?: string[];
 };
 
 /**
