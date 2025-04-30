@@ -4,6 +4,7 @@ import {
 	CustomType,
 	SharedSlice,
 	traverseCustomType,
+	traverseSharedSlice,
 } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
@@ -180,10 +181,6 @@ export class CustomTypesManager extends BaseManager {
 			newPath &&
 			previousPath.join(".") !== newPath.join(".")
 		) {
-			console.log("Updating custom type", {
-				previousPath,
-				newPath,
-			});
 			// Find existing content relationships that link to the renamed field id in
 			// any custom type and update them to use the one.
 
@@ -205,7 +202,7 @@ export class CustomTypesManager extends BaseManager {
 						}
 
 						console.log(
-							`Found field to update ${oldPathString} -> ${newPathString}`,
+							`Found CT field to update ${oldPathString} -> ${newPathString}`,
 							JSON.stringify({ key, path, field }, null, 2),
 						);
 
@@ -231,6 +228,62 @@ export class CustomTypesManager extends BaseManager {
 				await this.sliceMachinePluginRunner.callHook("custom-type:update", {
 					model: updatedCt,
 				});
+			}
+
+			const { libraries } = await this.slices.readAllSliceLibraries();
+			for (const library of libraries) {
+				const librarySlices = await this.slices.readAllSlicesForLibrary({
+					libraryID: library.libraryID,
+				});
+
+				for (const slice of librarySlices.models) {
+					const updatedModel = traverseSharedSlice({
+						path: ["."],
+						slice: slice.model,
+						onField: ({ field, key, path }) => {
+							if (
+								field.type !== "Link" ||
+								field.config?.select !== "document" ||
+								!field.config.customtypes?.includes(oldPathString)
+							) {
+								return field;
+							}
+
+							// find the index of the old name and replace it with the new name
+							const newCustomTypes = field.config.customtypes
+								? field.config.customtypes.slice()
+								: undefined;
+
+							if (newCustomTypes) {
+								const index = newCustomTypes.indexOf(oldPathString);
+								if (index !== -1) {
+									newCustomTypes[index] = newPathString;
+								}
+							}
+
+							const newLocal = {
+								...field,
+								config: { ...field.config, customtypes: newCustomTypes },
+							};
+
+							console.log(
+								`Found SLICE field to update ${oldPathString} -> ${newPathString}`,
+								JSON.stringify(
+									{ key, path, old: field, new: newLocal },
+									null,
+									2,
+								),
+							);
+
+							return newLocal;
+						},
+					});
+
+					await this.sliceMachinePluginRunner.callHook("slice:update", {
+						libraryID: library.libraryID,
+						model: updatedModel,
+					});
+				}
 			}
 		}
 
