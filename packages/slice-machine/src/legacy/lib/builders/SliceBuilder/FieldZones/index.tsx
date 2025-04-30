@@ -70,8 +70,6 @@ type OnSaveFieldProps = {
   newKey: string;
   value: SlicePrimaryFieldSM;
   inGroupFieldAction?: "add" | "update";
-  previousPath: string[];
-  newPath: string[];
 };
 
 const FieldZones: FC = () => {

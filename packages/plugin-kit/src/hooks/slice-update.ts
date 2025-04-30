@@ -12,8 +12,6 @@ import type {
 export type SliceUpdateHookData = {
 	libraryID: string;
 	model: SharedSlice;
-	previousPath?: string[];
-	newPath?: string[];
 };
 
 /**
