@@ -7,7 +7,6 @@ import {
 	LegacySlice,
 	SharedSlice,
 	Variation,
-	traverseSharedSlice,
 } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
@@ -59,8 +58,6 @@ type SliceMachineManagerUpdateSliceArgs = {
 	libraryID: string;
 	model: SharedSlice;
 	mocks?: SharedSliceContent[];
-	previousPath?: string[];
-	newPath?: string[];
 };
 
 type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
@@ -441,55 +438,6 @@ export class SlicesManager extends BaseManager {
 		args: SliceMachineManagerUpdateSliceArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		if (args.previousPath && args.newPath) {
-			const oldPathString = [args.model.id, ...args.previousPath].join(".");
-			const newPathString = [args.model.id, ...args.newPath].join(".");
-
-			const allSlices = await this.readAllSlices();
-			for (const slice of allSlices.models) {
-				const updatedModel = traverseSharedSlice({
-					path: ["."],
-					slice: slice.model,
-					onField: ({ field, key, path }) => {
-						if (
-							field.type !== "Link" ||
-							field.config?.select !== "document" ||
-							!field.config.customtypes?.includes(oldPathString)
-						) {
-							return field;
-						}
-
-						console.log(
-							`Found SLICE field to update ${oldPathString} -> ${newPathString}`,
-							JSON.stringify({ key, path, field }, null, 2),
-						);
-
-						// find the index of the old name and replace it with the new name
-						const newCustomTypes = field.config.customtypes
-							? field.config.customtypes.slice()
-							: undefined;
-
-						if (newCustomTypes) {
-							const index = newCustomTypes.indexOf(oldPathString);
-							if (index !== -1) {
-								newCustomTypes[index] = newPathString;
-							}
-						}
-
-						return {
-							...field,
-							config: { ...field.config, customtypes: newCustomTypes },
-						};
-					},
-				});
-
-				await this.sliceMachinePluginRunner.callHook("slice:update", {
-					libraryID: args.libraryID,
-					model: updatedModel,
-				});
-			}
-		}
 
 		const { mocks: previousMocks } = await this.readSliceMocks({
 			libraryID: args.libraryID,

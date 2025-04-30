@@ -105,19 +105,12 @@ const FieldZones: FC = () => {
       fieldId: key,
     });
 
-    setSlice({ slice: newSlice });
+    setSlice(newSlice);
   };
 
   const _onSave = (
     widgetArea: WidgetsArea,
-    {
-      apiId: previousKey,
-      newKey,
-      value,
-      inGroupFieldAction,
-      newPath,
-      previousPath,
-    }: OnSaveFieldProps,
+    { apiId: previousKey, newKey, value, inGroupFieldAction }: OnSaveFieldProps,
   ) => {
     console.log("FieldZone onSave", {
       previousKey,
@@ -134,15 +127,10 @@ const FieldZones: FC = () => {
       newField: value as SlicePrimaryWidget,
     });
 
-    setSlice({
-      slice: newSlice,
-      previousPath,
-      newPath,
-      onSaveCallback: () => {
-        if (inGroupFieldAction === "add") {
-          toast.success("Field added");
-        }
-      },
+    setSlice(newSlice, () => {
+      if (inGroupFieldAction === "add") {
+        toast.success("Field added");
+      }
     });
 
     // We don't want to track the group field update when it's for the management of a
@@ -184,13 +172,8 @@ const FieldZones: FC = () => {
         newField.type === GroupFieldType ? Groups.fromSM(newField) : newField,
     });
 
-    setSlice({
-      slice: newSlice,
-      onSaveCallback: () => {
-        toast.success(
-          `${widgetTypeName === "Group" ? "Group" : "Field"} added`,
-        );
-      },
+    setSlice(newSlice, () => {
+      toast.success(`${widgetTypeName === "Group" ? "Group" : "Field"} added`);
     });
 
     trackFieldAdded({ id, field: newField });
@@ -224,13 +207,13 @@ const FieldZones: FC = () => {
     // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
     // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
     // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
-    flushSync(() => setSlice({ slice: newSlice }));
+    flushSync(() => setSlice(newSlice));
   };
 
   const onDeleteRepeatableZone = () => {
     const newSlice = deleteRepeatableZone({ slice, variationId: variation.id });
 
-    setSlice({ slice: newSlice });
+    setSlice(newSlice);
     setIsDeleteRepeatableZoneDialogOpen(false);
   };
 

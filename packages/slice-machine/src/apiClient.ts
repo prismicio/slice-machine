@@ -76,11 +76,7 @@ export const updateCustomType = async (args: {
 }): ReturnType<
   SliceMachineManagerClient["customTypes"]["updateCustomType"]
 > => {
-  return await managerClient.customTypes.updateCustomType({
-    model: args.customType,
-    newPath: args.newPath,
-    previousPath: args.previousPath,
-  });
+  return await managerClient.customTypes.updateCustomType(args);
 };
 
 /** Slice Routes * */
@@ -130,8 +126,6 @@ export const generateSliceCustomScreenshot = async (
 
 export const updateSlice = async (
   component: ComponentUI,
-  previousPath?: string[],
-  newPath?: string[],
 ): Promise<
   Awaited<ReturnType<(typeof managerClient)["slices"]["updateSlice"]>>
 > => {
@@ -139,8 +133,6 @@ export const updateSlice = async (
     libraryID: component.from,
     model: Slices.fromSM(component.model),
     mocks: component.mocks,
-    previousPath: previousPath,
-    newPath: newPath,
   });
 };
 

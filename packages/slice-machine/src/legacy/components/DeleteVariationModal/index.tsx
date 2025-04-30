@@ -67,7 +67,7 @@ export const DeleteVariationModal: FC<DeleteVariationModalProps> = ({
                       saveSliceSuccess,
                       variation,
                     });
-                    setSlice({ slice: newSlice });
+                    setSlice(newSlice);
                   } catch {}
                   setIsDeleting(false);
                   onClose();

@@ -56,8 +56,6 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
     (args: SetCustomTypeArgs) => {
       const { customType, onSaveCallback, previousPath, newPath } = args;
 
-      console.log(args);
-
       setCustomTypeState(customType);
       setNextAction(async () => {
         const { errors } = await updateCustomType({

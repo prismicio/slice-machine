@@ -167,7 +167,7 @@ export const VariationsList: FC<VariationsListProps> = (props) => {
 
             await updateSlice(newSlice);
             saveSliceSuccess(newSlice);
-            setSlice({ slice: newSlice });
+            setSlice(newSlice);
 
             const url = SLICES_CONFIG.getBuilderPagePathname({
               libraryName: newSlice.href,
@@ -239,7 +239,7 @@ export const SharedSliceCards = (props: SharedSliceCardsProps) => {
                   variationID: v.id,
                 },
                 onUploadSuccess: (newSlice) => {
-                  setSlice({ slice: newSlice });
+                  setSlice(newSlice);
                 },
               });
             }}
