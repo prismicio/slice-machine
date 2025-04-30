@@ -6272,6 +6272,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/types-internal@npm:3.10.0-alpha.0":
+  version: 3.10.0-alpha.0
+  resolution: "@prismicio/types-internal@npm:3.10.0-alpha.0"
+  dependencies:
+    monocle-ts: ^2.3.11
+    newtype-ts: ^0.3.5
+    tslib: ^2.3.1
+    uuid: ^9.0.0
+  peerDependencies:
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    io-ts-types: ^0.5.16
+  checksum: f2a48f110c556cc478b63e76bc081b614522404e5be89e7f3864854afb3c41167503245f628f53ece6a703c5e8b3819abe4efa18bc741891da29d66fda50e26f
+  languageName: node
+  linkType: hard
+
 "@prismicio/types-internal@npm:3.8.0, @prismicio/types-internal@npm:^3.8.0":
   version: 3.8.0
   resolution: "@prismicio/types-internal@npm:3.8.0"
@@ -9323,7 +9339,7 @@ __metadata:
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.12.0
-    "@prismicio/types-internal": 3.8.0
+    "@prismicio/types-internal": 3.10.0-alpha.0
     "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"

@@ -69,12 +69,14 @@ export const getState = async (): Promise<ServerState> => {
 
 /** Custom Type Routes * */
 
-export const updateCustomType = async (
-  customType: CustomType,
-): ReturnType<SliceMachineManagerClient["customTypes"]["updateCustomType"]> => {
-  return await managerClient.customTypes.updateCustomType({
-    model: customType,
-  });
+export const updateCustomType = async (args: {
+  customType: CustomType;
+  previousPath?: string[];
+  newPath?: string[];
+}): ReturnType<
+  SliceMachineManagerClient["customTypes"]["updateCustomType"]
+> => {
+  return await managerClient.customTypes.updateCustomType(args);
 };
 
 /** Slice Routes * */

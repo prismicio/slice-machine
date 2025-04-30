@@ -70,6 +70,8 @@ type OnSaveFieldProps = {
   newKey: string;
   value: SlicePrimaryFieldSM;
   inGroupFieldAction?: "add" | "update";
+  previousPath: string[];
+  newPath: string[];
 };
 
 const FieldZones: FC = () => {
@@ -110,6 +112,12 @@ const FieldZones: FC = () => {
     widgetArea: WidgetsArea,
     { apiId: previousKey, newKey, value, inGroupFieldAction }: OnSaveFieldProps,
   ) => {
+    console.log("FieldZone onSave", {
+      previousKey,
+      newKey,
+      value,
+      inGroupFieldAction,
+    });
     const newSlice = updateField({
       slice,
       variationId: variation.id,

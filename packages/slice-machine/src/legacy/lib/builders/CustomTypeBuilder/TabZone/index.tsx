@@ -74,6 +74,8 @@ type OnSaveFieldProps = {
   newKey: string;
   value: TabField;
   inGroupFieldAction?: "add" | "update";
+  previousPath: string[];
+  newPath: string[];
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -105,7 +107,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType);
+    setCustomType({ customType: newCustomType });
   };
 
   const onSaveNewField = ({ apiId: id, value: field }: OnSaveFieldProps) => {
@@ -137,8 +139,11 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType, () => {
-      toast.success(`${field.type === "Group" ? "Group" : "Field"} added`);
+    setCustomType({
+      customType: newCustomType,
+      onSaveCallback: () => {
+        toast.success(`${field.type === "Group" ? "Group" : "Field"} added`);
+      },
     });
 
     trackFieldAdded({ id, field: newField });
@@ -164,7 +169,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     // When removing redux and replacing it by a simple useState, react-beautiful-dnd (that is deprecated library) was making the fields flickering on reorder.
     // The problem seems to come from the react non-synchronous way to handle our state update that didn't work well with the library.
     // It's a hack and since it's used on an old pure JavaScript code with a deprecated library it will be removed when updating the UI of the fields.
-    flushSync(() => setCustomType(newCustomType));
+    flushSync(() => setCustomType({ customType: newCustomType }));
   };
 
   const onSave = ({
@@ -172,6 +177,8 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     newKey,
     value,
     inGroupFieldAction,
+    previousPath,
+    newPath,
   }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
@@ -187,10 +194,15 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sectionId: tabId,
     });
 
-    setCustomType(newCustomType, () => {
-      if (inGroupFieldAction === "add") {
-        toast.success("Field added");
-      }
+    setCustomType({
+      customType: newCustomType,
+      onSaveCallback: () => {
+        if (inGroupFieldAction === "add") {
+          toast.success("Field added");
+        }
+      },
+      previousPath,
+      newPath,
     });
 
     // We don't want to track the group field update when it's for the management of a
@@ -207,6 +219,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   };
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {
+    console.log("TabZone onCreateOrSave", { props });
     if (props.apiId === "") {
       return onSaveNewField({ ...props, apiId: props.newKey }); // create new
     }
@@ -216,13 +229,13 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const onCreateSliceZone = () => {
     const newCustomType = createSectionSliceZone(customType, tabId);
 
-    setCustomType(newCustomType);
+    setCustomType({ customType: newCustomType });
   };
 
   const onDeleteSliceZone = () => {
     const newCustomType = deleteSectionSliceZone(customType, tabId);
 
-    setCustomType(newCustomType);
+    setCustomType({ customType: newCustomType });
   };
 
   const onRemoveSharedSlice = (sliceId: string) => {
@@ -232,7 +245,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
       sliceId,
     });
 
-    setCustomType(newCustomType);
+    setCustomType({ customType: newCustomType });
   };
 
   return (

@@ -3,6 +3,7 @@ import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import {
 	CustomType,
 	SharedSlice,
+	traverseCustomType,
 } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
@@ -168,13 +169,70 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async updateCustomType(
-		args: CustomTypeUpdateHookData,
+		hookArgs: CustomTypeUpdateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
+		const { model, previousPath, newPath } = hookArgs;
+
+		if (
+			previousPath &&
+			newPath &&
+			previousPath.join(".") !== newPath.join(".")
+		) {
+			// Find existing content relationships that link to the renamed field id in
+			// any custom type and update them to use the one.
+
+			const oldPathString = [model.id, ...previousPath].join(".");
+			const newPathString = [model.id, ...newPath].join(".");
+
+			const cts = await this.readAllCustomTypes();
+
+			for (const ct of cts.models) {
+				const updatedCt: CustomType = traverseCustomType({
+					customType: ct.model,
+					onField: ({ field, key, path }) => {
+						if (
+							field.type !== "Link" ||
+							field.config?.select !== "document" ||
+							!field.config.customtypes?.includes(oldPathString)
+						) {
+							return field;
+						}
+
+						console.log(
+							`Found field to update ${oldPathString} -> ${newPathString}`,
+							JSON.stringify({ key, path, field }, null, 2),
+						);
+
+						// find the index of the old name and replace it with the new name
+						const newCustomTypes = field.config.customtypes
+							? field.config.customtypes.slice()
+							: undefined;
+
+						if (newCustomTypes) {
+							const index = newCustomTypes.indexOf(oldPathString);
+							if (index !== -1) {
+								newCustomTypes[index] = newPathString;
+							}
+						}
+
+						return {
+							...field,
+							config: { ...field.config, customtypes: newCustomTypes },
+						};
+					},
+				});
+
+				await this.sliceMachinePluginRunner.callHook("custom-type:update", {
+					model: updatedCt,
+				});
+			}
+		}
+
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"custom-type:update",
-			args,
+			hookArgs,
 		);
 
 		return {

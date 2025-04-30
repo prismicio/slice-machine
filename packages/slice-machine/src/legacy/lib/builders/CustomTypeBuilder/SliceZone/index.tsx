@@ -373,8 +373,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices,
             });
-            setCustomType(CustomTypes.fromSM(newCustomType), () => {
-              toast.success("Slice(s) added to slice zone");
+            setCustomType({
+              customType: CustomTypes.fromSM(newCustomType),
+              onSaveCallback: () => {
+                toast.success("Slice(s) added to slice zone");
+              },
             });
             void completeStep("createSlice");
             closeUpdateSliceZoneModal();
@@ -394,13 +397,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices,
             });
-            setCustomType(CustomTypes.fromSM(newCustomType), () => {
-              toast.success(
-                <ToastMessageWithPath
-                  message="Slice template(s) added to slice zone and created at: "
-                  path={`${localLibraries[0].name}/`}
-                />,
-              );
+            setCustomType({
+              customType: CustomTypes.fromSM(newCustomType),
+              onSaveCallback: () => {
+                toast.success(
+                  <ToastMessageWithPath
+                    message="Slice template(s) added to slice zone and created at: "
+                    path={`${localLibraries[0].name}/`}
+                  />,
+                );
+              },
             });
             void completeStep("createSlice");
             closeSlicesTemplatesModal();
@@ -427,13 +433,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               tabId,
               slices: [newSlice],
             });
-            setCustomType(CustomTypes.fromSM(newCustomType), () => {
-              toast.success(
-                <ToastMessageWithPath
-                  message="New slice added to slice zone and created at: "
-                  path={`${localLibraries[0].name}/`}
-                />,
-              );
+            setCustomType({
+              customType: CustomTypes.fromSM(newCustomType),
+              onSaveCallback: () => {
+                toast.success(
+                  <ToastMessageWithPath
+                    message="New slice added to slice zone and created at: "
+                    path={`${localLibraries[0].name}/`}
+                  />,
+                );
+              },
             });
             closeCreateSliceModal();
           }}
@@ -454,13 +463,16 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             tabId,
             slices: slices.map((slice) => slice.model),
           });
-          setCustomType(CustomTypes.fromSM(newCustomType), () => {
-            toast.success(
-              <ToastMessageWithPath
-                message="Slice(s) added to slice zone and created at: "
-                path={library}
-              />,
-            );
+          setCustomType({
+            customType: CustomTypes.fromSM(newCustomType),
+            onSaveCallback: () => {
+              toast.success(
+                <ToastMessageWithPath
+                  message="Slice(s) added to slice zone and created at: "
+                  path={library}
+                />,
+              );
+            },
           });
           void completeStep("createSlice");
           syncChanges();

@@ -17,10 +17,17 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
+type SetCustomTypeArgs = {
+  customType: CustomType;
+  onSaveCallback?: () => void;
+  previousPath?: string[];
+  newPath?: string[];
+};
+
 type CustomTypeContext = {
   customType: CustomType;
   actionQueueStatus: ActionQueueStatus;
-  setCustomType: (customType: CustomType, onSaveCallback?: () => void) => void;
+  setCustomType: (args: SetCustomTypeArgs) => void;
 };
 
 type CustomTypeProviderProps = {
@@ -46,10 +53,16 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
-    (customType: CustomType, onSaveCallback?: () => void) => {
+    (args: SetCustomTypeArgs) => {
+      const { customType, onSaveCallback, previousPath, newPath } = args;
+
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { errors } = await updateCustomType(customType);
+        const { errors } = await updateCustomType({
+          customType,
+          previousPath,
+          newPath,
+        });
 
         if (errors.length > 0) {
           throw errors;
