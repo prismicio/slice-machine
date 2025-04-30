@@ -189,7 +189,9 @@ export class CustomTypesManager extends BaseManager {
 		const newCustomTypes = field.config.customtypes.slice();
 		if (newCustomTypes) {
 			const index = newCustomTypes.indexOf(oldPath);
-			if (index !== -1) newCustomTypes[index] = newPath;
+			if (index !== -1) {
+				newCustomTypes[index] = newPath;
+			}
 		}
 
 		return {
