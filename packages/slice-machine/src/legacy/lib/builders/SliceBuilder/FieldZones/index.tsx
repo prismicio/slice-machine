@@ -112,12 +112,6 @@ const FieldZones: FC = () => {
     widgetArea: WidgetsArea,
     { apiId: previousKey, newKey, value, inGroupFieldAction }: OnSaveFieldProps,
   ) => {
-    console.log("FieldZone onSave", {
-      previousKey,
-      newKey,
-      value,
-      inGroupFieldAction,
-    });
     const newSlice = updateField({
       slice,
       variationId: variation.id,

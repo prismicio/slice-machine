@@ -182,7 +182,7 @@ export class CustomTypesManager extends BaseManager {
 			previousPath.join(".") !== newPath.join(".")
 		) {
 			// Find existing content relationships that link to the renamed field id in
-			// any custom type and update them to use the one.
+			// any custom type and update them to use the new one.
 
 			const oldPathString = [model.id, ...previousPath].join(".");
 			const newPathString = [model.id, ...newPath].join(".");
@@ -200,11 +200,6 @@ export class CustomTypesManager extends BaseManager {
 						) {
 							return field;
 						}
-
-						console.log(
-							`Found CT field to update ${oldPathString} -> ${newPathString}`,
-							JSON.stringify({ key, path, field }, null, 2),
-						);
 
 						// find the index of the old name and replace it with the new name
 						const newCustomTypes = field.config.customtypes
@@ -230,6 +225,8 @@ export class CustomTypesManager extends BaseManager {
 				});
 			}
 
+			// Find existing slice with content relationships that link to the renamed
+			// field id in all libraries and update them to use the new one.
 			const { libraries } = await this.slices.readAllSliceLibraries();
 			for (const library of libraries) {
 				const librarySlices = await this.slices.readAllSlicesForLibrary({
@@ -265,15 +262,6 @@ export class CustomTypesManager extends BaseManager {
 								...field,
 								config: { ...field.config, customtypes: newCustomTypes },
 							};
-
-							console.log(
-								`Found SLICE field to update ${oldPathString} -> ${newPathString}`,
-								JSON.stringify(
-									{ key, path, old: field, new: newLocal },
-									null,
-									2,
-								),
-							);
 
 							return newLocal;
 						},

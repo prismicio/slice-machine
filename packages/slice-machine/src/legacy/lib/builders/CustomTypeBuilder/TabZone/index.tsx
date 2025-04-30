@@ -219,7 +219,6 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   };
 
   const onCreateOrSave = (props: OnSaveFieldProps) => {
-    console.log("TabZone onCreateOrSave", { props });
     if (props.apiId === "") {
       return onSaveNewField({ ...props, apiId: props.newKey }); // create new
     }
