@@ -173,7 +173,7 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	private updateCustomRelationships<
+	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
 	>(args: { field: T; oldPath: string; newPath: string }): T {
 		const { field, oldPath, newPath } = args;
@@ -185,16 +185,11 @@ export class CustomTypesManager extends BaseManager {
 			return field;
 		}
 
-		// find the index of the old name and replace it with the new name
-		const newCustomTypes = field.config.customtypes
-			? field.config.customtypes.slice()
-			: undefined;
-
+		// find the index of the old path and replace it with the new one
+		const newCustomTypes = field.config.customtypes.slice();
 		if (newCustomTypes) {
 			const index = newCustomTypes.indexOf(oldPath);
-			if (index !== -1) {
-				newCustomTypes[index] = newPath;
-			}
+			if (index !== -1) newCustomTypes[index] = newPath;
 		}
 
 		return {
@@ -231,7 +226,7 @@ export class CustomTypesManager extends BaseManager {
 				const updatedCustomTypeModel = traverseCustomType({
 					customType: customType.model,
 					onField: ({ field }) => {
-						return this.updateCustomRelationships({
+						return this.updateFieldContentRelationships({
 							field,
 							oldPath: oldPathString,
 							newPath: newPathString,
@@ -263,7 +258,7 @@ export class CustomTypesManager extends BaseManager {
 						path: ["."],
 						slice: slice.model,
 						onField: ({ field }) => {
-							return this.updateCustomRelationships({
+							return this.updateFieldContentRelationships({
 								field,
 								oldPath: oldPathString,
 								newPath: newPathString,
