@@ -42,15 +42,18 @@ export interface GroupListItemProps<F extends TabField> {
     newKey,
     value,
     inGroupFieldAction,
-    previousPath,
-    newPath,
+    updateMeta,
   }: {
     apiId: string;
     newKey: string;
     value: F;
     inGroupFieldAction?: "add" | "update";
-    previousPath: string[];
-    newPath: string[];
+    updateMeta?: {
+      fieldIdChanged?: {
+        previousPath?: string[];
+        newPath?: string[];
+      };
+    };
   }) => void;
   HintElement: JSX.Element;
 }

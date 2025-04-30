@@ -20,8 +20,12 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 type SetCustomTypeArgs = {
   customType: CustomType;
   onSaveCallback?: () => void;
-  previousPath?: string[];
-  newPath?: string[];
+  updateMeta?: {
+    fieldIdChanged?: {
+      previousPath?: string[];
+      newPath?: string[];
+    };
+  };
 };
 
 type CustomTypeContext = {
@@ -54,15 +58,11 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
   const setCustomType = useCallback(
     (args: SetCustomTypeArgs) => {
-      const { customType, onSaveCallback, previousPath, newPath } = args;
+      const { customType, onSaveCallback, updateMeta } = args;
 
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { errors } = await updateCustomType({
-          customType,
-          previousPath,
-          newPath,
-        });
+        const { errors } = await updateCustomType({ customType, updateMeta });
 
         if (errors.length > 0) {
           throw errors;

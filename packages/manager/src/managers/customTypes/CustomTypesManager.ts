@@ -210,55 +210,22 @@ export class CustomTypesManager extends BaseManager {
 			args,
 		);
 
-		const { model, previousPath, newPath } = args;
+		const { model, updateMeta } = args;
 
-		if (
-			previousPath &&
-			newPath &&
-			previousPath.join(".") !== newPath.join(".")
-		) {
-			const oldPathString = [model.id, ...previousPath].join(".");
-			const newPathString = [model.id, ...newPath].join(".");
+		if (updateMeta?.fieldIdChanged) {
+			const { previousPath, newPath } = updateMeta.fieldIdChanged;
 
-			// Find existing content relationships that link to the renamed field id in
-			// any custom type and update them to use the new one.
-			const customTypes = await this.readAllCustomTypes();
+			if (previousPath.join(".") !== newPath.join(".")) {
+				const oldPathString = [model.id, ...previousPath].join(".");
+				const newPathString = [model.id, ...newPath].join(".");
 
-			for (const customType of customTypes.models) {
-				const updatedCustomTypeModel = traverseCustomType({
-					customType: customType.model,
-					onField: ({ field }) => {
-						return this.updateFieldContentRelationships({
-							field,
-							oldPath: oldPathString,
-							newPath: newPathString,
-						});
-					},
-				});
+				// Find existing content relationships that link to the renamed field id in
+				// any custom type and update them to use the new one.
+				const customTypes = await this.readAllCustomTypes();
 
-				const hookResult = await this.sliceMachinePluginRunner.callHook(
-					"custom-type:create",
-					{ model: updatedCustomTypeModel },
-				);
-
-				if (hookResult.errors.length > 0) {
-					return { errors: hookResult.errors };
-				}
-			}
-
-			// Find existing slice with content relationships that link to the renamed
-			// field id in all libraries and update them to use the new one.
-			const { libraries } = await this.slices.readAllSliceLibraries();
-
-			for (const library of libraries) {
-				const slices = await this.slices.readAllSlicesForLibrary({
-					libraryID: library.libraryID,
-				});
-
-				for (const slice of slices.models) {
-					const updatedSliceModel = traverseSharedSlice({
-						path: ["."],
-						slice: slice.model,
+				for (const customType of customTypes.models) {
+					const updatedCustomTypeModel = traverseCustomType({
+						customType: customType.model,
 						onField: ({ field }) => {
 							return this.updateFieldContentRelationships({
 								field,
@@ -269,12 +236,45 @@ export class CustomTypesManager extends BaseManager {
 					});
 
 					const hookResult = await this.sliceMachinePluginRunner.callHook(
-						"slice:update",
-						{ libraryID: library.libraryID, model: updatedSliceModel },
+						"custom-type:create",
+						{ model: updatedCustomTypeModel },
 					);
 
 					if (hookResult.errors.length > 0) {
 						return { errors: hookResult.errors };
+					}
+				}
+
+				// Find existing slice with content relationships that link to the renamed
+				// field id in all libraries and update them to use the new one.
+				const { libraries } = await this.slices.readAllSliceLibraries();
+
+				for (const library of libraries) {
+					const slices = await this.slices.readAllSlicesForLibrary({
+						libraryID: library.libraryID,
+					});
+
+					for (const slice of slices.models) {
+						const updatedSliceModel = traverseSharedSlice({
+							path: ["."],
+							slice: slice.model,
+							onField: ({ field }) => {
+								return this.updateFieldContentRelationships({
+									field,
+									oldPath: oldPathString,
+									newPath: newPathString,
+								});
+							},
+						});
+
+						const hookResult = await this.sliceMachinePluginRunner.callHook(
+							"slice:update",
+							{ libraryID: library.libraryID, model: updatedSliceModel },
+						);
+
+						if (hookResult.errors.length > 0) {
+							return { errors: hookResult.errors };
+						}
 					}
 				}
 			}

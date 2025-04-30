@@ -71,15 +71,18 @@ export const getState = async (): Promise<ServerState> => {
 
 export const updateCustomType = async (args: {
   customType: CustomType;
-  previousPath?: string[];
-  newPath?: string[];
+  updateMeta?: {
+    fieldIdChanged?: {
+      previousPath?: string[];
+      newPath?: string[];
+    };
+  };
 }): ReturnType<
   SliceMachineManagerClient["customTypes"]["updateCustomType"]
 > => {
   return await managerClient.customTypes.updateCustomType({
     model: args.customType,
-    newPath: args.newPath,
-    previousPath: args.previousPath,
+    updateMeta: args.updateMeta,
   });
 };
 

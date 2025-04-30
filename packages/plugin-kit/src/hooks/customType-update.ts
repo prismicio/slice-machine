@@ -11,8 +11,12 @@ import type {
  */
 export type CustomTypeUpdateHookData = {
 	model: CustomType;
-	previousPath?: string[];
-	newPath?: string[];
+	updateMeta?: {
+		fieldIdChanged?: {
+			previousPath: string[];
+			newPath: string[];
+		};
+	};
 };
 
 /**

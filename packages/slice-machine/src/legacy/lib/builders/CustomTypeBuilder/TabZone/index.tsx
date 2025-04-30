@@ -74,8 +74,12 @@ type OnSaveFieldProps = {
   newKey: string;
   value: TabField;
   inGroupFieldAction?: "add" | "update";
-  previousPath: string[];
-  newPath: string[];
+  updateMeta?: {
+    fieldIdChanged?: {
+      previousPath?: string[];
+      newPath?: string[];
+    };
+  };
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -177,8 +181,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     newKey,
     value,
     inGroupFieldAction,
-    previousPath,
-    newPath,
+    updateMeta,
   }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
@@ -201,8 +204,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           toast.success("Field added");
         }
       },
-      previousPath,
-      newPath,
+      updateMeta,
     });
 
     // We don't want to track the group field update when it's for the management of a
