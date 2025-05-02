@@ -22,6 +22,10 @@ import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
+import {
+  useSectionsExperiment,
+  useSectionsExperimentReturnType,
+} from "@/features/builder/useSectionsExperiment";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
@@ -53,7 +57,7 @@ export function CreateSliceFromImageModal(
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
-
+  const sectionsExperiment = useSectionsExperiment();
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
@@ -239,7 +243,8 @@ export function CreateSliceFromImageModal(
       <DialogHeader title="Generate from image" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
-          Upload images to generate slices with AI
+          Upload images to generate {sectionsExperiment.plural.lowercase} with
+          AI
         </DialogDescription>
         {slices.length === 0 ? (
           <Box padding={16} height="100%">
@@ -279,7 +284,8 @@ export function CreateSliceFromImageModal(
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            {getSubmitButtonLabel(location)} ({readySlices.length})
+            {getSubmitButtonLabel({ location, sectionsExperiment })} (
+            {readySlices.length})
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
@@ -291,6 +297,7 @@ function UploadBlankSlate(props: {
   droppingFiles?: boolean;
   onFilesSelected: (files: File[]) => void;
 }) {
+  const sectionsExperiment = useSectionsExperiment();
   const { droppingFiles = false, onFilesSelected } = props;
 
   return (
@@ -312,7 +319,8 @@ function UploadBlankSlate(props: {
         />
         <BlankSlateTitle>Upload your design images.</BlankSlateTitle>
         <BlankSlateDescription>
-          Once uploaded, you can generate slices automatically using AI.
+          Once uploaded, you can generate {sectionsExperiment.plural.lowercase}{" "}
+          automatically using AI.
         </BlankSlateDescription>
         <BlankSlateActions>
           <FileUploadButton
@@ -460,15 +468,19 @@ async function addSlices(newSlices: NewSlice[]) {
   return { library, slices };
 }
 
-const getSubmitButtonLabel = (
-  location: "custom_type" | "page_type" | "slices",
-) => {
+const getSubmitButtonLabel = ({
+  location,
+  sectionsExperiment,
+}: {
+  location: "custom_type" | "page_type" | "slices";
+  sectionsExperiment: useSectionsExperimentReturnType;
+}) => {
   switch (location) {
     case "custom_type":
       return "Add to type";
     case "page_type":
       return "Add to page";
     case "slices":
-      return "Add to slices";
+      return `Add to ${sectionsExperiment.plural.lowercase}`;
   }
 };

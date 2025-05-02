@@ -3,6 +3,7 @@ import { type FC } from "react";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { AutoSaveStatusIndicator } from "@/features/autoSave/AutoSaveStatusIndicator";
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
 import { FloatingBackButton } from "@/features/slices/sliceBuilder/FloatingBackButton";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import {
@@ -21,6 +22,7 @@ import { VariationsList } from "./VariationsList";
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
   const horizontalScroll = useMediaQuery({ max: "large" });
+  const sectionsExperiment = useSectionsExperiment();
 
   const contentDisplayProps = horizontalScroll
     ? { gridTemplateRows: "304px 1fr" }
@@ -31,7 +33,7 @@ export const SliceBuilder: FC = () => {
       <AppLayoutHeader>
         <AppLayoutBackButton url="/slices" />
         <AppLayoutBreadcrumb>
-          <BreadcrumbItem>Slices</BreadcrumbItem>
+          <BreadcrumbItem>{sectionsExperiment.plural.uppercase}</BreadcrumbItem>
           <BreadcrumbItem active>{slice.model.name}</BreadcrumbItem>
         </AppLayoutBreadcrumb>
         <AppLayoutActions>

@@ -1,66 +1,71 @@
 import { IoMdRefresh } from "react-icons/io";
 import { Image, Link, Text } from "theme-ui";
 
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
 import { Button } from "@/legacy/components/Button";
 
 import FullPage from "../FullPage";
 
-const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => (
-  <FullPage>
-    <Image src="/iframe-not-running.png" sx={{ width: "320px" }} />
-    <Text
-      sx={{
-        color: "textClear",
-        mb: 2,
-        fontSize: "14px",
-        lineHeight: "24px",
-        fontWeight: "600",
-      }}
-    >
-      Slice Machine can't render your Slice
-    </Text>
-    <Text
-      sx={{
-        color: "failedConnectText",
-        maxWidth: "400px",
-        textAlign: "center",
-        fontSize: "12px",
-        lineHeight: "22px",
-      }}
-    >
-      Ensure your website's development server is running by typing
-      <br />
+const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => {
+  const sectionsExperiment = useSectionsExperiment();
+
+  return (
+    <FullPage>
+      <Image src="/iframe-not-running.png" sx={{ width: "320px" }} />
       <Text
-        as="code"
-        variant="styles.inlineCode"
-        sx={{ padding: "4px", borderRadius: "6px" }}
-      >
-        npm run dev
-      </Text>
-      &nbsp; in your terminal at the root of your website directory.
-      <br /> If that doesn't work, see the&nbsp;
-      <Link
-        target="_blank"
-        href="https://prismic.io/docs/slice-machine#simulate-slices"
         sx={{
-          color: "link",
+          color: "textClear",
+          mb: 2,
+          fontSize: "14px",
+          lineHeight: "24px",
+          fontWeight: "600",
         }}
       >
-        troubleshooting instructions.
-      </Link>
-    </Text>
-    <Button
-      onClick={onRetrigger}
-      label="Refresh"
-      Icon={IoMdRefresh}
-      iconSize={20}
-      iconFill="#6F6E77"
-      variant="secondaryMedium"
-      sx={{
-        mt: "16px",
-      }}
-    />
-  </FullPage>
-);
+        Slice Machine can't render your {sectionsExperiment.singular.uppercase}
+      </Text>
+      <Text
+        sx={{
+          color: "failedConnectText",
+          maxWidth: "400px",
+          textAlign: "center",
+          fontSize: "12px",
+          lineHeight: "22px",
+        }}
+      >
+        Ensure your website's development server is running by typing
+        <br />
+        <Text
+          as="code"
+          variant="styles.inlineCode"
+          sx={{ padding: "4px", borderRadius: "6px" }}
+        >
+          npm run dev
+        </Text>
+        &nbsp; in your terminal at the root of your website directory.
+        <br /> If that doesn't work, see the&nbsp;
+        <Link
+          target="_blank"
+          href="https://prismic.io/docs/slice-machine#simulate-slices"
+          sx={{
+            color: "link",
+          }}
+        >
+          troubleshooting instructions.
+        </Link>
+      </Text>
+      <Button
+        onClick={onRetrigger}
+        label="Refresh"
+        Icon={IoMdRefresh}
+        iconSize={20}
+        iconFill="#6F6E77"
+        variant="secondaryMedium"
+        sx={{
+          mt: "16px",
+        }}
+      />
+    </FullPage>
+  );
+};
 
 export default FailedConnect;

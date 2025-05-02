@@ -1,5 +1,4 @@
 import {
-  BackgroundIcon,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +15,9 @@ import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
+import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
@@ -49,6 +50,11 @@ const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
+  const sectionsExperiment = useSectionsExperiment();
+  const sliceCreationOptions = getSliceCreationOptions({
+    menuType: "Dropdown",
+    sectionsExperiment,
+  });
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
@@ -106,12 +112,14 @@ const SlicesIndex: React.FunctionComponent = () => {
   return (
     <>
       <Head>
-        <title>Slices - Slice Machine</title>
+        <title>{sectionsExperiment.plural.uppercase} - Slice Machine</title>
       </Head>
       <AppLayout>
         <AppLayoutHeader>
           <AppLayoutBreadcrumb>
-            <BreadcrumbItem>Slices</BreadcrumbItem>
+            <BreadcrumbItem>
+              {sectionsExperiment.plural.uppercase}
+            </BreadcrumbItem>
           </AppLayoutBreadcrumb>
           {localLibraries?.length !== 0 && sliceCount !== 0 ? (
             <DropdownMenu>
@@ -128,37 +136,23 @@ const SlicesIndex: React.FunctionComponent = () => {
               <DropdownMenuContent align="end">
                 {aiSliceGenerationExperiment.eligible && (
                   <DropdownMenuItem
-                    renderStartIcon={() => (
-                      <BackgroundIcon
-                        name="autoFixHigh"
-                        size="extraSmall"
-                        iconSize="small"
-                        radius={6}
-                        variant="solid"
-                        color="purple"
-                      />
-                    )}
+                    renderStartIcon={() =>
+                      sliceCreationOptions.fromImage.BackgroundIcon
+                    }
                     onSelect={() => void openCreateSliceFromImageModal()}
-                    description="Build a Slice based on your design image."
+                    description={sliceCreationOptions.fromImage.description}
                   >
-                    Generate from image
+                    {sliceCreationOptions.fromImage.title}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
-                  renderStartIcon={() => (
-                    <BackgroundIcon
-                      name="add"
-                      size="extraSmall"
-                      iconSize="small"
-                      radius={6}
-                      variant="solid"
-                      color="white"
-                    />
-                  )}
+                  renderStartIcon={() =>
+                    sliceCreationOptions.fromScratch.BackgroundIcon
+                  }
                   onSelect={() => setIsCreateSliceModalOpen(true)}
-                  description="Build a custom Slice your way."
+                  description={sliceCreationOptions.fromScratch.description}
                 >
-                  Start from scratch
+                  {sliceCreationOptions.fromScratch.title}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -182,7 +176,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                     }}
                   >
                     <EmptyState
-                      title={"What are Slices?"}
+                      title={`What are ${sectionsExperiment.plural.uppercase}?`}
                       onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
                       }}
@@ -190,9 +184,11 @@ const SlicesIndex: React.FunctionComponent = () => {
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                       documentationComponent={
                         <>
-                          Slices are sections of your website. Prismic documents
-                          contain a dynamic "Slice Zone" that allows content
-                          creators to add, edit, and rearrange Slices to compose
+                          {sectionsExperiment.plural.uppercase} are sections of
+                          your website. Prismic documents contain a dynamic "
+                          {sectionsExperiment.singular.uppercase} Zone" that
+                          allows content creators to add, edit, and rearrange{" "}
+                          {sectionsExperiment.plural.uppercase} to compose
                           dynamic layouts for any page design.{" "}
                           <Link
                             target={"_blank"}
@@ -239,7 +235,12 @@ const SlicesIndex: React.FunctionComponent = () => {
                               mb: 1,
                             }}
                           >
-                            <Text>{name}</Text>
+                            <Text>
+                              {sectionsExperiment.eligible &&
+                              sortedLibraries.length === 1
+                                ? `Your ${sectionsExperiment.plural.uppercase}`
+                                : name}
+                            </Text>
                           </Flex>
                           {!isLocal && (
                             <p>⚠️ External libraries are read-only</p>
@@ -340,7 +341,7 @@ const SlicesIndex: React.FunctionComponent = () => {
             onSuccess={({ library }) => {
               toast.success(
                 <ToastMessageWithPath
-                  message="Slice(s) added to slice zone and created at: "
+                  message={`${sectionsExperiment.singular.uppercase}(s) added to ${sectionsExperiment.singular.lowercase} zone and created at: `}
                   path={library}
                 />,
               );

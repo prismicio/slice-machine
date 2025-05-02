@@ -3,6 +3,7 @@ import { FC } from "react";
 import { Text } from "theme-ui";
 
 import { getState } from "@/apiClient";
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
 import { createSlicesTemplates } from "@/features/slicesTemplates/actions/createSlicesTemplates";
 import { SliceTemplate } from "@/features/slicesTemplates/useSlicesTemplates";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
@@ -37,6 +38,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
   location,
 }) => {
   const { createSliceSuccess } = useSliceMachineActions();
+  const sectionsExperiment = useSectionsExperiment();
 
   return (
     <ModalFormCard
@@ -80,7 +82,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: "Use template slices",
+        title: `Use template ${sectionsExperiment.plural.lowercase}`,
       }}
       validate={(values) => {
         if (values.sliceKeys.length === 0) {

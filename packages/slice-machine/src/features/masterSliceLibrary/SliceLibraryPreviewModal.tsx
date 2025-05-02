@@ -11,6 +11,8 @@ import {
 import { telemetry } from "@/apiClient";
 import { useMarketingContent } from "@/hooks/useMarketingContent";
 
+import { useSectionsExperiment } from "../builder/useSectionsExperiment";
+
 type MasterSliceLibraryPreviewModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -20,6 +22,7 @@ export const MasterSliceLibraryPreviewModal: React.FC<
   MasterSliceLibraryPreviewModalProps
 > = ({ isOpen, onClose }) => {
   const { masterSliceLibrary } = useMarketingContent();
+  const sectionsExperiment = useSectionsExperiment();
 
   if (!masterSliceLibrary) return null;
 
@@ -38,18 +41,23 @@ export const MasterSliceLibraryPreviewModal: React.FC<
       open={isOpen}
       onOpenChange={(open) => !open && onClose()}
     >
-      <DialogHeader title="Master Slice Library Generator (BETA)" />
+      <DialogHeader
+        title={`Master ${sectionsExperiment.singular.uppercase} Library Generator (BETA)`}
+      />
       <DialogContent>
         <Box flexDirection="column" padding={16} gap={16}>
-          <Text variant="h2">Create a Master Slice Library</Text>
+          <Text variant="h2">
+            Create a Master {sectionsExperiment.singular.uppercase} Library
+          </Text>
           <Video src={previewVideoUrl} sizing="contain" autoPlay loop />
           <Text>
             This is an{" "}
             <a href={exampleLinkUrl} target="_blank">
-              example slice library
+              example {sectionsExperiment.singular.lowercase} library
             </a>
-            ,  which provides you with an overview of all your slices in one
-            place. Build it yourself in a few steps.
+            , which provides you with an overview of all your{" "}
+            {sectionsExperiment.plural.lowercase} in one place. Build it
+            yourself in a few steps.
           </Text>
           <Button size="large" onClick={onGetTheCodeButtonClick}>
             Get the code

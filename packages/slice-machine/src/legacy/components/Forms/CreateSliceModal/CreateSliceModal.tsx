@@ -4,6 +4,7 @@ import Select from "react-select";
 import { Box, Label } from "theme-ui";
 
 import { getState } from "@/apiClient";
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { createSlice } from "@/features/slices/actions/createSlice";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
@@ -36,6 +37,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
   const { syncChanges } = useAutoSync();
   const { completeStep } = useOnboarding();
+  const sectionsExperiment = useSectionsExperiment();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
@@ -79,15 +81,15 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         validateSliceModalValues(values, localLibraries, remoteSlices)
       }
       content={{
-        title: "Create a new slice",
+        title: `Create a new ${sectionsExperiment.singular.lowercase}`,
       }}
     >
       {({ touched, values, setFieldValue, errors }) => (
         <Box>
           <InputBox
             name="sliceName"
-            label="Slice Name"
-            placeholder="Pascalised Slice API ID (e.g. TextBlock)"
+            label={`${sectionsExperiment.singular.uppercase} name`}
+            placeholder={`Pascalised ${sectionsExperiment.singular.uppercase} API ID (e.g. TextBlock)`}
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}
             testId="slice-name-input"

@@ -1,6 +1,7 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { Text } from "theme-ui";
 
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
@@ -23,6 +24,8 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
   onSubmit,
   availableSlices,
 }) => {
+  const sectionsExperiment = useSectionsExperiment();
+
   return (
     <ModalFormCard
       isOpen
@@ -43,7 +46,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: "Select existing slices",
+        title: `Select existing ${sectionsExperiment.plural.lowercase}`,
       }}
       testId="update-slices-modal"
       validate={(values) => {

@@ -7,6 +7,8 @@ import {
   TypeOptions,
 } from "react-toastify";
 
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+
 const getIconAccordingToasterType = ({
   type,
 }: {
@@ -67,6 +69,13 @@ export const ToastMessageWithPath: React.FC<{
 
 export const SliceToastMessage: React.FC<{
   path: string;
-}> = (props) => (
-  <ToastMessageWithPath message="Slice saved successfully at " {...props} />
-);
+}> = (props) => {
+  const sectionsExperiment = useSectionsExperiment();
+
+  return (
+    <ToastMessageWithPath
+      message={`${sectionsExperiment.singular.uppercase} saved successfully at `}
+      {...props}
+    />
+  );
+};

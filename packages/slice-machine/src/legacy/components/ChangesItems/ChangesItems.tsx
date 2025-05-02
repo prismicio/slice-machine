@@ -4,6 +4,7 @@ import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 import { countMissingScreenshots } from "@/domain/slice";
 import { ErrorBoundary } from "@/ErrorBoundary";
+import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { ModelsStatuses } from "@/features/sync/getUnSyncChanges";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
@@ -34,6 +35,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   isOnline,
 }) => {
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
+  const sectionsExperiment = useSectionsExperiment();
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
@@ -68,7 +70,9 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
               <Box padding={{ bottom: 8 }}>
                 <ChangesSectionHeader>
                   <Box>
-                    <Text variant="h5">Slices</Text>
+                    <Text variant="h5">
+                      {sectionsExperiment.plural.uppercase}
+                    </Text>
                     <Text variant="h5" sx={{ marginLeft: 8 }}>
                       {unSyncedSlices.length}
                     </Text>
