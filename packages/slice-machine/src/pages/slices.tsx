@@ -15,7 +15,7 @@ import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
@@ -50,7 +50,7 @@ const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "Dropdown",
     sectionsExperiment,

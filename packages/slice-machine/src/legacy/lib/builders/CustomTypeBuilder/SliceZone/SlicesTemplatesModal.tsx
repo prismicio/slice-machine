@@ -3,7 +3,7 @@ import { FC } from "react";
 import { Text } from "theme-ui";
 
 import { getState } from "@/apiClient";
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { createSlicesTemplates } from "@/features/slicesTemplates/actions/createSlicesTemplates";
 import { SliceTemplate } from "@/features/slicesTemplates/useSlicesTemplates";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
@@ -38,7 +38,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
   location,
 }) => {
   const { createSliceSuccess } = useSliceMachineActions();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
 
   return (
     <ModalFormCard

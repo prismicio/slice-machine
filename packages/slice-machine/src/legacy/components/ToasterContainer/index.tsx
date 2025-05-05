@@ -7,7 +7,7 @@ import {
   TypeOptions,
 } from "react-toastify";
 
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 
 const getIconAccordingToasterType = ({
   type,
@@ -70,7 +70,7 @@ export const ToastMessageWithPath: React.FC<{
 export const SliceToastMessage: React.FC<{
   path: string;
 }> = (props) => {
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
 
   return (
     <ToastMessageWithPath

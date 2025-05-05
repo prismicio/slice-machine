@@ -11,7 +11,7 @@ import {
 import { telemetry } from "@/apiClient";
 import { useMarketingContent } from "@/hooks/useMarketingContent";
 
-import { useSectionsExperiment } from "../builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "../builder/useSectionsNamingExperiment";
 
 type MasterSliceLibraryPreviewModalProps = {
   isOpen: boolean;
@@ -22,7 +22,7 @@ export const MasterSliceLibraryPreviewModal: React.FC<
   MasterSliceLibraryPreviewModalProps
 > = ({ isOpen, onClose }) => {
   const { masterSliceLibrary } = useMarketingContent();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
 
   if (!masterSliceLibrary) return null;
 

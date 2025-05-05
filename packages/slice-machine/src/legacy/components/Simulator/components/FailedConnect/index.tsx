@@ -1,13 +1,13 @@
 import { IoMdRefresh } from "react-icons/io";
 import { Image, Link, Text } from "theme-ui";
 
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { Button } from "@/legacy/components/Button";
 
 import FullPage from "../FullPage";
 
 const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => {
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
 
   return (
     <FullPage>

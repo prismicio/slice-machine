@@ -1,7 +1,7 @@
 import { Text } from "@prismicio/editor-ui";
 import { FC, ReactNode } from "react";
 
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 
 import styles from "./ZoneEmptyState.module.css";
 
@@ -12,7 +12,7 @@ type ZoneEmptyStateProps = {
 };
 
 export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
   const modifiedZoneType =
     props.zoneType === "slice"
       ? sectionsExperiment.singular.lowercase

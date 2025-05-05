@@ -16,7 +16,7 @@ import { BaseStyles } from "theme-ui";
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
@@ -134,7 +134,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
   const { openLoginModal } = useSliceMachineActions();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "Dropdown",
     sectionsExperiment,

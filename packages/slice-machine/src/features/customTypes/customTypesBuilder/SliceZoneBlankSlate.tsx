@@ -10,7 +10,7 @@ import {
 import { FC } from "react";
 
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 
 import { getSliceCreationOptions } from "./sliceCreationOptions";
 
@@ -32,7 +32,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   isSlicesTemplatesSupported,
 }) => {
   const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "ActionList",
     sectionsExperiment,

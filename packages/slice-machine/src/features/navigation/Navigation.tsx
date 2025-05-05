@@ -18,7 +18,7 @@ import { SettingsIcon } from "@/icons/SettingsIcon";
 
 import { ChangesItem } from "../../legacy/components/Navigation/ChangesItem";
 import { Environment } from "../../legacy/components/Navigation/Environment";
-import { useSectionsExperiment } from "../builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "../builder/useSectionsNamingExperiment";
 import { NavigationItem } from "./NavigationItem";
 import { SliceMachineVersion } from "./SliceMachineVersion";
 import { UpdateInfo } from "./UpdateInfo";
@@ -30,7 +30,7 @@ export function Navigation() {
   const [isSliceLibraryDialogOpen, setIsSliceLibraryDialogOpen] =
     useState(false);
   const { masterSliceLibrary } = useMarketingContent();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
 
   interface CustomTypeNavigationItemProps {
     type: "page" | "custom";

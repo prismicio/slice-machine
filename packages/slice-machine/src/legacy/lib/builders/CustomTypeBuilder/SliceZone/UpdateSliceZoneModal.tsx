@@ -1,7 +1,7 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { Text } from "theme-ui";
 
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
@@ -24,7 +24,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
   onSubmit,
   availableSlices,
 }) => {
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
 
   return (
     <ModalFormCard

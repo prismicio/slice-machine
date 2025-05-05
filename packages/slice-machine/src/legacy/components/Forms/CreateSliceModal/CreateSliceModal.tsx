@@ -4,7 +4,7 @@ import Select from "react-select";
 import { Box, Label } from "theme-ui";
 
 import { getState } from "@/apiClient";
-import { useSectionsExperiment } from "@/features/builder/useSectionsExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { createSlice } from "@/features/slices/actions/createSlice";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
@@ -37,7 +37,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
   const { syncChanges } = useAutoSync();
   const { completeStep } = useOnboarding();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;

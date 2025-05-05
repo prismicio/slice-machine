@@ -23,9 +23,9 @@ import { toast } from "react-toastify";
 import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
 import {
-  useSectionsExperiment,
-  UseSectionsExperimentReturnType,
-} from "@/features/builder/useSectionsExperiment";
+  useSectionsNamingExperiment,
+  useSectionsNamingExperimentReturnType,
+} from "@/features/builder/useSectionsNamingExperiment";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
@@ -57,7 +57,7 @@ export function CreateSliceFromImageModal(
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
@@ -297,7 +297,7 @@ function UploadBlankSlate(props: {
   droppingFiles?: boolean;
   onFilesSelected: (files: File[]) => void;
 }) {
-  const sectionsExperiment = useSectionsExperiment();
+  const sectionsExperiment = useSectionsNamingExperiment();
   const { droppingFiles = false, onFilesSelected } = props;
 
   return (
@@ -473,7 +473,7 @@ const getSubmitButtonLabel = ({
   sectionsExperiment,
 }: {
   location: "custom_type" | "page_type" | "slices";
-  sectionsExperiment: UseSectionsExperimentReturnType;
+  sectionsExperiment: useSectionsNamingExperimentReturnType;
 }) => {
   switch (location) {
     case "custom_type":
