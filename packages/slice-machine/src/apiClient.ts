@@ -73,8 +73,8 @@ export const updateCustomType = async (args: {
   customType: CustomType;
   updateMeta?: {
     fieldIdChanged?: {
-      previousPath?: string[];
-      newPath?: string[];
+      previousPath: string[];
+      newPath: string[];
     };
   };
 }): ReturnType<
