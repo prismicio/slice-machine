@@ -24,7 +24,7 @@ import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
 import {
   useSectionsNamingExperiment,
-  useSectionsNamingExperimentReturnType,
+  UseSectionsNamingExperimentReturnType,
 } from "@/features/builder/useSectionsNamingExperiment";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
@@ -474,7 +474,7 @@ const getSubmitButtonLabel = ({
   sectionsNamingExperiment,
 }: {
   location: "custom_type" | "page_type" | "slices";
-  sectionsNamingExperiment: useSectionsNamingExperimentReturnType;
+  sectionsNamingExperiment: UseSectionsNamingExperimentReturnType;
 }) => {
   switch (location) {
     case "custom_type":

@@ -1,11 +1,11 @@
 import { BackgroundIcon } from "@prismicio/editor-ui";
 
-import { useSectionsNamingExperimentReturnType } from "@/features/builder/useSectionsNamingExperiment";
+import { UseSectionsNamingExperimentReturnType } from "@/features/builder/useSectionsNamingExperiment";
 import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 type SliceCreationOptionArgs = {
   menuType: "ActionList" | "Dropdown";
-  sectionsNamingExperiment: useSectionsNamingExperimentReturnType;
+  sectionsNamingExperiment: UseSectionsNamingExperimentReturnType;
 };
 
 export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
