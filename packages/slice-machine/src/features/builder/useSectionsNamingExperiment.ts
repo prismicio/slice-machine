@@ -1,4 +1,4 @@
-// import { useExperimentVariant } from "@/hooks/useExperimentVariant";
+import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 
 export type UseSectionsNamingExperimentReturnType = {
   eligible: boolean;
@@ -6,9 +6,8 @@ export type UseSectionsNamingExperimentReturnType = {
 };
 
 export function useSectionsNamingExperiment(): UseSectionsNamingExperimentReturnType {
-  // const variant = useExperimentVariant("slicemachine-sections");
-  // return variant?.value === "on"
-  const eligible = false;
+  const variant = useExperimentVariant("section_greater_than_slice");
+  const eligible = variant?.value === "treatment";
   return {
     eligible,
     value: eligible ? "section" : "slice",
