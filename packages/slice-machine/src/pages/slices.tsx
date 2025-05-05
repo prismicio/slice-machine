@@ -181,7 +181,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                   >
                     <EmptyState
                       title={`What are ${pluralize(
-                        capitalizeFirstLetter(sectionsNamingExperiment.value),
+                        sectionsNamingExperiment.value,
                       )}?`}
                       onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
@@ -201,12 +201,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                             sectionsNamingExperiment.value,
                           )}{" "}
                           Zone" that allows content creators to add, edit, and
-                          rearrange{" "}
-                          {pluralize(
-                            capitalizeFirstLetter(
-                              sectionsNamingExperiment.value,
-                            ),
-                          )}{" "}
+                          rearrange {pluralize(sectionsNamingExperiment.value)}{" "}
                           to compose dynamic layouts for any page design.{" "}
                           <Link
                             target={"_blank"}
@@ -257,9 +252,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                               {sectionsNamingExperiment.eligible &&
                               sortedLibraries.length === 1
                                 ? `Your ${pluralize(
-                                    capitalizeFirstLetter(
-                                      sectionsNamingExperiment.value,
-                                    ),
+                                    sectionsNamingExperiment.value,
                                   )}`
                                 : name}
                             </Text>

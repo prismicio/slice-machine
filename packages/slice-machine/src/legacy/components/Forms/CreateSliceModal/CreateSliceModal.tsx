@@ -92,9 +92,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
             label={`${capitalizeFirstLetter(
               sectionsNamingExperiment.value,
             )} name`}
-            placeholder={`Pascalised ${capitalizeFirstLetter(
-              sectionsNamingExperiment.value,
-            )} API ID (e.g. TextBlock)`}
+            placeholder={`Pascalised ${sectionsNamingExperiment.value} API ID (e.g. TextBlock)`}
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}
             testId="slice-name-input"

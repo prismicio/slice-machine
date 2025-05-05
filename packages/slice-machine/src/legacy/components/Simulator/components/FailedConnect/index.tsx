@@ -3,7 +3,6 @@ import { Image, Link, Text } from "theme-ui";
 
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { Button } from "@/legacy/components/Button";
-import { capitalizeFirstLetter } from "@/utils/textConversion";
 
 import FullPage from "../FullPage";
 
@@ -22,8 +21,7 @@ const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => {
           fontWeight: "600",
         }}
       >
-        Slice Machine can't render your{" "}
-        {capitalizeFirstLetter(sectionsNamingExperiment.value)}
+        Slice Machine can't render your {sectionsNamingExperiment.value}
       </Text>
       <Text
         sx={{

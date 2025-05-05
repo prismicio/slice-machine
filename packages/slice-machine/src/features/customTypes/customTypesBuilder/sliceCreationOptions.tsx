@@ -1,7 +1,7 @@
 import { BackgroundIcon } from "@prismicio/editor-ui";
 
 import { UseSectionsNamingExperimentReturnType } from "@/features/builder/useSectionsNamingExperiment";
-import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
+import { pluralize } from "@/utils/textConversion";
 
 type SliceCreationOptionArgs = {
   menuType: "ActionList" | "Dropdown";
@@ -24,9 +24,7 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
         />
       ),
       title: "Generate from image",
-      description: `Build a ${capitalizeFirstLetter(
-        sectionsNamingExperiment.value,
-      )} based on your design image.`,
+      description: `Build a ${sectionsNamingExperiment.value} based on your design image.`,
     },
     fromScratch: {
       BackgroundIcon: (
@@ -40,9 +38,7 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
         />
       ),
       title: "Start from scratch",
-      description: `Build a custom ${capitalizeFirstLetter(
-        sectionsNamingExperiment.value,
-      )} your way.`,
+      description: `Build a custom ${sectionsNamingExperiment.value} your way.`,
     },
     fromTemplate: {
       BackgroundIcon: (
@@ -69,11 +65,9 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
           radius={6}
         />
       ),
-      title: `Reuse an existing ${capitalizeFirstLetter(
-        sectionsNamingExperiment.value,
-      )}`,
+      title: `Reuse an existing ${sectionsNamingExperiment.value}`,
       description: `Select from your created ${pluralize(
-        capitalizeFirstLetter(sectionsNamingExperiment.value),
+        sectionsNamingExperiment.value,
       )}`,
     },
   };
