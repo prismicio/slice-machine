@@ -8,7 +8,7 @@ export type useSectionsNamingExperimentReturnType = {
 export function useSectionsNamingExperiment(): useSectionsNamingExperimentReturnType {
   // const variant = useExperimentVariant("slicemachine-sections");
   // return variant?.value === "on"
-  const eligible = true;
+  const eligible = false;
   return {
     eligible,
     value: eligible ? "section" : "slice",
