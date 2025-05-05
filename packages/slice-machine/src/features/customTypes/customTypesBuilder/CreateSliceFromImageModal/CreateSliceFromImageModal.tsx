@@ -30,6 +30,7 @@ import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { pluralize } from "@/utils/textConversion";
 
 import { Slice, SliceCard } from "./SliceCard";
 
@@ -57,7 +58,7 @@ export function CreateSliceFromImageModal(
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
@@ -243,8 +244,8 @@ export function CreateSliceFromImageModal(
       <DialogHeader title="Generate from image" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
-          Upload images to generate {sectionsExperiment.plural.lowercase} with
-          AI
+          Upload images to generate {pluralize(sectionsNamingExperiment.value)}{" "}
+          with AI
         </DialogDescription>
         {slices.length === 0 ? (
           <Box padding={16} height="100%">
@@ -284,7 +285,7 @@ export function CreateSliceFromImageModal(
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            {getSubmitButtonLabel({ location, sectionsExperiment })} (
+            {getSubmitButtonLabel({ location, sectionsNamingExperiment })} (
             {readySlices.length})
           </DialogActionButton>
         </DialogActions>
@@ -297,7 +298,7 @@ function UploadBlankSlate(props: {
   droppingFiles?: boolean;
   onFilesSelected: (files: File[]) => void;
 }) {
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const { droppingFiles = false, onFilesSelected } = props;
 
   return (
@@ -319,8 +320,8 @@ function UploadBlankSlate(props: {
         />
         <BlankSlateTitle>Upload your design images.</BlankSlateTitle>
         <BlankSlateDescription>
-          Once uploaded, you can generate {sectionsExperiment.plural.lowercase}{" "}
-          automatically using AI.
+          Once uploaded, you can generate{" "}
+          {pluralize(sectionsNamingExperiment.value)} automatically using AI.
         </BlankSlateDescription>
         <BlankSlateActions>
           <FileUploadButton
@@ -470,10 +471,10 @@ async function addSlices(newSlices: NewSlice[]) {
 
 const getSubmitButtonLabel = ({
   location,
-  sectionsExperiment,
+  sectionsNamingExperiment,
 }: {
   location: "custom_type" | "page_type" | "slices";
-  sectionsExperiment: useSectionsNamingExperimentReturnType;
+  sectionsNamingExperiment: useSectionsNamingExperimentReturnType;
 }) => {
   switch (location) {
     case "custom_type":
@@ -481,6 +482,6 @@ const getSubmitButtonLabel = ({
     case "page_type":
       return "Add to page";
     case "slices":
-      return `Add to ${sectionsExperiment.plural.lowercase}`;
+      return `Add to ${pluralize(sectionsNamingExperiment.value)}`;
   }
 };

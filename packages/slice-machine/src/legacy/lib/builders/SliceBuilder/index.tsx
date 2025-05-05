@@ -15,6 +15,7 @@ import {
   AppLayoutHeader,
 } from "@/legacy/components/AppLayout";
 import SimulatorButton from "@/legacy/lib/builders/SliceBuilder/SimulatorButton";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import FieldZones from "./FieldZones";
 import { VariationsList } from "./VariationsList";
@@ -22,7 +23,7 @@ import { VariationsList } from "./VariationsList";
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
   const horizontalScroll = useMediaQuery({ max: "large" });
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   const contentDisplayProps = horizontalScroll
     ? { gridTemplateRows: "304px 1fr" }
@@ -33,7 +34,9 @@ export const SliceBuilder: FC = () => {
       <AppLayoutHeader>
         <AppLayoutBackButton url="/slices" />
         <AppLayoutBreadcrumb>
-          <BreadcrumbItem>{sectionsExperiment.plural.uppercase}</BreadcrumbItem>
+          <BreadcrumbItem>
+            {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))}
+          </BreadcrumbItem>
           <BreadcrumbItem active>{slice.model.name}</BreadcrumbItem>
         </AppLayoutBreadcrumb>
         <AppLayoutActions>

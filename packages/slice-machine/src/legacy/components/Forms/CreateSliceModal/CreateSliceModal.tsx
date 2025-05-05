@@ -12,6 +12,7 @@ import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { capitalizeFirstLetter } from "@/utils/textConversion";
 
 import { InputBox } from "../components/InputBox";
 import { validateSliceModalValues } from "../formsValidator";
@@ -37,7 +38,7 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
   const { syncChanges } = useAutoSync();
   const { completeStep } = useOnboarding();
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
@@ -81,15 +82,19 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         validateSliceModalValues(values, localLibraries, remoteSlices)
       }
       content={{
-        title: `Create a new ${sectionsExperiment.singular.lowercase}`,
+        title: `Create a new ${sectionsNamingExperiment.value}`,
       }}
     >
       {({ touched, values, setFieldValue, errors }) => (
         <Box>
           <InputBox
             name="sliceName"
-            label={`${sectionsExperiment.singular.uppercase} name`}
-            placeholder={`Pascalised ${sectionsExperiment.singular.uppercase} API ID (e.g. TextBlock)`}
+            label={`${capitalizeFirstLetter(
+              sectionsNamingExperiment.value,
+            )} name`}
+            placeholder={`Pascalised ${capitalizeFirstLetter(
+              sectionsNamingExperiment.value,
+            )} API ID (e.g. TextBlock)`}
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}
             testId="slice-name-input"

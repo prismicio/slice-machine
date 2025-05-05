@@ -2,28 +2,15 @@
 
 export type useSectionsNamingExperimentReturnType = {
   eligible: boolean;
-  singular: {
-    uppercase: string;
-    lowercase: string;
-  };
-  plural: {
-    uppercase: string;
-    lowercase: string;
-  };
+  value: string;
 };
 
 export function useSectionsNamingExperiment(): useSectionsNamingExperimentReturnType {
   // const variant = useExperimentVariant("slicemachine-sections");
   // return variant?.value === "on"
-  return false
-    ? {
-        eligible: true,
-        singular: { uppercase: "Section", lowercase: "section" },
-        plural: { uppercase: "Sections", lowercase: "sections" },
-      }
-    : {
-        eligible: false,
-        singular: { uppercase: "Slice", lowercase: "slice" },
-        plural: { uppercase: "Slices", lowercase: "slices" },
-      };
+  const eligible = true;
+  return {
+    eligible,
+    value: eligible ? "section" : "slice",
+  };
 }

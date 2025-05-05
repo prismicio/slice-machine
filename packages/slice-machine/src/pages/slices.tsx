@@ -44,16 +44,17 @@ import { managerClient } from "@/managerClient";
 import { getLibraries, getRemoteSlices } from "@/modules/slices";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "Dropdown",
-    sectionsExperiment,
+    sectionsNamingExperiment,
   });
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
@@ -112,13 +113,16 @@ const SlicesIndex: React.FunctionComponent = () => {
   return (
     <>
       <Head>
-        <title>{sectionsExperiment.plural.uppercase} - Slice Machine</title>
+        <title>
+          {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))} -
+          Slice Machine
+        </title>
       </Head>
       <AppLayout>
         <AppLayoutHeader>
           <AppLayoutBreadcrumb>
             <BreadcrumbItem>
-              {sectionsExperiment.plural.uppercase}
+              {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))}
             </BreadcrumbItem>
           </AppLayoutBreadcrumb>
           {localLibraries?.length !== 0 && sliceCount !== 0 ? (
@@ -176,7 +180,9 @@ const SlicesIndex: React.FunctionComponent = () => {
                     }}
                   >
                     <EmptyState
-                      title={`What are ${sectionsExperiment.plural.uppercase}?`}
+                      title={`What are ${pluralize(
+                        capitalizeFirstLetter(sectionsNamingExperiment.value),
+                      )}?`}
                       onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
                       }}
@@ -184,12 +190,24 @@ const SlicesIndex: React.FunctionComponent = () => {
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                       documentationComponent={
                         <>
-                          {sectionsExperiment.plural.uppercase} are sections of
-                          your website. Prismic documents contain a dynamic "
-                          {sectionsExperiment.singular.uppercase} Zone" that
-                          allows content creators to add, edit, and rearrange{" "}
-                          {sectionsExperiment.plural.uppercase} to compose
-                          dynamic layouts for any page design.{" "}
+                          {pluralize(
+                            capitalizeFirstLetter(
+                              sectionsNamingExperiment.value,
+                            ),
+                          )}{" "}
+                          are sections of your website. Prismic documents
+                          contain a dynamic "
+                          {capitalizeFirstLetter(
+                            sectionsNamingExperiment.value,
+                          )}{" "}
+                          Zone" that allows content creators to add, edit, and
+                          rearrange{" "}
+                          {pluralize(
+                            capitalizeFirstLetter(
+                              sectionsNamingExperiment.value,
+                            ),
+                          )}{" "}
+                          to compose dynamic layouts for any page design.{" "}
                           <Link
                             target={"_blank"}
                             href={
@@ -236,9 +254,13 @@ const SlicesIndex: React.FunctionComponent = () => {
                             }}
                           >
                             <Text>
-                              {sectionsExperiment.eligible &&
+                              {sectionsNamingExperiment.eligible &&
                               sortedLibraries.length === 1
-                                ? `Your ${sectionsExperiment.plural.uppercase}`
+                                ? `Your ${pluralize(
+                                    capitalizeFirstLetter(
+                                      sectionsNamingExperiment.value,
+                                    ),
+                                  )}`
                                 : name}
                             </Text>
                           </Flex>
@@ -341,7 +363,11 @@ const SlicesIndex: React.FunctionComponent = () => {
             onSuccess={({ library }) => {
               toast.success(
                 <ToastMessageWithPath
-                  message={`${sectionsExperiment.singular.uppercase}(s) added to ${sectionsExperiment.singular.lowercase} zone and created at: `}
+                  message={`${capitalizeFirstLetter(
+                    sectionsNamingExperiment.value,
+                  )}(s) added to ${
+                    sectionsNamingExperiment.value
+                  } zone and created at: `}
                   path={library}
                 />,
               );

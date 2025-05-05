@@ -42,6 +42,7 @@ import {
 } from "@/modules/slices";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import type { SliceMachineStoreType } from "@/redux/type";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";
@@ -134,10 +135,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
   const { openLoginModal } = useSliceMachineActions();
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "Dropdown",
-    sectionsExperiment,
+    sectionsNamingExperiment,
   });
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
@@ -300,7 +301,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           ) : undefined
         }
       >
-        {sectionsExperiment.plural.uppercase}
+        {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))}
       </ListHeader>
 
       {sliceZone ? (
@@ -372,7 +373,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             setCustomType(CustomTypes.fromSM(newCustomType), () => {
               toast.success(
                 <ToastMessageWithPath
-                  message={`${sectionsExperiment.singular.uppercase} template(s) added to ${sectionsExperiment.singular.lowercase} zone and created at: `}
+                  message={`${capitalizeFirstLetter(
+                    sectionsNamingExperiment.value,
+                  )} template(s) added to ${
+                    sectionsNamingExperiment.value
+                  } zone and created at: `}
                   path={`${localLibraries[0].name}/`}
                 />,
               );
@@ -405,7 +410,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             setCustomType(CustomTypes.fromSM(newCustomType), () => {
               toast.success(
                 <ToastMessageWithPath
-                  message={`New ${sectionsExperiment.singular.lowercase} added to ${sectionsExperiment.singular.lowercase} zone and created at: `}
+                  message={`New ${sectionsNamingExperiment.value} added to ${sectionsNamingExperiment.value} zone and created at: `}
                   path={`${localLibraries[0].name}/`}
                 />,
               );
@@ -430,7 +435,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           setCustomType(CustomTypes.fromSM(newCustomType), () => {
             toast.success(
               <ToastMessageWithPath
-                message={`${sectionsExperiment.singular.uppercase}(s) added to ${sectionsExperiment.singular.lowercase} zone and created at: `}
+                message={`${capitalizeFirstLetter(
+                  sectionsNamingExperiment.value,
+                )}(s) added to ${
+                  sectionsNamingExperiment.value
+                } zone and created at: `}
                 path={library}
               />,
             );

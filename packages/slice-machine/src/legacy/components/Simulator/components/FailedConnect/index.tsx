@@ -3,11 +3,12 @@ import { Image, Link, Text } from "theme-ui";
 
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { Button } from "@/legacy/components/Button";
+import { capitalizeFirstLetter } from "@/utils/textConversion";
 
 import FullPage from "../FullPage";
 
 const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => {
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   return (
     <FullPage>
@@ -21,7 +22,8 @@ const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => {
           fontWeight: "600",
         }}
       >
-        Slice Machine can't render your {sectionsExperiment.singular.uppercase}
+        Slice Machine can't render your{" "}
+        {capitalizeFirstLetter(sectionsNamingExperiment.value)}
       </Text>
       <Text
         sx={{

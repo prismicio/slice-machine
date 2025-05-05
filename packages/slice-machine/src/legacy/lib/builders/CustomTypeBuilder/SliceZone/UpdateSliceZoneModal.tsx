@@ -4,6 +4,7 @@ import { Text } from "theme-ui";
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
+import { pluralize } from "@/utils/textConversion";
 
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
@@ -24,7 +25,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
   onSubmit,
   availableSlices,
 }) => {
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   return (
     <ModalFormCard
@@ -46,7 +47,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: `Select existing ${sectionsExperiment.plural.lowercase}`,
+        title: `Select existing ${pluralize(sectionsNamingExperiment.value)}`,
       }}
       testId="update-slices-modal"
       validate={(values) => {

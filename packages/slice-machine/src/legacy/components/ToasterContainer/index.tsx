@@ -8,6 +8,7 @@ import {
 } from "react-toastify";
 
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
+import { capitalizeFirstLetter } from "@/utils/textConversion";
 
 const getIconAccordingToasterType = ({
   type,
@@ -70,11 +71,13 @@ export const ToastMessageWithPath: React.FC<{
 export const SliceToastMessage: React.FC<{
   path: string;
 }> = (props) => {
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   return (
     <ToastMessageWithPath
-      message={`${sectionsExperiment.singular.uppercase} saved successfully at `}
+      message={`${capitalizeFirstLetter(
+        sectionsNamingExperiment.value,
+      )} saved successfully at `}
       {...props}
     />
   );

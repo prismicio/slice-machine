@@ -11,6 +11,7 @@ import { FC } from "react";
 
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { getSliceCreationOptions } from "./sliceCreationOptions";
 
@@ -32,10 +33,10 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   isSlicesTemplatesSupported,
 }) => {
   const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "ActionList",
-    sectionsExperiment,
+    sectionsNamingExperiment,
   });
 
   return (
@@ -47,13 +48,13 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
         size="large"
       />
       <BlankSlateTitle size="big">
-        Add {sectionsExperiment.plural.lowercase}
+        Add {pluralize(sectionsNamingExperiment.value)}
       </BlankSlateTitle>
       <BlankSlateDescription>
-        {sectionsExperiment.plural.uppercase} are website sections that you can
-        reuse on different pages with different content. Each on different pages
-        with different content. Each {sectionsExperiment.singular.lowercase} has
-        its own component in your code.
+        {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))} are
+        website sections that you can reuse on different pages with different
+        content. Each on different pages with different content. Each{" "}
+        {sectionsNamingExperiment.value} has its own component in your code.
       </BlankSlateDescription>
       <BlankSlateActions>
         <ActionList>

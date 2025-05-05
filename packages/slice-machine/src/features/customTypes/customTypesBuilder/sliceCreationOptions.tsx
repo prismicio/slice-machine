@@ -1,14 +1,15 @@
 import { BackgroundIcon } from "@prismicio/editor-ui";
 
 import { useSectionsNamingExperimentReturnType } from "@/features/builder/useSectionsNamingExperiment";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 type SliceCreationOptionArgs = {
   menuType: "ActionList" | "Dropdown";
-  sectionsExperiment: useSectionsNamingExperimentReturnType;
+  sectionsNamingExperiment: useSectionsNamingExperimentReturnType;
 };
 
 export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
-  const { menuType, sectionsExperiment } = args;
+  const { menuType, sectionsNamingExperiment } = args;
 
   return {
     fromImage: {
@@ -23,7 +24,9 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
         />
       ),
       title: "Generate from image",
-      description: `Build a ${sectionsExperiment.singular.uppercase} based on your design image.`,
+      description: `Build a ${capitalizeFirstLetter(
+        sectionsNamingExperiment.value,
+      )} based on your design image.`,
     },
     fromScratch: {
       BackgroundIcon: (
@@ -37,7 +40,9 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
         />
       ),
       title: "Start from scratch",
-      description: `Build a custom ${sectionsExperiment.singular.uppercase} your way.`,
+      description: `Build a custom ${capitalizeFirstLetter(
+        sectionsNamingExperiment.value,
+      )} your way.`,
     },
     fromTemplate: {
       BackgroundIcon: (
@@ -64,8 +69,12 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
           radius={6}
         />
       ),
-      title: `Reuse an existing ${sectionsExperiment.singular.uppercase}`,
-      description: `Select from your created ${sectionsExperiment.plural.uppercase}`,
+      title: `Reuse an existing ${capitalizeFirstLetter(
+        sectionsNamingExperiment.value,
+      )}`,
+      description: `Select from your created ${pluralize(
+        capitalizeFirstLetter(sectionsNamingExperiment.value),
+      )}`,
     },
   };
 };

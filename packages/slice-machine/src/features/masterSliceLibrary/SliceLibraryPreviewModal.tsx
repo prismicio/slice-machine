@@ -10,6 +10,7 @@ import {
 
 import { telemetry } from "@/apiClient";
 import { useMarketingContent } from "@/hooks/useMarketingContent";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { useSectionsNamingExperiment } from "../builder/useSectionsNamingExperiment";
 
@@ -22,7 +23,7 @@ export const MasterSliceLibraryPreviewModal: React.FC<
   MasterSliceLibraryPreviewModalProps
 > = ({ isOpen, onClose }) => {
   const { masterSliceLibrary } = useMarketingContent();
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   if (!masterSliceLibrary) return null;
 
@@ -42,21 +43,24 @@ export const MasterSliceLibraryPreviewModal: React.FC<
       onOpenChange={(open) => !open && onClose()}
     >
       <DialogHeader
-        title={`Master ${sectionsExperiment.singular.uppercase} Library Generator (BETA)`}
+        title={`Master ${capitalizeFirstLetter(
+          sectionsNamingExperiment.value,
+        )} Library Generator (BETA)`}
       />
       <DialogContent>
         <Box flexDirection="column" padding={16} gap={16}>
           <Text variant="h2">
-            Create a Master {sectionsExperiment.singular.uppercase} Library
+            Create a Master{" "}
+            {capitalizeFirstLetter(sectionsNamingExperiment.value)} Library
           </Text>
           <Video src={previewVideoUrl} sizing="contain" autoPlay loop />
           <Text>
             This is an{" "}
             <a href={exampleLinkUrl} target="_blank">
-              example {sectionsExperiment.singular.lowercase} library
+              example {sectionsNamingExperiment.value} library
             </a>
             , which provides you with an overview of all your{" "}
-            {sectionsExperiment.plural.lowercase} in one place. Build it
+            {pluralize(sectionsNamingExperiment.value)} in one place. Build it
             yourself in a few steps.
           </Text>
           <Button size="large" onClick={onGetTheCodeButtonClick}>

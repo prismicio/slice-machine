@@ -16,6 +16,7 @@ import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { LocalOrRemoteCustomType } from "@/legacy/lib/models/common/ModelData";
 import { ModelStatus } from "@/legacy/lib/models/common/ModelStatus";
 import { AuthStatus } from "@/modules/userContext/types";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { DevCollaborationExperiment } from "./DevCollaborationExperiment";
 
@@ -35,7 +36,7 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
   isOnline,
 }) => {
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
@@ -71,7 +72,9 @@ export const ChangesItems: React.FC<ChangesItemsProps> = ({
                 <ChangesSectionHeader>
                   <Box>
                     <Text variant="h5">
-                      {sectionsExperiment.plural.uppercase}
+                      {pluralize(
+                        capitalizeFirstLetter(sectionsNamingExperiment.value),
+                      )}
                     </Text>
                     <Text variant="h5" sx={{ marginLeft: 8 }}>
                       {unSyncedSlices.length}

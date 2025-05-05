@@ -12,10 +12,10 @@ type ZoneEmptyStateProps = {
 };
 
 export const ZoneEmptyState: FC<ZoneEmptyStateProps> = (props) => {
-  const sectionsExperiment = useSectionsNamingExperiment();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const modifiedZoneType =
     props.zoneType === "slice"
-      ? sectionsExperiment.singular.lowercase
+      ? sectionsNamingExperiment.value
       : props.zoneType;
 
   const { heading = `Your ${modifiedZoneType} has no fields yet`, action } =
