@@ -22,8 +22,8 @@ type SetCustomTypeArgs = {
   onSaveCallback?: () => void;
   updateMeta?: {
     fieldIdChanged?: {
-      previousPath?: string[];
-      newPath?: string[];
+      previousPath: string[];
+      newPath: string[];
     };
   };
 };
