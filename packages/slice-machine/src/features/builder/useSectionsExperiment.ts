@@ -1,6 +1,6 @@
 // import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 
-export type useSectionsExperimentReturnType = {
+export type UseSectionsExperimentReturnType = {
   eligible: boolean;
   singular: {
     uppercase: string;
@@ -12,7 +12,7 @@ export type useSectionsExperimentReturnType = {
   };
 };
 
-export function useSectionsExperiment(): useSectionsExperimentReturnType {
+export function useSectionsExperiment(): UseSectionsExperimentReturnType {
   // const variant = useExperimentVariant("slicemachine-sections");
   // return variant?.value === "on"
   return false

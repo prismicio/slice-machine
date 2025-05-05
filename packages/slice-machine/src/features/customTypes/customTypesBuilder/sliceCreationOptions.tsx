@@ -1,10 +1,10 @@
 import { BackgroundIcon } from "@prismicio/editor-ui";
 
-import { useSectionsExperimentReturnType } from "@/features/builder/useSectionsExperiment";
+import { UseSectionsExperimentReturnType } from "@/features/builder/useSectionsExperiment";
 
 type SliceCreationOptionArgs = {
   menuType: "ActionList" | "Dropdown";
-  sectionsExperiment: useSectionsExperimentReturnType;
+  sectionsExperiment: UseSectionsExperimentReturnType;
 };
 
 export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
