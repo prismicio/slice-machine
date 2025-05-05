@@ -236,7 +236,7 @@ export class CustomTypesManager extends BaseManager {
 					});
 
 					const hookResult = await this.sliceMachinePluginRunner.callHook(
-						"custom-type:create",
+						"custom-type:update",
 						{ model: updatedCustomTypeModel },
 					);
 
