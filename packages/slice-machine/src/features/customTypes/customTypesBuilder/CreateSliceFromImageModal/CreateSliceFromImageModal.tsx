@@ -17,32 +17,48 @@ import {
   ScrollArea,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
+import { getState, telemetry } from "@/apiClient";
+import { addAiFeedback } from "@/features/aiFeedback";
+import {
+  useSectionsNamingExperiment,
+  UseSectionsNamingExperimentReturnType,
+} from "@/features/builder/useSectionsNamingExperiment";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
+import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
+import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { pluralize } from "@/utils/textConversion";
 
 import { Slice, SliceCard } from "./SliceCard";
 
 const IMAGE_UPLOAD_LIMIT = 10;
 
-interface GenerateSliceWithAiModalProps {
+interface CreateSliceFromImageModalProps {
   open: boolean;
+  location: "custom_type" | "page_type" | "slices";
   onSuccess: (args: {
     slices: {
       model: SharedSlice;
       langSmithUrl?: string;
     }[];
     library: string;
-  }) => Promise<void>;
+  }) => void;
   onClose: () => void;
 }
 
-export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
-  const { open, onSuccess, onClose } = props;
+export function CreateSliceFromImageModal(
+  props: CreateSliceFromImageModalProps,
+) {
+  const { open, location, onSuccess, onClose } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
-
+  const { syncChanges } = useAutoSync();
+  const { createSliceSuccess } = useSliceMachineActions();
+  const { completeStep } = useOnboarding();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
@@ -59,8 +75,8 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
 
   const onOpenChange = (open: boolean) => {
     if (open || isCreatingSlices) return;
-    id.current = crypto.randomUUID();
     onClose();
+    id.current = crypto.randomUUID();
     setSlices([]);
   };
 
@@ -113,6 +129,8 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     );
   };
 
+  const existingSlices = useExistingSlices({ open });
+
   const inferSlice = (args: { index: number; imageUrl: string }) => {
     const { index, imageUrl } = args;
     const currentId = id.current;
@@ -129,16 +147,24 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     managerClient.customTypes.inferSlice({ imageUrl }).then(
       ({ slice, langSmithUrl }) => {
         if (currentId !== id.current) return;
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
-            ...prevSlice,
-            status: "success",
-            thumbnailUrl: imageUrl,
-            model: slice,
-            langSmithUrl,
-          }),
-        });
+
+        setSlices((prevSlices) =>
+          prevSlices.map((prevSlice, i) =>
+            i === index
+              ? {
+                  ...prevSlice,
+                  status: "success",
+                  thumbnailUrl: imageUrl,
+                  model: sliceWithoutConflicts({
+                    existingSlices: existingSlices.current,
+                    newSlices: prevSlices,
+                    slice,
+                  }),
+                  langSmithUrl,
+                }
+              : prevSlice,
+          ),
+        );
       },
       () => {
         if (currentId !== id.current) return;
@@ -167,10 +193,38 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
     addSlices(newSlices)
       .then(async ({ slices, library }) => {
         if (currentId !== id.current) return;
-        id.current = crypto.randomUUID();
-        await onSuccess({ slices, library });
+
+        const serverState = await getState();
+        createSliceSuccess(serverState.libraries);
+        syncChanges();
+
+        onSuccess({ slices, library });
+
         setIsCreatingSlices(false);
+        id.current = crypto.randomUUID();
         setSlices([]);
+
+        void completeStep("createSlice");
+
+        for (const { model, langSmithUrl } of slices) {
+          void telemetry.track({
+            event: "slice:created",
+            id: model.id,
+            name: model.name,
+            library,
+            location,
+            mode: "ai",
+            langSmithUrl,
+          });
+
+          addAiFeedback({
+            type: "model",
+            library,
+            sliceId: model.id,
+            variationId: model.variations[0].id,
+            langSmithUrl,
+          });
+        }
       })
       .catch(() => {
         if (currentId !== id.current) return;
@@ -190,7 +244,8 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
       <DialogHeader title="Generate from image" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
-          Upload images to generate slices with AI
+          Upload images to generate {pluralize(sectionsNamingExperiment.value)}{" "}
+          with AI
         </DialogDescription>
         {slices.length === 0 ? (
           <Box padding={16} height="100%">
@@ -230,7 +285,8 @@ export function GenerateSliceWithAiModal(props: GenerateSliceWithAiModalProps) {
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            Add to page ({readySlices.length})
+            {getSubmitButtonLabel({ location, sectionsNamingExperiment })} (
+            {readySlices.length})
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
@@ -242,6 +298,7 @@ function UploadBlankSlate(props: {
   droppingFiles?: boolean;
   onFilesSelected: (files: File[]) => void;
 }) {
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const { droppingFiles = false, onFilesSelected } = props;
 
   return (
@@ -263,7 +320,8 @@ function UploadBlankSlate(props: {
         />
         <BlankSlateTitle>Upload your design images.</BlankSlateTitle>
         <BlankSlateDescription>
-          Once uploaded, you can generate slices automatically using AI.
+          Once uploaded, you can generate{" "}
+          {pluralize(sectionsNamingExperiment.value)} automatically using AI.
         </BlankSlateDescription>
         <BlankSlateActions>
           <FileUploadButton
@@ -302,6 +360,77 @@ type NewSlice = {
   langSmithUrl?: string;
 };
 
+/**
+ * Keeps track of the existing slices in the project.
+ * Re-fetches them when the modal is opened.
+ */
+function useExistingSlices({ open }: { open: boolean }) {
+  const ref = useRef<SharedSlice[]>([]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    ref.current = [];
+    managerClient.slices
+      .readAllSlices()
+      .then((slices) => {
+        ref.current = slices.models.map(({ model }) => model);
+      })
+      .catch(() => null);
+  }, [open]);
+
+  return ref;
+}
+
+/**
+ * If needed, assigns new ids and names to avoid conflicts with existing slices.
+ * Names are compared case-insensitively to avoid conflicts
+ * between folder names with different casing.
+ */
+function sliceWithoutConflicts({
+  existingSlices,
+  newSlices,
+  slice,
+}: {
+  existingSlices: SharedSlice[];
+  newSlices: Slice[];
+  slice: SharedSlice;
+}): SharedSlice {
+  const existingIds = new Set<string>();
+  const existingNames = new Set<string>();
+
+  for (const { id, name } of existingSlices) {
+    existingIds.add(id);
+    existingNames.add(name.toLowerCase());
+  }
+
+  for (const slice of newSlices) {
+    if (slice.status !== "success") continue;
+    existingIds.add(slice.model.id);
+    existingNames.add(slice.model.name.toLowerCase());
+  }
+
+  let id = slice.id;
+  let counter = 2;
+  while (existingIds.has(id)) {
+    id = `${slice.id}_${counter}`;
+    counter++;
+  }
+
+  let name = slice.name;
+  counter = 2;
+  while (existingNames.has(name.toLowerCase())) {
+    name = `${slice.name}${counter}`;
+    counter++;
+  }
+
+  return {
+    ...slice,
+    id,
+    name,
+  };
+}
+
 async function addSlices(newSlices: NewSlice[]) {
   // use the first library
   const { libraries = [] } =
@@ -311,27 +440,48 @@ async function addSlices(newSlices: NewSlice[]) {
     throw new Error("No library found in the config.");
   }
 
-  // add the slices computing new ids/names if needed
-  const models = await managerClient.slices.addSlices({
-    library,
-    models: newSlices.map((slice) => slice.model),
-  });
+  for (const { model } of newSlices) {
+    const { errors } = await managerClient.slices.createSlice({
+      libraryID: library,
+      model,
+    });
+    if (errors.length) {
+      throw new Error(`Failed to create slice ${model.id}.`);
+    }
+  }
 
   // for each added slice, set the variation screenshot
   const slices = await Promise.all(
-    models.map(async (model, index) => {
+    newSlices.map(async ({ model, image, langSmithUrl }) => {
       await managerClient.slices.updateSliceScreenshot({
         libraryID: library,
         sliceID: model.id,
         variationID: model.variations[0].id,
-        data: newSlices[index].image,
+        data: image,
       });
       return {
         model,
-        langSmithUrl: newSlices[index].langSmithUrl,
+        langSmithUrl,
       };
     }),
   );
 
   return { library, slices };
 }
+
+const getSubmitButtonLabel = ({
+  location,
+  sectionsNamingExperiment,
+}: {
+  location: "custom_type" | "page_type" | "slices";
+  sectionsNamingExperiment: UseSectionsNamingExperimentReturnType;
+}) => {
+  switch (location) {
+    case "custom_type":
+      return "Add to type";
+    case "page_type":
+      return "Add to page";
+    case "slices":
+      return `Add to ${pluralize(sectionsNamingExperiment.value)}`;
+  }
+};

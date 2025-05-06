@@ -3,6 +3,7 @@ import { FC } from "react";
 import { Text } from "theme-ui";
 
 import { getState } from "@/apiClient";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { createSlicesTemplates } from "@/features/slicesTemplates/actions/createSlicesTemplates";
 import { SliceTemplate } from "@/features/slicesTemplates/useSlicesTemplates";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
@@ -11,6 +12,7 @@ import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { Slices } from "@/legacy/lib/models/common/Slice";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
+import { pluralize } from "@/utils/textConversion";
 
 import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
@@ -37,6 +39,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
   location,
 }) => {
   const { createSliceSuccess } = useSliceMachineActions();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   return (
     <ModalFormCard
@@ -80,7 +83,7 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: "Use template slices",
+        title: `Use template ${pluralize(sectionsNamingExperiment.value)}`,
       }}
       validate={(values) => {
         if (values.sliceKeys.length === 0) {

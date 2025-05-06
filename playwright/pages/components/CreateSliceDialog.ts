@@ -7,6 +7,7 @@ export class CreateSliceDialog extends Dialog {
   readonly createdMessageFromSliceZone: Locator;
   readonly nameInput: Locator;
   readonly sliceAlreadyExistMessage: Locator;
+  readonly sliceCreationErrorMessage: Locator;
 
   constructor(page: Page) {
     super(page, {
@@ -33,6 +34,10 @@ export class CreateSliceDialog extends Dialog {
     this.sliceAlreadyExistMessage = this.dialog.getByText(
       "Slice name is already taken.",
       { exact: true },
+    );
+    this.sliceCreationErrorMessage = page.getByText(
+      "An unexpected error happened while creating slice",
+      { exact: false },
     );
   }
 
@@ -63,5 +68,10 @@ export class CreateSliceDialog extends Dialog {
       await expect(this.createdMessageFromSliceZone).toBeVisible();
       await expect(this.createdMessageFromSliceZone).not.toBeVisible();
     }
+  }
+
+  async checkSliceCreationErrorMessage() {
+    await expect(this.sliceCreationErrorMessage).toBeVisible();
+    await expect(this.sliceCreationErrorMessage).not.toBeVisible();
   }
 }

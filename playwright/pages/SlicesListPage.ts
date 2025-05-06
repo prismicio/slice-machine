@@ -14,9 +14,11 @@ export class SlicesListPage extends SliceMachinePage {
   readonly path: string;
   readonly header: Locator;
   readonly breadcrumbLabel: Locator;
-  readonly createButton: Locator;
   readonly blankSlate: Locator;
   readonly blankSlateCreateAction: Locator;
+  readonly addSliceDropdown: Locator;
+  readonly addSliceDropdownCreateNewAction: Locator;
+  readonly addSliceDropdownFromImageAction: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -35,14 +37,18 @@ export class SlicesListPage extends SliceMachinePage {
     this.path = "/slices";
     this.header = page.getByRole("banner");
     this.breadcrumbLabel = this.breadcrumb.getByText("Slices", { exact: true });
-    this.createButton = this.header
-      .getByRole("button", { name: "Create one", exact: true })
-      .or(page.getByRole("button", { name: "Create", exact: true }));
     this.blankSlate = page.getByTestId("slices-table-blank-slate");
     this.blankSlateCreateAction = this.blankSlate.getByRole("button", {
       name: "Create one",
       exact: true,
     });
+    this.addSliceDropdown = this.header.getByTestId("add-new-slice-dropdown");
+    this.addSliceDropdownCreateNewAction = page
+      .getByRole("menu")
+      .getByText("Start from scratch", { exact: true });
+    this.addSliceDropdownFromImageAction = page
+      .getByRole("menu")
+      .getByText("Generate from image", { exact: true });
   }
 
   /**
@@ -67,10 +73,6 @@ export class SlicesListPage extends SliceMachinePage {
     // Click on slice name to make sure not to accidentally click
     // on a button that would trigger another action
     await this.getCard(name).getByText(name, { exact: true }).click();
-  }
-
-  async openCreateDialog() {
-    await this.createButton.first().click();
   }
 
   async openActionMenu(name: string, action: "Rename" | "Delete") {
