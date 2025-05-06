@@ -6181,24 +6181,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mocks@npm:2.12.0":
-  version: 2.12.0
-  resolution: "@prismicio/mocks@npm:2.12.0"
-  dependencies:
-    "@prismicio/api-renderer": ^6.4.0
-    "@prismicio/types-internal": ^3.8.0
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-    lorem-ipsum: ^2.0.4
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-    uuid: ^9.0.1
-  checksum: 62d39124de680581274f8fb56b8bcf924bb1bd1f4f0e94cff08972eded99babfb6b081e41de37ae9d7d4a2d0660ebb56d0e34dc80bc2cbb81acc3e1d555bd75c
-  languageName: node
-  linkType: hard
-
 "@prismicio/mocks@npm:2.13.0":
   version: 2.13.0
   resolution: "@prismicio/mocks@npm:2.13.0"
@@ -32146,7 +32128,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
-    "@prismicio/mocks": 2.12.0
+    "@prismicio/mocks": 2.13.0
     "@prismicio/types-internal": 3.10.0-alpha.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:*"
