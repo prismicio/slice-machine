@@ -89,8 +89,12 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type XCustomTypes = NonNullable<NonNullable<Link["config"]>["customtypes"]>;
-type XCustomType = NonNullable<XCustomTypes>[number];
+type CustomTypeUpdateMeta = {
+	previousPath: string[];
+	newPath: string[];
+};
+type CRCustomTypes = NonNullable<NonNullable<Link["config"]>["customtypes"]>;
+type CRCustomType = NonNullable<CRCustomTypes>[number];
 
 export class CustomTypesManager extends BaseManager {
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
@@ -177,80 +181,54 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	private processCustomType(args: {
-		customType: XCustomType;
-		oldPath: string[];
-		newPath: string[];
-	}): XCustomType {
-		const { customType, oldPath, newPath } = args;
+	private updateCRCustomType(
+		args: { customType: CRCustomType } & CustomTypeUpdateMeta,
+	): CRCustomType {
+		const { customType, previousPath, newPath } = args;
 		let level = 0;
 
-		console.log(
-			`Processing level ${level}...`,
-			JSON.stringify(customType, null, 2),
-		);
+		const previousId = previousPath[level];
+		const newId = newPath[level];
 
 		if (typeof customType === "string") {
-			if (customType === oldPath[level] && customType !== newPath[level]) {
-				console.log(
-					`Found STRING mismatch (level ${level}): ${customType} !== ${newPath[level]}, correcting to ${newPath[level]}`,
-				);
-
-				return newPath[level];
+			if (customType === previousId && customType !== newId) {
+				return newId; // update to new api id
 			}
 
 			return customType;
 		}
 
-		if (customType.id === oldPath[level] && customType.id !== newPath[level]) {
-			console.log(
-				`Found ID mismatch (level ${level}): ${customType.id} !== ${newPath[level]}, correcting to ${newPath[level]}`,
-			);
-
-			return { ...customType, id: newPath[level] };
+		if (customType.id === previousId && customType.id !== newId) {
+			return { ...customType, id: newId }; // update to new api id
 		}
 
-		const rootLevel = level;
+		level++;
 
 		if (customType.fields) {
 			return {
 				...customType,
 				fields: customType.fields.map((field) => {
-					level = rootLevel + 1;
-					if (typeof field === "string") {
-						console.log(
-							`Comparing ${field} with ${oldPath[level]}, changed to ${newPath[level]}`,
-							field === oldPath[level] && field !== newPath[level],
-						);
-						if (field === oldPath[level] && field !== newPath[level]) {
-							console.log(
-								`Found STRING mismatch (level ${level}): ${field} !== ${newPath[level]}, correcting to ${newPath[level]}`,
-							);
+					const previousId = previousPath[level];
+					const newId = newPath[level];
 
-							return newPath[level];
+					if (typeof field === "string") {
+						if (field === previousId && field !== newId) {
+							return newId; // update to new api id
 						}
 
 						return field;
 					}
 
-					console.log(
-						`Comparing ${field.id} with ${oldPath[level]}, changed to ${newPath[level]}`,
-						field.id === oldPath[level] && field.id !== newPath[level],
-					);
-					if (field.id === oldPath[level] && field.id !== newPath[level]) {
-						console.log(
-							`Found ID mismatch (level ${level}): ${field.id} !== ${newPath[level]}, correcting to ${newPath[level]}`,
-						);
-
-						return { ...field, id: newPath[level] };
+					if (field.id === previousId && field.id !== newId) {
+						return { ...field, id: newId }; // update to new api id
 					}
 
 					return {
 						...field,
-						customtypes: field.customtypes.map((field) => {
-							return this.processCustomType({
-								customType: field,
-								oldPath,
+						customtypes: field.customtypes.map((customType) => {
+							return this.updateCRCustomType({
+								customType,
+								previousPath,
 								newPath,
 								// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: Fix types
 							}) as any;
@@ -263,26 +241,29 @@ export class CustomTypesManager extends BaseManager {
 		return { ...customType };
 	}
 
-	private processCustomTypes(args: {
-		customTypes: XCustomTypes;
-		oldPath: string[];
-		newPath: string[];
-	}): XCustomTypes {
-		const { customTypes, oldPath, newPath } = args;
+	/**
+	 * Map over the custom types of a Content Relationship Link and update the API
+	 * IDs that were changed during the custom type update.
+	 */
+	private updateCRCustomTypes(
+		args: { customTypes: CRCustomTypes } & CustomTypeUpdateMeta,
+	): CRCustomTypes {
+		const { customTypes, ...updateMeta } = args;
 
-		return customTypes.map((ct) => {
-			return this.processCustomType({
-				customType: ct,
-				oldPath,
-				newPath,
-			});
+		return customTypes.map((customType) => {
+			return this.updateCRCustomType({ customType, ...updateMeta });
 		});
 	}
 
+	/**
+	 * Update the Content Relationship API IDs that were changed during the custom
+	 * type update. The change is determined by the `previousPath` and `newPath`
+	 * properties.
+	 */
 	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
-	>(args: { field: T; oldPath: string[]; newPath: string[] }): T {
-		const { field, oldPath, newPath } = args;
+	>(args: { field: T } & CustomTypeUpdateMeta): T {
+		const { field, previousPath, newPath } = args;
 		if (
 			field.type !== "Link" ||
 			field.config?.select !== "document" ||
@@ -291,22 +272,13 @@ export class CustomTypesManager extends BaseManager {
 			return field;
 		}
 
-		console.log(
-			`--------------------------------------------
-
-Found Link field in custom type '${field.config.label}', checking for outdated content relationships...
-`,
-			JSON.stringify({ field, oldPath, newPath }, null, 2),
-		);
-
 		return {
 			...field,
 			config: {
 				...field.config,
-				// find outdated field ids and replace them with the new ones
-				customtypes: this.processCustomTypes({
+				customtypes: this.updateCRCustomTypes({
 					customTypes: field.config.customtypes.slice(),
-					oldPath,
+					previousPath,
 					newPath,
 				}),
 			},
@@ -326,11 +298,11 @@ Found Link field in custom type '${field.config.label}', checking for outdated c
 		const { model, updateMeta } = args;
 
 		if (updateMeta?.fieldIdChanged) {
-			const { previousPath, newPath } = updateMeta.fieldIdChanged;
+			let { previousPath, newPath } = updateMeta.fieldIdChanged;
 
 			if (previousPath.join(".") !== newPath.join(".")) {
-				const previousPathArray = [model.id, ...previousPath];
-				const newPathArray = [model.id, ...newPath];
+				previousPath = [model.id, ...previousPath];
+				newPath = [model.id, ...newPath];
 
 				// Find existing content relationships that link to the renamed field id in
 				// any custom type and update them to use the new one.
@@ -342,8 +314,8 @@ Found Link field in custom type '${field.config.label}', checking for outdated c
 						onField: ({ field }) => {
 							return this.updateFieldContentRelationships({
 								field,
-								oldPath: previousPathArray,
-								newPath: newPathArray,
+								previousPath,
+								newPath,
 							});
 						},
 					});
@@ -374,8 +346,8 @@ Found Link field in custom type '${field.config.label}', checking for outdated c
 							onField: ({ field }) => {
 								return this.updateFieldContentRelationships({
 									field,
-									oldPath: previousPathArray,
-									newPath: newPathArray,
+									previousPath,
+									newPath,
 								});
 							},
 						});
