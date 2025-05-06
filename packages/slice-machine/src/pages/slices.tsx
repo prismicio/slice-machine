@@ -321,6 +321,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                 void router.push(sliceLocation);
                 toast.success(
                   SliceToastMessage({
+                    sectionsNamingExperiment,
                     path: `${libraryName}/${newSlice.name}/model.json`,
                   }),
                 );
