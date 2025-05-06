@@ -184,11 +184,19 @@ export class CustomTypesManager extends BaseManager {
 	private updateCRCustomType(
 		args: { customType: CRCustomType } & CustomTypeUpdateMeta,
 	): CRCustomType {
-		const { customType, previousPath, newPath } = args;
-		let level = 0;
+		const { customType: customTypeArg, previousPath, newPath } = args;
 
-		const previousId = previousPath[level];
-		const newId = newPath[level];
+		let customType = customTypeArg;
+		if (typeof customTypeArg === "object") {
+			customType = { ...customTypeArg };
+		}
+
+		const [previousId] = previousPath;
+		const [newId] = newPath;
+
+		if (!previousId || !newId) {
+			return customType;
+		}
 
 		if (typeof customType === "string") {
 			if (customType === previousId && customType !== newId) {
@@ -199,17 +207,19 @@ export class CustomTypesManager extends BaseManager {
 		}
 
 		if (customType.id === previousId && customType.id !== newId) {
-			return { ...customType, id: newId }; // update to new api id
+			customType.id = newId; // update to new api id
 		}
-
-		level++;
 
 		if (customType.fields) {
 			return {
 				...customType,
 				fields: customType.fields.map((field) => {
-					const previousId = previousPath[level];
-					const newId = newPath[level];
+					const previousId = previousPath[1];
+					const newId = newPath[1];
+
+					if (!previousId || !newId) {
+						return field;
+					}
 
 					if (typeof field === "string") {
 						if (field === previousId && field !== newId) {
@@ -220,7 +230,7 @@ export class CustomTypesManager extends BaseManager {
 					}
 
 					if (field.id === previousId && field.id !== newId) {
-						return { ...field, id: newId }; // update to new api id
+						field.id = newId; // update to new api id
 					}
 
 					return {
@@ -230,7 +240,10 @@ export class CustomTypesManager extends BaseManager {
 								customType,
 								previousPath,
 								newPath,
-								// eslint-disable-next-line @typescript-eslint/no-explicit-any -- TODO: Fix types
+								// TODO: Fix types. The second level customtypes are not typed
+								// the same as the first level customtypes. Although it won't
+								// matter at runtime.
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any -- -
 							}) as any;
 						}),
 					};
@@ -263,13 +276,13 @@ export class CustomTypesManager extends BaseManager {
 	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
 	>(args: { field: T } & CustomTypeUpdateMeta): T {
-		const { field, previousPath, newPath } = args;
+		const { field, ...updateMeta } = args;
 		if (
 			field.type !== "Link" ||
 			field.config?.select !== "document" ||
 			!field.config?.customtypes
 		) {
-			return field;
+			return field; // not a content relationship field
 		}
 
 		return {
@@ -277,9 +290,8 @@ export class CustomTypesManager extends BaseManager {
 			config: {
 				...field.config,
 				customtypes: this.updateCRCustomTypes({
+					...updateMeta,
 					customTypes: field.config.customtypes.slice(),
-					previousPath,
-					newPath,
 				}),
 			},
 		};
