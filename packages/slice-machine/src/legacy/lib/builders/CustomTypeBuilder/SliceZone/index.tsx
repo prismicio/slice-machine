@@ -1,5 +1,4 @@
 import {
-  BackgroundIcon,
   Box,
   Button,
   DropdownMenu,
@@ -17,8 +16,10 @@ import { BaseStyles } from "theme-ui";
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { addSlicesToSliceZone } from "@/features/slices/actions/addSlicesToSliceZone";
@@ -41,6 +42,7 @@ import {
 } from "@/modules/slices";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import type { SliceMachineStoreType } from "@/redux/type";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";
@@ -133,6 +135,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
   const { openLoginModal } = useSliceMachineActions();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
+  const sliceCreationOptions = getSliceCreationOptions({
+    menuType: "Dropdown",
+    sectionsNamingExperiment,
+  });
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -231,74 +238,46 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               <DropdownMenuContent align="end">
                 {aiSliceGenerationExperiment.eligible && (
                   <DropdownMenuItem
-                    renderStartIcon={() => (
-                      <BackgroundIcon
-                        name="autoFixHigh"
-                        size="extraSmall"
-                        iconSize="small"
-                        radius={6}
-                        variant="solid"
-                        color="purple"
-                      />
-                    )}
+                    renderStartIcon={() =>
+                      sliceCreationOptions.fromImage.BackgroundIcon
+                    }
                     onSelect={() => void openCreateSliceFromImageModal()}
-                    description="Build a Slice based on your design image."
+                    description={sliceCreationOptions.fromImage.description}
                   >
-                    Generate from image
+                    {sliceCreationOptions.fromImage.title}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem
-                  renderStartIcon={() => (
-                    <BackgroundIcon
-                      name="add"
-                      size="extraSmall"
-                      iconSize="small"
-                      radius={6}
-                      variant="solid"
-                      color="white"
-                    />
-                  )}
+                  renderStartIcon={() =>
+                    sliceCreationOptions.fromScratch.BackgroundIcon
+                  }
                   onSelect={openCreateSliceModal}
-                  description="Build a custom Slice your way."
+                  description={sliceCreationOptions.fromScratch.description}
                 >
-                  Start from scratch
+                  {sliceCreationOptions.fromScratch.title}
                 </DropdownMenuItem>
 
                 {availableSlicesTemplates.length > 0 ? (
                   <DropdownMenuItem
                     onSelect={openSlicesTemplatesModal}
-                    renderStartIcon={() => (
-                      <BackgroundIcon
-                        name="contentCopy"
-                        size="extraSmall"
-                        iconSize="small"
-                        radius={6}
-                        variant="solid"
-                        color="white"
-                      />
-                    )}
-                    description="Choose from ready-made examples."
+                    renderStartIcon={() =>
+                      sliceCreationOptions.fromTemplate.BackgroundIcon
+                    }
+                    description={sliceCreationOptions.fromTemplate.description}
                   >
-                    Use a template
+                    {sliceCreationOptions.fromTemplate.title}
                   </DropdownMenuItem>
                 ) : undefined}
 
                 {availableSlicesToAdd.length > 0 ? (
                   <DropdownMenuItem
                     onSelect={openUpdateSliceZoneModal}
-                    renderStartIcon={() => (
-                      <BackgroundIcon
-                        name="folder"
-                        size="extraSmall"
-                        iconSize="small"
-                        radius={6}
-                        variant="solid"
-                        color="white"
-                      />
-                    )}
-                    description="Select from your created Slices."
+                    renderStartIcon={() =>
+                      sliceCreationOptions.fromExisting.BackgroundIcon
+                    }
+                    description={sliceCreationOptions.fromExisting.description}
                   >
-                    Reuse an existing Slice
+                    {sliceCreationOptions.fromExisting.title}
                   </DropdownMenuItem>
                 ) : undefined}
               </DropdownMenuContent>
@@ -322,7 +301,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           ) : undefined
         }
       >
-        Slices
+        {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))}
       </ListHeader>
 
       {sliceZone ? (
@@ -394,7 +373,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             setCustomType(CustomTypes.fromSM(newCustomType), () => {
               toast.success(
                 <ToastMessageWithPath
-                  message="Slice template(s) added to slice zone and created at: "
+                  message={`${capitalizeFirstLetter(
+                    sectionsNamingExperiment.value,
+                  )} template(s) added to ${
+                    sectionsNamingExperiment.value
+                  } zone and created at: `}
                   path={`${localLibraries[0].name}/`}
                 />,
               );
@@ -427,7 +410,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             setCustomType(CustomTypes.fromSM(newCustomType), () => {
               toast.success(
                 <ToastMessageWithPath
-                  message="New slice added to slice zone and created at: "
+                  message={`New ${sectionsNamingExperiment.value} added to ${sectionsNamingExperiment.value} zone and created at: `}
                   path={`${localLibraries[0].name}/`}
                 />,
               );
@@ -452,7 +435,11 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           setCustomType(CustomTypes.fromSM(newCustomType), () => {
             toast.success(
               <ToastMessageWithPath
-                message="Slice(s) added to slice zone and created at: "
+                message={`${capitalizeFirstLetter(
+                  sectionsNamingExperiment.value,
+                )}(s) added to ${
+                  sectionsNamingExperiment.value
+                } zone and created at: `}
                 path={library}
               />,
             );

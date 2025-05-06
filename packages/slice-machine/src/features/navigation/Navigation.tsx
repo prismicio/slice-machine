@@ -15,9 +15,11 @@ import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
 import { MasterSliceLibraryIcon } from "@/icons/MasterSliceLibraryIcon";
 import { SettingsIcon } from "@/icons/SettingsIcon";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { ChangesItem } from "../../legacy/components/Navigation/ChangesItem";
 import { Environment } from "../../legacy/components/Navigation/Environment";
+import { useSectionsNamingExperiment } from "../builder/useSectionsNamingExperiment";
 import { NavigationItem } from "./NavigationItem";
 import { SliceMachineVersion } from "./SliceMachineVersion";
 import { UpdateInfo } from "./UpdateInfo";
@@ -29,6 +31,7 @@ export function Navigation() {
   const [isSliceLibraryDialogOpen, setIsSliceLibraryDialogOpen] =
     useState(false);
   const { masterSliceLibrary } = useMarketingContent();
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   interface CustomTypeNavigationItemProps {
     type: "page" | "custom";
@@ -78,7 +81,9 @@ export function Navigation() {
           <CustomTypeNavigationItem type="custom" />
 
           <NavigationItem
-            title="Slices"
+            title={pluralize(
+              capitalizeFirstLetter(sectionsNamingExperiment.value),
+            )}
             href="/slices"
             Icon={FolderIcon}
             active={router.asPath.startsWith("/slices")}
@@ -109,7 +114,9 @@ export function Navigation() {
                 }}
               />
               <NavigationItem
-                title="Master Slice Library"
+                title={`Master ${capitalizeFirstLetter(
+                  sectionsNamingExperiment.value,
+                )} Library`}
                 Icon={MasterSliceLibraryIcon}
                 onClick={() => {
                   void telemetry.track({

@@ -3,6 +3,7 @@ import { type FC } from "react";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { AutoSaveStatusIndicator } from "@/features/autoSave/AutoSaveStatusIndicator";
+import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { FloatingBackButton } from "@/features/slices/sliceBuilder/FloatingBackButton";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import {
@@ -14,6 +15,7 @@ import {
   AppLayoutHeader,
 } from "@/legacy/components/AppLayout";
 import SimulatorButton from "@/legacy/lib/builders/SliceBuilder/SimulatorButton";
+import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import FieldZones from "./FieldZones";
 import { VariationsList } from "./VariationsList";
@@ -21,6 +23,7 @@ import { VariationsList } from "./VariationsList";
 export const SliceBuilder: FC = () => {
   const { slice, actionQueueStatus } = useSliceState();
   const horizontalScroll = useMediaQuery({ max: "large" });
+  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   const contentDisplayProps = horizontalScroll
     ? { gridTemplateRows: "304px 1fr" }
@@ -31,7 +34,9 @@ export const SliceBuilder: FC = () => {
       <AppLayoutHeader>
         <AppLayoutBackButton url="/slices" />
         <AppLayoutBreadcrumb>
-          <BreadcrumbItem>Slices</BreadcrumbItem>
+          <BreadcrumbItem>
+            {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))}
+          </BreadcrumbItem>
           <BreadcrumbItem active>{slice.model.name}</BreadcrumbItem>
         </AppLayoutBreadcrumb>
         <AppLayoutActions>

@@ -7,6 +7,9 @@ import {
   TypeOptions,
 } from "react-toastify";
 
+import { UseSectionsNamingExperimentReturnType } from "@/features/builder/useSectionsNamingExperiment";
+import { capitalizeFirstLetter } from "@/utils/textConversion";
+
 const getIconAccordingToasterType = ({
   type,
 }: {
@@ -67,6 +70,14 @@ export const ToastMessageWithPath: React.FC<{
 
 export const SliceToastMessage: React.FC<{
   path: string;
-}> = (props) => (
-  <ToastMessageWithPath message="Slice saved successfully at " {...props} />
-);
+  sectionsNamingExperiment: UseSectionsNamingExperimentReturnType;
+}> = (props) => {
+  return (
+    <ToastMessageWithPath
+      message={`${capitalizeFirstLetter(
+        props.sectionsNamingExperiment.value,
+      )} saved successfully at `}
+      {...props}
+    />
+  );
+};
