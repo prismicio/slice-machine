@@ -76,8 +76,8 @@ type OnSaveFieldProps = {
   inGroupFieldAction?: "add" | "update";
   updateMeta?: {
     fieldIdChanged?: {
-      previousPath?: string[];
-      newPath?: string[];
+      previousPath: string[];
+      newPath: string[];
     };
   };
 };
