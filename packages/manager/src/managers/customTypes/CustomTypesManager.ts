@@ -20,7 +20,6 @@ import {
 	CustomTypeRenameHookData,
 	CustomTypeUpdateHook,
 	CustomTypeUpdateHookData,
-	SliceUpdateHookReturnType,
 	HookError,
 } from "@slicemachine/plugin-kit";
 import { z } from "zod";
@@ -95,6 +94,7 @@ type CRCustomType = NonNullable<CRCustomTypes>[number];
 type CustomTypeFieldIdChangedMeta = NonNullable<
 	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
 >;
+
 export class CustomTypesManager extends BaseManager {
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
@@ -182,60 +182,58 @@ export class CustomTypesManager extends BaseManager {
 
 	private updateCRCustomType(
 		args: { customType: CRCustomType } & CustomTypeFieldIdChangedMeta,
-	): CRCustomType {
-		const { customType: customTypeArg, previousPath, newPath } = args;
+	): { customType: CRCustomType; changed: boolean } {
+		const { previousPath, newPath } = args;
 
-		let customType = customTypeArg;
-		if (typeof customTypeArg === "object") {
-			customType = { ...customTypeArg };
-		}
+		let changed = false;
+		const customType = shallowClone(args.customType);
 
 		const [previousId] = previousPath;
 		const [newId] = newPath;
 
-		if (!previousId || !newId) {
-			return customType;
-		}
-
-		if (typeof customType === "string") {
-			if (customType === previousId && customType !== newId) {
-				return newId; // update to new api id
-			}
-
-			return customType;
-		}
-
-		if (customType.id == previousId && customType.id !== newId) {
-			customType.id = newId; // update to new api id
+		if (!previousId || !newId || typeof customType === "string") {
+			return { changed, customType };
 		}
 
 		if (customType.fields) {
-			return {
-				...customType,
-				fields: customType.fields.map((field) => {
-					const previousId = previousPath[1];
-					const newId = newPath[1];
+			const newFields = customType.fields.map((fieldArg) => {
+				const field = shallowClone(fieldArg);
 
-					if (!previousId || !newId) {
-						return field;
+				const previousId = previousPath[1];
+				const newId = newPath[1];
+
+				if (!previousId || !newId) {
+					return field;
+				}
+
+				if (typeof field === "string") {
+					if (field === previousId && field !== newId) {
+						// We have reached a field id that matches the id that was renamed,
+						// so we update it new one. The field is a string, so return the new
+						// id.
+						changed = true;
+
+						return newId;
 					}
 
-					if (typeof field === "string") {
-						if (field === previousId && field !== newId) {
-							return newId; // update to new api id
-						}
+					return field;
+				}
 
-						return field;
-					}
+				if (field.id === previousId && field.id !== newId) {
+					// We have reached a field id that matches the id that was renamed,
+					// so we update it new one.
+					// Since field is not a string, we don't exit, as we might have
+					// something to update further down in customtypes.
+					changed = true;
 
-					if (field.id === previousId && field.id !== newId) {
-						field.id = newId; // update to new api id
-					}
+					field.id = newId;
+				}
 
-					return {
-						...field,
-						customtypes: field.customtypes.map((customType) => {
-							return this.updateCRCustomType({
+				return {
+					...field,
+					customtypes: field.customtypes.map((customType) => {
+						const { customType: newCustomType, changed: hasChanged } =
+							this.updateCRCustomType({
 								customType,
 								previousPath,
 								newPath,
@@ -244,13 +242,21 @@ export class CustomTypesManager extends BaseManager {
 								// matter at runtime.
 								// eslint-disable-next-line @typescript-eslint/no-explicit-any -- -
 							}) as any;
-						}),
-					};
-				}),
+
+						changed ||= hasChanged;
+
+						return newCustomType;
+					}),
+				};
+			});
+
+			return {
+				changed,
+				customType: { ...customType, fields: newFields },
 			};
 		}
 
-		return { ...customType };
+		return { changed, customType };
 	}
 
 	/**
@@ -259,59 +265,71 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private updateCRCustomTypes(
 		args: { customTypes: CRCustomTypes } & CustomTypeFieldIdChangedMeta,
-	): CRCustomTypes {
+	): { customTypes: CRCustomTypes; changed: boolean } {
 		const { customTypes, ...updateMeta } = args;
 
-		return customTypes.map((customType) => {
-			return this.updateCRCustomType({ customType, ...updateMeta });
+		let changed = false;
+
+		const newCustomTypes = customTypes.map((customType) => {
+			const { customType: newCustomType, changed: hasChanged } =
+				this.updateCRCustomType({ customType, ...updateMeta });
+
+			changed ||= hasChanged;
+
+			return newCustomType;
 		});
+
+		return { customTypes: newCustomTypes, changed };
 	}
 
 	/**
-	 * Update the Content Relationship API IDs that were changed during the custom
-	 * type update. The change is determined by the `previousPath` and `newPath`
-	 * properties.
+	 * Update the Content Relationship API IDs of a single field. The change is
+	 * determined by the `previousPath` and `newPath` properties.
 	 */
 	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
-	>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
+	>(
+		args: { field: T } & CustomTypeFieldIdChangedMeta,
+	): { field: T; changed: boolean } {
 		const { field, ...updateMeta } = args;
 		if (
 			field.type !== "Link" ||
 			field.config?.select !== "document" ||
 			!field.config?.customtypes
 		) {
-			return field; // not a content relationship field
+			// not a content relationship field
+			return { field, changed: false };
 		}
 
+		const { customTypes: newCustomTypes, changed } = this.updateCRCustomTypes({
+			...updateMeta,
+			customTypes: field.config.customtypes,
+		});
+
 		return {
-			...field,
-			config: {
-				...field.config,
-				customtypes: this.updateCRCustomTypes({
-					...updateMeta,
-					customTypes: field.config.customtypes.slice(),
-				}),
+			field: {
+				...field,
+				config: { ...field.config, customtypes: newCustomTypes },
 			},
+			changed,
 		};
 	}
 
-	async updateCustomType(
+	/**
+	 * Update the Content Relationship API IDs for all existing custom types and
+	 * slices. The change is determined by properties inside the `updateMeta`
+	 * property.
+	 */
+	private async updateContentRelationships(
 		args: CustomTypeUpdateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"custom-type:update",
-			args,
-		);
-
 		const { model, updateMeta } = args;
 
 		if (updateMeta?.fieldIdChanged) {
-			const crUpdatesPromises: Promise<{ errors: HookError[] }>[] = [];
-
 			let { previousPath, newPath } = updateMeta.fieldIdChanged;
+			const crUpdatesPromises: Promise<{ errors: HookError[] }>[] = [];
 
 			if (previousPath.join(".") !== newPath.join(".")) {
 				previousPath = [model.id, ...previousPath];
@@ -322,22 +340,31 @@ export class CustomTypesManager extends BaseManager {
 				const customTypes = await this.readAllCustomTypes();
 
 				for (const customType of customTypes.models) {
+					let hasChangedCustomType = false;
+
 					const updatedCustomTypeModel = traverseCustomType({
 						customType: customType.model,
 						onField: ({ field }) => {
-							return this.updateFieldContentRelationships({
-								field,
-								previousPath,
-								newPath,
-							});
+							const { field: updatedField, changed } =
+								this.updateFieldContentRelationships({
+									field,
+									previousPath,
+									newPath,
+								});
+
+							hasChangedCustomType ||= changed;
+
+							return updatedField;
 						},
 					});
 
-					crUpdatesPromises.push(
-						this.sliceMachinePluginRunner.callHook("custom-type:update", {
-							model: updatedCustomTypeModel,
-						}),
-					);
+					if (hasChangedCustomType) {
+						crUpdatesPromises.push(
+							this.sliceMachinePluginRunner.callHook("custom-type:update", {
+								model: updatedCustomTypeModel,
+							}),
+						);
+					}
 				}
 
 				// Find existing slice with content relationships that link to the renamed
@@ -350,24 +377,33 @@ export class CustomTypesManager extends BaseManager {
 					});
 
 					for (const slice of slices.models) {
+						let hasChangedSlice = false;
+
 						const updatedSliceModel = traverseSharedSlice({
 							path: ["."],
 							slice: slice.model,
 							onField: ({ field }) => {
-								return this.updateFieldContentRelationships({
-									field,
-									previousPath,
-									newPath,
-								});
+								const { field: updatedField, changed } =
+									this.updateFieldContentRelationships({
+										field,
+										previousPath,
+										newPath,
+									});
+
+								hasChangedSlice ||= changed;
+
+								return updatedField;
 							},
 						});
 
-						crUpdatesPromises.push(
-							this.sliceMachinePluginRunner.callHook("slice:update", {
-								libraryID: library.libraryID,
-								model: updatedSliceModel,
-							}),
-						);
+						if (hasChangedSlice) {
+							crUpdatesPromises.push(
+								this.sliceMachinePluginRunner.callHook("slice:update", {
+									libraryID: library.libraryID,
+									model: updatedSliceModel,
+								}),
+							);
+						}
 					}
 				}
 
@@ -380,6 +416,23 @@ export class CustomTypesManager extends BaseManager {
 					};
 				}
 			}
+		}
+
+		return { errors: [] };
+	}
+
+	async updateCustomType(
+		args: CustomTypeUpdateHookData,
+	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"custom-type:update",
+			args,
+		);
+
+		if (args.updateMeta?.fieldIdChanged) {
+			await this.updateContentRelationships(args);
 		}
 
 		return { errors: hookResult.errors };
@@ -596,3 +649,11 @@ const InferSliceResponse = z.object({
 	}),
 	langSmithUrl: z.string().url().optional(),
 });
+
+function shallowClone<T>(value: T): T {
+	if (typeof value === "object") {
+		return { ...value };
+	}
+
+	return value;
+}
