@@ -50,8 +50,8 @@ export interface GroupListItemProps<F extends TabField> {
     inGroupFieldAction?: "add" | "update";
     updateMeta?: {
       fieldIdChanged?: {
-        previousPath?: string[];
-        newPath?: string[];
+        previousPath: string[];
+        newPath: string[];
       };
     };
   }) => void;

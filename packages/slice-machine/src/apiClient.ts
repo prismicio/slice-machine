@@ -80,9 +80,10 @@ export const updateCustomType = async (args: {
 }): ReturnType<
   SliceMachineManagerClient["customTypes"]["updateCustomType"]
 > => {
+  const { customType: model, updateMeta } = args;
   return await managerClient.customTypes.updateCustomType({
-    model: args.customType,
-    updateMeta: args.updateMeta,
+    model,
+    updateMeta,
   });
 };
 
