@@ -20,6 +20,7 @@ import {
 	CustomTypeRenameHookData,
 	CustomTypeUpdateHook,
 	CustomTypeUpdateHookData,
+	SliceUpdateHookReturnType,
 	HookError,
 } from "@slicemachine/plugin-kit";
 import { z } from "zod";
@@ -89,13 +90,11 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type CustomTypeUpdateMeta = {
-	previousPath: string[];
-	newPath: string[];
-};
 type CRCustomTypes = NonNullable<NonNullable<Link["config"]>["customtypes"]>;
 type CRCustomType = NonNullable<CRCustomTypes>[number];
-
+type CustomTypeFieldIdChangedMeta = NonNullable<
+	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
+>;
 export class CustomTypesManager extends BaseManager {
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
@@ -182,7 +181,7 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	private updateCRCustomType(
-		args: { customType: CRCustomType } & CustomTypeUpdateMeta,
+		args: { customType: CRCustomType } & CustomTypeFieldIdChangedMeta,
 	): CRCustomType {
 		const { customType: customTypeArg, previousPath, newPath } = args;
 
@@ -206,7 +205,7 @@ export class CustomTypesManager extends BaseManager {
 			return customType;
 		}
 
-		if (customType.id === previousId && customType.id !== newId) {
+		if (customType.id == previousId && customType.id !== newId) {
 			customType.id = newId; // update to new api id
 		}
 
@@ -259,7 +258,7 @@ export class CustomTypesManager extends BaseManager {
 	 * IDs that were changed during the custom type update.
 	 */
 	private updateCRCustomTypes(
-		args: { customTypes: CRCustomTypes } & CustomTypeUpdateMeta,
+		args: { customTypes: CRCustomTypes } & CustomTypeFieldIdChangedMeta,
 	): CRCustomTypes {
 		const { customTypes, ...updateMeta } = args;
 
@@ -275,7 +274,7 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
-	>(args: { field: T } & CustomTypeUpdateMeta): T {
+	>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
 		const { field, ...updateMeta } = args;
 		if (
 			field.type !== "Link" ||
@@ -310,6 +309,8 @@ export class CustomTypesManager extends BaseManager {
 		const { model, updateMeta } = args;
 
 		if (updateMeta?.fieldIdChanged) {
+			const crUpdatesPromises: Promise<{ errors: HookError[] }>[] = [];
+
 			let { previousPath, newPath } = updateMeta.fieldIdChanged;
 
 			if (previousPath.join(".") !== newPath.join(".")) {
@@ -332,14 +333,11 @@ export class CustomTypesManager extends BaseManager {
 						},
 					});
 
-					const hookResult = await this.sliceMachinePluginRunner.callHook(
-						"custom-type:update",
-						{ model: updatedCustomTypeModel },
+					crUpdatesPromises.push(
+						this.sliceMachinePluginRunner.callHook("custom-type:update", {
+							model: updatedCustomTypeModel,
+						}),
 					);
-
-					if (hookResult.errors.length > 0) {
-						return { errors: hookResult.errors };
-					}
 				}
 
 				// Find existing slice with content relationships that link to the renamed
@@ -364,15 +362,22 @@ export class CustomTypesManager extends BaseManager {
 							},
 						});
 
-						const hookResult = await this.sliceMachinePluginRunner.callHook(
-							"slice:update",
-							{ libraryID: library.libraryID, model: updatedSliceModel },
+						crUpdatesPromises.push(
+							this.sliceMachinePluginRunner.callHook("slice:update", {
+								libraryID: library.libraryID,
+								model: updatedSliceModel,
+							}),
 						);
-
-						if (hookResult.errors.length > 0) {
-							return { errors: hookResult.errors };
-						}
 					}
+				}
+
+				// Process all the Content Relationship updates at once.
+				const crUpdatesResults = await Promise.all(crUpdatesPromises);
+
+				if (crUpdatesResults.some((result) => result.errors.length > 0)) {
+					return {
+						errors: crUpdatesResults.flatMap((result) => result.errors),
+					};
 				}
 			}
 		}

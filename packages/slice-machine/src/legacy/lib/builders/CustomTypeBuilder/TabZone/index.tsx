@@ -41,6 +41,7 @@ import { trackFieldUpdated } from "@/utils/tracking/trackFieldUpdated";
 import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
 import SliceZone from "../SliceZone";
+import { CustomTypeUpdateMeta } from "@/apiClient";
 
 const widgetsArray = [
   Widgets.UID,
@@ -74,12 +75,7 @@ type OnSaveFieldProps = {
   newKey: string;
   value: TabField;
   inGroupFieldAction?: "add" | "update";
-  updateMeta?: {
-    fieldIdChanged?: {
-      previousPath: string[];
-      newPath: string[];
-    };
-  };
+  updateMeta?: CustomTypeUpdateMeta;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {

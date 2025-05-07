@@ -9,6 +9,7 @@ import { type Widget } from "@/legacy/lib/models/common/widgets/Widget";
 
 import { createGroupWidget, type SchemaType } from "./createGroupWidget";
 import { CustomListItem } from "./ListItem";
+import { CustomTypeUpdateMeta } from "@/apiClient";
 
 const widgetsArray = [
   Widgets.Image,
@@ -48,12 +49,7 @@ export interface GroupListItemProps<F extends TabField> {
     newKey: string;
     value: F;
     inGroupFieldAction?: "add" | "update";
-    updateMeta?: {
-      fieldIdChanged?: {
-        previousPath: string[];
-        newPath: string[];
-      };
-    };
+    updateMeta?: CustomTypeUpdateMeta;
   }) => void;
   HintElement: JSX.Element;
 }

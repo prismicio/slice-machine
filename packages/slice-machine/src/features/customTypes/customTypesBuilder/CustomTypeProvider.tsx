@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { updateCustomType } from "@/apiClient";
+import { CustomTypeUpdateMeta, updateCustomType } from "@/apiClient";
 import { getFormat } from "@/domain/customType";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
@@ -20,12 +20,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 type SetCustomTypeArgs = {
   customType: CustomType;
   onSaveCallback?: () => void;
-  updateMeta?: {
-    fieldIdChanged?: {
-      previousPath: string[];
-      newPath: string[];
-    };
-  };
+  updateMeta?: CustomTypeUpdateMeta;
 };
 
 type CustomTypeContext = {
