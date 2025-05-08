@@ -89,11 +89,28 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type CRCustomTypes = NonNullable<NonNullable<Link["config"]>["customtypes"]>;
-type CRCustomType = NonNullable<CRCustomTypes>[number];
 type CustomTypeFieldIdChangedMeta = NonNullable<
 	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
 >;
+
+type CrCustomType =
+	| string
+	| {
+			id: string;
+			fields?: readonly (string | CrCustomTypeNestedCr)[];
+	  };
+type CrCustomTypeNestedCr =
+	| string
+	| {
+			id: string;
+			customtypes: readonly (string | CrCustomTypeFieldLeaf)[];
+	  };
+type CrCustomTypeFieldLeaf =
+	| string
+	| {
+			id: string;
+			fields?: readonly string[];
+	  };
 
 export class CustomTypesManager extends BaseManager {
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
@@ -180,12 +197,18 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	private updateCRCustomType(
-		args: { customType: CRCustomType } & CustomTypeFieldIdChangedMeta,
-	): { customType: CRCustomType; changed: boolean } {
+	private updateCRCustomType<T extends CrCustomType | CrCustomTypeFieldLeaf>(
+		args: {
+			customType: T;
+		} & CustomTypeFieldIdChangedMeta,
+	): {
+		customType: T;
+		changed: boolean;
+	} {
 		const { previousPath, newPath } = args;
 
 		let changed = false;
+
 		const customType = shallowClone(args.customType);
 
 		const [previousId] = previousPath;
@@ -236,11 +259,7 @@ export class CustomTypesManager extends BaseManager {
 							customType,
 							previousPath,
 							newPath,
-							// TODO: Fix types. The second level customtypes are not typed
-							// the same as the first level customtypes. Although it won't
-							// matter at runtime.
-							// eslint-disable-next-line @typescript-eslint/no-explicit-any -- -
-						}) as any;
+						});
 
 						changed ||= result.changed;
 
@@ -251,7 +270,11 @@ export class CustomTypesManager extends BaseManager {
 
 			return {
 				changed,
-				customType: { ...customType, fields: newFields },
+				// @ts-expect-error We know that at this level we are returning the
+				// right properties, but TypeScript will not trust it because it might
+				// also have customtypes. This is because the type is not fully
+				// recursive, it just has two levels of depth.
+				customType: { id: customType.id, fields: newFields },
 			};
 		}
 
@@ -263,8 +286,8 @@ export class CustomTypesManager extends BaseManager {
 	 * IDs that were changed during the custom type update.
 	 */
 	private updateCRCustomTypes(
-		args: { customTypes: CRCustomTypes } & CustomTypeFieldIdChangedMeta,
-	): { customTypes: CRCustomTypes; changed: boolean } {
+		args: { customTypes: CrCustomType[] } & CustomTypeFieldIdChangedMeta,
+	): { customTypes: CrCustomType[]; changed: boolean } {
 		const { customTypes, ...updateMeta } = args;
 
 		let changed = false;
