@@ -353,8 +353,6 @@ export class CustomTypesManager extends BaseManager {
 				previousPath = [model.id, ...previousPath];
 				newPath = [model.id, ...newPath];
 
-				const crUpdatesPromises: Promise<{ errors: HookError[] }>[] = [];
-
 				const crUpdates: Promise<{ errors: HookError[] }>[] = [];
 
 				// Find existing content relationships that link to the renamed field id in
@@ -432,11 +430,11 @@ export class CustomTypesManager extends BaseManager {
 				}
 
 				// Process all the Content Relationship updates at once.
-				const crUpdatesResults = await Promise.all(crUpdatesPromises);
+				const crUpdatesResult = await Promise.all(crUpdates);
 
-				if (crUpdatesResults.some((result) => result.errors.length > 0)) {
+				if (crUpdatesResult.some((result) => result.errors.length > 0)) {
 					return {
-						errors: crUpdatesResults.flatMap((result) => result.errors),
+						errors: crUpdatesResult.flatMap((result) => result.errors),
 					};
 				}
 			}
