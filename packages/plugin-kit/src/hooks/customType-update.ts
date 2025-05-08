@@ -15,14 +15,12 @@ export type CustomTypeUpdateHookData = {
 		fieldIdChanged?: {
 			/**
 			 * Previous path of the changed field. Can be used to identify the field
-			 * that had an API ID rename (e.g. `["page", "title"]` or `["page",
-			 * "group1", "title"]`)
+			 * that had an API ID rename (e.g. ["page", "title"])
 			 */
 			previousPath: string[];
 			/**
 			 * New path of the changed field. Can be used to identify the field that
-			 * had an API ID rename (e.g. `["page", "title2"]` or `["page", "group1",
-			 * "title2"]`)
+			 * had an API ID rename (e.g. ["page", "title2"])
 			 */
 			newPath: string[];
 		};
