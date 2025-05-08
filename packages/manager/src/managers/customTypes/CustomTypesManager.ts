@@ -92,17 +92,18 @@ type CustomTypeFieldIdChangedMeta = NonNullable<
 	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
 >;
 
+type CrCustomTypes = readonly CrCustomType[];
 type CrCustomType =
 	| string
 	| {
 			id: string;
-			fields?: readonly (string | CrCustomTypeNestedCr)[];
+			fields?: readonly CrCustomTypeNestedCr[];
 	  };
 type CrCustomTypeNestedCr =
 	| string
 	| {
 			id: string;
-			customtypes: readonly (string | CrCustomTypeFieldLeaf)[];
+			customtypes: readonly CrCustomTypeFieldLeaf[];
 	  };
 type CrCustomTypeFieldLeaf =
 	| string
@@ -285,8 +286,8 @@ export class CustomTypesManager extends BaseManager {
 	 * IDs that were changed during the custom type update.
 	 */
 	private updateCRCustomTypes(
-		args: { customTypes: CrCustomType[] } & CustomTypeFieldIdChangedMeta,
-	): { customTypes: CrCustomType[]; changed: boolean } {
+		args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
+	): { customTypes: CrCustomTypes; changed: boolean } {
 		const { customTypes, ...updateMeta } = args;
 
 		let changed = false;
