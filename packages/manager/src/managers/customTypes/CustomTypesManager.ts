@@ -232,20 +232,19 @@ export class CustomTypesManager extends BaseManager {
 				return {
 					...field,
 					customtypes: field.customtypes.map((customType) => {
-						const { customType: newCustomType, changed: hasChanged } =
-							this.updateCRCustomType({
-								customType,
-								previousPath,
-								newPath,
-								// TODO: Fix types. The second level customtypes are not typed
-								// the same as the first level customtypes. Although it won't
-								// matter at runtime.
-								// eslint-disable-next-line @typescript-eslint/no-explicit-any -- -
-							}) as any;
+						const result = this.updateCRCustomType({
+							customType,
+							previousPath,
+							newPath,
+							// TODO: Fix types. The second level customtypes are not typed
+							// the same as the first level customtypes. Although it won't
+							// matter at runtime.
+							// eslint-disable-next-line @typescript-eslint/no-explicit-any -- -
+						}) as any;
 
-						changed ||= hasChanged;
+						changed ||= result.changed;
 
-						return newCustomType;
+						return result.customType;
 					}),
 				};
 			});
@@ -271,12 +270,10 @@ export class CustomTypesManager extends BaseManager {
 		let changed = false;
 
 		const newCustomTypes = customTypes.map((customType) => {
-			const { customType: newCustomType, changed: hasChanged } =
-				this.updateCRCustomType({ customType, ...updateMeta });
+			const result = this.updateCRCustomType({ customType, ...updateMeta });
+			changed ||= result.changed;
 
-			changed ||= hasChanged;
-
-			return newCustomType;
+			return result.customType;
 		});
 
 		return { customTypes: newCustomTypes, changed };
@@ -301,7 +298,7 @@ export class CustomTypesManager extends BaseManager {
 			return { field, changed: false };
 		}
 
-		const { customTypes: newCustomTypes, changed } = this.updateCRCustomTypes({
+		const result = this.updateCRCustomTypes({
 			...updateMeta,
 			customTypes: field.config.customtypes,
 		});
@@ -309,9 +306,9 @@ export class CustomTypesManager extends BaseManager {
 		return {
 			field: {
 				...field,
-				config: { ...field.config, customtypes: newCustomTypes },
+				config: { ...field.config, customtypes: result.customTypes },
 			},
-			changed,
+			changed: result.changed,
 		};
 	}
 
@@ -329,37 +326,41 @@ export class CustomTypesManager extends BaseManager {
 
 		if (updateMeta?.fieldIdChanged) {
 			let { previousPath, newPath } = updateMeta.fieldIdChanged;
-			const crUpdatesPromises: Promise<{ errors: HookError[] }>[] = [];
 
 			if (previousPath.join(".") !== newPath.join(".")) {
 				previousPath = [model.id, ...previousPath];
 				newPath = [model.id, ...newPath];
+
+				const crUpdatesPromises: Promise<{ errors: HookError[] }>[] = [];
+
+				const crUpdates: Promise<{ errors: HookError[] }>[] = [];
 
 				// Find existing content relationships that link to the renamed field id in
 				// any custom type and update them to use the new one.
 				const customTypes = await this.readAllCustomTypes();
 
 				for (const customType of customTypes.models) {
-					let hasChangedCustomType = false;
+					// keep track of whether the custom type has changed to avoid calling
+					// the update hook if nothing has changed
+					let customTypeChanged = false;
 
 					const updatedCustomTypeModel = traverseCustomType({
 						customType: customType.model,
 						onField: ({ field }) => {
-							const { field: updatedField, changed } =
-								this.updateFieldContentRelationships({
-									field,
-									previousPath,
-									newPath,
-								});
+							const result = this.updateFieldContentRelationships({
+								field,
+								previousPath,
+								newPath,
+							});
 
-							hasChangedCustomType ||= changed;
+							customTypeChanged ||= result.changed;
 
-							return updatedField;
+							return result.field;
 						},
 					});
 
-					if (hasChangedCustomType) {
-						crUpdatesPromises.push(
+					if (customTypeChanged) {
+						crUpdates.push(
 							this.sliceMachinePluginRunner.callHook("custom-type:update", {
 								model: updatedCustomTypeModel,
 							}),
@@ -377,27 +378,28 @@ export class CustomTypesManager extends BaseManager {
 					});
 
 					for (const slice of slices.models) {
-						let hasChangedSlice = false;
+						// keep track of whether the custom type has changed to avoid calling
+						// the update hook if nothing has changed
+						let sliceChanged = false;
 
 						const updatedSliceModel = traverseSharedSlice({
 							path: ["."],
 							slice: slice.model,
 							onField: ({ field }) => {
-								const { field: updatedField, changed } =
-									this.updateFieldContentRelationships({
-										field,
-										previousPath,
-										newPath,
-									});
+								const result = this.updateFieldContentRelationships({
+									field,
+									previousPath,
+									newPath,
+								});
 
-								hasChangedSlice ||= changed;
+								sliceChanged ||= result.changed;
 
-								return updatedField;
+								return result.field;
 							},
 						});
 
-						if (hasChangedSlice) {
-							crUpdatesPromises.push(
+						if (sliceChanged) {
+							crUpdates.push(
 								this.sliceMachinePluginRunner.callHook("slice:update", {
 									libraryID: library.libraryID,
 									model: updatedSliceModel,
