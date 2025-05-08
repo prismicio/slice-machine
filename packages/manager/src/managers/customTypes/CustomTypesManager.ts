@@ -3,7 +3,6 @@ import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import {
 	CustomType,
 	Group,
-	Link,
 	NestableWidget,
 	NestedGroup,
 	SharedSlice,
