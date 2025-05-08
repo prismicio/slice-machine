@@ -9,6 +9,7 @@ import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { toast } from "react-toastify";
 
+import { CustomTypeUpdateMeta } from "@/apiClient";
 import { List } from "@/components/List";
 import {
   addField,
@@ -41,7 +42,6 @@ import { trackFieldUpdated } from "@/utils/tracking/trackFieldUpdated";
 import EditModal from "../../common/EditModal";
 import Zone from "../../common/Zone";
 import SliceZone from "../SliceZone";
-import { CustomTypeUpdateMeta } from "@/apiClient";
 
 const widgetsArray = [
   Widgets.UID,
