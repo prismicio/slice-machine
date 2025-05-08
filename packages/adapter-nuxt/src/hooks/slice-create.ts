@@ -1,7 +1,8 @@
-import type {
-	SliceCreateHook,
-	SliceCreateHookData,
-	SliceMachineContext,
+import {
+	type SliceCreateHook,
+	type SliceCreateHookData,
+	type SliceMachineContext,
+	renderSliceCodePlaceholder,
 } from "@slicemachine/plugin-kit";
 import {
 	upsertGlobalTypeScriptTypes,
@@ -55,7 +56,7 @@ const createComponentFile = async ({
 					:data-slice-type="slice.slice_type"
 					:data-slice-variation="slice.variation"
 				>
-					Placeholder component for ${data.model.id} (variation: {{ slice.variation }}) Slices
+					${renderSliceCodePlaceholder(data.model)}
 				</section>
 			</template>
 		`;
@@ -72,7 +73,7 @@ const createComponentFile = async ({
 					:data-slice-type="slice.slice_type"
 					:data-slice-variation="slice.variation"
 				>
-					Placeholder component for {{ model.id }} (variation: {{ slice.variation }}) Slices
+					${renderSliceCodePlaceholder(data.model)}
 				</section>
 			</template>
 		`;

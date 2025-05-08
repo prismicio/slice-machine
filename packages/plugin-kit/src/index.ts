@@ -62,6 +62,7 @@ export type {
 	SliceCreateHookData,
 	SliceCreateHookReturnType,
 } from "./hooks/slice-create";
+export { renderSliceCodePlaceholder } from "./hooks/slice-create";
 
 // slice:update
 export type {
