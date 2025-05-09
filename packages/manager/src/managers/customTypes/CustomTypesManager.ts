@@ -613,7 +613,7 @@ export function updateCustomTypeContentRelationships(
 		models: { model: CustomType }[];
 		onUpdate: (model: CustomType) => void;
 	} & CustomTypeFieldIdChangedMeta,
-) {
+): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
 	for (const customType of models) {
@@ -637,7 +637,7 @@ export function updateSharedSliceContentRelationships(
 		models: { model: SharedSlice }[];
 		onUpdate: (model: SharedSlice) => void;
 	} & CustomTypeFieldIdChangedMeta,
-) {
+): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
 	for (const slice of models) {
