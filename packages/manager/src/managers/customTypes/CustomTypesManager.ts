@@ -95,22 +95,13 @@ type CustomTypeFieldIdChangedMeta = NonNullable<
 type CrCustomTypes = readonly CrCustomType[];
 type CrCustomType =
 	| string
-	| {
-			id: string;
-			fields?: readonly CrCustomTypeNestedCr[];
-	  };
+	| { id: string; fields?: readonly CrCustomTypeNestedCr[] };
 type CrCustomTypeNestedCr =
 	| string
-	| {
-			id: string;
-			customtypes: readonly CrCustomTypeFieldLeaf[];
-	  };
+	| { id: string; customtypes: readonly CrCustomTypeFieldLeaf[] };
 type CrCustomTypeFieldLeaf =
 	| string
-	| {
-			id: string;
-			fields?: readonly string[];
-	  };
+	| { id: string; fields?: readonly string[] };
 
 export class CustomTypesManager extends BaseManager {
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
@@ -201,13 +192,8 @@ export class CustomTypesManager extends BaseManager {
 		args: {
 			customType: T;
 		} & CustomTypeFieldIdChangedMeta,
-	): {
-		customType: T;
-		changed: boolean;
-	} {
+	): T {
 		const { previousPath, newPath } = args;
-
-		let changed = false;
 
 		const customType = shallowClone(args.customType);
 
@@ -215,7 +201,7 @@ export class CustomTypesManager extends BaseManager {
 		const [newId] = newPath;
 
 		if (!previousId || !newId || typeof customType === "string") {
-			return { changed, customType };
+			return customType;
 		}
 
 		if (customType.fields) {
@@ -234,8 +220,6 @@ export class CustomTypesManager extends BaseManager {
 						// We have reached a field id that matches the id that was renamed,
 						// so we update it new one. The field is a string, so return the new
 						// id.
-						changed = true;
-
 						return newId;
 					}
 
@@ -247,38 +231,32 @@ export class CustomTypesManager extends BaseManager {
 					// so we update it new one.
 					// Since field is not a string, we don't exit, as we might have
 					// something to update further down in customtypes.
-					changed = true;
-
 					field.id = newId;
 				}
 
 				return {
 					...field,
 					customtypes: field.customtypes.map((customType) => {
-						const result = this.updateCRCustomType({
+						return this.updateCRCustomType({
 							customType,
 							previousPath,
 							newPath,
 						});
-
-						changed ||= result.changed;
-
-						return result.customType;
 					}),
 				};
 			});
 
+			// @ts-expect-error We know that at this level we are returning the
+			// right properties, but TypeScript will not trust it because it might
+			// also have customtypes. This is because the type is not fully
+			// recursive, it just has two levels of depth.
 			return {
-				changed,
-				// @ts-expect-error We know that at this level we are returning the
-				// right properties, but TypeScript will not trust it because it might
-				// also have customtypes. This is because the type is not fully
-				// recursive, it just has two levels of depth.
-				customType: { id: customType.id, fields: newFields },
+				id: customType.id,
+				fields: newFields,
 			};
 		}
 
-		return { changed, customType };
+		return customType;
 	}
 
 	/**
@@ -287,19 +265,12 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private updateCRCustomTypes(
 		args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
-	): { customTypes: CrCustomTypes; changed: boolean } {
+	): CrCustomTypes {
 		const { customTypes, ...updateMeta } = args;
 
-		let changed = false;
-
-		const newCustomTypes = customTypes.map((customType) => {
-			const result = this.updateCRCustomType({ customType, ...updateMeta });
-			changed ||= result.changed;
-
-			return result.customType;
+		return customTypes.map((customType) => {
+			return this.updateCRCustomType({ customType, ...updateMeta });
 		});
-
-		return { customTypes: newCustomTypes, changed };
 	}
 
 	/**
@@ -308,9 +279,7 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
-	>(
-		args: { field: T } & CustomTypeFieldIdChangedMeta,
-	): { field: T; changed: boolean } {
+	>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
 		const { field, ...updateMeta } = args;
 		if (
 			field.type !== "Link" ||
@@ -318,20 +287,17 @@ export class CustomTypesManager extends BaseManager {
 			!field.config?.customtypes
 		) {
 			// not a content relationship field
-			return { field, changed: false };
+			return field;
 		}
 
-		const result = this.updateCRCustomTypes({
+		const newCustomTypes = this.updateCRCustomTypes({
 			...updateMeta,
 			customTypes: field.config.customtypes,
 		});
 
 		return {
-			field: {
-				...field,
-				config: { ...field.config, customtypes: result.customTypes },
-			},
-			changed: result.changed,
+			...field,
+			config: { ...field.config, customtypes: newCustomTypes },
 		};
 	}
 
@@ -361,32 +327,22 @@ export class CustomTypesManager extends BaseManager {
 				const customTypes = await this.readAllCustomTypes();
 
 				for (const customType of customTypes.models) {
-					// keep track of whether the custom type has changed to avoid calling
-					// the update hook if nothing has changed
-					let customTypeChanged = false;
-
 					const updatedCustomTypeModel = traverseCustomType({
 						customType: customType.model,
 						onField: ({ field }) => {
-							const result = this.updateFieldContentRelationships({
+							return this.updateFieldContentRelationships({
 								field,
 								previousPath,
 								newPath,
 							});
-
-							customTypeChanged ||= result.changed;
-
-							return result.field;
 						},
 					});
 
-					if (customTypeChanged) {
-						crUpdates.push(
-							this.sliceMachinePluginRunner.callHook("custom-type:update", {
-								model: updatedCustomTypeModel,
-							}),
-						);
-					}
+					crUpdates.push(
+						this.sliceMachinePluginRunner.callHook("custom-type:update", {
+							model: updatedCustomTypeModel,
+						}),
+					);
 				}
 
 				// Find existing slice with content relationships that link to the renamed
@@ -399,34 +355,24 @@ export class CustomTypesManager extends BaseManager {
 					});
 
 					for (const slice of slices.models) {
-						// keep track of whether the custom type has changed to avoid calling
-						// the update hook if nothing has changed
-						let sliceChanged = false;
-
 						const updatedSliceModel = traverseSharedSlice({
 							path: ["."],
 							slice: slice.model,
 							onField: ({ field }) => {
-								const result = this.updateFieldContentRelationships({
+								return this.updateFieldContentRelationships({
 									field,
 									previousPath,
 									newPath,
 								});
-
-								sliceChanged ||= result.changed;
-
-								return result.field;
 							},
 						});
 
-						if (sliceChanged) {
-							crUpdates.push(
-								this.sliceMachinePluginRunner.callHook("slice:update", {
-									libraryID: library.libraryID,
-									model: updatedSliceModel,
-								}),
-							);
-						}
+						crUpdates.push(
+							this.sliceMachinePluginRunner.callHook("slice:update", {
+								libraryID: library.libraryID,
+								model: updatedSliceModel,
+							}),
+						);
 					}
 				}
 
