@@ -9,7 +9,6 @@ import {
 	updateCustomTypeContentRelationships,
 	updateSharedSliceContentRelationships,
 } from "../src/managers/customTypes/CustomTypesManager";
-import { SharedSlice } from "@prismicio/types-internal";
 
 it("calls plugins' `custom-type:update` hook", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
@@ -181,7 +180,7 @@ describe("updateCustomTypeContentRelationships", () => {
 
 describe("updateSharedSliceContentRelationships", () => {
 	it("should update slice content relationship ids", async () => {
-		const getOneLevelSharedSliceModel = (...ids: string[]): SharedSlice => {
+		const getOneLevelSharedSliceModel = (...ids: string[]) => {
 			return {
 				id: "testSlice",
 				name: "Test Slice",
@@ -217,7 +216,7 @@ describe("updateSharedSliceContentRelationships", () => {
 						},
 					},
 				],
-			};
+			} as const;
 		};
 
 		const onUpdate = vi.fn();
@@ -248,7 +247,7 @@ describe("updateSharedSliceContentRelationships", () => {
 		const getTwoLevelSharedSliceModel = (args?: {
 			crId?: string;
 			ids?: string[];
-		}): SharedSlice => {
+		}) => {
 			const { crId, ids } = args ?? {};
 
 			return {
@@ -297,7 +296,7 @@ describe("updateSharedSliceContentRelationships", () => {
 						},
 					},
 				],
-			};
+			} as const;
 		};
 
 		const onUpdate = vi.fn();
