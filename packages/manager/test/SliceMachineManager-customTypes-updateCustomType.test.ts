@@ -112,7 +112,9 @@ describe("updateCustomTypeContentRelationships", () => {
 	});
 
 	it("should update NESTED content relationship ids", async (ctx) => {
-		const getTwoLevelCrModel = (...ids: string[]) => {
+		const getTwoLevelCrModel = (args?: { crId?: string; ids?: string[] }) => {
+			const { crId, ids } = args ?? {};
+
 			return ctx.mockPrismic.model.customType({
 				format: "custom",
 				label: "Test CT",
@@ -136,11 +138,11 @@ describe("updateCustomTypeContentRelationships", () => {
 									fields: [
 										"authorFirstName",
 										{
-											id: "address_cr",
+											id: crId ?? "address_cr",
 											customtypes: [
 												{
 													id: "address",
-													fields: ["country", ...ids],
+													fields: ["country", ...(ids ?? [])],
 												},
 											],
 										},
@@ -156,19 +158,34 @@ describe("updateCustomTypeContentRelationships", () => {
 		const onUpdate = vi.fn();
 		updateCustomTypeContentRelationships({
 			models: [
-				{ model: getTwoLevelCrModel("city") },
-				{ model: getTwoLevelCrModel("addressLine1") },
-				{ model: getTwoLevelCrModel("addressLine1", "city") },
+				{ model: getTwoLevelCrModel({ ids: ["city"] }) },
+				{ model: getTwoLevelCrModel({ ids: ["addressLine1"] }) },
+				{ model: getTwoLevelCrModel({ ids: ["addressLine1", "city"] }) },
 			],
 			previousPath: ["address", "city"],
 			newPath: ["address", "city_CHANGED"],
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledWith(getTwoLevelCrModel("city_CHANGED")); // changed
-		expect(onUpdate).toHaveBeenCalledWith(getTwoLevelCrModel("addressLine1")); // not changed
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelCrModel("addressLine1", "city_CHANGED"),
+			getTwoLevelCrModel({ ids: ["city_CHANGED"] }),
+		); // changed
+		expect(onUpdate).toHaveBeenCalledWith(
+			getTwoLevelCrModel({ ids: ["addressLine1"] }),
+		); // not changed
+		expect(onUpdate).toHaveBeenCalledWith(
+			getTwoLevelCrModel({ ids: ["addressLine1", "city_CHANGED"] }),
+		); // changed
+
+		updateCustomTypeContentRelationships({
+			models: [{ model: getTwoLevelCrModel() }],
+			previousPath: ["author", "address_cr"],
+			newPath: ["author", "address_cr_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledWith(
+			getTwoLevelCrModel({ crId: "address_cr_CHANGED" }),
 		); // changed
 	});
 });
@@ -187,8 +204,8 @@ describe("updateSharedSliceContentRelationships", () => {
 						name: "Test Variation",
 						description: "Test Variation",
 						version: "1.0.0",
-						docURL: "https://www.google.com",
-						imageUrl: "https://www.google.com",
+						docURL: "https://www.prismic.io",
+						imageUrl: "https://www.prismic.io",
 						primary: {
 							name: {
 								type: "Text",
@@ -239,7 +256,12 @@ describe("updateSharedSliceContentRelationships", () => {
 	});
 
 	it("should update slice NESTED content relationship ids", async () => {
-		const getTwoLevelSharedSliceModel = (...ids: string[]): SharedSlice => {
+		const getTwoLevelSharedSliceModel = (args?: {
+			crId?: string;
+			ids?: string[];
+		}): SharedSlice => {
+			const { crId, ids } = args ?? {};
+
 			return {
 				id: "testSlice",
 				name: "Test Slice",
@@ -251,8 +273,8 @@ describe("updateSharedSliceContentRelationships", () => {
 						name: "Test Variation",
 						description: "Test Variation",
 						version: "1.0.0",
-						docURL: "https://www.google.com",
-						imageUrl: "https://www.google.com",
+						docURL: "https://www.prismic.io",
+						imageUrl: "https://www.prismic.io",
 						primary: {
 							name: {
 								type: "Text",
@@ -270,11 +292,11 @@ describe("updateSharedSliceContentRelationships", () => {
 											fields: [
 												"authorFirstName",
 												{
-													id: "address_cr",
+													id: crId ?? "address_cr",
 													customtypes: [
 														{
 															id: "address",
-															fields: ["country", ...ids],
+															fields: ["country", ...(ids ?? [])],
 														},
 													],
 												},
@@ -292,9 +314,11 @@ describe("updateSharedSliceContentRelationships", () => {
 		const onUpdate = vi.fn();
 		updateSharedSliceContentRelationships({
 			models: [
-				{ model: getTwoLevelSharedSliceModel("city") },
-				{ model: getTwoLevelSharedSliceModel("addressLine1") },
-				{ model: getTwoLevelSharedSliceModel("addressLine1", "city") },
+				{ model: getTwoLevelSharedSliceModel({ ids: ["city"] }) },
+				{ model: getTwoLevelSharedSliceModel({ ids: ["addressLine1"] }) },
+				{
+					model: getTwoLevelSharedSliceModel({ ids: ["addressLine1", "city"] }),
+				},
 			],
 			previousPath: ["address", "city"],
 			newPath: ["address", "city_CHANGED"],
@@ -303,13 +327,24 @@ describe("updateSharedSliceContentRelationships", () => {
 
 		expect(onUpdate).toHaveBeenCalledTimes(3);
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelSharedSliceModel("city_CHANGED"),
+			getTwoLevelSharedSliceModel({ ids: ["city_CHANGED"] }),
 		); // changed
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelSharedSliceModel("addressLine1"),
+			getTwoLevelSharedSliceModel({ ids: ["addressLine1"] }),
 		); // not changed
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelSharedSliceModel("addressLine1", "city_CHANGED"),
+			getTwoLevelSharedSliceModel({ ids: ["addressLine1", "city_CHANGED"] }),
+		); // changed
+
+		updateSharedSliceContentRelationships({
+			models: [{ model: getTwoLevelSharedSliceModel() }],
+			previousPath: ["author", "address_cr"],
+			newPath: ["author", "address_cr_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledWith(
+			getTwoLevelSharedSliceModel({ crId: "address_cr_CHANGED" }),
 		); // changed
 	});
 });
