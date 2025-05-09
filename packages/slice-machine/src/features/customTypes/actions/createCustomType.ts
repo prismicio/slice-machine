@@ -31,7 +31,7 @@ export async function createCustomType(args: DeleteCustomTypeArgs) {
   });
 
   try {
-    const { errors } = await updateCustomType(newCustomType);
+    const { errors } = await updateCustomType({ customType: newCustomType });
 
     if (errors.length > 0) {
       throw errors;

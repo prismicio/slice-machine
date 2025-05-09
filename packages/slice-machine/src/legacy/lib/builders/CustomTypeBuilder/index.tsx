@@ -121,7 +121,7 @@ export const CustomTypeBuilder = () => {
           isOpen
           onSubmit={({ id }) => {
             const newCustomType = createSection(customType, id);
-            setCustomType(newCustomType);
+            setCustomType({ customType: newCustomType });
             setTabValue(id);
           }}
           tabIds={customTypeSM.tabs.map((tab) => tab.key.toLowerCase())}
@@ -136,7 +136,7 @@ export const CustomTypeBuilder = () => {
           isOpen
           onSubmit={({ id }) => {
             const newCustomType = renameSection(customType, dialog.tabKey, id);
-            setCustomType(newCustomType);
+            setCustomType({ customType: newCustomType });
 
             if (tabValue === dialog.tabKey) setTabValue(id);
           }}
@@ -153,7 +153,7 @@ export const CustomTypeBuilder = () => {
           isOpen
           onSubmit={() => {
             const newCustomType = deleteSection(customType, dialog.tabKey);
-            setCustomType(newCustomType);
+            setCustomType({ customType: newCustomType });
 
             if (tabValue === dialog.tabKey) {
               const otherTabValue = customTypeSM.tabs.find(

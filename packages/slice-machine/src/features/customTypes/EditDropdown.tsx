@@ -22,7 +22,7 @@ type EditDropdownProps = {
   isChangesLocal: boolean;
   format: CustomTypeFormat;
   customType: CustomType;
-  setLocalCustomType?: (customType: CustomType) => void;
+  setLocalCustomType?: (args: { customType: CustomType }) => void;
 };
 
 export const EditDropdown: FC<EditDropdownProps> = ({
