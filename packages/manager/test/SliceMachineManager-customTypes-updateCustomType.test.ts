@@ -46,17 +46,6 @@ it("throws if plugins have not been initialized", async (ctx) => {
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });
 
-it("throws if plugins have not been initialized", async (ctx) => {
-	const cwd = await createTestProject();
-	const manager = createSliceMachineManager({ cwd });
-
-	await expect(async () => {
-		await manager.customTypes.updateCustomType({
-			model: ctx.mockPrismic.model.customType(),
-		});
-	}).rejects.toThrow(/plugins have not been initialized/i);
-});
-
 describe("updateCustomTypeContentRelationships", () => {
 	it("should update content relationship ids", async (ctx) => {
 		const getOneLevelCrModel = (...ids: string[]) => {
