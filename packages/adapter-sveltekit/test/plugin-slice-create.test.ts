@@ -199,21 +199,7 @@ test("component file has correct contents", async (ctx) => {
 	);
 
 	expect(contents).includes("<script>");
-	expect(contents).toMatchInlineSnapshot(`
-		"<script>
-		  /** @type {import(\\"@prismicio/client\\").Content.QuxQuuxSlice} */
-		  export let slice;
-		</script>
-
-		<section
-		  data-slice-type={slice.slice_type}
-		  data-slice-variation={slice.variation}
-		>
-		  Placeholder component for {slice.slice_type} (variation: {slice.variation})
-		  Slices
-		</section>
-		"
-	`);
+	expect(contents).toMatchSnapshot();
 });
 
 test("component file is correctly typed when TypeScript is enabled", async (ctx) => {
@@ -234,22 +220,7 @@ test("component file is correctly typed when TypeScript is enabled", async (ctx)
 	);
 
 	expect(contents).includes('<script lang="ts">');
-	expect(contents).toMatchInlineSnapshot(`
-		"<script lang=\\"ts\\">
-		  import type { Content } from \\"@prismicio/client\\";
-
-		  export let slice: Content.QuxQuuxSlice;
-		</script>
-
-		<section
-		  data-slice-type={slice.slice_type}
-		  data-slice-variation={slice.variation}
-		>
-		  Placeholder component for {slice.slice_type} (variation: {slice.variation})
-		  Slices
-		</section>
-		"
-	`);
+	expect(contents).toMatchSnapshot();
 });
 
 test("component file is formatted by default", async (ctx) => {
