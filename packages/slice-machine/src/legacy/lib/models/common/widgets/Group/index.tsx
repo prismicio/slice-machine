@@ -1,5 +1,6 @@
 import { type DroppableStateSnapshot } from "react-beautiful-dnd";
 
+import { CustomTypeUpdateMeta } from "@/apiClient";
 import { useNestedGroupExperiment } from "@/features/builder/useNestedGroupExperiment";
 import { type Item } from "@/legacy/components/ListItem";
 import { type TabField } from "@/legacy/lib/models/common/CustomType";
@@ -9,7 +10,6 @@ import { type Widget } from "@/legacy/lib/models/common/widgets/Widget";
 
 import { createGroupWidget, type SchemaType } from "./createGroupWidget";
 import { CustomListItem } from "./ListItem";
-import { CustomTypeUpdateMeta } from "@/apiClient";
 
 const widgetsArray = [
   Widgets.Image,
