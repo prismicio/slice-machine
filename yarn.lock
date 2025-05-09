@@ -6035,13 +6035,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.75-alpha.support-new-cr-model.1":
-  version: 0.4.75-alpha.support-new-cr-model.1
-  resolution: "@prismicio/editor-fields@npm:0.4.75-alpha.support-new-cr-model.1"
+"@prismicio/editor-fields@npm:0.4.75":
+  version: 0.4.75
+  resolution: "@prismicio/editor-fields@npm:0.4.75"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/client": 7.15.1
-    "@prismicio/editor-support": 0.4.75-alpha.support-new-cr-model.1
+    "@prismicio/editor-support": 0.4.75
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.9.0
     "@tiptap/core": 2.11.5
@@ -6076,17 +6076,17 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.75-alpha.support-new-cr-model.1
+    "@prismicio/editor-ui": ^0.4.75
     "@tanstack/react-query": 5.55.4
     react: 18
     react-dom: 18
-  checksum: 7ad13f73e17ba8d6c91feb0284c347870f7b1fa9328b965c91266780a150702d75b3b6c4d7d58a0daa9e6a8b057e65c1622dd39b1c167fb9ddb7bd027008ba41
+  checksum: 3d3baa7178782f913cc48ef93505b302bc2628960ece4444021a96c47884660ef8271d763c61794473c478c8e36ecd76adb447cbc055018ebf6a36598097dac7
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.75-alpha.support-new-cr-model.1":
-  version: 0.4.75-alpha.support-new-cr-model.1
-  resolution: "@prismicio/editor-support@npm:0.4.75-alpha.support-new-cr-model.1"
+"@prismicio/editor-support@npm:0.4.75":
+  version: 0.4.75
+  resolution: "@prismicio/editor-support@npm:0.4.75"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6097,16 +6097,16 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 2d5e97fe34e62dc50d17fb5a7595b57de00f0ecfab76d1508bc77a5a1e418b92b59324480bbf8bd453b4088b44a739f46051b5c0f068e211e0c5d74919c8c769
+  checksum: ffdc9652356c571114153b2d92d120311efc658ab836e26c71496c1189f3ac40bbb5116cafb7cd5498bcffad4af8c7cf41553b5df78a8bd3cb0cf2e13c1ee1c9
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.75-alpha.support-new-cr-model.1":
-  version: 0.4.75-alpha.support-new-cr-model.1
-  resolution: "@prismicio/editor-ui@npm:0.4.75-alpha.support-new-cr-model.1"
+"@prismicio/editor-ui@npm:0.4.75":
+  version: 0.4.75
+  resolution: "@prismicio/editor-ui@npm:0.4.75"
   dependencies:
     "@internationalized/date": 3.5.5
-    "@prismicio/editor-support": 0.4.75-alpha.support-new-cr-model.1
+    "@prismicio/editor-support": 0.4.75
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -6157,7 +6157,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: d8949d542eae9b2cd86f52a9b48bd8c486342b21abf66b12cfe17392f39a4e9e2d266a39eb7a153e34eca9bcc22f248653011fd940764daaf2616088a958bc2c
+  checksum: 8fbed0c5bec068836c4418107cd68fa020ea698d7b1b231e71cd0a15533e9c3067f80ddd92039119b1df19b19c2987373e5edf8da13e4b01cfad9b6bc0caf472
   languageName: node
   linkType: hard
 
@@ -31654,9 +31654,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.17.0
-    "@prismicio/editor-fields": 0.4.75-alpha.support-new-cr-model.1
-    "@prismicio/editor-support": 0.4.75-alpha.support-new-cr-model.1
-    "@prismicio/editor-ui": 0.4.75-alpha.support-new-cr-model.1
+    "@prismicio/editor-fields": 0.4.75
+    "@prismicio/editor-support": 0.4.75
+    "@prismicio/editor-ui": 0.4.75
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.13.0
     "@prismicio/simulator": 0.1.4
