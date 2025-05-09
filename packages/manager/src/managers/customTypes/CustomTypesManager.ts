@@ -188,119 +188,6 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	private updateCRCustomType<T extends CrCustomType | CrCustomTypeFieldLeaf>(
-		args: {
-			customType: T;
-		} & CustomTypeFieldIdChangedMeta,
-	): T {
-		const { previousPath, newPath } = args;
-
-		const customType = shallowClone(args.customType);
-
-		const [previousId] = previousPath;
-		const [newId] = newPath;
-
-		if (!previousId || !newId || typeof customType === "string") {
-			return customType;
-		}
-
-		if (customType.fields) {
-			const newFields = customType.fields.map((fieldArg) => {
-				const field = shallowClone(fieldArg);
-
-				const previousId = previousPath[1];
-				const newId = newPath[1];
-
-				if (!previousId || !newId) {
-					return field;
-				}
-
-				if (typeof field === "string") {
-					if (field === previousId && field !== newId) {
-						// We have reached a field id that matches the id that was renamed,
-						// so we update it new one. The field is a string, so return the new
-						// id.
-						return newId;
-					}
-
-					return field;
-				}
-
-				if (field.id === previousId && field.id !== newId) {
-					// We have reached a field id that matches the id that was renamed,
-					// so we update it new one.
-					// Since field is not a string, we don't exit, as we might have
-					// something to update further down in customtypes.
-					field.id = newId;
-				}
-
-				return {
-					...field,
-					customtypes: field.customtypes.map((customType) => {
-						return this.updateCRCustomType({
-							customType,
-							previousPath,
-							newPath,
-						});
-					}),
-				};
-			});
-
-			// @ts-expect-error We know that at this level we are returning the
-			// right properties, but TypeScript will not trust it because it might
-			// also have customtypes. This is because the type is not fully
-			// recursive, it just has two levels of depth.
-			return {
-				id: customType.id,
-				fields: newFields,
-			};
-		}
-
-		return customType;
-	}
-
-	/**
-	 * Map over the custom types of a Content Relationship Link and update the API
-	 * IDs that were changed during the custom type update.
-	 */
-	private updateCRCustomTypes(
-		args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
-	): CrCustomTypes {
-		const { customTypes, ...updateMeta } = args;
-
-		return customTypes.map((customType) => {
-			return this.updateCRCustomType({ customType, ...updateMeta });
-		});
-	}
-
-	/**
-	 * Update the Content Relationship API IDs of a single field. The change is
-	 * determined by the `previousPath` and `newPath` properties.
-	 */
-	private updateFieldContentRelationships<
-		T extends UID | NestableWidget | Group | NestedGroup,
-	>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
-		const { field, ...updateMeta } = args;
-		if (
-			field.type !== "Link" ||
-			field.config?.select !== "document" ||
-			!field.config?.customtypes
-		) {
-			// not a content relationship field
-			return field;
-		}
-
-		const newCustomTypes = this.updateCRCustomTypes({
-			...updateMeta,
-			customTypes: field.config.customtypes,
-		});
-
-		return {
-			...field,
-			config: { ...field.config, customtypes: newCustomTypes },
-		};
-	}
-
 	/**
 	 * Update the Content Relationship API IDs for all existing custom types and
 	 * slices. The change is determined by properties inside the `updateMeta`
@@ -330,7 +217,7 @@ export class CustomTypesManager extends BaseManager {
 					const updatedCustomTypeModel = traverseCustomType({
 						customType: customType.model,
 						onField: ({ field }) => {
-							return this.updateFieldContentRelationships({
+							return updateFieldContentRelationships({
 								field,
 								previousPath,
 								newPath,
@@ -359,7 +246,7 @@ export class CustomTypesManager extends BaseManager {
 							path: ["."],
 							slice: slice.model,
 							onField: ({ field }) => {
-								return this.updateFieldContentRelationships({
+								return updateFieldContentRelationships({
 									field,
 									previousPath,
 									newPath,
@@ -619,7 +506,120 @@ const InferSliceResponse = z.object({
 	langSmithUrl: z.string().url().optional(),
 });
 
-function shallowClone<T>(value: T): T {
+function updateCRCustomType<T extends CrCustomType | CrCustomTypeFieldLeaf>(
+	args: {
+		customType: T;
+	} & CustomTypeFieldIdChangedMeta,
+): T {
+	const { previousPath, newPath } = args;
+
+	const customType = shallowCloneIfObject(args.customType);
+
+	const [previousId] = previousPath;
+	const [newId] = newPath;
+
+	if (!previousId || !newId || typeof customType === "string") {
+		return customType;
+	}
+
+	if (customType.fields) {
+		const newFields = customType.fields.map((fieldArg) => {
+			const field = shallowCloneIfObject(fieldArg);
+
+			const previousId = previousPath[1];
+			const newId = newPath[1];
+
+			if (!previousId || !newId) {
+				return field;
+			}
+
+			if (typeof field === "string") {
+				if (field === previousId && field !== newId) {
+					// We have reached a field id that matches the id that was renamed,
+					// so we update it new one. The field is a string, so return the new
+					// id.
+					return newId;
+				}
+
+				return field;
+			}
+
+			if (field.id === previousId && field.id !== newId) {
+				// We have reached a field id that matches the id that was renamed,
+				// so we update it new one.
+				// Since field is not a string, we don't exit, as we might have
+				// something to update further down in customtypes.
+				field.id = newId;
+			}
+
+			return {
+				...field,
+				customtypes: field.customtypes.map((customType) => {
+					return updateCRCustomType({
+						customType,
+						previousPath,
+						newPath,
+					});
+				}),
+			};
+		});
+
+		// @ts-expect-error We know that at this level we are returning the
+		// right properties, but TypeScript will not trust it because it might
+		// also have customtypes. This is because the type is not fully
+		// recursive, it just has two levels of depth.
+		return {
+			id: customType.id,
+			fields: newFields,
+		};
+	}
+
+	return customType;
+}
+
+/**
+ * Map over the custom types of a Content Relationship Link and update the API
+ * IDs that were changed during the custom type update.
+ */
+function updateCRCustomTypes(
+	args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
+): CrCustomTypes {
+	const { customTypes, ...updateMeta } = args;
+
+	return customTypes.map((customType) => {
+		return updateCRCustomType({ customType, ...updateMeta });
+	});
+}
+
+/**
+ * Update the Content Relationship API IDs of a single field. The change is
+ * determined by the `previousPath` and `newPath` properties.
+ */
+export function updateFieldContentRelationships<
+	T extends UID | NestableWidget | Group | NestedGroup,
+>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
+	const { field, ...updateMeta } = args;
+	if (
+		field.type !== "Link" ||
+		field.config?.select !== "document" ||
+		!field.config?.customtypes
+	) {
+		// not a content relationship field
+		return field;
+	}
+
+	const newCustomTypes = updateCRCustomTypes({
+		...updateMeta,
+		customTypes: field.config.customtypes,
+	});
+
+	return {
+		...field,
+		config: { ...field.config, customtypes: newCustomTypes },
+	};
+}
+
+function shallowCloneIfObject<T>(value: T): T {
 	if (typeof value === "object") {
 		return { ...value };
 	}
