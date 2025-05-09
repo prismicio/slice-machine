@@ -190,17 +190,18 @@ export class CustomTypesManager extends BaseManager {
 
 	private updateCRCustomType(
 		args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
-	): CrCustomType {
+	): { customType: CrCustomType; changed: boolean } {
 		const { previousPath, newPath } = args;
-
 		const customType = shallowClone(args.customType);
 
 		const [previousId] = previousPath;
 		const [newId] = newPath;
 
 		if (!previousId || !newId || typeof customType === "string") {
-			return customType;
+			return { customType, changed: false };
 		}
+
+		let modelHasChanged = false;
 
 		if (customType.fields) {
 			const newFields = customType.fields.map((fieldArg) => {
@@ -215,6 +216,8 @@ export class CustomTypesManager extends BaseManager {
 
 				if (typeof field === "string") {
 					if (field === previousId && field !== newId) {
+						modelHasChanged = true;
+
 						// We have reached a field id that matches the id that was renamed,
 						// so we update it new one. The field is a string, so return the new
 						// id.
@@ -225,6 +228,8 @@ export class CustomTypesManager extends BaseManager {
 				}
 
 				if (field.id === previousId && field.id !== newId) {
+					modelHasChanged = true;
+
 					// We have reached a field id that matches the id that was renamed,
 					// so we update it new one.
 					// Since field is not a string, we don't exit, as we might have
@@ -245,6 +250,8 @@ export class CustomTypesManager extends BaseManager {
 
 						if (typeof customType === "string") {
 							if (customType === previousId && customType !== newId) {
+								modelHasChanged = true;
+
 								// Matches the previous id, so we update it.
 								return newId;
 							}
@@ -253,6 +260,8 @@ export class CustomTypesManager extends BaseManager {
 						}
 
 						if (customType.id === previousId && customType.id !== newId) {
+							modelHasChanged = true;
+
 							// Matches the previous id, so we update it and return because
 							// it's the last level.
 							return { ...customType, id: newId };
@@ -263,10 +272,13 @@ export class CustomTypesManager extends BaseManager {
 				};
 			});
 
-			return { ...customType, fields: newFields };
+			return {
+				customType: { ...customType, fields: newFields },
+				changed: modelHasChanged,
+			};
 		}
 
-		return customType;
+		return { customType, changed: modelHasChanged };
 	}
 
 	/**
@@ -275,12 +287,20 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private updateCRCustomTypes(
 		args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
-	): CrCustomTypes {
+	): { customTypes: CrCustomTypes; changed: boolean } {
 		const { customTypes, ...updateMeta } = args;
 
-		return customTypes.map((customType) => {
-			return this.updateCRCustomType({ customType, ...updateMeta });
+		let customTypeHasChanged = false;
+
+		const newCustomTypes = customTypes.map((customType) => {
+			const update = this.updateCRCustomType({ customType, ...updateMeta });
+
+			customTypeHasChanged ||= update.changed;
+
+			return update.customType;
 		});
+
+		return { customTypes: newCustomTypes, changed: customTypeHasChanged };
 	}
 
 	/**
@@ -289,7 +309,9 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
-	>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
+	>(
+		args: { field: T } & CustomTypeFieldIdChangedMeta,
+	): { field: T; changed: boolean } {
 		const { field, ...updateMeta } = args;
 		if (
 			field.type !== "Link" ||
@@ -297,17 +319,20 @@ export class CustomTypesManager extends BaseManager {
 			!field.config?.customtypes
 		) {
 			// not a content relationship field
-			return field;
+			return { field, changed: false };
 		}
 
-		const newCustomTypes = this.updateCRCustomTypes({
+		const update = this.updateCRCustomTypes({
 			...updateMeta,
 			customTypes: field.config.customtypes,
 		});
 
 		return {
-			...field,
-			config: { ...field.config, customtypes: newCustomTypes },
+			field: {
+				...field,
+				config: { ...field.config, customtypes: update.customTypes },
+			},
+			changed: update.changed,
 		};
 	}
 
@@ -337,22 +362,32 @@ export class CustomTypesManager extends BaseManager {
 				const customTypes = await this.readAllCustomTypes();
 
 				for (const customType of customTypes.models) {
+					// Keep track of whether the model has changed to avoid calling the
+					// update hook if nothing has changed
+					let customTypeHasChanged = false;
+
 					const updatedCustomTypeModel = traverseCustomType({
 						customType: customType.model,
 						onField: ({ field }) => {
-							return this.updateFieldContentRelationships({
+							const update = this.updateFieldContentRelationships({
 								field,
 								previousPath,
 								newPath,
 							});
+
+							customTypeHasChanged ||= update.changed;
+
+							return update.field;
 						},
 					});
 
-					crUpdates.push(
-						this.sliceMachinePluginRunner.callHook("custom-type:update", {
-							model: updatedCustomTypeModel,
-						}),
-					);
+					if (customTypeHasChanged) {
+						crUpdates.push(
+							this.sliceMachinePluginRunner.callHook("custom-type:update", {
+								model: updatedCustomTypeModel,
+							}),
+						);
+					}
 				}
 
 				// Find existing slice with content relationships that link to the renamed
@@ -365,34 +400,44 @@ export class CustomTypesManager extends BaseManager {
 					});
 
 					for (const slice of slices.models) {
+						// Keep track of whether the model has changed to avoid calling the
+						// update hook if nothing has changed
+						let sliceHasChanged = false;
+
 						const updatedSliceModel = traverseSharedSlice({
 							path: ["."],
 							slice: slice.model,
 							onField: ({ field }) => {
-								return this.updateFieldContentRelationships({
+								const update = this.updateFieldContentRelationships({
 									field,
 									previousPath,
 									newPath,
 								});
+
+								sliceHasChanged ||= update.changed;
+
+								return update.field;
 							},
 						});
 
-						crUpdates.push(
-							this.sliceMachinePluginRunner.callHook("slice:update", {
-								libraryID: library.libraryID,
-								model: updatedSliceModel,
-							}),
-						);
+						if (sliceHasChanged) {
+							crUpdates.push(
+								this.sliceMachinePluginRunner.callHook("slice:update", {
+									libraryID: library.libraryID,
+									model: updatedSliceModel,
+								}),
+							);
+						}
 					}
-				}
 
-				// Process all the Content Relationship updates at once.
-				const crUpdatesResult = await Promise.all(crUpdates);
+					// Process all the Content Relationship updates at once.
+					const crUpdatesResult = await Promise.all(crUpdates);
 
-				if (crUpdatesResult.some((result) => result.errors.length > 0)) {
-					return {
-						errors: crUpdatesResult.flatMap((result) => result.errors),
-					};
+					if (crUpdatesResult.some((result) => result.errors.length > 0)) {
+						return {
+							errors: crUpdatesResult.flatMap((result) => result.errors),
+						};
+					}
 				}
 			}
 		}
