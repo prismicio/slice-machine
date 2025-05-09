@@ -429,15 +429,15 @@ export class CustomTypesManager extends BaseManager {
 							);
 						}
 					}
+				}
 
-					// Process all the Content Relationship updates at once.
-					const crUpdatesResult = await Promise.all(crUpdates);
+				// Process all the Content Relationship updates at once.
+				const crUpdatesResult = await Promise.all(crUpdates);
 
-					if (crUpdatesResult.some((result) => result.errors.length > 0)) {
-						return {
-							errors: crUpdatesResult.flatMap((result) => result.errors),
-						};
-					}
+				if (crUpdatesResult.some((result) => result.errors.length > 0)) {
+					return {
+						errors: crUpdatesResult.flatMap((result) => result.errors),
+					};
 				}
 			}
 		}
