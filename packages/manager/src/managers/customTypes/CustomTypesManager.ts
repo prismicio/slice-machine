@@ -213,24 +213,19 @@ export class CustomTypesManager extends BaseManager {
 				// any custom type and update them to use the new one.
 				const customTypes = await this.readAllCustomTypes();
 
-				for (const customType of customTypes.models) {
-					const updatedCustomTypeModel = traverseCustomType({
-						customType: customType.model,
-						onField: ({ field }) => {
-							return updateFieldContentRelationships({
-								field,
-								previousPath,
-								newPath,
-							});
-						},
-					});
-
-					crUpdates.push(
-						this.sliceMachinePluginRunner.callHook("custom-type:update", {
-							model: updatedCustomTypeModel,
-						}),
-					);
-				}
+				updateCustomTypeContentRelationships({
+					models: customTypes.models,
+					onUpdate: (model) => {
+						pushIfDefined(
+							crUpdates,
+							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+								model,
+							}),
+						);
+					},
+					previousPath,
+					newPath,
+				});
 
 				// Find existing slice with content relationships that link to the renamed
 				// field id in all libraries and update them to use the new one.
@@ -241,26 +236,20 @@ export class CustomTypesManager extends BaseManager {
 						libraryID: library.libraryID,
 					});
 
-					for (const slice of slices.models) {
-						const updatedSliceModel = traverseSharedSlice({
-							path: ["."],
-							slice: slice.model,
-							onField: ({ field }) => {
-								return updateFieldContentRelationships({
-									field,
-									previousPath,
-									newPath,
-								});
-							},
-						});
-
-						crUpdates.push(
-							this.sliceMachinePluginRunner.callHook("slice:update", {
-								libraryID: library.libraryID,
-								model: updatedSliceModel,
-							}),
-						);
-					}
+					updateSharedSliceContentRelationships({
+						models: slices.models,
+						onUpdate: (model) => {
+							pushIfDefined(
+								crUpdates,
+								this.sliceMachinePluginRunner?.callHook("slice:update", {
+									libraryID: library.libraryID,
+									model,
+								}),
+							);
+						},
+						previousPath,
+						newPath,
+					});
 				}
 
 				// Process all the Content Relationship updates at once.
@@ -595,7 +584,7 @@ function updateCRCustomTypes(
  * Update the Content Relationship API IDs of a single field. The change is
  * determined by the `previousPath` and `newPath` properties.
  */
-export function updateFieldContentRelationships<
+function updateFieldContentRelationships<
 	T extends UID | NestableWidget | Group | NestedGroup,
 >(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
 	const { field, ...updateMeta } = args;
@@ -619,10 +608,65 @@ export function updateFieldContentRelationships<
 	};
 }
 
+export function updateCustomTypeContentRelationships(
+	args: {
+		models: { model: CustomType }[];
+		onUpdate: (model: CustomType) => void;
+	} & CustomTypeFieldIdChangedMeta,
+) {
+	const { models, previousPath, newPath, onUpdate } = args;
+
+	for (const customType of models) {
+		const updatedCustomTypeModel = traverseCustomType({
+			customType: customType.model,
+			onField: ({ field }) => {
+				return updateFieldContentRelationships({
+					field,
+					previousPath,
+					newPath,
+				});
+			},
+		});
+
+		onUpdate(updatedCustomTypeModel);
+	}
+}
+
+export function updateSharedSliceContentRelationships(
+	args: {
+		models: { model: SharedSlice }[];
+		onUpdate: (model: SharedSlice) => void;
+	} & CustomTypeFieldIdChangedMeta,
+) {
+	const { models, previousPath, newPath, onUpdate } = args;
+
+	for (const slice of models) {
+		const updatedSliceModel = traverseSharedSlice({
+			path: ["."],
+			slice: slice.model,
+			onField: ({ field }) => {
+				return updateFieldContentRelationships({
+					field,
+					previousPath,
+					newPath,
+				});
+			},
+		});
+
+		onUpdate(updatedSliceModel);
+	}
+}
+
 function shallowCloneIfObject<T>(value: T): T {
 	if (typeof value === "object") {
 		return { ...value };
 	}
 
 	return value;
+}
+
+function pushIfDefined<T>(array: T[], value: T | undefined) {
+	if (value) {
+		array.push(value);
+	}
 }
