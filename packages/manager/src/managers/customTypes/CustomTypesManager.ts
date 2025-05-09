@@ -188,11 +188,9 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	private updateCRCustomType<T extends CrCustomType | CrCustomTypeFieldLeaf>(
-		args: {
-			customType: T;
-		} & CustomTypeFieldIdChangedMeta,
-	): T {
+	private updateCRCustomType(
+		args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
+	): CrCustomType {
 		const { previousPath, newPath } = args;
 
 		const customType = shallowClone(args.customType);
@@ -236,24 +234,36 @@ export class CustomTypesManager extends BaseManager {
 
 				return {
 					...field,
-					customtypes: field.customtypes.map((customType) => {
-						return this.updateCRCustomType({
-							customType,
-							previousPath,
-							newPath,
-						});
+					customtypes: field.customtypes.map((customTypeArg) => {
+						const customType = shallowClone(customTypeArg);
+						const previousId = previousPath[2];
+						const newId = newPath[2];
+
+						if (!previousId || !newId) {
+							return customType;
+						}
+
+						if (typeof customType === "string") {
+							if (customType === previousId && customType !== newId) {
+								// Matches the previous id, so we update it.
+								return newId;
+							}
+
+							return customType;
+						}
+
+						if (customType.id === previousId && customType.id !== newId) {
+							// Matches the previous id, so we update it and return because
+							// it's the last level.
+							return { ...customType, id: newId };
+						}
+
+						return customType;
 					}),
 				};
 			});
 
-			// @ts-expect-error We know that at this level we are returning the
-			// right properties, but TypeScript will not trust it because it might
-			// also have customtypes. This is because the type is not fully
-			// recursive, it just has two levels of depth.
-			return {
-				id: customType.id,
-				fields: newFields,
-			};
+			return { ...customType, fields: newFields };
 		}
 
 		return customType;
