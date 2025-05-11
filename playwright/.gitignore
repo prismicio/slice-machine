@@ -1,4 +1,6 @@
 /test-results/
 /playwright-report/
+/blob-report/
 .env.test
 .env.test.local
+.repository-name

@@ -16,6 +16,15 @@ Playwright Test extension was created specifically to accommodate the needs of e
 
 ## How to run tests
 
+### Prerequisites
+
+- Run `yarn dev` in the root directory before running tests locally
+- Create a `.env.test.local` file by copying `.env.test.local.example` and fill in the required environment variables
+
+**Note:** If you want to run tests against an existing playground, run `yarn play` and set `REPOSITORY` variable in `.env.test.local` file. If Slice Machine is not already running when you start tests, Playwright will automatically run `yarn play` for you.
+
+### Commands
+
 - Run all tests
 
 _You can run your tests with the playwright test command. Tests run in headless mode by default meaning no browser window will be opened while running the tests and results will be seen in the terminal._
