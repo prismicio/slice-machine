@@ -69,6 +69,12 @@ async function main(): Promise<void> {
       },
     );
 
+    // Disable telemetry (Segment / Amplitude) for the newly created playground
+    await fs.writeFile(
+      `../playgrounds/${repositoryName}/.prismicrc`,
+      "telemetry=false",
+    );
+
     // Save the name of the newly created repo into a file so it can be accessed
     // by playwright globalTeardown that is in a separate process
     await fs.writeFile(".repository-name", repositoryName);
