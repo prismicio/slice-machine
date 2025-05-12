@@ -199,7 +199,7 @@ export class CustomTypesManager extends BaseManager {
 		const [newId] = newPath;
 
 		if (!previousId || !newId || typeof customType === "string") {
-			return customType;
+			return customType;  // we don't support custom type id renaming
 		}
 
 		if (customType.fields) {
@@ -239,17 +239,8 @@ export class CustomTypesManager extends BaseManager {
 						const previousId = previousPath[2];
 						const newId = newPath[2];
 
-						if (!previousId || !newId) {
-							return customType;
-						}
-
-						if (typeof customType === "string") {
-							if (customType === previousId && customType !== newId) {
-								// Matches the previous id, so we update it.
-								return newId;
-							}
-
-							return customType;
+						if (!previousId || !newId || typeof customType === "string") {
+							return customType; // we don't support custom type id renaming
 						}
 
 						if (customType.id === previousId && customType.id !== newId) {
