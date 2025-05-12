@@ -56,7 +56,7 @@ const createComponentFile = async ({
 				}
 			}
 
-			2. Select Claude 3.7 Sonnet for better output (more for a recommendation)
+			2. Select Claude 3.7 Sonnet (recommended for optimal output)
 
 			✅ Then open your slice file and ask your code editor:
 				"Code this slice"
