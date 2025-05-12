@@ -495,20 +495,18 @@ const InferSliceResponse = z.object({
 	langSmithUrl: z.string().url().optional(),
 });
 
-function updateCRCustomType<T extends CrCustomType | CrCustomTypeFieldLeaf>(
-	args: {
-		customType: T;
-	} & CustomTypeFieldIdChangedMeta,
-): T {
+function updateCRCustomType(
+	args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
+): CrCustomType {
 	const { previousPath, newPath } = args;
 
 	const customType = shallowCloneIfObject(args.customType);
 
-	const [previousId] = previousPath;
-	const [newId] = newPath;
+	const previousId = previousPath[0];
+	const newId = newPath[0];
 
 	if (!previousId || !newId || typeof customType === "string") {
-		return customType;
+		return customType; // we don't support custom type id renaming
 	}
 
 	if (customType.fields) {
@@ -543,24 +541,40 @@ function updateCRCustomType<T extends CrCustomType | CrCustomTypeFieldLeaf>(
 
 			return {
 				...field,
-				customtypes: field.customtypes.map((customType) => {
-					return updateCRCustomType({
-						customType,
-						previousPath,
-						newPath,
-					});
+				customtypes: field.customtypes.map((customTypeArg) => {
+					const customType = shallowCloneIfObject(customTypeArg);
+					const previousId = previousPath[0];
+					const newId = newPath[0];
+
+					if (!previousId || !newId || typeof customType === "string") {
+						return customType; // we don't support custom type id renaming
+					}
+
+					if (customType.fields) {
+						return {
+							...customType,
+							fields: customType.fields.map((fieldArg) => {
+								const field = shallowCloneIfObject(fieldArg);
+								const previousId = previousPath[1];
+								const newId = newPath[1];
+
+								if (field === previousId && field !== newId) {
+									// Matches the previous id, so we update it and return because
+									// it's the last level.
+									return newId;
+								}
+
+								return field;
+							}),
+						};
+					}
+
+					return customType;
 				}),
 			};
 		});
 
-		// @ts-expect-error We know that at this level we are returning the
-		// right properties, but TypeScript will not trust it because it might
-		// also have customtypes. This is because the type is not fully
-		// recursive, it just has two levels of depth.
-		return {
-			id: customType.id,
-			fields: newFields,
-		};
+		return { ...customType, fields: newFields };
 	}
 
 	return customType;
