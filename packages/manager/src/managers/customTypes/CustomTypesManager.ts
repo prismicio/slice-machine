@@ -195,11 +195,11 @@ export class CustomTypesManager extends BaseManager {
 
 		const customType = shallowClone(args.customType);
 
-		const [previousId] = previousPath;
-		const [newId] = newPath;
+		const previousId = previousPath[0];
+		const newId = newPath[0];
 
 		if (!previousId || !newId || typeof customType === "string") {
-			return customType;  // we don't support custom type id renaming
+			return customType; // we don't support custom type id renaming
 		}
 
 		if (customType.fields) {
@@ -236,17 +236,30 @@ export class CustomTypesManager extends BaseManager {
 					...field,
 					customtypes: field.customtypes.map((customTypeArg) => {
 						const customType = shallowClone(customTypeArg);
-						const previousId = previousPath[2];
-						const newId = newPath[2];
+						const previousId = previousPath[0];
+						const newId = newPath[0];
 
 						if (!previousId || !newId || typeof customType === "string") {
 							return customType; // we don't support custom type id renaming
 						}
 
-						if (customType.id === previousId && customType.id !== newId) {
-							// Matches the previous id, so we update it and return because
-							// it's the last level.
-							return { ...customType, id: newId };
+						if (customType.fields) {
+							return {
+								...customType,
+								fields: customType.fields.map((fieldArg) => {
+									const field = shallowClone(fieldArg);
+									const previousId = previousPath[1];
+									const newId = newPath[1];
+
+									if (field === previousId && field !== newId) {
+										// Matches the previous id, so we update it and return because
+										// it's the last level.
+										return newId;
+									}
+
+									return field;
+								}),
+							};
 						}
 
 						return customType;
