@@ -8,7 +8,7 @@
     "lint": "eslint --max-warnings 0 --ext .js,.ts .",
     "test:e2e:install": "playwright install --with-deps chromium",
     "test:e2e:report": "playwright show-report",
-    "test:e2e": "playwright test",
+    "test:e2e": "tsx e2eTestSetup.ts && playwright test",
     "types": "tsc --noEmit",
     "test:e2e:merge-reports": "playwright merge-reports"
   },
@@ -23,6 +23,7 @@
     "depcheck": "1.4.3",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.0.0",
+    "tsx": "4.6.2",
     "typescript": "5.4.5"
   }
 }

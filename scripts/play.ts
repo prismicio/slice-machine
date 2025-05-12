@@ -15,6 +15,7 @@ const PLAYGROUNDS_ROOT = new URL("../playgrounds/", import.meta.url);
 const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
 const DEFAULT_ENVIRONMENT = "dev-tools" satisfies Args["environment"];
 const DEFAULT_WROOM_URL = "https://cdn.wroom.io";
+const DEFAULT_PREFIX = "play-";
 const SLICEMACHINE_INIT_SCRIPT = new URL(
   "../packages/init/bin/slicemachine-init.js",
   import.meta.url,
@@ -40,7 +41,7 @@ type Args = {
   /**
    * The environment on which the playground is run.
    *
-   * @defaultValue `"staging"`
+   * @defaultValue `"dev-tools"`
    */
   environment:
     | "staging"
@@ -54,6 +55,13 @@ type Args = {
    * If `true`, commands are not executed.
    */
   "dry-run": boolean;
+
+  /**
+   * A prefix to be used for the playground name.
+   *
+   * @defaultValue `"play-"`
+   */
+  prefix: string;
 };
 
 type DryRunOption = {
@@ -73,8 +81,14 @@ async function main(): Promise<void> {
 
   const args = mri<Args>(process.argv.slice(2), {
     boolean: ["help", "dry-run", "start", "new"],
-    string: ["framework", "environment"],
-    alias: { h: "help", n: "dry-run", f: "framework", e: "environment" },
+    string: ["framework", "environment", "prefix"],
+    alias: {
+      h: "help",
+      n: "dry-run",
+      f: "framework",
+      e: "environment",
+      p: "prefix",
+    },
     default: {
       "dry-run": false,
       help: false,
@@ -82,6 +96,7 @@ async function main(): Promise<void> {
       new: false,
       framework: DEFAULT_FRAMEWORK,
       environment: DEFAULT_ENVIRONMENT,
+      prefix: DEFAULT_PREFIX,
     },
   });
 
@@ -96,6 +111,7 @@ Options:
     --framework, -f    Specify the playground's framework (next, nuxt, sveltekit) (default: ${DEFAULT_FRAMEWORK})
     --environment, -e  Specify the playground's environment (staging, dev-tools, marketing-tools, platform, production, development) (default: ${DEFAULT_ENVIRONMENT})
     --no-start         Do not start Slice Machine and the website
+    --prefix, -p       Specify the prefix for the playground name (default: ${DEFAULT_PREFIX})
     --dry-run, -n      Show what would have happened
     --help, -h         Show help text
 
@@ -139,8 +155,8 @@ Arguments:
     }
   }
 
-  if (!playgroundName.startsWith("play-")) {
-    playgroundName = `play-${playgroundName}`;
+  if (!playgroundName.startsWith(args.prefix)) {
+    playgroundName = `${args.prefix}${playgroundName}`;
   }
 
   const playgroundDir = new URL(`./${playgroundName}/`, PLAYGROUNDS_ROOT);
@@ -190,7 +206,7 @@ Arguments:
       cwd: playgroundDir,
       env: {
         CONCURRENTLY_PREFIX: `${chalk.grey(
-          playgroundName.replace(/^play-/, ""),
+          playgroundName.replace(new RegExp(`^${args.prefix}`), ""),
         )} [{name}]`,
       },
       stdio: "inherit",
@@ -360,10 +376,12 @@ async function createPlayground(
   );
 
   // Commit all changes so new changes are reflected in Git.
-  await exec("git", ["commit", "-am", "chore: init playground"], {
-    cwd: dir,
-    dryRun: options.dryRun,
-  });
+  if (!process.env.CI) {
+    await exec("git", ["commit", "-am", "chore: init playground"], {
+      cwd: dir,
+      dryRun: options.dryRun,
+    });
+  }
 }
 
 /**
