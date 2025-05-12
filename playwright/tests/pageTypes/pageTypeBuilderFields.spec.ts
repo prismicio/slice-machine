@@ -1,7 +1,9 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { generateRandomString } from "../../utils";
+import { generateRandomId, generateRandomString } from "../../utils";
+import { generateLibraries, generateTypes } from "../../mocks";
+import { generateType } from "../../mocks/generateTypes";
 
 test("I can see default SEO & Metadata tab fields", async ({
   pageTypesBuilderPage,
@@ -607,4 +609,79 @@ test("I cannot save UID longer than 35 characters for reusable page", async ({
       "The label can't be longer than 35 characters",
     ),
   ).toBeVisible();
+});
+
+test("I see that linked content relationships are updated when a custom type API IDis renamed", async ({
+  customTypesTablePage,
+  pageTypesBuilderPage,
+  changesPage,
+  procedures,
+}) => {
+  const targetCustomType = generateType({
+    format: "custom",
+    id: `MyType${generateRandomId()}`,
+    fields: {
+      name: {
+        type: "Text",
+        config: { label: "Name" },
+      },
+    },
+  });
+  const relationCustomType = generateType({
+    format: "custom",
+    id: `MyType${generateRandomId()}`,
+    fields: {
+      authorCr: {
+        type: "Link",
+        config: {
+          label: "Author",
+          select: "document",
+          customtypes: [{ id: targetCustomType.id, fields: ["name"] }],
+        },
+      },
+    },
+  });
+  procedures.mock("getState", ({ data }) => ({
+    ...(data as Record<string, unknown>),
+    libraries: generateLibraries({ slicesCount: 0 }),
+    customTypes: [targetCustomType, relationCustomType],
+    remoteCustomTypes: [targetCustomType, relationCustomType],
+    remoteSlices: [],
+    clientError: undefined,
+  }));
+
+  await customTypesTablePage.goto();
+
+  const customTypeRow = customTypesTablePage.getRow(targetCustomType.id);
+  await expect(customTypeRow).toBeVisible();
+
+  await customTypeRow.click();
+
+  await expect(pageTypesBuilderPage.getListItemFieldId("name")).toBeVisible();
+
+  await pageTypesBuilderPage.getEditFieldButton("name").click();
+
+  await pageTypesBuilderPage.editFieldDialog.editField({
+    name: "Name",
+    newName: "Name Renamed",
+    newId: "name_renamed",
+  });
+
+  await expect(pageTypesBuilderPage.autoSaveStatusSaved).toBeVisible();
+
+  await changesPage.goto();
+
+  await changesPage.checkCustomTypeName(
+    targetCustomType.id,
+    targetCustomType.label as string,
+  );
+  await changesPage.checkCustomTypeApiId(targetCustomType.id);
+  await changesPage.checkCustomTypeStatus(targetCustomType.id, "New");
+
+  await changesPage.checkCustomTypeName(
+    relationCustomType.id,
+    relationCustomType.label as string,
+  );
+  await changesPage.checkCustomTypeApiId(relationCustomType.id);
+  await changesPage.checkCustomTypeStatus(relationCustomType.id, "Modified");
 });
