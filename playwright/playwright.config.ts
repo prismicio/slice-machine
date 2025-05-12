@@ -2,7 +2,6 @@ import { type PlaywrightTestConfig, devices } from "@playwright/test";
 import assert from "assert";
 import dotenv from "dotenv";
 
-dotenv.config({ path: ".env.test" });
 dotenv.config({ path: ".env.test.local", override: true });
 
 declare const process: {
@@ -22,16 +21,12 @@ declare const process: {
 
 export const baseUrl = (() => {
   switch (process.env.SM_ENV) {
-    case "dev-tools":
-    case "marketing-tools":
-    case "platform":
-      return `https://${process.env.SM_ENV}-wroom.com/`;
     case "production":
       return "https://prismic.io/";
     case "staging":
       return "https://wroom.io/";
     default:
-      return "https://dev-tools-wroom.com/";
+      return `https://${process.env.SM_ENV}-wroom.com/`;
   }
 })();
 
@@ -40,15 +35,15 @@ export const cluster = process.env.SM_ENV === "staging" ? "exp" : undefined;
 export const auth = {
   username: process.env.PLAYWRIGHT_ADMIN_USERNAME,
   password: process.env.PLAYWRIGHT_ADMIN_PASSWORD,
-  storageState: ".auth/admin.json",
 };
 
 assert.ok(auth.username, "Missing PLAYWRIGHT_ADMIN_USERNAME env variable.");
 assert.ok(auth.password, "Missing PLAYWRIGHT_ADMIN_PASSWORD env variable.");
 
+export const REPOSITORY_NAME_PREFIX = "e2e-tests-";
+
 // See https://playwright.dev/docs/api/class-testconfig
 const config = {
-  globalSetup: require.resolve("./globalSetup.ts"),
   globalTeardown: require.resolve("./globalTeardown.ts"),
 
   // Configuration for the expect assertion library
@@ -111,26 +106,16 @@ const config = {
   },
 
   // Run local dev servers before starting the tests if needed.
-  webServer: [
-    {
-      cwd: "..",
-      command: process.env["CI"] ? "yarn dev:e2e-next" : "yarn dev",
-      url: process.env["CI"]
-        ? "http://localhost:8000/"
-        : "http://localhost:3000/",
-      reuseExistingServer: !process.env["CI"],
-      stdout: "pipe",
-      timeout: 120_000,
-    },
-    {
-      cwd: "../e2e-projects/next",
-      command: "yarn slicemachine:dev",
-      url: "http://localhost:9999/",
-      reuseExistingServer: !process.env["CI"],
-      stdout: "pipe",
-      timeout: 120_000,
-    },
-  ],
+  webServer: {
+    cwd: "..",
+    command: process.env["CI"]
+      ? `yarn play --prefix ${REPOSITORY_NAME_PREFIX}`
+      : `yarn play`,
+    url: "http://localhost:9999/",
+    reuseExistingServer: !process.env["CI"],
+    stdout: "pipe",
+    timeout: 120_000,
+  },
 
   // Opt out of parallel tests on CI to prioritize stability and reproducibility.
   // See: https://playwright.dev/docs/ci#workers
