@@ -87,7 +87,7 @@ const FieldZone = ({
                       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                       fieldId: key,
                       updateMeta: {
-                        fieldDeleteOrIdChanged: {
+                        fieldDeletedOrIdChanged: {
                           previousPath: [key],
                           newPath: null,
                         },
