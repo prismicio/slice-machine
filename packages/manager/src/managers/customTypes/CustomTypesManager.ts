@@ -89,7 +89,7 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 };
 
 type CustomTypeFieldIdChangedMeta = NonNullable<
-	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
+	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldDeleteOrIdChanged"]
 >;
 
 type CrCustomTypes = readonly CrCustomType[];
@@ -200,12 +200,12 @@ export class CustomTypesManager extends BaseManager {
 
 		const { model, updateMeta } = args;
 
-		if (updateMeta?.fieldIdChanged) {
-			let { previousPath, newPath } = updateMeta.fieldIdChanged;
+		if (updateMeta?.fieldDeleteOrIdChanged) {
+			let { previousPath, newPath } = updateMeta.fieldDeleteOrIdChanged;
 
-			if (previousPath.join(".") !== newPath.join(".")) {
+			if (previousPath.join(".") !== newPath?.join(".")) {
 				previousPath = [model.id, ...previousPath];
-				newPath = [model.id, ...newPath];
+				newPath = newPath ? [model.id, ...newPath] : null;
 
 				const crUpdates: Promise<{ errors: HookError[] }>[] = [];
 
@@ -499,7 +499,7 @@ function updateCRCustomType(
 	args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
 ): CrCustomType {
 	const [previousCustomTypeId, previousFieldId] = args.previousPath;
-	const [newCustomTypeId, newFieldId] = args.newPath;
+	const [newCustomTypeId, newFieldId] = args.newPath ?? []; // TODO: Handle null newPath for deleted fields
 
 	if (!previousCustomTypeId || !newCustomTypeId) {
 		throw new Error(
