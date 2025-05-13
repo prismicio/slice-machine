@@ -95,14 +95,15 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledTimes(3);
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getOneLevelCrModel("authorLastName_CHANGED"),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(getOneLevelCrModel("address")); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getOneLevelCrModel("address", "authorLastName_CHANGED"),
-		); // changed
+		);
 	});
 
 	it("should update NESTED content relationship ids", async () => {
@@ -166,15 +167,15 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getTwoLevelCrModel({ ids: ["city_CHANGED"] }),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelCrModel({ ids: ["addressLine1"] }),
-		); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getTwoLevelCrModel({ ids: ["addressLine1", "city_CHANGED"] }),
-		); // changed
+		);
 
 		updateCustomTypeContentRelationships({
 			models: [{ model: getTwoLevelCrModel() }],
@@ -185,7 +186,7 @@ describe("updateCustomTypeContentRelationships", () => {
 
 		expect(onUpdate).toHaveBeenCalledWith(
 			getTwoLevelCrModel({ crId: "address_cr_CHANGED" }),
-		); // changed
+		);
 	});
 });
 
@@ -242,16 +243,15 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledTimes(3);
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getOneLevelSharedSliceModel("authorLastName_CHANGED"),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(
-			getOneLevelSharedSliceModel("address"),
-		); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getOneLevelSharedSliceModel("address", "authorLastName_CHANGED"),
-		); // changed
+		);
 	});
 
 	it("should update slice NESTED content relationship ids", async () => {
@@ -324,16 +324,15 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledTimes(3);
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getTwoLevelSharedSliceModel({ ids: ["city_CHANGED"] }),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelSharedSliceModel({ ids: ["addressLine1"] }),
-		); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getTwoLevelSharedSliceModel({ ids: ["addressLine1", "city_CHANGED"] }),
-		); // changed
+		);
 
 		updateSharedSliceContentRelationships({
 			models: [{ model: getTwoLevelSharedSliceModel() }],
