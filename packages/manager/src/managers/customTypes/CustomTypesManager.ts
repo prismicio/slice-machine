@@ -285,20 +285,6 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	/**
-	 * Map over the custom types of a Content Relationship Link and update the API
-	 * IDs that were changed during the custom type update.
-	 */
-	private updateCRCustomTypes(
-		args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
-	): CrCustomTypes {
-		const { customTypes, ...updateMeta } = args;
-
-		return customTypes.map((customType) => {
-			return this.updateCRCustomType({ customType, ...updateMeta });
-		});
-	}
-
-	/**
 	 * Update the Content Relationship API IDs of a single field. The change is
 	 * determined by the `previousPath` and `newPath` properties.
 	 */
@@ -317,21 +303,22 @@ export class CustomTypesManager extends BaseManager {
 			return { field, changed: false };
 		}
 
-		const newField = {
-			...field,
-			config: {
-				...field.config,
-				customtypes: this.updateCRCustomTypes({
-					...updateMeta,
-					customTypes: field.config.customtypes,
-				}),
-			},
-		};
+		const newCustomTypes = field.config.customtypes.map((customType) =>
+			this.updateCRCustomType({ customType, ...updateMeta }),
+		);
 
 		return {
-			field: newField,
+			field: {
+				...field,
+				config: {
+					...field.config,
+					customtypes: newCustomTypes,
+				},
+			},
 			// the size and complexity of a field is small, so JSON.stringify is fine
-			changed: JSON.stringify(field) !== JSON.stringify(newField),
+			changed:
+				JSON.stringify(field.config.customtypes) !==
+				JSON.stringify(newCustomTypes),
 		};
 	}
 
