@@ -20,7 +20,7 @@ export type Item<F extends TabField> = { key: string; value: F };
 interface ListItemProps<F extends TabField, S extends AnyObjectSchema> {
   item: Item<F>;
   index: number;
-  deleteItem: (args: { fieldId: string; groupId?: string }) => void;
+  deleteItem: (key: string) => void;
   enterEditMode: (
     itemInfo: [string, F],
     modelFieldName: string | undefined,
@@ -180,7 +180,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                             >
                               <MenuItem
                                 style={{ padding: "6px", cursor: "pointer" }}
-                                onSelect={() => deleteItem({ fieldId: key })}
+                                onSelect={() => deleteItem(key)}
                               >
                                 Delete field
                               </MenuItem>

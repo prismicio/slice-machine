@@ -9,6 +9,7 @@ import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { toast } from "react-toastify";
 
+import { CustomTypeUpdateMeta } from "@/apiClient";
 import { List } from "@/components/List";
 import {
   addField,
@@ -74,12 +75,12 @@ type OnSaveFieldProps = {
   newKey: string;
   value: TabField;
   inGroupFieldAction?: "add" | "update";
-  groupId?: string;
+  updateMeta?: CustomTypeUpdateMeta;
 };
 
 type OnDeleteItemProps = {
   fieldId: string;
-  groupId?: string;
+  updateMeta?: CustomTypeUpdateMeta;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -104,7 +105,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     [],
   );
 
-  const onDeleteItem = ({ fieldId, groupId }: OnDeleteItemProps) => {
+  const onDeleteItem = ({ fieldId, updateMeta }: OnDeleteItemProps) => {
     const newCustomType = deleteField({
       customType,
       fieldId,
@@ -113,12 +114,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
 
     setCustomType({
       customType: newCustomType,
-      updateMeta: {
-        fieldDeleteOrIdChanged: {
-          previousPath: groupId != null ? [groupId, fieldId] : [fieldId],
-          newPath: null,
-        },
-      },
+      updateMeta,
     });
   };
 
@@ -189,7 +185,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     newKey,
     value,
     inGroupFieldAction,
-    groupId,
+    updateMeta,
   }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
@@ -212,18 +208,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           toast.success("Field added");
         }
       },
-      updateMeta: {
-        fieldDeleteOrIdChanged:
-          groupId != null
-            ? {
-                previousPath: [groupId, previousKey],
-                newPath: [groupId, newKey],
-              }
-            : {
-                previousPath: [previousKey],
-                newPath: [newKey],
-              },
-      },
+      updateMeta,
     });
 
     // We don't want to track the group field update when it's for the management of a

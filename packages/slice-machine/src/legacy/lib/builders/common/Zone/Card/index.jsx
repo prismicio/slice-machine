@@ -81,7 +81,19 @@ const FieldZone = ({
                   enterEditMode,
                   parentSnapshot: snapshot,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                  deleteItem: onDeleteItem,
+                  deleteItem: (key) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                    onDeleteItem({
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                      fieldId: key,
+                      updateMeta: {
+                        fieldDeleteOrIdChanged: {
+                          previousPath: [key],
+                          newPath: null,
+                        },
+                      },
+                    });
+                  },
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                   saveItem: onSave,
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access

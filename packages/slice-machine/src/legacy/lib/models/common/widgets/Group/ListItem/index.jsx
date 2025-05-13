@@ -89,7 +89,12 @@ export const CustomListItem = ({
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
       inGroupFieldAction: "update",
-      groupId: groupItem.key,
+      updateMeta: {
+        fieldDeleteOrIdChanged: {
+          previousPath: [groupItem.key, previousKey],
+          newPath: [groupItem.key, newKey],
+        },
+      },
     });
 
     trackFieldUpdated({
@@ -149,6 +154,12 @@ export const CustomListItem = ({
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
       groupId: groupItem.key,
+      updateMeta: {
+        fieldDeleteOrIdChanged: {
+          previousPath: [groupItem.key, key],
+          newPath: null,
+        },
+      },
     });
   };
 
