@@ -12,7 +12,7 @@ import type {
 export type CustomTypeUpdateHookData = {
 	model: CustomType;
 	updateMeta?: {
-		fieldDeleteOrIdChanged?: {
+		fieldDeletedOrIdChanged?: {
 			/**
 			 * Previous path of the changed field. Can be used to identify the field
 			 * that had an API ID renamed or was deleted (e.g. ["page", "title"])
