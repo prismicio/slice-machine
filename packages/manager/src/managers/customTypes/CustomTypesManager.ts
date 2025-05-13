@@ -92,7 +92,6 @@ type CustomTypeFieldIdChangedMeta = NonNullable<
 	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
 >;
 
-type CrCustomTypes = readonly CrCustomType[];
 type CrCustomType =
 	| string
 	| { id: string; fields?: readonly CrCustomTypeNestedCr[] };
@@ -592,20 +591,6 @@ function updateCRCustomType(
 }
 
 /**
- * Map over the custom types of a Content Relationship Link and update the API
- * IDs that were changed during the custom type update.
- */
-function updateCRCustomTypes(
-	args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
-): CrCustomTypes {
-	const { customTypes, ...updateMeta } = args;
-
-	return customTypes.map((customType) => {
-		return updateCRCustomType({ customType, ...updateMeta });
-	});
-}
-
-/**
  * Update the Content Relationship API IDs of a single field. The change is
  * determined by the `previousPath` and `newPath` properties.
  */
@@ -622,9 +607,8 @@ function updateFieldContentRelationships<
 		return field;
 	}
 
-	const newCustomTypes = updateCRCustomTypes({
-		...updateMeta,
-		customTypes: field.config.customtypes,
+	const newCustomTypes = field.config.customtypes.map((customType) => {
+		return updateCRCustomType({ customType, ...updateMeta });
 	});
 
 	return {
@@ -641,9 +625,9 @@ export function updateCustomTypeContentRelationships(
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
-	for (const customType of models) {
+	for (const { model: customType } of models) {
 		const updatedCustomTypeModel = traverseCustomType({
-			customType: customType.model,
+			customType,
 			onField: ({ field }) => {
 				return updateFieldContentRelationships({
 					field,
@@ -653,7 +637,9 @@ export function updateCustomTypeContentRelationships(
 			},
 		});
 
-		onUpdate(updatedCustomTypeModel);
+		if (!isEqualModel(customType, updatedCustomTypeModel)) {
+			onUpdate(updatedCustomTypeModel);
+		}
 	}
 }
 
@@ -665,10 +651,10 @@ export function updateSharedSliceContentRelationships(
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
-	for (const slice of models) {
+	for (const { model: slice } of models) {
 		const updatedSliceModel = traverseSharedSlice({
 			path: ["."],
-			slice: slice.model,
+			slice,
 			onField: ({ field }) => {
 				return updateFieldContentRelationships({
 					field,
@@ -678,8 +664,17 @@ export function updateSharedSliceContentRelationships(
 			},
 		});
 
-		onUpdate(updatedSliceModel);
+		if (!isEqualModel(slice, updatedSliceModel)) {
+			onUpdate(updatedSliceModel);
+		}
 	}
+}
+
+function isEqualModel<T extends CustomType | SharedSlice>(
+	modelA: T,
+	modelB: T,
+): boolean {
+	return JSON.stringify(modelA) === JSON.stringify(modelB);
 }
 
 function shallowCloneIfObject<T>(value: T): T {
