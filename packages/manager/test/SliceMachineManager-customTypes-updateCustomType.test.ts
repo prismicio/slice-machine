@@ -9,6 +9,7 @@ import {
 	updateCustomTypeContentRelationships,
 	updateSharedSliceContentRelationships,
 } from "../src/managers/customTypes/CustomTypesManager";
+import { CustomType, SharedSlice } from "@prismicio/types-internal";
 
 it("calls plugins' `custom-type:update` hook", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
@@ -47,7 +48,7 @@ it("throws if plugins have not been initialized", async (ctx) => {
 
 describe("updateCustomTypeContentRelationships", () => {
 	it("should update content relationship ids", async (ctx) => {
-		const getOneLevelCrModel = (...ids: string[]) => {
+		const getOneLevelCrModel = (...ids: string[]): CustomType => {
 			return ctx.mockPrismic.model.customType({
 				format: "custom",
 				label: "Test CT",
@@ -100,7 +101,10 @@ describe("updateCustomTypeContentRelationships", () => {
 	});
 
 	it("should update NESTED content relationship ids", async (ctx) => {
-		const getTwoLevelCrModel = (args?: { crId?: string; ids?: string[] }) => {
+		const getTwoLevelCrModel = (args?: {
+			crId?: string;
+			ids?: string[];
+		}): CustomType => {
 			const { crId, ids } = args ?? {};
 
 			return ctx.mockPrismic.model.customType({
@@ -180,7 +184,7 @@ describe("updateCustomTypeContentRelationships", () => {
 
 describe("updateSharedSliceContentRelationships", () => {
 	it("should update slice content relationship ids", async () => {
-		const getOneLevelSharedSliceModel = (...ids: string[]) => {
+		const getOneLevelSharedSliceModel = (...ids: string[]): SharedSlice => {
 			return {
 				id: "testSlice",
 				name: "Test Slice",
@@ -216,7 +220,7 @@ describe("updateSharedSliceContentRelationships", () => {
 						},
 					},
 				],
-			} as const;
+			};
 		};
 
 		const onUpdate = vi.fn();
@@ -247,7 +251,7 @@ describe("updateSharedSliceContentRelationships", () => {
 		const getTwoLevelSharedSliceModel = (args?: {
 			crId?: string;
 			ids?: string[];
-		}) => {
+		}): SharedSlice => {
 			const { crId, ids } = args ?? {};
 
 			return {
@@ -296,7 +300,7 @@ describe("updateSharedSliceContentRelationships", () => {
 						},
 					},
 				],
-			} as const;
+			};
 		};
 
 		const onUpdate = vi.fn();
