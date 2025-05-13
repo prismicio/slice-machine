@@ -49,7 +49,7 @@ it("throws if plugins have not been initialized", async (ctx) => {
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });
 
-function getCtFields(args?: {
+function getCustomTypeFields(args?: {
 	crId?: string;
 	ids?: string[];
 	nestedCrId?: string;
@@ -92,7 +92,7 @@ function getCtFields(args?: {
 }
 
 describe("updateCustomTypeContentRelationships", () => {
-	function getCrModel(args?: {
+	function getCustomTypeModel(args?: {
 		crId?: string;
 		ids?: string[];
 		nestedCrId?: string;
@@ -105,7 +105,7 @@ describe("updateCustomTypeContentRelationships", () => {
 			status: true,
 			id: "testCt",
 			json: {
-				Main: getCtFields(args),
+				Main: getCustomTypeFields(args),
 			},
 		};
 	}
@@ -114,9 +114,9 @@ describe("updateCustomTypeContentRelationships", () => {
 		const onUpdate = vi.fn();
 		updateCustomTypeContentRelationships({
 			models: [
-				{ model: getCrModel({ ids: ["authorLastName"] }) },
-				{ model: getCrModel({ ids: ["address"] }) },
-				{ model: getCrModel({ ids: ["address", "authorLastName"] }) },
+				{ model: getCustomTypeModel({ ids: ["authorLastName"] }) },
+				{ model: getCustomTypeModel({ ids: ["address"] }) },
+				{ model: getCustomTypeModel({ ids: ["address", "authorLastName"] }) },
 			],
 			previousPath: ["author", "authorLastName"],
 			newPath: ["author", "authorLastName_CHANGED"],
@@ -125,11 +125,13 @@ describe("updateCustomTypeContentRelationships", () => {
 
 		expect(onUpdate).toHaveBeenCalledTimes(3);
 		expect(onUpdate).toHaveBeenCalledWith(
-			getCrModel({ ids: ["authorLastName_CHANGED"] }),
+			getCustomTypeModel({ ids: ["authorLastName_CHANGED"] }),
 		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(getCrModel({ ids: ["address"] })); // not changed
 		expect(onUpdate).toHaveBeenCalledWith(
-			getCrModel({ ids: ["address", "authorLastName_CHANGED"] }),
+			getCustomTypeModel({ ids: ["address"] }),
+		); // not changed
+		expect(onUpdate).toHaveBeenCalledWith(
+			getCustomTypeModel({ ids: ["address", "authorLastName_CHANGED"] }),
 		); // changed
 	});
 
@@ -137,9 +139,9 @@ describe("updateCustomTypeContentRelationships", () => {
 		const onUpdate = vi.fn();
 		updateCustomTypeContentRelationships({
 			models: [
-				{ model: getCrModel({ nestedIds: ["city"] }) },
-				{ model: getCrModel({ nestedIds: ["addressLine1"] }) },
-				{ model: getCrModel({ nestedIds: ["addressLine1", "city"] }) },
+				{ model: getCustomTypeModel({ nestedIds: ["city"] }) },
+				{ model: getCustomTypeModel({ nestedIds: ["addressLine1"] }) },
+				{ model: getCustomTypeModel({ nestedIds: ["addressLine1", "city"] }) },
 			],
 			previousPath: ["address", "city"],
 			newPath: ["address", "city_CHANGED"],
@@ -147,30 +149,30 @@ describe("updateCustomTypeContentRelationships", () => {
 		});
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getCrModel({ nestedIds: ["city_CHANGED"] }),
+			getCustomTypeModel({ nestedIds: ["city_CHANGED"] }),
 		); // changed
 		expect(onUpdate).toHaveBeenCalledWith(
-			getCrModel({ nestedIds: ["addressLine1"] }),
+			getCustomTypeModel({ nestedIds: ["addressLine1"] }),
 		); // not changed
 		expect(onUpdate).toHaveBeenCalledWith(
-			getCrModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
+			getCustomTypeModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
 		); // changed
 
 		updateCustomTypeContentRelationships({
-			models: [{ model: getCrModel() }],
+			models: [{ model: getCustomTypeModel() }],
 			previousPath: ["author", "address_cr"],
 			newPath: ["author", "address_cr_CHANGED"],
 			onUpdate,
 		});
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getCrModel({ nestedCrId: "address_cr_CHANGED" }),
+			getCustomTypeModel({ nestedCrId: "address_cr_CHANGED" }),
 		); // changed
 	});
 
 	it("should not update content relationship ids if the custom type id is not the same", async () => {
 		const onUpdate = vi.fn();
-		const initialModel = getCrModel({
+		const initialModel = getCustomTypeModel({
 			ids: ["sameFieldName"],
 			nestedIds: ["sameFieldName"],
 		});
@@ -187,7 +189,7 @@ describe("updateCustomTypeContentRelationships", () => {
 	it("should throw if there is no custom type of field id in previousPath and/or newPath", async () => {
 		expect(() => {
 			return updateCustomTypeContentRelationships({
-				models: [{ model: getCrModel() }],
+				models: [{ model: getCustomTypeModel() }],
 				previousPath: [],
 				newPath: [],
 				onUpdate: vi.fn(),
@@ -216,7 +218,7 @@ describe("updateSharedSliceContentRelationships", () => {
 					version: "1.0.0",
 					docURL: "https://www.prismic.io",
 					imageUrl: "https://www.prismic.io",
-					primary: getCtFields(args),
+					primary: getCustomTypeFields(args),
 				},
 			],
 		};
