@@ -123,16 +123,15 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledTimes(3);
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getCustomTypeModel({ ids: ["authorLastName_CHANGED"] }),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(
-			getCustomTypeModel({ ids: ["address"] }),
-		); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getCustomTypeModel({ ids: ["address", "authorLastName_CHANGED"] }),
-		); // changed
+		);
 	});
 
 	it("should update NESTED content relationship ids", async () => {
@@ -148,15 +147,15 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getCustomTypeModel({ nestedIds: ["city_CHANGED"] }),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(
-			getCustomTypeModel({ nestedIds: ["addressLine1"] }),
-		); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getCustomTypeModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
-		); // changed
+		);
 
 		updateCustomTypeContentRelationships({
 			models: [{ model: getCustomTypeModel() }],
@@ -172,18 +171,22 @@ describe("updateCustomTypeContentRelationships", () => {
 
 	it("should not update content relationship ids if the custom type id is not the same", async () => {
 		const onUpdate = vi.fn();
-		const initialModel = getCustomTypeModel({
-			ids: ["sameFieldName"],
-			nestedIds: ["sameFieldName"],
-		});
+
 		updateCustomTypeContentRelationships({
-			models: [{ model: initialModel }],
+			models: [
+				{
+					model: getCustomTypeModel({
+						ids: ["sameFieldName"],
+						nestedIds: ["sameFieldName"],
+					}),
+				},
+			],
 			previousPath: ["differentCustomType", "sameFieldName"],
 			newPath: ["differentCustomType", "sameFieldName_CHANGED"],
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledWith(initialModel); // not changed
+		expect(onUpdate).not.toHaveBeenCalled();
 	});
 
 	it("should throw if there is no custom type of field id in previousPath and/or newPath", async () => {
@@ -237,16 +240,15 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledTimes(3);
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getSharedSliceModel({ ids: ["authorLastName_CHANGED"] }),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(
-			getSharedSliceModel({ ids: ["address"] }),
-		); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getSharedSliceModel({ ids: ["address", "authorLastName_CHANGED"] }),
-		); // changed
+		);
 	});
 
 	it("should update slice NESTED content relationship ids", async () => {
@@ -262,16 +264,15 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledTimes(3);
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
 		expect(onUpdate).toHaveBeenCalledWith(
 			getSharedSliceModel({ nestedIds: ["city_CHANGED"] }),
-		); // changed
-		expect(onUpdate).toHaveBeenCalledWith(
-			getSharedSliceModel({ nestedIds: ["addressLine1"] }),
-		); // not changed
+		);
 		expect(onUpdate).toHaveBeenCalledWith(
 			getSharedSliceModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
-		); // changed
+		);
 
 		updateSharedSliceContentRelationships({
 			models: [{ model: getSharedSliceModel() }],
@@ -287,18 +288,22 @@ describe("updateSharedSliceContentRelationships", () => {
 
 	it("should not update content relationship ids if the custom type id is not the same", async () => {
 		const onUpdate = vi.fn();
-		const initialModel = getSharedSliceModel({
-			ids: ["sameFieldName"],
-			nestedIds: ["sameFieldName"],
-		});
+
 		updateSharedSliceContentRelationships({
-			models: [{ model: initialModel }],
+			models: [
+				{
+					model: getSharedSliceModel({
+						ids: ["sameFieldName"],
+						nestedIds: ["sameFieldName"],
+					}),
+				},
+			],
 			previousPath: ["differentCustomTypeId", "sameFieldName"],
 			newPath: ["differentCustomTypeId", "sameFieldName_CHANGED"],
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledWith(initialModel); // not changed
+		expect(onUpdate).not.toHaveBeenCalled();
 	});
 
 	it("should throw if there is no custom type of field id in previousPath and/or newPath", async () => {
