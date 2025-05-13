@@ -9,7 +9,7 @@ import {
 	updateCustomTypeContentRelationships,
 	updateSharedSliceContentRelationships,
 } from "../src/managers/customTypes/CustomTypesManager";
-import { CustomType, SharedSlice } from "@prismicio/types-internal";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 it("calls plugins' `custom-type:update` hook", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
@@ -48,7 +48,7 @@ it("throws if plugins have not been initialized", async (ctx) => {
 
 describe("updateCustomTypeContentRelationships", () => {
 	it("should update content relationship ids", async (ctx) => {
-		const getOneLevelCrModel = (...ids: string[]): CustomType => {
+		const getOneLevelCrModel = (...ids: string[]) => {
 			return ctx.mockPrismic.model.customType({
 				format: "custom",
 				label: "Test CT",
@@ -101,10 +101,7 @@ describe("updateCustomTypeContentRelationships", () => {
 	});
 
 	it("should update NESTED content relationship ids", async (ctx) => {
-		const getTwoLevelCrModel = (args?: {
-			crId?: string;
-			ids?: string[];
-		}): CustomType => {
+		const getTwoLevelCrModel = (args?: { crId?: string; ids?: string[] }) => {
 			const { crId, ids } = args ?? {};
 
 			return ctx.mockPrismic.model.customType({
