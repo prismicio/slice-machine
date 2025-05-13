@@ -212,10 +212,6 @@ export class CustomTypesManager extends BaseManager {
 				// any custom type and update them to use the new one.
 				const customTypes = await this.readAllCustomTypes();
 
-				// Keep track of whether the model has changed to avoid calling the
-				// update hook if nothing has changed
-				let customTypeHasChanged = false;
-
 				updateCustomTypeContentRelationships({
 					models: customTypes.models,
 					onUpdate: (model) => {
@@ -238,10 +234,6 @@ export class CustomTypesManager extends BaseManager {
 					const slices = await this.slices.readAllSlicesForLibrary({
 						libraryID: library.libraryID,
 					});
-
-					// Keep track of whether the model has changed to avoid calling the
-					// update hook if nothing has changed
-					let sliceHasChanged = false;
 
 					updateSharedSliceContentRelationships({
 						models: slices.models,
@@ -642,6 +634,8 @@ export function updateCustomTypeContentRelationships(
 	const { models, previousPath, newPath, onUpdate } = args;
 
 	for (const customType of models) {
+		// Keep track of whether the model has changed to avoid calling the
+		// update hook if nothing has changed
 		let changed = false;
 
 		const updatedCustomTypeModel = traverseCustomType({
@@ -674,6 +668,8 @@ export function updateSharedSliceContentRelationships(
 	const { models, previousPath, newPath, onUpdate } = args;
 
 	for (const slice of models) {
+		// Keep track of whether the model has changed to avoid calling the
+		// update hook if nothing has changed
 		let changed = false;
 
 		const updatedSliceModel = traverseSharedSlice({
