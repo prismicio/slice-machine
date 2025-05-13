@@ -596,9 +596,7 @@ function updateCRCustomType(
  */
 function updateFieldContentRelationships<
 	T extends UID | NestableWidget | Group | NestedGroup,
->(
-	args: { field: T } & CustomTypeFieldIdChangedMeta,
-): { field: T; changed: boolean } {
+>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
 	const { field, ...updateMeta } = args;
 	if (
 		field.type !== "Link" ||
@@ -606,7 +604,7 @@ function updateFieldContentRelationships<
 		!field.config?.customtypes
 	) {
 		// not a content relationship field
-		return { field, changed: false };
+		return field;
 	}
 
 	const newCustomTypes = field.config.customtypes.map((customType) => {
@@ -614,14 +612,8 @@ function updateFieldContentRelationships<
 	});
 
 	return {
-		field: {
-			...field,
-			config: { ...field.config, customtypes: newCustomTypes },
-		},
-		// the size and complexity of a field is small, so JSON.stringify is fine
-		changed:
-			JSON.stringify(field.config.customtypes) !==
-			JSON.stringify(newCustomTypes),
+		...field,
+		config: { ...field.config, customtypes: newCustomTypes },
 	};
 }
 
@@ -633,27 +625,19 @@ export function updateCustomTypeContentRelationships(
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
-	for (const customType of models) {
-		// Keep track of whether the model has changed to avoid calling the
-		// update hook if nothing has changed
-		let changed = false;
-
+	for (const { model: customType } of models) {
 		const updatedCustomTypeModel = traverseCustomType({
-			customType: customType.model,
+			customType,
 			onField: ({ field }) => {
-				const update = updateFieldContentRelationships({
+				return updateFieldContentRelationships({
 					field,
 					previousPath,
 					newPath,
 				});
-
-				changed ||= update.changed;
-
-				return update.field;
 			},
 		});
 
-		if (changed) {
+		if (JSON.stringify(customType) !== JSON.stringify(updatedCustomTypeModel)) {
 			onUpdate(updatedCustomTypeModel);
 		}
 	}
@@ -667,28 +651,20 @@ export function updateSharedSliceContentRelationships(
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
-	for (const slice of models) {
-		// Keep track of whether the model has changed to avoid calling the
-		// update hook if nothing has changed
-		let changed = false;
-
+	for (const { model: slice } of models) {
 		const updatedSliceModel = traverseSharedSlice({
 			path: ["."],
-			slice: slice.model,
+			slice,
 			onField: ({ field }) => {
-				const update = updateFieldContentRelationships({
+				return updateFieldContentRelationships({
 					field,
 					previousPath,
 					newPath,
 				});
-
-				changed ||= update.changed;
-
-				return update.field;
 			},
 		});
 
-		if (changed) {
+		if (JSON.stringify(slice) !== JSON.stringify(updatedSliceModel)) {
 			onUpdate(updatedSliceModel);
 		}
 	}
