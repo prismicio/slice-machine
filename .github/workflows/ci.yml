@@ -190,12 +190,8 @@ jobs:
             echo "SM_ENV=dev-tools" >> $GITHUB_ENV
           fi
 
-      - name: Set up Slice Machine project
-        run: |
-          yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/manager,@slicemachine/plugin-kit,start-slicemachine}' --parallel --topological-dev run build
-          yarn workspace slice-machine-ui pack --out ../../e2e-projects/next/sm.tgz
-          yarn workspace cimsirp add -D ./sm.tgz
-          echo "telemetry=false" > ./e2e-projects/next/.prismicrc
+      - name: Build
+        run: yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/init,start-slicemachine,slice-machine-ui}' --parallel --topological-dev run build
 
       - name: Running E2E tests
         run: yarn test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
