@@ -195,12 +195,18 @@ export class CustomTypesManager extends BaseManager {
 
 		const customType = shallowClone(args.customType);
 
-		const previousCustomTypeId = previousPath[0];
-		const newCustomTypeId = newPath[0];
+		const [previousCustomTypeId, previousFieldId] = previousPath;
+		const [newCustomTypeId, newFieldId] = newPath;
 
 		if (!previousCustomTypeId || !newCustomTypeId) {
 			throw new Error(
-				"Didn't find any customtype id, which should not be possible",
+				"Didn't find any customtype id, which should not be possible.",
+			);
+		}
+
+		if (!previousFieldId || !newFieldId) {
+			throw new Error(
+				"Didn't find any field id, which should not be possible.",
 			);
 		}
 
@@ -211,15 +217,6 @@ export class CustomTypesManager extends BaseManager {
 		if (customType.fields) {
 			const newFields = customType.fields.map((fieldArg) => {
 				const field = shallowClone(fieldArg);
-
-				const previousFieldId = previousPath[1];
-				const newFieldId = newPath[1];
-
-				if (!previousFieldId || !newFieldId) {
-					throw new Error(
-						"Didn't find any field id, which should not be possible",
-					);
-				}
 
 				if (typeof field === "string") {
 					if (field === previousFieldId && field !== newFieldId) {
@@ -244,12 +241,6 @@ export class CustomTypesManager extends BaseManager {
 					...field,
 					customtypes: field.customtypes.map((customTypeArg) => {
 						const customType = shallowClone(customTypeArg);
-
-						if (!previousCustomTypeId || !newCustomTypeId) {
-							throw new Error(
-								"Didn't find any customtype id, which should not be possible",
-							);
-						}
 
 						if (typeof customType === "string") {
 							return customType; // we don't support custom type id renaming
