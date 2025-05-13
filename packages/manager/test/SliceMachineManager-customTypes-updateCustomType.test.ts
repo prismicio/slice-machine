@@ -54,7 +54,7 @@ function getCtFields(args?: {
 	ids?: string[];
 	nestedCrId?: string;
 	nestedIds?: string[];
-}): CustomType["json"][keyof CustomType["json"]] {
+}) {
 	const { crId, ids, nestedCrId, nestedIds } = args ?? {};
 
 	return {
@@ -88,7 +88,7 @@ function getCtFields(args?: {
 				],
 			},
 		},
-	};
+	} as const satisfies CustomType["json"][keyof CustomType["json"]];
 }
 
 describe("updateCustomTypeContentRelationships", () => {
