@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { updateCustomType } from "@/apiClient";
+import { CustomTypeUpdateMeta, updateCustomType } from "@/apiClient";
 import { getFormat } from "@/domain/customType";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
@@ -17,10 +17,16 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
+type SetCustomTypeArgs = {
+  customType: CustomType;
+  onSaveCallback?: () => void;
+  updateMeta?: CustomTypeUpdateMeta;
+};
+
 type CustomTypeContext = {
   customType: CustomType;
   actionQueueStatus: ActionQueueStatus;
-  setCustomType: (customType: CustomType, onSaveCallback?: () => void) => void;
+  setCustomType: (args: SetCustomTypeArgs) => void;
 };
 
 type CustomTypeProviderProps = {
@@ -46,10 +52,12 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
-    (customType: CustomType, onSaveCallback?: () => void) => {
+    (args: SetCustomTypeArgs) => {
+      const { customType, onSaveCallback, updateMeta } = args;
+
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { errors } = await updateCustomType(customType);
+        const { errors } = await updateCustomType({ customType, updateMeta });
 
         if (errors.length > 0) {
           throw errors;

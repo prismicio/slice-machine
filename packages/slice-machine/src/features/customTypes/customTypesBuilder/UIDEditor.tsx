@@ -51,7 +51,7 @@ export function UIDEditor() {
       ? updateUIDField(label, customType)
       : addUIDField(label, customType);
 
-    setCustomType(updatedCustomType);
+    setCustomType({ customType: updatedCustomType });
     setOpen(false);
   }
 
