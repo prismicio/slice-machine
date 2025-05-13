@@ -328,9 +328,11 @@ export class CustomTypesManager extends BaseManager {
 			},
 		};
 
-		const changed = JSON.stringify(field) !== JSON.stringify(newField);
-
-		return { field: newField, changed };
+		return {
+			field: newField,
+			// the size and complexity of a field is small, so JSON.stringify is fine
+			changed: JSON.stringify(field) !== JSON.stringify(newField),
+		};
 	}
 
 	/**
