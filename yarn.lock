@@ -8573,7 +8573,7 @@ __metadata:
     rollup-plugin-preserve-directives: 0.2.0
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
@@ -8614,7 +8614,7 @@ __metadata:
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
     vue: 2.7.14
@@ -8656,7 +8656,7 @@ __metadata:
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
     vue: 3.2.47
@@ -8702,7 +8702,7 @@ __metadata:
     size-limit: 8.2.4
     svelte: 4.2.0
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
@@ -8779,7 +8779,7 @@ __metadata:
     semver: ^7.3.8
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   bin:
@@ -8838,7 +8838,7 @@ __metadata:
     semver: ^7.3.8
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
@@ -8883,7 +8883,7 @@ __metadata:
     prismic-ts-codegen: 0.1.25
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   languageName: unknown
@@ -16891,7 +16891,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.18.0, esbuild@npm:~0.18.20":
+"esbuild@npm:^0.18.0, esbuild@npm:^0.18.10, esbuild@npm:~0.18.20":
   version: 0.18.20
   resolution: "esbuild@npm:0.18.20"
   dependencies:
@@ -23807,6 +23807,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^3.3.8":
+  version: 3.3.11
+  resolution: "nanoid@npm:3.3.11"
+  bin:
+    nanoid: bin/nanoid.cjs
+  checksum: 3be20d8866a57a6b6d218e82549711c8352ed969f9ab3c45379da28f405363ad4c9aeb0b39e9abc101a529ca65a72ff9502b00bf74a912c4b64a9d62dfd26c29
+  languageName: node
+  linkType: hard
+
 "nanoid@npm:^4.0.2":
   version: 4.0.2
   resolution: "nanoid@npm:4.0.2"
@@ -25420,6 +25429,13 @@ __metadata:
   version: 1.0.1
   resolution: "picocolors@npm:1.0.1"
   checksum: fa68166d1f56009fc02a34cdfd112b0dd3cf1ef57667ac57281f714065558c01828cdf4f18600ad6851cbe0093952ed0660b1e0156bddf2184b6aaf5817553a5
+  languageName: node
+  linkType: hard
+
+"picocolors@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "picocolors@npm:1.1.1"
+  checksum: e1cf46bf84886c79055fdfa9dcb3e4711ad259949e3565154b004b260cd356c5d54b31a1437ce9782624bf766272fe6b0154f5f0c744fb7af5d454d2b60db045
   languageName: node
   linkType: hard
 
@@ -27048,6 +27064,17 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: 814e2126dacfea313588eda09cc99a9b4c26ec55c059188aa7a916d20d26d483483106dc5ff9e560731b59f45c5bb91b945dfadc670aed875cc90ddbbf4e787d
+  languageName: node
+  linkType: hard
+
+"postcss@npm:^8.4.27":
+  version: 8.5.3
+  resolution: "postcss@npm:8.5.3"
+  dependencies:
+    nanoid: ^3.3.8
+    picocolors: ^1.1.1
+    source-map-js: ^1.2.1
+  checksum: da574620eb84ff60e65e1d8fc6bd5ad87a19101a23d0aba113c653434161543918229a0f673d89efb3b6d4906287eb04b957310dbcf4cbebacad9d1312711461
   languageName: node
   linkType: hard
 
@@ -29096,6 +29123,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rollup@npm:^3.27.1":
+  version: 3.29.5
+  resolution: "rollup@npm:3.29.5"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: 6f8304e58ac8170a715e61e46c4aa674b2ae2587ed2a712dab58f72e5e54803ae40b485fbe6b3e6a694f4c8f7a59ab936ccf9f6b686c7cfd1f1970fa9ecadf1a
+  languageName: node
+  linkType: hard
+
 "root-workspace-0b6124@workspace:.":
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
@@ -29945,7 +29986,7 @@ __metadata:
     typed-css-modules: 0.8.1
     typesafe-actions: 5.1.0
     typescript: 5.4.5
-    vite: 4.3.9
+    vite: 4.5.14
     vitest: 0.32.0
     yup: 0.32.11
     zod: 3.23.8
@@ -30061,6 +30102,13 @@ __metadata:
   version: 1.2.0
   resolution: "source-map-js@npm:1.2.0"
   checksum: 791a43306d9223792e84293b00458bf102a8946e7188f3db0e4e22d8d530b5f80a4ce468eb5ec0bf585443ad55ebbd630bf379c98db0b1f317fd902500217f97
+  languageName: node
+  linkType: hard
+
+"source-map-js@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "source-map-js@npm:1.2.1"
+  checksum: 4eb0cd997cdf228bc253bcaff9340afeb706176e64868ecd20efbe6efea931465f43955612346d6b7318789e5265bdc419bc7669c1cebe3db0eb255f57efa76b
   languageName: node
   linkType: hard
 
@@ -30349,7 +30397,7 @@ __metadata:
     serve-static: ^1.15.0
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   bin:
@@ -32796,7 +32844,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:4.3.9, vite@npm:^3.0.0 || ^4.0.0":
+"vite@npm:4.5.14":
+  version: 4.5.14
+  resolution: "vite@npm:4.5.14"
+  dependencies:
+    esbuild: ^0.18.10
+    fsevents: ~2.3.2
+    postcss: ^8.4.27
+    rollup: ^3.27.1
+  peerDependencies:
+    "@types/node": ">= 14"
+    less: "*"
+    lightningcss: ^1.21.0
+    sass: "*"
+    stylus: "*"
+    sugarss: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    less:
+      optional: true
+    lightningcss:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: ed61e2bc284968c5f514eae1f0b040ad6aa1b6591575c102d4967da5e34f8e52cd1a7048800bc3154ece0c11b4f11e1be1d0ef382c92993fd2dc6f7feca110ba
+  languageName: node
+  linkType: hard
+
+"vite@npm:^3.0.0 || ^4.0.0":
   version: 4.3.9
   resolution: "vite@npm:4.3.9"
   dependencies:
