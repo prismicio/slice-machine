@@ -618,17 +618,14 @@ function updateFieldContentRelationships<
 		return { field, changed: false };
 	}
 
-	const newCustomTypes = field.config.customtypes.map((customType) =>
-		this.updateCRCustomType({ customType, ...updateMeta }),
-	);
+	const newCustomTypes = field.config.customtypes.map((customType) => {
+		return updateCRCustomType({ customType, ...updateMeta });
+	});
 
 	return {
 		field: {
 			...field,
-			config: {
-				...field.config,
-				customtypes: newCustomTypes,
-			},
+			config: { ...field.config, customtypes: newCustomTypes },
 		},
 		// the size and complexity of a field is small, so JSON.stringify is fine
 		changed:
