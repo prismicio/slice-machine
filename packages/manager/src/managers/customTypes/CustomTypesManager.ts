@@ -88,7 +88,7 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type CustomTypeFieldIdChangedMeta = NonNullable<
+type CustomTypeFieldDeleteOrIdChangedMeta = NonNullable<
 	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldDeleteOrIdChanged"]
 >;
 
@@ -276,7 +276,7 @@ export class CustomTypesManager extends BaseManager {
 			args,
 		);
 
-		if (args.updateMeta?.fieldIdChanged) {
+		if (args.updateMeta?.fieldDeleteOrIdChanged) {
 			await this.updateContentRelationships(args);
 		}
 
@@ -496,7 +496,7 @@ const InferSliceResponse = z.object({
 });
 
 function updateCRCustomType(
-	args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
+	args: { customType: CrCustomType } & CustomTypeFieldDeleteOrIdChangedMeta,
 ): CrCustomType {
 	const [previousCustomTypeId, previousFieldId] = args.previousPath;
 	const [newCustomTypeId, newFieldId] = args.newPath ?? []; // TODO: Handle null newPath for deleted fields
@@ -596,7 +596,7 @@ function updateCRCustomType(
  * IDs that were changed during the custom type update.
  */
 function updateCRCustomTypes(
-	args: { customTypes: CrCustomTypes } & CustomTypeFieldIdChangedMeta,
+	args: { customTypes: CrCustomTypes } & CustomTypeFieldDeleteOrIdChangedMeta,
 ): CrCustomTypes {
 	const { customTypes, ...updateMeta } = args;
 
@@ -611,7 +611,7 @@ function updateCRCustomTypes(
  */
 function updateFieldContentRelationships<
 	T extends UID | NestableWidget | Group | NestedGroup,
->(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
+>(args: { field: T } & CustomTypeFieldDeleteOrIdChangedMeta): T {
 	const { field, ...updateMeta } = args;
 	if (
 		field.type !== "Link" ||
@@ -637,7 +637,7 @@ export function updateCustomTypeContentRelationships(
 	args: {
 		models: { model: CustomType }[];
 		onUpdate: (model: CustomType) => void;
-	} & CustomTypeFieldIdChangedMeta,
+	} & CustomTypeFieldDeleteOrIdChangedMeta,
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
@@ -661,7 +661,7 @@ export function updateSharedSliceContentRelationships(
 	args: {
 		models: { model: SharedSlice }[];
 		onUpdate: (model: SharedSlice) => void;
-	} & CustomTypeFieldIdChangedMeta,
+	} & CustomTypeFieldDeleteOrIdChangedMeta,
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
