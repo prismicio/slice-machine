@@ -171,7 +171,19 @@ describe("updateCustomTypeContentRelationships", () => {
 			newPath: ["differentCustomType", "sameFieldName_CHANGED"],
 			onUpdate,
 		});
+
 		expect(onUpdate).toHaveBeenCalledWith(initialModel); // not changed
+	});
+
+	it("should throw if there is no custom type of field id in previousPath and/or newPath", async () => {
+		expect(() => {
+			return updateCustomTypeContentRelationships({
+				models: [{ model: getCrModel() }],
+				previousPath: [],
+				newPath: [],
+				onUpdate: vi.fn(),
+			});
+		}).toThrow();
 	});
 });
 
@@ -307,6 +319,18 @@ describe("updateSharedSliceContentRelationships", () => {
 			newPath: ["differentCustomTypeId", "sameFieldName_CHANGED"],
 			onUpdate,
 		});
+
 		expect(onUpdate).toHaveBeenCalledWith(initialModel); // not changed
+	});
+
+	it("should throw if there is no custom type of field id in previousPath and/or newPath", async () => {
+		expect(() => {
+			return updateSharedSliceContentRelationships({
+				models: [{ model: getSharedSliceModel() }],
+				previousPath: [],
+				newPath: [],
+				onUpdate: vi.fn(),
+			});
+		}).toThrow();
 	});
 });
