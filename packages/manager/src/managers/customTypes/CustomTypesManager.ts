@@ -92,7 +92,6 @@ type CustomTypeFieldIdChangedMeta = NonNullable<
 	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
 >;
 
-type CrCustomTypes = readonly CrCustomType[];
 type CrCustomType =
 	| string
 	| { id: string; fields?: readonly CrCustomTypeNestedCr[] };
