@@ -188,140 +188,6 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	private updateCRCustomType(
-		args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
-	): CrCustomType {
-		const [previousCustomTypeId, previousFieldId] = args.previousPath;
-		const [newCustomTypeId, newFieldId] = args.newPath;
-
-		if (!previousCustomTypeId || !newCustomTypeId) {
-			throw new Error(
-				"Could not find a customtype id in previousPath and/or newPath, which should not be possible.",
-			);
-		}
-
-		if (!previousFieldId || !newFieldId) {
-			throw new Error(
-				"Could not find a field id in previousPath and/or newPath, which should not be possible.",
-			);
-		}
-
-		const customType = shallowCloneIfObject(args.customType);
-
-		if (typeof customType === "string" || !customType.fields) {
-			return customType;
-		}
-
-		const matchedCustomTypeId = customType.id === previousCustomTypeId;
-
-		const newFields = customType.fields.map((fieldArg) => {
-			const customTypeField = shallowCloneIfObject(fieldArg);
-
-			if (typeof customTypeField === "string") {
-				if (
-					matchedCustomTypeId &&
-					customTypeField === previousFieldId &&
-					customTypeField !== newFieldId
-				) {
-					// We have reached a field id that matches the id that was renamed,
-					// so we update it new one. The field is a string, so return the new
-					// id.
-					return newFieldId;
-				}
-
-				return customTypeField;
-			}
-
-			if (
-				matchedCustomTypeId &&
-				customTypeField.id === previousFieldId &&
-				customTypeField.id !== newFieldId
-			) {
-				// We have reached a field id that matches the id that was renamed,
-				// so we update it new one.
-				// Since field is not a string, we don't exit, as we might have
-				// something to update further down in customtypes.
-				customTypeField.id = newFieldId;
-			}
-
-			return {
-				...customTypeField,
-				customtypes: customTypeField.customtypes.map((customTypeArg) => {
-					const nestedCustomType = shallowCloneIfObject(customTypeArg);
-
-					if (
-						typeof nestedCustomType === "string" ||
-						!nestedCustomType.fields ||
-						// Since we are on the last level, if we don't start matching right
-						// at the custom type id, we can return exit early because it's not
-						// a match.
-						nestedCustomType.id !== previousCustomTypeId
-					) {
-						return nestedCustomType;
-					}
-
-					return {
-						...nestedCustomType,
-						fields: nestedCustomType.fields.map((fieldArg) => {
-							const nestedCustomTypeField = shallowCloneIfObject(fieldArg);
-
-							if (
-								nestedCustomTypeField === previousFieldId &&
-								nestedCustomTypeField !== newFieldId
-							) {
-								// Matches the previous id, so we update it and return because
-								// it's the last level.
-								return newFieldId;
-							}
-
-							return nestedCustomTypeField;
-						}),
-					};
-				}),
-			};
-		});
-
-		return { ...customType, fields: newFields };
-	}
-
-	/**
-	 * Update the Content Relationship API IDs of a single field. The change is
-	 * determined by the `previousPath` and `newPath` properties.
-	 */
-	private updateFieldContentRelationships<
-		T extends UID | NestableWidget | Group | NestedGroup,
-	>(
-		args: { field: T } & CustomTypeFieldIdChangedMeta,
-	): { field: T; changed: boolean } {
-		const { field, ...updateMeta } = args;
-		if (
-			field.type !== "Link" ||
-			field.config?.select !== "document" ||
-			!field.config?.customtypes
-		) {
-			// not a content relationship field
-			return { field, changed: false };
-		}
-
-		const newCustomTypes = field.config.customtypes.map((customType) =>
-			this.updateCRCustomType({ customType, ...updateMeta }),
-		);
-
-		return {
-			field: {
-				...field,
-				config: {
-					...field.config,
-					customtypes: newCustomTypes,
-				},
-			},
-			// the size and complexity of a field is small, so JSON.stringify is fine
-			changed:
-				JSON.stringify(field.config.customtypes) !==
-				JSON.stringify(newCustomTypes),
-		};
-	}
-
 	/**
 	 * Update the Content Relationship API IDs for all existing custom types and
 	 * slices. The change is determined by properties inside the `updateMeta`
@@ -346,34 +212,24 @@ export class CustomTypesManager extends BaseManager {
 				// Find existing content relationships that link to the renamed field id in
 				// any custom type and update them to use the new one.
 				const customTypes = await this.readAllCustomTypes();
-				for (const customType of customTypes.models) {
-					// Keep track of whether the model has changed to avoid calling the
-					// update hook if nothing has changed
-					let customTypeHasChanged = false;
 
-					const updatedCustomTypeModel = traverseCustomType({
-						customType: customType.model,
-						onField: ({ field }) => {
-							const update = this.updateFieldContentRelationships({
-								field,
-								previousPath,
-								newPath,
-							});
+				// Keep track of whether the model has changed to avoid calling the
+				// update hook if nothing has changed
+				let customTypeHasChanged = false;
 
-							customTypeHasChanged ||= update.changed;
-
-							return update.field;
-						},
-					});
-
-					if (customTypeHasChanged) {
-						crUpdates.push(
-							this.sliceMachinePluginRunner.callHook("custom-type:update", {
-								model: updatedCustomTypeModel,
+				updateCustomTypeContentRelationships({
+					models: customTypes.models,
+					onUpdate: (model) => {
+						pushIfDefined(
+							crUpdates,
+							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+								model,
 							}),
 						);
-					}
-				}
+					},
+					previousPath,
+					newPath,
+				});
 
 				// Find existing slice with content relationships that link to the renamed
 				// field id in all libraries and update them to use the new one.
@@ -384,36 +240,24 @@ export class CustomTypesManager extends BaseManager {
 						libraryID: library.libraryID,
 					});
 
-					for (const slice of slices.models) {
-						// Keep track of whether the model has changed to avoid calling the
-						// update hook if nothing has changed
-						let sliceHasChanged = false;
+					// Keep track of whether the model has changed to avoid calling the
+					// update hook if nothing has changed
+					let sliceHasChanged = false;
 
-						const updatedSliceModel = traverseSharedSlice({
-							path: ["."],
-							slice: slice.model,
-							onField: ({ field }) => {
-								const update = this.updateFieldContentRelationships({
-									field,
-									previousPath,
-									newPath,
-								});
-
-								sliceHasChanged ||= update.changed;
-
-								return update.field;
-							},
-						});
-
-						if (sliceHasChanged) {
-							crUpdates.push(
-								this.sliceMachinePluginRunner.callHook("slice:update", {
+					updateSharedSliceContentRelationships({
+						models: slices.models,
+						onUpdate: (model) => {
+							pushIfDefined(
+								crUpdates,
+								this.sliceMachinePluginRunner?.callHook("slice:update", {
 									libraryID: library.libraryID,
-									model: updatedSliceModel,
+									model,
 								}),
 							);
-						}
-					}
+						},
+						previousPath,
+						newPath,
+					});
 				}
 
 				// Process all the Content Relationship updates at once.
@@ -659,10 +503,215 @@ const InferSliceResponse = z.object({
 	langSmithUrl: z.string().url().optional(),
 });
 
+function updateCRCustomType(
+	args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
+): CrCustomType {
+	const [previousCustomTypeId, previousFieldId] = args.previousPath;
+	const [newCustomTypeId, newFieldId] = args.newPath;
+
+	if (!previousCustomTypeId || !newCustomTypeId) {
+		throw new Error(
+			"Could not find a customtype id in previousPath and/or newPath, which should not be possible.",
+		);
+	}
+
+	if (!previousFieldId || !newFieldId) {
+		throw new Error(
+			"Could not find a field id in previousPath and/or newPath, which should not be possible.",
+		);
+	}
+
+	const customType = shallowCloneIfObject(args.customType);
+
+	if (typeof customType === "string" || !customType.fields) {
+		return customType;
+	}
+
+	const matchedCustomTypeId = customType.id === previousCustomTypeId;
+
+	const newFields = customType.fields.map((fieldArg) => {
+		const customTypeField = shallowCloneIfObject(fieldArg);
+
+		if (typeof customTypeField === "string") {
+			if (
+				matchedCustomTypeId &&
+				customTypeField === previousFieldId &&
+				customTypeField !== newFieldId
+			) {
+				// We have reached a field id that matches the id that was renamed,
+				// so we update it new one. The field is a string, so return the new
+				// id.
+				return newFieldId;
+			}
+
+			return customTypeField;
+		}
+
+		if (
+			matchedCustomTypeId &&
+			customTypeField.id === previousFieldId &&
+			customTypeField.id !== newFieldId
+		) {
+			// We have reached a field id that matches the id that was renamed,
+			// so we update it new one.
+			// Since field is not a string, we don't exit, as we might have
+			// something to update further down in customtypes.
+			customTypeField.id = newFieldId;
+		}
+
+		return {
+			...customTypeField,
+			customtypes: customTypeField.customtypes.map((customTypeArg) => {
+				const nestedCustomType = shallowCloneIfObject(customTypeArg);
+
+				if (
+					typeof nestedCustomType === "string" ||
+					!nestedCustomType.fields ||
+					// Since we are on the last level, if we don't start matching right
+					// at the custom type id, we can return exit early because it's not
+					// a match.
+					nestedCustomType.id !== previousCustomTypeId
+				) {
+					return nestedCustomType;
+				}
+
+				return {
+					...nestedCustomType,
+					fields: nestedCustomType.fields.map((fieldArg) => {
+						const nestedCustomTypeField = shallowCloneIfObject(fieldArg);
+
+						if (
+							nestedCustomTypeField === previousFieldId &&
+							nestedCustomTypeField !== newFieldId
+						) {
+							// Matches the previous id, so we update it and return because
+							// it's the last level.
+							return newFieldId;
+						}
+
+						return nestedCustomTypeField;
+					}),
+				};
+			}),
+		};
+	});
+
+	return { ...customType, fields: newFields };
+}
+
+/**
+ * Update the Content Relationship API IDs of a single field. The change is
+ * determined by the `previousPath` and `newPath` properties.
+ */
+function updateFieldContentRelationships<
+	T extends UID | NestableWidget | Group | NestedGroup,
+>(
+	args: { field: T } & CustomTypeFieldIdChangedMeta,
+): { field: T; changed: boolean } {
+	const { field, ...updateMeta } = args;
+	if (
+		field.type !== "Link" ||
+		field.config?.select !== "document" ||
+		!field.config?.customtypes
+	) {
+		// not a content relationship field
+		return { field, changed: false };
+	}
+
+	const newCustomTypes = field.config.customtypes.map((customType) =>
+		this.updateCRCustomType({ customType, ...updateMeta }),
+	);
+
+	return {
+		field: {
+			...field,
+			config: {
+				...field.config,
+				customtypes: newCustomTypes,
+			},
+		},
+		// the size and complexity of a field is small, so JSON.stringify is fine
+		changed:
+			JSON.stringify(field.config.customtypes) !==
+			JSON.stringify(newCustomTypes),
+	};
+}
+
+export function updateCustomTypeContentRelationships(
+	args: {
+		models: { model: CustomType }[];
+		onUpdate: (model: CustomType) => void;
+	} & CustomTypeFieldIdChangedMeta,
+): void {
+	const { models, previousPath, newPath, onUpdate } = args;
+
+	for (const customType of models) {
+		let changed = false;
+
+		const updatedCustomTypeModel = traverseCustomType({
+			customType: customType.model,
+			onField: ({ field }) => {
+				const update = updateFieldContentRelationships({
+					field,
+					previousPath,
+					newPath,
+				});
+
+				changed ||= update.changed;
+
+				return update.field;
+			},
+		});
+
+		if (changed) {
+			onUpdate(updatedCustomTypeModel);
+		}
+	}
+}
+
+export function updateSharedSliceContentRelationships(
+	args: {
+		models: { model: SharedSlice }[];
+		onUpdate: (model: SharedSlice) => void;
+	} & CustomTypeFieldIdChangedMeta,
+): void {
+	const { models, previousPath, newPath, onUpdate } = args;
+
+	for (const slice of models) {
+		let changed = false;
+
+		const updatedSliceModel = traverseSharedSlice({
+			path: ["."],
+			slice: slice.model,
+			onField: ({ field }) => {
+				const update = updateFieldContentRelationships({
+					field,
+					previousPath,
+					newPath,
+				});
+
+				changed ||= update.changed;
+
+				return update.field;
+			},
+		});
+
+		if (changed) {
+			onUpdate(updatedSliceModel);
+		}
+	}
+}
+
 function shallowCloneIfObject<T>(value: T): T {
 	if (typeof value === "object") {
 		return { ...value };
 	}
 
 	return value;
+}
+
+function pushIfDefined<T>(array: T[], value: T | undefined) {
+	if (value) {
+		array.push(value);
+	}
 }
