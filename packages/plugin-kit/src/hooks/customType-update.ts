@@ -24,6 +24,14 @@ export type CustomTypeUpdateHookData = {
 			 */
 			newPath: string[];
 		};
+		fieldDeleted?: {
+			/**
+			 * Path of the deleted field. Can be used to identify the field that was
+			 * deleted to update a Content Relationship field. (e.g. ["page",
+			 * "title2"])
+			 */
+			path: string[];
+		};
 	};
 };
 
