@@ -73,12 +73,12 @@ export type CustomTypeUpdateMeta = {
   fieldDeleteOrIdChanged?: {
     /**
      * Previous path of the changed field. Can be used to identify the field
-     * that had an API ID rename or was deleted (e.g. ["page", "title"])
+     * that had an API ID renamed or was deleted (e.g. ["page", "title"])
      */
     previousPath: string[];
     /**
      * New path of the changed field. Can be used to identify the field that had
-     * an API ID rename or was deleted (e.g. ["page", "title2"])
+     * an API ID renamed or was deleted (e.g. ["page", "title2"])
      */
     newPath: string[] | null;
   };
