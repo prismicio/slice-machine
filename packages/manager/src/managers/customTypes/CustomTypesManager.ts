@@ -195,62 +195,62 @@ export class CustomTypesManager extends BaseManager {
 
 		const customType = shallowClone(args.customType);
 
-		const previousId = previousPath[0];
-		const newId = newPath[0];
+		const previousCustomTypeId = previousPath[0];
+		const newCustomTypeId = newPath[0];
 
-		if (
-			!previousId ||
-			!newId ||
-			// we don't support custom type id renaming
-			typeof customType === "string"
-		) {
-			return customType;
+		if (!previousCustomTypeId || !newCustomTypeId) {
+			throw new Error(
+				"Didn't find any customtype id, which should not be possible",
+			);
+		}
+
+		if (typeof customType === "string") {
+			return customType; // we don't support custom type id renaming
 		}
 
 		if (customType.fields) {
 			const newFields = customType.fields.map((fieldArg) => {
 				const field = shallowClone(fieldArg);
 
-				const previousId = previousPath[1];
-				const newId = newPath[1];
+				const previousFieldId = previousPath[1];
+				const newFieldId = newPath[1];
 
-				if (!previousId || !newId) {
+				if (!previousFieldId || !newFieldId) {
 					return field;
 				}
 
 				if (typeof field === "string") {
-					if (field === previousId && field !== newId) {
+					if (field === previousFieldId && field !== newFieldId) {
 						// We have reached a field id that matches the id that was renamed,
 						// so we update it new one. The field is a string, so return the new
 						// id.
-						return newId;
+						return newFieldId;
 					}
 
 					return field;
 				}
 
-				if (field.id === previousId && field.id !== newId) {
+				if (field.id === previousFieldId && field.id !== newFieldId) {
 					// We have reached a field id that matches the id that was renamed,
 					// so we update it new one.
 					// Since field is not a string, we don't exit, as we might have
 					// something to update further down in customtypes.
-					field.id = newId;
+					field.id = newFieldId;
 				}
 
 				return {
 					...field,
 					customtypes: field.customtypes.map((customTypeArg) => {
 						const customType = shallowClone(customTypeArg);
-						const previousId = previousPath[0];
-						const newId = newPath[0];
 
-						if (
-							!previousId ||
-							!newId ||
-							// we don't support custom type id renaming
-							typeof customType === "string"
-						) {
-							return customType;
+						if (!previousCustomTypeId || !newCustomTypeId) {
+							throw new Error(
+								"Didn't find any customtype id, which should not be possible",
+							);
+						}
+
+						if (typeof customType === "string") {
+							return customType; // we don't support custom type id renaming
 						}
 
 						if (customType.fields) {
@@ -258,13 +258,11 @@ export class CustomTypesManager extends BaseManager {
 								...customType,
 								fields: customType.fields.map((fieldArg) => {
 									const field = shallowClone(fieldArg);
-									const previousId = previousPath[1];
-									const newId = newPath[1];
 
-									if (field === previousId && field !== newId) {
+									if (field === previousFieldId && field !== newFieldId) {
 										// Matches the previous id, so we update it and return because
 										// it's the last level.
-										return newId;
+										return newFieldId;
 									}
 
 									return field;
