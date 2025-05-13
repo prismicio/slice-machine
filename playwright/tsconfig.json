@@ -24,7 +24,7 @@
     "utils",
     ".eslintrc.js",
     "playwright.config.ts",
-    "globalSetup.ts",
-    "globalTeardown.ts"
+    "globalTeardown.ts",
+    "e2eTestSetup.ts"
   ]
 }

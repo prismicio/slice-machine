@@ -317,12 +317,3 @@ export const test = baseTest.extend<Options & Fixtures>({
     await use(procedures);
   },
 });
-
-export function setRepositoryEnvVar(repositoryName: string) {
-  process.env["REPOSITORY"] = repositoryName;
-  process.env["PLAYWRIGHT_REPOSITORY"] = repositoryName;
-}
-
-export function clearRepositoryEnvVar() {
-  process.env["PLAYWRIGHT_REPOSITORY"] = undefined;
-}
