@@ -78,6 +78,11 @@ type OnSaveFieldProps = {
   updateMeta?: CustomTypeUpdateMeta;
 };
 
+type OnDeleteItemProps = {
+  fieldId: string;
+  groupId?: string;
+};
+
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
@@ -100,14 +105,21 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     [],
   );
 
-  const onDeleteItem = (fieldId: string) => {
+  const onDeleteItem = ({ fieldId, groupId }: OnDeleteItemProps) => {
     const newCustomType = deleteField({
       customType,
       fieldId,
       sectionId: tabId,
     });
 
-    setCustomType({ customType: newCustomType });
+    setCustomType({
+      customType: newCustomType,
+      updateMeta: {
+        fieldDeleted: {
+          path: groupId != null ? [groupId, fieldId] : [fieldId],
+        },
+      },
+    });
   };
 
   const onSaveNewField = ({ apiId: id, value: field }: OnSaveFieldProps) => {
