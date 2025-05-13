@@ -49,6 +49,48 @@ it("throws if plugins have not been initialized", async (ctx) => {
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });
 
+function getCtFields(args?: {
+	crId?: string;
+	ids?: string[];
+	nestedCrId?: string;
+	nestedIds?: string[];
+}): CustomType["json"][keyof CustomType["json"]] {
+	const { crId, ids, nestedCrId, nestedIds } = args ?? {};
+
+	return {
+		name: {
+			type: "Text",
+			config: { label: "Name", placeholder: "Type name" },
+		},
+		authorDetails: {
+			type: "Link",
+			config: {
+				label: "Author Details",
+				placeholder: "Select author",
+				select: "document",
+				customtypes: [
+					{
+						id: crId ?? "author",
+						fields: [
+							"firstName",
+							...(ids ?? []),
+							{
+								id: nestedCrId ?? "address_cr",
+								customtypes: [
+									{
+										id: "address",
+										fields: ["country", ...(nestedIds ?? [])],
+									},
+								],
+							},
+						],
+					},
+				],
+			},
+		},
+	};
+}
+
 describe("updateCustomTypeContentRelationships", () => {
 	function getCrModel(args?: {
 		crId?: string;
@@ -56,8 +98,6 @@ describe("updateCustomTypeContentRelationships", () => {
 		nestedCrId?: string;
 		nestedIds?: string[];
 	}): CustomType {
-		const { crId, nestedCrId, ids, nestedIds } = args ?? {};
-
 		return {
 			format: "custom",
 			label: "Test CT",
@@ -65,38 +105,7 @@ describe("updateCustomTypeContentRelationships", () => {
 			status: true,
 			id: "testCt",
 			json: {
-				Main: {
-					name: {
-						type: "Text",
-						config: { label: "Name", placeholder: "Type name" },
-					},
-					authorDetails: {
-						type: "Link",
-						config: {
-							label: "Author Details",
-							placeholder: "Select author",
-							select: "document",
-							customtypes: [
-								{
-									id: crId ?? "author",
-									fields: [
-										"firstName",
-										...(ids ?? []),
-										{
-											id: nestedCrId ?? "address_cr",
-											customtypes: [
-												{
-													id: "address",
-													fields: ["country", ...(nestedIds ?? [])],
-												},
-											],
-										},
-									],
-								},
-							],
-						},
-					},
-				},
+				Main: getCtFields(args),
 			},
 		};
 	}
@@ -194,8 +203,6 @@ describe("updateSharedSliceContentRelationships", () => {
 		nestedCrId?: string;
 		nestedIds?: string[];
 	}): SharedSlice {
-		const { crId, nestedCrId, ids, nestedIds } = args ?? {};
-
 		return {
 			id: "testSlice",
 			name: "Test Slice",
@@ -209,38 +216,7 @@ describe("updateSharedSliceContentRelationships", () => {
 					version: "1.0.0",
 					docURL: "https://www.prismic.io",
 					imageUrl: "https://www.prismic.io",
-					primary: {
-						name: {
-							type: "Text",
-							config: { label: "Name", placeholder: "Type name" },
-						},
-						authorDetails: {
-							type: "Link",
-							config: {
-								label: "Author Details",
-								placeholder: "Select author",
-								select: "document",
-								customtypes: [
-									{
-										id: crId ?? "author",
-										fields: [
-											"firstName",
-											...(ids ?? []),
-											{
-												id: nestedCrId ?? "address_cr",
-												customtypes: [
-													{
-														id: "address",
-														fields: ["country", ...(nestedIds ?? [])],
-													},
-												],
-											},
-										],
-									},
-								],
-							},
-						},
-					},
+					primary: getCtFields(args),
 				},
 			],
 		};
