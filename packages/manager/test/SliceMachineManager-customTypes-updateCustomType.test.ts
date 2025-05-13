@@ -95,7 +95,7 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
-		// the second call doesn't change anything, so onUpdate is not called
+		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
@@ -167,7 +167,7 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
-		// the second call doesn't change anything, so onUpdate is not called
+		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
@@ -243,7 +243,7 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		// the second call doesn't change anything, so onUpdate is not called
+		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
@@ -324,7 +324,7 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		// the second call doesn't change anything, so onUpdate is not called
+		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
