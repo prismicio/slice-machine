@@ -70,24 +70,17 @@ export const getState = async (): Promise<ServerState> => {
 /** Custom Type Routes * */
 
 export type CustomTypeUpdateMeta = {
-  fieldIdChanged?: {
+  fieldDeleteOrIdChanged?: {
     /**
      * Previous path of the changed field. Can be used to identify the field
-     * that had an API ID rename (e.g. ["page", "title"])
+     * that had an API ID rename or was deleted (e.g. ["page", "title"])
      */
     previousPath: string[];
     /**
-     * New path of the changed field. Can be used to identify the field that
-     * had an API ID rename (e.g. ["page", "title2"])
+     * New path of the changed field. Can be used to identify the field that had
+     * an API ID rename or was deleted (e.g. ["page", "title2"])
      */
-    newPath: string[];
-  };
-  fieldDeleted?: {
-    /**
-     * Path of the deleted field. Can be used to identify the field that was
-     * deleted to update a Content Relationship field. (e.g. ["page", "title2"])
-     */
-    path: string[];
+    newPath: string[] | null;
   };
 };
 

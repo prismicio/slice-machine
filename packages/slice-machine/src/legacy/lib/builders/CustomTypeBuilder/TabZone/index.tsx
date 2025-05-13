@@ -114,8 +114,9 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     setCustomType({
       customType: newCustomType,
       updateMeta: {
-        fieldDeleted: {
-          path: groupId != null ? [groupId, fieldId] : [fieldId],
+        fieldDeleteOrIdChanged: {
+          previousPath: groupId != null ? [groupId, fieldId] : [fieldId],
+          newPath: null,
         },
       },
     });
@@ -212,7 +213,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
         }
       },
       updateMeta: {
-        fieldIdChanged:
+        fieldDeleteOrIdChanged:
           groupId != null
             ? {
                 previousPath: [groupId, previousKey],
