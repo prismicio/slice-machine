@@ -522,13 +522,13 @@ function updateCRCustomType(
 	const matchedCustomTypeId = customType.id === previousCustomTypeId;
 
 	const newFields = customType.fields.map((fieldArg) => {
-		const nestedField = shallowCloneIfObject(fieldArg);
+		const customTypeField = shallowCloneIfObject(fieldArg);
 
-		if (typeof nestedField === "string") {
+		if (typeof customTypeField === "string") {
 			if (
 				matchedCustomTypeId &&
-				nestedField === previousFieldId &&
-				nestedField !== newFieldId
+				customTypeField === previousFieldId &&
+				customTypeField !== newFieldId
 			) {
 				// We have reached a field id that matches the id that was renamed,
 				// so we update it new one. The field is a string, so return the new
@@ -536,40 +536,43 @@ function updateCRCustomType(
 				return newFieldId;
 			}
 
-			return nestedField;
+			return customTypeField;
 		}
 
 		if (
 			matchedCustomTypeId &&
-			nestedField.id === previousFieldId &&
-			nestedField.id !== newFieldId
+			customTypeField.id === previousFieldId &&
+			customTypeField.id !== newFieldId
 		) {
 			// We have reached a field id that matches the id that was renamed,
 			// so we update it new one.
 			// Since field is not a string, we don't exit, as we might have
 			// something to update further down in customtypes.
-			nestedField.id = newFieldId;
+			customTypeField.id = newFieldId;
 		}
 
 		return {
-			...nestedField,
-			customtypes: nestedField.customtypes.map((customTypeArg) => {
-				const customTypeField = shallowCloneIfObject(customTypeArg);
+			...customTypeField,
+			customtypes: customTypeField.customtypes.map((customTypeArg) => {
+				const nestedCustomType = shallowCloneIfObject(customTypeArg);
 
-				if (typeof customTypeField === "string" || !customTypeField.fields) {
-					return customTypeField;
+				if (
+					typeof nestedCustomType === "string" ||
+					!nestedCustomType.fields ||
+					// Since we are on the last level, if we don't start matching right
+					// at the custom type id, we can return exit early because it's not
+					// a match.
+					nestedCustomType.id !== previousCustomTypeId
+				) {
+					return nestedCustomType;
 				}
 
-				const matchedNestedCustomTypeId =
-					customTypeField.id === previousCustomTypeId;
-
 				return {
-					...customTypeField,
-					fields: customTypeField.fields.map((fieldArg) => {
+					...nestedCustomType,
+					fields: nestedCustomType.fields.map((fieldArg) => {
 						const nestedCustomTypeField = shallowCloneIfObject(fieldArg);
 
 						if (
-							matchedNestedCustomTypeId &&
 							nestedCustomTypeField === previousFieldId &&
 							nestedCustomTypeField !== newFieldId
 						) {
