@@ -637,7 +637,7 @@ export function updateCustomTypeContentRelationships(
 			},
 		});
 
-		if (JSON.stringify(customType) !== JSON.stringify(updatedCustomTypeModel)) {
+		if (!isEqualModel(customType, updatedCustomTypeModel)) {
 			onUpdate(updatedCustomTypeModel);
 		}
 	}
@@ -664,10 +664,17 @@ export function updateSharedSliceContentRelationships(
 			},
 		});
 
-		if (JSON.stringify(slice) !== JSON.stringify(updatedSliceModel)) {
+		if (!isEqualModel(slice, updatedSliceModel)) {
 			onUpdate(updatedSliceModel);
 		}
 	}
+}
+
+function isEqualModel<T extends CustomType | SharedSlice>(
+	modelA: T,
+	modelB: T,
+): boolean {
+	return JSON.stringify(modelA) === JSON.stringify(modelB);
 }
 
 function shallowCloneIfObject<T>(value: T): T {
