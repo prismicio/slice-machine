@@ -216,54 +216,60 @@ export class CustomTypesManager extends BaseManager {
 
 		if (customType.fields) {
 			const newFields = customType.fields.map((fieldArg) => {
-				const field = shallowClone(fieldArg);
+				const nestedField = shallowClone(fieldArg);
 
-				if (typeof field === "string") {
-					if (field === previousFieldId && field !== newFieldId) {
+				if (typeof nestedField === "string") {
+					if (nestedField === previousFieldId && nestedField !== newFieldId) {
 						// We have reached a field id that matches the id that was renamed,
 						// so we update it new one. The field is a string, so return the new
 						// id.
 						return newFieldId;
 					}
 
-					return field;
+					return nestedField;
 				}
 
-				if (field.id === previousFieldId && field.id !== newFieldId) {
+				if (
+					nestedField.id === previousFieldId &&
+					nestedField.id !== newFieldId
+				) {
 					// We have reached a field id that matches the id that was renamed,
 					// so we update it new one.
 					// Since field is not a string, we don't exit, as we might have
 					// something to update further down in customtypes.
-					field.id = newFieldId;
+					nestedField.id = newFieldId;
 				}
 
 				return {
-					...field,
-					customtypes: field.customtypes.map((customTypeArg) => {
-						const customType = shallowClone(customTypeArg);
+					...nestedField,
+					customtypes: nestedField.customtypes.map((customTypeArg) => {
+						const customTypeField = shallowClone(customTypeArg);
 
-						if (typeof customType === "string") {
-							return customType; // we don't support custom type id renaming
+						if (typeof customTypeField === "string") {
+							return customTypeField; // we don't support custom type id renaming
 						}
 
-						if (customType.fields) {
+						if (customTypeField.fields) {
 							return {
-								...customType,
-								fields: customType.fields.map((fieldArg) => {
-									const field = shallowClone(fieldArg);
+								...customTypeField,
+								fields: customTypeField.fields.map((fieldArg) => {
+									const nestedCustomTypeField = shallowClone(fieldArg);
 
-									if (field === previousFieldId && field !== newFieldId) {
+									if (
+										nestedCustomTypeField === previousFieldId &&
+										nestedCustomTypeField !== newFieldId
+									) {
 										// Matches the previous id, so we update it and return because
 										// it's the last level.
 										return newFieldId;
 									}
 
-									return field;
+									return nestedCustomTypeField;
 								}),
 							};
 						}
 
-						return customType;
+						return customTypeField;
 					}),
 				};
 			});
