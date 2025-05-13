@@ -304,7 +304,9 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private updateFieldContentRelationships<
 		T extends UID | NestableWidget | Group | NestedGroup,
-	>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
+	>(
+		args: { field: T } & CustomTypeFieldIdChangedMeta,
+	): { field: T; changed: boolean } {
 		const { field, ...updateMeta } = args;
 		if (
 			field.type !== "Link" ||
@@ -312,18 +314,23 @@ export class CustomTypesManager extends BaseManager {
 			!field.config?.customtypes
 		) {
 			// not a content relationship field
-			return field;
+			return { field, changed: false };
 		}
 
-		const newCustomTypes = this.updateCRCustomTypes({
-			...updateMeta,
-			customTypes: field.config.customtypes,
-		});
-
-		return {
+		const newField = {
 			...field,
-			config: { ...field.config, customtypes: newCustomTypes },
+			config: {
+				...field.config,
+				customtypes: this.updateCRCustomTypes({
+					...updateMeta,
+					customTypes: field.config.customtypes,
+				}),
+			},
 		};
+
+		const changed = JSON.stringify(field) !== JSON.stringify(newField);
+
+		return { field: newField, changed };
 	}
 
 	/**
@@ -350,24 +357,33 @@ export class CustomTypesManager extends BaseManager {
 				// Find existing content relationships that link to the renamed field id in
 				// any custom type and update them to use the new one.
 				const customTypes = await this.readAllCustomTypes();
-
 				for (const customType of customTypes.models) {
+					// Keep track of whether the model has changed to avoid calling the
+					// update hook if nothing has changed
+					let customTypeHasChanged = false;
+
 					const updatedCustomTypeModel = traverseCustomType({
 						customType: customType.model,
 						onField: ({ field }) => {
-							return this.updateFieldContentRelationships({
+							const update = this.updateFieldContentRelationships({
 								field,
 								previousPath,
 								newPath,
 							});
+
+							customTypeHasChanged ||= update.changed;
+
+							return update.field;
 						},
 					});
 
-					crUpdates.push(
-						this.sliceMachinePluginRunner.callHook("custom-type:update", {
-							model: updatedCustomTypeModel,
-						}),
-					);
+					if (customTypeHasChanged) {
+						crUpdates.push(
+							this.sliceMachinePluginRunner.callHook("custom-type:update", {
+								model: updatedCustomTypeModel,
+							}),
+						);
+					}
 				}
 
 				// Find existing slice with content relationships that link to the renamed
@@ -380,24 +396,34 @@ export class CustomTypesManager extends BaseManager {
 					});
 
 					for (const slice of slices.models) {
+						// Keep track of whether the model has changed to avoid calling the
+						// update hook if nothing has changed
+						let sliceHasChanged = false;
+
 						const updatedSliceModel = traverseSharedSlice({
 							path: ["."],
 							slice: slice.model,
 							onField: ({ field }) => {
-								return this.updateFieldContentRelationships({
+								const update = this.updateFieldContentRelationships({
 									field,
 									previousPath,
 									newPath,
 								});
+
+								sliceHasChanged ||= update.changed;
+
+								return update.field;
 							},
 						});
 
-						crUpdates.push(
-							this.sliceMachinePluginRunner.callHook("slice:update", {
-								libraryID: library.libraryID,
-								model: updatedSliceModel,
-							}),
-						);
+						if (sliceHasChanged) {
+							crUpdates.push(
+								this.sliceMachinePluginRunner.callHook("slice:update", {
+									libraryID: library.libraryID,
+									model: updatedSliceModel,
+								}),
+							);
+						}
 					}
 				}
 
