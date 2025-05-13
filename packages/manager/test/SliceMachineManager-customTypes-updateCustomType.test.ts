@@ -9,7 +9,10 @@ import {
 	updateCustomTypeContentRelationships,
 	updateSharedSliceContentRelationships,
 } from "../src/managers/customTypes/CustomTypesManager";
-import { CustomType, SharedSlice } from "@prismicio/types-internal";
+import {
+	SharedSlice,
+	CustomType,
+} from "@prismicio/types-internal/lib/customtypes";
 
 it("calls plugins' `custom-type:update` hook", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
@@ -47,35 +50,37 @@ it("throws if plugins have not been initialized", async (ctx) => {
 });
 
 describe("updateCustomTypeContentRelationships", () => {
-	it("should update content relationship ids", async (ctx) => {
+	it("should update content relationship ids", async () => {
 		const getOneLevelCrModel = (...ids: string[]): CustomType => {
-			return ctx.mockPrismic.model.customType({
+			return {
 				format: "custom",
 				label: "Test CT",
 				repeatable: false,
 				status: true,
 				id: "testCt",
-				fields: {
-					name: {
-						type: "Text",
-						config: { label: "Name", placeholder: "Type name" },
-					},
-					authorDetails: {
-						type: "Link",
-						config: {
-							label: "Author Details",
-							placeholder: "Select author",
-							select: "document",
-							customtypes: [
-								{
-									id: "author",
-									fields: ["authorFirstName", ...ids],
-								},
-							],
+				json: {
+					Main: {
+						name: {
+							type: "Text",
+							config: { label: "Name", placeholder: "Type name" },
+						},
+						authorDetails: {
+							type: "Link",
+							config: {
+								label: "Author Details",
+								placeholder: "Select author",
+								select: "document",
+								customtypes: [
+									{
+										id: "author",
+										fields: ["authorFirstName", ...ids],
+									},
+								],
+							},
 						},
 					},
 				},
-			});
+			};
 		};
 
 		const onUpdate = vi.fn();
@@ -100,51 +105,53 @@ describe("updateCustomTypeContentRelationships", () => {
 		); // changed
 	});
 
-	it("should update NESTED content relationship ids", async (ctx) => {
+	it("should update NESTED content relationship ids", async () => {
 		const getTwoLevelCrModel = (args?: {
 			crId?: string;
 			ids?: string[];
 		}): CustomType => {
 			const { crId, ids } = args ?? {};
 
-			return ctx.mockPrismic.model.customType({
+			return {
 				format: "custom",
 				label: "Test CT",
 				repeatable: false,
 				status: true,
 				id: "testCt",
-				fields: {
-					name: {
-						type: "Text",
-						config: { label: "Name", placeholder: "Type name" },
-					},
-					authorDetails: {
-						type: "Link",
-						config: {
-							label: "Author Details",
-							placeholder: "Select author",
-							select: "document",
-							customtypes: [
-								{
-									id: "author",
-									fields: [
-										"authorFirstName",
-										{
-											id: crId ?? "address_cr",
-											customtypes: [
-												{
-													id: "address",
-													fields: ["country", ...(ids ?? [])],
-												},
-											],
-										},
-									],
-								},
-							],
+				json: {
+					Main: {
+						name: {
+							type: "Text",
+							config: { label: "Name", placeholder: "Type name" },
+						},
+						authorDetails: {
+							type: "Link",
+							config: {
+								label: "Author Details",
+								placeholder: "Select author",
+								select: "document",
+								customtypes: [
+									{
+										id: "author",
+										fields: [
+											"authorFirstName",
+											{
+												id: crId ?? "address_cr",
+												customtypes: [
+													{
+														id: "address",
+														fields: ["country", ...(ids ?? [])],
+													},
+												],
+											},
+										],
+									},
+								],
+							},
 						},
 					},
 				},
-			});
+			};
 		};
 
 		const onUpdate = vi.fn();
