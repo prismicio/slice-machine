@@ -205,7 +205,7 @@ export class CustomTypesManager extends BaseManager {
 
 			if (previousPath.join(".") !== newPath?.join(".")) {
 				previousPath = [model.id, ...previousPath];
-				newPath = newPath ? [model.id, ...newPath] : null;
+				newPath = newPath ? [model.id, ...newPath] : null; // TODO: Handle null newPath for deleted fields
 
 				const crUpdates: Promise<{ errors: HookError[] }>[] = [];
 
