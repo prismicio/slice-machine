@@ -502,74 +502,88 @@ function updateCRCustomType(
 
 	const customType = shallowCloneIfObject(args.customType);
 
-	const previousId = previousPath[0];
-	const newId = newPath[0];
+	const [previousCustomTypeId, previousFieldId] = previousPath;
+	const [newCustomTypeId, newFieldId] = newPath;
 
-	if (!previousId || !newId || typeof customType === "string") {
+	if (!previousCustomTypeId || !newCustomTypeId) {
+		throw new Error(
+			"Didn't find any customtype id, which should not be possible.",
+		);
+	}
+
+	if (!previousFieldId || !newFieldId) {
+		throw new Error("Didn't find any field id, which should not be possible.");
+	}
+
+	if (typeof customType === "string") {
 		return customType; // we don't support custom type id renaming
 	}
 
+	const matchedCustomTypeId = customType.id === previousCustomTypeId;
+
 	if (customType.fields) {
 		const newFields = customType.fields.map((fieldArg) => {
-			const field = shallowCloneIfObject(fieldArg);
+			const nestedField = shallowCloneIfObject(fieldArg);
 
-			const previousId = previousPath[1];
-			const newId = newPath[1];
-
-			if (!previousId || !newId) {
-				return field;
-			}
-
-			if (typeof field === "string") {
-				if (field === previousId && field !== newId) {
+			if (typeof nestedField === "string") {
+				if (
+					matchedCustomTypeId &&
+					nestedField === previousFieldId &&
+					nestedField !== newFieldId
+				) {
 					// We have reached a field id that matches the id that was renamed,
 					// so we update it new one. The field is a string, so return the new
 					// id.
-					return newId;
+					return newFieldId;
 				}
 
-				return field;
+				return nestedField;
 			}
 
-			if (field.id === previousId && field.id !== newId) {
-				// We have reached a field id that matches the id that was renamed,
-				// so we update it new one.
-				// Since field is not a string, we don't exit, as we might have
-				// something to update further down in customtypes.
-				field.id = newId;
+			if (nestedField.id === previousFieldId) {
+				if (matchedCustomTypeId && nestedField.id !== newFieldId) {
+					// We have reached a field id that matches the id that was renamed,
+					// so we update it new one.
+					// Since field is not a string, we don't exit, as we might have
+					// something to update further down in customtypes.
+					nestedField.id = newFieldId;
+				}
 			}
 
 			return {
-				...field,
-				customtypes: field.customtypes.map((customTypeArg) => {
-					const customType = shallowCloneIfObject(customTypeArg);
-					const previousId = previousPath[0];
-					const newId = newPath[0];
+				...nestedField,
+				customtypes: nestedField.customtypes.map((customTypeArg) => {
+					const customTypeField = shallowCloneIfObject(customTypeArg);
 
-					if (!previousId || !newId || typeof customType === "string") {
-						return customType; // we don't support custom type id renaming
+					if (typeof customTypeField === "string") {
+						return customTypeField; // we don't support custom type id renaming
 					}
 
-					if (customType.fields) {
-						return {
-							...customType,
-							fields: customType.fields.map((fieldArg) => {
-								const field = shallowCloneIfObject(fieldArg);
-								const previousId = previousPath[1];
-								const newId = newPath[1];
+					const matchedNestedCustomTypeId =
+						customTypeField.id === previousCustomTypeId;
 
-								if (field === previousId && field !== newId) {
+					if (customTypeField.fields) {
+						return {
+							...customTypeField,
+							fields: customTypeField.fields.map((fieldArg) => {
+								const nestedCustomTypeField = shallowCloneIfObject(fieldArg);
+
+								if (
+									matchedNestedCustomTypeId &&
+									nestedCustomTypeField === previousFieldId &&
+									nestedCustomTypeField !== newFieldId
+								) {
 									// Matches the previous id, so we update it and return because
 									// it's the last level.
-									return newId;
+									return newFieldId;
 								}
 
-								return field;
+								return nestedCustomTypeField;
 							}),
 						};
 					}
 
-					return customType;
+					return customTypeField;
 				}),
 			};
 		});
