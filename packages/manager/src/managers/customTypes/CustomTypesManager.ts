@@ -214,12 +214,18 @@ export class CustomTypesManager extends BaseManager {
 			return customType; // we don't support custom type id renaming
 		}
 
+		const matchedCustomTypeId = customType.id === previousCustomTypeId;
+
 		if (customType.fields) {
 			const newFields = customType.fields.map((fieldArg) => {
 				const nestedField = shallowClone(fieldArg);
 
 				if (typeof nestedField === "string") {
-					if (nestedField === previousFieldId && nestedField !== newFieldId) {
+					if (
+						matchedCustomTypeId &&
+						nestedField === previousFieldId &&
+						nestedField !== newFieldId
+					) {
 						// We have reached a field id that matches the id that was renamed,
 						// so we update it new one. The field is a string, so return the new
 						// id.
@@ -229,15 +235,14 @@ export class CustomTypesManager extends BaseManager {
 					return nestedField;
 				}
 
-				if (
-					nestedField.id === previousFieldId &&
-					nestedField.id !== newFieldId
-				) {
-					// We have reached a field id that matches the id that was renamed,
-					// so we update it new one.
-					// Since field is not a string, we don't exit, as we might have
-					// something to update further down in customtypes.
-					nestedField.id = newFieldId;
+				if (nestedField.id === previousFieldId) {
+					if (matchedCustomTypeId && nestedField.id !== newFieldId) {
+						// We have reached a field id that matches the id that was renamed,
+						// so we update it new one.
+						// Since field is not a string, we don't exit, as we might have
+						// something to update further down in customtypes.
+						nestedField.id = newFieldId;
+					}
 				}
 
 				return {
@@ -249,6 +254,9 @@ export class CustomTypesManager extends BaseManager {
 							return customTypeField; // we don't support custom type id renaming
 						}
 
+						const matchedNestedCustomTypeId =
+							customTypeField.id === previousCustomTypeId;
+
 						if (customTypeField.fields) {
 							return {
 								...customTypeField,
@@ -256,6 +264,7 @@ export class CustomTypesManager extends BaseManager {
 									const nestedCustomTypeField = shallowClone(fieldArg);
 
 									if (
+										matchedNestedCustomTypeId &&
 										nestedCustomTypeField === previousFieldId &&
 										nestedCustomTypeField !== newFieldId
 									) {
