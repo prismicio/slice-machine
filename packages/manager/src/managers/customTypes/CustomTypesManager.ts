@@ -203,9 +203,8 @@ export class CustomTypesManager extends BaseManager {
 		if (updates) {
 			for (const [previousPathStr, newPathStr] of Object.entries(updates)) {
 				if (previousPathStr !== newPathStr) {
-					const previousPath = buildPath(previousPathStr, model.id);
-					const newPath = buildPath(newPathStr, model.id);
-
+					const previousPath = [model.id, ...previousPathStr.split(".")];
+					const newPath = [model.id, ...newPathStr.split(".")];
 					const crUpdates: Promise<{ errors: HookError[] }>[] = [];
 
 					// Find existing content relationships that link to the renamed field id in
@@ -661,12 +660,6 @@ export function updateSharedSliceContentRelationships(
 			onUpdate(updatedSliceModel);
 		}
 	}
-}
-
-function buildPath<TPath extends string | null>(path: TPath, modelId: string) {
-	return (path ? [modelId, ...path.split(".")] : null) as TPath extends null
-		? string[] | null
-		: string[];
 }
 
 function isEqualModel<T extends CustomType | SharedSlice>(
