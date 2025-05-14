@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { CustomTypeUpdateMeta, updateCustomType } from "@/apiClient";
+import { CustomTypeUpdatesRecord, updateCustomType } from "@/apiClient";
 import { getFormat } from "@/domain/customType";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
@@ -20,7 +20,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 type SetCustomTypeArgs = {
   customType: CustomType;
   onSaveCallback?: () => void;
-  updateMeta?: CustomTypeUpdateMeta;
+  updates?: CustomTypeUpdatesRecord;
 };
 
 type CustomTypeContext = {
@@ -53,11 +53,14 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
   const setCustomType = useCallback(
     (args: SetCustomTypeArgs) => {
-      const { customType, onSaveCallback, updateMeta } = args;
+      const { customType, onSaveCallback, updates } = args;
 
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { errors } = await updateCustomType({ customType, updateMeta });
+        const { errors } = await updateCustomType({
+          customType,
+          updates,
+        });
 
         if (errors.length > 0) {
           throw errors;

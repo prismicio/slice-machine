@@ -89,11 +89,10 @@ export const CustomListItem = ({
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
       inGroupFieldAction: "update",
-      updateMeta: {
-        fieldDeletedOrIdChanged: {
-          previousPath: [groupItem.key, previousKey],
-          newPath: [groupItem.key, newKey],
-        },
+      updates: {
+        [[groupItem.key, previousKey].join(".")]: [groupItem.key, newKey].join(
+          ".",
+        ),
       },
     });
 
@@ -154,12 +153,7 @@ export const CustomListItem = ({
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
       groupId: groupItem.key,
-      updateMeta: {
-        fieldDeletedOrIdChanged: {
-          previousPath: [groupItem.key, key],
-          newPath: null,
-        },
-      },
+      updates: { [[groupItem.key, key].join(".")]: null },
     });
   };
 
