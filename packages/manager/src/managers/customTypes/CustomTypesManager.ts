@@ -88,7 +88,7 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type CustomTypeFieldDeletedOrIdChangedMeta = {
+type CustomTypeFieldUpdatedPaths = {
 	previousPath: string[];
 	newPath: string[] | null;
 };
@@ -496,7 +496,7 @@ const InferSliceResponse = z.object({
 });
 
 function updateCRCustomType(
-	args: { customType: CrCustomType } & CustomTypeFieldDeletedOrIdChangedMeta,
+	args: { customType: CrCustomType } & CustomTypeFieldUpdatedPaths,
 ): CrCustomType {
 	const [previousCustomTypeId, previousFieldId] = args.previousPath;
 	const [newCustomTypeId, newFieldId] = args.newPath ?? []; // TODO: Handle null newPath for deleted fields
@@ -597,8 +597,8 @@ function updateCRCustomType(
  */
 function updateFieldContentRelationships<
 	T extends UID | NestableWidget | Group | NestedGroup,
->(args: { field: T } & CustomTypeFieldDeletedOrIdChangedMeta): T {
-	const { field, ...updates } = args;
+>(args: { field: T } & CustomTypeFieldUpdatedPaths): T {
+	const { field, ...updatedPaths } = args;
 	if (
 		field.type !== "Link" ||
 		field.config?.select !== "document" ||
@@ -609,7 +609,7 @@ function updateFieldContentRelationships<
 	}
 
 	const newCustomTypes = field.config.customtypes.map((customType) => {
-		return updateCRCustomType({ customType, ...updates });
+		return updateCRCustomType({ customType, ...updatedPaths });
 	});
 
 	return {
@@ -622,19 +622,15 @@ export function updateCustomTypeContentRelationships(
 	args: {
 		models: { model: CustomType }[];
 		onUpdate: (model: CustomType) => void;
-	} & CustomTypeFieldDeletedOrIdChangedMeta,
+	} & CustomTypeFieldUpdatedPaths,
 ): void {
-	const { models, previousPath, newPath, onUpdate } = args;
+	const { models, onUpdate, ...updatedPaths } = args;
 
 	for (const { model: customType } of models) {
 		const updatedCustomTypeModel = traverseCustomType({
 			customType,
 			onField: ({ field }) => {
-				return updateFieldContentRelationships({
-					field,
-					previousPath,
-					newPath,
-				});
+				return updateFieldContentRelationships({ ...updatedPaths, field });
 			},
 		});
 
@@ -648,20 +644,16 @@ export function updateSharedSliceContentRelationships(
 	args: {
 		models: { model: SharedSlice }[];
 		onUpdate: (model: SharedSlice) => void;
-	} & CustomTypeFieldDeletedOrIdChangedMeta,
+	} & CustomTypeFieldUpdatedPaths,
 ): void {
-	const { models, previousPath, newPath, onUpdate } = args;
+	const { models, onUpdate, ...updatedPaths } = args;
 
 	for (const { model: slice } of models) {
 		const updatedSliceModel = traverseSharedSlice({
 			path: ["."],
 			slice,
 			onField: ({ field }) => {
-				return updateFieldContentRelationships({
-					field,
-					previousPath,
-					newPath,
-				});
+				return updateFieldContentRelationships({ ...updatedPaths, field });
 			},
 		});
 
