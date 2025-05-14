@@ -153,7 +153,6 @@ export const CustomListItem = ({
       newKey: groupItem.key,
       value: Groups.toSM(newGroupValue),
       groupId: groupItem.key,
-      updates: { [[groupItem.key, key].join(".")]: null },
     });
   };
 
