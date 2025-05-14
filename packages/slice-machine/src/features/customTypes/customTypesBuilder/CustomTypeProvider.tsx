@@ -57,10 +57,7 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { errors } = await updateCustomType({
-          customType,
-          updates,
-        });
+        const { errors } = await updateCustomType({ customType, updates });
 
         if (errors.length > 0) {
           throw errors;
