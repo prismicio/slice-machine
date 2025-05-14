@@ -13,7 +13,7 @@ export type CustomTypeUpdateHookData = {
 	model: CustomType;
 	/** Record of updated paths in the custom type. */
 	updates?: {
-		[previousPath: string]: string | null;
+		[previousPath: string]: string;
 	};
 };
 

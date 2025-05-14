@@ -90,7 +90,7 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 
 type CustomTypeFieldUpdatedPaths = {
 	previousPath: string[];
-	newPath: string[] | null;
+	newPath: string[];
 };
 
 type CrCustomType =
@@ -498,10 +498,10 @@ const InferSliceResponse = z.object({
 function updateCRCustomType(
 	args: { customType: CrCustomType } & CustomTypeFieldUpdatedPaths,
 ): CrCustomType {
-	const [previousCustomTypeId, previousFieldId] = args.previousPath;
-	const [newCustomTypeId, newFieldId] = args.newPath ?? [null, null];
+	const [customTypeId, previousFieldId] = args.previousPath;
+	const [_, newFieldId] = args.newPath;
 
-	if (!previousCustomTypeId) {
+	if (!customTypeId) {
 		throw new Error(
 			"Could not find a customtype id in previousPath and/or newPath, which should not be possible.",
 		);
@@ -519,80 +519,74 @@ function updateCRCustomType(
 		return customType;
 	}
 
-	const matchedCustomTypeId = customType.id === previousCustomTypeId;
+	const matchedCustomTypeId = customType.id === customTypeId;
 
+	const newFields = customType.fields.map((fieldArg) => {
+		const customTypeField = shallowCloneIfObject(fieldArg);
 
-	const newFields = customType.fields
-		.map((fieldArg): CrCustomTypeNestedCr | null => {
-			const customTypeField = shallowCloneIfObject(fieldArg);
-
-			if (typeof customTypeField === "string") {
-				if (
-					matchedCustomTypeId &&
-					customTypeField === previousFieldId &&
-					customTypeField !== newFieldId
-				) {
-					// We have reached a field id that matches the id that was renamed,
-					// so we update it new one. The field is a string, so return the new
-					// id.
-					return newFieldId;
-				}
-
-				return customTypeField;
-			}
-
+		if (typeof customTypeField === "string") {
 			if (
 				matchedCustomTypeId &&
-				customTypeField.id === previousFieldId &&
-				newFieldId &&
-				customTypeField.id !== newFieldId
+				customTypeField === previousFieldId &&
+				customTypeField !== newFieldId
 			) {
 				// We have reached a field id that matches the id that was renamed,
-				// so we update it new one.
-				// Since field is not a string, we don't exit, as we might have
-				// something to update further down in customtypes.
-				customTypeField.id = newFieldId;
+				// so we update it new one. The field is a string, so return the new
+				// id.
+				return newFieldId;
 			}
 
-			return {
-				...customTypeField,
-				customtypes: customTypeField.customtypes.map((customTypeArg) => {
-					const nestedCustomType = shallowCloneIfObject(customTypeArg);
+			return customTypeField;
+		}
 
-					if (
-						typeof nestedCustomType === "string" ||
-						!nestedCustomType.fields ||
-						// Since we are on the last level, if we don't start matching right
-						// at the custom type id, we can return exit early because it's not
-						// a match.
-						nestedCustomType.id !== previousCustomTypeId
-					) {
-						return nestedCustomType;
-					}
+		if (
+			matchedCustomTypeId &&
+			customTypeField.id === previousFieldId &&
+			customTypeField.id !== newFieldId
+		) {
+			// We have reached a field id that matches the id that was renamed,
+			// so we update it new one.
+			// Since field is not a string, we don't exit, as we might have
+			// something to update further down in customtypes.
+			customTypeField.id = newFieldId;
+		}
 
-					return {
-						...nestedCustomType,
-						fields: nestedCustomType.fields
-							.map((fieldArg) => {
-								const nestedCustomTypeField = shallowCloneIfObject(fieldArg);
+		return {
+			...customTypeField,
+			customtypes: customTypeField.customtypes.map((customTypeArg) => {
+				const nestedCustomType = shallowCloneIfObject(customTypeArg);
 
-								if (
-									nestedCustomTypeField === previousFieldId &&
-									nestedCustomTypeField !== newFieldId
-								) {
-									// Matches the previous id, so we update it and return because
-									// it's the last level.
-									return newFieldId;
-								}
+				if (
+					typeof nestedCustomType === "string" ||
+					!nestedCustomType.fields ||
+					// Since we are on the last level, if we don't start matching right
+					// at the custom type id, we can return exit early because it's not
+					// a match.
+					nestedCustomType.id !== customTypeId
+				) {
+					return nestedCustomType;
+				}
 
-								return nestedCustomTypeField;
-							})
-							.filter((field): field is string => field != null),
-					};
-				}),
-			};
-		})
-		.filter((field): field is CrCustomTypeNestedCr => field != null);
+				return {
+					...nestedCustomType,
+					fields: nestedCustomType.fields.map((fieldArg) => {
+						const nestedCustomTypeField = shallowCloneIfObject(fieldArg);
+
+						if (
+							nestedCustomTypeField === previousFieldId &&
+							nestedCustomTypeField !== newFieldId
+						) {
+							// Matches the previous id, so we update it and return because
+							// it's the last level.
+							return newFieldId;
+						}
+
+						return nestedCustomTypeField;
+					}),
+				};
+			}),
+		};
+	});
 
 	return { ...customType, fields: newFields };
 }
