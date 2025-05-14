@@ -70,13 +70,13 @@ export const getState = async (): Promise<ServerState> => {
 /** Custom Type Routes * */
 
 /** Record of updated paths in the custom type. */
-export type CustomTypeUpdateDetails = {
+export type CustomTypeUpdatesRecord = {
   [key: string]: string | null;
 };
 
 export const updateCustomType = async (args: {
   customType: CustomType;
-  updates?: CustomTypeUpdateDetails;
+  updates?: CustomTypeUpdatesRecord;
 }): ReturnType<
   SliceMachineManagerClient["customTypes"]["updateCustomType"]
 > => {

@@ -1,6 +1,6 @@
 import { type DroppableStateSnapshot } from "react-beautiful-dnd";
 
-import { CustomTypeUpdateDetails } from "@/apiClient";
+import { CustomTypeUpdatesRecord } from "@/apiClient";
 import { useNestedGroupExperiment } from "@/features/builder/useNestedGroupExperiment";
 import { type Item } from "@/legacy/components/ListItem";
 import { type TabField } from "@/legacy/lib/models/common/CustomType";
@@ -49,7 +49,7 @@ export interface GroupListItemProps<F extends TabField> {
     newKey: string;
     value: F;
     inGroupFieldAction?: "add" | "update";
-    updates?: CustomTypeUpdateDetails;
+    updates?: CustomTypeUpdatesRecord;
   }) => void;
   HintElement: JSX.Element;
 }

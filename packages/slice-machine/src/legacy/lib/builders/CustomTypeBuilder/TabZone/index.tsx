@@ -9,7 +9,7 @@ import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { toast } from "react-toastify";
 
-import { CustomTypeUpdateDetails } from "@/apiClient";
+import { CustomTypeUpdatesRecord } from "@/apiClient";
 import { List } from "@/components/List";
 import {
   addField,
@@ -75,12 +75,12 @@ type OnSaveFieldProps = {
   newKey: string;
   value: TabField;
   inGroupFieldAction?: "add" | "update";
-  updates?: CustomTypeUpdateDetails;
+  updates?: CustomTypeUpdatesRecord;
 };
 
 type OnDeleteItemProps = {
   fieldId: string;
-  updates?: CustomTypeUpdateDetails;
+  updates?: CustomTypeUpdatesRecord;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
