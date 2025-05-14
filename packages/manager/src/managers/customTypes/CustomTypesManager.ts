@@ -90,7 +90,7 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 
 type CustomTypeFieldUpdatedPaths = {
 	previousPath: string[];
-	newPath: string[] | null;
+	newPath: string[];
 };
 
 type CrCustomType =
@@ -499,7 +499,7 @@ function updateCRCustomType(
 	args: { customType: CrCustomType } & CustomTypeFieldUpdatedPaths,
 ): CrCustomType {
 	const [previousCustomTypeId, previousFieldId] = args.previousPath;
-	const [newCustomTypeId, newFieldId] = args.newPath ?? []; // TODO: Handle null newPath for deleted fields
+	const [newCustomTypeId, newFieldId] = args.newPath;
 
 	if (!previousCustomTypeId || !newCustomTypeId) {
 		throw new Error(
