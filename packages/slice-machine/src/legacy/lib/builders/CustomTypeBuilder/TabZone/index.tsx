@@ -78,11 +78,6 @@ type OnSaveFieldProps = {
   updates?: CustomTypeUpdatesRecord;
 };
 
-type OnDeleteItemProps = {
-  fieldId: string;
-  updates?: CustomTypeUpdatesRecord;
-};
-
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   const { customType, setCustomType } = useCustomTypeState();
   const customTypeSM = CustomTypes.toSM(customType);
@@ -105,17 +100,14 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     [],
   );
 
-  const onDeleteItem = ({ fieldId, updates }: OnDeleteItemProps) => {
+  const onDeleteItem = (fieldId: string) => {
     const newCustomType = deleteField({
       customType,
       fieldId,
       sectionId: tabId,
     });
 
-    setCustomType({
-      customType: newCustomType,
-      updates,
-    });
+    setCustomType({ customType: newCustomType });
   };
 
   const onSaveNewField = ({ apiId: id, value: field }: OnSaveFieldProps) => {

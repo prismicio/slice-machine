@@ -86,28 +86,25 @@ const FieldZones: FC = () => {
     variation.items && Object.keys(variation.items).length > 0,
   );
 
-  const _onDeleteItem =
-    (widgetArea: WidgetsArea) => (args: { fieldId: string }) => {
-      const { fieldId } = args;
+  const _onDeleteItem = (widgetArea: WidgetsArea) => (key: string) => {
+    if (
+      widgetArea === WidgetsArea.Items &&
+      variation.items &&
+      Object.keys(variation.items).length <= 1
+    ) {
+      setIsDeleteRepeatableZoneDialogOpen(true);
+      return;
+    }
 
-      if (
-        widgetArea === WidgetsArea.Items &&
-        variation.items &&
-        Object.keys(variation.items).length <= 1
-      ) {
-        setIsDeleteRepeatableZoneDialogOpen(true);
-        return;
-      }
+    const newSlice = deleteField({
+      slice,
+      variationId: variation.id,
+      widgetArea,
+      fieldId: key,
+    });
 
-      const newSlice = deleteField({
-        slice,
-        variationId: variation.id,
-        widgetArea,
-        fieldId,
-      });
-
-      setSlice(newSlice);
-    };
+    setSlice(newSlice);
+  };
 
   const _onSave = (
     widgetArea: WidgetsArea,
