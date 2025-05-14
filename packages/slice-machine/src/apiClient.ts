@@ -71,7 +71,7 @@ export const getState = async (): Promise<ServerState> => {
 
 /** Record of updated paths in the custom type. */
 export type CustomTypeUpdatesRecord = {
-  [key: string]: string | null;
+  [previousPath: string]: string | null;
 };
 
 export const updateCustomType = async (args: {
