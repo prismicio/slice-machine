@@ -207,8 +207,8 @@ export class CustomTypesManager extends BaseManager {
 					const newPath = [model.id, ...newPathStr.split(".")];
 					const crUpdates: Promise<{ errors: HookError[] }>[] = [];
 
-					// Find existing content relationships that link to the renamed field id in
-					// any custom type and update them to use the new one.
+					// Find existing content relationships that link to the renamed field
+					// id in any custom type and update them to use the new one.
 					const customTypes = await this.readAllCustomTypes();
 
 					updateCustomTypeContentRelationships({
@@ -225,8 +225,8 @@ export class CustomTypesManager extends BaseManager {
 						newPath,
 					});
 
-					// Find existing slice with content relationships that link to the renamed
-					// field id in all libraries and update them to use the new one.
+					// Find existing slice with content relationships that link to the
+					// renamed field id in all libraries and update them to use the new one.
 					const { libraries } = await this.slices.readAllSliceLibraries();
 
 					for (const library of libraries) {
