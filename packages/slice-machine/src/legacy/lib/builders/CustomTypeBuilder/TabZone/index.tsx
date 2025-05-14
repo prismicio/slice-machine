@@ -9,7 +9,7 @@ import type { DropResult } from "react-beautiful-dnd";
 import { flushSync } from "react-dom";
 import { toast } from "react-toastify";
 
-import { CustomTypeUpdateMeta } from "@/apiClient";
+import { CustomTypeUpdateDetails } from "@/apiClient";
 import { List } from "@/components/List";
 import {
   addField,
@@ -75,12 +75,12 @@ type OnSaveFieldProps = {
   newKey: string;
   value: TabField;
   inGroupFieldAction?: "add" | "update";
-  updateMeta?: CustomTypeUpdateMeta;
+  updateDetails?: CustomTypeUpdateDetails;
 };
 
 type OnDeleteItemProps = {
   fieldId: string;
-  updateMeta?: CustomTypeUpdateMeta;
+  updateDetails?: CustomTypeUpdateDetails;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -105,7 +105,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     [],
   );
 
-  const onDeleteItem = ({ fieldId, updateMeta }: OnDeleteItemProps) => {
+  const onDeleteItem = ({ fieldId, updateDetails }: OnDeleteItemProps) => {
     const newCustomType = deleteField({
       customType,
       fieldId,
@@ -114,7 +114,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
 
     setCustomType({
       customType: newCustomType,
-      updateMeta,
+      updateDetails,
     });
   };
 
@@ -185,7 +185,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     newKey,
     value,
     inGroupFieldAction,
-    updateMeta,
+    updateDetails,
   }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
@@ -208,7 +208,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           toast.success("Field added");
         }
       },
-      updateMeta,
+      updateDetails,
     });
 
     // We don't want to track the group field update when it's for the management of a

@@ -86,7 +86,7 @@ const FieldZone = ({
                     onDeleteItem({
                       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                       fieldId: key,
-                      updateMeta: {
+                      updateDetails: {
                         fieldDeletedOrIdChanged: {
                           previousPath: [key],
                           newPath: null,

@@ -89,7 +89,9 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 };
 
 type CustomTypeFieldDeletedOrIdChangedMeta = NonNullable<
-	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldDeletedOrIdChanged"]
+	NonNullable<
+		CustomTypeUpdateHookData["updateDetails"]
+	>["fieldDeletedOrIdChanged"]
 >;
 
 type CrCustomType =
@@ -189,7 +191,7 @@ export class CustomTypesManager extends BaseManager {
 
 	/**
 	 * Update the Content Relationship API IDs for all existing custom types and
-	 * slices. The change is determined by properties inside the `updateMeta`
+	 * slices. The change is determined by properties inside the `updateDetails`
 	 * property.
 	 */
 	private async updateContentRelationships(
@@ -197,10 +199,10 @@ export class CustomTypesManager extends BaseManager {
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const { model, updateMeta } = args;
+		const { model, updateDetails } = args;
 
-		if (updateMeta?.fieldDeletedOrIdChanged) {
-			let { previousPath, newPath } = updateMeta.fieldDeletedOrIdChanged;
+		if (updateDetails?.fieldDeletedOrIdChanged) {
+			let { previousPath, newPath } = updateDetails.fieldDeletedOrIdChanged;
 
 			if (previousPath.join(".") !== newPath?.join(".")) {
 				previousPath = [model.id, ...previousPath];
@@ -275,7 +277,7 @@ export class CustomTypesManager extends BaseManager {
 			args,
 		);
 
-		if (args.updateMeta?.fieldDeletedOrIdChanged) {
+		if (args.updateDetails?.fieldDeletedOrIdChanged) {
 			await this.updateContentRelationships(args);
 		}
 
@@ -597,7 +599,7 @@ function updateCRCustomType(
 function updateFieldContentRelationships<
 	T extends UID | NestableWidget | Group | NestedGroup,
 >(args: { field: T } & CustomTypeFieldDeletedOrIdChangedMeta): T {
-	const { field, ...updateMeta } = args;
+	const { field, ...updateDetails } = args;
 	if (
 		field.type !== "Link" ||
 		field.config?.select !== "document" ||
@@ -608,7 +610,7 @@ function updateFieldContentRelationships<
 	}
 
 	const newCustomTypes = field.config.customtypes.map((customType) => {
-		return updateCRCustomType({ customType, ...updateMeta });
+		return updateCRCustomType({ customType, ...updateDetails });
 	});
 
 	return {

@@ -11,7 +11,8 @@ import type {
  */
 export type CustomTypeUpdateHookData = {
 	model: CustomType;
-	updateMeta?: {
+	/** Details/context about the changes made to the custom type. */
+	updateDetails?: {
 		fieldDeletedOrIdChanged?: {
 			/**
 			 * Previous path of the changed field. Can be used to identify the field

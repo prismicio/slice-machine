@@ -69,7 +69,8 @@ export const getState = async (): Promise<ServerState> => {
 
 /** Custom Type Routes * */
 
-export type CustomTypeUpdateMeta = {
+/** Details/context about the changes made to the custom type. */
+export type CustomTypeUpdateDetails = {
   fieldDeletedOrIdChanged?: {
     /**
      * Previous path of the changed field. Can be used to identify the field
@@ -86,14 +87,14 @@ export type CustomTypeUpdateMeta = {
 
 export const updateCustomType = async (args: {
   customType: CustomType;
-  updateMeta?: CustomTypeUpdateMeta;
+  updateDetails?: CustomTypeUpdateDetails;
 }): ReturnType<
   SliceMachineManagerClient["customTypes"]["updateCustomType"]
 > => {
-  const { customType: model, updateMeta } = args;
+  const { customType: model, updateDetails } = args;
   return await managerClient.customTypes.updateCustomType({
     model,
-    updateMeta,
+    updateDetails,
   });
 };
 
