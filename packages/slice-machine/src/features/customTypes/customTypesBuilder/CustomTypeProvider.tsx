@@ -20,7 +20,7 @@ import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 type SetCustomTypeArgs = {
   customType: CustomType;
   onSaveCallback?: () => void;
-  updateDetails?: CustomTypeUpdateDetails;
+  updates?: CustomTypeUpdateDetails;
 };
 
 type CustomTypeContext = {
@@ -53,13 +53,13 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
   const setCustomType = useCallback(
     (args: SetCustomTypeArgs) => {
-      const { customType, onSaveCallback, updateDetails } = args;
+      const { customType, onSaveCallback, updates } = args;
 
       setCustomTypeState(customType);
       setNextAction(async () => {
         const { errors } = await updateCustomType({
           customType,
-          updateDetails,
+          updates,
         });
 
         if (errors.length > 0) {

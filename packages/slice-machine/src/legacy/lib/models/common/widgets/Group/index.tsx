@@ -43,13 +43,13 @@ export interface GroupListItemProps<F extends TabField> {
     newKey,
     value,
     inGroupFieldAction,
-    updateDetails,
+    updates,
   }: {
     apiId: string;
     newKey: string;
     value: F;
     inGroupFieldAction?: "add" | "update";
-    updateDetails?: CustomTypeUpdateDetails;
+    updates?: CustomTypeUpdateDetails;
   }) => void;
   HintElement: JSX.Element;
 }

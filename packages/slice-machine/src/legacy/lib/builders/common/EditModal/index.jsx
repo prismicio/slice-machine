@@ -145,12 +145,8 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
             newKey,
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             value: updatedValue,
-            updateDetails: {
-              fieldDeletedOrIdChanged: {
-                previousPath: [apiId],
-                newPath: [newKey],
-              },
-            },
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            updates: { [apiId]: newKey },
           });
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           close();

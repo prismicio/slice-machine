@@ -86,12 +86,9 @@ const FieldZone = ({
                     onDeleteItem({
                       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                       fieldId: key,
-                      updateDetails: {
-                        fieldDeletedOrIdChanged: {
-                          previousPath: [key],
-                          newPath: null,
-                        },
-                      },
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                      updates: { [key]: null },
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     });
                   },
                   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

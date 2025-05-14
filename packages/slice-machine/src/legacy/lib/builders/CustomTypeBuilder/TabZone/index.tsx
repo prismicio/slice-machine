@@ -75,12 +75,12 @@ type OnSaveFieldProps = {
   newKey: string;
   value: TabField;
   inGroupFieldAction?: "add" | "update";
-  updateDetails?: CustomTypeUpdateDetails;
+  updates?: CustomTypeUpdateDetails;
 };
 
 type OnDeleteItemProps = {
   fieldId: string;
-  updateDetails?: CustomTypeUpdateDetails;
+  updates?: CustomTypeUpdateDetails;
 };
 
 const TabZone: FC<TabZoneProps> = ({ tabId }) => {
@@ -105,7 +105,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     [],
   );
 
-  const onDeleteItem = ({ fieldId, updateDetails }: OnDeleteItemProps) => {
+  const onDeleteItem = ({ fieldId, updates }: OnDeleteItemProps) => {
     const newCustomType = deleteField({
       customType,
       fieldId,
@@ -114,7 +114,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
 
     setCustomType({
       customType: newCustomType,
-      updateDetails,
+      updates,
     });
   };
 
@@ -185,7 +185,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
     newKey,
     value,
     inGroupFieldAction,
-    updateDetails,
+    updates,
   }: OnSaveFieldProps) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (ensureWidgetTypeExistence(Widgets, value.type)) {
@@ -208,7 +208,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           toast.success("Field added");
         }
       },
-      updateDetails,
+      updates,
     });
 
     // We don't want to track the group field update when it's for the management of a

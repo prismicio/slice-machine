@@ -88,11 +88,10 @@ type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type CustomTypeFieldDeletedOrIdChangedMeta = NonNullable<
-	NonNullable<
-		CustomTypeUpdateHookData["updateDetails"]
-	>["fieldDeletedOrIdChanged"]
->;
+type CustomTypeFieldDeletedOrIdChangedMeta = {
+	previousPath: string[];
+	newPath: string[] | null;
+};
 
 type CrCustomType =
 	| string
@@ -191,7 +190,7 @@ export class CustomTypesManager extends BaseManager {
 
 	/**
 	 * Update the Content Relationship API IDs for all existing custom types and
-	 * slices. The change is determined by properties inside the `updateDetails`
+	 * slices. The change is determined by properties inside the `updated`
 	 * property.
 	 */
 	private async updateContentRelationships(
@@ -199,51 +198,26 @@ export class CustomTypesManager extends BaseManager {
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const { model, updateDetails } = args;
+		const { model, updates } = args;
 
-		if (updateDetails?.fieldDeletedOrIdChanged) {
-			let { previousPath, newPath } = updateDetails.fieldDeletedOrIdChanged;
+		if (updates) {
+			for (const [previousPathStr, newPathStr] of Object.entries(updates)) {
+				if (previousPathStr !== newPathStr) {
+					const previousPath = buildPath(previousPathStr, model.id);
+					const newPath = buildPath(newPathStr, model.id);
 
-			if (previousPath.join(".") !== newPath?.join(".")) {
-				previousPath = [model.id, ...previousPath];
-				newPath = newPath ? [model.id, ...newPath] : null; // TODO: Handle null newPath for deleted fields
+					const crUpdates: Promise<{ errors: HookError[] }>[] = [];
 
-				const crUpdates: Promise<{ errors: HookError[] }>[] = [];
+					// Find existing content relationships that link to the renamed field id in
+					// any custom type and update them to use the new one.
+					const customTypes = await this.readAllCustomTypes();
 
-				// Find existing content relationships that link to the renamed field id in
-				// any custom type and update them to use the new one.
-				const customTypes = await this.readAllCustomTypes();
-
-				updateCustomTypeContentRelationships({
-					models: customTypes.models,
-					onUpdate: (model) => {
-						pushIfDefined(
-							crUpdates,
-							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
-								model,
-							}),
-						);
-					},
-					previousPath,
-					newPath,
-				});
-
-				// Find existing slice with content relationships that link to the renamed
-				// field id in all libraries and update them to use the new one.
-				const { libraries } = await this.slices.readAllSliceLibraries();
-
-				for (const library of libraries) {
-					const slices = await this.slices.readAllSlicesForLibrary({
-						libraryID: library.libraryID,
-					});
-
-					updateSharedSliceContentRelationships({
-						models: slices.models,
+					updateCustomTypeContentRelationships({
+						models: customTypes.models,
 						onUpdate: (model) => {
 							pushIfDefined(
 								crUpdates,
-								this.sliceMachinePluginRunner?.callHook("slice:update", {
-									libraryID: library.libraryID,
+								this.sliceMachinePluginRunner?.callHook("custom-type:update", {
 									model,
 								}),
 							);
@@ -251,15 +225,40 @@ export class CustomTypesManager extends BaseManager {
 						previousPath,
 						newPath,
 					});
-				}
 
-				// Process all the Content Relationship updates at once.
-				const crUpdatesResult = await Promise.all(crUpdates);
+					// Find existing slice with content relationships that link to the renamed
+					// field id in all libraries and update them to use the new one.
+					const { libraries } = await this.slices.readAllSliceLibraries();
 
-				if (crUpdatesResult.some((result) => result.errors.length > 0)) {
-					return {
-						errors: crUpdatesResult.flatMap((result) => result.errors),
-					};
+					for (const library of libraries) {
+						const slices = await this.slices.readAllSlicesForLibrary({
+							libraryID: library.libraryID,
+						});
+
+						updateSharedSliceContentRelationships({
+							models: slices.models,
+							onUpdate: (model) => {
+								pushIfDefined(
+									crUpdates,
+									this.sliceMachinePluginRunner?.callHook("slice:update", {
+										libraryID: library.libraryID,
+										model,
+									}),
+								);
+							},
+							previousPath,
+							newPath,
+						});
+					}
+
+					// Process all the Content Relationship updates at once.
+					const crUpdatesResult = await Promise.all(crUpdates);
+
+					if (crUpdatesResult.some((result) => result.errors.length > 0)) {
+						return {
+							errors: crUpdatesResult.flatMap((result) => result.errors),
+						};
+					}
 				}
 			}
 		}
@@ -277,7 +276,7 @@ export class CustomTypesManager extends BaseManager {
 			args,
 		);
 
-		if (args.updateDetails?.fieldDeletedOrIdChanged) {
+		if (args.updates) {
 			await this.updateContentRelationships(args);
 		}
 
@@ -599,7 +598,7 @@ function updateCRCustomType(
 function updateFieldContentRelationships<
 	T extends UID | NestableWidget | Group | NestedGroup,
 >(args: { field: T } & CustomTypeFieldDeletedOrIdChangedMeta): T {
-	const { field, ...updateDetails } = args;
+	const { field, ...updates } = args;
 	if (
 		field.type !== "Link" ||
 		field.config?.select !== "document" ||
@@ -610,7 +609,7 @@ function updateFieldContentRelationships<
 	}
 
 	const newCustomTypes = field.config.customtypes.map((customType) => {
-		return updateCRCustomType({ customType, ...updateDetails });
+		return updateCRCustomType({ customType, ...updates });
 	});
 
 	return {
@@ -670,6 +669,12 @@ export function updateSharedSliceContentRelationships(
 			onUpdate(updatedSliceModel);
 		}
 	}
+}
+
+function buildPath<TPath extends string | null>(path: TPath, modelId: string) {
+	return (path ? [modelId, ...path.split(".")] : null) as TPath extends null
+		? string[] | null
+		: string[];
 }
 
 function isEqualModel<T extends CustomType | SharedSlice>(

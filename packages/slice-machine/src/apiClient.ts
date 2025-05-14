@@ -69,32 +69,21 @@ export const getState = async (): Promise<ServerState> => {
 
 /** Custom Type Routes * */
 
-/** Details/context about the changes made to the custom type. */
+/** Record of updated paths in the custom type. */
 export type CustomTypeUpdateDetails = {
-  fieldDeletedOrIdChanged?: {
-    /**
-     * Previous path of the changed field. Can be used to identify the field
-     * that had an API ID renamed or was deleted (e.g. ["page", "title"])
-     */
-    previousPath: string[];
-    /**
-     * New path of the changed field. Can be used to identify the field that had
-     * an API ID renamed or was deleted (e.g. ["page", "title2"])
-     */
-    newPath: string[] | null;
-  };
+  [key: string]: string | null;
 };
 
 export const updateCustomType = async (args: {
   customType: CustomType;
-  updateDetails?: CustomTypeUpdateDetails;
+  updates?: CustomTypeUpdateDetails;
 }): ReturnType<
   SliceMachineManagerClient["customTypes"]["updateCustomType"]
 > => {
-  const { customType: model, updateDetails } = args;
+  const { customType: model, updates } = args;
   return await managerClient.customTypes.updateCustomType({
     model,
-    updateDetails,
+    updates,
   });
 };
 
