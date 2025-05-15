@@ -223,12 +223,12 @@ export class CustomTypesManager extends BaseManager {
 
 				updateCustomTypeContentRelationships({
 					models: customTypes.models,
-					onUpdate: ({ previousModel, updatedModel }) => {
+					onUpdate: ({ previousModel, model }) => {
 						assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 						crUpdates.push(
 							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
-								model: updatedModel,
+								model,
 							}),
 						);
 
@@ -253,13 +253,13 @@ export class CustomTypesManager extends BaseManager {
 
 					updateSharedSliceContentRelationships({
 						models: slices.models,
-						onUpdate: ({ previousModel, updatedModel }) => {
+						onUpdate: ({ previousModel, model }) => {
 							assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 							crUpdates.push(
 								this.sliceMachinePluginRunner?.callHook("slice:update", {
 									libraryID: library.libraryID,
-									model: updatedModel,
+									model,
 								}),
 							);
 
@@ -674,16 +674,13 @@ function updateFieldContentRelationships<
 export function updateCustomTypeContentRelationships(
 	args: {
 		models: { model: CustomType }[];
-		onUpdate: (model: {
-			updatedModel: CustomType;
-			previousModel: CustomType;
-		}) => void;
+		onUpdate: (model: { previousModel: CustomType; model: CustomType }) => void;
 	} & CustomTypeFieldIdChangedMeta,
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
 	for (const { model: customType } of models) {
-		const updatedModel = traverseCustomType({
+		const updatedCustomType = traverseCustomType({
 			customType,
 			onField: ({ field }) => {
 				return updateFieldContentRelationships({
@@ -694,8 +691,8 @@ export function updateCustomTypeContentRelationships(
 			},
 		});
 
-		if (!isEqualModel(customType, updatedModel)) {
-			onUpdate({ updatedModel, previousModel: customType });
+		if (!isEqualModel(customType, updatedCustomType)) {
+			onUpdate({ model: updatedCustomType, previousModel: customType });
 		}
 	}
 }
@@ -704,15 +701,15 @@ export function updateSharedSliceContentRelationships(
 	args: {
 		models: { model: SharedSlice }[];
 		onUpdate: (model: {
-			updatedModel: SharedSlice;
 			previousModel: SharedSlice;
+			model: SharedSlice;
 		}) => void;
 	} & CustomTypeFieldIdChangedMeta,
 ): void {
 	const { models, previousPath, newPath, onUpdate } = args;
 
 	for (const { model: slice } of models) {
-		const updatedModel = traverseSharedSlice({
+		const updateSlice = traverseSharedSlice({
 			path: ["."],
 			slice,
 			onField: ({ field }) => {
@@ -724,8 +721,8 @@ export function updateSharedSliceContentRelationships(
 			},
 		});
 
-		if (!isEqualModel(slice, updatedModel)) {
-			onUpdate({ updatedModel, previousModel: slice });
+		if (!isEqualModel(slice, updateSlice)) {
+			onUpdate({ model: updateSlice, previousModel: slice });
 		}
 	}
 }
