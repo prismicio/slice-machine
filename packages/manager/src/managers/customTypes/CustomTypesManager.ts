@@ -299,41 +299,57 @@ export class CustomTypesManager extends BaseManager {
 		args: CustomTypeUpdateHookData,
 	): Promise<CustomTypesMachineManagerUpdateCustomTypeReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
 		const { model } = args;
-		const previousCustomTypeRead = await this.readCustomType({ id: model.id });
 
-		if (previousCustomTypeRead.errors.length > 0) {
-			return { errors: previousCustomTypeRead.errors };
-		}
-		if (!previousCustomTypeRead.model) {
-			throw new Error(
-				"Read custom type without errors, but model is undefined.",
-			);
+		let updateCrPromise: (() => Promise<{ errors: HookError[] }>) | undefined;
+
+		if (args.updateMeta?.fieldIdChanged) {
+			const customTypeRead = await this.readCustomType({ id: model.id });
+
+			if (customTypeRead.errors.length > 0) {
+				return { errors: customTypeRead.errors };
+			}
+			if (!customTypeRead.model) {
+				throw new Error(
+					"Read custom type without errors, but model is undefined.",
+				);
+			}
+
+			const previousCustomType = customTypeRead.model;
+
+			updateCrPromise = async () => {
+				const crUpdateResult = await this.updateContentRelationships(args);
+
+				if (crUpdateResult.errors.length > 0) {
+					// put the previous custom type back
+					await this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+						model: previousCustomType,
+					});
+					// revert the content relationships updates
+					await crUpdateResult.rollback();
+
+					return { errors: crUpdateResult.errors };
+				}
+
+				return { errors: [] };
+			};
 		}
 
-		const customTypeUpdate = await this.sliceMachinePluginRunner.callHook(
+		// Execute the updates
+
+		const customTypeUpdateResult = await this.sliceMachinePluginRunner.callHook(
 			"custom-type:update",
 			{ model },
 		);
 
-		if (customTypeUpdate.errors.length > 0) {
-			return { errors: customTypeUpdate.errors };
+		if (customTypeUpdateResult.errors.length > 0) {
+			return { errors: customTypeUpdateResult.errors };
 		}
 
-		if (args.updateMeta?.fieldIdChanged) {
-			const crUpdate = await this.updateContentRelationships(args);
+		const crUpdateResult = await updateCrPromise?.();
 
-			if (crUpdate.errors.length > 0) {
-				// put the previous custom type back
-				await this.sliceMachinePluginRunner.callHook("custom-type:update", {
-					model: previousCustomTypeRead.model,
-				});
-				// revert the content relationships updates
-				await crUpdate.rollback();
-
-				return { errors: crUpdate.errors };
-			}
+		if (crUpdateResult && crUpdateResult.errors.length > 0) {
+			return { errors: crUpdateResult.errors };
 		}
 
 		return { errors: [] };
