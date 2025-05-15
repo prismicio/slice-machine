@@ -44,6 +44,7 @@ import * as Hero from "./sliceTemplates/Hero";
 import * as CallToAction from "./sliceTemplates/CallToAction";
 import * as AlternateGrid from "./sliceTemplates/AlternateGrid";
 import * as CustomerLogos from "./sliceTemplates/CustomerLogos";
+import { checkIsSvelte5 } from "./lib/checkIsSvelte5";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -200,14 +201,16 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("slice-template-library:read", async (data, context) => {
+			const isSvelte5 = await checkIsSvelte5({ helpers: context.helpers });
+
 			return await readSliceTemplateLibrary({
 				...data,
 				...context,
 				dirName: path.dirname(fileURLToPath(new URL(import.meta.url))),
 				templates: [Hero, CustomerLogos, AlternateGrid, CallToAction],
 				componentFileNames: {
-					js: "javascript.svelte",
-					ts: "typescript.svelte",
+					js: isSvelte5 ? "javascript.5.svelte" : "javascript.svelte",
+					ts: isSvelte5 ? "typescript.5.svelte" : "typescript.svelte",
 				},
 			});
 		});

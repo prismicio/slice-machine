@@ -11,6 +11,7 @@ import {
 import { source } from "common-tags";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
+import { checkIsSvelte5 } from "../lib/checkIsSvelte5";
 import { pascalCase } from "../lib/pascalCase";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
@@ -35,6 +36,7 @@ const createComponentFile = async ({
 		helpers,
 		options,
 	});
+	const isSvelte5 = await checkIsSvelte5({ helpers });
 
 	const placeholder = `
 		Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
@@ -68,29 +70,60 @@ const createComponentFile = async ({
 
 	if (data.componentContents) {
 		contents = data.componentContents;
-	} else if (isTypeScriptProject) {
-		contents = source`
-			<script lang="ts">
-				import type { Content } from '@prismicio/client';
+	} else if (isSvelte5) {
+		if (isTypeScriptProject) {
+			contents = source`
+				<script lang="ts">
+					import type { Content } from '@prismicio/client';
 
-				export let slice: Content.${pascalName}Slice;
-			</script>
+					interface Props {
+						slice: Content.${pascalName}Slice;
+					}
 
-			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
-				${placeholder}
-			</section>
-		`;
+					let { slice }: Props = $props();
+				</script>
+
+				<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
+					${placeholder}
+				</section>
+			`;
+		} else {
+			contents = source`
+				<script>
+					/** @type {{ slice: import("@prismicio/client").Content.${pascalName}Slice }} */
+					let { slice } = $props();
+				</script>
+
+				<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
+					${placeholder}
+				</section>
+			`;
+		}
 	} else {
-		contents = source`
-			<script>
-				/** @type {import("@prismicio/client").Content.${pascalName}Slice} */
-				export let slice;
-			</script>
+		if (isTypeScriptProject) {
+			contents = source`
+				<script lang="ts">
+					import type { Content } from '@prismicio/client';
 
-			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
-				${placeholder}
-			</section>
-		`;
+					export let slice: Content.${pascalName}Slice;
+				</script>
+
+				<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
+					${placeholder}
+				</section>
+			`;
+		} else {
+			contents = source`
+				<script>
+					/** @type {import("@prismicio/client").Content.${pascalName}Slice} */
+					export let slice;
+				</script>
+
+				<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
+					${placeholder}
+				</section>
+			`;
+		}
 	}
 
 	await writeSliceFile({
