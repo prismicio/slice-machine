@@ -3,6 +3,7 @@ import { source } from "common-tags";
 import type { DocumentationReadHook } from "@slicemachine/plugin-kit";
 
 import { getJSFileExtension } from "../lib/getJSFileExtension";
+import { checkIsSvelte5 } from "../lib/checkIsSvelte5";
 
 import type { PluginOptions } from "../types";
 
@@ -22,6 +23,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		const { model } = data.data;
 
 		const pageDataExtension = await getJSFileExtension({ helpers, options });
+		const isSvelte5 = await checkIsSvelte5({ helpers });
 
 		const routePath = `src/routes/${model.repeatable ? "[uid]" : model.id}`;
 		const dataFilePath = `${routePath}/+page.server.${pageDataExtension}`;
@@ -72,17 +74,35 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			`;
 		}
 
-		let componentFileContent = source`
-			<script>
-				import { SliceZone } from "@prismicio/svelte";
+		let componentFileContent;
 
-				import { components } from "$lib/slices";
+		if (isSvelte5) {
+			// Svelte 5 syntax with runes
+			componentFileContent = source`
+				<script>
+					import { SliceZone } from "@prismicio/svelte";
 
-				export let data;
-			</script>
+					import { components } from "$lib/slices";
 
-			<SliceZone slices={data.page.data.slices} {components} />
-		`;
+					let { data } = $props();
+				</script>
+
+				<SliceZone slices={data.page.data.slices} components={components} />
+			`;
+		} else {
+			// Traditional Svelte 3/4 syntax
+			componentFileContent = source`
+				<script>
+					import { SliceZone } from "@prismicio/svelte";
+
+					import { components } from "$lib/slices";
+
+					export let data;
+				</script>
+
+				<SliceZone slices={data.page.data.slices} {components} />
+			`;
+		}
 
 		if (options.format) {
 			dataFileContent = await helpers.format(

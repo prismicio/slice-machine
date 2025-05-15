@@ -173,6 +173,8 @@ const createSliceSimulatorPage = async ({
 		return;
 	}
 
+	// Due to limitations in Svelte 4 on how slots can be typed, we cannot provide a Svelte 5-flavor
+	// version of this snippet, so we have to rely on the legacy Svelte 4 syntax.
 	const contents = source`
 		<script>
 			import { SliceSimulator } from '@slicemachine/adapter-sveltekit/simulator';
