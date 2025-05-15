@@ -214,8 +214,10 @@ export class CustomTypesManager extends BaseManager {
 				previousPath = [model.id, ...previousPath];
 				newPath = [model.id, ...newPath];
 
-				const crUpdates: Promise<{ errors: HookError[] }>[] = [];
-				const crRollbackFns: (() => void)[] = [];
+				const crUpdates: {
+					updatePromise: Promise<{ errors: HookError[] }>;
+					rollback: () => void;
+				}[] = [];
 
 				// Find existing content relationships that link to the renamed field id in
 				// any custom type and update them to use the new one.
@@ -226,16 +228,16 @@ export class CustomTypesManager extends BaseManager {
 					onUpdate: ({ previousModel, model }) => {
 						assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-						crUpdates.push(
-							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
-								model,
-							}),
-						);
-
-						crRollbackFns.push(() => {
-							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
-								model: previousModel,
-							});
+						crUpdates.push({
+							updatePromise: this.sliceMachinePluginRunner?.callHook(
+								"custom-type:update",
+								{ model },
+							),
+							rollback: () => {
+								this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+									model: previousModel,
+								});
+							},
 						});
 					},
 					previousPath,
@@ -256,18 +258,17 @@ export class CustomTypesManager extends BaseManager {
 						onUpdate: ({ previousModel, model }) => {
 							assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-							crUpdates.push(
-								this.sliceMachinePluginRunner?.callHook("slice:update", {
-									libraryID: library.libraryID,
-									model,
-								}),
-							);
-
-							crRollbackFns.push(() => {
-								this.sliceMachinePluginRunner?.callHook("slice:update", {
-									libraryID: library.libraryID,
-									model: previousModel,
-								});
+							crUpdates.push({
+								updatePromise: this.sliceMachinePluginRunner?.callHook(
+									"slice:update",
+									{ libraryID: library.libraryID, model },
+								),
+								rollback: () => {
+									this.sliceMachinePluginRunner?.callHook("slice:update", {
+										libraryID: library.libraryID,
+										model: previousModel,
+									});
+								},
 							});
 						},
 						previousPath,
@@ -276,13 +277,15 @@ export class CustomTypesManager extends BaseManager {
 				}
 
 				// Process all the Content Relationship updates at once.
-				const crUpdatesResult = await Promise.all(crUpdates);
+				const crUpdatesResult = await Promise.all(
+					crUpdates.map((update) => update.updatePromise),
+				);
 
 				if (crUpdatesResult.some((result) => result.errors.length > 0)) {
 					return {
 						errors: crUpdatesResult.flatMap((result) => result.errors),
 						rollback: async () => {
-							await Promise.all(crRollbackFns.map((fn) => fn()));
+							await Promise.all(crUpdates.map((update) => update.rollback()));
 						},
 					};
 				}
