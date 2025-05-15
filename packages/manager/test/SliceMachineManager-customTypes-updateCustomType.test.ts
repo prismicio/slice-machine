@@ -49,46 +49,74 @@ it("throws if plugins have not been initialized", async (ctx) => {
 	}).rejects.toThrow(/plugins have not been initialized/i);
 });
 
-describe("updateCustomTypeContentRelationships", () => {
-	it("should update content relationship ids", async () => {
-		const getOneLevelCrModel = (...ids: string[]): CustomType => {
-			return {
-				format: "custom",
-				label: "Test CT",
-				repeatable: false,
-				status: true,
-				id: "testCt",
-				json: {
-					Main: {
-						name: {
-							type: "Text",
-							config: { label: "Name", placeholder: "Type name" },
-						},
-						authorDetails: {
-							type: "Link",
-							config: {
-								label: "Author Details",
-								placeholder: "Select author",
-								select: "document",
+function getCustomTypeFields(args?: {
+	crId?: string;
+	ids?: string[];
+	nestedCrId?: string;
+	nestedIds?: string[];
+}) {
+	const { crId, ids, nestedCrId, nestedIds } = args ?? {};
+
+	return {
+		name: {
+			type: "Text",
+			config: { label: "Name", placeholder: "Type name" },
+		},
+		authorDetails: {
+			type: "Link",
+			config: {
+				label: "Author Details",
+				placeholder: "Select author",
+				select: "document",
+				customtypes: [
+					{
+						id: crId ?? "author",
+						fields: [
+							"firstName",
+							...(ids ?? []),
+							{
+								id: nestedCrId ?? "address_cr",
 								customtypes: [
 									{
-										id: "author",
-										fields: ["authorFirstName", ...ids],
+										id: "address",
+										fields: ["country", ...(nestedIds ?? [])],
 									},
 								],
 							},
-						},
+						],
 					},
-				},
-			};
-		};
+				],
+			},
+		},
+	} as const satisfies CustomType["json"][keyof CustomType["json"]];
+}
 
+describe("updateCustomTypeContentRelationships", () => {
+	function getCustomTypeModel(args?: {
+		crId?: string;
+		ids?: string[];
+		nestedCrId?: string;
+		nestedIds?: string[];
+	}): CustomType {
+		return {
+			format: "custom",
+			label: "Test CT",
+			repeatable: false,
+			status: true,
+			id: "testCt",
+			json: {
+				Main: getCustomTypeFields(args),
+			},
+		};
+	}
+
+	it("should update content relationship ids", async () => {
 		const onUpdate = vi.fn();
 		updateCustomTypeContentRelationships({
 			models: [
-				{ model: getOneLevelCrModel("authorLastName") },
-				{ model: getOneLevelCrModel("address") },
-				{ model: getOneLevelCrModel("address", "authorLastName") },
+				{ model: getCustomTypeModel({ ids: ["authorLastName"] }) },
+				{ model: getCustomTypeModel({ ids: ["address"] }) },
+				{ model: getCustomTypeModel({ ids: ["address", "authorLastName"] }) },
 			],
 			previousPath: ["author", "authorLastName"],
 			newPath: ["author", "authorLastName_CHANGED"],
@@ -99,68 +127,20 @@ describe("updateCustomTypeContentRelationships", () => {
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getOneLevelCrModel("authorLastName_CHANGED"),
+			getCustomTypeModel({ ids: ["authorLastName_CHANGED"] }),
 		);
 		expect(onUpdate).toHaveBeenCalledWith(
-			getOneLevelCrModel("address", "authorLastName_CHANGED"),
+			getCustomTypeModel({ ids: ["address", "authorLastName_CHANGED"] }),
 		);
 	});
 
 	it("should update NESTED content relationship ids", async () => {
-		const getTwoLevelCrModel = (args?: {
-			crId?: string;
-			ids?: string[];
-		}): CustomType => {
-			const { crId, ids } = args ?? {};
-
-			return {
-				format: "custom",
-				label: "Test CT",
-				repeatable: false,
-				status: true,
-				id: "testCt",
-				json: {
-					Main: {
-						name: {
-							type: "Text",
-							config: { label: "Name", placeholder: "Type name" },
-						},
-						authorDetails: {
-							type: "Link",
-							config: {
-								label: "Author Details",
-								placeholder: "Select author",
-								select: "document",
-								customtypes: [
-									{
-										id: "author",
-										fields: [
-											"authorFirstName",
-											{
-												id: crId ?? "address_cr",
-												customtypes: [
-													{
-														id: "address",
-														fields: ["country", ...(ids ?? [])],
-													},
-												],
-											},
-										],
-									},
-								],
-							},
-						},
-					},
-				},
-			};
-		};
-
 		const onUpdate = vi.fn();
 		updateCustomTypeContentRelationships({
 			models: [
-				{ model: getTwoLevelCrModel({ ids: ["city"] }) },
-				{ model: getTwoLevelCrModel({ ids: ["addressLine1"] }) },
-				{ model: getTwoLevelCrModel({ ids: ["addressLine1", "city"] }) },
+				{ model: getCustomTypeModel({ nestedIds: ["city"] }) },
+				{ model: getCustomTypeModel({ nestedIds: ["addressLine1"] }) },
+				{ model: getCustomTypeModel({ nestedIds: ["addressLine1", "city"] }) },
 			],
 			previousPath: ["address", "city"],
 			newPath: ["address", "city_CHANGED"],
@@ -171,72 +151,89 @@ describe("updateCustomTypeContentRelationships", () => {
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelCrModel({ ids: ["city_CHANGED"] }),
+			getCustomTypeModel({ nestedIds: ["city_CHANGED"] }),
 		);
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelCrModel({ ids: ["addressLine1", "city_CHANGED"] }),
+			getCustomTypeModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
 		);
 
 		updateCustomTypeContentRelationships({
-			models: [{ model: getTwoLevelCrModel() }],
+			models: [{ model: getCustomTypeModel() }],
 			previousPath: ["author", "address_cr"],
 			newPath: ["author", "address_cr_CHANGED"],
 			onUpdate,
 		});
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelCrModel({ crId: "address_cr_CHANGED" }),
-		);
+			getCustomTypeModel({ nestedCrId: "address_cr_CHANGED" }),
+		); // changed
+	});
+
+	it("should not update content relationship ids if the custom type id is not the same", async () => {
+		const onUpdate = vi.fn();
+
+		updateCustomTypeContentRelationships({
+			models: [
+				{
+					model: getCustomTypeModel({
+						ids: ["sameFieldName"],
+						nestedIds: ["sameFieldName"],
+					}),
+				},
+			],
+			previousPath: ["differentCustomType", "sameFieldName"],
+			newPath: ["differentCustomType", "sameFieldName_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).not.toHaveBeenCalled();
+	});
+
+	it("should throw if there is no custom type of field id in previousPath and/or newPath", async () => {
+		expect(() => {
+			return updateCustomTypeContentRelationships({
+				models: [{ model: getCustomTypeModel() }],
+				previousPath: [],
+				newPath: [],
+				onUpdate: vi.fn(),
+			});
+		}).toThrow();
 	});
 });
 
 describe("updateSharedSliceContentRelationships", () => {
-	it("should update slice content relationship ids", async () => {
-		const getOneLevelSharedSliceModel = (...ids: string[]): SharedSlice => {
-			return {
-				id: "testSlice",
-				name: "Test Slice",
-				type: "SharedSlice",
-				description: "Test Slice",
-				variations: [
-					{
-						id: "testVariation",
-						name: "Test Variation",
-						description: "Test Variation",
-						version: "1.0.0",
-						docURL: "https://www.prismic.io",
-						imageUrl: "https://www.prismic.io",
-						primary: {
-							name: {
-								type: "Text",
-								config: { label: "Name", placeholder: "Type name" },
-							},
-							authorDetails: {
-								type: "Link",
-								config: {
-									label: "Author Details",
-									placeholder: "Select author",
-									select: "document",
-									customtypes: [
-										{
-											id: "author",
-											fields: ["authorFirstName", ...ids],
-										},
-									],
-								},
-							},
-						},
-					},
-				],
-			};
+	function getSharedSliceModel(args?: {
+		crId?: string;
+		ids?: string[];
+		nestedCrId?: string;
+		nestedIds?: string[];
+	}): SharedSlice {
+		return {
+			id: "testSlice",
+			name: "Test Slice",
+			type: "SharedSlice",
+			description: "Test Slice",
+			variations: [
+				{
+					id: "testVariation",
+					name: "Test Variation",
+					description: "Test Variation",
+					version: "1.0.0",
+					docURL: "https://www.prismic.io",
+					imageUrl: "https://www.prismic.io",
+					primary: getCustomTypeFields(args),
+				},
+			],
 		};
+	}
 
+	it("should update slice content relationship ids", async () => {
 		const onUpdate = vi.fn();
 		updateSharedSliceContentRelationships({
 			models: [
-				{ model: getOneLevelSharedSliceModel("authorLastName") },
-				{ model: getOneLevelSharedSliceModel("address") },
-				{ model: getOneLevelSharedSliceModel("address", "authorLastName") },
+				{ model: getSharedSliceModel({ ids: ["authorLastName"] }) },
+				{ model: getSharedSliceModel({ ids: ["address"] }) },
+				{ model: getSharedSliceModel({ ids: ["address", "authorLastName"] }) },
 			],
 			previousPath: ["author", "authorLastName"],
 			newPath: ["author", "authorLastName_CHANGED"],
@@ -247,77 +244,20 @@ describe("updateSharedSliceContentRelationships", () => {
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getOneLevelSharedSliceModel("authorLastName_CHANGED"),
+			getSharedSliceModel({ ids: ["authorLastName_CHANGED"] }),
 		);
 		expect(onUpdate).toHaveBeenCalledWith(
-			getOneLevelSharedSliceModel("address", "authorLastName_CHANGED"),
+			getSharedSliceModel({ ids: ["address", "authorLastName_CHANGED"] }),
 		);
 	});
 
 	it("should update slice NESTED content relationship ids", async () => {
-		const getTwoLevelSharedSliceModel = (args?: {
-			crId?: string;
-			ids?: string[];
-		}): SharedSlice => {
-			const { crId, ids } = args ?? {};
-
-			return {
-				id: "testSlice",
-				name: "Test Slice",
-				type: "SharedSlice",
-				description: "Test Slice",
-				variations: [
-					{
-						id: "testVariation",
-						name: "Test Variation",
-						description: "Test Variation",
-						version: "1.0.0",
-						docURL: "https://www.prismic.io",
-						imageUrl: "https://www.prismic.io",
-						primary: {
-							name: {
-								type: "Text",
-								config: { label: "Name", placeholder: "Type name" },
-							},
-							authorDetails: {
-								type: "Link",
-								config: {
-									label: "Author Details",
-									placeholder: "Select author",
-									select: "document",
-									customtypes: [
-										{
-											id: "author",
-											fields: [
-												"authorFirstName",
-												{
-													id: crId ?? "address_cr",
-													customtypes: [
-														{
-															id: "address",
-															fields: ["country", ...(ids ?? [])],
-														},
-													],
-												},
-											],
-										},
-									],
-								},
-							},
-						},
-					},
-				],
-			};
-		};
-
 		const onUpdate = vi.fn();
 		updateSharedSliceContentRelationships({
 			models: [
-				{ model: getTwoLevelSharedSliceModel({ ids: ["city"] }) },
-				{ model: getTwoLevelSharedSliceModel({ ids: ["addressLine1"] }) },
-				{
-					model: getTwoLevelSharedSliceModel({ ids: ["addressLine1", "city"] }),
-				},
+				{ model: getSharedSliceModel({ nestedIds: ["city"] }) },
+				{ model: getSharedSliceModel({ nestedIds: ["addressLine1"] }) },
+				{ model: getSharedSliceModel({ nestedIds: ["addressLine1", "city"] }) },
 			],
 			previousPath: ["address", "city"],
 			newPath: ["address", "city_CHANGED"],
@@ -328,21 +268,52 @@ describe("updateSharedSliceContentRelationships", () => {
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelSharedSliceModel({ ids: ["city_CHANGED"] }),
+			getSharedSliceModel({ nestedIds: ["city_CHANGED"] }),
 		);
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelSharedSliceModel({ ids: ["addressLine1", "city_CHANGED"] }),
+			getSharedSliceModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
 		);
 
 		updateSharedSliceContentRelationships({
-			models: [{ model: getTwoLevelSharedSliceModel() }],
+			models: [{ model: getSharedSliceModel() }],
 			previousPath: ["author", "address_cr"],
 			newPath: ["author", "address_cr_CHANGED"],
 			onUpdate,
 		});
 
 		expect(onUpdate).toHaveBeenCalledWith(
-			getTwoLevelSharedSliceModel({ crId: "address_cr_CHANGED" }),
+			getSharedSliceModel({ nestedCrId: "address_cr_CHANGED" }),
 		); // changed
+	});
+
+	it("should not update content relationship ids if the custom type id is not the same", async () => {
+		const onUpdate = vi.fn();
+
+		updateSharedSliceContentRelationships({
+			models: [
+				{
+					model: getSharedSliceModel({
+						ids: ["sameFieldName"],
+						nestedIds: ["sameFieldName"],
+					}),
+				},
+			],
+			previousPath: ["differentCustomTypeId", "sameFieldName"],
+			newPath: ["differentCustomTypeId", "sameFieldName_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).not.toHaveBeenCalled();
+	});
+
+	it("should throw if there is no custom type of field id in previousPath and/or newPath", async () => {
+		expect(() => {
+			return updateSharedSliceContentRelationships({
+				models: [{ model: getSharedSliceModel() }],
+				previousPath: [],
+				newPath: [],
+				onUpdate: vi.fn(),
+			});
+		}).toThrow();
 	});
 });
