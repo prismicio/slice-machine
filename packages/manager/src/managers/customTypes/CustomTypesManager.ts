@@ -194,7 +194,11 @@ export class CustomTypesManager extends BaseManager {
 	 */
 	private async updateContentRelationships(
 		args: CustomTypeUpdateHookData,
-	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
+	): Promise<{
+		errors: HookError[];
+		updatedCustomTypes: CustomType[];
+		updatedSlices: { model: SharedSlice; libraryID: string }[];
+	}> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		const { model, updateMeta } = args;
@@ -206,7 +210,8 @@ export class CustomTypesManager extends BaseManager {
 				previousPath = [model.id, ...previousPath];
 				newPath = [model.id, ...newPath];
 
-				const crUpdates: Promise<{ errors: HookError[] }>[] = [];
+				const customTypesToUpdate: CustomType[] = [];
+				const slicesToUpdate: { model: SharedSlice; libraryID: string }[] = [];
 
 				// Find existing content relationships that link to the renamed field id in
 				// any custom type and update them to use the new one.
@@ -214,14 +219,7 @@ export class CustomTypesManager extends BaseManager {
 
 				updateCustomTypeContentRelationships({
 					models: customTypes.models,
-					onUpdate: (model) => {
-						pushIfDefined(
-							crUpdates,
-							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
-								model,
-							}),
-						);
-					},
+					onUpdate: (model) => customTypesToUpdate.push(model),
 					previousPath,
 					newPath,
 				});
@@ -238,13 +236,7 @@ export class CustomTypesManager extends BaseManager {
 					updateSharedSliceContentRelationships({
 						models: slices.models,
 						onUpdate: (model) => {
-							pushIfDefined(
-								crUpdates,
-								this.sliceMachinePluginRunner?.callHook("slice:update", {
-									libraryID: library.libraryID,
-									model,
-								}),
-							);
+							slicesToUpdate.push({ model, libraryID: library.libraryID });
 						},
 						previousPath,
 						newPath,
@@ -252,22 +244,48 @@ export class CustomTypesManager extends BaseManager {
 				}
 
 				// Process all the Content Relationship updates at once.
-				const crUpdatesResult = await Promise.all(crUpdates);
+				const crUpdatesResult = await Promise.all([
+					...customTypesToUpdate.map(
+						(model) =>
+							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+								model,
+							}),
+					),
+					...slicesToUpdate.map(
+						({ model, libraryID }) =>
+							this.sliceMachinePluginRunner?.callHook("slice:update", {
+								model,
+								libraryID,
+							}),
+					),
+				]);
 
-				if (crUpdatesResult.some((result) => result.errors.length > 0)) {
+				if (
+					crUpdatesResult.some((result) => result && result.errors.length > 0)
+				) {
 					return {
-						errors: crUpdatesResult.flatMap((result) => result.errors),
+						errors: crUpdatesResult.flatMap((result) => result?.errors || []),
+						updatedCustomTypes: customTypesToUpdate,
+						updatedSlices: slicesToUpdate,
 					};
 				}
+
+				return {
+					errors: [],
+					updatedCustomTypes: customTypesToUpdate,
+					updatedSlices: slicesToUpdate,
+				};
 			}
 		}
 
-		return { errors: [] };
+		return { errors: [], updatedCustomTypes: [], updatedSlices: [] };
 	}
 
-	async updateCustomType(
-		args: CustomTypeUpdateHookData,
-	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
+	async updateCustomType(args: CustomTypeUpdateHookData): Promise<{
+		errors: HookError[];
+		updatedCustomTypes: CustomType[];
+		updatedSlices: { model: SharedSlice; libraryID: string }[];
+	}> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
@@ -276,10 +294,28 @@ export class CustomTypesManager extends BaseManager {
 		);
 
 		if (args.updateMeta?.fieldIdChanged) {
-			await this.updateContentRelationships(args);
+			const crUpdate = await this.updateContentRelationships(args);
+
+			if (crUpdate.errors.length > 0) {
+				return {
+					errors: crUpdate.errors,
+					updatedCustomTypes: [],
+					updatedSlices: [],
+				};
+			}
+
+			return {
+				errors: [],
+				updatedCustomTypes: [args.model, ...crUpdate.updatedCustomTypes],
+				updatedSlices: crUpdate.updatedSlices,
+			};
 		}
 
-		return { errors: hookResult.errors };
+		return {
+			errors: hookResult.errors,
+			updatedCustomTypes: [],
+			updatedSlices: [],
+		};
 	}
 
 	async renameCustomType(
