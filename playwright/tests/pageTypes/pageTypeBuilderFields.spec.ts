@@ -669,7 +669,7 @@ test("I see that linked content relationships are updated when a custom type API
 
   await expect(pageTypesBuilderPage.autoSaveStatusSaved).toBeVisible();
 
-  await changesPage.goto();
+  await changesPage.menu.changesLink.click();
 
   await changesPage.checkCustomTypeName(
     targetCustomType.id,
