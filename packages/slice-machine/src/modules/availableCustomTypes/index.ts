@@ -25,6 +25,12 @@ export const customTypeSaveSuccess = createAction("CUSTOM_TYPE/SAVE_SUCCESS")<{
   newCustomType: CustomTypeSM;
 }>();
 
+export const customTypesSaveSuccess = createAction(
+  "CUSTOM_TYPE/SAVE_MULTIPLE_SUCCESS",
+)<{
+  newCustomTypes: CustomTypeSM[];
+}>();
+
 export const customTypeCreateSuccess = createAction(
   "CUSTOM_TYPES/CREATE_SUCCESS",
 )<{
@@ -48,6 +54,7 @@ type CustomTypesActions =
   | ActionType<typeof customTypeCreateSuccess>
   | ActionType<typeof customTypeRenameSuccess>
   | ActionType<typeof customTypeSaveSuccess>
+  | ActionType<typeof customTypesSaveSuccess>
   | ActionType<typeof customTypeDeleteSuccess>
   | ActionType<typeof sliceDeleteSuccess>;
 
@@ -117,6 +124,23 @@ export const availableCustomTypesReducer: Reducer<
           ...state[localCustomType.id],
           local: localCustomType,
         },
+      };
+    }
+
+    case getType(customTypesSaveSuccess): {
+      const localCustomTypes = action.payload.newCustomTypes;
+
+      return {
+        ...state,
+        ...Object.fromEntries(
+          localCustomTypes.map((localCustomType) => [
+            localCustomType.id,
+            {
+              ...state[localCustomType.id],
+              local: localCustomType,
+            },
+          ]),
+        ),
       };
     }
 

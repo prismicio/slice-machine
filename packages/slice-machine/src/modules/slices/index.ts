@@ -34,6 +34,12 @@ export const sliceUpdateSuccess = createAction("SLICE/UPDATE_SUCCESS")<{
   component: ComponentUI;
 }>();
 
+export const sliceUpdateModelsSuccess = createAction(
+  "SLICE/UPDATE_MODELS_SUCCESS",
+)<{
+  slices: { libraryID: string; model: SliceSM }[];
+}>();
+
 export const sliceGenerateCustomScreenshotSuccess = createAction(
   "SLICE/GENERATE_CUSTOM_SCREENSHOT_SUCCESS",
 )<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
@@ -48,6 +54,7 @@ type SlicesActions =
   | ActionType<typeof sliceRenameSuccess>
   | ActionType<typeof sliceDeleteSuccess>
   | ActionType<typeof sliceUpdateSuccess>
+  | ActionType<typeof sliceUpdateModelsSuccess>
   | ActionType<typeof sliceGenerateCustomScreenshotSuccess>
   | ActionType<typeof sliceUpdateMockSuccess>;
 
@@ -128,6 +135,28 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       });
 
       return { ...state, libraries: newLibraries };
+    }
+    case getType(sliceUpdateModelsSuccess): {
+      const { slices } = action.payload;
+      const libraries = [...state.libraries];
+
+      for (const { libraryID, model } of slices) {
+        const libraryIndex = libraries.findIndex(
+          (lib) => lib.name === libraryID,
+        );
+        if (libraryIndex === -1) continue;
+
+        const components: ComponentUI[] = libraries[
+          libraryIndex
+        ].components.map((component) => {
+          if (component.model.id !== model.id) return component;
+          return { ...component, model };
+        });
+
+        libraries[libraryIndex] = { ...libraries[libraryIndex], components };
+      }
+
+      return { ...state, libraries };
     }
     case getType(sliceGenerateCustomScreenshotSuccess): {
       const { component, screenshot, variationId } = action.payload;

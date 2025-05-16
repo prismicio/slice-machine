@@ -47,8 +47,14 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const { actionQueueStatus, setNextAction } = useActionQueue({
     errorMessage: customTypeMessages.autoSaveFailed,
   });
-  const { saveCustomTypeSuccess } = useSliceMachineActions();
-  const stableSaveCustomTypeSuccess = useStableCallback(saveCustomTypeSuccess);
+  const { saveCustomTypesSuccess, saveSliceModelsSuccess } =
+    useSliceMachineActions();
+  const stableSaveCustomTypesSuccess = useStableCallback(
+    saveCustomTypesSuccess,
+  );
+  const stableSaveSliceModelsSuccess = useStableCallback(
+    saveSliceModelsSuccess,
+  );
   const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
@@ -57,20 +63,26 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { errors } = await updateCustomType({ customType, updateMeta });
+        const { updatedCustomTypes, updatedSlices, errors } =
+          await updateCustomType({ customType, updateMeta });
 
         if (errors.length > 0) {
           throw errors;
         }
 
-        // Update available custom types store with new custom type
-        stableSaveCustomTypeSuccess(customType);
+        stableSaveCustomTypesSuccess(updatedCustomTypes);
+        stableSaveSliceModelsSuccess(updatedSlices);
 
         syncChanges();
         onSaveCallback?.();
       });
     },
-    [setNextAction, stableSaveCustomTypeSuccess, syncChanges],
+    [
+      setNextAction,
+      stableSaveCustomTypesSuccess,
+      stableSaveSliceModelsSuccess,
+      syncChanges,
+    ],
   );
 
   const contextValue: CustomTypeContext = useMemo(

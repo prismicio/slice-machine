@@ -1,4 +1,7 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import {
+  CustomType,
+  SharedSlice,
+} from "@prismicio/types-internal/lib/customtypes";
 import { useDispatch } from "react-redux";
 
 import { SaveSliceMockRequest } from "@/apiClient";
@@ -8,7 +11,7 @@ import {
 } from "@/legacy/lib/models/common/ComponentUI";
 import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
-import { SliceSM } from "@/legacy/lib/models/common/Slice";
+import { Slices,SliceSM } from "@/legacy/lib/models/common/Slice";
 import ServerState from "@/legacy/lib/models/server/ServerState";
 
 import {
@@ -16,6 +19,7 @@ import {
   customTypeDeleteSuccess,
   customTypeRenameSuccess,
   customTypeSaveSuccess,
+  customTypesSaveSuccess,
 } from "./availableCustomTypes";
 import { refreshStateCreator } from "./environment";
 import { startLoadingActionCreator, stopLoadingActionCreator } from "./loading";
@@ -28,6 +32,7 @@ import {
   sliceGenerateCustomScreenshotSuccess,
   sliceRenameSuccess,
   sliceUpdateMockSuccess,
+  sliceUpdateModelsSuccess,
   sliceUpdateSuccess,
 } from "./slices";
 import {
@@ -113,6 +118,12 @@ const useSliceMachineActions = () => {
         newCustomType: CustomTypes.toSM(customType),
       }),
     );
+  const saveCustomTypesSuccess = (customTypes: CustomType[]) =>
+    dispatch(
+      customTypesSaveSuccess({
+        newCustomTypes: customTypes.map(CustomTypes.toSM),
+      }),
+    );
   const deleteCustomTypeSuccess = (id: string) =>
     dispatch(
       customTypeDeleteSuccess({
@@ -146,6 +157,18 @@ const useSliceMachineActions = () => {
         variationId,
         screenshot,
         component,
+      }),
+    );
+  };
+  const saveSliceModelsSuccess = (
+    slices: { libraryID: string; model: SharedSlice }[],
+  ) => {
+    dispatch(
+      sliceUpdateModelsSuccess({
+        slices: slices.map(({ libraryID, model }) => ({
+          libraryID,
+          model: Slices.toSM(model),
+        })),
       }),
     );
   };
@@ -184,7 +207,9 @@ const useSliceMachineActions = () => {
     deleteCustomTypeSuccess,
     renameCustomTypeSuccess,
     saveCustomTypeSuccess,
+    saveCustomTypesSuccess,
     saveSliceSuccess,
+    saveSliceModelsSuccess,
     saveSliceCustomScreenshotSuccess,
     createSliceSuccess,
     renameSliceSuccess,
