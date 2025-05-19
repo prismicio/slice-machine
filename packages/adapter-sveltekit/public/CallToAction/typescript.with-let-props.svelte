@@ -1,17 +1,14 @@
-<script>
-	import { isFilled } from "@prismicio/client";
+<script lang="ts">
+	import { type Content, isFilled } from "@prismicio/client";
 	import {
 		PrismicLink,
 		PrismicImage,
 		PrismicRichText,
 	} from "@prismicio/svelte";
 
-	/**
-	 * @type {{ slice: import("@prismicio/client").Content.${PascalNameToReplace}Slice }}
-	 */
-	let { slice } = $props();
+	export let slice: Content.PascalNameToReplaceSlice;
 
-	const alignment = $derived(slice.variation === "alignLeft" ? "left" : "center");
+	$: alignment = slice.variation === "alignLeft" ? "left" : "center";
 </script>
 
 <section

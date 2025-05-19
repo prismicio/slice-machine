@@ -1,16 +1,15 @@
-<script lang="ts">
+<script>
 	import {
 		PrismicImage,
 		PrismicRichText,
 		PrismicLink,
 	} from "@prismicio/svelte";
-	import { type Content, isFilled } from "@prismicio/client";
+	import { isFilled } from "@prismicio/client";
 
-	interface Props {
-		slice: Content.PascalNameToReplaceSlice;
-	}
-
-	let { slice }: Props = $props();
+	/**
+	 * @type {import("@prismicio/client").Content.${PascalNameToReplace}Slice}
+	 */
+	export let slice;
 </script>
 
 <section

@@ -7,11 +7,11 @@
 	} from "@prismicio/svelte";
 
 	/**
-	 * @type {import("@prismicio/client").Content.${PascalNameToReplace}Slice}
+	 * @type {{ slice: import("@prismicio/client").Content.${PascalNameToReplace}Slice }}
 	 */
-	export let slice;
+	let { slice } = $props();
 
-	$: alignment = slice.variation === "alignLeft" ? "left" : "center";
+	const alignment = $derived(slice.variation === "alignLeft" ? "left" : "center");
 </script>
 
 <section

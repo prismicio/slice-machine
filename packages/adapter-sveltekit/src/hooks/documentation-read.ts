@@ -87,7 +87,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					let { data } = $props();
 				</script>
 
-				<SliceZone slices={data.page.data.slices} components={components} />
+				<SliceZone slices={data.page.data.slices} {components} />
 			`;
 		} else {
 			// Traditional Svelte 3/4 syntax

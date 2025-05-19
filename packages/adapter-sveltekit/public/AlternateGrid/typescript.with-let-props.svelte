@@ -2,11 +2,7 @@
 	import { PrismicImage, PrismicRichText } from "@prismicio/svelte";
 	import { type Content, isFilled } from "@prismicio/client";
 
-	interface Props {
-		slice: Content.PascalNameToReplaceSlice;
-	}
-
-	let { slice }: Props = $props();
+	export let slice: Content.PascalNameToReplaceSlice;
 </script>
 
 <section

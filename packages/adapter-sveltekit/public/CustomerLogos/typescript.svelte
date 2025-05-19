@@ -6,7 +6,11 @@
 		PrismicLink,
 	} from "@prismicio/svelte";
 
-	export let slice: Content.PascalNameToReplaceSlice;
+	interface Props {
+		slice: Content.PascalNameToReplaceSlice;
+	}
+
+	let { slice }: Props = $props();
 </script>
 
 <section

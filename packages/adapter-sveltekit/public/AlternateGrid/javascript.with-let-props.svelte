@@ -3,9 +3,9 @@
 	import { isFilled } from "@prismicio/client";
 
 	/**
-	 * @type {{ slice: import("@prismicio/client").Content.${PascalNameToReplace}Slice }}
+	 * @type {import("@prismicio/client").Content.${PascalNameToReplace}Slice}
 	 */
-	let { slice } = $props();
+	export let slice;
 </script>
 
 <section

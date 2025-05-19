@@ -209,8 +209,12 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				dirName: path.dirname(fileURLToPath(new URL(import.meta.url))),
 				templates: [Hero, CustomerLogos, AlternateGrid, CallToAction],
 				componentFileNames: {
-					js: isSvelte5 ? "javascript.5.svelte" : "javascript.svelte",
-					ts: isSvelte5 ? "typescript.5.svelte" : "typescript.svelte",
+					js: isSvelte5
+						? "javascript.svelte"
+						: "javascript.with-let-props.svelte",
+					ts: isSvelte5
+						? "typescript.svelte"
+						: "typescript.with-let-props.svelte",
 				},
 			});
 		});
