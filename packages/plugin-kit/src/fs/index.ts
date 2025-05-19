@@ -6,6 +6,8 @@
 
 export { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
 
+export { checkProjectDependencyMatch } from "./checkProjectDependencyMatch";
+
 export { upsertGlobalTypeScriptTypes } from "./upsertGlobalTypeScriptTypes";
 export type { UpsertGlobalTypeScriptTypesArgs } from "./upsertGlobalTypeScriptTypes";
 

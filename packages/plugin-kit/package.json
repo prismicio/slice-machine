@@ -72,7 +72,8 @@
 		"io-ts-reporters": "^2.0.1",
 		"p-limit": "^4.0.0",
 		"prettier": "^3.0.3",
-		"prismic-ts-codegen": "0.1.25"
+		"prismic-ts-codegen": "0.1.25",
+		"semver": "^7.3.8"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.7.1",
@@ -80,6 +81,7 @@
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
 		"@types/fs-extra": "11.0.1",
+		"@types/semver": "7.3.13",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",
 		"@vitest/coverage-v8": "0.32.0",
