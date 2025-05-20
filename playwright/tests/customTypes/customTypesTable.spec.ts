@@ -2,6 +2,8 @@ import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
 import { generateRandomId } from "../../utils/generateRandomId";
+import { generateLibraries } from "../../mocks";
+import { generateType } from "../../mocks/generateTypes";
 
 test("I can create a reusable custom type", async ({
   customTypesTablePage,
