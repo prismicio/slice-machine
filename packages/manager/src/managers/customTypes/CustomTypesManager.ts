@@ -309,7 +309,7 @@ export class CustomTypesManager extends BaseManager {
 
 		return {
 			errors: hookResult.errors,
-			updatedCustomTypes: [],
+			updatedCustomTypes: [args.model],
 			updatedSlices: [],
 		};
 	}

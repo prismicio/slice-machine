@@ -35,6 +35,8 @@ it("calls plugins' `custom-type:update` hook", async (ctx) => {
 	expectHookHandlerToHaveBeenCalledWithData(hookHandler, { model });
 	expect(res).toStrictEqual({
 		errors: [],
+		updatedCustomTypes: [model],
+		updatedSlices: [],
 	});
 });
 
