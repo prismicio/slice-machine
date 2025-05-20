@@ -17,7 +17,6 @@ import {
 	CustomTypeReadHookData,
 	CustomTypeRenameHook,
 	CustomTypeRenameHookData,
-	CustomTypeUpdateHook,
 	CustomTypeUpdateHookData,
 	HookError,
 } from "@slicemachine/plugin-kit";
