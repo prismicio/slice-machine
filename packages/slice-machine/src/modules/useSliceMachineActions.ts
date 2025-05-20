@@ -11,7 +11,7 @@ import {
 } from "@/legacy/lib/models/common/ComponentUI";
 import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
-import { Slices,SliceSM } from "@/legacy/lib/models/common/Slice";
+import { Slices, SliceSM } from "@/legacy/lib/models/common/Slice";
 import ServerState from "@/legacy/lib/models/server/ServerState";
 
 import {
@@ -121,7 +121,7 @@ const useSliceMachineActions = () => {
   const saveCustomTypesSuccess = (customTypes: CustomType[]) =>
     dispatch(
       customTypesSaveSuccess({
-        newCustomTypes: customTypes.map(CustomTypes.toSM),
+        newCustomTypes: customTypes.map((ct) => CustomTypes.toSM(ct)),
       }),
     );
   const deleteCustomTypeSuccess = (id: string) =>
