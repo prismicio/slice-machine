@@ -227,16 +227,14 @@ export class CustomTypesManager extends BaseManager {
 				// field id in all libraries and update them to use the new one.
 				const { libraries } = await this.slices.readAllSliceLibraries();
 
-				for (const library of libraries) {
+				for (const { libraryID } of libraries) {
 					const slices = await this.slices.readAllSlicesForLibrary({
-						libraryID: library.libraryID,
+						libraryID,
 					});
 
 					updateSharedSliceContentRelationships({
 						models: slices.models,
-						onUpdate: (model) => {
-							slicesToUpdate.push({ model, libraryID: library.libraryID });
-						},
+						onUpdate: (model) => slicesToUpdate.push({ model, libraryID }),
 						previousPath,
 						newPath,
 					});
@@ -244,19 +242,18 @@ export class CustomTypesManager extends BaseManager {
 
 				// Process all the Content Relationship updates at once.
 				const crUpdatesResult = await Promise.all([
-					...customTypesToUpdate.map(
-						(model) =>
-							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
-								model,
-							}),
-					),
-					...slicesToUpdate.map(
-						({ model, libraryID }) =>
-							this.sliceMachinePluginRunner?.callHook("slice:update", {
-								model,
-								libraryID,
-							}),
-					),
+					...customTypesToUpdate.map((model) => {
+						return this.sliceMachinePluginRunner?.callHook(
+							"custom-type:update",
+							{ model },
+						);
+					}),
+					...slicesToUpdate.map((args) => {
+						return this.sliceMachinePluginRunner?.callHook(
+							"slice:update",
+							args,
+						);
+					}),
 				]);
 
 				if (
@@ -718,10 +715,4 @@ function shallowCloneIfObject<T>(value: T): T {
 	}
 
 	return value;
-}
-
-function pushIfDefined<T>(array: T[], value: T | undefined) {
-	if (value) {
-		array.push(value);
-	}
 }
