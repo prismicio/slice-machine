@@ -63,11 +63,11 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
           throw errors;
         }
 
-        syncChanges();
-
-        // Refresh the store to get the updated custom types
+        // Refresh the store with the latest server state to get the updated
+        // custom types
         stableRefreshState(await getState());
 
+        syncChanges();
         onSaveCallback?.();
       });
     },
