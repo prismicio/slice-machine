@@ -11,6 +11,7 @@ import { DefaultFields } from "@/legacy/lib/forms/defaults";
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 import { hasLocal } from "../../ModelData";
+import { ContentRelationshipFieldPicker } from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -49,57 +50,25 @@ const WidgetForm = ({
     : null;
 
   return (
-    <FlexGrid>
-      {Object.entries(FormFields)
-        .filter((e) => e[0] !== "customtypes")
-        .map(([key, field]) => (
-          <Col key={key}>
-            <WidgetFormField
-              fieldName={createFieldNameFromKey(key)}
-              formField={field}
-              fields={fields}
-              initialValues={initialValues}
-            />
-          </Col>
-        ))}
-      <Col>
-        <Box
-          sx={{
-            mt: 2,
-            alignItems: "center",
-          }}
-        >
-          <Label htmlFor="origin" mb="1">
-            Types
-          </Label>
-          <Select
-            isMulti
-            name="origin"
-            options={options}
-            onChange={(v) => {
-              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-              if (v) {
-                void setFieldValue(
-                  "config.customtypes",
-                  v.map(({ value }) => value),
-                );
-              }
-            }}
-            value={selectValues}
-            theme={(theme) => {
-              return {
-                ...theme,
-                colors: {
-                  ...theme.colors,
-                  text: "text",
-                  primary: "background",
-                },
-              };
-            }}
-          />
-        </Box>
-      </Col>
-    </FlexGrid>
+    <>
+      <FlexGrid>
+        {Object.entries(FormFields)
+          .filter((e) => e[0] !== "customtypes")
+          .map(([key, field]) => (
+            <Col key={key}>
+              <WidgetFormField
+                fieldName={createFieldNameFromKey(key)}
+                formField={field}
+                fields={fields}
+                initialValues={initialValues}
+              />
+            </Col>
+          ))}
+      </FlexGrid>
+      <Box mt={20}>
+        <ContentRelationshipFieldPicker />
+      </Box>
+    </>
   );
 };
 
