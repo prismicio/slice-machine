@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "2.15.3",
+  "version": "2.16.0",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -48,7 +48,7 @@
     "@prismicio/mock": "0.7.1",
     "@prismicio/mocks": "2.13.0",
     "@prismicio/simulator": "0.1.4",
-    "@prismicio/types-internal": "3.10.0-alpha.0",
+    "@prismicio/types-internal": "3.10.0",
     "@radix-ui/react-hover-card": "1.0.6",
     "@radix-ui/react-tabs": "1.0.4",
     "@radix-ui/react-visually-hidden": "1.1.1",

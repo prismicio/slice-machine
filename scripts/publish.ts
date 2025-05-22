@@ -269,35 +269,36 @@ async function publish(options?: Options): Promise<void> {
   }
   await exec("yarn", ["version", "apply", "--all"], { dryRun });
 
-  // If running in stable mode, both commit and tag the changes. Otherwise, only
-  // tag them.
-  console.log(`🏷️  ${mode === "stable" ? "Committing" : "Tagging"} changes...`);
-  const { stdout: gitDiff } = await exec("git", ["diff", "--name-only"]);
-  if (gitDiff.length === 0 && !dryRun) {
-    throw new CommandError(
-      "There are no changed package versions to commit or tag.",
-    );
-  } else if (mode === "stable") {
-    const commitMessage = `release: ${packageNameToReleaseVersion.size} new package${s}`;
-    await exec("git", ["commit", "--all", "--message", commitMessage], {
-      dryRun,
-    });
-  }
-  for (const [
-    packageName,
-    packageReleaseVersion,
-  ] of packageNameToReleaseVersion) {
-    const gitTagName = `${packageName}@${packageReleaseVersion}`;
-    await exec(
-      "git",
-      ["tag", "--annotate", "--force", "--message", packageName, gitTagName],
-      { dryRun },
-    );
-  }
+  // If running in stable mode, both commit and tag the changes.
+  if (mode === "stable") {
+    console.log(`🏷️  "Committing changes...`);
+    const { stdout: gitDiff } = await exec("git", ["diff", "--name-only"]);
+    if (gitDiff.length === 0 && !dryRun) {
+      throw new CommandError(
+        "There are no changed package versions to commit or tag.",
+      );
+    } else {
+      const commitMessage = `release: ${packageNameToReleaseVersion.size} new package${s}`;
+      await exec("git", ["commit", "--all", "--message", commitMessage], {
+        dryRun,
+      });
+    }
+    for (const [
+      packageName,
+      packageReleaseVersion,
+    ] of packageNameToReleaseVersion) {
+      const gitTagName = `${packageName}@${packageReleaseVersion}`;
+      await exec(
+        "git",
+        ["tag", "--annotate", "--force", "--message", packageName, gitTagName],
+        { dryRun },
+      );
+    }
 
-  // Push the changes to GitHub.
-  console.log("🐱 Pushing to GitHub...");
-  await exec("git", ["push", "--atomic", "--follow-tags"], { dryRun });
+    // Push the changes to GitHub.
+    console.log("🐱 Pushing to GitHub...");
+    await exec("git", ["push", "--atomic", "--follow-tags"], { dryRun });
+  }
 
   // Publish the packages that are part of the release, both in parallel and in
   // topological order.
