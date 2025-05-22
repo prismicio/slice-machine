@@ -22,8 +22,6 @@ packages/**/yalc.lock
 ehthumbs.db
 Thumbs.db
 
-e2e-projects/**/.next
-
 # IDE Specific
 nbproject
 .~lock.*
