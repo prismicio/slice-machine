@@ -223,13 +223,13 @@ export class CustomTypesManager extends BaseManager {
 
 			updateCustomTypeContentRelationships({
 				models: customTypes.models,
-				onUpdate: ({ previousModel, model }) => {
+				onUpdate: ({ previousModel, model: updatedModel }) => {
 					assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 					crUpdates.push({
 						updatePromise: this.sliceMachinePluginRunner?.callHook(
 							"custom-type:update",
-							{ model },
+							{ model: updatedModel },
 						),
 						rollback: () => {
 							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
@@ -253,13 +253,13 @@ export class CustomTypesManager extends BaseManager {
 
 				updateSharedSliceContentRelationships({
 					models: slices.models,
-					onUpdate: ({ previousModel, model }) => {
+					onUpdate: ({ previousModel, model: updatedModel }) => {
 						assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 						crUpdates.push({
 							updatePromise: this.sliceMachinePluginRunner?.callHook(
 								"slice:update",
-								{ libraryID: library.libraryID, model },
+								{ libraryID: library.libraryID, model: updatedModel },
 							),
 							rollback: () => {
 								this.sliceMachinePluginRunner?.callHook("slice:update", {
