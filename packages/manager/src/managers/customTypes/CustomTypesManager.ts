@@ -92,9 +92,10 @@ type CustomTypesMachineManagerUpdateCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type CustomTypeFieldIdChangedMeta = NonNullable<
-	NonNullable<CustomTypeUpdateHookData["updateMeta"]>["fieldIdChanged"]
->;
+type CustomTypeFieldIdChangedMeta = {
+	previousPath: string[];
+	newPath: string[];
+};
 
 type CrCustomType =
 	| string
@@ -197,44 +198,72 @@ export class CustomTypesManager extends BaseManager {
 	 * property.
 	 */
 	private async updateContentRelationships(
-		args: CustomTypeUpdateHookData,
+		args: { model: CustomType } & CustomTypeFieldIdChangedMeta,
 	): Promise<
 		OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>> & {
-			rollback: () => Promise<void>;
+			rollback?: () => Promise<void>;
 		}
 	> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const { model, updateMeta } = args;
+		let { model, newPath, previousPath } = args;
 
-		if (updateMeta?.fieldIdChanged) {
-			let { previousPath, newPath } = updateMeta.fieldIdChanged;
+		if (previousPath.join(".") !== newPath.join(".")) {
+			previousPath = [model.id, ...previousPath];
+			newPath = [model.id, ...newPath];
 
-			if (previousPath.join(".") !== newPath.join(".")) {
-				previousPath = [model.id, ...previousPath];
-				newPath = [model.id, ...newPath];
+			const crUpdates: {
+				updatePromise: Promise<{ errors: HookError[] }>;
+				rollback: () => void;
+			}[] = [];
 
-				const crUpdates: {
-					updatePromise: Promise<{ errors: HookError[] }>;
-					rollback: () => void;
-				}[] = [];
+			// Find existing content relationships that link to the renamed field id in
+			// any custom type and update them to use the new one.
+			const customTypes = await this.readAllCustomTypes();
 
-				// Find existing content relationships that link to the renamed field id in
-				// any custom type and update them to use the new one.
-				const customTypes = await this.readAllCustomTypes();
+			updateCustomTypeContentRelationships({
+				models: customTypes.models,
+				onUpdate: ({ previousModel, model }) => {
+					assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-				updateCustomTypeContentRelationships({
-					models: customTypes.models,
+					crUpdates.push({
+						updatePromise: this.sliceMachinePluginRunner?.callHook(
+							"custom-type:update",
+							{ model },
+						),
+						rollback: () => {
+							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+								model: previousModel,
+							});
+						},
+					});
+				},
+				previousPath,
+				newPath,
+			});
+
+			// Find existing slice with content relationships that link to the renamed
+			// field id in all libraries and update them to use the new one.
+			const { libraries } = await this.slices.readAllSliceLibraries();
+
+			for (const library of libraries) {
+				const slices = await this.slices.readAllSlicesForLibrary({
+					libraryID: library.libraryID,
+				});
+
+				updateSharedSliceContentRelationships({
+					models: slices.models,
 					onUpdate: ({ previousModel, model }) => {
 						assertPluginsInitialized(this.sliceMachinePluginRunner);
 
 						crUpdates.push({
 							updatePromise: this.sliceMachinePluginRunner?.callHook(
-								"custom-type:update",
-								{ model },
+								"slice:update",
+								{ libraryID: library.libraryID, model },
 							),
 							rollback: () => {
-								this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+								this.sliceMachinePluginRunner?.callHook("slice:update", {
+									libraryID: library.libraryID,
 									model: previousModel,
 								});
 							},
@@ -243,56 +272,24 @@ export class CustomTypesManager extends BaseManager {
 					previousPath,
 					newPath,
 				});
+			}
 
-				// Find existing slice with content relationships that link to the renamed
-				// field id in all libraries and update them to use the new one.
-				const { libraries } = await this.slices.readAllSliceLibraries();
+			// Process all the Content Relationship updates at once.
+			const crUpdatesResult = await Promise.all(
+				crUpdates.map((update) => update.updatePromise),
+			);
 
-				for (const library of libraries) {
-					const slices = await this.slices.readAllSlicesForLibrary({
-						libraryID: library.libraryID,
-					});
-
-					updateSharedSliceContentRelationships({
-						models: slices.models,
-						onUpdate: ({ previousModel, model }) => {
-							assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-							crUpdates.push({
-								updatePromise: this.sliceMachinePluginRunner?.callHook(
-									"slice:update",
-									{ libraryID: library.libraryID, model },
-								),
-								rollback: () => {
-									this.sliceMachinePluginRunner?.callHook("slice:update", {
-										libraryID: library.libraryID,
-										model: previousModel,
-									});
-								},
-							});
-						},
-						previousPath,
-						newPath,
-					});
-				}
-
-				// Process all the Content Relationship updates at once.
-				const crUpdatesResult = await Promise.all(
-					crUpdates.map((update) => update.updatePromise),
-				);
-
-				if (crUpdatesResult.some((result) => result.errors.length > 0)) {
-					return {
-						errors: crUpdatesResult.flatMap((result) => result.errors),
-						rollback: async () => {
-							await Promise.all(crUpdates.map((update) => update.rollback()));
-						},
-					};
-				}
+			if (crUpdatesResult.some((result) => result.errors.length > 0)) {
+				return {
+					errors: crUpdatesResult.flatMap((result) => result.errors),
+					rollback: async () => {
+						await Promise.all(crUpdates.map((update) => update.rollback()));
+					},
+				};
 			}
 		}
 
-		return { errors: [], rollback: () => Promise.resolve() };
+		return { errors: [] };
 	}
 
 	async updateCustomType(
@@ -300,10 +297,11 @@ export class CustomTypesManager extends BaseManager {
 	): Promise<CustomTypesMachineManagerUpdateCustomTypeReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 		const { model } = args;
+		const { fieldIdChanged } = args.updateMeta ?? {};
 
-		let updateCrPromise: (() => Promise<{ errors: HookError[] }>) | undefined;
+		let previousCustomType: CustomType | undefined;
 
-		if (args.updateMeta?.fieldIdChanged) {
+		if (fieldIdChanged) {
 			const customTypeRead = await this.readCustomType({ id: model.id });
 
 			if (customTypeRead.errors.length > 0) {
@@ -311,31 +309,12 @@ export class CustomTypesManager extends BaseManager {
 			}
 			if (!customTypeRead.model) {
 				throw new Error(
-					"Read custom type without errors, but model is undefined.",
+					`readCustomType succeeded reading custom type ${model.id} but model is undefined.`,
 				);
 			}
 
-			const previousCustomType = customTypeRead.model;
-
-			updateCrPromise = async () => {
-				const crUpdateResult = await this.updateContentRelationships(args);
-
-				if (crUpdateResult.errors.length > 0) {
-					// put the previous custom type back
-					await this.sliceMachinePluginRunner?.callHook("custom-type:update", {
-						model: previousCustomType,
-					});
-					// revert the content relationships updates
-					await crUpdateResult.rollback();
-
-					return { errors: crUpdateResult.errors };
-				}
-
-				return { errors: [] };
-			};
+			previousCustomType = customTypeRead.model;
 		}
-
-		// Execute the updates
 
 		const customTypeUpdateResult = await this.sliceMachinePluginRunner.callHook(
 			"custom-type:update",
@@ -346,10 +325,23 @@ export class CustomTypesManager extends BaseManager {
 			return { errors: customTypeUpdateResult.errors };
 		}
 
-		const crUpdateResult = await updateCrPromise?.();
+		if (previousCustomType && fieldIdChanged) {
+			const crUpdateResult = await this.updateContentRelationships({
+				model: previousCustomType,
+				previousPath: fieldIdChanged.previousPath,
+				newPath: fieldIdChanged.newPath,
+			});
 
-		if (crUpdateResult && crUpdateResult.errors.length > 0) {
-			return { errors: crUpdateResult.errors };
+			if (crUpdateResult.errors.length > 0) {
+				// put the previous custom type back
+				await this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+					model: previousCustomType,
+				});
+				// revert the content relationships updates
+				await crUpdateResult.rollback?.();
+
+				return { errors: crUpdateResult.errors };
+			}
 		}
 
 		return { errors: [] };
