@@ -206,7 +206,8 @@ export class CustomTypesManager extends BaseManager {
 	> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		let { model, newPath, previousPath } = args;
+		const { model } = args;
+		let { newPath, previousPath } = args;
 
 		if (previousPath.join(".") !== newPath.join(".")) {
 			previousPath = [model.id, ...previousPath];
