@@ -327,9 +327,8 @@ export class CustomTypesManager extends BaseManager {
 
 		if (previousCustomType && fieldIdChanged) {
 			const crUpdateResult = await this.updateContentRelationships({
+				...fieldIdChanged,
 				model: previousCustomType,
-				previousPath: fieldIdChanged.previousPath,
-				newPath: fieldIdChanged.newPath,
 			});
 
 			if (crUpdateResult.errors.length > 0) {
