@@ -16,7 +16,7 @@ export async function convertCustomToPageType(
 
   try {
     const newCustomType = convertToPageType(customType);
-    const { errors } = await updateCustomType(newCustomType);
+    const { errors } = await updateCustomType({ customType: newCustomType });
 
     if (errors.length > 0) {
       throw errors;

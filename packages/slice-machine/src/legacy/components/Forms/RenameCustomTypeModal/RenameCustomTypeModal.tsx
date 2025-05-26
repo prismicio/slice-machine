@@ -20,7 +20,7 @@ interface RenameCustomTypeModalProps {
   customType: CustomType;
   format: CustomTypeFormat;
   onClose: () => void;
-  setLocalCustomType?: (customType: CustomType) => void;
+  setLocalCustomType?: (args: { customType: CustomType }) => void;
 }
 
 export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
@@ -41,8 +41,7 @@ export const RenameCustomTypeModal: React.FC<RenameCustomTypeModalProps> = ({
     setIsRenaming(true);
     if (isChangesLocal && setLocalCustomType) {
       setLocalCustomType({
-        ...customType,
-        label: values.customTypeName,
+        customType: { ...customType, label: values.customTypeName },
       });
     } else {
       await renameCustomType({
