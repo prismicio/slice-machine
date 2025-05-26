@@ -8199,6 +8199,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/pluginutils@npm:^5.1.0":
+  version: 5.1.4
+  resolution: "@rollup/pluginutils@npm:5.1.4"
+  dependencies:
+    "@types/estree": ^1.0.0
+    estree-walker: ^2.0.2
+    picomatch: ^4.0.2
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: dc0294580effbf68965ed7939c9e469b8c8847b59842e4691fd10d0a8d0b178600bd912694c409ae33600c9059efce72e96f25917cff983afd57f092a7aeb8d2
+  languageName: node
+  linkType: hard
+
 "@samverschueren/stream-to-observable@npm:^0.3.0":
   version: 0.3.1
   resolution: "@samverschueren/stream-to-observable@npm:0.3.1"
@@ -8585,7 +8601,7 @@ __metadata:
     prettier-plugin-jsdoc: 1.1.1
     prismic-ts-codegen: 0.1.25
     react: 18.2.0
-    rollup-plugin-preserve-directives: 0.2.0
+    rollup-plugin-preserve-directives: 0.4.0
     size-limit: 8.2.4
     typescript: 4.9.5
     vite: 4.5.14
@@ -25397,6 +25413,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"picomatch@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "picomatch@npm:4.0.2"
+  checksum: a7a5188c954f82c6585720e9143297ccd0e35ad8072231608086ca950bee672d51b0ef676254af0788205e59bd4e4deb4e7708769226bed725bf13370a7d1464
+  languageName: node
+  linkType: hard
+
 "pidtree@npm:^0.6.0":
   version: 0.6.0
   resolution: "pidtree@npm:0.6.0"
@@ -29004,14 +29027,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-preserve-directives@npm:0.2.0":
-  version: 0.2.0
-  resolution: "rollup-plugin-preserve-directives@npm:0.2.0"
+"rollup-plugin-preserve-directives@npm:0.4.0":
+  version: 0.4.0
+  resolution: "rollup-plugin-preserve-directives@npm:0.4.0"
   dependencies:
-    magic-string: ^0.30.0
+    "@rollup/pluginutils": ^5.1.0
+    magic-string: ^0.30.5
   peerDependencies:
-    rollup: 2.x || 3.x
-  checksum: 7560a77ef8d49661b616a868ef2b140b069f4016a24c948d0b1d7db973a7e5258197054f64db5398baa88ce879c76dd0ee28656f4b81a2761b3a3750f909834e
+    rollup: 2.x || 3.x || 4.x
+  checksum: 457ca1f60d2cdbe5485339dbc4b228bec5684a99b6589c771bc2268ffaeb29dce2d248f83a85da2fbf572a23cc592d7f59e6485369965210df1035f22ce67feb
   languageName: node
   linkType: hard
 

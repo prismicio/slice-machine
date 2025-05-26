@@ -97,7 +97,7 @@
 		"prettier-plugin-jsdoc": "1.1.1",
 		"prismic-ts-codegen": "0.1.25",
 		"react": "18.2.0",
-		"rollup-plugin-preserve-directives": "0.2.0",
+		"rollup-plugin-preserve-directives": "0.4.0",
 		"size-limit": "8.2.4",
 		"typescript": "4.9.5",
 		"vite": "4.5.14",
