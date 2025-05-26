@@ -3,13 +3,39 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { environments } from "../../mocks";
 
-test("I can click on the text to log in", async ({ sliceMachinePage }) => {
+test("I can click on the text to log in", async ({
+  sliceMachinePage,
+  procedures,
+}) => {
+  procedures.mock(
+    "prismicRepository.fetchEnvironments",
+    () => {
+      const error = new Error();
+      error.name = "SMUnauthenticatedError";
+      throw error;
+    },
+    { execute: false },
+  );
+
   await sliceMachinePage.gotoDefaultPage();
   await sliceMachinePage.menu.environmentSelector.loginTextButton.click();
   await expect(sliceMachinePage.loginDialog.submitButton).toBeVisible();
 });
 
-test("I can click on the icon to log in", async ({ sliceMachinePage }) => {
+test("I can click on the icon to log in", async ({
+  sliceMachinePage,
+  procedures,
+}) => {
+  procedures.mock(
+    "prismicRepository.fetchEnvironments",
+    () => {
+      const error = new Error();
+      error.name = "SMUnauthenticatedError";
+      throw error;
+    },
+    { execute: false },
+  );
+
   await sliceMachinePage.gotoDefaultPage();
   await sliceMachinePage.menu.environmentSelector.loginIconButton.click();
   await expect(sliceMachinePage.loginDialog.submitButton).toBeVisible();
