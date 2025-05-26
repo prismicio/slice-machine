@@ -33,7 +33,10 @@ export function ContentRelationshipFieldPicker() {
             Choose which fields you want to expose from the linked document.
           </Text>
         </Box>
-        <TreeView title="Exposed fields" subtitle="(3)">
+        <TreeView
+          title="Exposed fields"
+          subtitle={`(${getTotalExposedFields(simplifiedCustomTypes)})`}
+        >
           {simplifiedCustomTypes.map((ct) => (
             <TreeViewSection
               key={ct.id}
@@ -85,4 +88,8 @@ function simplifyCustomTypes(customTypes: LocalOrRemoteCustomType[]) {
 
     return { id, label: label ?? id, fields };
   });
+}
+
+function getTotalExposedFields(customTypes: SimplifiedCustomType[]) {
+  return customTypes.reduce((acc, ct) => acc + ct.fields.length, 0);
 }
