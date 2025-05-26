@@ -5,8 +5,18 @@ import {
   TreeViewCheckbox,
   TreeViewSection,
 } from "@prismicio/editor-ui";
+import { useSelector } from "react-redux";
+
+import {
+  hasLocal,
+  LocalOrRemoteCustomType,
+} from "@/legacy/lib/models/common/ModelData";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 export function ContentRelationshipFieldPicker() {
+  const customTypes = useSelector(selectAllCustomTypes).filter(hasLocal);
+  const simplifiedCustomTypes = simplifyCustomTypes(customTypes);
+
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
       <Box
@@ -24,32 +34,18 @@ export function ContentRelationshipFieldPicker() {
           </Text>
         </Box>
         <TreeView title="Exposed fields" subtitle="(3)">
-          <TreeViewSection
-            title="Custom Type A"
-            subtitle="(3 fields exposed)"
-            badge="Custom Type"
-          >
-            <TreeViewCheckbox title="Name" />
-            <TreeViewCheckbox title="Biography" />
+          {simplifiedCustomTypes.map((ct) => (
             <TreeViewSection
-              title="Slice A"
-              subtitle="(2 fields exposed)"
-              badge="Slice"
+              key={ct.id}
+              title={ct.label}
+              subtitle={`(${ct.fields.length} fields exposed)`}
+              badge="Custom Type"
             >
-              <TreeViewCheckbox title="Title" />
-              <TreeViewCheckbox title="Subtitle" />
-              <TreeViewCheckbox title="Image" />
+              {ct.fields.map((field) => {
+                return <TreeViewCheckbox key={field.id} title={field.label} />;
+              })}
             </TreeViewSection>
-          </TreeViewSection>
-          <TreeViewSection title="Custom Type B" badge="Custom Type">
-            Something else
-          </TreeViewSection>
-          <TreeViewSection title="Custom Type C" badge="Custom Type">
-            Something else
-          </TreeViewSection>
-          <TreeViewSection title="Custom Type D" badge="Custom Type">
-            Something else
-          </TreeViewSection>
+          ))}
         </TreeView>
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
@@ -67,4 +63,26 @@ export function ContentRelationshipFieldPicker() {
       </Box>
     </Box>
   );
+}
+
+type SimplifiedCustomType = {
+  id: string;
+  label: string;
+  fields: { id: string; label: string }[];
+};
+
+function simplifyCustomTypes(customTypes: LocalOrRemoteCustomType[]) {
+  return customTypes.flatMap<SimplifiedCustomType>((ct) => {
+    if (!("local" in ct)) return [];
+
+    const { id, label, tabs } = ct.local;
+    const fields = tabs.flatMap((tab) => {
+      return tab.value.map((field) => ({
+        id: field.key,
+        label: field.value.config?.label ?? field.key,
+      }));
+    });
+
+    return { id, label: label ?? id, fields };
+  });
 }

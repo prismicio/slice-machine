@@ -1,17 +1,12 @@
 import { FormikProps } from "formik";
-import { useSelector } from "react-redux";
-import Select from "react-select";
-import { Box, Label } from "theme-ui";
+import { Box } from "theme-ui";
 import * as yup from "yup";
 
+import { ContentRelationshipFieldPicker } from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
-import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
-
-import { hasLocal } from "../../ModelData";
-import { ContentRelationshipFieldPicker } from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -29,26 +24,8 @@ type FormProps = {
 
 const WidgetForm = ({
   initialValues,
-  values: formValues,
   fields,
-  setFieldValue,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
-  const customTypes = useSelector(selectAllCustomTypes).filter(hasLocal);
-
-  const options = customTypes.map((ct) => ({
-    value: ct.local.id,
-    label: ct.local.label,
-  }));
-
-  const selectValues = formValues.config.customtypes
-    ? formValues.config.customtypes.map((id) => {
-        const ct = customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === id,
-        );
-        return { value: ct?.local.id, label: ct?.local.label };
-      })
-    : null;
-
   return (
     <>
       <FlexGrid>
