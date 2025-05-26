@@ -23,64 +23,38 @@ export function ContentRelationshipFieldPicker() {
             Choose which fields you want to expose from the linked document.
           </Text>
         </Box>
-        <TreeView
-          title="Exposed fields"
-          subtitle="(3)"
-          onChange={(selected) => {
-            console.log(selected);
-          }}
-        >
+        <TreeView title="Exposed fields" subtitle="(3)">
           <TreeViewSection
-            name="customTypeA"
             title="Custom Type A"
             subtitle="(3 fields exposed)"
             badge="Custom Type"
-            defaultOpen
           >
-            <TreeViewCheckbox name="name" title="Name" />
-            <TreeViewCheckbox
-              name="biography"
-              title="Biography"
-              defaultChecked
-            />
+            <TreeViewCheckbox title="Name" />
+            <TreeViewCheckbox title="Biography" />
             <TreeViewSection
-              name="sliceA"
               title="Slice A"
               subtitle="(2 fields exposed)"
               badge="Slice"
-              defaultOpen
             >
-              <TreeViewCheckbox name="title" title="Title" defaultChecked />
-              <TreeViewCheckbox name="subtitle" title="Subtitle" />
-              <TreeViewCheckbox name="image" title="Image" defaultChecked />
+              <TreeViewCheckbox title="Title" />
+              <TreeViewCheckbox title="Subtitle" />
+              <TreeViewCheckbox title="Image" />
             </TreeViewSection>
           </TreeViewSection>
-          <TreeViewSection
-            name="customTypeB"
-            title="Custom Type B"
-            badge="Custom Type"
-          >
+          <TreeViewSection title="Custom Type B" badge="Custom Type">
             Something else
           </TreeViewSection>
-          <TreeViewSection
-            name="customTypeC"
-            title="Custom Type C"
-            badge="Custom Type"
-          >
+          <TreeViewSection title="Custom Type C" badge="Custom Type">
             Something else
           </TreeViewSection>
-          <TreeViewSection
-            name="customTypeD"
-            title="Custom Type D"
-            badge="Custom Type"
-          >
+          <TreeViewSection title="Custom Type D" badge="Custom Type">
             Something else
           </TreeViewSection>
         </TreeView>
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
         <Text variant="normal" color="grey11">
-          Have ideas for improving this field?{' '}
+          Have ideas for improving this field?{" "}
           <a
             href="https://community.prismic.io/t//TODO"
             target="_blank"
