@@ -55,7 +55,8 @@ export function ContentRelationshipFieldPicker() {
         <Text variant="normal" color="grey11">
           Have ideas for improving this field?{" "}
           <a
-            href="https://community.prismic.io/t//TODO"
+            // TODO: Add real URL: https://linear.app/prismic/issue/DT-2693
+            href="https://community.prismic.io/t/TODO"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: "inherit", textDecoration: "underline" }}
