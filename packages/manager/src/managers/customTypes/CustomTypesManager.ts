@@ -2,7 +2,13 @@ import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import {
 	CustomType,
+	Group,
+	NestableWidget,
+	NestedGroup,
 	SharedSlice,
+	UID,
+	traverseCustomType,
+	traverseSharedSlice,
 } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
@@ -81,6 +87,25 @@ type CustomTypesMachineManagerDeleteCustomTypeArgs = {
 type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
+
+type CustomTypesMachineManagerUpdateCustomTypeReturnType = {
+	errors: (DecodeError | HookError)[];
+};
+
+type CustomTypeFieldIdChangedMeta = {
+	previousPath: string[];
+	newPath: string[];
+};
+
+type CrCustomType =
+	| string
+	| { id: string; fields?: readonly CrCustomTypeNestedCr[] };
+type CrCustomTypeNestedCr =
+	| string
+	| { id: string; customtypes: readonly CrCustomTypeFieldLeaf[] };
+type CrCustomTypeFieldLeaf =
+	| string
+	| { id: string; fields?: readonly string[] };
 
 export class CustomTypesManager extends BaseManager {
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
@@ -167,19 +192,159 @@ export class CustomTypesManager extends BaseManager {
 		};
 	}
 
-	async updateCustomType(
-		args: CustomTypeUpdateHookData,
-	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>>> {
+	/**
+	 * Update the Content Relationship API IDs for all existing custom types and
+	 * slices. The change is determined by properties inside the `updateMeta`
+	 * property.
+	 */
+	private async updateContentRelationships(
+		args: { model: CustomType } & CustomTypeFieldIdChangedMeta,
+	): Promise<
+		OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>> & {
+			rollback?: () => Promise<void>;
+		}
+	> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const { model } = args;
+		let { newPath, previousPath } = args;
+
+		if (previousPath.join(".") !== newPath.join(".")) {
+			previousPath = [model.id, ...previousPath];
+			newPath = [model.id, ...newPath];
+
+			const crUpdates: {
+				updatePromise: Promise<{ errors: HookError[] }>;
+				rollback: () => void;
+			}[] = [];
+
+			// Find existing content relationships that link to the renamed field id in
+			// any custom type and update them to use the new one.
+			const customTypes = await this.readAllCustomTypes();
+
+			updateCustomTypeContentRelationships({
+				models: customTypes.models,
+				onUpdate: ({ previousModel, model: updatedModel }) => {
+					assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+					crUpdates.push({
+						updatePromise: this.sliceMachinePluginRunner?.callHook(
+							"custom-type:update",
+							{ model: updatedModel },
+						),
+						rollback: () => {
+							this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+								model: previousModel,
+							});
+						},
+					});
+				},
+				previousPath,
+				newPath,
+			});
+
+			// Find existing slice with content relationships that link to the renamed
+			// field id in all libraries and update them to use the new one.
+			const { libraries } = await this.slices.readAllSliceLibraries();
+
+			for (const library of libraries) {
+				const slices = await this.slices.readAllSlicesForLibrary({
+					libraryID: library.libraryID,
+				});
+
+				updateSharedSliceContentRelationships({
+					models: slices.models,
+					onUpdate: ({ previousModel, model: updatedModel }) => {
+						assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+						crUpdates.push({
+							updatePromise: this.sliceMachinePluginRunner?.callHook(
+								"slice:update",
+								{ libraryID: library.libraryID, model: updatedModel },
+							),
+							rollback: () => {
+								this.sliceMachinePluginRunner?.callHook("slice:update", {
+									libraryID: library.libraryID,
+									model: previousModel,
+								});
+							},
+						});
+					},
+					previousPath,
+					newPath,
+				});
+			}
+
+			// Process all the Content Relationship updates at once.
+			const crUpdatesResult = await Promise.all(
+				crUpdates.map((update) => update.updatePromise),
+			);
+
+			if (crUpdatesResult.some((result) => result.errors.length > 0)) {
+				return {
+					errors: crUpdatesResult.flatMap((result) => result.errors),
+					rollback: async () => {
+						await Promise.all(crUpdates.map((update) => update.rollback()));
+					},
+				};
+			}
+		}
+
+		return { errors: [] };
+	}
+
+	async updateCustomType(
+		args: CustomTypeUpdateHookData,
+	): Promise<CustomTypesMachineManagerUpdateCustomTypeReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		const { model } = args;
+		const { fieldIdChanged } = args.updateMeta ?? {};
+
+		let previousCustomType: CustomType | undefined;
+
+		if (fieldIdChanged) {
+			const customTypeRead = await this.readCustomType({ id: model.id });
+
+			if (customTypeRead.errors.length > 0) {
+				return { errors: customTypeRead.errors };
+			}
+			if (!customTypeRead.model) {
+				throw new Error(
+					`readCustomType succeeded reading custom type ${model.id} but model is undefined.`,
+				);
+			}
+
+			previousCustomType = customTypeRead.model;
+		}
+
+		const customTypeUpdateResult = await this.sliceMachinePluginRunner.callHook(
 			"custom-type:update",
-			args,
+			{ model },
 		);
 
-		return {
-			errors: hookResult.errors,
-		};
+		if (customTypeUpdateResult.errors.length > 0) {
+			return { errors: customTypeUpdateResult.errors };
+		}
+
+		if (previousCustomType && fieldIdChanged) {
+			const crUpdateResult = await this.updateContentRelationships({
+				...fieldIdChanged,
+				model: previousCustomType,
+			});
+
+			if (crUpdateResult.errors.length > 0) {
+				// put the previous custom type back
+				await this.sliceMachinePluginRunner?.callHook("custom-type:update", {
+					model: previousCustomType,
+				});
+				// revert the content relationships updates
+				await crUpdateResult.rollback?.();
+
+				return { errors: crUpdateResult.errors };
+			}
+		}
+
+		return { errors: [] };
 	}
 
 	async renameCustomType(
@@ -393,3 +558,197 @@ const InferSliceResponse = z.object({
 	}),
 	langSmithUrl: z.string().url().optional(),
 });
+
+function updateCRCustomType(
+	args: { customType: CrCustomType } & CustomTypeFieldIdChangedMeta,
+): CrCustomType {
+	const [previousCustomTypeId, previousFieldId] = args.previousPath;
+	const [newCustomTypeId, newFieldId] = args.newPath;
+
+	if (!previousCustomTypeId || !newCustomTypeId) {
+		throw new Error(
+			"Could not find a customtype id in previousPath and/or newPath, which should not be possible.",
+		);
+	}
+
+	if (!previousFieldId || !newFieldId) {
+		throw new Error(
+			"Could not find a field id in previousPath and/or newPath, which should not be possible.",
+		);
+	}
+
+	const customType = shallowCloneIfObject(args.customType);
+
+	if (typeof customType === "string" || !customType.fields) {
+		return customType;
+	}
+
+	const matchedCustomTypeId = customType.id === previousCustomTypeId;
+
+	const newFields = customType.fields.map((fieldArg) => {
+		const customTypeField = shallowCloneIfObject(fieldArg);
+
+		if (typeof customTypeField === "string") {
+			if (
+				matchedCustomTypeId &&
+				customTypeField === previousFieldId &&
+				customTypeField !== newFieldId
+			) {
+				// We have reached a field id that matches the id that was renamed,
+				// so we update it new one. The field is a string, so return the new
+				// id.
+				return newFieldId;
+			}
+
+			return customTypeField;
+		}
+
+		if (
+			matchedCustomTypeId &&
+			customTypeField.id === previousFieldId &&
+			customTypeField.id !== newFieldId
+		) {
+			// We have reached a field id that matches the id that was renamed,
+			// so we update it new one.
+			// Since field is not a string, we don't exit, as we might have
+			// something to update further down in customtypes.
+			customTypeField.id = newFieldId;
+		}
+
+		return {
+			...customTypeField,
+			customtypes: customTypeField.customtypes.map((customTypeArg) => {
+				const nestedCustomType = shallowCloneIfObject(customTypeArg);
+
+				if (
+					typeof nestedCustomType === "string" ||
+					!nestedCustomType.fields ||
+					// Since we are on the last level, if we don't start matching right
+					// at the custom type id, we can return exit early because it's not
+					// a match.
+					nestedCustomType.id !== previousCustomTypeId
+				) {
+					return nestedCustomType;
+				}
+
+				return {
+					...nestedCustomType,
+					fields: nestedCustomType.fields.map((fieldArg) => {
+						const nestedCustomTypeField = shallowCloneIfObject(fieldArg);
+
+						if (
+							nestedCustomTypeField === previousFieldId &&
+							nestedCustomTypeField !== newFieldId
+						) {
+							// Matches the previous id, so we update it and return because
+							// it's the last level.
+							return newFieldId;
+						}
+
+						return nestedCustomTypeField;
+					}),
+				};
+			}),
+		};
+	});
+
+	return { ...customType, fields: newFields };
+}
+
+/**
+ * Update the Content Relationship API IDs of a single field. The change is
+ * determined by the `previousPath` and `newPath` properties.
+ */
+function updateFieldContentRelationships<
+	T extends UID | NestableWidget | Group | NestedGroup,
+>(args: { field: T } & CustomTypeFieldIdChangedMeta): T {
+	const { field, ...updateMeta } = args;
+	if (
+		field.type !== "Link" ||
+		field.config?.select !== "document" ||
+		!field.config?.customtypes
+	) {
+		// not a content relationship field
+		return field;
+	}
+
+	const newCustomTypes = field.config.customtypes.map((customType) => {
+		return updateCRCustomType({ customType, ...updateMeta });
+	});
+
+	return {
+		...field,
+		config: { ...field.config, customtypes: newCustomTypes },
+	};
+}
+
+export function updateCustomTypeContentRelationships(
+	args: {
+		models: { model: CustomType }[];
+		onUpdate: (model: { previousModel: CustomType; model: CustomType }) => void;
+	} & CustomTypeFieldIdChangedMeta,
+): void {
+	const { models, previousPath, newPath, onUpdate } = args;
+
+	for (const { model: customType } of models) {
+		const updatedCustomType = traverseCustomType({
+			customType,
+			onField: ({ field }) => {
+				return updateFieldContentRelationships({
+					field,
+					previousPath,
+					newPath,
+				});
+			},
+		});
+
+		if (!isEqualModel(customType, updatedCustomType)) {
+			onUpdate({ model: updatedCustomType, previousModel: customType });
+		}
+	}
+}
+
+export function updateSharedSliceContentRelationships(
+	args: {
+		models: { model: SharedSlice }[];
+		onUpdate: (model: {
+			previousModel: SharedSlice;
+			model: SharedSlice;
+		}) => void;
+	} & CustomTypeFieldIdChangedMeta,
+): void {
+	const { models, previousPath, newPath, onUpdate } = args;
+
+	for (const { model: slice } of models) {
+		const updateSlice = traverseSharedSlice({
+			path: ["."],
+			slice,
+			onField: ({ field }) => {
+				return updateFieldContentRelationships({
+					field,
+					previousPath,
+					newPath,
+				});
+			},
+		});
+
+		if (!isEqualModel(slice, updateSlice)) {
+			onUpdate({ model: updateSlice, previousModel: slice });
+		}
+	}
+}
+
+function isEqualModel<T extends CustomType | SharedSlice>(
+	modelA: T,
+	modelB: T,
+): boolean {
+	return JSON.stringify(modelA) === JSON.stringify(modelB);
+}
+
+function shallowCloneIfObject<T>(value: T): T {
+	if (typeof value === "object") {
+		return { ...value };
+	}
+
+	return value;
+}
