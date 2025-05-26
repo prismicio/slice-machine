@@ -35,8 +35,6 @@ export const SegmentEventType = {
 	devCollab_setUpWorkflowOpened: "dev-collab:set-up-workflow-opened",
 	devCollab_workflowStubDisplayed: "dev-collab:workflow-stub-displayed",
 	sliceMachine_start: "slice-machine:start",
-	sliceLibrary_beta_modalOpened: "slice-library:beta:modal-opened",
-	sliceLibrary_beta_codeOpened: "slice-library:beta:code-opened",
 	postPush_emptyStateCtaClicked: "post-push:empty-state-cta-clicked",
 	postPush_toastCtaClicked: "post-push:toast-cta-clicked",
 	experiment_exposure: "experiment:exposure",
@@ -45,6 +43,7 @@ export const SegmentEventType = {
 	sharedOnboarding_completed: "shared-onboarding:completed",
 	sharedOnboarding_tutorial: "shared-onboarding:follow-tutorial",
 	sliceGenerationFeedback: "slice-generation-feedback",
+	navigation_documentationLinkClicked: "navigation:documentation-link-clicked",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -88,10 +87,6 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.devCollab_workflowStubDisplayed]:
 		"SliceMachine Dev Collab Workflow Stub Displayed",
 	[SegmentEventType.sliceMachine_start]: "SliceMachine Start",
-	[SegmentEventType.sliceLibrary_beta_modalOpened]:
-		"SliceMachine Slice Library [BETA] CTA modal displayed",
-	[SegmentEventType.sliceLibrary_beta_codeOpened]:
-		"SliceMachine Slice Library [BETA] CTA example code opened",
 	[SegmentEventType.postPush_emptyStateCtaClicked]:
 		"SliceMachine Post Push Empty State CTA Clicked",
 	[SegmentEventType.postPush_toastCtaClicked]:
@@ -106,6 +101,8 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sharedOnboarding_tutorial]:
 		"Prismic Onboarding Guide Follow Tutorial",
 	[SegmentEventType.sliceGenerationFeedback]: "Slice Generation Feedback",
+	[SegmentEventType.navigation_documentationLinkClicked]:
+		"SliceMachine Documentation Link Clicked",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -375,14 +372,6 @@ type SliceMachineStart = SegmentEvent<
 	}
 >;
 
-type SliceLibraryBetaModalOpened = SegmentEvent<
-	typeof SegmentEventType.sliceLibrary_beta_modalOpened
->;
-
-type SliceLibraryBetaCodeOpened = SegmentEvent<
-	typeof SegmentEventType.sliceLibrary_beta_codeOpened
->;
-
 type OnboardingCommonPayload = { stepId: string; stepTitle: string };
 type SharedOnboardingProperties<T = Record<string, string>> = T & {
 	source: "SliceMachine";
@@ -431,6 +420,13 @@ type SliceGenerationFeedback = SegmentEvent<
 	}
 >;
 
+type NavigationDocumentationLinkClicked = SegmentEvent<
+	typeof SegmentEventType.navigation_documentationLinkClicked,
+	{
+		framework: string;
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -461,8 +457,6 @@ export type SegmentEvents =
 	| DevCollabSetUpWorkflowOpened
 	| DevCollabWorkflowStubDisplayed
 	| SliceMachineStart
-	| SliceLibraryBetaModalOpened
-	| SliceLibraryBetaCodeOpened
 	| SliceMachineSharedOnboardingStepOpened
 	| SliceMachineSharedOnboardingStepCompleted
 	| SliceMachineSharedOnboardingCompleted
@@ -470,4 +464,5 @@ export type SegmentEvents =
 	| SliceMachinePostPushEmptyStateCtaClicked
 	| SliceMachinePostPushToastCtaClicked
 	| SliceMachineExperimentExposure
-	| SliceGenerationFeedback;
+	| SliceGenerationFeedback
+	| NavigationDocumentationLinkClicked;

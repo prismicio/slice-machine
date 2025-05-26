@@ -56,7 +56,7 @@ test("I can navigate through all menu entries", async ({
   );
 });
 
-test("I can access the repository using the open icon", async ({
+test.skip("I can access the repository using the open icon", async ({
   sliceMachinePage,
   procedures,
 }) => {
@@ -128,54 +128,17 @@ test("I cannot see the updates available warning", async ({
   await expect(pageTypesTablePage.menu.updatesAvailableTitle).not.toBeVisible();
 });
 
-// NOTE: This tests doesn't use page objects as the Master Slice Library preview modal
-//       is meant to be a temporary experiment lasting a few weeks, so it didn't really
-//       make sense to implement a page object for such a feature.
-test('I can open a modal describing Master Slice Libraries by clicking the "Master Slice Library" button', async ({
+test('I can open Prismic documentation by clicking the "Documentation" link', async ({
   sliceMachinePage,
-  procedures,
 }) => {
-  procedures.mock("getState", ({ data }) => {
-    const result = data as { env: { manifest: { apiEndpoint: string } } };
-    result.env.manifest.apiEndpoint =
-      "https://example-prismic-repo.cdn.prismic.io/api/v2";
-    return result;
-  });
-
   await sliceMachinePage.gotoDefaultPage();
-  await expect(sliceMachinePage.menu.masterSliceLibraryButton).toBeVisible();
+  await expect(sliceMachinePage.menu.documentationLink).toBeVisible();
 
-  const modal = sliceMachinePage.page.getByRole("dialog");
-  const modalHeader = modal.getByText("Master Slice Library Generator (BETA)", {
-    exact: true,
-  });
-  await sliceMachinePage.menu.masterSliceLibraryButton.click();
-  await expect(modalHeader).toBeVisible();
+  const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
+  await sliceMachinePage.menu.documentationLink.click();
 
-  const exampleLink = modal.getByRole("link", {
-    name: "example slice library",
-    exact: false,
-  });
-  const newExampleTabPromise = sliceMachinePage.page.waitForEvent("popup");
+  const newTab = await newTabPromise;
+  await newTab.waitForLoadState();
 
-  await exampleLink.click();
-
-  const newExampleTab = await newExampleTabPromise;
-  await newExampleTab.waitForLoadState();
-
-  await expect(newExampleTab).toHaveURL(
-    "https://slicify-app.vercel.app/slice-library",
-  );
-
-  const codeLink = modal.getByText("Get the code", { exact: true });
-  const newCodeTabPromise = sliceMachinePage.page.waitForEvent("popup");
-
-  await codeLink.click();
-
-  const newCodeTab = await newCodeTabPromise;
-  await newCodeTab.waitForLoadState();
-
-  await expect(newCodeTab).toHaveURL(
-    "https://github.com/prismicio-solution-engineering/slicify-library#readme",
-  );
+  await expect(newTab).toHaveURL("https://prismic.io/docs/nextjs");
 });

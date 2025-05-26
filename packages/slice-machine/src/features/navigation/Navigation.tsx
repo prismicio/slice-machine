@@ -1,19 +1,19 @@
 import { ActionList, Box, Separator, Skeleton } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 
 import { telemetry } from "@/apiClient";
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
-import { MasterSliceLibraryPreviewModal } from "@/features/masterSliceLibrary/SliceLibraryPreviewModal";
 import { RepositoryInfo } from "@/features/navigation/RepositoryInfo";
 import { OnboardingGuide } from "@/features/onboarding";
 import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
+import { useAdapterName } from "@/hooks/useAdapterName";
 import { useMarketingContent } from "@/hooks/useMarketingContent";
 import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
-import { MasterSliceLibraryIcon } from "@/icons/MasterSliceLibraryIcon";
+import { MenuBookIcon } from "@/icons/MenuBookIcon";
 import { SettingsIcon } from "@/icons/SettingsIcon";
 import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
@@ -28,10 +28,9 @@ export function Navigation() {
   const router = useRouter();
 
   const gitIntegrationExperiment = useGitIntegrationExperiment();
-  const [isSliceLibraryDialogOpen, setIsSliceLibraryDialogOpen] =
-    useState(false);
-  const { masterSliceLibrary } = useMarketingContent();
+  const { documentationLink } = useMarketingContent();
   const sectionsNamingExperiment = useSectionsNamingExperiment();
+  const adapter = useAdapterName();
 
   interface CustomTypeNavigationItemProps {
     type: "page" | "custom";
@@ -105,29 +104,18 @@ export function Navigation() {
             </Suspense>
           </ErrorBoundary>
 
-          {masterSliceLibrary && (
-            <>
-              <MasterSliceLibraryPreviewModal
-                isOpen={isSliceLibraryDialogOpen}
-                onClose={() => {
-                  setIsSliceLibraryDialogOpen(false);
-                }}
-              />
-              <NavigationItem
-                title={`Master ${capitalizeFirstLetter(
-                  sectionsNamingExperiment.value,
-                )} Library`}
-                Icon={MasterSliceLibraryIcon}
-                onClick={() => {
-                  void telemetry.track({
-                    event: "slice-library:beta:modal-opened",
-                  });
-
-                  setIsSliceLibraryDialogOpen(true);
-                }}
-              />
-            </>
-          )}
+          <NavigationItem
+            title="Documentation"
+            href={documentationLink}
+            target="_blank"
+            Icon={MenuBookIcon}
+            onClick={() => {
+              void telemetry.track({
+                event: "navigation:documentation-link-clicked",
+                framework: adapter,
+              });
+            }}
+          />
 
           {gitIntegrationExperiment.eligible && (
             <NavigationItem
