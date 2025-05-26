@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { updateCustomType } from "@/apiClient";
+import { CustomTypeUpdateMeta, getState, updateCustomType } from "@/apiClient";
 import { getFormat } from "@/domain/customType";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
@@ -17,10 +17,16 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { CUSTOM_TYPES_MESSAGES } from "../customTypesMessages";
 
+type SetCustomTypeArgs = {
+  customType: CustomType;
+  onSaveCallback?: () => void;
+  updateMeta?: CustomTypeUpdateMeta;
+};
+
 type CustomTypeContext = {
   customType: CustomType;
   actionQueueStatus: ActionQueueStatus;
-  setCustomType: (customType: CustomType, onSaveCallback?: () => void) => void;
+  setCustomType: (args: SetCustomTypeArgs) => void;
 };
 
 type CustomTypeProviderProps = {
@@ -41,28 +47,31 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const { actionQueueStatus, setNextAction } = useActionQueue({
     errorMessage: customTypeMessages.autoSaveFailed,
   });
-  const { saveCustomTypeSuccess } = useSliceMachineActions();
-  const stableSaveCustomTypeSuccess = useStableCallback(saveCustomTypeSuccess);
+  const { refreshState } = useSliceMachineActions();
+  const stableRefreshState = useStableCallback(refreshState);
   const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
-    (customType: CustomType, onSaveCallback?: () => void) => {
+    (args: SetCustomTypeArgs) => {
+      const { customType, onSaveCallback, updateMeta } = args;
+
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { errors } = await updateCustomType(customType);
+        const { errors } = await updateCustomType({ customType, updateMeta });
 
         if (errors.length > 0) {
           throw errors;
         }
 
-        // Update available custom types store with new custom type
-        stableSaveCustomTypeSuccess(customType);
+        // Refresh the store with the latest server state to get the updated
+        // custom types
+        stableRefreshState(await getState());
 
         syncChanges();
         onSaveCallback?.();
       });
     },
-    [setNextAction, stableSaveCustomTypeSuccess, syncChanges],
+    [setNextAction, stableRefreshState, syncChanges],
   );
 
   const contextValue: CustomTypeContext = useMemo(
