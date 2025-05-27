@@ -16,18 +16,20 @@ import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 export type PickedFieldsMap = Record<string, Record<string, boolean>>;
 
 interface ContentRelationshipFieldPickerProps {
+  value: { id: string; fields: string[] }[] | undefined;
   onChange: (fields: PickedFieldsMap) => void;
 }
 
 export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
-  const { onChange } = props;
+  const { value, onChange } = props;
   const customTypes = useCustomTypes();
 
+  console.log("value", value);
   const stableOnChange = useStableCallback(onChange);
   const form = useFormik<PickedFieldsMap>({
-    initialValues: {}, // TODO: Initialize with API data
+    initialValues: getInitialValues(value),
     onSubmit: () => undefined, // values will be updated on change
   });
 
@@ -144,4 +146,19 @@ function useCustomTypes() {
 
 function getTotalExposedFields(customTypes: SimplifiedCustomType[]) {
   return customTypes.reduce((acc, ct) => acc + ct.fields.length, 0);
+}
+
+function getInitialValues(
+  value: { id: string; fields: string[] }[] | undefined,
+) {
+  if (!value) return {};
+
+  return value.reduce<PickedFieldsMap>((acc, ct) => {
+    acc[ct.id] = ct.fields.reduce<Record<string, boolean>>((acc, field) => {
+      acc[field] = true;
+      return acc;
+    }, {});
+
+    return acc;
+  }, {});
 }

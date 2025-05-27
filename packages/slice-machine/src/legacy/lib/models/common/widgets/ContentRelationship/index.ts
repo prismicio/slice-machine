@@ -16,7 +16,10 @@ import Form, { FormFields } from "./Form";
       "config": {
         "select": "document",
         "customtypes": [
-          "page"
+          {
+            "id": "page",
+            "fields": ["uid", "country"]
+          }
         ],
         "label": "relationship"
       }
@@ -34,7 +37,15 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
-  customtypes: yup.array(yup.string()).strict().optional(),
+  customtypes: yup
+    .array(
+      yup.object({
+        id: yup.string(),
+        fields: yup.array(yup.string()),
+      }),
+    )
+    .strict()
+    .optional(),
 });
 
 const schema = yup.object().shape({
@@ -62,6 +73,7 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   CUSTOM_NAME: "ContentRelationship",
   Form,
   prepareInitialValues: (initialValues) => {
+    console.log("initialValues", initialValues);
     const customTypes =
       // TODO: fix this error
       // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -74,9 +86,12 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
     return {
       ...initialValues,
       customtypes: initialValues.customtypes.filter((ct) =>
-        customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === ct,
-        ),
+        customTypes.find((frontendCustomType) => {
+          if (typeof ct === "string") {
+            return frontendCustomType.local.id === ct;
+          }
+          return frontendCustomType.local.id === ct.id;
+        }),
       ),
     };
   },

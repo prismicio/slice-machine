@@ -15,25 +15,32 @@ const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
   customtypes: {
-    validate: () => yup.array().of(yup.string()),
+    validate: () =>
+      yup.array(
+        yup.object({
+          id: yup.string(),
+          fields: yup.array(yup.string()),
+        }),
+      ),
   },
 };
 
 type FormProps = {
-  config: { label: string; select: string; customtypes?: string[] };
+  config: {
+    label: string;
+    select: string;
+    customtypes?: { id: string; fields: string[] }[];
+  };
   id: string;
-  // type: string; // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
+  // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
 };
 
 const WidgetForm = ({
   initialValues,
   setFieldValue,
+  values,
   fields,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
-  function onFieldsChange(fields: PickedFieldsMap) {
-    void setFieldValue("config.customtypes", buildCustomTypesConfig(fields));
-  }
-
   return (
     <>
       <FlexGrid>
@@ -51,7 +58,15 @@ const WidgetForm = ({
           ))}
       </FlexGrid>
       <Box mt={20}>
-        <ContentRelationshipFieldPicker onChange={onFieldsChange} />
+        <ContentRelationshipFieldPicker
+          value={values.config.customtypes}
+          onChange={(fields) => {
+            void setFieldValue(
+              "config.customtypes",
+              buildCustomTypesConfig(fields),
+            );
+          }}
+        />
       </Box>
     </>
   );
