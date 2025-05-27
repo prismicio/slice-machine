@@ -73,7 +73,6 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   CUSTOM_NAME: "ContentRelationship",
   Form,
   prepareInitialValues: (initialValues) => {
-    console.log("initialValues", initialValues);
     const customTypes =
       // TODO: fix this error
       // eslint-disable-next-line react-hooks/rules-of-hooks
