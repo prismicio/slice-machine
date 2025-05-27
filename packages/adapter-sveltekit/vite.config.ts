@@ -9,4 +9,17 @@ export default defineConfig({
 		}),
 		svelte({ hot: false }),
 	],
+	resolve: process.env.VITEST
+		? {
+				conditions: ["browser"],
+		  }
+		: undefined,
+	test: {
+		testTimeout: 15_000,
+		coverage: {
+			provider: "v8",
+			reporter: ["lcovonly", "text"],
+		},
+		setupFiles: "./test/__setup__.ts",
+	},
 });

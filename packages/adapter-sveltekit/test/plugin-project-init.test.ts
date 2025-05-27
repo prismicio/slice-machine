@@ -257,34 +257,28 @@ describe("prismicio.js file", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"import * as prismic from "@prismicio/client";
+			"import { createClient as baseCreateClient } from "@prismicio/client";
 			import { enableAutoPreviews } from "@prismicio/svelte/kit";
-			import config from "../../slicemachine.config.json";
+			import sm from "../../slicemachine.config.json";
 
 			/**
 			 * The project's Prismic repository name.
 			 */
 			export const repositoryName =
-			  import.meta.env.VITE_PRISMIC_ENVIRONMENT || config.repositoryName;
+			  import.meta.env.VITE_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 			 *
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 *
-			 * @type {prismic.ClientConfig["routes"]}
+			 * @type {import("@prismicio/client").Route[]}
 			 */
 			// TODO: Update the routes array to match your project's route structure.
 			const routes = [
 			  // Examples:
-			  // {
-			  // 	type: "homepage",
-			  // 	path: "/",
-			  // },
-			  // {
-			  // 	type: "page",
-			  // 	path: "/:uid",
-			  // },
+			  // { type: "homepage", path: "/" },
+			  // { type: "page", path: "/:uid" },
 			];
 
 			/**
@@ -328,35 +322,32 @@ describe("prismicio.js file", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"import * as prismic from "@prismicio/client";
+			"import {
+			  createClient as baseCreateClient,
+			  type Route,
+			} from "@prismicio/client";
 			import {
 			  type CreateClientConfig,
 			  enableAutoPreviews,
 			} from "@prismicio/svelte/kit";
-			import config from "../../slicemachine.config.json";
+			import sm from "../../slicemachine.config.json";
 
 			/**
 			 * The project's Prismic repository name.
 			 */
 			export const repositoryName =
-			  import.meta.env.VITE_PRISMIC_ENVIRONMENT || config.repositoryName;
+			  import.meta.env.VITE_PRISMIC_ENVIRONMENT || sm.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
 			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
+			 * {@link https://prismic.io/docs/route-resolver}
 			 */
 			// TODO: Update the routes array to match your project's route structure.
-			const routes: prismic.ClientConfig["routes"] = [
+			const routes: Route[] = [
 			  // Examples:
-			  // {
-			  // 	type: "homepage",
-			  // 	path: "/",
-			  // },
-			  // {
-			  // 	type: "page",
-			  // 	path: "/:uid",
-			  // },
+			  // { type: "homepage", path: "/" },
+			  // { type: "page", path: "/:uid" },
 			];
 
 			/**
@@ -369,7 +360,7 @@ describe("prismicio.js file", () => {
 			  cookies,
 			  ...config
 			}: CreateClientConfig = {}) => {
-			  const client = prismic.createClient(repositoryName, {
+			  const client = baseCreateClient(repositoryName, {
 			    routes,
 			    ...config,
 			  });
@@ -409,6 +400,7 @@ describe("/api/preview route", () => {
 			"import { redirectToPreviewURL } from "@prismicio/svelte/kit";
 			import { createClient } from "$lib/prismicio";
 
+			/* @type {import("./types").RequestHandler} */
 			export async function GET({ fetch, request, cookies }) {
 			  const client = createClient({ fetch });
 
@@ -447,12 +439,13 @@ describe("/api/preview route", () => {
 		expect(contents).toMatchInlineSnapshot(`
 			"import { redirectToPreviewURL } from "@prismicio/svelte/kit";
 			import { createClient } from "$lib/prismicio";
+			import type { RequestHandler } from "./types";
 
-			export async function GET({ fetch, request, cookies }) {
+			export const GET: RequestHandler = ({ fetch, request, cookies }) => {
 			  const client = createClient({ fetch });
 
 			  return await redirectToPreviewURL({ client, request, cookies });
-			}
+			};
 			"
 		`);
 	});
@@ -785,7 +778,9 @@ describe("Slice Simulator route", () => {
 			</script>
 
 			<SliceSimulator let:slices>
-			  <SliceZone {slices} {components} />
+			  {#snippet children(slices)}
+			    <SliceZone {slices} {components} />
+			  {/snippet}
 			</SliceSimulator>
 			"
 		`);
@@ -1061,7 +1056,7 @@ describe("root layout file", () => {
 			    />
 			  {/if}
 			</svelte:head>
-			<slot />
+			{@render children()}
 			<PrismicPreview {repositoryName} />
 			"
 		`);

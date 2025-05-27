@@ -1,4 +1,4 @@
-<script type="ts">
+<script lang="ts">
 	import type { SliceZone } from "@prismicio/client";
 	import {
 		type SliceSimulatorProps,
@@ -15,6 +15,7 @@
 	import type { Snippet } from "svelte";
 
 	type Props = SliceSimulatorProps & {
+		class?: string;
 		children?: Snippet<[SliceZone]>;
 	};
 
@@ -23,11 +24,12 @@
 	const {
 		zIndex = defaultProps.zIndex,
 		background = defaultProps.background,
+		class: klass,
 		children,
 	}: Props = $props();
 
-	let slices = getDefaultSlices();
-	let message = getDefaultMessage();
+	let slices = $state(getDefaultSlices());
+	let message = $state(getDefaultMessage());
 
 	if (typeof window !== "undefined") {
 		const simulatorManager = new SimulatorManager();
@@ -52,7 +54,7 @@
 </script>
 
 <div
-	class="{simulatorClass} {$$props.class}"
+	class={[simulatorClass, klass]}
 	style="z-index: {zIndex}; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; overflow: auto; background: {background}"
 >
 	{#if message}
@@ -61,13 +63,13 @@
 			{@html message}
 		</article>
 	{:else if slices.length}
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div
 			id="root"
 			class={simulatorRootClass}
-			on:click={onClickHandler}
-			on:submit={disableEventHandler}
-			on:keypress={disableEventHandler}
+			onclick={onClickHandler}
+			onsubmit={disableEventHandler}
+			onkeypress={disableEventHandler}
 		>
 			{@render children?.(slices)}
 		</div>
