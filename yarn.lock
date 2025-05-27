@@ -5843,13 +5843,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.76-alpha.tree-view-component.1":
-  version: 0.4.76-alpha.tree-view-component.1
-  resolution: "@prismicio/editor-fields@npm:0.4.76-alpha.tree-view-component.1"
+"@prismicio/editor-fields@npm:0.4.76":
+  version: 0.4.76
+  resolution: "@prismicio/editor-fields@npm:0.4.76"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/client": 7.15.1
-    "@prismicio/editor-support": 0.4.76-alpha.tree-view-component.1
+    "@prismicio/editor-support": 0.4.76
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.9.0
     "@tiptap/core": 2.11.5
@@ -5884,17 +5884,17 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.76-alpha.tree-view-component.1
+    "@prismicio/editor-ui": ^0.4.76
     "@tanstack/react-query": 5.55.4
     react: 18
     react-dom: 18
-  checksum: f8a8a470ba1757cce40ee53ecebe2f6c53b4b3cbb865a4e8735f6cdb40852c9e5d5b7a87106dcd4b7af9f7790ea7ed82b3a08cc5cdb7d33feb10577be4731cc6
+  checksum: 7f5e01dd2eb219bb7a9904372109368b3a3d14454be98e29680d9a87ff847b9633e63fc95fd2eacb03ee83e8d2393db633792dd4895d8d88bff3110bad49ec50
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.76-alpha.tree-view-component.1":
-  version: 0.4.76-alpha.tree-view-component.1
-  resolution: "@prismicio/editor-support@npm:0.4.76-alpha.tree-view-component.1"
+"@prismicio/editor-support@npm:0.4.76":
+  version: 0.4.76
+  resolution: "@prismicio/editor-support@npm:0.4.76"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -5905,19 +5905,19 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 6117c3f2c57331d39189f951171e906c5ed7e29836e8da9c4c8381ece460a5d4d8916777a2f1a951ae98ec0dd1080ea814673378aacc862dae077d1628cf8388
+  checksum: e6af5c426f6b3995f596432f9df42a5cce8c93b1480f5b3051f615f21c6523cf975440e8735ada045ea20948d34663eae4613ebe51cccfbefa726a34af8f6e11
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.76-alpha.tree-view-component.1":
-  version: 0.4.76-alpha.tree-view-component.1
-  resolution: "@prismicio/editor-ui@npm:0.4.76-alpha.tree-view-component.1"
+"@prismicio/editor-ui@npm:0.4.76":
+  version: 0.4.76
+  resolution: "@prismicio/editor-ui@npm:0.4.76"
   dependencies:
     "@internationalized/date": 3.5.5
     "@nivo/bar": 0.96.0
     "@nivo/core": 0.96.0
     "@nivo/tooltip": 0.96.0
-    "@prismicio/editor-support": 0.4.76-alpha.tree-view-component.1
+    "@prismicio/editor-support": 0.4.76
     "@radix-ui/react-avatar": 1.1.0
     "@radix-ui/react-checkbox": 1.1.1
     "@radix-ui/react-dialog": 1.1.1
@@ -5968,7 +5968,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: dd69f0d5f5dab812fb51fc5cedadc88f20b09de8391418c09f6848aad64194162d0669044ac141f1d4033ad2db13ff38db7eda749d0763a9f969f3d755d526f2
+  checksum: 7abb874012ae8c0badd25b3851e47f9963cd17e102227089993765b801a4610f4e396b7cd54b7e0e8f66934e57385856e30718a0ace3bf197da7b34b510f5364
   languageName: node
   linkType: hard
 
@@ -30365,9 +30365,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.17.0
-    "@prismicio/editor-fields": 0.4.76-alpha.tree-view-component.1
-    "@prismicio/editor-support": 0.4.76-alpha.tree-view-component.1
-    "@prismicio/editor-ui": 0.4.76-alpha.tree-view-component.1
+    "@prismicio/editor-fields": 0.4.76
+    "@prismicio/editor-support": 0.4.76
+    "@prismicio/editor-ui": 0.4.76
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.13.0
     "@prismicio/simulator": 0.1.4
