@@ -2,10 +2,7 @@ import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
 
-import {
-  ContentRelationshipFieldPicker,
-  PickedFieldsMap,
-} from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
+import { ContentRelationshipFieldPicker } from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
@@ -61,30 +58,13 @@ const WidgetForm = ({
         <ContentRelationshipFieldPicker
           value={values.config.customtypes}
           onChange={(fields) => {
-            void setFieldValue(
-              "config.customtypes",
-              buildCustomTypesConfig(fields),
-            );
+            void setFieldValue("config.customtypes", fields);
           }}
         />
       </Box>
     </>
   );
 };
-
-function buildCustomTypesConfig(pickedFields: PickedFieldsMap) {
-  return Object.entries(pickedFields).flatMap(([id, fields]) => {
-    if (!Object.values(fields).some(Boolean)) return [];
-    return [
-      {
-        id,
-        fields: Object.entries(fields).flatMap(([fieldId, checked]) =>
-          checked ? fieldId : [],
-        ),
-      },
-    ];
-  });
-}
 
 export { FormFields };
 

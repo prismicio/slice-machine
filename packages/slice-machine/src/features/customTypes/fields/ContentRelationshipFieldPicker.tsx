@@ -13,11 +13,14 @@ import { useSelector } from "react-redux";
 
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
-export type PickedFieldsMap = Record<string, Record<string, boolean>>;
+type FieldMap = Record<string, boolean>;
+export type CustomTypeFieldMap = Record<string, FieldMap>;
+
+type CustomTypeFields = { id: string; fields: string[] }[];
 
 interface ContentRelationshipFieldPickerProps {
-  value: { id: string; fields: string[] }[] | undefined;
-  onChange: (fields: PickedFieldsMap) => void;
+  value: CustomTypeFields | undefined;
+  onChange: (fields: CustomTypeFields) => void;
 }
 
 export function ContentRelationshipFieldPicker(
@@ -26,15 +29,14 @@ export function ContentRelationshipFieldPicker(
   const { value, onChange } = props;
   const customTypes = useCustomTypes();
 
-  console.log("value", value);
   const stableOnChange = useStableCallback(onChange);
-  const form = useFormik<PickedFieldsMap>({
-    initialValues: getInitialValues(value),
+  const form = useFormik<CustomTypeFieldMap>({
+    initialValues: value ? getInitialValues(value) : {},
     onSubmit: () => undefined, // values will be updated on change
   });
 
   useEffect(() => {
-    stableOnChange(form.values);
+    stableOnChange(buildCustomTypesConfig(form.values));
   }, [form.values, stableOnChange]);
 
   return (
@@ -148,17 +150,27 @@ function getTotalExposedFields(customTypes: SimplifiedCustomType[]) {
   return customTypes.reduce((acc, ct) => acc + ct.fields.length, 0);
 }
 
-function getInitialValues(
-  value: { id: string; fields: string[] }[] | undefined,
-) {
-  if (!value) return {};
-
-  return value.reduce<PickedFieldsMap>((acc, ct) => {
-    acc[ct.id] = ct.fields.reduce<Record<string, boolean>>((acc, field) => {
-      acc[field] = true;
-      return acc;
+function getInitialValues(value: CustomTypeFields) {
+  return value.reduce<CustomTypeFieldMap>((cts, ct) => {
+    cts[ct.id] = ct.fields.reduce<FieldMap>((fields, field) => {
+      fields[field] = true;
+      return fields;
     }, {});
 
-    return acc;
+    return cts;
   }, {});
+}
+
+/** Convert the picked fields map to the customtypes config and filter out empty customtypes */
+function buildCustomTypesConfig(fields: CustomTypeFieldMap) {
+  return Object.entries(fields).flatMap(([ctId, fields]) => {
+    const fieldEntries = Object.entries(fields);
+    if (!fieldEntries.some(([_, checked]) => checked)) return [];
+    return [
+      {
+        id: ctId,
+        fields: fieldEntries.flatMap(([id, checked]) => (checked ? [id] : [])),
+      },
+    ];
+  });
 }
