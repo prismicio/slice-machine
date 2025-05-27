@@ -16,11 +16,11 @@ import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 type FieldMap = Record<string, boolean>;
 export type CustomTypeFieldMap = Record<string, FieldMap>;
 
-type CustomTypeFields = { id: string; fields: string[] }[];
+type CustomTypeField = { id: string; fields: string[] };
 
 interface ContentRelationshipFieldPickerProps {
-  value: CustomTypeFields | undefined;
-  onChange: (fields: CustomTypeFields) => void;
+  value: CustomTypeField[] | undefined;
+  onChange: (fields: CustomTypeField[]) => void;
 }
 
 export function ContentRelationshipFieldPicker(
@@ -36,7 +36,7 @@ export function ContentRelationshipFieldPicker(
   });
 
   useEffect(() => {
-    stableOnChange(buildCustomTypesConfig(form.values));
+    stableOnChange(convertFormToCustomTypes(form.values));
   }, [form.values, stableOnChange]);
 
   return (
@@ -58,10 +58,10 @@ export function ContentRelationshipFieldPicker(
           </Box>
           <TreeView
             title="Exposed fields"
-            subtitle={`(${countExposedFields(form.values)})`}
+            subtitle={`(${countPickedFields(form.values)})`}
           >
             {customTypes.map((ct) => {
-              const count = countExposedFields(form.values[ct.id]);
+              const count = countPickedFields(form.values[ct.id]);
 
               return (
                 <TreeViewSection
@@ -108,12 +108,12 @@ function TreeViewCheckboxField(
     customTypeId: string;
   } & Omit<TreeViewCheckboxProps, "checked" | "onCheckedChange">,
 ) {
-  const { id, customTypeId, ...rest } = props;
+  const { id, customTypeId, ...checkboxProps } = props;
   const [field, _, helpers] = useField<boolean>(`${customTypeId}.${id}`);
 
   return (
     <TreeViewCheckbox
-      {...rest}
+      {...checkboxProps}
       checked={field.value}
       onCheckedChange={(checked) => helpers.setValue(checked)}
     />
@@ -150,22 +150,19 @@ function useCustomTypes() {
   return simplifiedCustomTypes;
 }
 
-function countExposedFields(fields: CustomTypeFieldMap | FieldMap | undefined) {
+function countPickedFields(fields: CustomTypeFieldMap | FieldMap | undefined) {
   if (!fields) return 0;
 
   return Object.values(fields).reduce<number>(
-    (acc, value: boolean | FieldMap) => {
-      if (typeof value === "boolean") {
-        return acc + (value ? 1 : 0);
-      }
-
-      return acc + Object.values(value).filter(Boolean).length;
+    (count, value: boolean | FieldMap) => {
+      if (typeof value === "boolean" && value) return count + 1;
+      return count + Object.values(value).filter(Boolean).length;
     },
     0,
   );
 }
 
-function getInitialValues(value: CustomTypeFields) {
+function getInitialValues(value: CustomTypeField[]) {
   return value.reduce<CustomTypeFieldMap>((cts, ct) => {
     cts[ct.id] = ct.fields.reduce<FieldMap>((fields, field) => {
       fields[field] = true;
@@ -177,8 +174,8 @@ function getInitialValues(value: CustomTypeFields) {
 }
 
 /** Convert the picked fields map to the customtypes config and filter out empty customtypes */
-function buildCustomTypesConfig(fields: CustomTypeFieldMap) {
-  return Object.entries(fields).flatMap(([ctId, fields]) => {
+function convertFormToCustomTypes(fields: CustomTypeFieldMap) {
+  return Object.entries(fields).flatMap<CustomTypeField>(([ctId, fields]) => {
     const fieldEntries = Object.entries(fields);
     if (!fieldEntries.some(([_, checked]) => checked)) return [];
     return [
