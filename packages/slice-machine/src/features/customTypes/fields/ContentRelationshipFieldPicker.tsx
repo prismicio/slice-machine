@@ -58,25 +58,29 @@ export function ContentRelationshipFieldPicker(
           </Box>
           <TreeView
             title="Exposed fields"
-            subtitle={`(${getTotalExposedFields(customTypes)})`}
+            subtitle={`(${countExposedFields(form.values)})`}
           >
-            {customTypes.map((ct) => (
-              <TreeViewSection
-                key={ct.id}
-                title={ct.label}
-                subtitle={`(${ct.fields.length} fields exposed)`}
-                badge="Custom Type"
-              >
-                {ct.fields.map((field) => (
-                  <TreeViewCheckboxField
-                    key={field.id}
-                    id={field.id}
-                    title={field.label}
-                    customTypeId={ct.id}
-                  />
-                ))}
-              </TreeViewSection>
-            ))}
+            {customTypes.map((ct) => {
+              const count = countExposedFields(form.values[ct.id]);
+
+              return (
+                <TreeViewSection
+                  key={ct.id}
+                  title={ct.label}
+                  subtitle={count > 0 ? `(${count} fields exposed)` : undefined}
+                  badge="Custom Type"
+                >
+                  {ct.fields.map((field) => (
+                    <TreeViewCheckboxField
+                      key={field.id}
+                      id={field.id}
+                      title={field.label}
+                      customTypeId={ct.id}
+                    />
+                  ))}
+                </TreeViewSection>
+              );
+            })}
           </TreeView>
         </Box>
         <Box backgroundColor="white" flexDirection="column" padding={12}>
@@ -146,8 +150,19 @@ function useCustomTypes() {
   return simplifiedCustomTypes;
 }
 
-function getTotalExposedFields(customTypes: SimplifiedCustomType[]) {
-  return customTypes.reduce((acc, ct) => acc + ct.fields.length, 0);
+function countExposedFields(fields: CustomTypeFieldMap | FieldMap | undefined) {
+  if (!fields) return 0;
+
+  return Object.values(fields).reduce<number>(
+    (acc, value: boolean | FieldMap) => {
+      if (typeof value === "boolean") {
+        return acc + (value ? 1 : 0);
+      }
+
+      return acc + Object.values(value).filter(Boolean).length;
+    },
+    0,
+  );
 }
 
 function getInitialValues(value: CustomTypeFields) {
