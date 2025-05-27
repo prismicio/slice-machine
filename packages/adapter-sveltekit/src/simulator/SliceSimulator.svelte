@@ -15,8 +15,8 @@
 	import type { Snippet } from "svelte";
 
 	type Props = SliceSimulatorProps & {
-		children?: Snippet<[SliceZone]>
-	}
+		children?: Snippet<[SliceZone]>;
+	};
 
 	const defaultProps = getDefaultProps();
 

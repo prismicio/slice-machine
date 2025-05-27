@@ -9879,7 +9879,7 @@ __metadata:
     newtype-ts: ^0.3.5
     pascal-case: ^3.1.2
     prettier: 3.0.3
-    prettier-plugin-jsdoc: 1.1.1
+    prettier-plugin-jsdoc: 1.3.2
     prettier-plugin-svelte: ^3.4.0
     prismic-ts-codegen: 0.1.25
     size-limit: 8.2.4
@@ -30460,6 +30460,19 @@ __metadata:
   peerDependencies:
     prettier: ^3.0.0
   checksum: a4601863a3774caa1b964ad4539fcabf818145fb094ad2971664655cc1576c7858bbde026f114cd83672c953516cc6ac2c88bd498307c19cea9136e377c29e2d
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-jsdoc@npm:1.3.2":
+  version: 1.3.2
+  resolution: "prettier-plugin-jsdoc@npm:1.3.2"
+  dependencies:
+    binary-searching: ^2.0.5
+    comment-parser: ^1.4.0
+    mdast-util-from-markdown: ^2.0.0
+  peerDependencies:
+    prettier: ^3.0.0
+  checksum: e8a7d49772721a71901a9c6843465d1ecbd4304c4f1d25ca5dea8fc9c6c3c4a9aacf6b291e198774ae9a48600aed97a3bc148e6691b5790f87cb2ca7a6685000
   languageName: node
   linkType: hard
 
