@@ -9699,10 +9699,10 @@ __metadata:
     prettier-plugin-jsdoc: 1.1.1
     prismic-ts-codegen: 0.1.25
     react: 18.2.0
-    rollup-plugin-preserve-directives: 0.2.0
+    rollup-plugin-preserve-directives: 0.4.0
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
@@ -9743,7 +9743,7 @@ __metadata:
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
     vue: 2.7.14
@@ -9785,7 +9785,7 @@ __metadata:
     size-limit: 8.2.4
     ts-morph: 17.0.1
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
     vue: 3.2.47
@@ -9831,7 +9831,7 @@ __metadata:
     size-limit: 8.2.4
     svelte: 4.2.0
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
@@ -9908,7 +9908,7 @@ __metadata:
     semver: ^7.3.8
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   bin:
@@ -9967,7 +9967,7 @@ __metadata:
     semver: ^7.3.8
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   peerDependencies:
@@ -10012,7 +10012,7 @@ __metadata:
     prismic-ts-codegen: 0.1.25
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   languageName: unknown
@@ -18949,7 +18949,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.18.0, esbuild@npm:~0.18.20":
+"esbuild@npm:^0.18.0, esbuild@npm:^0.18.10, esbuild@npm:~0.18.20":
   version: 0.18.20
   resolution: "esbuild@npm:0.18.20"
   dependencies:
@@ -30036,6 +30036,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postcss@npm:^8.4.27, postcss@npm:^8.4.48, postcss@npm:^8.5.3":
+  version: 8.5.3
+  resolution: "postcss@npm:8.5.3"
+  dependencies:
+    nanoid: ^3.3.8
+    picocolors: ^1.1.1
+    source-map-js: ^1.2.1
+  checksum: da574620eb84ff60e65e1d8fc6bd5ad87a19101a23d0aba113c653434161543918229a0f673d89efb3b6d4906287eb04b957310dbcf4cbebacad9d1312711461
+  languageName: node
+  linkType: hard
+
 "postcss@npm:^8.4.28, postcss@npm:^8.4.5":
   version: 8.4.28
   resolution: "postcss@npm:8.4.28"
@@ -30044,17 +30055,6 @@ __metadata:
     picocolors: ^1.0.0
     source-map-js: ^1.0.2
   checksum: f605c24a36f7e400bad379735fbfc893ccb8d293ad6d419bb824db77cdcb69f43d614ef35f9f7091f32ca588d130ec60dbcf53b366e6bf88a8a64bbeb3c05f6d
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.4.48, postcss@npm:^8.5.3":
-  version: 8.5.3
-  resolution: "postcss@npm:8.5.3"
-  dependencies:
-    nanoid: ^3.3.8
-    picocolors: ^1.1.1
-    source-map-js: ^1.2.1
-  checksum: da574620eb84ff60e65e1d8fc6bd5ad87a19101a23d0aba113c653434161543918229a0f673d89efb3b6d4906287eb04b957310dbcf4cbebacad9d1312711461
   languageName: node
   linkType: hard
 
@@ -32161,14 +32161,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-preserve-directives@npm:0.2.0":
-  version: 0.2.0
-  resolution: "rollup-plugin-preserve-directives@npm:0.2.0"
+"rollup-plugin-preserve-directives@npm:0.4.0":
+  version: 0.4.0
+  resolution: "rollup-plugin-preserve-directives@npm:0.4.0"
   dependencies:
-    magic-string: ^0.30.0
+    "@rollup/pluginutils": ^5.1.0
+    magic-string: ^0.30.5
   peerDependencies:
-    rollup: 2.x || 3.x
-  checksum: 7560a77ef8d49661b616a868ef2b140b069f4016a24c948d0b1d7db973a7e5258197054f64db5398baa88ce879c76dd0ee28656f4b81a2761b3a3750f909834e
+    rollup: 2.x || 3.x || 4.x
+  checksum: 457ca1f60d2cdbe5485339dbc4b228bec5684a99b6589c771bc2268ffaeb29dce2d248f83a85da2fbf572a23cc592d7f59e6485369965210df1035f22ce67feb
   languageName: node
   linkType: hard
 
@@ -32231,6 +32232,20 @@ __metadata:
   bin:
     rollup: dist/bin/rollup
   checksum: f483b28a0605097a725b080c088262b0fa21f7bce66f741df73d9ff0be6a3baaf2927916b094ce95412f4f15cc59bb5eae020f59cae3d3a6993d123faceb5b41
+  languageName: node
+  linkType: hard
+
+"rollup@npm:^3.27.1":
+  version: 3.29.5
+  resolution: "rollup@npm:3.29.5"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: 6f8304e58ac8170a715e61e46c4aa674b2ae2587ed2a712dab58f72e5e54803ae40b485fbe6b3e6a694f4c8f7a59ab936ccf9f6b686c7cfd1f1970fa9ecadf1a
   languageName: node
   linkType: hard
 
@@ -33280,7 +33295,7 @@ __metadata:
     typed-css-modules: 0.8.1
     typesafe-actions: 5.1.0
     typescript: 5.4.5
-    vite: 4.3.9
+    vite: 4.5.14
     vitest: 0.32.0
     yup: 0.32.11
     zod: 3.23.8
@@ -33698,7 +33713,7 @@ __metadata:
     serve-static: ^1.15.0
     size-limit: 8.2.4
     typescript: 4.9.5
-    vite: 4.3.9
+    vite: 4.5.14
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
   bin:
@@ -36574,7 +36589,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:4.3.9, vite@npm:^3.0.0 || ^4.0.0":
+"vite@npm:4.5.14":
+  version: 4.5.14
+  resolution: "vite@npm:4.5.14"
+  dependencies:
+    esbuild: ^0.18.10
+    fsevents: ~2.3.2
+    postcss: ^8.4.27
+    rollup: ^3.27.1
+  peerDependencies:
+    "@types/node": ">= 14"
+    less: "*"
+    lightningcss: ^1.21.0
+    sass: "*"
+    stylus: "*"
+    sugarss: "*"
+    terser: ^5.4.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  peerDependenciesMeta:
+    "@types/node":
+      optional: true
+    less:
+      optional: true
+    lightningcss:
+      optional: true
+    sass:
+      optional: true
+    stylus:
+      optional: true
+    sugarss:
+      optional: true
+    terser:
+      optional: true
+  bin:
+    vite: bin/vite.js
+  checksum: ed61e2bc284968c5f514eae1f0b040ad6aa1b6591575c102d4967da5e34f8e52cd1a7048800bc3154ece0c11b4f11e1be1d0ef382c92993fd2dc6f7feca110ba
+  languageName: node
+  linkType: hard
+
+"vite@npm:^3.0.0 || ^4.0.0":
   version: 4.3.9
   resolution: "vite@npm:4.3.9"
   dependencies:
