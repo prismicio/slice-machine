@@ -87,7 +87,7 @@
 		"@types/common-tags": "1.8.1",
 		"@vitest/coverage-v8": "0.32.0",
 		"concurrently": "8.2.1",
-		"depcheck": "1.4.3",
+		"depcheck": "1.4.7",
 		"eslint": "9.27.0",
 		"eslint-config-prettier": "10.1.5",
 		"eslint-plugin-svelte": "3.9.0",
