@@ -103,10 +103,20 @@ const checkHasAuthenticationToken = (
 };
 
 const parseCookies = (cookies: string): Record<string, string> => {
-	return cookie.parse(cookies, {
+	const parsed = cookie.parse(cookies, {
 		// Don't escape any values.
 		decode: (value) => value,
 	});
+
+	const result: Record<string, string> = {};
+	for (const key in parsed) {
+		const value = parsed[key];
+		if (value) {
+			result[key] = value;
+		}
+	}
+
+	return result;
 };
 
 export class PrismicAuthManager {
