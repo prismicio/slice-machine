@@ -2,7 +2,10 @@ import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
 
-import { ContentRelationshipFieldPicker } from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
+import {
+  ContentRelationshipFieldPicker,
+  PickedFieldsMap,
+} from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
@@ -24,8 +27,13 @@ type FormProps = {
 
 const WidgetForm = ({
   initialValues,
+  setFieldValue,
   fields,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
+  function onFieldsChange(fields: PickedFieldsMap) {
+    void setFieldValue("config.customtypes", buildCustomTypesConfig(fields));
+  }
+
   return (
     <>
       <FlexGrid>
@@ -43,11 +51,25 @@ const WidgetForm = ({
           ))}
       </FlexGrid>
       <Box mt={20}>
-        <ContentRelationshipFieldPicker />
+        <ContentRelationshipFieldPicker onChange={onFieldsChange} />
       </Box>
     </>
   );
 };
+
+function buildCustomTypesConfig(pickedFields: PickedFieldsMap) {
+  return Object.entries(pickedFields).flatMap(([id, fields]) => {
+    if (!Object.values(fields).some(Boolean)) return [];
+    return [
+      {
+        id,
+        fields: Object.entries(fields).flatMap(([fieldId, checked]) =>
+          checked ? fieldId : [],
+        ),
+      },
+    ];
+  });
+}
 
 export { FormFields };
 
