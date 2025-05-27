@@ -2,6 +2,7 @@ import { source } from "common-tags";
 
 import type { DocumentationReadHook } from "@slicemachine/plugin-kit";
 
+import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
 
 import type { PluginOptions } from "../types";
@@ -27,62 +28,136 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		const dataFilePath = `${routePath}/+page.server.${pageDataExtension}`;
 		const componentFilePath = `${routePath}/+page.svelte`;
 
+		const isTypeScriptProject = await checkIsTypeScriptProject({
+			helpers,
+			options,
+		});
+
 		let dataFileContent: string;
-		if (model.repeatable) {
-			dataFileContent = source`
-				import { createClient } from "$lib/prismicio";
+		if (isTypeScriptProject) {
+			if (model.repeatable) {
+				dataFileContent = source`
+					import { createClient } from "$lib/prismicio";
+					import type { PageServerLoad, EntryGenerator } from './$types';
 
-				export async function load({ params, fetch, cookies }) {
-					const client = createClient({ fetch, cookies });
+					export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
+						const client = createClient({ fetch, cookies });
 
-					const page = await client.getByUID("${model.id}", params.uid);
+						const page = await client.getByUID("${model.id}", params.uid);
 
-					return {
-						page,
-					};
-				}
+						return {
+							page,
+						};
+					}
 
-				export async function entries() {
-					const client = createClient();
+					export const entries: EntryGenerator = async () => {
+						const client = createClient();
 
-					const pages = await client.getAllByType("${model.id}");
+						const pages = await client.getAllByType("${model.id}");
 
-					return pages.map((page) => {
-						return { uid: page.uid };
-					});
-				}
-			`;
+						return pages.map((page) => {
+							return { uid: page.uid };
+						});
+					}
+				`;
+			} else {
+				dataFileContent = source`
+					import { createClient } from "$lib/prismicio";
+					import type { PageServerLoad, EntryGenerator } from './$types';
+
+					export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
+						const client = createClient({ fetch, cookies });
+
+						const page = await client.getSingle("${model.id}");
+
+						return {
+							page,
+						};
+					}
+
+					export const entries: EntryGenerator = async () => {
+						return [{}]
+					}
+				`;
+			}
 		} else {
-			dataFileContent = source`
-				import { createClient } from "$lib/prismicio";
+			if (model.repeatable) {
+				dataFileContent = source`
+					import { createClient } from "$lib/prismicio";
 
-				export async function load({ params, fetch, cookies }) {
-					const client = createClient({ fetch, cookies });
+					/* @type {import("./$types").PageServerLoad} */
+					export async function load({ params, fetch, cookies }) {
+						const client = createClient({ fetch, cookies });
 
-					const page = await client.getSingle("${model.id}");
+						const page = await client.getByUID("${model.id}", params.uid);
 
-					return {
-						page,
-					};
-				}
+						return {
+							page,
+						};
+					}
 
-				export async function entries() {
-					return [{}]
-				}
-			`;
+					/* @type {import("./$types").EntryGenerator} */
+					export async function entries() {
+						const client = createClient();
+
+						const pages = await client.getAllByType("${model.id}");
+
+						return pages.map((page) => {
+							return { uid: page.uid };
+						});
+					}
+				`;
+			} else {
+				dataFileContent = source`
+					import { createClient } from "$lib/prismicio";
+
+					/* @type {import("./$types").PageServerLoad} */
+					export async function load({ params, fetch, cookies }) {
+						const client = createClient({ fetch, cookies });
+
+						const page = await client.getSingle("${model.id}");
+
+						return {
+							page,
+						};
+					}
+
+					/* @type {import("./$types").EntryGenerator} */
+					export async function entries() {
+						return [{}]
+					}
+				`;
+			}
 		}
 
-		let componentFileContent = source`
+		let componentFileContent;
+		if (isTypeScriptProject) {
+			componentFileContent = source`
+			<script lang="ts">
+				import { SliceZone } from "@prismicio/svelte";
+
+				import { components } from "$lib/slices";
+				import type { PageData } from "./$types";
+
+				const { data }: PageData = $props();
+			</script>
+
+			<SliceZone slices={data.page.data.slices} {components} />
+		`;
+		} else {
+			componentFileContent = source`
 			<script>
 				import { SliceZone } from "@prismicio/svelte";
 
 				import { components } from "$lib/slices";
 
-				export let data;
+				/* @type {import("./$types").PageData} */
+				const { data } = $props();
 			</script>
 
 			<SliceZone slices={data.page.data.slices} {components} />
 		`;
+		}
 
 		if (options.format) {
 			dataFileContent = await helpers.format(

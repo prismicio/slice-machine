@@ -4,9 +4,10 @@
 		PrismicImage,
 		PrismicRichText,
 		PrismicLink,
+		type SliceComponentProps,
 	} from "@prismicio/svelte";
 
-	export let slice: Content.PascalNameToReplaceSlice;
+	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> = $props()
 </script>
 
 <section

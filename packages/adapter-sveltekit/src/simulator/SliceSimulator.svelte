@@ -1,5 +1,7 @@
-<script>
+<script type="ts">
+	import type { SliceZone } from "@prismicio/client";
 	import {
+		type SliceSimulatorProps,
 		SimulatorManager,
 		StateEventType,
 		disableEventHandler,
@@ -10,11 +12,19 @@
 		simulatorClass,
 		simulatorRootClass,
 	} from "@prismicio/simulator/kit";
+	import type { Snippet } from "svelte";
+
+	type Props = SliceSimulatorProps & {
+		children?: Snippet<[SliceZone]>
+	}
 
 	const defaultProps = getDefaultProps();
 
-	export let zIndex = defaultProps.zIndex;
-	export let background = defaultProps.background;
+	const {
+		zIndex = defaultProps.zIndex,
+		background = defaultProps.background,
+		children,
+	}: Props = $props();
 
 	let slices = getDefaultSlices();
 	let message = getDefaultMessage();
@@ -59,7 +69,7 @@
 			on:submit={disableEventHandler}
 			on:keypress={disableEventHandler}
 		>
-			<slot {slices} />
+			{@render children?.(slices)}
 		</div>
 	{/if}
 </div>

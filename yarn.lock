@@ -6590,6 +6590,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/client@npm:7.17.2":
+  version: 7.17.2
+  resolution: "@prismicio/client@npm:7.17.2"
+  dependencies:
+    imgix-url-builder: ^0.0.6
+  checksum: 3c03d3d8a37d8e65089419c44e94fddeba2fea899c068ba41b84d8532bf8ba778044b1e29d9ce69fc9d90f6ee4638a6a0457daa3412fc1786cdc3e3ab0486b8f
+  languageName: node
+  linkType: hard
+
 "@prismicio/client@npm:^7.1.0":
   version: 7.6.0
   resolution: "@prismicio/client@npm:7.6.0"
@@ -9842,6 +9851,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@slicemachine/adapter-sveltekit@workspace:packages/adapter-sveltekit"
   dependencies:
+    "@prismicio/client": 7.17.2
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
     "@prismicio/types-internal": 3.10.0
@@ -9879,6 +9889,7 @@ __metadata:
     vite-plugin-sdk: 0.1.3
     vitest: 3.1.4
   peerDependencies:
+    "@prismic/client": ^7
     "@sveltejs/kit": ^2
     prettier: ">=3"
     prettier-plugin-svelte: ">=3"
@@ -22374,6 +22385,13 @@ __metadata:
   version: 0.0.5
   resolution: "imgix-url-builder@npm:0.0.5"
   checksum: 5bdb9c8df1ef6eff7f53cb8f84dfc33c4862bb3542d557ee083a1cb213c3acb9464f0216ade00a5ed5d79403d58bb2169a537bb24e705ed05b8c3606902435d7
+  languageName: node
+  linkType: hard
+
+"imgix-url-builder@npm:^0.0.6":
+  version: 0.0.6
+  resolution: "imgix-url-builder@npm:0.0.6"
+  checksum: 06eb3223c3c7d1c1b8d3129dbc91db75d28229d60d5a8d02f0330f97e508ad8e9e27218a2707e5ccb70d94df1b7eeed332b2c3d7f7ee3df698c0095316a83e14
   languageName: node
   linkType: hard
 

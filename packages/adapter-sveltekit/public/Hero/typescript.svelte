@@ -1,12 +1,13 @@
 <script lang="ts">
+	import { type Content, isFilled } from "@prismicio/client";
 	import {
 		PrismicImage,
 		PrismicRichText,
 		PrismicLink,
+		type SliceComponentProps,
 	} from "@prismicio/svelte";
-	import { type Content, isFilled } from "@prismicio/client";
 
-	export let slice: Content.PascalNameToReplaceSlice;
+	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> = $props()
 </script>
 
 <section

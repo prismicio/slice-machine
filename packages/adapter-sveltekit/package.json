@@ -75,6 +75,7 @@
 		"prettier-plugin-svelte": "^3.4.0"
 	},
 	"devDependencies": {
+		"@prismicio/client": "7.17.2",
 		"@prismicio/mock": "0.7.1",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@sveltejs/kit": "2.21.1",
@@ -102,6 +103,7 @@
 		"vitest": "3.1.4"
 	},
 	"peerDependencies": {
+		"@prismic/client": "^7",
 		"@sveltejs/kit": "^2",
 		"prettier": ">=3",
 		"prettier-plugin-svelte": ">=3",

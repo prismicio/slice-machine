@@ -72,8 +72,11 @@ const createComponentFile = async ({
 		contents = source`
 			<script lang="ts">
 				import type { Content } from '@prismicio/client';
+				import type { SliceComponentProps } from '@prismicio/svelte';
 
-				export let slice: Content.${pascalName}Slice;
+				type Props = SliceComponentProps<Content.${pascalName}Slice>;
+
+				const { slice }: Props = $props();
 			</script>
 
 			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
@@ -83,8 +86,11 @@ const createComponentFile = async ({
 	} else {
 		contents = source`
 			<script>
-				/** @type {import("@prismicio/client").Content.${pascalName}Slice} */
-				export let slice;
+				/* @typedef {import("@prismicio/client").Content} Content */
+				/* @typedef {import("@prismicio/svelte").SliceComponentProps} SliceComponentProps */
+
+				/* @type {SliceComponentProps<Content.${pascalName}Slice>} */
+				const { slice } = $props();
 			</script>
 
 			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>

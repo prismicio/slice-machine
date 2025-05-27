@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { PrismicImage, PrismicRichText } from "@prismicio/svelte";
 	import { type Content, isFilled } from "@prismicio/client";
+	import { PrismicImage, PrismicRichText, type SliceComponentProps } from "@prismicio/svelte";
 
-	export let slice: Content.PascalNameToReplaceSlice;
+	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> = $props()
 </script>
 
 <section
@@ -53,7 +53,7 @@
 			</div>
 			{#if slice.primary.items && slice.primary.items.length}
 				<div class="es-alternate-grid__primary-content__items">
-					{#each slice.primary.items as item, i}
+					{#each slice.primary.items as item}
 						<div class="es-alternate-grid__item">
 							{#if isFilled.richText(item.title)}
 								<div class="es-alternate-grid__item__heading">

@@ -6,10 +6,11 @@
 		PrismicLink,
 	} from "@prismicio/svelte";
 
-	/**
-	 * @type {import("@prismicio/client").Content.${PascalNameToReplace}Slice}
-	 */
-	export let slice;
+	/* @typedef {import("@prismicio/client").Content} Content */
+	/* @typedef {import("@prismicio/svelte").SliceComponentProps} SliceComponentProps */
+
+	/* @type {SliceComponentProps<Content.${PascalNameToReplace}Slice>} */
+	const { slice } = $props();
 </script>
 
 <section
