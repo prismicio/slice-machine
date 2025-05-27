@@ -60,7 +60,7 @@ const createComponentFile = async ({
 		 *   }
 		 * }
 		 *
-		 * 2. Select Claude 3.7 Sonnet (recommended for optimal output)
+		 * 2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
 		 *
 		 * ✅ Then open your slice file and ask your code editor:
 		 *    "Code this slice"
