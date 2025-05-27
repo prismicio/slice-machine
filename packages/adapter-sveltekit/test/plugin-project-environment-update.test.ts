@@ -97,7 +97,7 @@ test("does nothing if the environment is undefined and the env file does not exi
 		environment: undefined,
 	});
 
-	expect(
+	await expect(
 		fs.access(path.join(ctx.project.root, ".env.local")),
 	).rejects.toThrow();
 });

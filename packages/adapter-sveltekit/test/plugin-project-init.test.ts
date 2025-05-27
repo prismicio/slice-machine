@@ -257,9 +257,9 @@ describe("prismicio.js file", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"import * as prismic from \\"@prismicio/client\\";
-			import { enableAutoPreviews } from \\"@prismicio/svelte/kit\\";
-			import config from \\"../../slicemachine.config.json\\";
+			"import * as prismic from "@prismicio/client";
+			import { enableAutoPreviews } from "@prismicio/svelte/kit";
+			import config from "../../slicemachine.config.json";
 
 			/**
 			 * The project's Prismic repository name.
@@ -272,18 +272,18 @@ describe("prismicio.js file", () => {
 			 *
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 *
-			 * @type {prismic.ClientConfig[\\"routes\\"]}
+			 * @type {prismic.ClientConfig["routes"]}
 			 */
 			// TODO: Update the routes array to match your project's route structure.
 			const routes = [
 			  // Examples:
 			  // {
-			  // 	type: \\"homepage\\",
-			  // 	path: \\"/\\",
+			  // 	type: "homepage",
+			  // 	path: "/",
 			  // },
 			  // {
-			  // 	type: \\"page\\",
-			  // 	path: \\"/:uid\\",
+			  // 	type: "page",
+			  // 	path: "/:uid",
 			  // },
 			];
 
@@ -328,12 +328,12 @@ describe("prismicio.js file", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"import * as prismic from \\"@prismicio/client\\";
+			"import * as prismic from "@prismicio/client";
 			import {
 			  type CreateClientConfig,
 			  enableAutoPreviews,
-			} from \\"@prismicio/svelte/kit\\";
-			import config from \\"../../slicemachine.config.json\\";
+			} from "@prismicio/svelte/kit";
+			import config from "../../slicemachine.config.json";
 
 			/**
 			 * The project's Prismic repository name.
@@ -347,15 +347,15 @@ describe("prismicio.js file", () => {
 			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
 			 */
 			// TODO: Update the routes array to match your project's route structure.
-			const routes: prismic.ClientConfig[\\"routes\\"] = [
+			const routes: prismic.ClientConfig["routes"] = [
 			  // Examples:
 			  // {
-			  // 	type: \\"homepage\\",
-			  // 	path: \\"/\\",
+			  // 	type: "homepage",
+			  // 	path: "/",
 			  // },
 			  // {
-			  // 	type: \\"page\\",
-			  // 	path: \\"/:uid\\",
+			  // 	type: "page",
+			  // 	path: "/:uid",
 			  // },
 			];
 
@@ -406,8 +406,8 @@ describe("/api/preview route", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
-			import { createClient } from \\"$lib/prismicio\\";
+			"import { redirectToPreviewURL } from "@prismicio/svelte/kit";
+			import { createClient } from "$lib/prismicio";
 
 			export async function GET({ fetch, request, cookies }) {
 			  const client = createClient({ fetch });
@@ -445,8 +445,8 @@ describe("/api/preview route", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
-			import { createClient } from \\"$lib/prismicio\\";
+			"import { redirectToPreviewURL } from "@prismicio/svelte/kit";
+			import { createClient } from "$lib/prismicio";
 
 			export async function GET({ fetch, request, cookies }) {
 			  const client = createClient({ fetch });
@@ -641,7 +641,7 @@ describe("preview route matcher", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"export function match(param) {
-			  return param === \\"preview\\";
+			  return param === "preview";
 			}
 			"
 		`);
@@ -692,7 +692,7 @@ describe("preview route matcher", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"export function match(param) {
-			  return param === \\"preview\\";
+			  return param === "preview";
 			}
 			"
 		`);
@@ -779,9 +779,9 @@ describe("Slice Simulator route", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"<script>
-			  import { SliceSimulator } from \\"@slicemachine/adapter-sveltekit/simulator\\";
-			  import { SliceZone } from \\"@prismicio/svelte\\";
-			  import { components } from \\"$lib/slices\\";
+			  import { SliceSimulator } from "@slicemachine/adapter-sveltekit/simulator";
+			  import { SliceZone } from "@prismicio/svelte";
+			  import { components } from "$lib/slices";
 			</script>
 
 			<SliceSimulator let:slices>
@@ -904,7 +904,7 @@ describe("root layout server file", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"export const prerender = \\"auto\\";
+			"export const prerender = "auto";
 			"
 		`);
 	});
@@ -958,7 +958,7 @@ describe("root layout server file", () => {
 		);
 
 		expect(contents).toMatchInlineSnapshot(`
-			"export const prerender = \\"auto\\";
+			"export const prerender = "auto";
 			"
 		`);
 	});
@@ -1038,25 +1038,25 @@ describe("root layout file", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"<script>
-			  import { isFilled, asImageSrc } from \\"@prismicio/client\\";
-			  import { PrismicPreview } from \\"@prismicio/svelte/kit\\";
-			  import { page } from \\"$app/state\\";
-			  import { repositoryName } from \\"$lib/prismicio\\";
+			  import { isFilled, asImageSrc } from "@prismicio/client";
+			  import { PrismicPreview } from "@prismicio/svelte/kit";
+			  import { page } from "$app/state";
+			  import { repositoryName } from "$lib/prismicio";
 			</script>
 
 			<svelte:head>
 			  <title>{page.data.page?.data.meta_title}</title>
-			  <meta property=\\"og:title\\" content={page.data.page?.data.meta_title} />
+			  <meta property="og:title" content={page.data.page?.data.meta_title} />
 			  {#if isFilled.keyText(page.data.page?.data.meta_description)}
-			    <meta name=\\"description\\" content={page.data.page.data.meta_description} />
+			    <meta name="description" content={page.data.page.data.meta_description} />
 			    <meta
-			      property=\\"og:description\\"
+			      property="og:description"
 			      content={page.data.page.data.meta_description}
 			    />
 			  {/if}
 			  {#if isFilled.image(page.data.page?.data.meta_image)}
 			    <meta
-			      property=\\"og:image\\"
+			      property="og:image"
 			      content={asImageSrc(page.data.page.data.meta_image)}
 			    />
 			  {/if}
