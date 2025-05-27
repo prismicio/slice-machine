@@ -7,7 +7,8 @@
 		type SliceComponentProps,
 	} from "@prismicio/svelte";
 
-	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> = $props()
+	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> =
+		$props();
 </script>
 
 <section
@@ -23,7 +24,7 @@
 		{/if}
 		{#if slice.primary.logos.length > 0}
 			<ul class="es-customer-logos__logos">
-				{#each slice.primary.logos as logo}
+				{#each slice.primary.logos as logo (logo.image)}
 					{#if isFilled.image(logo.image)}
 						<li class="es-customer-logos__logo">
 							<PrismicLink field={logo.link}>

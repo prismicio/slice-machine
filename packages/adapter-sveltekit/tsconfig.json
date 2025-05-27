@@ -15,5 +15,5 @@
 		"lib": ["esnext", "dom"],
 		"types": ["node"]
 	},
-	"exclude": ["node_modules", "dist", "examples", "public"]
+	"exclude": ["node_modules", "dist", "examples"]
 }
