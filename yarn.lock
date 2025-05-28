@@ -10014,7 +10014,7 @@ __metadata:
     "@slicemachine/plugin-kit": "workspace:*"
     "@sveltejs/kit": 2.21.1
     "@sveltejs/package": 2.3.11
-    "@sveltejs/vite-plugin-svelte": 5.0.3
+    "@sveltejs/vite-plugin-svelte": 3.0.1
     "@types/common-tags": 1.8.1
     "@vitest/coverage-v8": 0.32.0
     common-tags: ^1.8.2
@@ -11398,33 +11398,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/vite-plugin-svelte-inspector@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "@sveltejs/vite-plugin-svelte-inspector@npm:4.0.1"
+"@sveltejs/vite-plugin-svelte-inspector@npm:^2.0.0-next.0 || ^2.0.0":
+  version: 2.1.0
+  resolution: "@sveltejs/vite-plugin-svelte-inspector@npm:2.1.0"
   dependencies:
-    debug: ^4.3.7
+    debug: ^4.3.4
   peerDependencies:
-    "@sveltejs/vite-plugin-svelte": ^5.0.0
-    svelte: ^5.0.0
-    vite: ^6.0.0
-  checksum: 01702a9fd4282ae2433eb1e082ce397e0cbac98e954fef90caf514096f146af40dd65411fef15e43b0541b7095cb2b454f0fe8530c240edcfd2fc52d7703e639
+    "@sveltejs/vite-plugin-svelte": ^3.0.0
+    svelte: ^4.0.0 || ^5.0.0-next.0
+    vite: ^5.0.0
+  checksum: 8ef577bb58f8b7b9ccc2e9fa556490be167bc1dce1b7585d98a33e12bc289c96e35d992925e2875ceb30864577aa5ba80a71d2f3215dc46a78c44f6377fe4ffe
   languageName: node
   linkType: hard
 
-"@sveltejs/vite-plugin-svelte@npm:5.0.3":
-  version: 5.0.3
-  resolution: "@sveltejs/vite-plugin-svelte@npm:5.0.3"
+"@sveltejs/vite-plugin-svelte@npm:3.0.1":
+  version: 3.0.1
+  resolution: "@sveltejs/vite-plugin-svelte@npm:3.0.1"
   dependencies:
-    "@sveltejs/vite-plugin-svelte-inspector": ^4.0.1
-    debug: ^4.4.0
+    "@sveltejs/vite-plugin-svelte-inspector": ^2.0.0-next.0 || ^2.0.0
+    debug: ^4.3.4
     deepmerge: ^4.3.1
     kleur: ^4.1.5
-    magic-string: ^0.30.15
-    vitefu: ^1.0.4
+    magic-string: ^0.30.5
+    svelte-hmr: ^0.15.3
+    vitefu: ^0.2.5
   peerDependencies:
-    svelte: ^5.0.0
-    vite: ^6.0.0
-  checksum: c846cc7af6cd27edb97a0716da6678188f4792516c61de5671bc700786c14e0fade0f75270b24017b65d0f0d513a6f8d91497928e0f0a9b4eaf037b52ca1c79d
+    svelte: ^4.0.0 || ^5.0.0-next.0
+    vite: ^5.0.0
+  checksum: 3a6b3a1bae74bf8e5ed5cb979c2e4d663fcecffb17941de70a44f8e58efdaa58adbd234efbaa4b537cf745ad6a66062f6f2fdc5f94e83592728f5d9b05737760
   languageName: node
   linkType: hard
 
@@ -18005,18 +18006,6 @@ __metadata:
     supports-color:
       optional: true
   checksum: fb42df878dd0e22816fc56e1fdca9da73caa85212fbe40c868b1295a6878f9101ae684f4eeef516c13acfc700f5ea07f1136954f43d4cd2d477a811144136479
-  languageName: node
-  linkType: hard
-
-"debug@npm:^4.3.7":
-  version: 4.4.1
-  resolution: "debug@npm:4.4.1"
-  dependencies:
-    ms: ^2.1.3
-  peerDependenciesMeta:
-    supports-color:
-      optional: true
-  checksum: a43826a01cda685ee4cec00fb2d3322eaa90ccadbef60d9287debc2a886be3e835d9199c80070ede75a409ee57828c4c6cd80e4b154f2843f0dc95a570dc0729
   languageName: node
   linkType: hard
 
@@ -25294,7 +25283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:^0.30.11, magic-string@npm:^0.30.15, magic-string@npm:^0.30.17, magic-string@npm:^0.30.3, magic-string@npm:^0.30.8":
+"magic-string@npm:^0.30.11, magic-string@npm:^0.30.17, magic-string@npm:^0.30.3, magic-string@npm:^0.30.8":
   version: 0.30.17
   resolution: "magic-string@npm:0.30.17"
   dependencies:
@@ -35048,6 +35037,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"svelte-hmr@npm:^0.15.3":
+  version: 0.15.3
+  resolution: "svelte-hmr@npm:0.15.3"
+  peerDependencies:
+    svelte: ^3.19.0 || ^4.0.0
+  checksum: 09518aad14288b15e723e69376d2044330f52f49c2730a5e1357b4bee5928c04c5e4022f713856f51ef08ccf3fb5639e870ac89a44c0cb573cedf395017e2402
+  languageName: node
+  linkType: hard
+
 "svelte2tsx@npm:~0.7.33":
   version: 0.7.39
   resolution: "svelte2tsx@npm:0.7.39"
@@ -37433,15 +37431,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitefu@npm:^1.0.4":
-  version: 1.0.6
-  resolution: "vitefu@npm:1.0.6"
+"vitefu@npm:^0.2.5":
+  version: 0.2.5
+  resolution: "vitefu@npm:0.2.5"
   peerDependencies:
-    vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+    vite: ^3.0.0 || ^4.0.0 || ^5.0.0
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: bb5053dc8a21dad1320297fbaaf1056754da40839b864eef2c57fb75dd9e37e9748ca5f234196beae0ac7881323f05548ff66ebffdc75c9e8eab0ccd87d52037
+  checksum: 1a58f3f8b2fe493f595952ad2e8d2876a18e2de16b211c2e795af879863948db838bdcc962d300c7fbd8d827ee616905d7799c30a46206a045aec5f7c8e5031b
   languageName: node
   linkType: hard
 
