@@ -75,6 +75,13 @@ async function main(): Promise<void> {
       "telemetry=false",
     );
 
+    // Logout user by default (This is to avoid flaky tests)
+    try {
+      await fs.rm(PRISMIC_FILE_PATH);
+    } catch (error) {
+      // Ignore since it means the user is already logged out
+    }
+
     // Save the name of the newly created repo into a file so it can be accessed
     // by playwright globalTeardown that is in a separate process
     await fs.writeFile(".repository-name", repositoryName);

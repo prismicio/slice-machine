@@ -1,19 +1,14 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
 import { generateLibraries, generateTypes } from "../../mocks";
+import { savePrismicAuthFile } from "../../utils/savePrismicAuthFile";
 
 test("I cannot see the login screen when logged in", async ({
   changesPage,
-  procedures,
+  userApiToken,
 }) => {
-  procedures.mock("getState", ({ data }) => ({
-    ...(data as Record<string, unknown>),
-    clientError: {
-      clientError: undefined,
-    },
-  }));
+  await savePrismicAuthFile(userApiToken);
 
   await changesPage.goto();
   await expect(changesPage.loginButton).not.toBeVisible();
@@ -73,27 +68,26 @@ test("I can see the empty state when I don't have any changes to push", async ({
 
 test("I can see the changes I have to push", async ({
   changesPage,
-  procedures,
+  reusablePageType,
+  slice,
+  userApiToken,
 }) => {
-  const types = generateTypes({ typesCount: 1 });
-  const customType = types[0] as CustomType;
-  procedures.mock("getState", ({ data }) => ({
-    ...(data as Record<string, unknown>),
-    libraries: generateLibraries({ slicesCount: 0 }),
-    customTypes: types,
-    remoteCustomTypes: [],
-    remoteSlices: [],
-    clientError: undefined,
-  }));
+  await savePrismicAuthFile(userApiToken);
 
   await changesPage.goto();
   await expect(changesPage.loginButton).not.toBeVisible();
+
+  // Custom Type
   await changesPage.checkCustomTypeName(
-    customType.id,
-    customType.label as string,
+    reusablePageType.id,
+    reusablePageType.name,
   );
-  await changesPage.checkCustomTypeApiId(customType.id);
-  await changesPage.checkCustomTypeStatus(customType.id, "New");
+  await changesPage.checkCustomTypeApiId(reusablePageType.id);
+  await changesPage.checkCustomTypeStatus(reusablePageType.id, "New");
+
+  // Slice
+  await changesPage.checkSliceName(slice.name);
+  await changesPage.checkSliceStatus(slice.name, "New");
 });
 
 test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
@@ -116,22 +110,22 @@ test("I can update screenshots", async ({ changesPage, procedures, slice }) => {
   ).not.toBeVisible();
 });
 
-test("I can push the changes I have", async ({ changesPage, procedures }) => {
-  procedures.mock("getState", ({ data }) => ({
-    ...(data as Record<string, unknown>),
-    libraries: generateLibraries({ slicesCount: 0 }),
-    customTypes: generateTypes({ typesCount: 1 }),
-    remoteCustomTypes: [],
-    remoteSlices: [],
-    clientError: undefined,
-  }));
-  procedures.mock("prismicRepository.pushChanges", () => undefined, {
-    execute: false,
-  });
+test("I can push the changes I have", async ({
+  changesPage,
+  reusablePageType,
+  slice,
+  userApiToken,
+}) => {
+  await savePrismicAuthFile(userApiToken);
 
   await changesPage.goto();
   await expect(changesPage.loginButton).not.toBeVisible();
   await changesPage.pushChanges();
+
+  await expect(
+    changesPage.getCustomType(reusablePageType.id),
+  ).not.toBeVisible();
+  await expect(changesPage.getSliceCard(slice.name)).not.toBeVisible();
 });
 
 test("I can see an error when the push failed", async ({

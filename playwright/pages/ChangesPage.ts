@@ -12,6 +12,7 @@ export class ChangesPage extends SliceMachinePage {
   readonly notLoggedInTitle: Locator;
   readonly notAuthorizedTitle: Locator;
   readonly blankSlateTitle: Locator;
+  readonly postPushBlankSlateTitle: Locator;
   readonly unknownErrorMessage: Locator;
   readonly softLimitTitle: Locator;
   readonly softLimitCheckbox: Locator;
@@ -50,6 +51,10 @@ export class ChangesPage extends SliceMachinePage {
     this.blankSlateTitle = page.getByText("Everything is up-to-date", {
       exact: true,
     });
+    this.postPushBlankSlateTitle = page.getByText(
+      "Success! Your changes have been pushed to the Page Builder.",
+      { exact: true },
+    );
     this.unknownErrorMessage = page.getByText(
       "Something went wrong when pushing your changes. Check your terminal logs.",
       {
@@ -100,6 +105,7 @@ export class ChangesPage extends SliceMachinePage {
     await this.pushChangesButton.click();
     await expect(this.pushChangesButton).toBeDisabled();
     await this.checkPushedMessage();
+    await expect(this.postPushBlankSlateTitle).toBeVisible();
   }
 
   async confirmDeleteDocuments() {
@@ -133,6 +139,18 @@ export class ChangesPage extends SliceMachinePage {
   async checkCustomTypeStatus(id: string, status: string) {
     await expect(
       this.getCustomType(id).getByText(status, { exact: true }),
+    ).toBeVisible();
+  }
+
+  async checkSliceName(name: string) {
+    await expect(
+      this.getSliceCard(name).getByText(name, { exact: true }),
+    ).toBeVisible();
+  }
+
+  async checkSliceStatus(name: string, status: string) {
+    await expect(
+      this.getSliceCard(name).getByText(status, { exact: true }),
     ).toBeVisible();
   }
 
