@@ -778,7 +778,9 @@ describe("Slice Simulator route", () => {
 			</script>
 
 			<SliceSimulator let:slices>
-			  <SliceZone {slices} {components} />
+			  {#snippet children(slices)}
+			    <SliceZone {slices} {components} />
+			  {/snippet}
 			</SliceSimulator>
 			"
 		`);
@@ -881,10 +883,12 @@ describe("Slice Simulator route", () => {
 	});
 
 	describe("Svelte <=4 syntax", () => {
-		beforeAll(() => {
+		beforeAll(async () => {
+			const originalVersion = await import("svelte/package.json");
+
 			vi.doMock("svelte/package.json", () => ({ version: "4.0.0" }));
 
-			return () => vi.doUnmock("svelte/package.json");
+			return () => vi.doMock("svelte/package.json", () => originalVersion);
 		});
 
 		it("creates a Slice Simulator page file", async (ctx) => {
@@ -1096,7 +1100,7 @@ describe("root layout file", () => {
 			    />
 			  {/if}
 			</svelte:head>
-			<slot />
+			{@render children()}
 			<PrismicPreview {repositoryName} />
 			"
 		`);
@@ -1189,10 +1193,12 @@ describe("root layout file", () => {
 	});
 
 	describe("Svelte <=4 syntax", () => {
-		beforeAll(() => {
+		beforeAll(async () => {
+			const originalVersion = await import("svelte/package.json");
+
 			vi.doMock("svelte/package.json", () => ({ version: "4.0.0" }));
 
-			return () => vi.doUnmock("svelte/package.json");
+			return () => vi.doMock("svelte/package.json", () => originalVersion);
 		});
 
 		it("creates a root layout file", async (ctx) => {

@@ -300,10 +300,12 @@ test("component file contains given contents instead of default one", async (ctx
 });
 
 describe("Svelte <=4 syntax", () => {
-	beforeAll(() => {
+	beforeAll(async () => {
+		const originalVersion = await import("svelte/package.json");
+
 		vi.doMock("svelte/package.json", () => ({ version: "4.0.0" }));
 
-		return () => vi.doUnmock("svelte/package.json");
+		return () => vi.doMock("svelte/package.json", () => originalVersion);
 	});
 
 	test("component file has correct contents", async (ctx) => {

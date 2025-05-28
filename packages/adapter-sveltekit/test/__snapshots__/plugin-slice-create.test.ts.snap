@@ -89,8 +89,11 @@ exports[`Svelte <=4 syntax > component file is correctly typed when TypeScript i
 
 exports[`component file has correct contents 1`] = `
 "<script>
-  /** @type {import(\\"@prismicio/client\\").Content.QuxQuuxSlice} */
-  export let slice;
+  /* @typedef {import(\\"@prismicio/client\\").Content} Content */
+  /* @typedef {import(\\"@prismicio/svelte\\").SliceComponentProps} SliceComponentProps */
+
+  /* @type {SliceComponentProps<Content.QuxQuuxSlice>} */
+  const { slice } = $props();
 </script>
 
 <section
@@ -133,8 +136,11 @@ exports[`component file has correct contents 1`] = `
 exports[`component file is correctly typed when TypeScript is enabled 1`] = `
 "<script lang=\\"ts\\">
   import type { Content } from \\"@prismicio/client\\";
+  import type { SliceComponentProps } from \\"@prismicio/svelte\\";
 
-  export let slice: Content.QuxQuuxSlice;
+  type Props = SliceComponentProps<Content.QuxQuuxSlice>;
+
+  const { slice }: Props = $props();
 </script>
 
 <section
