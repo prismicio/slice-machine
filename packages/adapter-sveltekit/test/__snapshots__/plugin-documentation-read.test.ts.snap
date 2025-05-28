@@ -11,6 +11,7 @@ Paste in this code:
 ~~~js [src/routes/[uid]/+page.server.js]
 import { createClient } from \\"$lib/prismicio\\";
 
+/* @type {import(\\"./$types\\").PageServerLoad} */
 export async function load({ params, fetch, cookies }) {
   const client = createClient({ fetch, cookies });
 
@@ -21,6 +22,7 @@ export async function load({ params, fetch, cookies }) {
   };
 }
 
+/* @type {import(\\"./$types\\").EntryGenerator} */
 export async function entries() {
   const client = createClient();
 
@@ -44,7 +46,8 @@ Paste in this code:
 
   import { components } from \\"$lib/slices\\";
 
-  export let data;
+  /* @type {import(\\"./$types\\").PageData} */
+  const { data } = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />
@@ -94,12 +97,13 @@ In the route's directory, create a \`src/routes/[uid]/+page.svelte\` file. (If t
 Paste in this code:
 
 ~~~svelte [src/routes/[uid]/+page.svelte]
-<script>
+<script lang=\\"ts\\">
   import { SliceZone } from \\"@prismicio/svelte\\";
 
   import { components } from \\"$lib/slices\\";
+  import type { PageData } from \\"./$types\\";
 
-  export let data;
+  const { data }: PageData = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />
@@ -121,6 +125,7 @@ Paste in this code:
 ~~~js [src/routes/single/+page.server.js]
 import { createClient } from \\"$lib/prismicio\\";
 
+/* @type {import(\\"./$types\\").PageServerLoad} */
 export async function load({ params, fetch, cookies }) {
   const client = createClient({ fetch, cookies });
 
@@ -131,6 +136,7 @@ export async function load({ params, fetch, cookies }) {
   };
 }
 
+/* @type {import(\\"./$types\\").EntryGenerator} */
 export async function entries() {
   return [{}];
 }
@@ -148,7 +154,8 @@ Paste in this code:
 
   import { components } from \\"$lib/slices\\";
 
-  export let data;
+  /* @type {import(\\"./$types\\").PageData} */
+  const { data } = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />
@@ -169,8 +176,9 @@ Paste in this code:
 
 ~~~ts [src/routes/single/+page.server.ts]
 import { createClient } from \\"$lib/prismicio\\";
+import type { PageServerLoad, EntryGenerator } from \\"./$types\\";
 
-export async function load({ params, fetch, cookies }) {
+export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
   const client = createClient({ fetch, cookies });
 
   const page = await client.getSingle(\\"single\\");
@@ -178,11 +186,11 @@ export async function load({ params, fetch, cookies }) {
   return {
     page,
   };
-}
+};
 
-export async function entries() {
+export const entries: EntryGenerator = async () => {
   return [{}];
-}
+};
 ~~~
 
 ## Create your Single's page component
@@ -192,12 +200,13 @@ In the route's directory, create a \`src/routes/single/+page.svelte\` file. (If 
 Paste in this code:
 
 ~~~svelte [src/routes/single/+page.svelte]
-<script>
+<script lang=\\"ts\\">
   import { SliceZone } from \\"@prismicio/svelte\\";
 
   import { components } from \\"$lib/slices\\";
+  import type { PageData } from \\"./$types\\";
 
-  export let data;
+  const { data }: PageData = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />

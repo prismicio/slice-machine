@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { vi, test, expect, describe, beforeAll } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
 import { createSliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 import prettier from "prettier";
@@ -297,4 +297,48 @@ test("component file contains given contents instead of default one", async (ctx
 	);
 
 	expect(componentContents).toContain("<div>TestSliceCreate</div>");
+});
+
+describe("Svelte <=4 syntax", () => {
+	beforeAll(() => {
+		vi.doMock("svelte/package.json", () => ({ version: "4.0.0" }));
+
+		return () => vi.doUnmock("svelte/package.json");
+	});
+
+	test("component file has correct contents", async (ctx) => {
+		await ctx.pluginRunner.callHook("slice:create", {
+			libraryID: "slices",
+			model,
+		});
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "slices", "QuxQuux", "index.svelte"),
+			"utf8",
+		);
+
+		expect(contents).includes("<script>");
+		expect(contents).toMatchSnapshot();
+	});
+
+	test("component file is correctly typed when TypeScript is enabled", async (ctx) => {
+		ctx.project.config.adapter.options.typescript = true;
+		const pluginRunner = createSliceMachinePluginRunner({
+			project: ctx.project,
+			nativePlugins: {
+				[ctx.project.config.adapter.resolve]: adapter,
+			},
+		});
+		await pluginRunner.init();
+
+		await pluginRunner.callHook("slice:create", { libraryID: "slices", model });
+
+		const contents = await fs.readFile(
+			path.join(ctx.project.root, "slices", "QuxQuux", "index.svelte"),
+			"utf8",
+		);
+
+		expect(contents).includes('<script lang="ts">');
+		expect(contents).toMatchSnapshot();
+	});
 });
