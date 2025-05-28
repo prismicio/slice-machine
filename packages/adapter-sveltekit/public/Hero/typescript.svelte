@@ -7,7 +7,8 @@
 		type SliceComponentProps,
 	} from "@prismicio/svelte";
 
-	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> = $props()
+	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> =
+		$props();
 </script>
 
 <section

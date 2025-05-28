@@ -7,9 +7,10 @@
 		type SliceComponentProps,
 	} from "@prismicio/svelte";
 
-	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> = $props()
+	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> =
+		$props();
 
-	let alignment = $derived(slice.variation === "alignLeft" ? "left" : "center")
+	let alignment = $derived(slice.variation === "alignLeft" ? "left" : "center");
 </script>
 
 <section

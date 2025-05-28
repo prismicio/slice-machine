@@ -1,5 +1,5 @@
 {
-	"plugins": ["prettier-plugin-jsdoc", "prettier-plugin-svelte"],
+	"plugins": ["prettier-plugin-jsdoc"],
 	"jsdocSeparateReturnsFromParam": true,
 	"jsdocSeparateTagGroups": true,
 	"jsdocCommentLineStrategy": "keep",
@@ -17,13 +17,5 @@
 	"requirePragma": false,
 	"insertPragma": false,
 	"htmlWhitespaceSensitivity": "css",
-	"endOfLine": "lf",
-	"overrides": [
-		{
-			"files": "*.svelte",
-			"options": {
-				"parser": "svelte"
-			}
-		}
-	]
+	"endOfLine": "lf"
 }

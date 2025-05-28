@@ -12,7 +12,7 @@
 	/* @type {SliceComponentProps<Content.${PascalNameToReplace}Slice>} */
 	const { slice } = $props();
 
-	let alignment = $derived(slice.variation === "alignLeft" ? "left" : "center")
+	let alignment = $derived(slice.variation === "alignLeft" ? "left" : "center");
 </script>
 
 <section
