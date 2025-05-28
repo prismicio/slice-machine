@@ -7156,54 +7156,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:3.9.0":
-  version: 3.9.0
-  resolution: "@prismicio/types-internal@npm:3.9.0"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-    uuid: ^9.0.0
-  peerDependencies:
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-  checksum: 16f8c7a2fd71b02fc7a3583c871a0366c8d8259fe00e9542ff11e461efd65a52dde9851589e3ddfa6217b9080d226952363abeb72d123b763bc5c118be017682
-  languageName: node
-  linkType: hard
-
-"@prismicio/types-internal@npm:^3.8.0":
-  version: 3.8.0
-  resolution: "@prismicio/types-internal@npm:3.8.0"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-    uuid: ^9.0.0
-  peerDependencies:
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-  checksum: 9783bab3ae71933676b70b1c6dff37ce0a3599fb41da4b819c678fc126a11e7bf5310827ee18268934a892d6d9f691466952a543bb82c46e1ffc72f45605fa99
-  languageName: node
-  linkType: hard
-
-"@prismicio/types-internal@npm:^3.9.0":
-  version: 3.10.1
-  resolution: "@prismicio/types-internal@npm:3.10.1"
-  dependencies:
-    monocle-ts: ^2.3.11
-    newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-    uuid: ^9.0.0
-  peerDependencies:
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-  checksum: 1db481da374b8ad9ac3c7f4e639f84a76e80a3abd900251572038382f59d6f564381c74f80b0eb431973064a44c81b5a8e44594d9cd0d28f53efbb4d44cbaf8e
-  languageName: node
-  linkType: hard
-
 "@prismicio/types@npm:^0.2.0":
   version: 0.2.8
   resolution: "@prismicio/types@npm:0.2.8"
