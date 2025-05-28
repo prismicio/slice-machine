@@ -1,13 +1,11 @@
-<script lang="ts">
-	import { type Content, isFilled } from "@prismicio/client";
-	import {
-		PrismicImage,
-		PrismicRichText,
-		type SliceComponentProps,
-	} from "@prismicio/svelte";
+<script>
+	import { PrismicImage, PrismicRichText } from "@prismicio/svelte";
+	import { isFilled } from "@prismicio/client";
 
-	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> =
-		$props();
+	/**
+	 * @type {import("@prismicio/client").Content.${PascalNameToReplace}Slice}
+	 */
+	export let slice;
 </script>
 
 <section
@@ -23,19 +21,19 @@
 					? "es-alternate-grid__content--with-image"
 					: ""
 			}
-		`}
+    `}
 	>
 		{#if isFilled.image(slice.primary.image)}
 			<PrismicImage
 				field={slice.primary.image}
 				class={`
-					es-alternate-grid__image
-					${
-						slice.variation === "imageRight"
-							? "es-alternate-grid__image--right"
-							: "es-alternate-grid__image--left"
-					}
-				`}
+				es-alternate-grid__image
+				${
+					slice.variation === "imageRight"
+						? "es-alternate-grid__image--right"
+						: "es-alternate-grid__image--left"
+				}
+			  `}
 			/>
 		{/if}
 		<div class="es-alternate-grid__primary-content">
@@ -58,7 +56,7 @@
 			</div>
 			{#if slice.primary.items && slice.primary.items.length}
 				<div class="es-alternate-grid__primary-content__items">
-					{#each slice.primary.items as item (item.title)}
+					{#each slice.primary.items as item, i}
 						<div class="es-alternate-grid__item">
 							{#if isFilled.richText(item.title)}
 								<div class="es-alternate-grid__item__heading">
