@@ -10057,9 +10057,9 @@ __metadata:
     monocle-ts: ^2.3.13
     newtype-ts: ^0.3.5
     pascal-case: ^3.1.2
-    prettier: 3.0.3
-    prettier-plugin-jsdoc: 1.1.1
-    prettier-plugin-svelte: ^3.0.3
+    prettier: 3.5.3
+    prettier-plugin-jsdoc: 1.3.2
+    prettier-plugin-svelte: ^3.4.0
     prismic-ts-codegen: 0.1.25
     size-limit: 8.2.4
     svelte: 5.33.4
@@ -31008,13 +31008,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-svelte@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "prettier-plugin-svelte@npm:3.0.3"
+"prettier-plugin-jsdoc@npm:1.3.2":
+  version: 1.3.2
+  resolution: "prettier-plugin-jsdoc@npm:1.3.2"
+  dependencies:
+    binary-searching: ^2.0.5
+    comment-parser: ^1.4.0
+    mdast-util-from-markdown: ^2.0.0
   peerDependencies:
     prettier: ^3.0.0
-    svelte: ^3.2.0 || ^4.0.0-next.0
-  checksum: 411e50afabb5925bd73e85d35f989f3ffbd9b96764aebe733ea03f0b0eeb8add5a7452d5c1e68a1dff20b8615f99fa2c92db62f2d8b7d892325bdb587284f46e
+  checksum: e8a7d49772721a71901a9c6843465d1ecbd4304c4f1d25ca5dea8fc9c6c3c4a9aacf6b291e198774ae9a48600aed97a3bc148e6691b5790f87cb2ca7a6685000
+  languageName: node
+  linkType: hard
+
+"prettier-plugin-svelte@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "prettier-plugin-svelte@npm:3.4.0"
+  peerDependencies:
+    prettier: ^3.0.0
+    svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
+  checksum: 1d1f526d39affe67e0bac8d646ce5d3129e1313d721f62c984b73a118c3e123826ef0ceed2c0875306fdb9535eef88f8503a5ae1b5c219d593ccf797efa15bac
   languageName: node
   linkType: hard
 
@@ -31024,6 +31037,15 @@ __metadata:
   bin:
     prettier: bin/prettier.cjs
   checksum: e10b9af02b281f6c617362ebd2571b1d7fc9fb8a3bd17e371754428cda992e5e8d8b7a046e8f7d3e2da1dcd21aa001e2e3c797402ebb6111b5cd19609dd228e0
+  languageName: node
+  linkType: hard
+
+"prettier@npm:3.5.3":
+  version: 3.5.3
+  resolution: "prettier@npm:3.5.3"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 61e97bb8e71a95d8f9c71f1fd5229c9aaa9d1e184dedb12399f76aa802fb6fdc8954ecac9df25a7f82ee7311cf8ddbd06baf5507388fc98e5b44036cc6a88a1b
   languageName: node
   linkType: hard
 
