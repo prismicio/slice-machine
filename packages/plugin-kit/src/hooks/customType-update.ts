@@ -11,6 +11,20 @@ import type {
  */
 export type CustomTypeUpdateHookData = {
 	model: CustomType;
+	updateMeta?: {
+		fieldIdChanged?: {
+			/**
+			 * Previous path of the changed field. Can be used to identify the field
+			 * that had an API ID rename (e.g. ["page", "title"])
+			 */
+			previousPath: string[];
+			/**
+			 * New path of the changed field. Can be used to identify the field that
+			 * had an API ID rename (e.g. ["page", "title2"])
+			 */
+			newPath: string[];
+		};
+	};
 };
 
 /**
