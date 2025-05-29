@@ -4,6 +4,8 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import prettier from "prettier";
 
+import { mockSvelteVersion } from "./__testutils__/mockSvelteVersion";
+
 import adapter from "../src";
 
 it("installs dependencies", async (ctx) => {
@@ -883,13 +885,7 @@ describe("Slice Simulator route", () => {
 	});
 
 	describe("Svelte <=4 syntax", () => {
-		beforeAll(async () => {
-			const originalVersion = await import("svelte/package.json");
-
-			vi.doMock("svelte/package.json", () => ({ version: "4.0.0" }));
-
-			return () => vi.doMock("svelte/package.json", () => originalVersion);
-		});
+		beforeAll(() => mockSvelteVersion("4.0.0"));
 
 		it("creates a Slice Simulator page file", async (ctx) => {
 			const log = vi.fn();
@@ -1193,13 +1189,7 @@ describe("root layout file", () => {
 	});
 
 	describe("Svelte <=4 syntax", () => {
-		beforeAll(async () => {
-			const originalVersion = await import("svelte/package.json");
-
-			vi.doMock("svelte/package.json", () => ({ version: "4.0.0" }));
-
-			return () => vi.doMock("svelte/package.json", () => originalVersion);
-		});
+		beforeAll(() => mockSvelteVersion("4.0.0"));
 
 		it("creates a root layout file", async (ctx) => {
 			const log = vi.fn();

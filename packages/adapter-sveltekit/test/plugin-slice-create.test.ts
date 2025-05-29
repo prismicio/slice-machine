@@ -1,4 +1,4 @@
-import { vi, test, expect, describe, beforeAll } from "vitest";
+import { test, expect, describe, beforeAll } from "vitest";
 import { createMockFactory } from "@prismicio/mock";
 import { createSliceMachinePluginRunner } from "@slicemachine/plugin-kit";
 import prettier from "prettier";
@@ -6,6 +6,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as tsm from "ts-morph";
 
+import { mockSvelteVersion } from "./__testutils__/mockSvelteVersion";
 import { parseSourceFile } from "./__testutils__/parseSourceFile";
 import { testGlobalContentTypes } from "./__testutils__/testGlobalContentTypes";
 
@@ -300,13 +301,7 @@ test("component file contains given contents instead of default one", async (ctx
 });
 
 describe("Svelte <=4 syntax", () => {
-	beforeAll(async () => {
-		const originalVersion = await import("svelte/package.json");
-
-		vi.doMock("svelte/package.json", () => ({ version: "4.0.0" }));
-
-		return () => vi.doMock("svelte/package.json", () => originalVersion);
-	});
+	beforeAll(() => mockSvelteVersion("4.0.0"));
 
 	test("component file has correct contents", async (ctx) => {
 		await ctx.pluginRunner.callHook("slice:create", {
