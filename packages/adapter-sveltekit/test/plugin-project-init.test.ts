@@ -402,7 +402,7 @@ describe("/api/preview route", () => {
 			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
 			import { createClient } from \\"$lib/prismicio\\";
 
-			/* @type {import(\\"./types\\").RequestHandler} */
+			/* @type {import(\\"./$types\\").RequestHandler} */
 			export async function GET({ fetch, request, cookies }) {
 			  const client = createClient({ fetch });
 
@@ -441,9 +441,9 @@ describe("/api/preview route", () => {
 		expect(contents).toMatchInlineSnapshot(`
 			"import { redirectToPreviewURL } from \\"@prismicio/svelte/kit\\";
 			import { createClient } from \\"$lib/prismicio\\";
-			import type { RequestHandler } from \\"./types\\";
+			import type { RequestHandler } from \\"./$types\\";
 
-			export const GET: RequestHandler = ({ fetch, request, cookies }) => {
+			export const GET: RequestHandler = async ({ fetch, request, cookies }) => {
 			  const client = createClient({ fetch });
 
 			  return await redirectToPreviewURL({ client, request, cookies });
@@ -779,10 +779,9 @@ describe("Slice Simulator route", () => {
 			  import { components } from \\"$lib/slices\\";
 			</script>
 
+			<!-- Slot syntax is used for backward compatibility with Svelte <=4. -->
 			<SliceSimulator let:slices>
-			  {#snippet children(slices)}
-			    <SliceZone {slices} {components} />
-			  {/snippet}
+			  <SliceZone {slices} {components} />
 			</SliceSimulator>
 			"
 		`);
@@ -1077,6 +1076,8 @@ describe("root layout file", () => {
 			  import { PrismicPreview } from \\"@prismicio/svelte/kit\\";
 			  import { page } from \\"$app/state\\";
 			  import { repositoryName } from \\"$lib/prismicio\\";
+
+			  const { children } = $props();
 			</script>
 
 			<svelte:head>
