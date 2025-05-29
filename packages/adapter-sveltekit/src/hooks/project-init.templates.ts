@@ -102,10 +102,9 @@ export function sliceSimulatorPageTemplate(args: { version: number }): string {
 			import { components } from '$lib/slices';
 		</script>
 
+		<!-- Slot syntax is used for backward compatibility with Svelte <=4. -->
 		<SliceSimulator let:slices>
-			{#snippet children(slices)}
-				<SliceZone {slices} {components} />
-			{/snippet}
+			<SliceZone {slices} {components} />
 		</SliceSimulator>
 	`;
 
@@ -130,7 +129,7 @@ export function previewAPIRouteTemplate(args: { typescript: boolean }): string {
 	const TS = ts`
 		import { redirectToPreviewURL } from '@prismicio/svelte/kit';
 		import { createClient } from '$lib/prismicio';
-		import type { RequestHandler } from "./types";
+		import type { RequestHandler } from "./$types";
 
 		export const GET: RequestHandler = async ({ fetch, request, cookies }) => {
 			const client = createClient({ fetch });
@@ -143,7 +142,7 @@ export function previewAPIRouteTemplate(args: { typescript: boolean }): string {
 		import { redirectToPreviewURL } from '@prismicio/svelte/kit';
 		import { createClient } from '$lib/prismicio';
 
-		/* @type {import("./types").RequestHandler} */
+		/* @type {import("./$types").RequestHandler} */
 		export async function GET({ fetch, request, cookies }) {
 			const client = createClient({ fetch });
 

@@ -10,6 +10,7 @@ import {
 	componentFileTemplate,
 	dataFileTemplate,
 } from "./documentation-read.templates";
+import { getSvelteMajor } from "../lib/getSvelteMajor";
 
 const nestRouteFilePath = (filePath: string, nesting: string): string => {
 	return [
@@ -27,9 +28,13 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		const { model } = data.data;
 
 		const pageDataExtension = await getJSFileExtension({ helpers, options });
+		const pageDataLanguage =
+			pageDataExtension === "ts" ? "typescript" : "javascript";
 		const typescript = await checkIsTypeScriptProject({ options, helpers });
 
-		const routePath = `src/routes/${model.repeatable ? "[uid]" : model.id}`;
+		const routePath = `src/routes/[[preview=preview]]/${
+			model.repeatable ? "[uid]" : model.id
+		}`;
 		const dataFilePath = `${routePath}/+page.server.${pageDataExtension}`;
 		const componentFilePath = `${routePath}/+page.svelte`;
 
@@ -44,7 +49,10 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 			);
 		}
 
-		let componentFileContent = componentFileTemplate({ typescript });
+		let componentFileContent = componentFileTemplate({
+			typescript,
+			version: await getSvelteMajor(),
+		});
 		if (options.format) {
 			componentFileContent = await helpers.format(
 				componentFileContent,
@@ -75,7 +83,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					Paste in this code:
 
-					${`~~~${pageDataExtension} [${dataFilePath}]\n${dataFileContent}\n~~~`}
+					${`~~~${pageDataLanguage} [${dataFilePath}]\n${dataFileContent}\n~~~`}
 
 					## Create your ${model.label}'s page component
 

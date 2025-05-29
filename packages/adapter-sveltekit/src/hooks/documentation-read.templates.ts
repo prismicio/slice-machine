@@ -1,38 +1,6 @@
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { source as svelte, source as ts, source as js } from "common-tags";
 
-export function componentFileTemplate(args: { typescript: boolean }): string {
-	const { typescript } = args;
-
-	const TS = svelte`
-		<script lang="ts">
-			import { SliceZone } from "@prismicio/svelte";
-
-			import { components } from "$lib/slices";
-			import type { PageData } from "./$types";
-
-			const { data }: PageData = $props();
-		</script>
-
-		<SliceZone slices={data.page.data.slices} {components} />
-	`;
-
-	const JS = svelte`
-		<script>
-			import { SliceZone } from "@prismicio/svelte";
-
-			import { components } from "$lib/slices";
-
-			/* @type {import("./$types").PageData} */
-			const { data } = $props();
-		</script>
-
-		<SliceZone slices={data.page.data.slices} {components} />
-	`;
-
-	return typescript ? TS : JS;
-}
-
 export function dataFileTemplate(args: {
 	model: CustomType;
 	typescript: boolean;
@@ -41,8 +9,9 @@ export function dataFileTemplate(args: {
 
 	const repeatableTS = ts`
 		import { createClient } from "$lib/prismicio";
+		import type { PageServerLoad, EntryGenerator } from './$types';
 
-		export async function load({ params, fetch, cookies }) {
+		export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
 			const client = createClient({ fetch, cookies });
 
 			const page = await client.getByUID("${model.id}", params.uid);
@@ -52,7 +21,7 @@ export function dataFileTemplate(args: {
 			};
 		}
 
-		export async function entries() {
+		export const entries: EntryGenerator = async () => {
 			const client = createClient();
 
 			const pages = await client.getAllByType("${model.id}");
@@ -133,4 +102,69 @@ export function dataFileTemplate(args: {
 	}
 
 	return model.repeatable ? repeatableJS : nonrepeatableJS;
+}
+
+export function componentFileTemplate(args: {
+	typescript: boolean;
+	version: number;
+}): string {
+	const { typescript, version } = args;
+
+	const v5TS = svelte`
+		<script lang="ts">
+			import { SliceZone } from "@prismicio/svelte";
+
+			import { components } from "$lib/slices";
+			import type { PageProps } from "./$types";
+
+			const { data }: PageProps = $props();
+		</script>
+
+		<SliceZone slices={data.page.data.slices} {components} />
+	`;
+
+	const v5JS = svelte`
+		<script>
+			import { SliceZone } from "@prismicio/svelte";
+
+			import { components } from "$lib/slices";
+
+			/* @type {import("./$types").PageProps} */
+			const { data } = $props();
+		</script>
+
+		<SliceZone slices={data.page.data.slices} {components} />
+	`;
+
+	const v4TS = svelte`
+		<script lang="ts">
+			import { SliceZone } from "@prismicio/svelte";
+
+			import { components } from "$lib/slices";
+			import type { PageData } from "./$types";
+
+			export let data: PageData;
+		</script>
+
+		<SliceZone slices={data.page.data.slices} {components} />
+	`;
+
+	const v4JS = svelte`
+		<script>
+			import { SliceZone } from "@prismicio/svelte";
+
+			import { components } from "$lib/slices";
+
+			/* @type {import("./$types").PageData} */
+			export let data;
+		</script>
+
+		<SliceZone slices={data.page.data.slices} {components} />
+	`;
+
+	if (typescript) {
+		return version <= 4 ? v4TS : v5TS;
+	}
+
+	return version <= 4 ? v4JS : v5JS;
 }
