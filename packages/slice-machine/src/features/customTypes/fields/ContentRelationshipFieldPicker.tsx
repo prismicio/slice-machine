@@ -21,7 +21,7 @@ type FormFieldMap = {
 };
 
 type FormNestedCustomType = {
-  [customTypeId: string]: FormFieldMap;
+  [nestedCustomTypeId: string]: FormFieldMap;
 };
 
 type FormCustomTypeFieldValues = {
@@ -140,7 +140,9 @@ interface TreeViewCustomTypeProps {
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   const { customType, id = customType.id } = props;
-  const [field] = useField<FormFieldMap>(id);
+  const [field] = useField<
+    FormCustomTypeFieldValues | FormContentRelationshipFieldValue | FormFieldMap
+  >(id);
 
   const count = countPickedFields(field.value);
 
@@ -188,8 +190,6 @@ function TreeViewCheckboxField(
 ) {
   const { id, ...checkboxProps } = props;
   const [field, _, helpers] = useField<boolean>(id);
-
-  console.log("id", id, field.value);
 
   return (
     <TreeViewCheckbox
@@ -263,20 +263,6 @@ function resolveContentRelationshipFields(
       }),
     };
   });
-}
-
-function countPickedFields(
-  fields: FormCustomTypeFields | FormCustomTypeFieldValues | undefined,
-): number {
-  if (!fields) return 0;
-
-  return Object.values(fields).reduce<number>(
-    (count, value: boolean | FormFieldMap) => {
-      if (typeof value === "boolean" && value) return count + 1;
-      return count + Object.values(value).filter(Boolean).length;
-    },
-    0,
-  );
 }
 
 /**
@@ -360,7 +346,10 @@ function convertFormStateToCustomTypes(
             : [];
         }
 
-        const [fieldId, fieldValue] = customTypeFieldsEntry;
+        const [fieldId, fieldValue] = customTypeFieldsEntry as [
+          string,
+          boolean,
+        ];
         return fieldValue ? fieldId : [];
       });
 
@@ -371,7 +360,7 @@ function convertFormStateToCustomTypes(
 
 // Type narrowing helper
 function isContentRelationshipField(
-  entry: [string, boolean | FormNestedCustomType],
+  entry: [string, boolean] | [string, FormNestedCustomType],
 ): entry is [string, FormNestedCustomType] {
   const [fieldId] = entry;
   return typeof fieldId === "string" && fieldId.startsWith("cr#");
@@ -480,4 +469,30 @@ function assertNestedCustomTypeField(
   if (typeof field === "string") {
     throw new Error("Field is not a nested custom type");
   }
+}
+
+/**
+ * Generic recursive function that goes down the form state and counts all
+ * the properties that are set to true, which correspond to selected fields.
+ *
+ * It's not type safe, but checks the type of the values at runtime so that
+ * it only recurses into valid objects.
+ */
+function countPickedFields(fields: object | undefined): number {
+  if (!fields) return 0;
+  return Object.values(fields).reduce<number>((count, value) => {
+    if (typeof value === "boolean" && value) return count + 1;
+    if (isValidObject(value)) return count + countPickedFields(value);
+    return count;
+  }, 0);
+}
+
+function isValidObject(value: unknown): value is object {
+  if (typeof value !== "object" || value === null) return false;
+  if (Array.isArray(value)) return false;
+  return !(
+    value instanceof Date ||
+    value instanceof RegExp ||
+    value instanceof Error
+  );
 }
