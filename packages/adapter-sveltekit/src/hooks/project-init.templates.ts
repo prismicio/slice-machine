@@ -132,7 +132,7 @@ export function previewAPIRouteTemplate(args: { typescript: boolean }): string {
 		import { createClient } from '$lib/prismicio';
 		import type { RequestHandler } from "./types";
 
-		export const GET: RequestHandler = ({ fetch, request, cookies }) => {
+		export const GET: RequestHandler = async ({ fetch, request, cookies }) => {
 			const client = createClient({ fetch });
 
 			return await redirectToPreviewURL({ client, request, cookies });
@@ -163,6 +163,8 @@ export function rootLayoutTemplate(args: { version: number }): string {
 			import { PrismicPreview } from '@prismicio/svelte/kit';
 			import { page } from '$app/state';
 			import { repositoryName } from '$lib/prismicio';
+
+			const { children } = $props();
 		</script>
 
 		<svelte:head>
