@@ -1,3 +1,4 @@
+import { LinkConfig } from "@prismicio/types-internal/lib/customtypes";
 import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
@@ -7,26 +8,46 @@ import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
+import { useEffect } from "react";
 
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
+  // TODO: Validate customtypes using existing types-internal codec
   customtypes: {
     validate: () =>
       yup.array(
         yup.object({
-          id: yup.string(),
-          fields: yup.array(yup.string()),
+          id: yup.string().required(),
+          fields: yup.array(
+            yup.lazy((value) =>
+              typeof value === "object"
+                ? yup.object({
+                    id: yup.string().required(),
+                    customtypes: yup
+                      .array(
+                        yup.object({
+                          id: yup.string().required(),
+                          fields: yup.array(yup.string()).required(),
+                        }),
+                      )
+                      .required(),
+                  })
+                : yup.string(),
+            ),
+          ),
         }),
       ),
   },
 };
 
+type TICustomTypesEntry = NonNullable<LinkConfig["customtypes"]>[number];
+
 type FormProps = {
   config: {
     label: string;
     select: string;
-    customtypes?: { id: string; fields: string[] }[];
+    customtypes?: TICustomTypesEntry[];
   };
   id: string;
   // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
@@ -36,7 +57,14 @@ const WidgetForm = ({
   initialValues,
   setFieldValue,
   fields,
+  errors,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
+  useEffect(() => {
+    if (errors && Object.keys(errors).length > 0) {
+      console.log("errors", errors);
+    }
+  }, [errors]);
+
   return (
     <>
       <FlexGrid>
@@ -57,6 +85,7 @@ const WidgetForm = ({
         <ContentRelationshipFieldPicker
           initialValues={initialValues.config.customtypes}
           onChange={(fields) => {
+            console.log("onChange", fields);
             void setFieldValue("config.customtypes", fields);
           }}
         />

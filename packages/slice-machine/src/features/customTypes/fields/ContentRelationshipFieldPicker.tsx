@@ -8,19 +8,61 @@ import {
   TreeViewSection,
 } from "@prismicio/editor-ui";
 import { FormikContext, useField, useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 
+import { CustomTypeSM } from "@/legacy/lib/models/common/CustomType";
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
-type FieldMap = Record<string, boolean>;
-export type CustomTypeFieldMap = Record<string, FieldMap>;
+// form state types
 
-type CustomTypeField = { id: string; fields: string[] };
+type FormFieldMap = {
+  [fieldId: string]: boolean;
+};
+
+type FormNestedCustomType = {
+  [customTypeId: string]: FormFieldMap;
+};
+
+type FormCustomTypeFieldValues = {
+  [fieldId: string]: boolean;
+};
+
+type FormContentRelationshipFieldValue = {
+  [contentRelationshipFieldId: string]: FormNestedCustomType;
+};
+
+type FormCustomTypeFields = {
+  [customTypeId: string]:
+    | FormCustomTypeFieldValues
+    | FormContentRelationshipFieldValue;
+};
+
+// copy of types-internal types
+
+type TICustomTypeFieldValues = {
+  id: string;
+  fields?: readonly string[] | undefined;
+};
+
+type TIContentRelationshipFieldValue = {
+  id: string;
+  customtypes: readonly (string | TICustomTypeFieldValues)[];
+};
+
+type TICustomTypeOrContentRelationship = {
+  id: string;
+  fields?: readonly (string | TIContentRelationshipFieldValue)[] | undefined;
+};
+
+type TICustomTypeFields = readonly (
+  | string
+  | TICustomTypeOrContentRelationship
+)[];
 
 interface ContentRelationshipFieldPickerProps {
-  initialValues: CustomTypeField[] | undefined;
-  onChange: (fields: CustomTypeField[]) => void;
+  initialValues: TICustomTypeFields | undefined;
+  onChange: (fields: TICustomTypeFields) => void;
 }
 
 export function ContentRelationshipFieldPicker(
@@ -30,13 +72,20 @@ export function ContentRelationshipFieldPicker(
   const customTypes = useCustomTypes();
 
   const stableOnChange = useStableCallback(onChange);
-  const form = useFormik<CustomTypeFieldMap>({
-    initialValues: initialValues ? getInitialValues(initialValues) : {},
+  const form = useFormik<FormCustomTypeFields>({
+    initialValues: convertCustomTypesToFormState(initialValues),
     onSubmit: () => undefined, // values will be updated on change
   });
 
+  // TODO: Remove debug
   useEffect(() => {
-    stableOnChange(convertFormToCustomTypes(form.values));
+    if (Object.keys(form.values).length > 0) {
+      console.log("form.values", form.values);
+    }
+  }, [form.values]);
+
+  useEffect(() => {
+    stableOnChange(convertFormStateToCustomTypes(form.values));
   }, [form.values, stableOnChange]);
 
   return (
@@ -60,27 +109,9 @@ export function ContentRelationshipFieldPicker(
             title="Exposed fields"
             subtitle={`(${countPickedFields(form.values)})`}
           >
-            {customTypes.map((ct) => {
-              const count = countPickedFields(form.values[ct.id]);
-
-              return (
-                <TreeViewSection
-                  key={ct.id}
-                  title={ct.label}
-                  subtitle={count > 0 ? `(${count} fields exposed)` : undefined}
-                  badge="Custom Type"
-                >
-                  {ct.fields.map((field) => (
-                    <TreeViewCheckboxField
-                      key={field.id}
-                      id={field.id}
-                      title={field.label}
-                      customTypeId={ct.id}
-                    />
-                  ))}
-                </TreeViewSection>
-              );
-            })}
+            {customTypes.map((customType) => (
+              <TreeViewCustomType key={customType.id} customType={customType} />
+            ))}
           </TreeView>
         </Box>
         <Box backgroundColor="white" flexDirection="column" padding={12}>
@@ -102,14 +133,63 @@ export function ContentRelationshipFieldPicker(
   );
 }
 
+interface TreeViewCustomTypeProps {
+  id?: string;
+  customType: TICustomTypeOrContentRelationship;
+}
+
+function TreeViewCustomType(props: TreeViewCustomTypeProps) {
+  const { customType, id = customType.id } = props;
+  const [field] = useField<FormFieldMap>(id);
+
+  const count = countPickedFields(field.value);
+
+  if (!customType.fields) return null;
+
+  return (
+    <TreeViewSection
+      key={customType.id}
+      title={customType.id} // TODO: Get field label
+      subtitle={count > 0 ? `(${count} fields exposed)` : undefined}
+      badge="Custom Type"
+    >
+      {customType.fields.map((field) => {
+        if (typeof field === "string") {
+          return (
+            <TreeViewCheckboxField
+              key={field}
+              title={field} // TODO: Get field label
+              id={`${id}.${field}`}
+            />
+          );
+        }
+
+        return field.customtypes.map((nestedCustomType) => {
+          if (typeof nestedCustomType === "string") return null;
+
+          return (
+            <TreeViewCustomType
+              key={nestedCustomType.id}
+              id={`${id}.cr#${field.id}.${nestedCustomType.id}`}
+              customType={nestedCustomType}
+            />
+          );
+        });
+      })}
+    </TreeViewSection>
+  );
+}
+
 function TreeViewCheckboxField(
-  props: {
-    id: string;
-    customTypeId: string;
-  } & Omit<TreeViewCheckboxProps, "checked" | "onCheckedChange">,
+  props: { id: string } & Omit<
+    TreeViewCheckboxProps,
+    "checked" | "onCheckedChange"
+  >,
 ) {
-  const { id, customTypeId, ...checkboxProps } = props;
-  const [field, _, helpers] = useField<boolean>(`${customTypeId}.${id}`);
+  const { id, ...checkboxProps } = props;
+  const [field, _, helpers] = useField<boolean>(id);
+
+  console.log("id", id, field.value);
 
   return (
     <TreeViewCheckbox
@@ -120,47 +200,78 @@ function TreeViewCheckboxField(
   );
 }
 
-interface SimplifiedCustomType {
-  id: string;
-  label: string;
-  fields: { id: string; label: string }[];
-}
-
 function useCustomTypes() {
-  const customTypes = useSelector(selectAllCustomTypes);
-  const simplifiedCustomTypes = customTypes.flatMap<SimplifiedCustomType>(
-    (customType) => {
-      if (!("local" in customType)) return [];
+  const allCustomTypes = useSelector(selectAllCustomTypes);
 
-      const { id, label, tabs } = customType.local;
-      return {
-        id,
-        label: label ?? id,
-        fields: tabs.flatMap((tab) => {
+  return useMemo((): TICustomTypeOrContentRelationship[] => {
+    const localCustomTypes = allCustomTypes.flatMap((ct) => {
+      return "local" in ct ? ct.local : [];
+    });
+
+    const result = localCustomTypes.map<TICustomTypeOrContentRelationship>(
+      (customType) => ({
+        id: customType.id,
+        fields: customType.tabs.flatMap((tab) => {
           return tab.value.flatMap((field) => {
-            // filter out uid field because it's a special field returned by the API
-            // and is not part of the data object in the document
-            if (field.key === "uid") return [];
+            // Check if it's a content relationship link/field
+            if (
+              field.value.type === "Link" &&
+              field.value.config?.select === "document" &&
+              field.value.config.customtypes
+            ) {
+              return {
+                id: field.key,
+                customtypes: resolveContentRelationshipFields(
+                  field.value.config.customtypes,
+                  localCustomTypes,
+                ),
+              };
+            }
 
-            return {
-              id: field.key,
-              label: field.value.config?.label ?? field.key,
-            };
+            if (field.key === "uid") return [];
+            return field.key;
           });
         }),
-      };
-    },
-  );
+      }),
+    );
 
-  simplifiedCustomTypes.sort((a, b) => a.id.localeCompare(b.id));
-  return simplifiedCustomTypes;
+    result.sort((a, b) => a.id.localeCompare(b.id));
+
+    return result;
+  }, [allCustomTypes]);
 }
 
-function countPickedFields(fields: CustomTypeFieldMap | FieldMap | undefined) {
+function resolveContentRelationshipFields(
+  customTypesArray: TICustomTypeFields,
+  localCustomTypes: CustomTypeSM[],
+): TICustomTypeFieldValues[] {
+  return customTypesArray.flatMap<TICustomTypeFieldValues>((customType) => {
+    if (typeof customType === "string" || !customType.fields) return [];
+
+    const matchingCustomType = localCustomTypes.find(
+      (ct) => ct.id === customType.id,
+    );
+    if (!matchingCustomType) return [];
+
+    return {
+      id: customType.id,
+      fields: matchingCustomType.tabs.flatMap((tab) => {
+        return tab.value.flatMap((field) => {
+          if (field.key === "uid") return [];
+          return field.key;
+        });
+      }),
+    };
+  });
+}
+
+function countPickedFields(
+  fields: FormCustomTypeFields | FormCustomTypeFieldValues | undefined,
+): number {
   if (!fields) return 0;
 
   return Object.values(fields).reduce<number>(
-    (count, value: boolean | FieldMap) => {
+    (count, value: boolean | FormFieldMap) => {
       if (typeof value === "boolean" && value) return count + 1;
       return count + Object.values(value).filter(Boolean).length;
     },
@@ -168,27 +279,205 @@ function countPickedFields(fields: CustomTypeFieldMap | FieldMap | undefined) {
   );
 }
 
-function getInitialValues(value: CustomTypeField[]) {
-  return value.reduce<CustomTypeFieldMap>((customTypes, { id, fields }) => {
-    customTypes[id] = fields.reduce<FieldMap>((customTypeFields, field) => {
-      customTypeFields[field] = true;
+/**
+ * Convert a value with form state format to a customtypes config format.
+ *
+ * Omits custom types that have no selected fields.
+ *
+ * Example:
+ * ```
+ * // Input:
+ * {
+ *   category: {
+ *     name: true,
+ *   },
+ *   author: {
+ *     firstName: true,
+ *     lastName: true,
+ *     country: false, // omitted
+ *     "cr#professionCr": {
+ *       profession: {
+ *         name: true,
+ *         industry: true,
+ *       },
+ *     },
+ *   }
+ * }
+ *
+ * // Output:
+ * [
+ *   {
+ *     id: "category",
+ *     fields: ["name"],
+ *   },
+ *   {
+ *     id: "author",
+ *     fields: [
+ *       "firstName",
+ *       "lastName",
+ *       {
+ *         id: "professionCr",
+ *         customtypes: [
+ *           {
+ *             id: "profession",
+ *             fields: ["name", "industry"],
+ *           },
+ *         ],
+ *       },
+ *     ],
+ *   },
+ * ]
+ **/
+function convertFormStateToCustomTypes(
+  formState: FormCustomTypeFields,
+): TICustomTypeFields {
+  return Object.entries(formState).flatMap<TICustomTypeOrContentRelationship>(
+    ([customTypeId, customTypeFields]) => {
+      const fields = Object.entries(customTypeFields).flatMap<
+        string | TIContentRelationshipFieldValue
+      >((customTypeFieldsEntry: [string, boolean | FormNestedCustomType]) => {
+        if (isContentRelationshipField(customTypeFieldsEntry)) {
+          const [nestedCtId, nestedCtFieldMap] = customTypeFieldsEntry;
+
+          const customTypes = Object.entries(
+            nestedCtFieldMap,
+          ).flatMap<TICustomTypeFieldValues>(
+            ([nestedCustomTypeId, nestedCustomTypeFields]) => {
+              const fields = Object.entries(nestedCustomTypeFields).flatMap(
+                ([nestedFieldId, nestedFieldValue]) => {
+                  return nestedFieldValue ? nestedFieldId : [];
+                },
+              );
+
+              return fields.length > 0
+                ? { id: nestedCustomTypeId, fields: fields }
+                : [];
+            },
+          );
+
+          return customTypes.length > 0
+            ? { id: nestedCtId.replace("cr#", ""), customtypes: customTypes }
+            : [];
+        }
+
+        const [fieldId, fieldValue] = customTypeFieldsEntry;
+        return fieldValue ? fieldId : [];
+      });
+
+      return fields.length > 0 ? { id: customTypeId, fields } : [];
+    },
+  );
+}
+
+// Type narrowing helper
+function isContentRelationshipField(
+  entry: [string, boolean | FormNestedCustomType],
+): entry is [string, FormNestedCustomType] {
+  const [fieldId] = entry;
+  return typeof fieldId === "string" && fieldId.startsWith("cr#");
+}
+
+/**
+ * Convert a value with customtypes config format to a form state format.
+ *
+ * @example
+ * ```
+ * // Input:
+ * [
+ *   {
+ *     id: "category",
+ *     fields: ["name"],
+ *   },
+ *   {
+ *     id: "author",
+ *     fields: [
+ *       "firstName",
+ *       "lastName",
+ *       {
+ *         id: "professionCr",
+ *         customtypes: [
+ *           {
+ *             id: "profession",
+ *             fields: ["name", "industry"],
+ *           },
+ *         ],
+ *       },
+ *     ],
+ *   },
+ * ]
+ *
+ * // Output:
+ * {
+ *   category: {
+ *     name: true,
+ *   },
+ *   author: {
+ *     firstName: true,
+ *     lastName: true,
+ *     "cr#professionCr": {
+ *       profession: {
+ *         name: true,
+ *         industry: true,
+ *       },
+ *     },
+ *   }
+ * }
+ **/
+function convertCustomTypesToFormState(
+  customTypes: TICustomTypeFields | undefined,
+): FormCustomTypeFields {
+  if (!customTypes) return {};
+
+  return customTypes.reduce<FormCustomTypeFields>((customTypes, customType) => {
+    if (typeof customType === "string" || !customType.fields) {
+      return customTypes;
+    }
+
+    customTypes[customType.id] = customType.fields.reduce<
+      FormContentRelationshipFieldValue | FormCustomTypeFieldValues
+    >((customTypeFields, field) => {
+      if (typeof field === "string") {
+        customTypeFields[field] = true;
+      } else {
+        assertNestedCustomTypeField(field);
+        assertContentRelationshipField(customTypeFields);
+
+        for (const nestedCustomType of field.customtypes) {
+          if (
+            typeof nestedCustomType === "string" ||
+            !nestedCustomType.fields
+          ) {
+            continue;
+          }
+
+          customTypeFields[`cr#${field.id}`] ??= {};
+          const crFields = customTypeFields[`cr#${field.id}`];
+
+          crFields[nestedCustomType.id] ??= {};
+          nestedCustomType.fields.forEach((nestedField) => {
+            crFields[nestedCustomType.id][nestedField] = true;
+          });
+        }
+      }
+
       return customTypeFields;
     }, {});
-
     return customTypes;
   }, {});
 }
 
-/** Convert the picked fields map to the customtypes config and filter out empty customtypes */
-function convertFormToCustomTypes(fields: CustomTypeFieldMap) {
-  return Object.entries(fields).flatMap<CustomTypeField>(([ctId, fields]) => {
-    const fieldEntries = Object.entries(fields);
-    if (!fieldEntries.some(([_, checked]) => checked)) return [];
-    return [
-      {
-        id: ctId,
-        fields: fieldEntries.flatMap(([id, checked]) => (checked ? [id] : [])),
-      },
-    ];
-  });
+// Type narrowing helpers
+function assertContentRelationshipField(
+  value: unknown,
+): asserts value is FormContentRelationshipFieldValue {
+  if (typeof value !== "object" || value === null) {
+    throw new Error("Value is not an object");
+  }
+}
+function assertNestedCustomTypeField(
+  field: string | TIContentRelationshipFieldValue,
+): asserts field is TIContentRelationshipFieldValue {
+  if (typeof field === "string") {
+    throw new Error("Field is not a nested custom type");
+  }
 }
