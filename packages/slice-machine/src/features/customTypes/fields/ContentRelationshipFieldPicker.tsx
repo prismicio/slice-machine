@@ -10,29 +10,64 @@ import { useSelector } from "react-redux";
 
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
-// picker state types
-
-type PickerCheckboxField = {
-  type: "checkbox";
-  value: boolean;
+/**
+ * Picker state types. Used internally to store the state of the TreeView.
+ *
+ * @example
+ * {
+ *   category: {
+ *     name: {
+ *       type: "checkbox",
+ *       value: true
+ *     }
+ *   },
+ *   author: {
+ *     firstName: {
+ *       type: "checkbox",
+ *       value: true
+ *     }
+ *     lastName: {
+ *       type: "checkbox",
+ *       value: false
+ *     }
+ *   }
+ * }
+ *
+ **/
+type PickerCustomTypes = {
+  [customTypeId: string]: PickerCustomType;
 };
 
 type PickerCustomType = {
   [fieldId: string]: PickerCheckboxField;
 };
 
-type PickerCustomTypes = {
-  [customTypeId: string]: PickerCustomType;
+type PickerCheckboxField = {
+  type: "checkbox";
+  value: boolean;
 };
 
-// copy of types-internal Link customtypes
+/**
+ * Copy of types-internal Link customtypes.
+ *
+ * @example
+ * [
+ *   {
+ *     id: "category",
+ *     fields: ["name"],
+ *   },
+ *   {
+ *     id: "author",
+ *     fields: ["firstName", "lastName"],
+ *   },
+ * ],
+ */
+type TICustomTypes = readonly (string | TICustomType)[];
 
 type TICustomType = {
   id: string;
   fields?: readonly string[] | undefined;
 };
-
-type TICustomTypes = readonly (string | TICustomType)[];
 
 interface ContentRelationshipFieldPickerProps {
   initialValues: TICustomTypes | undefined;
@@ -207,7 +242,10 @@ function useCustomTypes() {
   }, [allCustomTypes]);
 }
 
-/** Convert the customtypes config to the picker state */
+/**
+ * Converts a Link config `customtypes` ({@link TICustomTypes}) structure into
+ * picker state ({@link PickerCustomTypes}).
+ */
 function convertCustomTypesToState(value: TICustomTypes) {
   return value.reduce<PickerCustomTypes>((customTypes, customType) => {
     if (typeof customType === "string") {
@@ -230,7 +268,10 @@ function convertCustomTypesToState(value: TICustomTypes) {
   }, {});
 }
 
-/** Convert the picked fields map to the customtypes config and filter out empty customtypes */
+/**
+ * Converts a picker state structure ({@link PickerCustomTypes}) into Link
+ * config `customtypes` ({@link TICustomTypes} and filter out empty Custom types.
+ */
 function convertStateToCustomTypes(fields: PickerCustomTypes) {
   return Object.entries(fields).flatMap<TICustomType>(([ctId, ctFields]) => {
     const fields = Object.entries(ctFields).flatMap(([fieldId, checkbox]) =>
