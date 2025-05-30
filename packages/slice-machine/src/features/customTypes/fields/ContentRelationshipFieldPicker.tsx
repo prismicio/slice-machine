@@ -121,10 +121,15 @@ function TreeViewCheckboxField(
   );
 }
 
+type SimplifiedCustomTypeField = {
+  id: string;
+  label: string;
+};
+
 interface SimplifiedCustomType {
   id: string;
   label: string;
-  fields: { id: string; label: string }[];
+  fields: SimplifiedCustomTypeField[];
 }
 
 function useCustomTypes() {
@@ -138,24 +143,25 @@ function useCustomTypes() {
       if (!("local" in customType)) return [];
 
       const { id, label, tabs } = customType.local;
-      return {
-        id,
-        label: label ?? id,
-        fields: tabs.flatMap((tab) => {
-          return tab.value.flatMap((field) => {
-            // filter out uid fields because it's a special field returned by the
-            // API and is not part of the data object in the document.
-            if (field.value.type === "UID" || field.key === "uid") {
-              return [];
-            }
 
-            return {
-              id: field.key,
-              label: field.value.config?.label ?? field.key,
-            };
-          });
-        }),
-      };
+      const fields = tabs.flatMap<SimplifiedCustomTypeField>((tab) => {
+        return tab.value.flatMap((field) => {
+          // filter out uid fields because it's a special field returned by the
+          // API and is not part of the data object in the document.
+          if (field.value.type === "UID" || field.key === "uid") {
+            return [];
+          }
+
+          return {
+            id: field.key,
+            label: field.value.config?.label ?? field.key,
+          };
+        });
+      });
+
+      if (fields.length === 0) return [];
+
+      return { id, label: label ?? id, fields };
     },
   );
 
