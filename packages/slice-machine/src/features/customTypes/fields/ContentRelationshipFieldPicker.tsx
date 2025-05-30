@@ -131,6 +131,10 @@ function useCustomTypes() {
   const customTypes = useSelector(selectAllCustomTypes);
   const simplifiedCustomTypes = customTypes.flatMap<SimplifiedCustomType>(
     (customType) => {
+      // In the store we have remote and local custom types, we want to show
+      // the local ones, so that the user is able to create a content
+      // relationship with custom types present on the user's computer (pushed
+      // or not).
       if (!("local" in customType)) return [];
 
       const { id, label, tabs } = customType.local;
