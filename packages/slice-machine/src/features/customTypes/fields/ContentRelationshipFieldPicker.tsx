@@ -69,7 +69,7 @@ export function ContentRelationshipFieldPicker(
                   key={ct.id}
                   title={ct.label}
                   subtitle={count > 0 ? `(${countLabel} exposed)` : undefined}
-                  badge="Custom Type"
+                  badge="Custom type"
                 >
                   {ct.fields.map((field) => (
                     <TreeViewCheckboxField
