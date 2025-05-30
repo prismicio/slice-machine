@@ -45,7 +45,9 @@ export function ContentRelationshipFieldPicker(
   const customTypes = useCustomTypes();
 
   const stableOnChange = useStableCallback(onChange);
-  const [state, setState] = useState<PickerCustomTypeFields>({});
+  const [state, setState] = useState<PickerCustomTypeFields>(
+    initialValues ? convertCustomTypesToState(initialValues) : {},
+  );
 
   useEffect(() => {
     console.log("state", state);
