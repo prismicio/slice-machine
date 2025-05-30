@@ -1,4 +1,3 @@
-import { useStableCallback } from "@prismicio/editor-support/React";
 import {
   Box,
   Text,
@@ -6,7 +5,7 @@ import {
   TreeViewCheckbox,
   TreeViewSection,
 } from "@prismicio/editor-ui";
-import { SetStateAction, useEffect, useMemo, useState } from "react";
+import { SetStateAction, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
@@ -41,21 +40,18 @@ interface ContentRelationshipFieldPickerProps {
 export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
-  const { initialValues, onChange } = props;
+  const { initialValues } = props;
   const customTypes = useCustomTypes();
 
-  const stableOnChange = useStableCallback(onChange);
   const [state, setState] = useState<PickerCustomTypeFields>(
     initialValues ? convertCustomTypesToState(initialValues) : {},
   );
 
-  useEffect(() => {
-    console.log("state", state);
-  }, [state]);
-
-  useEffect(() => {
-    stableOnChange(convertStateToCustomTypes(state));
-  }, [state, stableOnChange]);
+  function onChange(updated: SetStateAction<PickerCustomTypeFields>) {
+    const newState = typeof updated === "function" ? updated(state) : updated;
+    setState(newState);
+    props.onChange(convertStateToCustomTypes(newState));
+  }
 
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
@@ -85,7 +81,7 @@ export function ContentRelationshipFieldPicker(
                 key={customType.id}
                 customType={customType}
                 state={state[customType.id]}
-                onChange={setState}
+                onChange={onChange}
                 labels={customTypes.labels}
               />
             );
