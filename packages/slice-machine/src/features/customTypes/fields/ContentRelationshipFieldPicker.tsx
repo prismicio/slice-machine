@@ -228,15 +228,10 @@ function convertCustomTypesToState(value: TICustomTypeFields) {
 /** Convert the picked fields map to the customtypes config and filter out empty customtypes */
 function convertStateToCustomTypes(fields: PickerCustomTypeFields) {
   return Object.entries(fields).flatMap<TICustomType>(([ctId, ctFields]) => {
-    const ctFieldEntries = Object.entries(ctFields);
-    if (!ctFieldEntries.some(([_, checked]) => checked)) return [];
-
-    const fields = ctFieldEntries.flatMap(([id, checkbox]) =>
-      checkbox.value ? [id] : [],
+    const fields = Object.entries(ctFields).flatMap(([fieldId, checkbox]) =>
+      checkbox.value ? [fieldId] : [],
     );
-
-    if (fields.length === 0) return [];
-    return { id: ctId, fields };
+    return fields.length > 0 ? { id: ctId, fields } : [];
   });
 }
 
