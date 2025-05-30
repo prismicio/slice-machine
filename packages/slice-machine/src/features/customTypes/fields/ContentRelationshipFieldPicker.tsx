@@ -202,36 +202,42 @@ function useCustomTypes() {
   const allCustomTypes = useSelector(selectAllCustomTypes);
 
   return useMemo(() => {
-    const localCustomTypes = allCustomTypes.flatMap((ct) => {
-      return "local" in ct ? ct.local : [];
-    });
     const labels: Record<string, string> = {};
-    const customTypes = localCustomTypes.flatMap<TICustomType>((customType) => {
-      if (customType.label != null) {
-        labels[customType.id] = customType.label;
-      }
+    const customTypes = allCustomTypes.flatMap<TICustomType>(
+      (storeCustomType) => {
+        // In the store we have remote and local custom types, we want to show
+        // the local ones, so that the user is able to create a content
+        // relationship with custom types present on the user's computer (pushed
+        // or not).
+        if (!("local" in storeCustomType)) return [];
+        const customType = storeCustomType.local;
 
-      const fields = customType.tabs.flatMap((tab) => {
-        return tab.value.flatMap((field) => {
-          // filter out uid fields because it's a special field returned by the
-          // API and is not part of the data object in the document.
-          if (field.value.type === "UID" || field.key === "uid") {
-            return [];
-          }
+        if (customType.label != null) {
+          labels[customType.id] = customType.label;
+        }
 
-          const { label } = field.value.config ?? {};
-          if (label != null) {
-            labels[`${customType.id}.${field.key}`] = label;
-          }
+        const fields = customType.tabs.flatMap((tab) => {
+          return tab.value.flatMap((field) => {
+            // filter out uid fields because it's a special field returned by the
+            // API and is not part of the data object in the document.
+            if (field.value.type === "UID" || field.key === "uid") {
+              return [];
+            }
 
-          return field.key;
+            const { label } = field.value.config ?? {};
+            if (label != null) {
+              labels[`${customType.id}.${field.key}`] = label;
+            }
+
+            return field.key;
+          });
         });
-      });
 
-      if (fields.length === 0) return [];
+        if (fields.length === 0) return [];
 
-      return { id: customType.id, fields };
-    });
+        return { id: customType.id, fields };
+      },
+    );
 
     customTypes.sort((a, b) => a.id.localeCompare(b.id));
 
