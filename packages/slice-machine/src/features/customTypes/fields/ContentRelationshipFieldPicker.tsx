@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
+// picker state types
+
 type PickerCheckboxField = {
   type: "checkbox";
   value: boolean;
@@ -41,7 +43,7 @@ export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
   const { initialValues } = props;
-  const customTypes = useCustomTypes();
+  const { customTypes, labels } = useCustomTypes();
 
   const [state, setState] = useState<PickerCustomTypeFields>(
     initialValues ? convertCustomTypesToState(initialValues) : {},
@@ -73,13 +75,13 @@ export function ContentRelationshipFieldPicker(
           title="Exposed fields"
           subtitle={`(${countPickedFields(state)})`}
         >
-          {customTypes.customTypes.map((customType) => (
+          {customTypes.map((customType) => (
             <TreeViewCustomType
               key={customType.id}
               customType={customType}
               state={state[customType.id]}
               onChange={onChange}
-              labels={customTypes.labels}
+              labels={labels}
             />
           ))}
         </TreeView>
