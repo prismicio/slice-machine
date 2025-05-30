@@ -18,7 +18,9 @@ type NavigationItemPropsBase = {
 type NavigationLinkItemProps = NavigationItemPropsBase & {
   href: string;
   target?: "_blank";
-  onClick?: never;
+
+  // For telemetry (optional)
+  onClick?: MouseEventHandler<Element>;
 };
 
 type NavigationButtonItemProps = NavigationItemPropsBase & {
@@ -58,6 +60,7 @@ export function NavigationItem(props: NavigationItemProps) {
           target={target}
           style={{ textDecoration: "none" }}
           data-active={active}
+          onClick={onClick}
         >
           {Content}
         </Link>

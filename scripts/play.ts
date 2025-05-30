@@ -142,6 +142,7 @@ Arguments:
 
   let [playgroundName] = args._;
   const didProvidePlaygroundName = Boolean(playgroundName);
+  let usedExistingPlayground = false;
 
   if (!playgroundName) {
     if (args.new) {
@@ -151,11 +152,12 @@ Arguments:
         PLAYGROUNDS_ROOT,
         { dirOnly: true, exclude: [".yarn", "node_modules"] },
       );
+      usedExistingPlayground = Boolean(mostRecentPlaygroundName);
       playgroundName = mostRecentPlaygroundName ?? createRandomName();
     }
   }
 
-  if (!playgroundName.startsWith(args.prefix)) {
+  if (!usedExistingPlayground && !playgroundName.startsWith(args.prefix)) {
     playgroundName = `${args.prefix}${playgroundName}`;
   }
 
