@@ -8,7 +8,6 @@ import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
-import { useEffect } from "react";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -57,14 +56,7 @@ const WidgetForm = ({
   initialValues,
   setFieldValue,
   fields,
-  errors,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
-  useEffect(() => {
-    if (errors && Object.keys(errors).length > 0) {
-      console.log("errors", errors);
-    }
-  }, [errors]);
-
   return (
     <>
       <FlexGrid>
