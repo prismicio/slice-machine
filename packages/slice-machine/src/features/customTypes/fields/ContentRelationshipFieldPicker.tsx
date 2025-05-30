@@ -84,8 +84,8 @@ export function ContentRelationshipFieldPicker(
     convertCustomTypesToState(initialValues),
   );
 
-  function onChange(updated: SetStateAction<PickerCustomTypes>) {
-    const newState = typeof updated === "function" ? updated(state) : updated;
+  function onChange(value: SetStateAction<PickerCustomTypes>) {
+    const newState = typeof value === "function" ? value(state) : value;
     setState(newState);
     props.onChange(convertStateToCustomTypes(newState));
   }
@@ -151,17 +151,12 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
   if (!customType.fields) return null;
 
-  function onLevelChange(values: SetStateAction<PickerCustomType>) {
-    onChange((prev) => {
-      const newState = { ...prev };
-      if (typeof values === "function") {
-        newState[customType.id] = values(prev[customType.id]);
-      } else {
-        newState[customType.id] = values;
-      }
-
-      return newState;
-    });
+  function onCustomTypeChange(value: SetStateAction<PickerCustomType>) {
+    onChange((prev) => ({
+      ...prev,
+      [customType.id]:
+        typeof value === "function" ? value(prev[customType.id]) : value,
+    }));
   }
 
   const fieldCount = countPickedFields(state);
@@ -177,10 +172,10 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       {customType.fields.map((field) => {
         const checkboxState = state?.[field];
 
-        function onCheckedChange(checked: boolean) {
-          onLevelChange((prev) => ({
+        function onCheckedChange(value: boolean) {
+          onCustomTypeChange((prev) => ({
             ...prev,
-            [field]: { type: "checkbox", value: checked },
+            [field]: { type: "checkbox", value },
           }));
         }
 
