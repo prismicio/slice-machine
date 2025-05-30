@@ -143,9 +143,11 @@ function useCustomTypes() {
         label: label ?? id,
         fields: tabs.flatMap((tab) => {
           return tab.value.flatMap((field) => {
-            // filter out uid field because it's a special field returned by the API
-            // and is not part of the data object in the document
-            if (field.value.type === "UID") return [];
+            // filter out uid fields because it's a special field returned by the
+            // API and is not part of the data object in the document.
+            if (field.value.type === "UID" || field.key === "uid") {
+              return [];
+            }
 
             return {
               id: field.key,
