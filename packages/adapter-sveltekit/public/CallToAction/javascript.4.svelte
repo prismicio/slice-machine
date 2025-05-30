@@ -6,13 +6,12 @@
 		PrismicRichText,
 	} from "@prismicio/svelte";
 
-	/* @typedef {import("@prismicio/client").Content} Content */
-	/* @typedef {import("@prismicio/svelte").SliceComponentProps} SliceComponentProps */
+	/**
+	 * @type {import("@prismicio/client").Content.${PascalNameToReplace}Slice}
+	 */
+	export let slice;
 
-	/* @type {SliceComponentProps<Content.${PascalNameToReplace}Slice>} */
-	const { slice } = $props();
-
-	let alignment = $derived(slice.variation === "alignLeft" ? "left" : "center");
+	$: alignment = slice.variation === "alignLeft" ? "left" : "center";
 </script>
 
 <section

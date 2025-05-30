@@ -3,8 +3,14 @@ import { source } from "common-tags";
 import type { DocumentationReadHook } from "@slicemachine/plugin-kit";
 
 import { getJSFileExtension } from "../lib/getJSFileExtension";
+import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
 import type { PluginOptions } from "../types";
+import {
+	componentFileTemplate,
+	dataFileTemplate,
+} from "./documentation-read.templates";
+import { getSvelteMajor } from "../lib/getSvelteMajor";
 
 const nestRouteFilePath = (filePath: string, nesting: string): string => {
 	return [
@@ -22,68 +28,17 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		const { model } = data.data;
 
 		const pageDataExtension = await getJSFileExtension({ helpers, options });
+		const pageDataLanguage =
+			pageDataExtension === "ts" ? "typescript" : "javascript";
+		const typescript = await checkIsTypeScriptProject({ options, helpers });
 
-		const routePath = `src/routes/${model.repeatable ? "[uid]" : model.id}`;
+		const routePath = `src/routes/[[preview=preview]]/${
+			model.repeatable ? "[uid]" : model.id
+		}`;
 		const dataFilePath = `${routePath}/+page.server.${pageDataExtension}`;
 		const componentFilePath = `${routePath}/+page.svelte`;
 
-		let dataFileContent: string;
-		if (model.repeatable) {
-			dataFileContent = source`
-				import { createClient } from "$lib/prismicio";
-
-				export async function load({ params, fetch, cookies }) {
-					const client = createClient({ fetch, cookies });
-
-					const page = await client.getByUID("${model.id}", params.uid);
-
-					return {
-						page,
-					};
-				}
-
-				export async function entries() {
-					const client = createClient();
-
-					const pages = await client.getAllByType("${model.id}");
-
-					return pages.map((page) => {
-						return { uid: page.uid };
-					});
-				}
-			`;
-		} else {
-			dataFileContent = source`
-				import { createClient } from "$lib/prismicio";
-
-				export async function load({ params, fetch, cookies }) {
-					const client = createClient({ fetch, cookies });
-
-					const page = await client.getSingle("${model.id}");
-
-					return {
-						page,
-					};
-				}
-
-				export async function entries() {
-					return [{}]
-				}
-			`;
-		}
-
-		let componentFileContent = source`
-			<script>
-				import { SliceZone } from "@prismicio/svelte";
-
-				import { components } from "$lib/slices";
-
-				export let data;
-			</script>
-
-			<SliceZone slices={data.page.data.slices} {components} />
-		`;
-
+		let dataFileContent = dataFileTemplate({ model, typescript });
 		if (options.format) {
 			dataFileContent = await helpers.format(
 				dataFileContent,
@@ -92,6 +47,13 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					includeNewlineAtEnd: false,
 				},
 			);
+		}
+
+		let componentFileContent = componentFileTemplate({
+			typescript,
+			version: await getSvelteMajor(),
+		});
+		if (options.format) {
 			componentFileContent = await helpers.format(
 				componentFileContent,
 				helpers.joinPathFromRoot(componentFilePath),
@@ -121,7 +83,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					Paste in this code:
 
-					${`~~~${pageDataExtension} [${dataFilePath}]\n${dataFileContent}\n~~~`}
+					${`~~~${pageDataLanguage} [${dataFilePath}]\n${dataFileContent}\n~~~`}
 
 					## Create your ${model.label}'s page component
 
