@@ -62,12 +62,13 @@ export function ContentRelationshipFieldPicker(
           >
             {customTypes.map((ct) => {
               const count = countPickedFields(form.values[ct.id]);
+              const countLabel = count === 1 ? "1 field" : `${count} fields`;
 
               return (
                 <TreeViewSection
                   key={ct.id}
                   title={ct.label}
-                  subtitle={count > 0 ? `(${count} fields exposed)` : undefined}
+                  subtitle={count > 0 ? `(${countLabel} exposed)` : undefined}
                   badge="Custom Type"
                 >
                   {ct.fields.map((field) => (
