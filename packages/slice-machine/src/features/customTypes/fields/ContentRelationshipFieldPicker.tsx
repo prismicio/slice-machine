@@ -17,26 +17,26 @@ type PickerCheckboxField = {
   value: boolean;
 };
 
-type PickerCustomTypeField = {
+type PickerCustomType = {
   [fieldId: string]: PickerCheckboxField;
 };
 
-type PickerCustomTypeFields = {
-  [customTypeId: string]: PickerCustomTypeField;
+type PickerCustomTypes = {
+  [customTypeId: string]: PickerCustomType;
 };
 
-// copy of types-internal types
+// copy of types-internal Link customtypes
 
 type TICustomType = {
   id: string;
   fields?: readonly string[] | undefined;
 };
 
-type TICustomTypeFields = readonly (string | TICustomType)[];
+type TICustomTypes = readonly (string | TICustomType)[];
 
 interface ContentRelationshipFieldPickerProps {
-  initialValues: TICustomTypeFields | undefined;
-  onChange: (fields: TICustomTypeFields) => void;
+  initialValues: TICustomTypes | undefined;
+  onChange: (fields: TICustomTypes) => void;
 }
 
 export function ContentRelationshipFieldPicker(
@@ -45,11 +45,11 @@ export function ContentRelationshipFieldPicker(
   const { initialValues } = props;
   const { customTypes, labels } = useCustomTypes();
 
-  const [state, setState] = useState<PickerCustomTypeFields>(
+  const [state, setState] = useState<PickerCustomTypes>(
     initialValues ? convertCustomTypesToState(initialValues) : {},
   );
 
-  function onChange(updated: SetStateAction<PickerCustomTypeFields>) {
+  function onChange(updated: SetStateAction<PickerCustomTypes>) {
     const newState = typeof updated === "function" ? updated(state) : updated;
     setState(newState);
     props.onChange(convertStateToCustomTypes(newState));
@@ -106,8 +106,8 @@ export function ContentRelationshipFieldPicker(
 
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
-  state: PickerCustomTypeField | undefined;
-  onChange: (state: SetStateAction<PickerCustomTypeFields>) => void;
+  state: PickerCustomType | undefined;
+  onChange: (state: SetStateAction<PickerCustomTypes>) => void;
   labels: Record<string, string>;
 }
 
@@ -116,7 +116,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
   if (!customType.fields) return null;
 
-  function onLevelChange(values: SetStateAction<PickerCustomTypeField>) {
+  function onLevelChange(values: SetStateAction<PickerCustomType>) {
     onChange((prev) => {
       const newState = { ...prev };
       if (typeof values === "function") {
@@ -208,8 +208,8 @@ function useCustomTypes() {
 }
 
 /** Convert the customtypes config to the picker state */
-function convertCustomTypesToState(value: TICustomTypeFields) {
-  return value.reduce<PickerCustomTypeFields>((customTypes, customType) => {
+function convertCustomTypesToState(value: TICustomTypes) {
+  return value.reduce<PickerCustomTypes>((customTypes, customType) => {
     if (typeof customType === "string") {
       customTypes[customType] = {};
       return customTypes;
@@ -218,7 +218,7 @@ function convertCustomTypesToState(value: TICustomTypeFields) {
     const { id, fields } = customType;
     if (fields === undefined) return customTypes;
 
-    customTypes[id] = fields.reduce<PickerCustomTypeField>(
+    customTypes[id] = fields.reduce<PickerCustomType>(
       (customTypeFields, field) => {
         customTypeFields[field] = { type: "checkbox", value: true };
         return customTypeFields;
@@ -231,7 +231,7 @@ function convertCustomTypesToState(value: TICustomTypeFields) {
 }
 
 /** Convert the picked fields map to the customtypes config and filter out empty customtypes */
-function convertStateToCustomTypes(fields: PickerCustomTypeFields) {
+function convertStateToCustomTypes(fields: PickerCustomTypes) {
   return Object.entries(fields).flatMap<TICustomType>(([ctId, ctFields]) => {
     const fields = Object.entries(ctFields).flatMap(([fieldId, checkbox]) =>
       checkbox.value ? [fieldId] : [],
