@@ -73,19 +73,15 @@ export function ContentRelationshipFieldPicker(
           title="Exposed fields"
           subtitle={`(${countPickedFields(state)})`}
         >
-          {customTypes.customTypes.map((customType) => {
-            if (typeof customType === "string") return null;
-
-            return (
-              <TreeViewCustomType
-                key={customType.id}
-                customType={customType}
-                state={state[customType.id]}
-                onChange={onChange}
-                labels={customTypes.labels}
-              />
-            );
-          })}
+          {customTypes.customTypes.map((customType) => (
+            <TreeViewCustomType
+              key={customType.id}
+              customType={customType}
+              state={state[customType.id]}
+              onChange={onChange}
+              labels={customTypes.labels}
+            />
+          ))}
         </TreeView>
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
