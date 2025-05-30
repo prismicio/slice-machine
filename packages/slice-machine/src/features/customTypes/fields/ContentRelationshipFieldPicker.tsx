@@ -162,6 +162,10 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   );
 }
 
+/**
+ * Get all the existing local custom types from the store and process them into
+ * a single array to be rendered by the picker.
+ */
 function useCustomTypes() {
   const allCustomTypes = useSelector(selectAllCustomTypes);
 
@@ -203,6 +207,7 @@ function useCustomTypes() {
   }, [allCustomTypes]);
 }
 
+/** Convert the customtypes config to the picker state */
 function convertCustomTypesToState(value: TICustomTypeFields) {
   return value.reduce<PickerCustomTypeFields>((customTypes, customType) => {
     if (typeof customType === "string") {
