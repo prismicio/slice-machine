@@ -44,7 +44,7 @@ export function ContentRelationshipFieldPicker(
       <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
         <Box
           border={{ bottom: true }}
-          padding={{ block: 16, inline: 16, top: 12 }}
+          padding={{ inline: 16, bottom: 16, top: 12 }}
           flexDirection="column"
           gap={8}
         >
