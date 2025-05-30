@@ -141,7 +141,7 @@ function useCustomTypes() {
           return tab.value.flatMap((field) => {
             // filter out uid field because it's a special field returned by the API
             // and is not part of the data object in the document
-            if (field.key === "uid") return [];
+            if (field.value.type === "UID") return [];
 
             return {
               id: field.key,
