@@ -9,6 +9,7 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
+import { loadFile } from "magicast";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
@@ -289,6 +290,46 @@ const upsertSliceLibraryIndexFiles = async (
 	);
 };
 
+const modifyViteConfig = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	let filename = "vite.config.js";
+	if (!(await checkHasProjectFile({ filename, helpers }))) {
+		filename = "vite.config.ts";
+	}
+	if (!(await checkHasProjectFile({ filename, helpers }))) {
+		// Couldn't find the config file.
+		return;
+	}
+	const filepath = helpers.joinPathFromRoot(filename);
+
+	const mod = await loadFile(filepath);
+	if (mod.exports.default.$type !== "function-call") {
+		// Invalid config file.
+		return;
+	}
+
+	// Add `./slicemachine.config.json` to allowed files.
+	const config = mod.exports.default.$args[0];
+	config.server ??= {};
+	config.server.fs ??= {};
+	config.server.fs.allow ??= [];
+	if (!config.server.fs.allow.includes("./slicemachine.config.json")) {
+		config.server.fs.allow.push("./slicemachine.config.json");
+	}
+
+	// Remove an empty line above the `server` property.
+	const contents = mod.generate().code.replace(/\n\s*\n(?=\s*server:)/, "\n");
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
@@ -304,6 +345,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			createPreviewRouteMatcherFile(context),
 			createRootLayoutServerFile(context),
 			createRootLayoutFile(context),
+			modifyViteConfig(context),
 		]),
 	);
 

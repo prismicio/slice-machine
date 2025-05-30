@@ -169,6 +169,46 @@ describe("modify slicemachine.config.json", () => {
 	});
 });
 
+describe("modify vite.config.js file", () => {
+	it("adds ./slicemachine.config.json to server.fs.allow", async (ctx) => {
+		const log = vi.fn();
+		const installDependencies = vi.fn();
+
+		const configPath = path.resolve(ctx.project.root, "./vite.config.js");
+
+		const preContents = await fs.readFile(configPath, "utf8");
+		expect(preContents).toMatchInlineSnapshot(`
+			"import { sveltekit } from \\"@sveltejs/kit/vite\\";
+			import { defineConfig } from \\"vite\\";
+
+			export default defineConfig({
+			  plugins: [sveltekit()],
+			});"
+		`);
+
+		await ctx.pluginRunner.callHook("project:init", {
+			log,
+			installDependencies,
+		});
+
+		const postContents = await fs.readFile(configPath, "utf8");
+		expect(postContents).toMatchInlineSnapshot(`
+			"import { sveltekit } from \\"@sveltejs/kit/vite\\";
+			import { defineConfig } from \\"vite\\";
+
+			export default defineConfig({
+			  plugins: [sveltekit()],
+			  server: {
+			    fs: {
+			      allow: [\\"./slicemachine.config.json\\"],
+			    },
+			  },
+			});
+			"
+		`);
+	});
+});
+
 describe("prismicio.js file", () => {
 	it("does not overwrite prismicio file if it already exists", async (ctx) => {
 		const log = vi.fn();
