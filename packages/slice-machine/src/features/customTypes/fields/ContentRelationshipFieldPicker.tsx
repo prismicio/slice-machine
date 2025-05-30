@@ -34,18 +34,18 @@ import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
  * }
  *
  **/
-type PickerCustomTypes = {
+interface PickerCustomTypes {
   [customTypeId: string]: PickerCustomType;
-};
+}
 
-type PickerCustomType = {
+interface PickerCustomType {
   [fieldId: string]: PickerCheckboxField;
-};
+}
 
-type PickerCheckboxField = {
+interface PickerCheckboxField {
   type: "checkbox";
   value: boolean;
-};
+}
 
 /**
  * Copy of types-internal Link customtypes.
@@ -64,10 +64,10 @@ type PickerCheckboxField = {
  */
 type TICustomTypes = readonly (string | TICustomType)[];
 
-type TICustomType = {
+interface TICustomType {
   id: string;
   fields?: readonly string[] | undefined;
-};
+}
 
 interface ContentRelationshipFieldPickerProps {
   initialValues: TICustomTypes | undefined;
@@ -81,7 +81,7 @@ export function ContentRelationshipFieldPicker(
   const { customTypes, labels } = useCustomTypes();
 
   const [state, setState] = useState<PickerCustomTypes>(
-    initialValues ? convertCustomTypesToState(initialValues) : {},
+    convertCustomTypesToState(initialValues),
   );
 
   function onChange(updated: SetStateAction<PickerCustomTypes>) {
@@ -177,12 +177,12 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       {customType.fields.map((field) => {
         const checkboxState = state?.[field];
 
-        const onCheckedChange = (checked: boolean) => {
+        function onCheckedChange(checked: boolean) {
           onLevelChange((prev) => ({
             ...prev,
             [field]: { type: "checkbox", value: checked },
           }));
-        };
+        }
 
         return (
           <TreeViewCheckbox
@@ -246,7 +246,9 @@ function useCustomTypes() {
  * Converts a Link config `customtypes` ({@link TICustomTypes}) structure into
  * picker state ({@link PickerCustomTypes}).
  */
-function convertCustomTypesToState(value: TICustomTypes) {
+function convertCustomTypesToState(value: TICustomTypes | undefined) {
+  if (value === undefined) return {};
+
   return value.reduce<PickerCustomTypes>((customTypes, customType) => {
     if (typeof customType === "string") {
       customTypes[customType] = {};
