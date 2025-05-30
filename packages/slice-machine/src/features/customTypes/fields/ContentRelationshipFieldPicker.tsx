@@ -69,20 +69,13 @@ export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
   const { initialValues, onChange } = props;
-  const customTypes = useCustomTypes();
+  const { customTypes, labels } = useCustomTypes();
 
   const stableOnChange = useStableCallback(onChange);
   const form = useFormik<FormCustomTypeFields>({
     initialValues: convertCustomTypesToFormState(initialValues),
     onSubmit: () => undefined, // values will be updated on change
   });
-
-  // TODO: Remove debug
-  useEffect(() => {
-    if (Object.keys(form.values).length > 0) {
-      console.log("form.values", form.values);
-    }
-  }, [form.values]);
 
   useEffect(() => {
     stableOnChange(convertFormStateToCustomTypes(form.values));
@@ -110,7 +103,11 @@ export function ContentRelationshipFieldPicker(
             subtitle={`(${countPickedFields(form.values)})`}
           >
             {customTypes.map((customType) => (
-              <TreeViewCustomType key={customType.id} customType={customType} />
+              <TreeViewCustomType
+                key={customType.id}
+                customType={customType}
+                labels={labels}
+              />
             ))}
           </TreeView>
         </Box>
@@ -136,10 +133,11 @@ export function ContentRelationshipFieldPicker(
 interface TreeViewCustomTypeProps {
   id?: string;
   customType: TICustomTypeOrContentRelationship;
+  labels: Record<string, string>;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
-  const { customType, id = customType.id } = props;
+  const { customType, id = customType.id, labels } = props;
   const [field] = useField<
     FormCustomTypeFieldValues | FormContentRelationshipFieldValue | FormFieldMap
   >(id);
@@ -151,7 +149,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   return (
     <TreeViewSection
       key={customType.id}
-      title={customType.id} // TODO: Get field label
+      title={labels[customType.id] ?? customType.id}
       subtitle={count > 0 ? `(${count} fields exposed)` : undefined}
       badge="Custom Type"
     >
@@ -160,8 +158,8 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           return (
             <TreeViewCheckboxField
               key={field}
-              title={field} // TODO: Get field label
               id={`${id}.${field}`}
+              title={labels[`${customType.id}.${field}`] ?? field}
             />
           );
         }
@@ -174,6 +172,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
               key={nestedCustomType.id}
               id={`${id}.cr#${field.id}.${nestedCustomType.id}`}
               customType={nestedCustomType}
+              labels={labels}
             />
           );
         });
@@ -203,66 +202,93 @@ function TreeViewCheckboxField(
 function useCustomTypes() {
   const allCustomTypes = useSelector(selectAllCustomTypes);
 
-  return useMemo((): TICustomTypeOrContentRelationship[] => {
+  return useMemo(() => {
     const localCustomTypes = allCustomTypes.flatMap((ct) => {
       return "local" in ct ? ct.local : [];
     });
+    let labels: Record<string, string> = {};
+    const customTypes = localCustomTypes.map<TICustomTypeOrContentRelationship>(
+      (customType) => {
+        if (customType.label != null) {
+          labels[customType.id] = customType.label;
+        }
 
-    const result = localCustomTypes.map<TICustomTypeOrContentRelationship>(
-      (customType) => ({
-        id: customType.id,
-        fields: customType.tabs.flatMap((tab) => {
-          return tab.value.flatMap((field) => {
-            // Check if it's a content relationship link/field
-            if (
-              field.value.type === "Link" &&
-              field.value.config?.select === "document" &&
-              field.value.config.customtypes
-            ) {
-              return {
-                id: field.key,
-                customtypes: resolveContentRelationshipFields(
+        return {
+          id: customType.id,
+          fields: customType.tabs.flatMap((tab) => {
+            return tab.value.flatMap((field) => {
+              // Check if it's a content relationship link/field
+              if (
+                field.value.type === "Link" &&
+                field.value.config?.select === "document" &&
+                field.value.config.customtypes
+              ) {
+                const resolvedCr = resolveContentRelationshipFields(
                   field.value.config.customtypes,
                   localCustomTypes,
-                ),
-              };
-            }
+                );
 
-            if (field.key === "uid") return [];
-            return field.key;
-          });
-        }),
-      }),
+                labels = { ...labels, ...resolvedCr.labels };
+
+                return {
+                  id: field.key,
+                  customtypes: resolvedCr.fields,
+                };
+              }
+
+              if (field.key === "uid") return [];
+
+              const { label } = field.value.config ?? {};
+              if (label != null) {
+                labels[`${customType.id}.${field.key}`] = label;
+              }
+
+              return field.key;
+            });
+          }),
+        };
+      },
     );
 
-    result.sort((a, b) => a.id.localeCompare(b.id));
+    customTypes.sort((a, b) => a.id.localeCompare(b.id));
 
-    return result;
+    return { customTypes, labels };
   }, [allCustomTypes]);
 }
 
 function resolveContentRelationshipFields(
   customTypesArray: TICustomTypeFields,
   localCustomTypes: CustomTypeSM[],
-): TICustomTypeFieldValues[] {
-  return customTypesArray.flatMap<TICustomTypeFieldValues>((customType) => {
-    if (typeof customType === "string" || !customType.fields) return [];
+): { labels: Record<string, string>; fields: TICustomTypeFieldValues[] } {
+  const labels: Record<string, string> = {};
+  const fields = customTypesArray.flatMap<TICustomTypeFieldValues>(
+    (customType) => {
+      if (typeof customType === "string" || !customType.fields) return [];
 
-    const matchingCustomType = localCustomTypes.find(
-      (ct) => ct.id === customType.id,
-    );
-    if (!matchingCustomType) return [];
+      const matchingCustomType = localCustomTypes.find(
+        (ct) => ct.id === customType.id,
+      );
+      if (!matchingCustomType) return [];
 
-    return {
-      id: customType.id,
-      fields: matchingCustomType.tabs.flatMap((tab) => {
-        return tab.value.flatMap((field) => {
-          if (field.key === "uid") return [];
-          return field.key;
-        });
-      }),
-    };
-  });
+      return {
+        id: customType.id,
+        fields: matchingCustomType.tabs.flatMap((tab) => {
+          return tab.value.flatMap((field) => {
+            if (field.key === "uid") return [];
+
+            const { label } = field.value.config ?? {};
+            if (label != null) {
+              labels[`${customType.id}.${field.key}`] = label;
+            }
+
+            return field.key;
+          });
+        }),
+      };
+    },
+  );
+
+  return { fields, labels };
 }
 
 /**
@@ -274,13 +300,11 @@ function resolveContentRelationshipFields(
  * ```
  * // Input:
  * {
- *   category: {
- *     name: true,
- *   },
+ *   category: { name: true },
+ *   country: { name: false }, // custom type omitted
  *   author: {
  *     firstName: true,
- *     lastName: true,
- *     country: false, // omitted
+ *     lastName: false, // field omitted
  *     "cr#professionCr": {
  *       profession: {
  *         name: true,
@@ -300,7 +324,6 @@ function resolveContentRelationshipFields(
  *     id: "author",
  *     fields: [
  *       "firstName",
- *       "lastName",
  *       {
  *         id: "professionCr",
  *         customtypes: [
@@ -397,9 +420,7 @@ function isContentRelationshipField(
  *
  * // Output:
  * {
- *   category: {
- *     name: true,
- *   },
+ *   category: { name: true },
  *   author: {
  *     firstName: true,
  *     lastName: true,
