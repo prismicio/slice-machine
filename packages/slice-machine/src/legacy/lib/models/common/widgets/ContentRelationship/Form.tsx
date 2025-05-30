@@ -14,9 +14,13 @@ const FormFields = {
   customtypes: {
     validate: () =>
       yup.array(
-        yup.object({
-          id: yup.string(),
-          fields: yup.array(yup.string()),
+        yup.lazy((value) => {
+          return typeof value === "object"
+            ? yup.object({
+                id: yup.string(),
+                fields: yup.array(yup.string()),
+              })
+            : yup.string();
         }),
       ),
   },
@@ -26,7 +30,7 @@ type FormProps = {
   config: {
     label: string;
     select: string;
-    customtypes?: { id: string; fields: string[] }[];
+    customtypes?: (string | { id: string; fields: string[] })[];
   };
   id: string;
   // TODO: this exists in the yup schema but this doesn't seem to be validated by formik

@@ -16,7 +16,7 @@ import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 type FieldMap = Record<string, boolean>;
 export type CustomTypeFieldMap = Record<string, FieldMap>;
 
-type CustomTypeField = { id: string; fields: string[] };
+type CustomTypeField = string | { id: string; fields: string[] };
 
 interface ContentRelationshipFieldPickerProps {
   initialValues: CustomTypeField[] | undefined;
@@ -31,7 +31,7 @@ export function ContentRelationshipFieldPicker(
 
   const stableOnChange = useStableCallback(onChange);
   const form = useFormik<CustomTypeFieldMap>({
-    initialValues: initialValues ? getInitialValues(initialValues) : {},
+    initialValues: initialValues ? convertCustomTypesToForm(initialValues) : {},
     onSubmit: () => undefined, // values will be updated on change
   });
 
@@ -168,8 +168,14 @@ function countPickedFields(fields: CustomTypeFieldMap | FieldMap | undefined) {
   );
 }
 
-function getInitialValues(value: CustomTypeField[]) {
-  return value.reduce<CustomTypeFieldMap>((customTypes, { id, fields }) => {
+function convertCustomTypesToForm(value: CustomTypeField[]) {
+  return value.reduce<CustomTypeFieldMap>((customTypes, customType) => {
+    if (typeof customType === "string") {
+      customTypes[customType] = {};
+      return customTypes;
+    }
+
+    const { id, fields } = customType;
     customTypes[id] = fields.reduce<FieldMap>((customTypeFields, field) => {
       customTypeFields[field] = true;
       return customTypeFields;

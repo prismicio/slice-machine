@@ -11,20 +11,33 @@ import { Widget } from "../Widget";
 import Form, { FormFields } from "./Form";
 
 /**
+ * Legacy:
+ *  {
+ *   "type": "Link",
+ *   "config": {
+ *     "select": "document",
+ *     "customtypes": [
+ *       "page"
+ *     ],
+ *     "label": "relationship"
+ *   }
+ * }
+ *
+ * Current format (field picking):
  * {
-      "type": "Link",
-      "config": {
-        "select": "document",
-        "customtypes": [
-          {
-            "id": "page",
-            "fields": ["uid", "country"]
-          }
-        ],
-        "label": "relationship"
-      }
-    }
-*/
+ *   "type": "Link",
+ *   "config": {
+ *     "select": "document",
+ *     "customtypes": [
+ *       {
+ *         "id": "page",
+ *         "fields": ["uid", "country"]
+ *       }
+ *     ],
+ *     "label": "relationship"
+ *   }
+ * }
+ */
 
 const Meta = {
   icon: MdSettingsEthernet,
@@ -39,9 +52,13 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .matches(/^document$/, { excludeEmptyString: true }),
   customtypes: yup
     .array(
-      yup.object({
-        id: yup.string(),
-        fields: yup.array(yup.string()),
+      yup.lazy((value) => {
+        return typeof value === "object"
+          ? yup.object({
+              id: yup.string(),
+              fields: yup.array(yup.string()),
+            })
+          : yup.string();
       }),
     )
     .strict()
