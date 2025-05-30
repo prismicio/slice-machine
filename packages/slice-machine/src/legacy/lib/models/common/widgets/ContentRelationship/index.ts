@@ -11,17 +11,33 @@ import { Widget } from "../Widget";
 import Form, { FormFields } from "./Form";
 
 /**
+ * Legacy:
+ *  {
+ *   "type": "Link",
+ *   "config": {
+ *     "select": "document",
+ *     "customtypes": [
+ *       "page"
+ *     ],
+ *     "label": "relationship"
+ *   }
+ * }
+ *
+ * Current format (field picking):
  * {
-      "type": "Link",
-      "config": {
-        "select": "document",
-        "customtypes": [
-          "page"
-        ],
-        "label": "relationship"
-      }
-    }
-*/
+ *   "type": "Link",
+ *   "config": {
+ *     "select": "document",
+ *     "customtypes": [
+ *       {
+ *         "id": "page",
+ *         "fields": ["uid", "country"]
+ *       }
+ *     ],
+ *     "label": "relationship"
+ *   }
+ * }
+ */
 
 const Meta = {
   icon: MdSettingsEthernet,
@@ -34,7 +50,19 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
-  customtypes: yup.array(yup.string()).strict().optional(),
+  customtypes: yup
+    .array(
+      yup.lazy((value) => {
+        return typeof value === "object"
+          ? yup.object({
+              id: yup.string(),
+              fields: yup.array(yup.string()),
+            })
+          : yup.string();
+      }),
+    )
+    .strict()
+    .optional(),
 });
 
 const schema = yup.object().shape({
@@ -74,9 +102,12 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
     return {
       ...initialValues,
       customtypes: initialValues.customtypes.filter((ct) =>
-        customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === ct,
-        ),
+        customTypes.find((frontendCustomType) => {
+          if (typeof ct === "string") {
+            return frontendCustomType.local.id === ct;
+          }
+          return frontendCustomType.local.id === ct.id;
+        }),
       ),
     };
   },
