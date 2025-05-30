@@ -194,7 +194,9 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
 /**
  * Get all the existing local custom types from the store and process them into
- * a single array to be rendered by the picker.
+ * a single array to be rendered by the picker. For this we use the same as the
+ * Link config `customtypes` structure {@link TICustomTypes}. Also creates a map
+ * of each custom type and field path and its corresponding label.
  */
 function useCustomTypes() {
   const allCustomTypes = useSelector(selectAllCustomTypes);
