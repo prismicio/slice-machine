@@ -234,7 +234,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           );
         }
 
-        const nestedCtState = state?.[fieldOrNestedCt.id].value;
+        const nestedCtState = state?.[fieldOrNestedCt.id]?.value;
 
         const onNestedCustomTypeChange = (
           value: SetStateAction<PickerNestedCustomTypeValue>,
@@ -257,7 +257,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
         return fieldOrNestedCt.customtypes.map((nestedCt) => {
           if (typeof nestedCt === "string" || !nestedCt.fields) return null;
 
-          const nestedCtFields: PickerNestedCustomTypeFieldValue =
+          const nestedCtFields: PickerNestedCustomTypeFieldValue | undefined =
             nestedCtState !== undefined && typeof nestedCtState !== "boolean"
               ? nestedCtState[nestedCt.id]
               : {};
