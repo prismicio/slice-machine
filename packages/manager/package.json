@@ -68,7 +68,7 @@
 		"@prismicio/client": "7.17.0",
 		"@prismicio/custom-types-client": "2.1.0",
 		"@prismicio/mocks": "2.13.0",
-		"@prismicio/types-internal": "3.10.0",
+		"@prismicio/types-internal": "3.10.1",
 		"@segment/analytics-node": "^2.1.2",
 		"@slicemachine/plugin-kit": "workspace:*",
 		"cookie": "^1.0.1",
