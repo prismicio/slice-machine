@@ -393,10 +393,12 @@ function isUidField(
  * Converts a Link config `customtypes` ({@link TICustomTypes}) structure into
  * picker state ({@link PickerCustomTypes}).
  */
-function convertCustomTypesToState(value: TICustomTypes | undefined) {
-  if (value === undefined) return {};
+function convertCustomTypesToState(
+  customTypes: TICustomTypes | undefined,
+): PickerCustomTypes {
+  if (!customTypes) return {};
 
-  return value.reduce<PickerCustomTypes>((customTypes, customType) => {
+  return customTypes.reduce<PickerCustomTypes>((customTypes, customType) => {
     if (typeof customType === "string" || !customType.fields) {
       return customTypes;
     }
@@ -406,6 +408,12 @@ function convertCustomTypesToState(value: TICustomTypes | undefined) {
         if (typeof field === "string") {
           customTypeFields[field] = { type: "checkbox", value: true };
         } else {
+          customTypeFields[field.id] ??= { type: "customType", value: {} };
+          const crFields = customTypeFields[field.id].value;
+
+          assertNestedCustomTypeField(field);
+          assertContentRelationshipField(crFields);
+
           for (const nestedCustomType of field.customtypes) {
             if (
               typeof nestedCustomType === "string" ||
@@ -414,18 +422,40 @@ function convertCustomTypesToState(value: TICustomTypes | undefined) {
               continue;
             }
 
+            crFields[nestedCustomType.id] ??= {};
+            const nestedCustomTypeFields = crFields[nestedCustomType.id];
+
             for (const nestedField of nestedCustomType.fields) {
-              customTypeFields[nestedField] = { type: "checkbox", value: true };
+              nestedCustomTypeFields[nestedField] = {
+                type: "checkbox",
+                value: true,
+              };
             }
           }
         }
+
         return customTypeFields;
       },
       {},
     );
-
     return customTypes;
   }, {});
+}
+
+// Type narrowing helpers
+function assertContentRelationshipField(
+  value: unknown,
+): asserts value is PickerNestedCustomTypeValue {
+  if (typeof value !== "object" || value === null) {
+    throw new Error("Value is not an object");
+  }
+}
+function assertNestedCustomTypeField(
+  field: string | TIContentRelationshipFieldValue,
+): asserts field is TIContentRelationshipFieldValue {
+  if (typeof field === "string") {
+    throw new Error("Field is not a nested custom type");
+  }
 }
 
 /**
