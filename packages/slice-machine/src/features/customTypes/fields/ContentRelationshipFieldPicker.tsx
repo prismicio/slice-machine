@@ -6,7 +6,7 @@ import {
   TreeViewSection,
 } from "@prismicio/editor-ui";
 import { UID } from "@prismicio/types-internal/lib/customtypes";
-import { SetStateAction, useMemo, useState } from "react";
+import { SetStateAction, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import { CustomTypeSM, TabFields } from "@/legacy/lib/models/common/CustomType";
@@ -117,24 +117,23 @@ interface TIContentRelationshipFieldValue {
 }
 
 interface ContentRelationshipFieldPickerProps {
-  initialValues: TICustomTypes | undefined;
+  value: TICustomTypes | undefined;
   onChange: (fields: TICustomTypes) => void;
 }
 
 export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
-  const { initialValues } = props;
+  const { value, onChange } = props;
   const customTypes = useCustomTypes();
+  const state = useMemo(() => convertCustomTypesToState(value), [value]);
 
-  const [state, setState] = useState<PickerCustomTypes>(
-    convertCustomTypesToState(initialValues),
-  );
-
-  function onChange(value: SetStateAction<PickerCustomTypes>) {
-    const newState = typeof value === "function" ? value(state) : value;
-    setState(newState);
-    props.onChange(convertStateToCustomTypes(newState));
+  function onCustomTypeChange(value: SetStateAction<PickerCustomTypes>) {
+    onChange(
+      convertStateToCustomTypes(
+        typeof value === "function" ? value(state) : value,
+      ),
+    );
   }
 
   return (
@@ -162,7 +161,7 @@ export function ContentRelationshipFieldPicker(
               key={customType.id}
               customType={customType}
               state={state[customType.id]}
-              onChange={onChange}
+              onChange={onCustomTypeChange}
             />
           ))}
         </TreeView>
@@ -306,8 +305,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 /**
  * Get all the existing local custom types from the store and process them into
  * a single array to be rendered by the picker. For this we use the same as the
- * Link config `customtypes` structure {@link TICustomTypes}. Also creates a map
- * of each custom type and field path and its corresponding label.
+ * Link config `customtypes` structure {@link TICustomTypes}.
  */
 function useCustomTypes() {
   const allCustomTypes = useSelector(selectAllCustomTypes);

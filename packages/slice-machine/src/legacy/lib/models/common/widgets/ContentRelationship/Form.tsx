@@ -51,6 +51,7 @@ type FormProps = {
 
 const WidgetForm = ({
   initialValues,
+  values,
   setFieldValue,
   fields,
 }: FormikProps<FormProps> & { fields: Record<string, unknown> }) => {
@@ -72,7 +73,7 @@ const WidgetForm = ({
       </FlexGrid>
       <Box mt={20}>
         <ContentRelationshipFieldPicker
-          initialValues={initialValues.config.customtypes}
+          value={values.config.customtypes}
           onChange={(fields) => {
             void setFieldValue("config.customtypes", fields);
           }}
