@@ -11,16 +11,29 @@ import { DefaultFields } from "@/legacy/lib/forms/defaults";
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
+  // TODO: Validate customtypes using existing types-internal codec
   customtypes: {
     validate: () =>
       yup.array(
-        yup.lazy((value) => {
-          return typeof value === "object"
-            ? yup.object({
-                id: yup.string(),
-                fields: yup.array(yup.string()),
-              })
-            : yup.string();
+        yup.object({
+          id: yup.string().required(),
+          fields: yup.array(
+            yup.lazy((value) =>
+              typeof value === "object"
+                ? yup.object({
+                    id: yup.string().required(),
+                    customtypes: yup
+                      .array(
+                        yup.object({
+                          id: yup.string().required(),
+                          fields: yup.array(yup.string()).required(),
+                        }),
+                      )
+                      .required(),
+                  })
+                : yup.string(),
+            ),
+          ),
         }),
       ),
   },
