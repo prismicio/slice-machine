@@ -5,7 +5,7 @@ import {
   TreeViewCheckbox,
   TreeViewSection,
 } from "@prismicio/editor-ui";
-import { SetStateAction, useMemo, useState } from "react";
+import { SetStateAction, useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
@@ -70,24 +70,23 @@ interface TICustomType {
 }
 
 interface ContentRelationshipFieldPickerProps {
-  initialValues: TICustomTypes | undefined;
+  value: TICustomTypes | undefined;
   onChange: (fields: TICustomTypes) => void;
 }
 
 export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
-  const { initialValues } = props;
-  const { customTypes, labels } = useCustomTypes();
+  const { value, onChange } = props;
+  const customTypes = useCustomTypes();
+  const state = useMemo(() => convertCustomTypesToState(value), [value]);
 
-  const [state, setState] = useState<PickerCustomTypes>(
-    convertCustomTypesToState(initialValues),
-  );
-
-  function onChange(value: SetStateAction<PickerCustomTypes>) {
-    const newState = typeof value === "function" ? value(state) : value;
-    setState(newState);
-    props.onChange(convertStateToCustomTypes(newState));
+  function onCustomTypeChange(value: SetStateAction<PickerCustomTypes>) {
+    onChange(
+      convertStateToCustomTypes(
+        typeof value === "function" ? value(state) : value,
+      ),
+    );
   }
 
   return (
@@ -115,8 +114,7 @@ export function ContentRelationshipFieldPicker(
               key={customType.id}
               customType={customType}
               state={state[customType.id]}
-              onChange={onChange}
-              labels={labels}
+              onChange={onCustomTypeChange}
             />
           ))}
         </TreeView>
@@ -143,11 +141,10 @@ interface TreeViewCustomTypeProps {
   customType: TICustomType;
   state: PickerCustomType | undefined;
   onChange: (state: SetStateAction<PickerCustomTypes>) => void;
-  labels: Record<string, string>;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
-  const { customType, state, onChange, labels } = props;
+  const { customType, state, onChange } = props;
 
   if (!customType.fields) return null;
 
@@ -165,7 +162,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   return (
     <TreeViewSection
       key={customType.id}
-      title={labels[customType.id]}
+      title={customType.id}
       subtitle={fieldCount > 0 ? `(${fieldCountLabel} exposed)` : undefined}
       badge="Custom type"
     >
@@ -182,7 +179,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
         return (
           <TreeViewCheckbox
             key={field}
-            title={labels[`${customType.id}.${field}`]}
+            title={field}
             checked={checkboxState?.value ?? false}
             onCheckedChange={onCheckedChange}
           />
@@ -195,14 +192,12 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 /**
  * Get all the existing local custom types from the store and process them into
  * a single array to be rendered by the picker. For this we use the same as the
- * Link config `customtypes` structure {@link TICustomTypes}. Also creates a map
- * of each custom type and field path and its corresponding label.
+ * Link config `customtypes` structure {@link TICustomTypes}.
  */
 function useCustomTypes() {
   const allCustomTypes = useSelector(selectAllCustomTypes);
 
   return useMemo(() => {
-    const labels: Record<string, string> = {};
     const customTypes = allCustomTypes.flatMap<TICustomType>(
       (storeCustomType) => {
         // In the store we have remote and local custom types, we want to show
@@ -212,21 +207,12 @@ function useCustomTypes() {
         if (!("local" in storeCustomType)) return [];
         const customType = storeCustomType.local;
 
-        if (customType.label != null) {
-          labels[customType.id] = customType.label;
-        }
-
         const fields = customType.tabs.flatMap((tab) => {
           return tab.value.flatMap((field) => {
             // filter out uid fields because it's a special field returned by the
             // API and is not part of the data object in the document.
             if (field.value.type === "UID" || field.key === "uid") {
               return [];
-            }
-
-            const { label } = field.value.config ?? {};
-            if (label != null) {
-              labels[`${customType.id}.${field.key}`] = label;
             }
 
             return field.key;
@@ -241,7 +227,7 @@ function useCustomTypes() {
 
     customTypes.sort((a, b) => a.id.localeCompare(b.id));
 
-    return { customTypes, labels };
+    return customTypes;
   }, [allCustomTypes]);
 }
 
