@@ -33,7 +33,7 @@ import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
  *       value: false
  *     }
  *     professionCr: {
- *       type: "customType",
+ *       type: "contentRelationship",
  *       value: {
  *         profession: {
  *           name: {
@@ -55,23 +55,25 @@ interface PickerCustomType {
   [fieldId: string]: PickerCustomTypeValue;
 }
 
-type PickerCustomTypeValue = PickerCheckboxField | PickerNestedCustomType;
+type PickerCustomTypeValue =
+  | PickerCheckboxField
+  | PickerContentRelationshipField;
 
 interface PickerCheckboxField {
   type: "checkbox";
   value: boolean;
 }
 
-interface PickerNestedCustomType {
-  type: "customType";
-  value: PickerNestedCustomTypeValue;
+interface PickerContentRelationshipField {
+  type: "contentRelationship";
+  value: PickerContentRelationshipFieldValue;
+}
+
+interface PickerContentRelationshipFieldValue {
+  [customTypeId: string]: PickerNestedCustomTypeValue;
 }
 
 interface PickerNestedCustomTypeValue {
-  [customTypeId: string]: PickerNestedCustomTypeFieldValue;
-}
-
-interface PickerNestedCustomTypeFieldValue {
   [fieldId: string]: PickerCheckboxField;
 }
 
@@ -233,73 +235,102 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           );
         }
 
-        const nestedCtState = state?.[fieldOrNestedCt.id]?.value;
+        const crFieldValue = state?.[fieldOrNestedCt.id]?.value;
+        const crFieldValueNarrowed =
+          crFieldValue !== undefined && typeof crFieldValue !== "boolean"
+            ? crFieldValue
+            : {};
 
-        const onNestedCustomTypeChange = (
-          value: SetStateAction<PickerNestedCustomTypeValue>,
-        ) => {
-          onCustomTypeChange((prev) => {
-            const prevCts = prev[fieldOrNestedCt.id]?.value;
-            const prevValue = typeof prevCts !== "boolean" ? prevCts : {};
+        return (
+          <TreeViewContentRelationshipField
+            key={fieldOrNestedCt.id}
+            field={fieldOrNestedCt}
+            state={crFieldValueNarrowed}
+            onChange={onCustomTypeChange}
+          />
+        );
+      })}
+    </TreeViewSection>
+  );
+}
 
-            return {
-              ...prev,
-              [fieldOrNestedCt.id]: {
-                type: "customType",
-                value:
-                  typeof value === "function" ? value(prevValue ?? {}) : value,
-              },
-            };
-          });
-        };
+interface TreeViewContentRelationshipFieldProps {
+  field: TIContentRelationshipFieldValue;
+  state: PickerContentRelationshipFieldValue;
+  onChange: (state: SetStateAction<PickerCustomType>) => void;
+}
 
-        return fieldOrNestedCt.customtypes.map((nestedCt) => {
-          if (typeof nestedCt === "string" || !nestedCt.fields) return null;
+function TreeViewContentRelationshipField(
+  props: TreeViewContentRelationshipFieldProps,
+) {
+  const { field, state, onChange: onCustomTypeChange } = props;
 
-          const nestedCtFields: PickerNestedCustomTypeFieldValue | undefined =
-            nestedCtState !== undefined && typeof nestedCtState !== "boolean"
-              ? nestedCtState[nestedCt.id]
-              : {};
+  const onContentRelationshipFieldChange = (
+    value: SetStateAction<PickerContentRelationshipFieldValue>,
+  ) => {
+    onCustomTypeChange((prev) => {
+      const prevCtValue = prev[field.id]?.value;
+      const prevCtValueNarrowed =
+        prevCtValue !== undefined && typeof prevCtValue !== "boolean"
+          ? prevCtValue
+          : {};
 
-          const onNestedCustomTypeFieldChange = (
-            value: SetStateAction<PickerNestedCustomTypeFieldValue>,
-          ) => {
+      return {
+        ...prev,
+        [field.id]: {
+          type: "contentRelationship",
+          value:
+            typeof value === "function"
+              ? value(prevCtValueNarrowed ?? {})
+              : value,
+        },
+      };
+    });
+  };
+
+  return field.customtypes.map((customType) => {
+    // Invalid nested custom type, we need to have fields.
+    if (typeof customType === "string" || !customType.fields) return null;
+
+    const fieldsState: PickerNestedCustomTypeValue | undefined =
+      state[customType.id];
+
+    const onNestedCustomTypeChange = (
+      value: SetStateAction<PickerNestedCustomTypeValue>,
+    ) => {
+      onContentRelationshipFieldChange((prev) => ({
+        ...prev,
+        [customType.id]:
+          typeof value === "function"
+            ? value(prev[customType.id] ?? {})
+            : value,
+      }));
+    };
+
+    return (
+      <TreeViewSection key={customType.id} title={customType.id}>
+        {customType.fields.map((field) => {
+          const { type, value: checked } = fieldsState?.[field] ?? {};
+
+          const onCheckedChange = (value: boolean) => {
             onNestedCustomTypeChange((prev) => ({
               ...prev,
-              [nestedCt.id]:
-                typeof value === "function"
-                  ? value(prev[nestedCt.id] ?? {})
-                  : value,
+              [field]: { type: "checkbox", value },
             }));
           };
 
           return (
-            <TreeViewSection key={nestedCt.id} title={nestedCt.id}>
-              {nestedCt.fields.map((field) => {
-                const { type, value: checked } = nestedCtFields[field] ?? {};
-
-                const onCheckedChange = (value: boolean) => {
-                  onNestedCustomTypeFieldChange((prev) => ({
-                    ...prev,
-                    [field]: { type: "checkbox", value },
-                  }));
-                };
-
-                return (
-                  <TreeViewCheckbox
-                    key={field}
-                    title={field}
-                    checked={type === "checkbox" ? checked : false}
-                    onCheckedChange={onCheckedChange}
-                  />
-                );
-              })}
-            </TreeViewSection>
+            <TreeViewCheckbox
+              key={field}
+              title={field}
+              checked={type === "checkbox" ? checked : false}
+              onCheckedChange={onCheckedChange}
+            />
           );
-        });
-      })}
-    </TreeViewSection>
-  );
+        })}
+      </TreeViewSection>
+    );
+  });
 }
 
 /**
@@ -421,8 +452,11 @@ function convertCustomTypesToState(
 
 function createNestedCustomTypeState(
   field: TIContentRelationshipFieldValue,
-): PickerNestedCustomType {
-  const crField: PickerNestedCustomType = { type: "customType", value: {} };
+): PickerContentRelationshipField {
+  const crField: PickerContentRelationshipField = {
+    type: "contentRelationship",
+    value: {},
+  };
   const crFieldCustomTypes = crField.value;
 
   for (const customType of field.customtypes) {
