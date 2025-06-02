@@ -34,11 +34,12 @@ import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
  *     }
  *     professionCr: {
  *       type: "customType",
- *       id: "profession",
  *       value: {
- *         name: {
- *           type: "checkbox",
- *           value: true
+ *         profession: {
+ *           name: {
+ *             type: "checkbox",
+ *             value: true
+ *           }
  *         }
  *       }
  *     }
@@ -51,8 +52,10 @@ interface PickerCustomTypes {
 }
 
 interface PickerCustomType {
-  [fieldId: string]: PickerCheckboxField | PickerNestedCustomType;
+  [fieldId: string]: PickerCustomTypeValue;
 }
+
+type PickerCustomTypeValue = PickerCheckboxField | PickerNestedCustomType;
 
 interface PickerCheckboxField {
   type: "checkbox";
@@ -61,11 +64,15 @@ interface PickerCheckboxField {
 
 interface PickerNestedCustomType {
   type: "customType";
-  value: {
-    [customTypeId: string]: {
-      [fieldId: string]: PickerCheckboxField;
-    };
-  };
+  value: PickerNestedCustomTypeValue;
+}
+
+interface PickerNestedCustomTypeValue {
+  [customTypeId: string]: PickerNestedCustomTypeFieldValue;
+}
+
+interface PickerNestedCustomTypeFieldValue {
+  [fieldId: string]: PickerCheckboxField;
 }
 
 /**
@@ -92,22 +99,22 @@ interface PickerNestedCustomType {
  *   },
  * ],
  */
-type TICustomTypes = readonly (string | TICustomTypeOrContentRelationship)[];
+type TICustomTypes = readonly (string | TICustomType)[];
 
-type TICustomTypeOrContentRelationship = {
+interface TICustomType {
   id: string;
   fields?: readonly (string | TIContentRelationshipFieldValue)[] | undefined;
-};
+}
 
-type TICustomTypeFieldValues = {
+interface TICustomTypeFieldValues {
   id: string;
   fields?: readonly string[] | undefined;
-};
+}
 
-type TIContentRelationshipFieldValue = {
+interface TIContentRelationshipFieldValue {
   id: string;
   customtypes: readonly (string | TICustomTypeFieldValues)[];
-};
+}
 
 interface ContentRelationshipFieldPickerProps {
   initialValues: TICustomTypes | undefined;
@@ -179,23 +186,22 @@ export function ContentRelationshipFieldPicker(
 }
 
 interface TreeViewCustomTypeProps {
-  customType: TICustomTypeOrContentRelationship;
+  customType: TICustomType;
   state: PickerCustomType | undefined;
   onChange: (state: SetStateAction<PickerCustomTypes>) => void;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   const { customType, state, onChange } = props;
-
   if (!customType.fields) return null;
 
-  function onCustomTypeChange(value: SetStateAction<PickerCustomType>) {
+  const onCustomTypeChange = (value: SetStateAction<PickerCustomType>) => {
     onChange((prev) => ({
       ...prev,
       [customType.id]:
-        typeof value === "function" ? value(prev[customType.id]) : value,
+        typeof value === "function" ? value(prev[customType.id] ?? {}) : value,
     }));
-  }
+  };
 
   const fieldCount = countPickedFields(state);
   const fieldCountLabel = fieldCount === 1 ? "1 field" : `${fieldCount} fields`;
@@ -207,26 +213,91 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       subtitle={fieldCount > 0 ? `(${fieldCountLabel} exposed)` : undefined}
       badge="Custom type"
     >
-      {customType.fields.map((field) => {
-        if (typeof field === "string") {
-          const checkbox = state?.[field];
+      {customType.fields.map((fieldOrNestedCt) => {
+        if (typeof fieldOrNestedCt === "string") {
+          const { type, value: checked } = state?.[fieldOrNestedCt] ?? {};
 
           const onCheckedChange = (value: boolean) => {
             onCustomTypeChange((prev) => ({
               ...prev,
-              [field]: { type: "checkbox", value },
+              [fieldOrNestedCt]: { type: "checkbox", value },
             }));
           };
 
           return (
             <TreeViewCheckbox
-              key={field}
-              title={field}
-              checked={checkbox?.type === "checkbox" ? checkbox.value : false}
+              key={fieldOrNestedCt}
+              title={fieldOrNestedCt}
+              checked={type === "checkbox" ? checked : false}
               onCheckedChange={onCheckedChange}
             />
           );
         }
+
+        const nestedCtState = state?.[fieldOrNestedCt.id].value;
+
+        const onNestedCustomTypeChange = (
+          value: SetStateAction<PickerNestedCustomTypeValue>,
+        ) => {
+          onCustomTypeChange((prev) => {
+            const prevCts = prev[fieldOrNestedCt.id]?.value;
+            const prevValue = typeof prevCts !== "boolean" ? prevCts : {};
+
+            return {
+              ...prev,
+              [fieldOrNestedCt.id]: {
+                type: "customType",
+                value:
+                  typeof value === "function" ? value(prevValue ?? {}) : value,
+              },
+            };
+          });
+        };
+
+        return fieldOrNestedCt.customtypes.map((nestedCt) => {
+          if (typeof nestedCt === "string" || !nestedCt.fields) return null;
+
+          const nestedCtFields: PickerNestedCustomTypeFieldValue =
+            nestedCtState !== undefined && typeof nestedCtState !== "boolean"
+              ? nestedCtState[nestedCt.id]
+              : {};
+
+          const onNestedCustomTypeFieldChange = (
+            value: SetStateAction<PickerNestedCustomTypeFieldValue>,
+          ) => {
+            onNestedCustomTypeChange((prev) => ({
+              ...prev,
+              [nestedCt.id]:
+                typeof value === "function"
+                  ? value(prev[nestedCt.id] ?? {})
+                  : value,
+            }));
+          };
+
+          return (
+            <TreeViewSection key={nestedCt.id} title={nestedCt.id}>
+              {nestedCt.fields.map((field) => {
+                const { type, value: checked } = nestedCtFields[field] ?? {};
+
+                const onCheckedChange = (value: boolean) => {
+                  onNestedCustomTypeFieldChange((prev) => ({
+                    ...prev,
+                    [field]: { type: "checkbox", value },
+                  }));
+                };
+
+                return (
+                  <TreeViewCheckbox
+                    key={field}
+                    title={field}
+                    checked={type === "checkbox" ? checked : false}
+                    onCheckedChange={onCheckedChange}
+                  />
+                );
+              })}
+            </TreeViewSection>
+          );
+        });
       })}
     </TreeViewSection>
   );
@@ -249,38 +320,35 @@ function useCustomTypes() {
   });
 
   return useMemo(() => {
-    const customTypes =
-      localCustomTypes.flatMap<TICustomTypeOrContentRelationship>(
-        (customType) => {
-          const fields = customType.tabs.flatMap((tab) => {
-            return tab.value.flatMap((field) => {
-              // filter out uid fields because it's a special field returned by the
-              // API and is not part of the data object in the document.
-              if (isUidField(field)) return [];
+    const customTypes = localCustomTypes.flatMap<TICustomType>((customType) => {
+      const fields = customType.tabs.flatMap((tab) => {
+        return tab.value.flatMap((field) => {
+          // filter out uid fields because it's a special field returned by the
+          // API and is not part of the data object in the document.
+          if (isUidField(field)) return [];
 
-              // Check if it's a content relationship link/field
-              if (
-                field.value.type === "Link" &&
-                field.value.config?.select === "document" &&
-                field.value.config.customtypes
-              ) {
-                const resolvedFields = resolveContentRelationshipFields(
-                  field.value.config.customtypes,
-                  localCustomTypes,
-                );
+          // Check if it's a content relationship link/field
+          if (
+            field.value.type === "Link" &&
+            field.value.config?.select === "document" &&
+            field.value.config.customtypes
+          ) {
+            const resolvedFields = resolveContentRelationshipFields(
+              field.value.config.customtypes,
+              localCustomTypes,
+            );
 
-                return resolvedFields.length > 0
-                  ? { id: field.key, customtypes: resolvedFields }
-                  : [];
-              }
+            return resolvedFields.length > 0
+              ? { id: field.key, customtypes: resolvedFields }
+              : [];
+          }
 
-              return field.key;
-            });
-          });
+          return field.key;
+        });
+      });
 
-          return fields.length > 0 ? { id: customType.id, fields } : [];
-        },
-      );
+      return fields.length > 0 ? { id: customType.id, fields } : [];
+    });
 
     customTypes.sort((a, b) => a.id.localeCompare(b.id));
 
@@ -305,6 +373,8 @@ function resolveContentRelationshipFields(
         id: customType.id,
         fields: matchingCustomType.tabs.flatMap((tab) => {
           return tab.value.flatMap((field) => {
+            // filter out uid fields because it's a special field returned by the
+            // API and is not part of the data object in the document.
             return !isUidField(field) ? field.key : [];
           });
         }),
@@ -365,39 +435,33 @@ function convertCustomTypesToState(value: TICustomTypes | undefined) {
  * config `customtypes` ({@link TICustomTypes} and filter out empty Custom types.
  */
 function convertStateToCustomTypes(fields: PickerCustomTypes) {
-  return Object.entries(fields).flatMap<TICustomTypeOrContentRelationship>(
-    ([ctId, ctFields]) => {
-      const fields = Object.entries(ctFields).flatMap(
-        ([fieldId, fieldValue]) => {
-          if (fieldValue.type === "checkbox") {
-            return fieldValue.value ? fieldId : [];
-          }
+  return Object.entries(fields).flatMap<TICustomType>(([ctId, ctFields]) => {
+    const fields = Object.entries(ctFields).flatMap(([fieldId, fieldValue]) => {
+      if (fieldValue.type === "checkbox") {
+        return fieldValue.value ? fieldId : [];
+      }
 
-          const customTypes = Object.entries(
-            fieldValue.value,
-          ).flatMap<TICustomTypeFieldValues>(
-            ([nestedCustomTypeId, nestedCustomTypeFields]) => {
-              const fields = Object.entries(nestedCustomTypeFields).flatMap(
-                ([nestedFieldId, nestedFieldValue]) => {
-                  return nestedFieldValue.value ? nestedFieldId : [];
-                },
-              );
-
-              return fields.length > 0
-                ? { id: nestedCustomTypeId, fields }
-                : [];
+      const customTypes = Object.entries(
+        fieldValue.value,
+      ).flatMap<TICustomTypeFieldValues>(
+        ([nestedCustomTypeId, nestedCustomTypeFields]) => {
+          const fields = Object.entries(nestedCustomTypeFields).flatMap(
+            ([nestedFieldId, nestedFieldValue]) => {
+              return nestedFieldValue.value ? nestedFieldId : [];
             },
           );
 
-          return customTypes.length > 0
-            ? { id: fieldId, customtypes: customTypes }
-            : [];
+          return fields.length > 0 ? { id: nestedCustomTypeId, fields } : [];
         },
       );
 
-      return fields.length > 0 ? { id: ctId, fields } : [];
-    },
-  );
+      return customTypes.length > 0
+        ? { id: fieldId, customtypes: customTypes }
+        : [];
+    });
+
+    return fields.length > 0 ? { id: ctId, fields } : [];
+  });
 }
 
 /**
