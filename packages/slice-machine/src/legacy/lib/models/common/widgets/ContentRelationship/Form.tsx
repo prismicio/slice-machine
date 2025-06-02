@@ -7,6 +7,7 @@ import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
+import { LinkConfig } from "@prismicio/types-internal/lib/customtypes";
 
 const FormFields = {
   label: DefaultFields.label,
@@ -43,7 +44,7 @@ type FormProps = {
   config: {
     label: string;
     select: string;
-    customtypes?: (string | { id: string; fields: string[] })[];
+    customtypes?: LinkConfig["customtypes"];
   };
   id: string;
   // TODO: this exists in the yup schema but this doesn't seem to be validated by formik
