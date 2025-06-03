@@ -9,6 +9,31 @@ import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
 
+const customTypesSchema = yup.object({
+  id: yup.string().required(),
+  customtypes: yup
+    .array(
+      yup.object({
+        id: yup.string().required(),
+        fields: yup
+          .array(
+            yup.lazy((fieldValue) => {
+              if (typeof fieldValue === "string") {
+                return yup.string();
+              }
+
+              return yup.object({
+                id: yup.string().required(),
+                fields: yup.array(yup.string()).required(),
+              });
+            }),
+          )
+          .required(),
+      }),
+    )
+    .required(),
+});
+
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
@@ -19,21 +44,30 @@ const FormFields = {
         yup.object({
           id: yup.string().required(),
           fields: yup.array(
-            yup.lazy((value) =>
-              typeof value === "object"
-                ? yup.object({
-                    id: yup.string().required(),
-                    customtypes: yup
-                      .array(
-                        yup.object({
-                          id: yup.string().required(),
-                          fields: yup.array(yup.string()).required(),
-                        }),
-                      )
-                      .required(),
-                  })
-                : yup.string(),
-            ),
+            yup.lazy((value) => {
+              if (typeof value === "string") {
+                return yup.string();
+              }
+
+              if ("fields" in value) {
+                return yup.object({
+                  id: yup.string().required(),
+                  fields: yup
+                    .array(
+                      yup.lazy((fieldValue) => {
+                        if (typeof fieldValue === "string") {
+                          return yup.string();
+                        }
+
+                        return customTypesSchema;
+                      }),
+                    )
+                    .required(),
+                });
+              }
+
+              return customTypesSchema;
+            }),
           ),
         }),
       ),

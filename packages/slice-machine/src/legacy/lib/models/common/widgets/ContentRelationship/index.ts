@@ -54,6 +54,30 @@ const Meta = {
   icon: MdSettingsEthernet,
 };
 
+const customTypesSchema = yup.object({
+  id: yup.string().required(),
+  customtypes: yup
+    .array(
+      yup.object({
+        id: yup.string().required(),
+        fields: yup
+          .array(
+            yup.lazy((fieldValue) => {
+              if (typeof fieldValue === "string") {
+                return yup.string();
+              }
+
+              return yup.object({
+                id: yup.string().required(),
+                fields: yup.array(yup.string()).required(),
+              });
+            }),
+          )
+          .required(),
+      }),
+    )
+    .required(),
+});
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const contentRelationShipConfigSchema = linkConfigSchema.shape({
   label: yup.string().max(35, "String is too long. Max: 35"),
@@ -67,21 +91,30 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
       yup.object({
         id: yup.string().required(),
         fields: yup.array(
-          yup.lazy((value) =>
-            typeof value === "object"
-              ? yup.object({
-                  id: yup.string().required(),
-                  customtypes: yup
-                    .array(
-                      yup.object({
-                        id: yup.string().required(),
-                        fields: yup.array(yup.string()).required(),
-                      }),
-                    )
-                    .required(),
-                })
-              : yup.string(),
-          ),
+          yup.lazy((value) => {
+            if (typeof value === "string") {
+              return yup.string();
+            }
+
+            if ("fields" in value) {
+              return yup.object({
+                id: yup.string().required(),
+                fields: yup
+                  .array(
+                    yup.lazy((fieldValue) => {
+                      if (typeof fieldValue === "string") {
+                        return yup.string();
+                      }
+
+                      return customTypesSchema;
+                    }),
+                  )
+                  .required(),
+              });
+            }
+
+            return customTypesSchema;
+          }),
         ),
       }),
     )
