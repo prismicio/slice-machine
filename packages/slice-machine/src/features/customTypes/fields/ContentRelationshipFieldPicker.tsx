@@ -204,14 +204,11 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     }));
   };
 
-  const fieldCount = countPickedFields(state);
-  const fieldCountLabel = fieldCount === 1 ? "1 field" : `${fieldCount} fields`;
-
   return (
     <TreeViewSection
       key={customType.id}
       title={customType.id}
-      subtitle={fieldCount > 0 ? `(${fieldCountLabel} exposed)` : undefined}
+      subtitle={getExposedFieldsLabel(countPickedFields(state))}
       badge="Custom type"
     >
       {customType.fields.map((fieldOrNestedCt) => {
@@ -308,7 +305,12 @@ function TreeViewContentRelationshipField(
     };
 
     return (
-      <TreeViewSection key={customType.id} title={customType.id}>
+      <TreeViewSection
+        key={customType.id}
+        title={customType.id}
+        subtitle={getExposedFieldsLabel(countPickedFields(fieldsState))}
+        badge="Custom type"
+      >
         {customType.fields.map((field) => {
           const { type, value: checked } = fieldsState?.[field] ?? {};
 
@@ -331,6 +333,11 @@ function TreeViewContentRelationshipField(
       </TreeViewSection>
     );
   });
+}
+
+function getExposedFieldsLabel(count: number) {
+  if (count === 0) return undefined;
+  return count === 1 ? "(1 field exposed)" : `(${count} fields exposed)`;
 }
 
 /**
