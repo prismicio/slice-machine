@@ -5,13 +5,16 @@ import {
   TreeViewCheckbox,
   TreeViewSection,
 } from "@prismicio/editor-ui";
-import { SetStateAction, useMemo } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
+import { isValidObject } from "@/utils/isValidObject";
 
 /**
- * Picker state types. Used internally to store the state of the TreeView.
+ * Picker fields check map types. Used internally to keep track of the checked
+ * fields in the TreeView, as it's easier to handle objects than arrays and
+ * also ensure field uniqueness.
  *
  * @example
  * {
@@ -66,8 +69,10 @@ type TICustomTypes = readonly (string | TICustomType)[];
 
 interface TICustomType {
   id: string;
-  fields?: readonly string[] | undefined;
+  fields: readonly string[];
 }
+
+type Updater<T> = (prev: T) => T;
 
 interface ContentRelationshipFieldPickerProps {
   value: TICustomTypes | undefined;
@@ -79,14 +84,10 @@ export function ContentRelationshipFieldPicker(
 ) {
   const { value, onChange } = props;
   const customTypes = useCustomTypes();
-  const state = useMemo(() => convertCustomTypesToState(value), [value]);
+  const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
 
-  function onCustomTypeChange(value: SetStateAction<PickerCustomTypes>) {
-    onChange(
-      convertStateToCustomTypes(
-        typeof value === "function" ? value(state) : value,
-      ),
-    );
+  function onCustomTypeChange(updater: Updater<PickerCustomTypes>) {
+    onChange(convertFieldCheckMapToCustomTypes(updater(fieldCheckMap)));
   }
 
   return (
@@ -107,14 +108,14 @@ export function ContentRelationshipFieldPicker(
         </Box>
         <TreeView
           title="Exposed fields"
-          subtitle={`(${countPickedFields(state)})`}
+          subtitle={`(${countPickedFields(fieldCheckMap)})`}
         >
           {customTypes.map((customType) => (
             <TreeViewCustomType
               key={customType.id}
               customType={customType}
-              state={state[customType.id]}
               onChange={onCustomTypeChange}
+              fieldCheckMap={fieldCheckMap[customType.id]}
             />
           ))}
         </TreeView>
@@ -139,24 +140,21 @@ export function ContentRelationshipFieldPicker(
 
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
-  state: PickerCustomType | undefined;
-  onChange: (state: SetStateAction<PickerCustomTypes>) => void;
+  fieldCheckMap: PickerCustomType | undefined;
+  onChange: (fn: (map: PickerCustomTypes) => PickerCustomTypes) => void;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
-  const { customType, state, onChange } = props;
+  const { customType, fieldCheckMap, onChange } = props;
 
-  if (!customType.fields) return null;
-
-  function onCustomTypeChange(value: SetStateAction<PickerCustomType>) {
-    onChange((prev) => ({
-      ...prev,
-      [customType.id]:
-        typeof value === "function" ? value(prev[customType.id]) : value,
+  function onCustomTypeChange(updater: Updater<PickerCustomType>) {
+    onChange((currentCustomTypes) => ({
+      ...currentCustomTypes,
+      [customType.id]: updater(currentCustomTypes[customType.id]),
     }));
   }
 
-  const fieldCount = countPickedFields(state);
+  const fieldCount = countPickedFields(fieldCheckMap);
   const fieldCountLabel = fieldCount === 1 ? "1 field" : `${fieldCount} fields`;
 
   return (
@@ -167,11 +165,11 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       badge="Custom type"
     >
       {customType.fields.map((field) => {
-        const checkboxState = state?.[field];
+        const checkboxState = fieldCheckMap?.[field];
 
         function onCheckedChange(value: boolean) {
-          onCustomTypeChange((prev) => ({
-            ...prev,
+          onCustomTypeChange((currentFields) => ({
+            ...currentFields,
             [field]: { type: "checkbox", value },
           }));
         }
@@ -233,21 +231,13 @@ function useCustomTypes() {
 
 /**
  * Converts a Link config `customtypes` ({@link TICustomTypes}) structure into
- * picker state ({@link PickerCustomTypes}).
+ * picker fields check map ({@link PickerCustomTypes}).
  */
-function convertCustomTypesToState(value: TICustomTypes | undefined) {
-  if (value === undefined) return {};
+function convertCustomTypesToFieldCheckMap(customtypes: TICustomTypes) {
+  return customtypes.reduce<PickerCustomTypes>((customTypes, customType) => {
+    if (typeof customType === "string") return customTypes;
 
-  return value.reduce<PickerCustomTypes>((customTypes, customType) => {
-    if (typeof customType === "string") {
-      customTypes[customType] = {};
-      return customTypes;
-    }
-
-    const { id, fields } = customType;
-    if (fields === undefined) return customTypes;
-
-    customTypes[id] = fields.reduce<PickerCustomType>(
+    customTypes[customType.id] = customType.fields.reduce<PickerCustomType>(
       (customTypeFields, field) => {
         customTypeFields[field] = { type: "checkbox", value: true };
         return customTypeFields;
@@ -260,11 +250,12 @@ function convertCustomTypesToState(value: TICustomTypes | undefined) {
 }
 
 /**
- * Converts a picker state structure ({@link PickerCustomTypes}) into Link
- * config `customtypes` ({@link TICustomTypes} and filter out empty Custom types.
+ * Converts a picker fields check map structure ({@link PickerCustomTypes}) into
+ * Link config `customtypes` ({@link TICustomTypes}) and filter out empty Custom
+ * types.
  */
-function convertStateToCustomTypes(fields: PickerCustomTypes) {
-  return Object.entries(fields).flatMap<TICustomType>(([ctId, ctFields]) => {
+function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
+  return Object.entries(map).flatMap<TICustomType>(([ctId, ctFields]) => {
     const fields = Object.entries(ctFields).flatMap(([fieldId, checkbox]) =>
       checkbox.value ? [fieldId] : [],
     );
@@ -273,13 +264,15 @@ function convertStateToCustomTypes(fields: PickerCustomTypes) {
 }
 
 /**
- * Generic recursive function that goes down the form state and counts all
+ * Generic recursive function that goes down the fields check map and counts all
  * the properties that are set to true, which correspond to selected fields.
  *
  * It's not type safe, but checks the type of the values at runtime so that
  * it only recurses into valid objects, and only counts checkbox fields.
  */
-function countPickedFields(fields: object | undefined): number {
+function countPickedFields(
+  fields: Record<string, unknown> | undefined,
+): number {
   if (!fields) return 0;
   return Object.values(fields).reduce<number>((count, value) => {
     if (!isValidObject(value)) return count;
@@ -287,15 +280,8 @@ function countPickedFields(fields: object | undefined): number {
     return count + countPickedFields(value);
   }, 0);
 }
-function isCheckboxField(value: object): value is PickerCheckboxField {
+
+function isCheckboxField(value: unknown): value is PickerCheckboxField {
+  if (!isValidObject(value)) return false;
   return "type" in value && value.type === "checkbox";
-}
-function isValidObject(value: unknown): value is object {
-  if (typeof value !== "object" || value === null) return false;
-  if (Array.isArray(value)) return false;
-  return !(
-    value instanceof Date ||
-    value instanceof RegExp ||
-    value instanceof Error
-  );
 }
