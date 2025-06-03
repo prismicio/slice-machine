@@ -1,3 +1,4 @@
+import { LinkConfig } from "@prismicio/types-internal/lib/customtypes";
 import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
@@ -7,7 +8,6 @@ import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
 import { DefaultFields } from "@/legacy/lib/forms/defaults";
-import { LinkConfig } from "@prismicio/types-internal/lib/customtypes";
 
 const FormFields = {
   label: DefaultFields.label,
