@@ -170,21 +170,21 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       subtitle={fieldCount > 0 ? `(${fieldCountLabel} exposed)` : undefined}
       badge="Custom type"
     >
-      {customType.fields.map((field) => {
-        const checkboxState = fieldCheckMap?.[field];
+      {customType.fields.map((fieldId) => {
+        const checked = fieldCheckMap?.[fieldId].value ?? false;
 
         function onCheckedChange(value: boolean) {
           onChange((currentFields) => ({
             ...currentFields,
-            [field]: { type: "checkbox", value },
+            [fieldId]: { type: "checkbox", value },
           }));
         }
 
         return (
           <TreeViewCheckbox
-            key={field}
-            title={field}
-            checked={checkboxState?.value ?? false}
+            key={fieldId}
+            title={fieldId}
+            checked={checked}
             onCheckedChange={onCheckedChange}
           />
         );
