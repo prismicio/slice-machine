@@ -211,8 +211,11 @@ function useCustomTypes() {
 
         const fields = customType.tabs.flatMap((tab) => {
           return tab.value.flatMap((field) => {
-            // filter out uid fields because it's a special field returned by the
+            // Filter out uid fields because it's a special field returned by the
             // API and is not part of the data object in the document.
+            // We also filter by key "uid", because (as of the time of writing
+            // this), creating any field with that API id will result in it being
+            // used for metadata.
             if (field.value.type === "UID" || field.key === "uid") {
               return [];
             }
