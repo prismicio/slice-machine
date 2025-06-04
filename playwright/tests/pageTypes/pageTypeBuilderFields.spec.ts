@@ -641,7 +641,9 @@ test("I see that linked content relationships are updated when a custom type API
   customTypesBuilderPage,
   page,
 }) => {
+  // Setup: Create two custom types and add a relationship between them
   // TODO: Replace manual creation of custom types with something faster
+
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
@@ -690,6 +692,8 @@ test("I see that linked content relationships are updated when a custom type API
 
   await pageTypesBuilderPage.editFieldDialog.submitButton.click();
 
+  // Go to the first custom type and rename the field API id
+
   await customTypesTablePage.goto();
 
   const customTypeRow = customTypesTablePage.getRow(ct1Id);
@@ -711,6 +715,8 @@ test("I see that linked content relationships are updated when a custom type API
 
   await expect(pageTypesBuilderPage.autoSaveStatusSaved).toBeVisible();
 
+  // Check that the custom relationship was also updated
+
   await customTypesTablePage.goto();
 
   await customTypesTablePage.getRow(ct2Id).click();
@@ -728,5 +734,5 @@ test("I see that linked content relationships are updated when a custom type API
     .getByText(ct1Id)
     .click();
 
-  await expect(page.getByLabel("my_rich_text")).toBeVisible();
+  await expect(page.getByLabel("my_rich_text_renamed")).toBeVisible();
 });
