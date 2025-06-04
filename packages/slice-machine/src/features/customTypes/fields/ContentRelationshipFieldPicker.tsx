@@ -86,7 +86,7 @@ export function ContentRelationshipFieldPicker(
   const customTypes = useCustomTypes();
   const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
 
-  function onCustomTypeChange(updater: Updater<PickerCustomTypes>) {
+  function onCustomTypesChange(updater: Updater<PickerCustomTypes>) {
     onChange(convertFieldCheckMapToCustomTypes(updater(fieldCheckMap)));
   }
 
@@ -110,14 +110,25 @@ export function ContentRelationshipFieldPicker(
           title="Exposed fields"
           subtitle={`(${countPickedFields(fieldCheckMap)})`}
         >
-          {customTypes.map((customType) => (
-            <TreeViewCustomType
-              key={customType.id}
-              customType={customType}
-              onChange={onCustomTypeChange}
-              fieldCheckMap={fieldCheckMap[customType.id]}
-            />
-          ))}
+          {customTypes.map((customType) => {
+            const onCustomTypeChange = (updater: Updater<PickerCustomType>) => {
+              onCustomTypesChange((currentCustomTypes) => ({
+                ...currentCustomTypes,
+                [customType.id]: updater(
+                  currentCustomTypes[customType.id] ?? {},
+                ),
+              }));
+            };
+
+            return (
+              <TreeViewCustomType
+                key={customType.id}
+                customType={customType}
+                onChange={onCustomTypeChange}
+                fieldCheckMap={fieldCheckMap[customType.id]}
+              />
+            );
+          })}
         </TreeView>
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
@@ -141,18 +152,11 @@ export function ContentRelationshipFieldPicker(
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
   fieldCheckMap: PickerCustomType | undefined;
-  onChange: (fn: (map: PickerCustomTypes) => PickerCustomTypes) => void;
+  onChange: (fn: Updater<PickerCustomType>) => void;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   const { customType, fieldCheckMap, onChange } = props;
-
-  function onCustomTypeChange(updater: Updater<PickerCustomType>) {
-    onChange((currentCustomTypes) => ({
-      ...currentCustomTypes,
-      [customType.id]: updater(currentCustomTypes[customType.id]),
-    }));
-  }
 
   const fieldCount = countPickedFields(fieldCheckMap);
   const fieldCountLabel = fieldCount === 1 ? "1 field" : `${fieldCount} fields`;
@@ -168,7 +172,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
         const checkboxState = fieldCheckMap?.[field];
 
         function onCheckedChange(value: boolean) {
-          onCustomTypeChange((currentFields) => ({
+          onChange((currentFields) => ({
             ...currentFields,
             [field]: { type: "checkbox", value },
           }));
