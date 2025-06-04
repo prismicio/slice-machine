@@ -658,34 +658,35 @@ function createNestedCustomTypeState(
  */
 function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
   return Object.entries(map).flatMap<TICustomType>(([ctId, ctFields]) => {
-    const fields = Object.entries(ctFields).flatMap(([fieldId, fieldValue]) => {
+    const fields = Object.entries(ctFields).flatMap<
+      string | TIContentRelationshipFieldValue | TIGroupFieldValues
+    >(([fieldId, fieldValue]) => {
       if (fieldValue.type === "checkbox") {
         return fieldValue.value ? fieldId : [];
       }
 
       if (fieldValue.type === "group") {
-        return {
-          id: fieldId,
-          fields: Object.entries(fieldValue.value).flatMap(
-            ([fieldId, fieldValue]) => {
-              return fieldValue.value ? fieldId : [];
-            },
-          ),
-        };
-      }
+        const fields = Object.entries(fieldValue.value).flatMap<
+          string | TIContentRelationshipFieldValue
+        >(([fieldId, fieldValue]) => {
+          if (fieldValue.type === "checkbox") {
+            return fieldValue.value ? fieldId : [];
+          }
 
-      const customTypes = Object.entries(
-        fieldValue.value,
-      ).flatMap<TICustomTypeFieldValues>(
-        ([nestedCustomTypeId, nestedCustomTypeFields]) => {
-          const fields = Object.entries(nestedCustomTypeFields).flatMap(
-            ([nestedFieldId, nestedFieldValue]) => {
-              return nestedFieldValue.value ? nestedFieldId : [];
-            },
+          const customTypes = convertContentRelationshipStateToCustomTypes(
+            fieldValue.value,
           );
 
-          return fields.length > 0 ? { id: nestedCustomTypeId, fields } : [];
-        },
+          return customTypes.length > 0
+            ? { id: fieldId, customtypes: customTypes }
+            : [];
+        });
+
+        return fields.length > 0 ? { id: fieldId, fields } : [];
+      }
+
+      const customTypes = convertContentRelationshipStateToCustomTypes(
+        fieldValue.value,
       );
 
       return customTypes.length > 0
@@ -695,6 +696,22 @@ function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
 
     return fields.length > 0 ? { id: ctId, fields } : [];
   });
+}
+
+function convertContentRelationshipStateToCustomTypes(
+  value: PickerContentRelationshipFieldValue,
+): TICustomTypeFieldValues[] {
+  return Object.entries(value).flatMap<TICustomTypeFieldValues>(
+    ([nestedCustomTypeId, nestedCustomTypeFields]) => {
+      const fields = Object.entries(nestedCustomTypeFields).flatMap(
+        ([nestedFieldId, nestedFieldValue]) => {
+          return nestedFieldValue.value ? nestedFieldId : [];
+        },
+      );
+
+      return fields.length > 0 ? { id: nestedCustomTypeId, fields } : [];
+    },
+  );
 }
 
 /**
