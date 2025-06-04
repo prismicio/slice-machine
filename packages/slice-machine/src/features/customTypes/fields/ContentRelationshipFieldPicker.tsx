@@ -72,8 +72,6 @@ interface TICustomType {
   fields: readonly string[];
 }
 
-type Updater<T> = (prev: T) => T;
-
 interface ContentRelationshipFieldPickerProps {
   value: TICustomTypes | undefined;
   onChange: (fields: TICustomTypes) => void;
@@ -86,7 +84,9 @@ export function ContentRelationshipFieldPicker(
   const customTypes = useCustomTypes();
   const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
 
-  function onCustomTypesChange(updater: Updater<PickerCustomTypes>) {
+  function onCustomTypesChange(
+    updater: (prev: PickerCustomTypes) => PickerCustomTypes,
+  ) {
     onChange(convertFieldCheckMapToCustomTypes(updater(fieldCheckMap)));
   }
 
@@ -111,7 +111,9 @@ export function ContentRelationshipFieldPicker(
           subtitle={`(${countPickedFields(fieldCheckMap)})`}
         >
           {customTypes.map((customType) => {
-            const onCustomTypeChange = (updater: Updater<PickerCustomType>) => {
+            const onCustomTypeChange = (
+              updater: (prev: PickerCustomType) => PickerCustomType,
+            ) => {
               onCustomTypesChange((currentCustomTypes) => ({
                 ...currentCustomTypes,
                 [customType.id]: updater(
@@ -152,7 +154,7 @@ export function ContentRelationshipFieldPicker(
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
   fieldCheckMap: PickerCustomType | undefined;
-  onChange: (fn: Updater<PickerCustomType>) => void;
+  onChange: (fn: (prev: PickerCustomType) => PickerCustomType) => void;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
