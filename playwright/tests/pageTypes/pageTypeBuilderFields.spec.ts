@@ -734,5 +734,5 @@ test("I see that linked content relationships are updated when a custom type API
     .getByText(ct1Id)
     .click();
 
-  await expect(page.getByLabel("my_rich_text_renamed")).toBeVisible();
+  await expect(page.getByLabel("my_rich_text_renamed")).toBeChecked();
 });
