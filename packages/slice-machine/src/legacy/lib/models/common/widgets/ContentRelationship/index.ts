@@ -1,4 +1,7 @@
-import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import {
+  CustomTypes,
+  Link,
+} from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdSettingsEthernet } from "react-icons/md";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
@@ -54,30 +57,6 @@ const Meta = {
   icon: MdSettingsEthernet,
 };
 
-const customTypesSchema = yup.object({
-  id: yup.string().required(),
-  customtypes: yup
-    .array(
-      yup.object({
-        id: yup.string().required(),
-        fields: yup
-          .array(
-            yup.lazy((fieldValue) => {
-              if (typeof fieldValue === "string") {
-                return yup.string();
-              }
-
-              return yup.object({
-                id: yup.string().required(),
-                fields: yup.array(yup.string()).required(),
-              });
-            }),
-          )
-          .required(),
-      }),
-    )
-    .required(),
-});
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 const contentRelationShipConfigSchema = linkConfigSchema.shape({
   label: yup.string().max(35, "String is too long. Max: 35"),
@@ -85,39 +64,13 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
-  // TODO: Validate customtypes using existing types-internal codec
   customtypes: yup
-    .array(
-      yup.object({
-        id: yup.string().required(),
-        fields: yup.array(
-          yup.lazy((value) => {
-            if (typeof value === "string") {
-              return yup.string();
-            }
-
-            if ("fields" in value) {
-              return yup.object({
-                id: yup.string().required(),
-                fields: yup
-                  .array(
-                    yup.lazy((fieldValue) => {
-                      if (typeof fieldValue === "string") {
-                        return yup.string();
-                      }
-
-                      return customTypesSchema;
-                    }),
-                  )
-                  .required(),
-              });
-            }
-
-            return customTypesSchema;
-          }),
-        ),
-      }),
-    )
+    .array()
+    .test({
+      message: "Invalid content relationship structure.",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      test: (value) => CustomTypes.decode(value)._tag === "Right",
+    })
     .optional(),
 });
 
