@@ -9,7 +9,7 @@ import {
   useState,
 } from "react";
 
-import { CustomTypeUpdateMeta, updateCustomType } from "@/apiClient";
+import { CustomTypeUpdateMeta, getState, updateCustomType } from "@/apiClient";
 import { getFormat } from "@/domain/customType";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
@@ -47,14 +47,8 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
   const { actionQueueStatus, setNextAction } = useActionQueue({
     errorMessage: customTypeMessages.autoSaveFailed,
   });
-  const { saveCustomTypesSuccess, saveSliceModelsSuccess } =
-    useSliceMachineActions();
-  const stableSaveCustomTypesSuccess = useStableCallback(
-    saveCustomTypesSuccess,
-  );
-  const stableSaveSliceModelsSuccess = useStableCallback(
-    saveSliceModelsSuccess,
-  );
+  const { refreshState } = useSliceMachineActions();
+  const stableRefreshState = useStableCallback(refreshState);
   const { syncChanges } = useAutoSync();
 
   const setCustomType = useCallback(
@@ -63,26 +57,21 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
 
       setCustomTypeState(customType);
       setNextAction(async () => {
-        const { updatedCustomTypes, updatedSlices, errors } =
-          await updateCustomType({ customType, updateMeta });
+        const { errors } = await updateCustomType({ customType, updateMeta });
 
         if (errors.length > 0) {
           throw errors;
         }
 
-        stableSaveCustomTypesSuccess(updatedCustomTypes);
-        stableSaveSliceModelsSuccess(updatedSlices);
+        // Refresh the store with the latest server state to get the updated
+        // custom types
+        stableRefreshState(await getState());
 
         syncChanges();
         onSaveCallback?.();
       });
     },
-    [
-      setNextAction,
-      stableSaveCustomTypesSuccess,
-      stableSaveSliceModelsSuccess,
-      syncChanges,
-    ],
+    [setNextAction, stableRefreshState, syncChanges],
   );
 
   const contextValue: CustomTypeContext = useMemo(

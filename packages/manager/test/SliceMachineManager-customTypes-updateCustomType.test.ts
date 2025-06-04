@@ -16,12 +16,19 @@ import {
 
 it("calls plugins' `custom-type:update` hook", async (ctx) => {
 	const model = ctx.mockPrismic.model.customType();
-	const hookHandler = vi.fn();
+	const readHookHandler = vi.fn(() => ({
+		model: ctx.mockPrismic.model.customType(),
+		errors: [],
+	}));
+	const updateHookHandler = vi.fn();
+
 	const adapter = createTestPlugin({
 		setup: ({ hook }) => {
-			hook("custom-type:update", hookHandler);
+			hook("custom-type:read", readHookHandler);
+			hook("custom-type:update", updateHookHandler);
 		},
 	});
+
 	const cwd = await createTestProject({ adapter });
 	const manager = createSliceMachineManager({
 		nativePlugins: { [adapter.meta.name]: adapter },
@@ -32,7 +39,7 @@ it("calls plugins' `custom-type:update` hook", async (ctx) => {
 
 	const res = await manager.customTypes.updateCustomType({ model });
 
-	expectHookHandlerToHaveBeenCalledWithData(hookHandler, { model });
+	expectHookHandlerToHaveBeenCalledWithData(updateHookHandler, { model });
 	expect(res).toStrictEqual({
 		errors: [],
 	});
@@ -126,12 +133,16 @@ describe("updateCustomTypeContentRelationships", () => {
 		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
-		expect(onUpdate).toHaveBeenCalledWith(
-			getCustomTypeModel({ ids: ["authorLastName_CHANGED"] }),
-		);
-		expect(onUpdate).toHaveBeenCalledWith(
-			getCustomTypeModel({ ids: ["address", "authorLastName_CHANGED"] }),
-		);
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ ids: ["authorLastName"] }),
+			model: getCustomTypeModel({ ids: ["authorLastName_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ ids: ["address", "authorLastName"] }),
+			model: getCustomTypeModel({
+				ids: ["address", "authorLastName_CHANGED"],
+			}),
+		});
 	});
 
 	it("should update NESTED content relationship ids", async () => {
@@ -150,12 +161,18 @@ describe("updateCustomTypeContentRelationships", () => {
 		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
-		expect(onUpdate).toHaveBeenCalledWith(
-			getCustomTypeModel({ nestedIds: ["city_CHANGED"] }),
-		);
-		expect(onUpdate).toHaveBeenCalledWith(
-			getCustomTypeModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
-		);
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ nestedIds: ["city"] }),
+			model: getCustomTypeModel({ nestedIds: ["city_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({
+				nestedIds: ["addressLine1", "city"],
+			}),
+			model: getCustomTypeModel({
+				nestedIds: ["addressLine1", "city_CHANGED"],
+			}),
+		});
 
 		updateCustomTypeContentRelationships({
 			models: [{ model: getCustomTypeModel() }],
@@ -164,9 +181,10 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledWith(
-			getCustomTypeModel({ nestedCrId: "address_cr_CHANGED" }),
-		); // changed
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ nestedCrId: "address_cr" }),
+			model: getCustomTypeModel({ nestedCrId: "address_cr_CHANGED" }),
+		}); // changed
 	});
 
 	it("should not update content relationship ids if the custom type id is not the same", async () => {
@@ -243,12 +261,18 @@ describe("updateSharedSliceContentRelationships", () => {
 		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
-		expect(onUpdate).toHaveBeenCalledWith(
-			getSharedSliceModel({ ids: ["authorLastName_CHANGED"] }),
-		);
-		expect(onUpdate).toHaveBeenCalledWith(
-			getSharedSliceModel({ ids: ["address", "authorLastName_CHANGED"] }),
-		);
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({ ids: ["authorLastName"] }),
+			model: getSharedSliceModel({ ids: ["authorLastName_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({
+				ids: ["address", "authorLastName"],
+			}),
+			model: getSharedSliceModel({
+				ids: ["address", "authorLastName_CHANGED"],
+			}),
+		});
 	});
 
 	it("should update slice NESTED content relationship ids", async () => {
@@ -267,12 +291,18 @@ describe("updateSharedSliceContentRelationships", () => {
 		// less calls than models because onUpdate is only called if the model has changed
 		expect(onUpdate).toHaveBeenCalledTimes(2);
 
-		expect(onUpdate).toHaveBeenCalledWith(
-			getSharedSliceModel({ nestedIds: ["city_CHANGED"] }),
-		);
-		expect(onUpdate).toHaveBeenCalledWith(
-			getSharedSliceModel({ nestedIds: ["addressLine1", "city_CHANGED"] }),
-		);
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({ nestedIds: ["city"] }),
+			model: getSharedSliceModel({ nestedIds: ["city_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({
+				nestedIds: ["addressLine1", "city"],
+			}),
+			model: getSharedSliceModel({
+				nestedIds: ["addressLine1", "city_CHANGED"],
+			}),
+		});
 
 		updateSharedSliceContentRelationships({
 			models: [{ model: getSharedSliceModel() }],
@@ -281,9 +311,10 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		expect(onUpdate).toHaveBeenCalledWith(
-			getSharedSliceModel({ nestedCrId: "address_cr_CHANGED" }),
-		); // changed
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({ nestedCrId: "address_cr" }),
+			model: getSharedSliceModel({ nestedCrId: "address_cr_CHANGED" }),
+		}); // changed
 	});
 
 	it("should not update content relationship ids if the custom type id is not the same", async () => {

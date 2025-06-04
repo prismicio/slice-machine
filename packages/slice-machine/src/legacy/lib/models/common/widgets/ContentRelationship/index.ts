@@ -11,17 +11,44 @@ import { Widget } from "../Widget";
 import Form, { FormFields } from "./Form";
 
 /**
+ * Legacy:
+ *  {
+ *   "type": "Link",
+ *   "config": {
+ *     "select": "document",
+ *     "label": "relationship"
+ *     "customtypes": [
+ *       "page"
+ *     ],
+ *   }
+ * }
+ *
+ * Current format (field picking):
  * {
-      "type": "Link",
-      "config": {
-        "select": "document",
-        "customtypes": [
-          "page"
-        ],
-        "label": "relationship"
-      }
-    }
-*/
+ *   "type": "Link",
+ *   "config": {
+ *     "select": "document",
+ *     "label": "relationship"
+ *     "customtypes": [
+ *       {
+ *         "id": "page",
+ *         "fields": [
+ *           "category",
+ *           {
+ *             "id": "countryRelation",
+ *             "customtypes": [
+ *               {
+ *                 "id": "country",
+ *                 "fields": ["name"]
+ *               }
+ *             ]
+ *           }
+ *         ]
+ *       }
+ *     ],
+ *   }
+ * }
+ */
 
 const Meta = {
   icon: MdSettingsEthernet,
@@ -34,7 +61,31 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
-  customtypes: yup.array(yup.string()).strict().optional(),
+  // TODO: Validate customtypes using existing types-internal codec
+  customtypes: yup
+    .array(
+      yup.object({
+        id: yup.string().required(),
+        fields: yup.array(
+          yup.lazy((value) =>
+            typeof value === "object"
+              ? yup.object({
+                  id: yup.string().required(),
+                  customtypes: yup
+                    .array(
+                      yup.object({
+                        id: yup.string().required(),
+                        fields: yup.array(yup.string()).required(),
+                      }),
+                    )
+                    .required(),
+                })
+              : yup.string(),
+          ),
+        ),
+      }),
+    )
+    .optional(),
 });
 
 const schema = yup.object().shape({
@@ -74,9 +125,12 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
     return {
       ...initialValues,
       customtypes: initialValues.customtypes.filter((ct) =>
-        customTypes.find(
-          (frontendCustomType) => frontendCustomType.local.id === ct,
-        ),
+        customTypes.find((frontendCustomType) => {
+          if (typeof ct === "string") {
+            return frontendCustomType.local.id === ct;
+          }
+          return frontendCustomType.local.id === ct.id;
+        }),
       ),
     };
   },

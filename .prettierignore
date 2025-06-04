@@ -16,7 +16,6 @@ packages/nuxt-sm/src/sm-resolver.js
 packages/**/package.json
 README.md
 package.json
-e2e-projects/**
 dist
 packages/init/playground
 coverage/

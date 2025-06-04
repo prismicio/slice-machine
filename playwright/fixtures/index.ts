@@ -1,6 +1,3 @@
-import * as fs from "fs/promises";
-import * as os from "os";
-import * as path from "path";
 import { test as baseTest, expect } from "@playwright/test";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import {
@@ -21,7 +18,7 @@ import { SimulatorPage } from "../pages/SimulatorPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
 import { generateRandomId } from "../utils/generateRandomId";
 import { MockManagerProcedures } from "../utils";
-import config from "../playwright.config";
+import config, { auth, baseUrl } from "../playwright.config";
 
 type Options = {
   onboarded: boolean;
@@ -48,10 +45,10 @@ type Fixtures = {
   /**
    * Data
    */
-  reusablePageType: { name: string };
-  singlePageType: { name: string };
-  reusableCustomType: { name: string };
-  singleCustomType: { name: string };
+  reusablePageType: { name: string; id: string };
+  singlePageType: { name: string; id: string };
+  reusableCustomType: { name: string; id: string };
+  singleCustomType: { name: string; id: string };
   slice: { name: string };
   repeatableZoneSlice: { name: string };
   firstSliceLibrary: { id: string };
@@ -65,6 +62,11 @@ type Fixtures = {
    * Mocks
    */
   procedures: MockManagerProcedures;
+
+  /**
+   * Authentication
+   */
+  userApiToken: string;
 };
 
 export const test = baseTest.extend<Options & Fixtures>({
@@ -112,55 +114,79 @@ export const test = baseTest.extend<Options & Fixtures>({
   /**
    * Data
    */
-  reusablePageType: async ({ pageTypesTablePage }, use) => {
+  reusablePageType: async ({ pageTypesTablePage, manager }, use) => {
     await pageTypesTablePage.goto();
     await pageTypesTablePage.openCreateDialog();
 
-    const pageTypeName = "Page Type " + generateRandomId();
+    const uuid = generateRandomId();
+    const pageTypeName = "Page Type " + uuid;
+    const pageTypeId = `page_type_${uuid}`;
     await pageTypesTablePage.createTypeDialog.createType(
       pageTypeName,
       "reusable",
     );
 
-    await use({ name: pageTypeName });
+    await use({ name: pageTypeName, id: pageTypeId });
+
+    await manager.customTypes.deleteCustomType({
+      id: pageTypeId,
+    });
   },
-  singlePageType: async ({ pageTypesTablePage }, use) => {
+  singlePageType: async ({ pageTypesTablePage, manager }, use) => {
     await pageTypesTablePage.goto();
     await pageTypesTablePage.openCreateDialog();
 
-    const pageTypeName = "Page Type " + generateRandomId();
+    const uuid = generateRandomId();
+    const pageTypeName = "Page Type " + uuid;
+    const pageTypeId = `page_type_${uuid}`;
     await pageTypesTablePage.createTypeDialog.createType(
       pageTypeName,
       "single",
     );
 
-    await use({ name: pageTypeName });
+    await use({ name: pageTypeName, id: pageTypeId });
+
+    await manager.customTypes.deleteCustomType({
+      id: pageTypeId,
+    });
   },
-  reusableCustomType: async ({ customTypesTablePage }, use) => {
+  reusableCustomType: async ({ customTypesTablePage, manager }, use) => {
     await customTypesTablePage.goto();
     await customTypesTablePage.openCreateDialog();
 
-    const customTypeName = "Custom Type " + generateRandomId();
+    const uuid = generateRandomId();
+    const customTypeName = "Custom Type " + uuid;
+    const customTypeId = `custom_type_${uuid}`;
     await customTypesTablePage.createTypeDialog.createType(
       customTypeName,
       "reusable",
     );
 
-    await use({ name: customTypeName });
+    await use({ name: customTypeName, id: customTypeId });
+
+    await manager.customTypes.deleteCustomType({
+      id: customTypeId,
+    });
   },
-  singleCustomType: async ({ customTypesTablePage }, use) => {
+  singleCustomType: async ({ customTypesTablePage, manager }, use) => {
     await customTypesTablePage.goto();
     await customTypesTablePage.openCreateDialog();
 
-    const customTypeName = "Custom Type " + generateRandomId();
+    const uuid = generateRandomId();
+    const customTypeName = "Custom Type " + uuid;
+    const customTypeId = `custom_type_${uuid}`;
     await customTypesTablePage.createTypeDialog.createType(
       customTypeName,
       "single",
     );
 
-    await use({ name: customTypeName });
+    await use({ name: customTypeName, id: customTypeId });
+
+    await manager.customTypes.deleteCustomType({
+      id: customTypeId,
+    });
   },
-  slice: async ({ slicesListPage }, use) => {
+  slice: async ({ slicesListPage, manager, firstSliceLibrary }, use) => {
     await slicesListPage.goto();
     await expect(slicesListPage.breadcrumbLabel).toBeVisible();
     await slicesListPage.addSliceDropdown.click();
@@ -170,6 +196,12 @@ export const test = baseTest.extend<Options & Fixtures>({
     await slicesListPage.createSliceDialog.createSlice(sliceName);
 
     await use({ name: sliceName });
+
+    const sliceId = sliceName.toLowerCase();
+    await manager.slices.deleteSlice({
+      libraryID: firstSliceLibrary.id,
+      sliceID: sliceId,
+    });
   },
   repeatableZoneSlice: async ({ firstSliceLibrary, manager }, use) => {
     const sliceName = "Slice" + generateRandomId();
@@ -280,13 +312,6 @@ export const test = baseTest.extend<Options & Fixtures>({
     const newContext = await browser.newContext({ storageState });
     const page = await newContext.newPage();
 
-    // Logout user by default
-    try {
-      await fs.rm(path.join(os.homedir(), ".prismic"));
-    } catch (error) {
-      // Ignore since it means the user is already logged out
-    }
-
     // Propagate the modified page to the test
     await use(page);
 
@@ -315,5 +340,23 @@ export const test = baseTest.extend<Options & Fixtures>({
     procedures.mock("getExperimentVariant", () => undefined);
 
     await use(procedures);
+  },
+
+  /**
+   * Authentication
+   */
+  // eslint-disable-next-line no-empty-pattern
+  userApiToken: async ({}, use) => {
+    const authUrl = baseUrl.replace("https://", "https://auth.");
+    const loginResponse = await fetch(`${authUrl}login`, {
+      method: "POST",
+      body: JSON.stringify({
+        email: auth.username,
+        password: auth.password,
+      }),
+    });
+    const userApiToken = await loginResponse.text();
+
+    await use(userApiToken);
   },
 });

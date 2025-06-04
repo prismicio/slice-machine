@@ -108,9 +108,7 @@ const config = {
   // Run local dev servers before starting the tests if needed.
   webServer: {
     cwd: "..",
-    command: process.env["CI"]
-      ? `yarn play --prefix ${REPOSITORY_NAME_PREFIX}`
-      : `yarn play`,
+    command: "yarn play",
     url: "http://localhost:9999/",
     reuseExistingServer: !process.env["CI"],
     stdout: "pipe",

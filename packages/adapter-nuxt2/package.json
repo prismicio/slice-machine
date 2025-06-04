@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt2",
-	"version": "0.3.76",
+	"version": "0.3.77",
 	"description": "Slice Machine adapter for Nuxt 2.",
 	"keywords": [
 		"typescript",
@@ -89,7 +89,7 @@
 		"size-limit": "8.2.4",
 		"ts-morph": "17.0.1",
 		"typescript": "4.9.5",
-		"vite": "4.3.9",
+		"vite": "4.5.14",
 		"vite-plugin-sdk": "0.1.1",
 		"vitest": "0.32.0",
 		"vue": "2.7.14"

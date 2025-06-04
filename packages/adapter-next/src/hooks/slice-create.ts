@@ -60,13 +60,13 @@ const createComponentFile = async ({
 		 *   }
 		 * }
 		 *
-		 * 2. Select Claude 3.7 Sonnet (recommended for optimal output)
+		 * 2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
 		 *
 		 * ✅ Then open your slice file and ask your code editor:
 		 *    "Code this slice"
 		 *
 		 * Your code editor reads your slice model and helps you code faster ⚡
-		 * 📚 Give your feedback: TODO
+		 * 📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
 		 */}`;
 
 	if (data.componentContents) {

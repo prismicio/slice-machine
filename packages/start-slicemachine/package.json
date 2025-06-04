@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.12.55",
+	"version": "0.12.56",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
@@ -93,7 +93,7 @@
 		"prettier-plugin-jsdoc": "1.1.1",
 		"size-limit": "8.2.4",
 		"typescript": "4.9.5",
-		"vite": "4.3.9",
+		"vite": "4.5.14",
 		"vite-plugin-sdk": "0.1.1",
 		"vitest": "0.32.0"
 	},

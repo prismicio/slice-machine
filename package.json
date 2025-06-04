@@ -5,7 +5,7 @@
   },
   "packageManager": "yarn@3.6.0",
   "scripts": {
-    "clean": "rimraf --glob '{e2e-projects/*/{.next,.svelte-kit},packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz,src/**/*.module.css.d.ts,storybook-static},playwright/{playwright-report,test-results}}'",
+    "clean": "rimraf --glob '{packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz,src/**/*.module.css.d.ts,storybook-static},playwright/{playwright-report,test-results}}'",
     "dev": "concurrently --prefix-colors auto \"yarn:dev:*\"",
     "dev:manager": "yarn workspace @slicemachine/manager dev",
     "dev:start-slicemachine": "yarn workspace start-slicemachine dev",
@@ -14,8 +14,6 @@
     "dev:adapter-next": "yarn workspace @slicemachine/adapter-next dev",
     "dev:adapter-sveltekit": "yarn workspace @slicemachine/adapter-sveltekit dev",
     "dev:init": "yarn workspace @slicemachine/init dev",
-    "dev:e2e-next": "cd ./e2e-projects/next && yarn dev --port 8000",
-    "clean-e2e-projects": "git checkout e2e-projects/ && git clean -f e2e-projects/",
     "postinstall": "husky install",
     "build": "yarn workspaces foreach --topological-dev --verbose run build && yarn run test",
     "build-essential": "yarn workspace @slicemachine/plugin-kit build && yarn workspace @slicemachine/manager build",
@@ -69,12 +67,10 @@
   "resolutions": {
     "connected-next-router/react-redux": "8.0.7",
     "react-beautiful-dnd/react-redux": "8.0.7",
-    "express": "4.20.0"
+    "express": "4.20.0",
+    "@prismicio/types-internal": "3.10.0"
   },
   "workspaces": [
-    "e2e-projects/next",
-    "e2e-projects/sveltekit",
-    "e2e-projects/next-upgrade",
     "playwright",
     "packages/*"
   ]
