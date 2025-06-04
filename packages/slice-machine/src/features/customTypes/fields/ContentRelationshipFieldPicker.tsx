@@ -1,3 +1,4 @@
+import { pluralize } from "@prismicio/editor-support/String";
 import {
   Box,
   Text,
@@ -246,7 +247,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           <TreeViewContentRelationshipField
             key={field.id}
             field={field}
-            state={crFieldValueNarrowed}
+            fieldCheckMap={crFieldValueNarrowed}
             onChange={onCustomTypeChange}
           />
         );
@@ -257,20 +258,20 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
 interface TreeViewContentRelationshipFieldProps {
   field: TIContentRelationshipFieldValue;
-  state: PickerContentRelationshipFieldValue;
+  fieldCheckMap: PickerContentRelationshipFieldValue;
   onChange: (updater: Updater<PickerCustomType>) => void;
 }
 
 function TreeViewContentRelationshipField(
   props: TreeViewContentRelationshipFieldProps,
 ) {
-  const { field, state, onChange: onCustomTypeChange } = props;
+  const { field: crField, fieldCheckMap, onChange: onCustomTypeChange } = props;
 
   const onContentRelationshipFieldChange = (
     updater: Updater<PickerContentRelationshipFieldValue>,
   ) => {
     onCustomTypeChange((currentCustomTypeFields) => {
-      const prevCtValue = currentCustomTypeFields[field.id]?.value;
+      const prevCtValue = currentCustomTypeFields[crField.id]?.value;
       const prevCtValueNarrowed =
         prevCtValue !== undefined && typeof prevCtValue !== "boolean"
           ? prevCtValue
@@ -278,7 +279,7 @@ function TreeViewContentRelationshipField(
 
       return {
         ...currentCustomTypeFields,
-        [field.id]: {
+        [crField.id]: {
           type: "contentRelationship",
           value: updater(prevCtValueNarrowed ?? {}),
         },
@@ -286,12 +287,13 @@ function TreeViewContentRelationshipField(
     });
   };
 
-  return field.customtypes.map((customType) => {
+  return crField.customtypes.map((customType) => {
     // Invalid nested custom type, we need to have fields.
-    if (typeof customType === "string" || !customType.fields) return null;
+    if (typeof customType === "string" || !customType.fields) {
+      return null;
+    }
 
-    const fieldsState: PickerNestedCustomTypeValue | undefined =
-      state[customType.id];
+    const customTypeFieldCheckMap = fieldCheckMap[customType.id] ?? {};
 
     const onNestedCustomTypeChange = (
       updater: Updater<PickerNestedCustomTypeValue>,
@@ -306,15 +308,17 @@ function TreeViewContentRelationshipField(
       <TreeViewSection
         key={customType.id}
         title={customType.id}
-        subtitle={getExposedFieldsLabel(countPickedFields(fieldsState))}
+        subtitle={getExposedFieldsLabel(
+          countPickedFields(customTypeFieldCheckMap),
+        )}
         badge="Custom type"
       >
         {customType.fields.map((field) => {
-          const { type, value: checked } = fieldsState?.[field] ?? {};
+          const { type, value: checked } = customTypeFieldCheckMap[field] ?? {};
 
           const onCheckedChange = (value: boolean) => {
-            onNestedCustomTypeChange((prev) => ({
-              ...prev,
+            onNestedCustomTypeChange((currentFields) => ({
+              ...currentFields,
               [field]: { type: "checkbox", value },
             }));
           };
@@ -335,7 +339,7 @@ function TreeViewContentRelationshipField(
 
 function getExposedFieldsLabel(count: number) {
   if (count === 0) return undefined;
-  return count === 1 ? "(1 field exposed)" : `(${count} fields exposed)`;
+  return `(${count} ${pluralize(count, "field", "fields")} exposed)`;
 }
 
 /**
