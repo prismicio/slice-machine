@@ -127,7 +127,7 @@ export function ContentRelationshipFieldPicker(
                 key={customType.id}
                 customType={customType}
                 onChange={onCustomTypeChange}
-                fieldCheckMap={fieldCheckMap[customType.id]}
+                fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
               />
             );
           })}
@@ -153,7 +153,7 @@ export function ContentRelationshipFieldPicker(
 
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
-  fieldCheckMap: PickerCustomType | undefined;
+  fieldCheckMap: PickerCustomType;
   onChange: (fn: (prev: PickerCustomType) => PickerCustomType) => void;
 }
 
@@ -171,7 +171,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       badge="Custom type"
     >
       {customType.fields.map((fieldId) => {
-        const checked = fieldCheckMap?.[fieldId].value ?? false;
+        const checked = fieldCheckMap[fieldId]?.value ?? false;
 
         function onCheckedChange(value: boolean) {
           onChange((currentFields) => ({
