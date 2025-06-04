@@ -164,8 +164,6 @@ interface TIGroupFieldValues {
   fields?: readonly (string | TIContentRelationshipFieldValue)[] | undefined;
 }
 
-type Updater<T> = (prev: T) => T;
-
 interface ContentRelationshipFieldPickerProps {
   value: TICustomTypes | undefined;
   onChange: (fields: TICustomTypes) => void;
@@ -178,7 +176,9 @@ export function ContentRelationshipFieldPicker(
   const customTypes = useCustomTypes();
   const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
 
-  function onCustomTypesChange(updater: Updater<PickerCustomTypes>) {
+  function onCustomTypesChange(
+    updater: (prev: PickerCustomTypes) => PickerCustomTypes,
+  ) {
     onChange(convertFieldCheckMapToCustomTypes(updater(fieldCheckMap)));
   }
 
@@ -203,7 +203,9 @@ export function ContentRelationshipFieldPicker(
           subtitle={`(${countPickedFields(fieldCheckMap)})`}
         >
           {customTypes.map((customType) => {
-            const onCustomTypeChange = (updater: Updater<PickerCustomType>) => {
+            const onCustomTypeChange = (
+              updater: (prev: PickerCustomType) => PickerCustomType,
+            ) => {
               onCustomTypesChange((currentCustomTypes) => ({
                 ...currentCustomTypes,
                 [customType.id]: updater(
@@ -244,7 +246,7 @@ export function ContentRelationshipFieldPicker(
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
   fieldCheckMap: PickerCustomType;
-  onChange: (fn: Updater<PickerCustomType>) => void;
+  onChange: (fn: (prev: PickerCustomType) => PickerCustomType) => void;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
@@ -268,7 +270,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       {customType.fields.map((field) => {
         // Checkbox field
         if (typeof field === "string") {
-          const { type, value: checked } = customTypeFieldCheckMap[field] ?? {};
+          const checked = customTypeFieldCheckMap[field]?.value ?? false;
 
           const onCheckedChange = (value: boolean) => {
             onCustomTypeChange((currentFields) => ({
@@ -281,7 +283,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
             <TreeViewCheckbox
               key={field}
               title={field}
-              checked={!!(type === "checkbox" && checked)}
+              checked={checked === true}
               onCheckedChange={onCheckedChange}
             />
           );
@@ -322,7 +324,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 interface TreeViewContentRelationshipFieldProps {
   field: TIContentRelationshipFieldValue | TIGroupFieldValues;
   fieldCheckMap: PickerContentRelationshipFieldValue;
-  onChange: (updater: Updater<PickerCustomType>) => void;
+  onChange: (updater: (prev: PickerCustomType) => PickerCustomType) => void;
 }
 
 function TreeViewContentRelationshipField(
@@ -335,7 +337,9 @@ function TreeViewContentRelationshipField(
   } = props;
 
   const onContentRelationshipFieldChange = (
-    updater: Updater<PickerContentRelationshipFieldValue>,
+    updater: (
+      prev: PickerContentRelationshipFieldValue,
+    ) => PickerContentRelationshipFieldValue,
   ) => {
     onCustomTypeChange((currentCustomTypeFields) => {
       const prevCtValue = currentCustomTypeFields[crField.id];
@@ -360,7 +364,9 @@ function TreeViewContentRelationshipField(
       const ctFieldCheckMap = customTypeFieldCheckMap[customType.id] ?? {};
 
       const onNestedCustomTypeChange = (
-        updater: Updater<PickerNestedCustomTypeValue>,
+        updater: (
+          prev: PickerNestedCustomTypeValue,
+        ) => PickerNestedCustomTypeValue,
       ) => {
         onContentRelationshipFieldChange((currentCustomTypes) => ({
           ...currentCustomTypes,
@@ -377,7 +383,7 @@ function TreeViewContentRelationshipField(
         >
           {customType.fields.map((field) => {
             if (typeof field === "string") {
-              const { type, value: checked } = ctFieldCheckMap[field] ?? {};
+              const checked = ctFieldCheckMap[field]?.value ?? false;
 
               const onCheckedChange = (newValue: boolean) => {
                 onNestedCustomTypeChange((currentFields) => ({
@@ -390,7 +396,7 @@ function TreeViewContentRelationshipField(
                 <TreeViewCheckbox
                   key={field}
                   title={field}
-                  checked={!!(type === "checkbox" && checked)}
+                  checked={checked}
                   onCheckedChange={onCheckedChange}
                 />
               );
@@ -409,14 +415,16 @@ function TreeViewContentRelationshipField(
 interface TreeViewGroupFieldProps {
   group: TIGroupFieldValues;
   fieldCheckMap: PickerGroupFieldValue;
-  onChange: (updater: Updater<PickerCustomType>) => void;
+  onChange: (updater: (prev: PickerCustomType) => PickerCustomType) => void;
 }
 
 function TreeViewGroupField(props: TreeViewGroupFieldProps) {
   const { group, fieldCheckMap, onChange: onCustomTypeChange } = props;
   if (!group.fields) return null;
 
-  const onGroupFieldChange = (updater: Updater<PickerGroupFieldValue>) => {
+  const onGroupFieldChange = (
+    updater: (prev: PickerGroupFieldValue) => PickerGroupFieldValue,
+  ) => {
     onCustomTypeChange((currentCustomTypeFields) => {
       const prevField = currentCustomTypeFields[group.id];
       const prevFieldNarrowed =
@@ -436,7 +444,7 @@ function TreeViewGroupField(props: TreeViewGroupFieldProps) {
     <TreeViewSection key={group.id} title={group.id} badge="Group">
       {group.fields.map((field) => {
         if (typeof field === "string") {
-          const { type, value: checked } = fieldCheckMap[field] ?? {};
+          const checked = fieldCheckMap[field]?.value ?? false;
 
           const onCheckedChange = (newValue: boolean) => {
             onGroupFieldChange((currentFields) => ({
@@ -449,7 +457,7 @@ function TreeViewGroupField(props: TreeViewGroupFieldProps) {
             <TreeViewCheckbox
               key={field}
               title={field}
-              checked={!!(type === "checkbox" && checked)}
+              checked={checked === true}
               onCheckedChange={onCheckedChange}
             />
           );
