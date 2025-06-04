@@ -220,7 +220,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     >
       {customType.fields.map((field) => {
         if (typeof field === "string") {
-          const { type, value: checked } = fieldCheckMap[field] ?? {};
+          const checked = fieldCheckMap[field]?.value ?? false;
 
           const onCheckedChange = (value: boolean) => {
             onCustomTypeChange((currentFields) => ({
@@ -233,7 +233,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
             <TreeViewCheckbox
               key={field}
               title={field}
-              checked={type === "checkbox" ? checked : false}
+              checked={checked === true}
               onCheckedChange={onCheckedChange}
             />
           );
@@ -319,21 +319,21 @@ function TreeViewContentRelationshipField(
         )}
         badge="Custom type"
       >
-        {customType.fields.map((field) => {
-          const { type, value: checked } = customTypeFieldCheckMap[field] ?? {};
+        {customType.fields.map((fieldId) => {
+          const checked = customTypeFieldCheckMap[fieldId]?.value ?? false;
 
           const onCheckedChange = (value: boolean) => {
             onNestedCustomTypeChange((currentFields) => ({
               ...currentFields,
-              [field]: { type: "checkbox", value },
+              [fieldId]: { type: "checkbox", value },
             }));
           };
 
           return (
             <TreeViewCheckbox
-              key={field}
-              title={field}
-              checked={type === "checkbox" ? checked : false}
+              key={fieldId}
+              title={fieldId}
+              checked={checked === true}
               onCheckedChange={onCheckedChange}
             />
           );
