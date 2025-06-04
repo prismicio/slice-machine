@@ -6,14 +6,17 @@ import {
   TreeViewSection,
 } from "@prismicio/editor-ui";
 import { UID } from "@prismicio/types-internal/lib/customtypes";
-import { SetStateAction, useMemo } from "react";
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 
 import { CustomTypeSM, TabFields } from "@/legacy/lib/models/common/CustomType";
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
+import { isValidObject } from "@/utils/isValidObject";
 
 /**
- * Picker state types. Used internally to store the state of the TreeView.
+ * Picker fields check map types. Used internally to keep track of the checked
+ * fields in the TreeView, as it's easier to handle objects than arrays and
+ * also ensure field uniqueness.
  *
  * @example
  * {
@@ -118,6 +121,8 @@ interface TIContentRelationshipFieldValue {
   customtypes: readonly (string | TICustomTypeFieldValues)[];
 }
 
+type Updater<T> = (prev: T) => T;
+
 interface ContentRelationshipFieldPickerProps {
   value: TICustomTypes | undefined;
   onChange: (fields: TICustomTypes) => void;
@@ -128,14 +133,10 @@ export function ContentRelationshipFieldPicker(
 ) {
   const { value, onChange } = props;
   const customTypes = useCustomTypes();
-  const state = useMemo(() => convertCustomTypesToState(value), [value]);
+  const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
 
-  function onCustomTypeChange(value: SetStateAction<PickerCustomTypes>) {
-    onChange(
-      convertStateToCustomTypes(
-        typeof value === "function" ? value(state) : value,
-      ),
-    );
+  function onCustomTypesChange(updater: Updater<PickerCustomTypes>) {
+    onChange(convertFieldCheckMapToCustomTypes(updater(fieldCheckMap)));
   }
 
   return (
@@ -156,16 +157,27 @@ export function ContentRelationshipFieldPicker(
         </Box>
         <TreeView
           title="Exposed fields"
-          subtitle={`(${countPickedFields(state)})`}
+          subtitle={`(${countPickedFields(fieldCheckMap)})`}
         >
-          {customTypes.map((customType) => (
-            <TreeViewCustomType
-              key={customType.id}
-              customType={customType}
-              state={state[customType.id]}
-              onChange={onCustomTypeChange}
-            />
-          ))}
+          {customTypes.map((customType) => {
+            const onCustomTypeChange = (updater: Updater<PickerCustomType>) => {
+              onCustomTypesChange((currentCustomTypes) => ({
+                ...currentCustomTypes,
+                [customType.id]: updater(
+                  currentCustomTypes[customType.id] ?? {},
+                ),
+              }));
+            };
+
+            return (
+              <TreeViewCustomType
+                key={customType.id}
+                customType={customType}
+                onChange={onCustomTypeChange}
+                fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
+              />
+            );
+          })}
         </TreeView>
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
@@ -188,51 +200,43 @@ export function ContentRelationshipFieldPicker(
 
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
-  state: PickerCustomType | undefined;
-  onChange: (state: SetStateAction<PickerCustomTypes>) => void;
+  fieldCheckMap: PickerCustomType;
+  onChange: (fn: Updater<PickerCustomType>) => void;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
-  const { customType, state, onChange } = props;
+  const { customType, fieldCheckMap, onChange: onCustomTypeChange } = props;
   if (!customType.fields) return null;
-
-  const onCustomTypeChange = (value: SetStateAction<PickerCustomType>) => {
-    onChange((prev) => ({
-      ...prev,
-      [customType.id]:
-        typeof value === "function" ? value(prev[customType.id] ?? {}) : value,
-    }));
-  };
 
   return (
     <TreeViewSection
       key={customType.id}
       title={customType.id}
-      subtitle={getExposedFieldsLabel(countPickedFields(state))}
+      subtitle={getExposedFieldsLabel(countPickedFields(fieldCheckMap))}
       badge="Custom type"
     >
-      {customType.fields.map((fieldOrNestedCt) => {
-        if (typeof fieldOrNestedCt === "string") {
-          const { type, value: checked } = state?.[fieldOrNestedCt] ?? {};
+      {customType.fields.map((field) => {
+        if (typeof field === "string") {
+          const { type, value: checked } = fieldCheckMap[field] ?? {};
 
           const onCheckedChange = (value: boolean) => {
-            onCustomTypeChange((prev) => ({
-              ...prev,
-              [fieldOrNestedCt]: { type: "checkbox", value },
+            onCustomTypeChange((currentFields) => ({
+              ...currentFields,
+              [field]: { type: "checkbox", value },
             }));
           };
 
           return (
             <TreeViewCheckbox
-              key={fieldOrNestedCt}
-              title={fieldOrNestedCt}
+              key={field}
+              title={field}
               checked={type === "checkbox" ? checked : false}
               onCheckedChange={onCheckedChange}
             />
           );
         }
 
-        const crFieldValue = state?.[fieldOrNestedCt.id]?.value;
+        const crFieldValue = fieldCheckMap[field.id]?.value;
         const crFieldValueNarrowed =
           crFieldValue !== undefined && typeof crFieldValue !== "boolean"
             ? crFieldValue
@@ -240,8 +244,8 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
         return (
           <TreeViewContentRelationshipField
-            key={fieldOrNestedCt.id}
-            field={fieldOrNestedCt}
+            key={field.id}
+            field={field}
             state={crFieldValueNarrowed}
             onChange={onCustomTypeChange}
           />
@@ -254,7 +258,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 interface TreeViewContentRelationshipFieldProps {
   field: TIContentRelationshipFieldValue;
   state: PickerContentRelationshipFieldValue;
-  onChange: (state: SetStateAction<PickerCustomType>) => void;
+  onChange: (updater: Updater<PickerCustomType>) => void;
 }
 
 function TreeViewContentRelationshipField(
@@ -263,23 +267,20 @@ function TreeViewContentRelationshipField(
   const { field, state, onChange: onCustomTypeChange } = props;
 
   const onContentRelationshipFieldChange = (
-    value: SetStateAction<PickerContentRelationshipFieldValue>,
+    updater: Updater<PickerContentRelationshipFieldValue>,
   ) => {
-    onCustomTypeChange((prev) => {
-      const prevCtValue = prev[field.id]?.value;
+    onCustomTypeChange((currentCustomTypeFields) => {
+      const prevCtValue = currentCustomTypeFields[field.id]?.value;
       const prevCtValueNarrowed =
         prevCtValue !== undefined && typeof prevCtValue !== "boolean"
           ? prevCtValue
           : {};
 
       return {
-        ...prev,
+        ...currentCustomTypeFields,
         [field.id]: {
           type: "contentRelationship",
-          value:
-            typeof value === "function"
-              ? value(prevCtValueNarrowed ?? {})
-              : value,
+          value: updater(prevCtValueNarrowed ?? {}),
         },
       };
     });
@@ -293,14 +294,11 @@ function TreeViewContentRelationshipField(
       state[customType.id];
 
     const onNestedCustomTypeChange = (
-      value: SetStateAction<PickerNestedCustomTypeValue>,
+      updater: Updater<PickerNestedCustomTypeValue>,
     ) => {
-      onContentRelationshipFieldChange((prev) => ({
-        ...prev,
-        [customType.id]:
-          typeof value === "function"
-            ? value(prev[customType.id] ?? {})
-            : value,
+      onContentRelationshipFieldChange((currentCustomTypes) => ({
+        ...currentCustomTypes,
+        [customType.id]: updater(currentCustomTypes[customType.id] ?? {}),
       }));
     };
 
@@ -359,8 +357,6 @@ function useCustomTypes() {
     const customTypes = localCustomTypes.flatMap<TICustomType>((customType) => {
       const fields = customType.tabs.flatMap((tab) => {
         return tab.value.flatMap((field) => {
-          // filter out uid fields because it's a special field returned by the
-          // API and is not part of the data object in the document.
           if (isUidField(field)) return [];
 
           // Check if it's a content relationship link/field
@@ -409,8 +405,6 @@ function resolveContentRelationshipFields(
         id: customType.id,
         fields: matchingCustomType.tabs.flatMap((tab) => {
           return tab.value.flatMap((field) => {
-            // filter out uid fields because it's a special field returned by the
-            // API and is not part of the data object in the document.
             return !isUidField(field) ? field.key : [];
           });
         }),
@@ -424,18 +418,21 @@ function resolveContentRelationshipFields(
 function isUidField(
   field: TabFields[number],
 ): field is { key: string; value: UID } {
+  // Filter out uid fields because it's a special field returned by the
+  // API and is not part of the data object in the document.
+  // We also filter by key "uid", because (as of the time of writing
+  // this), creating any field with that API id will result in it being
+  // used for metadata.
   return field.key === "uid" && field.value.type === "UID";
 }
 
 /**
  * Converts a Link config `customtypes` ({@link TICustomTypes}) structure into
- * picker state ({@link PickerCustomTypes}).
+ * picker fields check map ({@link PickerCustomTypes}).
  */
-function convertCustomTypesToState(
-  customTypes: TICustomTypes | undefined,
+function convertCustomTypesToFieldCheckMap(
+  customTypes: TICustomTypes,
 ): PickerCustomTypes {
-  if (!customTypes) return {};
-
   return customTypes.reduce<PickerCustomTypes>((customTypes, customType) => {
     if (typeof customType === "string" || !customType.fields) {
       return customTypes;
@@ -481,11 +478,12 @@ function createNestedCustomTypeState(
 }
 
 /**
- * Converts a picker state structure ({@link PickerCustomTypes}) into Link
- * config `customtypes` ({@link TICustomTypes} and filter out empty Custom types.
+ * Converts a picker fields check map structure ({@link PickerCustomTypes}) into
+ * Link config `customtypes` ({@link TICustomTypes}) and filter out empty Custom
+ * types.
  */
-function convertStateToCustomTypes(fields: PickerCustomTypes) {
-  return Object.entries(fields).flatMap<TICustomType>(([ctId, ctFields]) => {
+function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
+  return Object.entries(map).flatMap<TICustomType>(([ctId, ctFields]) => {
     const fields = Object.entries(ctFields).flatMap(([fieldId, fieldValue]) => {
       if (fieldValue.type === "checkbox") {
         return fieldValue.value ? fieldId : [];
@@ -515,13 +513,15 @@ function convertStateToCustomTypes(fields: PickerCustomTypes) {
 }
 
 /**
- * Generic recursive function that goes down the form state and counts all
+ * Generic recursive function that goes down the fields check map and counts all
  * the properties that are set to true, which correspond to selected fields.
  *
  * It's not type safe, but checks the type of the values at runtime so that
  * it only recurses into valid objects, and only counts checkbox fields.
  */
-function countPickedFields(fields: object | undefined): number {
+function countPickedFields(
+  fields: Record<string, unknown> | undefined,
+): number {
   if (!fields) return 0;
   return Object.values(fields).reduce<number>((count, value) => {
     if (!isValidObject(value)) return count;
@@ -529,15 +529,8 @@ function countPickedFields(fields: object | undefined): number {
     return count + countPickedFields(value);
   }, 0);
 }
-function isCheckboxField(value: object): value is PickerCheckboxField {
+
+function isCheckboxField(value: unknown): value is PickerCheckboxField {
+  if (!isValidObject(value)) return false;
   return "type" in value && value.type === "checkbox";
-}
-function isValidObject(value: unknown): value is object {
-  if (typeof value !== "object" || value === null) return false;
-  if (Array.isArray(value)) return false;
-  return !(
-    value instanceof Date ||
-    value instanceof RegExp ||
-    value instanceof Error
-  );
 }
