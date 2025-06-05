@@ -134,19 +134,21 @@ type TICustomTypes = readonly (string | TICustomType)[];
 
 interface TICustomType {
   id: string;
-  fields?:
-    | readonly (string | TIContentRelationshipFieldValue | TIGroupFieldValues)[]
-    | undefined;
+  fields: readonly (
+    | string
+    | TIContentRelationshipFieldValue
+    | TIGroupFieldValues
+  )[];
 }
 
 interface TICustomTypeRegularFieldValues {
   id: string;
-  fields?: readonly string[] | undefined;
+  fields: readonly string[];
 }
 
 interface TIGroupFieldValues {
   id: string;
-  fields?: readonly (string | TIContentRelationshipFieldValue)[] | undefined;
+  fields: readonly (string | TIContentRelationshipFieldValue)[];
 }
 
 interface TIContentRelationshipFieldValue {
@@ -156,7 +158,7 @@ interface TIContentRelationshipFieldValue {
 
 interface TICustomTypeFieldValues {
   id: string;
-  fields?: readonly (string | TICustomTypeRegularFieldValues)[] | undefined;
+  fields: readonly (string | TICustomTypeRegularFieldValues)[];
 }
 
 interface ContentRelationshipFieldPickerProps {
@@ -250,8 +252,6 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     fieldCheckMap: customTypeFieldCheckMap,
     onChange: onCustomTypeChange,
   } = props;
-
-  if (!customType.fields) return null;
 
   return (
     <TreeViewSection
@@ -353,8 +353,7 @@ function TreeViewContentRelationshipField(
 
   if ("customtypes" in crField) {
     return crField.customtypes.map((customType) => {
-      // Invalid nested custom type, we need to have fields.
-      if (typeof customType === "string" || !customType.fields) return null;
+      if (typeof customType === "string") return null;
 
       const ctFieldCheckMap = customTypeFieldCheckMap[customType.id] ?? {};
 
@@ -415,7 +414,6 @@ interface TreeViewGroupFieldProps {
 
 function TreeViewGroupField(props: TreeViewGroupFieldProps) {
   const { group, fieldCheckMap, onChange: onCustomTypeChange } = props;
-  if (!group.fields) return null;
 
   const onGroupFieldChange = (
     updater: (prev: PickerGroupFieldValue) => PickerGroupFieldValue,
@@ -544,7 +542,7 @@ function resolveContentRelationshipFields(
 ): TICustomTypeFieldValues[] {
   const fields = customTypesArray.flatMap<TICustomTypeFieldValues>(
     (customType) => {
-      if (typeof customType === "string" || !customType.fields) return [];
+      if (typeof customType === "string") return [];
 
       const matchingCustomType = localCustomTypes.find(
         (ct) => ct.id === customType.id,
@@ -584,9 +582,7 @@ function convertCustomTypesToFieldCheckMap(
   customTypes: TICustomTypes,
 ): PickerCustomTypes {
   return customTypes.reduce<PickerCustomTypes>((customTypes, customType) => {
-    if (typeof customType === "string" || !customType.fields) {
-      return customTypes;
-    }
+    if (typeof customType === "string") return customTypes;
 
     customTypes[customType.id] = customType.fields.reduce<PickerCustomType>(
       (customTypeFields, field) => {
@@ -607,7 +603,6 @@ function convertCustomTypesToFieldCheckMap(
 }
 
 function createGroupField(group: TIGroupFieldValues): PickerGroupField {
-  if (!group.fields) return { type: "group", value: {} };
   return {
     type: "group",
     value: group.fields.reduce<PickerGroupFieldValue>((fields, field) => {
@@ -632,7 +627,7 @@ function createNestedCustomTypeField(
   const crFieldCustomTypes = crField.value;
 
   for (const customType of field.customtypes) {
-    if (typeof customType === "string" || !customType.fields) continue;
+    if (typeof customType === "string") continue;
 
     crFieldCustomTypes[customType.id] ??= {};
     const customTypeFields = crFieldCustomTypes[customType.id];
