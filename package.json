@@ -68,7 +68,7 @@
     "connected-next-router/react-redux": "8.0.7",
     "react-beautiful-dnd/react-redux": "8.0.7",
     "express": "4.20.0",
-    "@prismicio/types-internal": "3.10.0"
+    "@prismicio/types-internal": "3.11.0"
   },
   "workspaces": [
     "playwright",

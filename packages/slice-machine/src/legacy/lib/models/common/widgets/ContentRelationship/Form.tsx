@@ -1,4 +1,7 @@
-import { LinkConfig } from "@prismicio/types-internal/lib/customtypes";
+import {
+  CustomTypes,
+  LinkConfig,
+} from "@prismicio/types-internal/lib/customtypes";
 import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
@@ -12,31 +15,13 @@ import { DefaultFields } from "@/legacy/lib/forms/defaults";
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
-  // TODO: Validate customtypes using existing types-internal codec
   customtypes: {
     validate: () =>
-      yup.array(
-        yup.object({
-          id: yup.string().required(),
-          fields: yup.array(
-            yup.lazy((value) =>
-              typeof value === "object"
-                ? yup.object({
-                    id: yup.string().required(),
-                    customtypes: yup
-                      .array(
-                        yup.object({
-                          id: yup.string().required(),
-                          fields: yup.array(yup.string()).required(),
-                        }),
-                      )
-                      .required(),
-                  })
-                : yup.string(),
-            ),
-          ),
-        }),
-      ),
+      yup.array().test({
+        message: "Invalid customtypes structure.",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        test: (value) => CustomTypes.decode(value)._tag === "Right",
+      }),
   },
 };
 
