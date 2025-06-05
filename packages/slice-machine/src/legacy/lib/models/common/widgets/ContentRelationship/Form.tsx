@@ -1,3 +1,4 @@
+import { LinkConfig } from "@prismicio/types-internal/lib/customtypes";
 import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
@@ -11,16 +12,29 @@ import { DefaultFields } from "@/legacy/lib/forms/defaults";
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
+  // TODO: Validate customtypes using existing types-internal codec
   customtypes: {
     validate: () =>
       yup.array(
-        yup.lazy((value) => {
-          return typeof value === "object"
-            ? yup.object({
-                id: yup.string(),
-                fields: yup.array(yup.string()),
-              })
-            : yup.string();
+        yup.object({
+          id: yup.string().required(),
+          fields: yup.array(
+            yup.lazy((value) =>
+              typeof value === "object"
+                ? yup.object({
+                    id: yup.string().required(),
+                    customtypes: yup
+                      .array(
+                        yup.object({
+                          id: yup.string().required(),
+                          fields: yup.array(yup.string()).required(),
+                        }),
+                      )
+                      .required(),
+                  })
+                : yup.string(),
+            ),
+          ),
         }),
       ),
   },
@@ -30,7 +44,7 @@ type FormProps = {
   config: {
     label: string;
     select: string;
-    customtypes?: (string | { id: string; fields: string[] })[];
+    customtypes?: LinkConfig["customtypes"];
   };
   id: string;
   // TODO: this exists in the yup schema but this doesn't seem to be validated by formik

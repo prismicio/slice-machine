@@ -16,10 +16,10 @@ import Form, { FormFields } from "./Form";
  *   "type": "Link",
  *   "config": {
  *     "select": "document",
+ *     "label": "relationship"
  *     "customtypes": [
  *       "page"
  *     ],
- *     "label": "relationship"
  *   }
  * }
  *
@@ -28,13 +28,24 @@ import Form, { FormFields } from "./Form";
  *   "type": "Link",
  *   "config": {
  *     "select": "document",
+ *     "label": "relationship"
  *     "customtypes": [
  *       {
  *         "id": "page",
- *         "fields": ["uid", "country"]
+ *         "fields": [
+ *           "category",
+ *           {
+ *             "id": "countryRelation",
+ *             "customtypes": [
+ *               {
+ *                 "id": "country",
+ *                 "fields": ["name"]
+ *               }
+ *             ]
+ *           }
+ *         ]
  *       }
  *     ],
- *     "label": "relationship"
  *   }
  * }
  */
@@ -50,18 +61,30 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
+  // TODO: Validate customtypes using existing types-internal codec
   customtypes: yup
     .array(
-      yup.lazy((value) => {
-        return typeof value === "object"
-          ? yup.object({
-              id: yup.string(),
-              fields: yup.array(yup.string()),
-            })
-          : yup.string();
+      yup.object({
+        id: yup.string().required(),
+        fields: yup.array(
+          yup.lazy((value) =>
+            typeof value === "object"
+              ? yup.object({
+                  id: yup.string().required(),
+                  customtypes: yup
+                    .array(
+                      yup.object({
+                        id: yup.string().required(),
+                        fields: yup.array(yup.string()).required(),
+                      }),
+                    )
+                    .required(),
+                })
+              : yup.string(),
+          ),
+        ),
       }),
     )
-    .strict()
     .optional(),
 });
 
