@@ -71,6 +71,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
       ? // eslint-disable-next-line
         maybeWidget.prepareInitialValues(
           localCustomTypes,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           initialModelValues.config,
         )
       : // eslint-disable-next-line
