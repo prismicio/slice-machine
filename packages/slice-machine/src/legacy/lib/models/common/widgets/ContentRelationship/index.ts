@@ -93,7 +93,7 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
         fields: yup.array(
           yup.lazy((value) => {
             if (typeof value === "string") {
-              return yup.string();
+              return yup.string().required();
             }
 
             if ("fields" in value) {
@@ -103,7 +103,7 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
                   .array(
                     yup.lazy((fieldValue) => {
                       if (typeof fieldValue === "string") {
-                        return yup.string();
+                        return yup.string().required();
                       }
 
                       return customTypesSchema;
