@@ -68,8 +68,11 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .array()
     .test({
       message: "Invalid customtypes structure.",
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      test: (value) => CustomTypes.decode(value)._tag === "Right",
+      test: (value) => {
+        if (!value) return true; // Still allow to be optional
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        return CustomTypes.decode(value)._tag === "Right";
+      },
     })
     .optional(),
 });
