@@ -18,6 +18,9 @@ import { removeProp } from "@/legacy/lib/utils";
 import { findWidgetByConfigOrType } from "../../utils";
 import WidgetFormField from "./Field";
 import WidgetForm from "./Form";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
+import { useSelector } from "react-redux";
+import { hasLocal } from "@/legacy/lib/models/common/ModelData";
 
 if (process.env.NODE_ENV !== "test") {
   Modal.setAppElement("#__next");
@@ -27,6 +30,7 @@ const FORM_ID = "edit-modal-form";
 
 const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   const { theme } = useThemeUI();
+  const localCustomTypes = useSelector(selectAllCustomTypes).filter(hasLocal);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
   if (!data.isOpen) {
@@ -65,7 +69,10 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
     ...(maybeWidget.prepareInitialValues
       ? // eslint-disable-next-line
-        maybeWidget.prepareInitialValues(initialModelValues.config)
+        maybeWidget.prepareInitialValues(
+          localCustomTypes,
+          initialModelValues.config,
+        )
       : // eslint-disable-next-line
         initialModelValues.config),
   };
