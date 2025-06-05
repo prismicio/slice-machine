@@ -453,7 +453,7 @@ function convertCustomTypesToFieldCheckMap(
         if (typeof field === "string") {
           customTypeFields[field] = { type: "checkbox", value: true };
         } else if (field.customtypes !== undefined) {
-          customTypeFields[field.id] = createNestedCustomTypeState(field);
+          customTypeFields[field.id] = createNestedCustomTypeField(field);
         }
 
         return customTypeFields;
@@ -464,7 +464,7 @@ function convertCustomTypesToFieldCheckMap(
   }, {});
 }
 
-function createNestedCustomTypeState(
+function createNestedCustomTypeField(
   field: TIContentRelationshipFieldValue,
 ): PickerContentRelationshipField {
   const crField: PickerContentRelationshipField = {
