@@ -598,9 +598,9 @@ function convertCustomTypesToFieldCheckMap(
         if (typeof field === "string") {
           customTypeFields[field] = { type: "checkbox", value: true };
         } else if ("fields" in field && field.fields !== undefined) {
-          customTypeFields[field.id] = createGroupFieldState(field);
+          customTypeFields[field.id] = createGroupField(field);
         } else if ("customtypes" in field && field.customtypes !== undefined) {
-          customTypeFields[field.id] = createNestedCustomTypeState(field);
+          customTypeFields[field.id] = createNestedCustomTypeField(field);
         }
 
         return customTypeFields;
@@ -611,7 +611,7 @@ function convertCustomTypesToFieldCheckMap(
   }, {});
 }
 
-function createGroupFieldState(group: TIGroupFieldValues): PickerGroupField {
+function createGroupField(group: TIGroupFieldValues): PickerGroupField {
   if (!group.fields) return { type: "group", value: {} };
   return {
     type: "group",
@@ -619,14 +619,15 @@ function createGroupFieldState(group: TIGroupFieldValues): PickerGroupField {
       if (typeof field === "string") {
         fields[field] = { type: "checkbox", value: true };
       } else if ("customtypes" in field && field.customtypes !== undefined) {
-        fields[field.id] = createNestedCustomTypeState(field);
+        fields[field.id] = createNestedCustomTypeField(field);
       }
 
       return fields;
     }, {}),
   };
 }
-function createNestedCustomTypeState(
+
+function createNestedCustomTypeField(
   field: TIContentRelationshipFieldValue,
 ): PickerContentRelationshipField {
   const crField: PickerContentRelationshipField = {
