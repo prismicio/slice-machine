@@ -184,8 +184,6 @@ export function ContentRelationshipFieldPicker(
   const customTypes = useCustomTypes();
   const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
 
-  console.log({ value, customTypes, fieldCheckMap });
-
   function onCustomTypesChange(
     updater: (prev: PickerCustomTypes) => PickerCustomTypes,
   ) {
@@ -415,12 +413,6 @@ function TreeViewContentRelationshipField(
 
             const groupFieldCheckMap = ctFieldCheckMap[field.id] ?? {};
 
-            console.log({
-              customTypeFieldCheckMap,
-              ctFieldCheckMap,
-              groupFieldCheckMap,
-            });
-
             const onGroupFieldsChange = (
               updater: (
                 prev: PickerGroupFieldWithoutContentRelationshipValue,
@@ -476,8 +468,6 @@ function TreeViewContentRelationshipFieldNestedGroup(
   props: TreeViewContentRelationshipFieldGroupProps,
 ) {
   const { group, fieldCheckMap, onChange: onGroupFieldsChange } = props;
-
-  console.log("fieldCheckMap", fieldCheckMap);
 
   return (
     <TreeViewSection
