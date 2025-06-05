@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import { useSelector } from "react-redux";
 import { Box, Button, Close, Flex, useThemeUI } from "theme-ui";
 import * as yup from "yup";
 
@@ -12,15 +13,14 @@ import {
   createInitialValues,
 } from "@/legacy/lib/forms";
 import { DeprecatedMockConfigMessage } from "@/legacy/lib/models/common/DeprecatedMockConfigMessage";
+import { hasLocal } from "@/legacy/lib/models/common/ModelData";
 import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { removeProp } from "@/legacy/lib/utils";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 import { findWidgetByConfigOrType } from "../../utils";
 import WidgetFormField from "./Field";
 import WidgetForm from "./Form";
-import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
-import { useSelector } from "react-redux";
-import { hasLocal } from "@/legacy/lib/models/common/ModelData";
 
 if (process.env.NODE_ENV !== "test") {
   Modal.setAppElement("#__next");
