@@ -337,7 +337,7 @@ function TreeViewContentRelationshipField(
     ) => PickerContentRelationshipFieldValue,
   ) => {
     onCustomTypeChange((currentCustomTypeFields) => {
-      const prevCtValue = currentCustomTypeFields[crField.id];
+      const prevCtValue = currentCustomTypeFields[crField.id] ?? {};
       const prevCtValueNarrowed =
         prevCtValue?.type === "contentRelationship" ? prevCtValue.value : {};
 
@@ -421,9 +421,9 @@ function TreeViewGroupField(props: TreeViewGroupFieldProps) {
     updater: (prev: PickerGroupFieldValue) => PickerGroupFieldValue,
   ) => {
     onCustomTypeChange((currentCustomTypeFields) => {
-      const prevField = currentCustomTypeFields[group.id];
+      const prevField = currentCustomTypeFields[group.id] ?? {};
       const prevFieldNarrowed =
-        prevField?.type === "group" ? prevField.value : {};
+        prevField.type === "group" ? prevField.value : {};
 
       return {
         ...currentCustomTypeFields,
