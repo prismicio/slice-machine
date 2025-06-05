@@ -159,11 +159,6 @@ interface TICustomTypeFieldValues {
   fields?: readonly (string | TICustomTypeRegularFieldValues)[] | undefined;
 }
 
-interface TIGroupFieldValues {
-  id: string;
-  fields?: readonly (string | TIContentRelationshipFieldValue)[] | undefined;
-}
-
 interface ContentRelationshipFieldPickerProps {
   value: TICustomTypes | undefined;
   onChange: (fields: TICustomTypes) => void;
