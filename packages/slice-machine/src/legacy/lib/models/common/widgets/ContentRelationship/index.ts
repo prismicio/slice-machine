@@ -67,7 +67,7 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
   customtypes: yup
     .array()
     .test({
-      message: "Invalid content relationship structure.",
+      message: "Invalid customtypes structure.",
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       test: (value) => CustomTypes.decode(value)._tag === "Right",
     })
