@@ -284,7 +284,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           );
         }
 
-        const fieldState = customTypeFieldCheckMap[field.id] ?? {};
+        const crOrGroupFieldCheckMap = customTypeFieldCheckMap[field.id] ?? {};
 
         // Group field
         if ("fields" in field) {
@@ -294,7 +294,9 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
               group={field}
               onChange={onCustomTypeChange}
               fieldCheckMap={
-                fieldState.type === "group" ? fieldState.value : {}
+                crOrGroupFieldCheckMap.type === "group"
+                  ? crOrGroupFieldCheckMap.value
+                  : {}
               }
             />
           );
@@ -307,7 +309,9 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
             field={field}
             onChange={onCustomTypeChange}
             fieldCheckMap={
-              fieldState.type === "contentRelationship" ? fieldState.value : {}
+              crOrGroupFieldCheckMap.type === "contentRelationship"
+                ? crOrGroupFieldCheckMap.value
+                : {}
             }
           />
         );
@@ -664,7 +668,7 @@ function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
             return fieldValue.value ? fieldId : [];
           }
 
-          const customTypes = convertContentRelationshipStateToCustomTypes(
+          const customTypes = convertContentRelationshipFieldValueToCustomTypes(
             fieldValue.value,
           );
 
@@ -676,7 +680,7 @@ function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
         return fields.length > 0 ? { id: fieldId, fields } : [];
       }
 
-      const customTypes = convertContentRelationshipStateToCustomTypes(
+      const customTypes = convertContentRelationshipFieldValueToCustomTypes(
         fieldValue.value,
       );
 
@@ -689,7 +693,7 @@ function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
   });
 }
 
-function convertContentRelationshipStateToCustomTypes(
+function convertContentRelationshipFieldValueToCustomTypes(
   value: PickerContentRelationshipFieldValue,
 ): TICustomTypeFieldValues[] {
   return Object.entries(value).flatMap<TICustomTypeFieldValues>(
