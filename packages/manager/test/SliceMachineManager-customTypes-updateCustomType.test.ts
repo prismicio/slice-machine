@@ -59,10 +59,23 @@ it("throws if plugins have not been initialized", async (ctx) => {
 function getCustomTypeFields(args?: {
 	crId?: string;
 	ids?: string[];
+	groupId?: string;
+	groupIds?: string[];
 	nestedCrId?: string;
+	nestedGroupId?: string;
 	nestedIds?: string[];
+	nestedGroupIds?: string[];
 }) {
-	const { crId, ids, nestedCrId, nestedIds } = args ?? {};
+	const {
+		crId,
+		ids,
+		groupId,
+		groupIds,
+		nestedCrId,
+		nestedGroupId,
+		nestedIds,
+		nestedGroupIds,
+	} = args ?? {};
 
 	return {
 		name: {
@@ -86,9 +99,20 @@ function getCustomTypeFields(args?: {
 								customtypes: [
 									{
 										id: "address",
-										fields: ["country", ...(nestedIds ?? [])],
+										fields: [
+											"country",
+											{
+												id: nestedGroupId ?? "contactDetails",
+												fields: ["name", ...(nestedGroupIds ?? [])],
+											},
+											...(nestedIds ?? []),
+										],
 									},
 								],
+							},
+							{
+								id: groupId ?? "languages",
+								fields: ["code", ...(groupIds ?? [])],
 							},
 						],
 					},
@@ -102,8 +126,12 @@ describe("updateCustomTypeContentRelationships", () => {
 	function getCustomTypeModel(args?: {
 		crId?: string;
 		ids?: string[];
+		groupId?: string;
+		groupIds?: string[];
 		nestedCrId?: string;
+		nestedGroupId?: string;
 		nestedIds?: string[];
+		nestedGroupIds?: string[];
 	}): CustomType {
 		return {
 			format: "custom",
@@ -143,6 +171,48 @@ describe("updateCustomTypeContentRelationships", () => {
 				ids: ["address", "authorLastName_CHANGED"],
 			}),
 		});
+	});
+
+	it("should update GROUP field ids", async () => {
+		const onUpdate = vi.fn();
+		updateCustomTypeContentRelationships({
+			models: [
+				{ model: getCustomTypeModel({ groupIds: ["shortCode"] }) },
+				{ model: getCustomTypeModel({ groupIds: ["flag"] }) },
+				{ model: getCustomTypeModel({ groupIds: ["shortCode", "flag"] }) },
+			],
+			previousPath: ["author", "languages", "shortCode"],
+			newPath: ["author", "languages", "shortCode_CHANGED"],
+			onUpdate,
+		});
+
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ groupIds: ["shortCode"] }),
+			model: getCustomTypeModel({ groupIds: ["shortCode_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({
+				groupIds: ["shortCode", "flag"],
+			}),
+			model: getCustomTypeModel({
+				groupIds: ["shortCode_CHANGED", "flag"],
+			}),
+		});
+
+		updateCustomTypeContentRelationships({
+			models: [{ model: getCustomTypeModel() }],
+			previousPath: ["author", "languages"],
+			newPath: ["author", "languages_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ groupId: "languages" }),
+			model: getCustomTypeModel({ groupId: "languages_CHANGED" }),
+		}); // changed
 	});
 
 	it("should update NESTED content relationship ids", async () => {
@@ -187,6 +257,48 @@ describe("updateCustomTypeContentRelationships", () => {
 		}); // changed
 	});
 
+	it("should update NESTED GROUP field ids", async () => {
+		const onUpdate = vi.fn();
+		updateCustomTypeContentRelationships({
+			models: [
+				{ model: getCustomTypeModel({ nestedGroupIds: ["phone"] }) },
+				{ model: getCustomTypeModel({ nestedGroupIds: ["email"] }) },
+				{ model: getCustomTypeModel({ nestedGroupIds: ["phone", "email"] }) },
+			],
+			previousPath: ["address", "contactDetails", "phone"],
+			newPath: ["address", "contactDetails", "phone_CHANGED"],
+			onUpdate,
+		});
+
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ nestedGroupIds: ["phone"] }),
+			model: getCustomTypeModel({ nestedGroupIds: ["phone_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({
+				nestedGroupIds: ["phone", "email"],
+			}),
+			model: getCustomTypeModel({
+				nestedGroupIds: ["phone_CHANGED", "email"],
+			}),
+		});
+
+		updateCustomTypeContentRelationships({
+			models: [{ model: getCustomTypeModel() }],
+			previousPath: ["address", "contactDetails"],
+			newPath: ["address", "contactDetails_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({ nestedGroupId: "contactDetails" }),
+			model: getCustomTypeModel({ nestedGroupId: "contactDetails_CHANGED" }),
+		}); // changed
+	});
+
 	it("should not update content relationship ids if the custom type id is not the same", async () => {
 		const onUpdate = vi.fn();
 
@@ -223,8 +335,12 @@ describe("updateSharedSliceContentRelationships", () => {
 	function getSharedSliceModel(args?: {
 		crId?: string;
 		ids?: string[];
+		groupId?: string;
+		groupIds?: string[];
 		nestedCrId?: string;
+		nestedGroupId?: string;
 		nestedIds?: string[];
+		nestedGroupIds?: string[];
 	}): SharedSlice {
 		return {
 			id: "testSlice",
@@ -275,6 +391,48 @@ describe("updateSharedSliceContentRelationships", () => {
 		});
 	});
 
+	it("should update GROUP field ids", async () => {
+		const onUpdate = vi.fn();
+		updateSharedSliceContentRelationships({
+			models: [
+				{ model: getSharedSliceModel({ groupIds: ["shortCode"] }) },
+				{ model: getSharedSliceModel({ groupIds: ["flag"] }) },
+				{ model: getSharedSliceModel({ groupIds: ["shortCode", "flag"] }) },
+			],
+			previousPath: ["author", "languages", "shortCode"],
+			newPath: ["author", "languages", "shortCode_CHANGED"],
+			onUpdate,
+		});
+
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({ groupIds: ["shortCode"] }),
+			model: getSharedSliceModel({ groupIds: ["shortCode_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({
+				groupIds: ["shortCode", "flag"],
+			}),
+			model: getSharedSliceModel({
+				groupIds: ["shortCode_CHANGED", "flag"],
+			}),
+		});
+
+		updateSharedSliceContentRelationships({
+			models: [{ model: getSharedSliceModel() }],
+			previousPath: ["author", "languages"],
+			newPath: ["author", "languages_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({ groupId: "languages" }),
+			model: getSharedSliceModel({ groupId: "languages_CHANGED" }),
+		}); // changed
+	});
+
 	it("should update slice NESTED content relationship ids", async () => {
 		const onUpdate = vi.fn();
 		updateSharedSliceContentRelationships({
@@ -314,6 +472,48 @@ describe("updateSharedSliceContentRelationships", () => {
 		expect(onUpdate).toHaveBeenCalledWith({
 			previousModel: getSharedSliceModel({ nestedCrId: "address_cr" }),
 			model: getSharedSliceModel({ nestedCrId: "address_cr_CHANGED" }),
+		}); // changed
+	});
+
+	it("should update NESTED GROUP field ids", async () => {
+		const onUpdate = vi.fn();
+		updateSharedSliceContentRelationships({
+			models: [
+				{ model: getSharedSliceModel({ nestedGroupIds: ["phone"] }) },
+				{ model: getSharedSliceModel({ nestedGroupIds: ["email"] }) },
+				{ model: getSharedSliceModel({ nestedGroupIds: ["phone", "email"] }) },
+			],
+			previousPath: ["address", "contactDetails", "phone"],
+			newPath: ["address", "contactDetails", "phone_CHANGED"],
+			onUpdate,
+		});
+
+		// less calls than models because onUpdate is only called if the model has changed
+		expect(onUpdate).toHaveBeenCalledTimes(2);
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({ nestedGroupIds: ["phone"] }),
+			model: getSharedSliceModel({ nestedGroupIds: ["phone_CHANGED"] }),
+		});
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({
+				nestedGroupIds: ["phone", "email"],
+			}),
+			model: getSharedSliceModel({
+				nestedGroupIds: ["phone_CHANGED", "email"],
+			}),
+		});
+
+		updateSharedSliceContentRelationships({
+			models: [{ model: getSharedSliceModel() }],
+			previousPath: ["address", "contactDetails"],
+			newPath: ["address", "contactDetails_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({ nestedGroupId: "contactDetails" }),
+			model: getSharedSliceModel({ nestedGroupId: "contactDetails_CHANGED" }),
 		}); // changed
 	});
 
