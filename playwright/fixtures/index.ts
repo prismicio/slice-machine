@@ -248,9 +248,6 @@ export const test = baseTest.extend<Options & Fixtures>({
     // Create redux storage state
     const userContext = onboarded
       ? {
-          userReview: {
-            onboarding: false,
-          },
           hasSeenChangesToolTip: true,
           hasSeenSimulatorToolTip: true,
           authStatus: "unknown",
@@ -258,9 +255,6 @@ export const test = baseTest.extend<Options & Fixtures>({
           ...reduxStorage,
         }
       : {
-          userReview: {
-            onboarding: onboarded,
-          },
           hasSeenChangesToolTip: false,
           hasSeenSimulatorToolTip: false,
           authStatus: "unknown",
