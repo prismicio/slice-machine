@@ -194,7 +194,7 @@ export class PrismicAuthManager {
 				server.once("listening", () => {
 					resolve();
 				});
-				server.listen(args.port);
+				server.listen(args.port, "127.0.0.1");
 			});
 
 			if (args.onListenCallback) {

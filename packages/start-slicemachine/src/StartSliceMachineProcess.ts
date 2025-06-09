@@ -120,7 +120,7 @@ export class StartSliceMachineProcess {
 		const app = await createSliceMachineExpressApp({
 			sliceMachineManager: this._sliceMachineManager,
 		});
-		const server = app.listen(this.port);
+		const server = app.listen(this.port, "127.0.0.1");
 		const address = server.address() as AddressInfo;
 		const url = `http://localhost:${address.port}`;
 
