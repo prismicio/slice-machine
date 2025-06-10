@@ -70,7 +70,7 @@ interface PickerCustomType {
 
 type PickerCustomTypeValue =
   | PickerCheckboxField
-  | PickerGroupField
+  | PickerFirstLevelGroupField
   | PickerContentRelationshipField;
 
 interface PickerCheckboxField {
@@ -78,21 +78,21 @@ interface PickerCheckboxField {
   value: boolean;
 }
 
-interface PickerGroupField {
+interface PickerFirstLevelGroupField {
   type: "group";
-  value: PickerGroupFieldValue;
+  value: PickerFirstLevelGroupFieldValue;
 }
 
-interface PickerGroupFieldWithoutContentRelationship {
+interface PickerLeafGroupField {
   type: "group";
-  value: PickerGroupFieldWithoutContentRelationshipValue;
+  value: PickerLeafGroupFieldValue;
 }
 
-interface PickerGroupFieldWithoutContentRelationshipValue {
+interface PickerLeafGroupFieldValue {
   [fieldId: string]: PickerCheckboxField;
 }
 
-interface PickerGroupFieldValue {
+interface PickerFirstLevelGroupFieldValue {
   [fieldId: string]: PickerCheckboxField | PickerContentRelationshipField;
 }
 
@@ -105,9 +105,7 @@ interface PickerContentRelationshipFieldValue {
   [customTypeId: string]: PickerNestedCustomTypeValue;
 }
 interface PickerNestedCustomTypeValue {
-  [fieldId: string]:
-    | PickerCheckboxField
-    | PickerGroupFieldWithoutContentRelationship;
+  [fieldId: string]: PickerCheckboxField | PickerLeafGroupField;
 }
 
 /**
@@ -414,8 +412,8 @@ function TreeViewContentRelationshipField(
 
           const onGroupFieldsChange = (
             updater: (
-              prev: PickerGroupFieldWithoutContentRelationshipValue,
-            ) => PickerGroupFieldWithoutContentRelationshipValue,
+              prev: PickerLeafGroupFieldValue,
+            ) => PickerLeafGroupFieldValue,
           ) => {
             onNestedCustomTypeChange((currentFields) => {
               const prevCtValue = currentFields[field.id] ?? {};
@@ -454,9 +452,7 @@ interface TreeViewContentRelationshipFieldGroupProps {
   group: TICustomTypeRegularFieldValues;
   fieldCheckMap: PickerNestedCustomTypeValue;
   onChange: (
-    updater: (
-      prev: PickerGroupFieldWithoutContentRelationshipValue,
-    ) => PickerGroupFieldWithoutContentRelationshipValue,
+    updater: (prev: PickerLeafGroupFieldValue) => PickerLeafGroupFieldValue,
   ) => void;
 }
 
@@ -497,7 +493,7 @@ function TreeViewContentRelationshipFieldNestedGroup(
 
 interface TreeViewGroupFieldProps {
   group: TIGroupFieldValues;
-  fieldCheckMap: PickerGroupFieldValue;
+  fieldCheckMap: PickerFirstLevelGroupFieldValue;
   onChange: (updater: (prev: PickerCustomType) => PickerCustomType) => void;
 }
 
@@ -505,7 +501,9 @@ function TreeViewGroupField(props: TreeViewGroupFieldProps) {
   const { group, fieldCheckMap, onChange: onCustomTypeChange } = props;
 
   const onGroupFieldChange = (
-    updater: (prev: PickerGroupFieldValue) => PickerGroupFieldValue,
+    updater: (
+      prev: PickerFirstLevelGroupFieldValue,
+    ) => PickerFirstLevelGroupFieldValue,
   ) => {
     onCustomTypeChange((currentCustomTypeFields) => {
       const prevField = currentCustomTypeFields[group.id] ?? {};
@@ -708,20 +706,25 @@ function convertCustomTypesToFieldCheckMap(
   }, {});
 }
 
-function createGroupField(group: TIGroupFieldValues): PickerGroupField {
+function createGroupField(
+  group: TIGroupFieldValues,
+): PickerFirstLevelGroupField {
   return {
     type: "group",
-    value: group.fields.reduce<PickerGroupFieldValue>((fields, field) => {
-      if (typeof field === "string") {
-        // Regular field
-        fields[field] = { type: "checkbox", value: true };
-      } else if ("customtypes" in field && field.customtypes !== undefined) {
-        // Content relationship field
-        fields[field.id] = createNestedCustomTypeField(field);
-      }
+    value: group.fields.reduce<PickerFirstLevelGroupFieldValue>(
+      (fields, field) => {
+        if (typeof field === "string") {
+          // Regular field
+          fields[field] = { type: "checkbox", value: true };
+        } else if ("customtypes" in field && field.customtypes !== undefined) {
+          // Content relationship field
+          fields[field.id] = createNestedCustomTypeField(field);
+        }
 
-      return fields;
-    }, {}),
+        return fields;
+      },
+      {},
+    ),
   };
 }
 
