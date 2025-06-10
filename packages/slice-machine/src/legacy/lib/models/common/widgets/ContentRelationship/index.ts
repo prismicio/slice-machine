@@ -1,7 +1,4 @@
-import {
-  CustomTypes,
-  Link,
-} from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
+import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdSettingsEthernet } from "react-icons/md";
 import { useSelector } from "react-redux";
 import * as yup from "yup";
@@ -64,17 +61,7 @@ const contentRelationShipConfigSchema = linkConfigSchema.shape({
     .string()
     .required()
     .matches(/^document$/, { excludeEmptyString: true }),
-  customtypes: yup
-    .array()
-    .test({
-      message: "Invalid customtypes structure.",
-      test: (value) => {
-        if (!value) return true; // Still allow to be optional
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        return CustomTypes.decode(value)._tag === "Right";
-      },
-    })
-    .optional(),
+  customtypes: yup.array().optional(),
 });
 
 const schema = yup.object().shape({
