@@ -34,10 +34,7 @@ import {
   changesPushSuccess,
   hasSeenChangesToolTipCreator,
   hasSeenSimulatorToolTipCreator,
-  sendAReviewCreator,
-  skipReviewCreator,
 } from "./userContext";
-import { UserReviewType } from "./userContext/types";
 
 const useSliceMachineActions = () => {
   const dispatch = useDispatch();
@@ -54,28 +51,12 @@ const useSliceMachineActions = () => {
     dispatch(modalOpenCreator({ modalKey: ModalKeysEnum.SCREENSHOT_PREVIEW }));
 
   // Loading module
-  const startLoadingReview = () =>
-    dispatch(startLoadingActionCreator({ loadingKey: LoadingKeysEnum.REVIEW }));
-  const stopLoadingReview = () =>
-    dispatch(stopLoadingActionCreator({ loadingKey: LoadingKeysEnum.REVIEW }));
   const startLoadingLogin = () =>
     dispatch(startLoadingActionCreator({ loadingKey: LoadingKeysEnum.LOGIN }));
   const stopLoadingLogin = () =>
     dispatch(stopLoadingActionCreator({ loadingKey: LoadingKeysEnum.LOGIN }));
 
   // UserContext module
-  const skipReview = (reviewType: UserReviewType) =>
-    dispatch(
-      skipReviewCreator({
-        reviewType,
-      }),
-    );
-  const sendAReview = (reviewType: UserReviewType) =>
-    dispatch(
-      sendAReviewCreator({
-        reviewType,
-      }),
-    );
   const setSeenSimulatorToolTip = () =>
     dispatch(hasSeenSimulatorToolTipCreator());
   const setSeenChangesToolTip = () => dispatch(hasSeenChangesToolTipCreator());
@@ -179,8 +160,6 @@ const useSliceMachineActions = () => {
     openLoginModal,
     startLoadingLogin,
     stopLoadingLogin,
-    stopLoadingReview,
-    startLoadingReview,
     deleteCustomTypeSuccess,
     renameCustomTypeSuccess,
     saveCustomTypeSuccess,
@@ -189,8 +168,6 @@ const useSliceMachineActions = () => {
     createSliceSuccess,
     renameSliceSuccess,
     deleteSliceSuccess,
-    sendAReview,
-    skipReview,
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
     openScreenshotPreviewModal,
