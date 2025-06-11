@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`component file has correct contents 1`] = `
+exports[`Svelte <=4 syntax > component file has correct contents 1`] = `
 "<script>
   /** @type {import(\\"@prismicio/client\\").Content.QuxQuuxSlice} */
   export let slice;
@@ -15,35 +15,35 @@ exports[`component file has correct contents 1`] = `
   <br />
   <strong>You can edit this slice directly in your code editor.</strong>
   <!--
-		💡 Use Prismic MCP with your code editor
+	💡 Use Prismic MCP with your code editor
 	
-		Get AI-powered help to build your slice components — based on your actual model.
+	Get AI-powered help to build your slice components — based on your actual model.
 	
-		▶️ Setup:
-		1. Add a new MCP Server in your code editor:
+	▶️ Setup:
+	1. Add a new MCP Server in your code editor:
 	
-		{
-			\\"mcpServers\\": {
-				\\"Prismic MCP\\": {
-					\\"command\\": \\"npx\\",
-					\\"args\\": [\\"-y\\", \\"@prismicio/mcp-server\\"]
-				}
-			}
-		}
+	{
+	  \\"mcpServers\\": {
+	    \\"Prismic MCP\\": {
+	      \\"command\\": \\"npx\\",
+	      \\"args\\": [\\"-y\\", \\"@prismicio/mcp-server\\"]
+	    }
+	  }
+	}
 	
-		2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
+	2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
 	
-		✅ Then open your slice file and ask your code editor:
-			\\"Code this slice\\"
+	✅ Then open your slice file and ask your code editor:
+		\\"Code this slice\\"
 	
-		Your code editor reads your slice model and helps you code faster ⚡
-		📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
+	Your code editor reads your slice model and helps you code faster ⚡
+	📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
 	-->
 </section>
 "
 `;
 
-exports[`component file is correctly typed when TypeScript is enabled 1`] = `
+exports[`Svelte <=4 syntax > component file is correctly typed when TypeScript is enabled 1`] = `
 "<script lang=\\"ts\\">
   import type { Content } from \\"@prismicio/client\\";
 
@@ -59,29 +59,122 @@ exports[`component file is correctly typed when TypeScript is enabled 1`] = `
   <br />
   <strong>You can edit this slice directly in your code editor.</strong>
   <!--
-		💡 Use Prismic MCP with your code editor
+	💡 Use Prismic MCP with your code editor
 	
-		Get AI-powered help to build your slice components — based on your actual model.
+	Get AI-powered help to build your slice components — based on your actual model.
 	
-		▶️ Setup:
-		1. Add a new MCP Server in your code editor:
+	▶️ Setup:
+	1. Add a new MCP Server in your code editor:
 	
-		{
-			\\"mcpServers\\": {
-				\\"Prismic MCP\\": {
-					\\"command\\": \\"npx\\",
-					\\"args\\": [\\"-y\\", \\"@prismicio/mcp-server\\"]
-				}
-			}
-		}
+	{
+	  \\"mcpServers\\": {
+	    \\"Prismic MCP\\": {
+	      \\"command\\": \\"npx\\",
+	      \\"args\\": [\\"-y\\", \\"@prismicio/mcp-server\\"]
+	    }
+	  }
+	}
 	
-		2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
+	2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
 	
-		✅ Then open your slice file and ask your code editor:
-			\\"Code this slice\\"
+	✅ Then open your slice file and ask your code editor:
+		\\"Code this slice\\"
 	
-		Your code editor reads your slice model and helps you code faster ⚡
-		📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
+	Your code editor reads your slice model and helps you code faster ⚡
+	📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
+	-->
+</section>
+"
+`;
+
+exports[`component file has correct contents 1`] = `
+"<script>
+  /* @typedef {import(\\"@prismicio/client\\").Content} Content */
+  /* @typedef {import(\\"@prismicio/svelte\\").SliceComponentProps} SliceComponentProps */
+
+  /* @type {SliceComponentProps<Content.QuxQuuxSlice>} */
+  const { slice } = $props();
+</script>
+
+<section
+  data-slice-type={slice.slice_type}
+  data-slice-variation={slice.variation}
+>
+  Placeholder component for {slice.slice_type} (variation: {slice.variation})
+  slices.
+  <br />
+  <strong>You can edit this slice directly in your code editor.</strong>
+  <!--
+	💡 Use Prismic MCP with your code editor
+	
+	Get AI-powered help to build your slice components — based on your actual model.
+	
+	▶️ Setup:
+	1. Add a new MCP Server in your code editor:
+	
+	{
+	  \\"mcpServers\\": {
+	    \\"Prismic MCP\\": {
+	      \\"command\\": \\"npx\\",
+	      \\"args\\": [\\"-y\\", \\"@prismicio/mcp-server\\"]
+	    }
+	  }
+	}
+	
+	2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
+	
+	✅ Then open your slice file and ask your code editor:
+		\\"Code this slice\\"
+	
+	Your code editor reads your slice model and helps you code faster ⚡
+	📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
+	-->
+</section>
+"
+`;
+
+exports[`component file is correctly typed when TypeScript is enabled 1`] = `
+"<script lang=\\"ts\\">
+  import type { Content } from \\"@prismicio/client\\";
+  import type { SliceComponentProps } from \\"@prismicio/svelte\\";
+
+  type Props = SliceComponentProps<Content.QuxQuuxSlice>;
+
+  const { slice }: Props = $props();
+</script>
+
+<section
+  data-slice-type={slice.slice_type}
+  data-slice-variation={slice.variation}
+>
+  Placeholder component for {slice.slice_type} (variation: {slice.variation})
+  slices.
+  <br />
+  <strong>You can edit this slice directly in your code editor.</strong>
+  <!--
+	💡 Use Prismic MCP with your code editor
+	
+	Get AI-powered help to build your slice components — based on your actual model.
+	
+	▶️ Setup:
+	1. Add a new MCP Server in your code editor:
+	
+	{
+	  \\"mcpServers\\": {
+	    \\"Prismic MCP\\": {
+	      \\"command\\": \\"npx\\",
+	      \\"args\\": [\\"-y\\", \\"@prismicio/mcp-server\\"]
+	    }
+	  }
+	}
+	
+	2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
+	
+	✅ Then open your slice file and ask your code editor:
+		\\"Code this slice\\"
+	
+	Your code editor reads your slice model and helps you code faster ⚡
+	📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
 	-->
 </section>
 "

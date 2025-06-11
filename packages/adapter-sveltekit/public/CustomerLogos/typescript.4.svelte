@@ -1,16 +1,12 @@
-<script>
-	import { isFilled } from "@prismicio/client";
+<script lang="ts">
+	import { type Content, isFilled } from "@prismicio/client";
 	import {
 		PrismicImage,
 		PrismicRichText,
 		PrismicLink,
 	} from "@prismicio/svelte";
 
-	/* @typedef {import("@prismicio/client").Content} Content */
-	/* @typedef {import("@prismicio/svelte").SliceComponentProps} SliceComponentProps */
-
-	/* @type {SliceComponentProps<Content.${PascalNameToReplace}Slice>} */
-	const { slice } = $props();
+	export let slice: Content.PascalNameToReplaceSlice;
 </script>
 
 <section
@@ -26,7 +22,7 @@
 		{/if}
 		{#if slice.primary.logos.length > 0}
 			<ul class="es-customer-logos__logos">
-				{#each slice.primary.logos as logo (logo.image)}
+				{#each slice.primary.logos as logo}
 					{#if isFilled.image(logo.image)}
 						<li class="es-customer-logos__logo">
 							<PrismicLink field={logo.link}>

@@ -4,13 +4,14 @@ exports[`PageSnippet > repeatable model > return a snippet with JavaScript 1`] =
 {
   "content": "## Create your Repeatable's page data fetcher
 
-Add a new route by creating a \`src/routes/[uid]/+page.server.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.server.js\`.)
+Add a new route by creating a \`src/routes/[[preview=preview]]/[uid]/+page.server.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/[uid]/+page.server.js\`.)
 
 Paste in this code:
 
-~~~js [src/routes/[uid]/+page.server.js]
+~~~javascript [src/routes/[[preview=preview]]/[uid]/+page.server.js]
 import { createClient } from \\"$lib/prismicio\\";
 
+/* @type {import(\\"./$types\\").PageServerLoad} */
 export async function load({ params, fetch, cookies }) {
   const client = createClient({ fetch, cookies });
 
@@ -21,6 +22,7 @@ export async function load({ params, fetch, cookies }) {
   };
 }
 
+/* @type {import(\\"./$types\\").EntryGenerator} */
 export async function entries() {
   const client = createClient();
 
@@ -34,17 +36,18 @@ export async function entries() {
 
 ## Create your Repeatable's page component
 
-In the route's directory, create a \`src/routes/[uid]/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.svelte\`.)
+In the route's directory, create a \`src/routes/[[preview=preview]]/[uid]/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/[uid]/+page.svelte\`.)
 
 Paste in this code:
 
-~~~svelte [src/routes/[uid]/+page.svelte]
+~~~svelte [src/routes/[[preview=preview]]/[uid]/+page.svelte]
 <script>
   import { SliceZone } from \\"@prismicio/svelte\\";
 
   import { components } from \\"$lib/slices\\";
 
-  export let data;
+  /* @type {import(\\"./$types\\").PageProps} */
+  const { data } = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />
@@ -59,14 +62,15 @@ exports[`PageSnippet > repeatable model > return a snippet with TypeScript for T
 {
   "content": "## Create your Repeatable's page data fetcher
 
-Add a new route by creating a \`src/routes/[uid]/+page.server.ts\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.server.ts\`.)
+Add a new route by creating a \`src/routes/[[preview=preview]]/[uid]/+page.server.ts\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/[uid]/+page.server.ts\`.)
 
 Paste in this code:
 
-~~~ts [src/routes/[uid]/+page.server.ts]
+~~~typescript [src/routes/[[preview=preview]]/[uid]/+page.server.ts]
 import { createClient } from \\"$lib/prismicio\\";
+import type { PageServerLoad, EntryGenerator } from \\"./$types\\";
 
-export async function load({ params, fetch, cookies }) {
+export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
   const client = createClient({ fetch, cookies });
 
   const page = await client.getByUID(\\"repeatable\\", params.uid);
@@ -74,9 +78,9 @@ export async function load({ params, fetch, cookies }) {
   return {
     page,
   };
-}
+};
 
-export async function entries() {
+export const entries: EntryGenerator = async () => {
   const client = createClient();
 
   const pages = await client.getAllByType(\\"repeatable\\");
@@ -84,22 +88,23 @@ export async function entries() {
   return pages.map((page) => {
     return { uid: page.uid };
   });
-}
+};
 ~~~
 
 ## Create your Repeatable's page component
 
-In the route's directory, create a \`src/routes/[uid]/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[uid]/+page.svelte\`.)
+In the route's directory, create a \`src/routes/[[preview=preview]]/[uid]/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/[uid]/+page.svelte\`.)
 
 Paste in this code:
 
-~~~svelte [src/routes/[uid]/+page.svelte]
-<script>
+~~~svelte [src/routes/[[preview=preview]]/[uid]/+page.svelte]
+<script lang=\\"ts\\">
   import { SliceZone } from \\"@prismicio/svelte\\";
 
   import { components } from \\"$lib/slices\\";
+  import type { PageProps } from \\"./$types\\";
 
-  export let data;
+  const { data }: PageProps = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />
@@ -114,13 +119,14 @@ exports[`PageSnippet > single model > return a snippet with JavaScript 1`] = `
 {
   "content": "## Create your Single's page data fetcher
 
-Add a new route by creating a \`src/routes/single/+page.server.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.server.js\`.)
+Add a new route by creating a \`src/routes/[[preview=preview]]/single/+page.server.js\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/single/+page.server.js\`.)
 
 Paste in this code:
 
-~~~js [src/routes/single/+page.server.js]
+~~~javascript [src/routes/[[preview=preview]]/single/+page.server.js]
 import { createClient } from \\"$lib/prismicio\\";
 
+/* @type {import(\\"./$types\\").PageServerLoad} */
 export async function load({ params, fetch, cookies }) {
   const client = createClient({ fetch, cookies });
 
@@ -131,6 +137,7 @@ export async function load({ params, fetch, cookies }) {
   };
 }
 
+/* @type {import(\\"./$types\\").EntryGenerator} */
 export async function entries() {
   return [{}];
 }
@@ -138,17 +145,18 @@ export async function entries() {
 
 ## Create your Single's page component
 
-In the route's directory, create a \`src/routes/single/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.svelte\`.)
+In the route's directory, create a \`src/routes/[[preview=preview]]/single/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/single/+page.svelte\`.)
 
 Paste in this code:
 
-~~~svelte [src/routes/single/+page.svelte]
+~~~svelte [src/routes/[[preview=preview]]/single/+page.svelte]
 <script>
   import { SliceZone } from \\"@prismicio/svelte\\";
 
   import { components } from \\"$lib/slices\\";
 
-  export let data;
+  /* @type {import(\\"./$types\\").PageProps} */
+  const { data } = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />
@@ -163,14 +171,15 @@ exports[`PageSnippet > single model > return a snippet with TypeScript for TypeS
 {
   "content": "## Create your Single's page data fetcher
 
-Add a new route by creating a \`src/routes/single/+page.server.ts\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.server.ts\`.)
+Add a new route by creating a \`src/routes/[[preview=preview]]/single/+page.server.ts\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/single/+page.server.ts\`.)
 
 Paste in this code:
 
-~~~ts [src/routes/single/+page.server.ts]
+~~~typescript [src/routes/[[preview=preview]]/single/+page.server.ts]
 import { createClient } from \\"$lib/prismicio\\";
+import type { PageServerLoad, EntryGenerator } from \\"./$types\\";
 
-export async function load({ params, fetch, cookies }) {
+export const load: PageServerLoad = async ({ params, fetch, cookies }) => {
   const client = createClient({ fetch, cookies });
 
   const page = await client.getSingle(\\"single\\");
@@ -178,26 +187,27 @@ export async function load({ params, fetch, cookies }) {
   return {
     page,
   };
-}
+};
 
-export async function entries() {
+export const entries: EntryGenerator = async () => {
   return [{}];
-}
+};
 ~~~
 
 ## Create your Single's page component
 
-In the route's directory, create a \`src/routes/single/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/single/+page.svelte\`.)
+In the route's directory, create a \`src/routes/[[preview=preview]]/single/+page.svelte\` file. (If the route should be nested in a child directory, you can create the file in a directory, like \`src/routes/marketing/[[preview=preview]]/single/+page.svelte\`.)
 
 Paste in this code:
 
-~~~svelte [src/routes/single/+page.svelte]
-<script>
+~~~svelte [src/routes/[[preview=preview]]/single/+page.svelte]
+<script lang=\\"ts\\">
   import { SliceZone } from \\"@prismicio/svelte\\";
 
   import { components } from \\"$lib/slices\\";
+  import type { PageProps } from \\"./$types\\";
 
-  export let data;
+  const { data }: PageProps = $props();
 </script>
 
 <SliceZone slices={data.page.data.slices} {components} />

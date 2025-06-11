@@ -1,10 +1,6 @@
 import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdSettingsEthernet } from "react-icons/md";
-import { useSelector } from "react-redux";
 import * as yup from "yup";
-
-import { hasLocal } from "@/legacy/lib/models/common/ModelData";
-import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 import { linkConfigSchema } from "../Link";
 import { Widget } from "../Widget";
@@ -112,12 +108,7 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
   FormFields,
   CUSTOM_NAME: "ContentRelationship",
   Form,
-  prepareInitialValues: (initialValues) => {
-    const customTypes =
-      // TODO: fix this error
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      useSelector(selectAllCustomTypes).filter(hasLocal);
-
+  prepareInitialValues: (customTypes, initialValues) => {
     if (!initialValues?.customtypes) {
       return initialValues;
     }

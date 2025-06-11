@@ -48,6 +48,18 @@ beforeEach(async (ctx) => {
 		JSON.stringify(config),
 	);
 
+	await fs.writeFile(
+		path.join(tmpRoot, "vite.config.js"),
+		`
+import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  plugins: [sveltekit()],
+});
+`.trim(),
+	);
+
 	ctx.project = {
 		root: tmpRoot,
 		config,

@@ -4,11 +4,13 @@
 		PrismicLink,
 		PrismicImage,
 		PrismicRichText,
+		type SliceComponentProps,
 	} from "@prismicio/svelte";
 
-	export let slice: Content.PascalNameToReplaceSlice;
+	const { slice }: SliceComponentProps<Content.PascalNameToReplaceSlice> =
+		$props();
 
-	$: alignment = slice.variation === "alignLeft" ? "left" : "center";
+	let alignment = $derived(slice.variation === "alignLeft" ? "left" : "center");
 </script>
 
 <section

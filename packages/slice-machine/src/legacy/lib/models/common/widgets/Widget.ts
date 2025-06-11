@@ -4,6 +4,7 @@ import { AnyObjectSchema } from "yup";
 
 import { TabField } from "@/legacy/lib/models/common/CustomType";
 import { GroupSM, NestedGroupSM } from "@/legacy/lib/models/common/Group";
+import { LocalOnlyCustomType } from "@/legacy/lib/models/common/ModelData";
 
 interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
   TYPE_NAME: FieldType;
@@ -19,7 +20,10 @@ interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
   CustomListItem?: (props: any) => React.ReactElement;
   // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
   Form?: (props: any) => React.ReactNode;
-  prepareInitialValues?: (props: F["config"]) => F["config"];
+  prepareInitialValues?: (
+    customTypes: LocalOnlyCustomType[],
+    initialValues: F["config"],
+  ) => F["config"];
 }
 
 export type Widget<F extends TabField, S extends AnyObjectSchema> = F extends
