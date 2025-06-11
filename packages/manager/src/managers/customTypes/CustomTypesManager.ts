@@ -578,13 +578,21 @@ function updateCRCustomType(
 
 	if (!previousPath.customTypeId || !newPath.customTypeId) {
 		throw new Error(
-			"Could not find a customtype id in previousPath and/or newPath, which should not be possible.",
+			`Could not find a customtype id in previousPath (${args.previousPath.join(
+				".",
+			)}) and/or newPath (${args.newPath.join(
+				".",
+			)}), which should not be possible.`,
 		);
 	}
 
 	if (!previousPath.fieldId || !newPath.fieldId) {
 		throw new Error(
-			"Could not find a field id in previousPath and/or newPath, which should not be possible.",
+			`Could not find a field id in previousPath (${args.previousPath.join(
+				".",
+			)}) and/or newPath (${args.newPath.join(
+				".",
+			)}), which should not be possible.`,
 		);
 	}
 
