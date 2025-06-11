@@ -77,6 +77,24 @@ type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
 	mocksConfig: Record<string, unknown>;
 };
 
+export type SliceMachineManagerUpdateCustomTypeArgs =
+	CustomTypeUpdateHookData & {
+		updateMeta?: {
+			fieldIdChanged?: {
+				/**
+				 * Previous path of the changed field. Can be used to identify the field
+				 * that had an API ID rename (e.g. ["page", "title"])
+				 */
+				previousPath: string[];
+				/**
+				 * New path of the changed field. Can be used to identify the field that
+				 * had an API ID rename (e.g. ["page", "title2"])
+				 */
+				newPath: string[];
+			};
+		};
+	};
+
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {
 	errors: HookError[];
 };
@@ -287,7 +305,7 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async updateCustomType(
-		args: CustomTypeUpdateHookData,
+		args: SliceMachineManagerUpdateCustomTypeArgs,
 	): Promise<CustomTypesMachineManagerUpdateCustomTypeReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 		const { model } = args;
