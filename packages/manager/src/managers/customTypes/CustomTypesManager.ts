@@ -76,45 +76,49 @@ type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
 	// TODO
 	mocksConfig: Record<string, unknown>;
 };
-
-/** `[field]` or `[group, field]` – path **inside** the Custom Type */
-type PathWithoutCustomType = [string] | [string, string];
-
-type SliceMachineManagerUpdateCustomTypeFieldIdChanged = {
-	/**
-	 * Previous path of the changed field, excluding the custom type id. Can be
-	 * used to identify the field that had an API ID rename (e.g. ["fieldA"] or
-	 * ["groupA", "fieldA"])
-	 */
-	previousPath: PathWithoutCustomType;
-	/**
-	 * New path of the changed field, excluding the custom type id. Can be used to
-	 * identify the field that had an API ID rename (e.g. ["fieldB"] or ["groupA",
-	 * "fieldB"])
-	 */
-	newPath: PathWithoutCustomType;
+ 
+/** `[field]` or `[group, field]` – path INSIDE the Custom Type */
+type PathWithinCustomType = [string] | [string, string];
+ 
+/** `[ct, field]` or `[ct, group, field]` – path WITH Custom Type ID */
+type PathWithCustomType = [string, string] | [string, string, string];
+ 
+type UnprefixedFieldIdChangedMeta = {
+	previousPath: PathWithinCustomType;
+	newPath: PathWithinCustomType;
 };
-
-type SliceMachineManagerUpdateCustomTypeArgs = CustomTypeUpdateHookData & {
-	updateMeta?: {
-		fieldIdChanged?: SliceMachineManagerUpdateCustomTypeFieldIdChanged;
+ 
+export type SliceMachineManagerUpdateCustomTypeArgs =
+	CustomTypeUpdateHookData & {
+		updateMeta?: {
+			fieldIdChanged?: {
+				/**
+				 * Previous path of the changed field. `[field]` or `[group, field]`
+				 */
+				previousPath: PathWithinCustomType;
+				/**
+				 * New path of the changed field. `[field]` or `[group, field]`
+				 */
+				newPath: PathWithinCustomType;
+			};
+		};
 	};
-};
-
+ 
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {
 	errors: HookError[];
 };
-
+ 
 type CustomTypesMachineManagerDeleteCustomTypeArgs = {
 	id: string;
 };
-
+ 
 type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
-
+ 
 type CustomTypesMachineManagerUpdateCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
+};
 };
 
 /** `[ct, field]` or `[ct, group, field]` – path **with** Custom Type ID */
