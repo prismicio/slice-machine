@@ -382,8 +382,8 @@ describe("updateCustomTypeContentRelationships", () => {
 		expect(() => {
 			return updateCustomTypeContentRelationships({
 				models: [{ model: getCustomTypeModel() }],
-				previousPath: [],
-				newPath: [],
+				previousPath: [] as unknown as [string, string],
+				newPath: [] as unknown as [string, string],
 				onUpdate: vi.fn(),
 			});
 		}).toThrow();
@@ -659,8 +659,8 @@ describe("updateSharedSliceContentRelationships", () => {
 		expect(() => {
 			return updateSharedSliceContentRelationships({
 				models: [{ model: getSharedSliceModel() }],
-				previousPath: [],
-				newPath: [],
+				previousPath: [] as unknown as [string, string],
+				newPath: [] as unknown as [string, string],
 				onUpdate: vi.fn(),
 			});
 		}).toThrow();
