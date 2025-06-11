@@ -897,6 +897,14 @@ interface CrUpdatePathIds {
 }
 
 function getPathIds(path: CustomTypeUpdatePath): CrUpdatePathIds {
+	if (path.length < 2) {
+		throw new Error(
+			`Unexpected path length ${
+				path.length
+			}. Expected at least 2 segments (got: ${path.join(".")}).`,
+		);
+	}
+
 	const [customTypeId, groupOrFieldId, fieldId] = path;
 
 	return {
