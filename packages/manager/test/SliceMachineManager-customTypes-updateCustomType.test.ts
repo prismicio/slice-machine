@@ -299,20 +299,60 @@ describe("updateCustomTypeContentRelationships", () => {
 		}); // changed
 	});
 
-	it("should not update content relationship ids if the custom type id is not the same", async () => {
+	it("should not update anything if the ids don't match", async () => {
 		const onUpdate = vi.fn();
+		// Wrong custom type id
 
 		updateCustomTypeContentRelationships({
 			models: [
-				{
-					model: getCustomTypeModel({
-						ids: ["sameFieldName"],
-						nestedIds: ["sameFieldName"],
-					}),
-				},
+				{ model: getCustomTypeModel({ ids: ["authorLastName"] }) },
+				{ model: getCustomTypeModel({ ids: ["authorLastName", "address"] }) },
 			],
-			previousPath: ["differentCustomType", "sameFieldName"],
-			newPath: ["differentCustomType", "sameFieldName_CHANGED"],
+			previousPath: ["author_WRONG", "authorLastName"],
+			newPath: ["author_WRONG", "authorLastName_NEW"],
+			onUpdate,
+		});
+
+		// Wrong regular field id
+
+		updateCustomTypeContentRelationships({
+			models: [
+				{ model: getCustomTypeModel({ ids: ["authorLastName"] }) },
+				{ model: getCustomTypeModel({ ids: ["authorLastName", "address"] }) },
+			],
+			previousPath: ["author", "authorLastName_WRONG"],
+			newPath: ["author", "authorLastName_NEW"],
+			onUpdate,
+		});
+
+		// Wrong group id
+
+		updateCustomTypeContentRelationships({
+			models: [
+				{ model: getCustomTypeModel({ groupIds: ["shortCode"] }) },
+				{ model: getCustomTypeModel({ groupIds: ["shortCode", "flag"] }) },
+			],
+			previousPath: ["author", "languages_WRONG", "shortCode"],
+			newPath: ["author", "languages_NEW", "shortCode_NEW"],
+			onUpdate,
+		});
+
+		updateCustomTypeContentRelationships({
+			models: [{ model: getCustomTypeModel() }],
+			previousPath: ["author", "languages_WRONG"],
+			newPath: ["author", "languages_NEW"],
+			onUpdate,
+		});
+
+		// Wrong group field id
+
+		updateCustomTypeContentRelationships({
+			models: [
+				{ model: getCustomTypeModel({ groupIds: ["shortCode"] }) },
+				{ model: getCustomTypeModel({ groupIds: ["shortCode", "flag"] }) },
+			],
+			previousPath: ["author", "languages", "shortCode_WRONG"],
+			newPath: ["author", "languages", "shortCode_NEW"],
 			onUpdate,
 		});
 
@@ -517,20 +557,60 @@ describe("updateSharedSliceContentRelationships", () => {
 		}); // changed
 	});
 
-	it("should not update content relationship ids if the custom type id is not the same", async () => {
+	it("should not update anything if the ids don't match", async () => {
 		const onUpdate = vi.fn();
+		// Wrong custom type id
 
 		updateSharedSliceContentRelationships({
 			models: [
-				{
-					model: getSharedSliceModel({
-						ids: ["sameFieldName"],
-						nestedIds: ["sameFieldName"],
-					}),
-				},
+				{ model: getSharedSliceModel({ ids: ["authorLastName"] }) },
+				{ model: getSharedSliceModel({ ids: ["authorLastName", "address"] }) },
 			],
-			previousPath: ["differentCustomTypeId", "sameFieldName"],
-			newPath: ["differentCustomTypeId", "sameFieldName_CHANGED"],
+			previousPath: ["author_WRONG", "authorLastName"],
+			newPath: ["author_WRONG", "authorLastName_NEW"],
+			onUpdate,
+		});
+
+		// Wrong regular field id
+
+		updateSharedSliceContentRelationships({
+			models: [
+				{ model: getSharedSliceModel({ ids: ["authorLastName"] }) },
+				{ model: getSharedSliceModel({ ids: ["authorLastName", "address"] }) },
+			],
+			previousPath: ["author", "authorLastName_WRONG"],
+			newPath: ["author", "authorLastName_NEW"],
+			onUpdate,
+		});
+
+		// Wrong group id
+
+		updateSharedSliceContentRelationships({
+			models: [
+				{ model: getSharedSliceModel({ groupIds: ["shortCode"] }) },
+				{ model: getSharedSliceModel({ groupIds: ["shortCode", "flag"] }) },
+			],
+			previousPath: ["author", "languages_WRONG", "shortCode"],
+			newPath: ["author", "languages_NEW", "shortCode_NEW"],
+			onUpdate,
+		});
+
+		updateSharedSliceContentRelationships({
+			models: [{ model: getSharedSliceModel() }],
+			previousPath: ["author", "languages_WRONG"],
+			newPath: ["author", "languages_NEW"],
+			onUpdate,
+		});
+
+		// Wrong group field id
+
+		updateSharedSliceContentRelationships({
+			models: [
+				{ model: getSharedSliceModel({ groupIds: ["shortCode"] }) },
+				{ model: getSharedSliceModel({ groupIds: ["shortCode", "flag"] }) },
+			],
+			previousPath: ["author", "languages", "shortCode_WRONG"],
+			newPath: ["author", "languages", "shortCode_NEW"],
 			onUpdate,
 		});
 
