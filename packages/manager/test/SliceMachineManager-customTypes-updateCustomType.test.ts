@@ -173,7 +173,7 @@ describe("updateCustomTypeContentRelationships", () => {
 		});
 	});
 
-	it("should update GROUP field ids", async () => {
+	it("should update the ids of fields inside a GROUP", async () => {
 		const onUpdate = vi.fn();
 		updateCustomTypeContentRelationships({
 			models: [
@@ -201,7 +201,33 @@ describe("updateCustomTypeContentRelationships", () => {
 				groupIds: ["shortCode_CHANGED", "flag"],
 			}),
 		});
+	});
 
+	it("should update the ids of fields inside a GROUP along with the group id", async () => {
+		const onUpdate = vi.fn();
+		updateCustomTypeContentRelationships({
+			models: [{ model: getCustomTypeModel({ groupIds: ["shortCode"] }) }],
+			previousPath: ["author", "languages", "shortCode"],
+			newPath: ["author", "languages_CHANGED", "shortCode_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledTimes(1);
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getCustomTypeModel({
+				groupId: "languages",
+				groupIds: ["shortCode"],
+			}),
+			model: getCustomTypeModel({
+				groupIds: ["shortCode_CHANGED"],
+				groupId: "languages_CHANGED",
+			}),
+		});
+	});
+
+	it("should update the id of a GROUP", async () => {
+		const onUpdate = vi.fn();
 		updateCustomTypeContentRelationships({
 			models: [{ model: getCustomTypeModel() }],
 			previousPath: ["author", "languages"],
@@ -313,7 +339,7 @@ describe("updateCustomTypeContentRelationships", () => {
 			onUpdate,
 		});
 
-		// Wrong regular field id
+		// Wrong field id
 
 		updateCustomTypeContentRelationships({
 			models: [
@@ -334,13 +360,6 @@ describe("updateCustomTypeContentRelationships", () => {
 			],
 			previousPath: ["author", "languages_WRONG", "shortCode"],
 			newPath: ["author", "languages_NEW", "shortCode_NEW"],
-			onUpdate,
-		});
-
-		updateCustomTypeContentRelationships({
-			models: [{ model: getCustomTypeModel() }],
-			previousPath: ["author", "languages_WRONG"],
-			newPath: ["author", "languages_NEW"],
 			onUpdate,
 		});
 
@@ -431,7 +450,7 @@ describe("updateSharedSliceContentRelationships", () => {
 		});
 	});
 
-	it("should update GROUP field ids", async () => {
+	it("should update the ids of fields inside a GROUP", async () => {
 		const onUpdate = vi.fn();
 		updateSharedSliceContentRelationships({
 			models: [
@@ -459,7 +478,33 @@ describe("updateSharedSliceContentRelationships", () => {
 				groupIds: ["shortCode_CHANGED", "flag"],
 			}),
 		});
+	});
 
+	it("should update the ids of fields inside a GROUP along with the group id", async () => {
+		const onUpdate = vi.fn();
+		updateSharedSliceContentRelationships({
+			models: [{ model: getSharedSliceModel({ groupIds: ["shortCode"] }) }],
+			previousPath: ["author", "languages", "shortCode"],
+			newPath: ["author", "languages_CHANGED", "shortCode_CHANGED"],
+			onUpdate,
+		});
+
+		expect(onUpdate).toHaveBeenCalledTimes(1);
+
+		expect(onUpdate).toHaveBeenCalledWith({
+			previousModel: getSharedSliceModel({
+				groupId: "languages",
+				groupIds: ["shortCode"],
+			}),
+			model: getSharedSliceModel({
+				groupIds: ["shortCode_CHANGED"],
+				groupId: "languages_CHANGED",
+			}),
+		});
+	});
+
+	it("should update the id of a GROUP", async () => {
+		const onUpdate = vi.fn();
 		updateSharedSliceContentRelationships({
 			models: [{ model: getSharedSliceModel() }],
 			previousPath: ["author", "languages"],
@@ -571,7 +616,7 @@ describe("updateSharedSliceContentRelationships", () => {
 			onUpdate,
 		});
 
-		// Wrong regular field id
+		// Wrong field id
 
 		updateSharedSliceContentRelationships({
 			models: [
@@ -592,13 +637,6 @@ describe("updateSharedSliceContentRelationships", () => {
 			],
 			previousPath: ["author", "languages_WRONG", "shortCode"],
 			newPath: ["author", "languages_NEW", "shortCode_NEW"],
-			onUpdate,
-		});
-
-		updateSharedSliceContentRelationships({
-			models: [{ model: getSharedSliceModel() }],
-			previousPath: ["author", "languages_WRONG"],
-			newPath: ["author", "languages_NEW"],
 			onUpdate,
 		});
 

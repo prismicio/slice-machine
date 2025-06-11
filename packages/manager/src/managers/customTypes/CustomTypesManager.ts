@@ -630,9 +630,22 @@ function updateCRCustomType(
 			// Group field
 			if ("fields" in customTypeField) {
 				if (
+					!previousPath.groupId &&
+					!newPath.groupId &&
+					customTypeField.id === previousPath.fieldId &&
+					customTypeField.id !== newPath.fieldId
+				) {
+					// Only the id of the group has changed. Group id is not defined, so
+					// we can return early.
+					return newPath.fieldId;
+				}
+
+				const matchedGroupId = customTypeField.id === previousPath.groupId;
+
+				if (
 					previousPath.groupId &&
 					newPath.groupId &&
-					customTypeField.id === previousPath.groupId &&
+					matchedGroupId &&
 					customTypeField.id !== newPath.groupId
 				) {
 					// The id of the group field has changed, so we update it. We don't
@@ -648,6 +661,7 @@ function updateCRCustomType(
 						// Regular field inside a group field
 						if (typeof groupField === "string") {
 							if (
+								matchedGroupId &&
 								groupField === previousPath.fieldId &&
 								groupField !== newPath.fieldId
 							) {
@@ -728,18 +742,27 @@ function updateContentRelationshipFields(args: {
 					return nestedCtField;
 				}
 
-				// Further down the path, the field can only be a group field. So if we have
-				// no group id defined, no need to continue.
-				if (!previousPath.groupId || !newPath.groupId) {
-					return nestedCtField;
-				}
-
 				// Group field
 
 				if (
-					nestedCtField.id === previousPath.groupId &&
-					nestedCtField.id !== newPath.groupId
+					nestedCtField.id === previousPath.fieldId &&
+					nestedCtField.id !== newPath.fieldId
 				) {
+					// The id of the field has changed.
+					nestedCtField.id = newPath.fieldId;
+				}
+
+				// Further down the path, the field can only be a group field. So if we have
+				// no group id defined, no need to continue.
+				if (
+					!previousPath.groupId ||
+					!newPath.groupId ||
+					nestedCtField.id !== previousPath.groupId
+				) {
+					return nestedCtField;
+				}
+
+				if (nestedCtField.id !== newPath.groupId) {
 					// The id of the group has changed.
 					nestedCtField.id = newPath.groupId;
 				}
