@@ -77,27 +77,29 @@ type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
 	mocksConfig: Record<string, unknown>;
 };
 
+/** `[field]` or `[group, field]` – path **inside** the Custom Type */
+type PathWithoutCustomType = [string] | [string, string];
+
 type SliceMachineManagerUpdateCustomTypeFieldIdChanged = {
 	/**
 	 * Previous path of the changed field, excluding the custom type id. Can be
 	 * used to identify the field that had an API ID rename (e.g. ["fieldA"] or
 	 * ["groupA", "fieldA"])
 	 */
-	previousPath: [string] | [string, string];
+	previousPath: PathWithoutCustomType;
 	/**
 	 * New path of the changed field, excluding the custom type id. Can be used to
 	 * identify the field that had an API ID rename (e.g. ["fieldB"] or ["groupA",
 	 * "fieldB"])
 	 */
-	newPath: [string] | [string, string];
+	newPath: PathWithoutCustomType;
 };
 
-export type SliceMachineManagerUpdateCustomTypeArgs =
-	CustomTypeUpdateHookData & {
-		updateMeta?: {
-			fieldIdChanged?: SliceMachineManagerUpdateCustomTypeFieldIdChanged;
-		};
+type SliceMachineManagerUpdateCustomTypeArgs = CustomTypeUpdateHookData & {
+	updateMeta?: {
+		fieldIdChanged?: SliceMachineManagerUpdateCustomTypeFieldIdChanged;
 	};
+};
 
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {
 	errors: HookError[];
@@ -115,12 +117,12 @@ type CustomTypesMachineManagerUpdateCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-/** Path of the changed field, including the custom type id. */
-type CustomTypeUpdatePath = [string, string] | [string, string, string];
+/** `[ct, field]` or `[ct, group, field]` – path **with** Custom Type ID */
+type PathWithCustomType = [string, string] | [string, string, string];
 
 type CustomTypeFieldIdChangedMeta = {
-	previousPath: CustomTypeUpdatePath;
-	newPath: CustomTypeUpdatePath;
+	previousPath: PathWithCustomType;
+	newPath: PathWithCustomType;
 };
 
 type LinkCustomType = NonNullable<LinkConfig["customtypes"]>[number];
@@ -234,8 +236,8 @@ export class CustomTypesManager extends BaseManager {
 
 		if (previousFieldPath.join(".") !== newFieldPath.join(".")) {
 			const { id: ctId } = model;
-			const previousPath: CustomTypeUpdatePath = [ctId, ...previousFieldPath];
-			const newPath: CustomTypeUpdatePath = [ctId, ...newFieldPath];
+			const previousPath: PathWithCustomType = [ctId, ...previousFieldPath];
+			const newPath: PathWithCustomType = [ctId, ...newFieldPath];
 
 			const crUpdates: {
 				updatePromise: Promise<{ errors: HookError[] }>;
@@ -896,7 +898,7 @@ interface CrUpdatePathIds {
 	fieldId: string;
 }
 
-function getPathIds(path: CustomTypeUpdatePath): CrUpdatePathIds {
+function getPathIds(path: PathWithCustomType): CrUpdatePathIds {
 	if (path.length < 2) {
 		throw new Error(
 			`Unexpected path length ${
