@@ -393,7 +393,6 @@ function TreeViewContentRelationshipField(
 
   return (
     <TreeViewSection
-      key={crField.id}
       title={crField.id}
       subtitle={getExposedFieldsLabel(countPickedFields(crFieldsCheckMap))}
     >
