@@ -183,9 +183,16 @@ export function ContentRelationshipFieldPicker(
   const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
 
   function onCustomTypesChange(
-    updater: (prev: PickerCustomTypes) => PickerCustomTypes,
+    customTypeId: string,
+    newFields: PickerCustomType,
   ) {
-    onChange(convertFieldCheckMapToCustomTypes(updater(fieldCheckMap)));
+    onChange(
+      convertFieldCheckMapToCustomTypes({
+        // PickerCustomTypes
+        ...fieldCheckMap,
+        [customTypeId]: newFields,
+      }),
+    );
   }
 
   return (
@@ -209,15 +216,8 @@ export function ContentRelationshipFieldPicker(
           subtitle={`(${countPickedFields(fieldCheckMap)})`}
         >
           {customTypes.map((customType) => {
-            const onCustomTypeChange = (
-              updater: (prev: PickerCustomType) => PickerCustomType,
-            ) => {
-              onCustomTypesChange((currentCustomTypes) => ({
-                ...currentCustomTypes,
-                [customType.id]: updater(
-                  currentCustomTypes[customType.id] ?? {},
-                ),
-              }));
+            const onCustomTypeChange = (newValue: PickerCustomType) => {
+              onCustomTypesChange(customType.id, newValue);
             };
 
             return (
@@ -252,7 +252,7 @@ export function ContentRelationshipFieldPicker(
 interface TreeViewCustomTypeProps {
   customType: TICustomType;
   fieldCheckMap: PickerCustomType;
-  onChange: (fn: (prev: PickerCustomType) => PickerCustomType) => void;
+  onChange: (newValue: PickerCustomType) => void;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
@@ -276,11 +276,11 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
         if (typeof field === "string") {
           const checked = customTypeFieldCheckMap[field]?.value ?? false;
 
-          const onCheckedChange = (value: boolean) => {
-            onCustomTypeChange((currentFields) => ({
-              ...currentFields,
-              [field]: { type: "checkbox", value },
-            }));
+          const onCheckedChange = (newValue: boolean) => {
+            onCustomTypeChange({
+              ...customTypeFieldCheckMap,
+              [field]: { type: "checkbox", value: newValue },
+            });
           };
 
           return (
@@ -295,13 +295,25 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
         const crOrGroupFieldCheckMap = customTypeFieldCheckMap[field.id] ?? {};
 
+        const onGroupFieldChange = (
+          newValue: PickerFirstLevelGroupFieldValue,
+        ) => {
+          onCustomTypeChange({
+            ...customTypeFieldCheckMap,
+            [field.id]: {
+              type: "group",
+              value: newValue,
+            },
+          });
+        };
+
         // Group field
         if ("fields" in field) {
           return (
             <TreeViewGroupField
               key={field.id}
               group={field}
-              onChange={onCustomTypeChange}
+              onChange={onGroupFieldChange}
               fieldCheckMap={
                 crOrGroupFieldCheckMap.type === "group"
                   ? crOrGroupFieldCheckMap.value
@@ -311,12 +323,24 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           );
         }
 
+        const onContentRelationshipFieldChange = (
+          newValue: PickerContentRelationshipFieldValue,
+        ) => {
+          onCustomTypeChange({
+            ...customTypeFieldCheckMap,
+            [field.id]: {
+              type: "contentRelationship",
+              value: newValue,
+            },
+          });
+        };
+
         // Content relationship field
         return (
           <TreeViewContentRelationshipField
             key={field.id}
             field={field}
-            onChange={onCustomTypeChange}
+            onChange={onContentRelationshipFieldChange}
             fieldCheckMap={
               crOrGroupFieldCheckMap.type === "contentRelationship"
                 ? crOrGroupFieldCheckMap.value
@@ -332,60 +356,29 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 interface TreeViewContentRelationshipFieldProps {
   field: TIContentRelationshipFieldValue;
   fieldCheckMap: PickerContentRelationshipFieldValue;
-  onChange: (updater: (prev: PickerCustomType) => PickerCustomType) => void;
+  onChange: (newValue: PickerContentRelationshipFieldValue) => void;
 }
 
 function TreeViewContentRelationshipField(
   props: TreeViewContentRelationshipFieldProps,
 ) {
-  const {
-    field: crField,
-    fieldCheckMap: customTypeFieldCheckMap,
-    onChange: onCustomTypeChange,
-  } = props;
-
-  const onContentRelationshipFieldChange = (
-    updater: (
-      prev: PickerContentRelationshipFieldValue,
-    ) => PickerContentRelationshipFieldValue,
-  ) => {
-    onCustomTypeChange((currentCustomTypeFields) => {
-      const prevCtValue = currentCustomTypeFields[crField.id] ?? {};
-      const prevCtValueNarrowed =
-        prevCtValue?.type === "contentRelationship" ? prevCtValue.value : {};
-
-      return {
-        ...currentCustomTypeFields,
-        [crField.id]: {
-          type: "contentRelationship",
-          value: updater(prevCtValueNarrowed ?? {}),
-        },
-      };
-    });
-  };
+  const { field: crField, fieldCheckMap, onChange: onCrFieldChange } = props;
 
   return (
     <TreeViewSection
       key={crField.id}
       title={crField.id}
-      subtitle={getExposedFieldsLabel(
-        countPickedFields(customTypeFieldCheckMap),
-      )}
+      subtitle={getExposedFieldsLabel(countPickedFields(fieldCheckMap))}
     >
       {crField.customtypes.map((customType) => {
         if (typeof customType === "string") return null;
 
-        const ctFieldCheckMap = customTypeFieldCheckMap[customType.id] ?? {};
+        const ctFieldCheckMap = fieldCheckMap[customType.id] ?? {};
 
         const onNestedCustomTypeChange = (
-          updater: (
-            prev: PickerNestedCustomTypeValue,
-          ) => PickerNestedCustomTypeValue,
+          newValue: PickerNestedCustomTypeValue,
         ) => {
-          onContentRelationshipFieldChange((currentCustomTypes) => ({
-            ...currentCustomTypes,
-            [customType.id]: updater(currentCustomTypes[customType.id] ?? {}),
-          }));
+          onCrFieldChange({ ...fieldCheckMap, [customType.id]: newValue });
         };
 
         return (
@@ -400,10 +393,10 @@ function TreeViewContentRelationshipField(
                 const checked = ctFieldCheckMap[field]?.value === true;
 
                 const onCheckedChange = (newValue: boolean) => {
-                  onNestedCustomTypeChange((currentFields) => ({
-                    ...currentFields,
+                  onNestedCustomTypeChange({
+                    ...ctFieldCheckMap,
                     [field]: { type: "checkbox", value: newValue },
-                  }));
+                  });
                 };
 
                 return (
@@ -419,22 +412,11 @@ function TreeViewContentRelationshipField(
               const groupFieldCheckMap = ctFieldCheckMap[field.id] ?? {};
 
               const onGroupFieldsChange = (
-                updater: (
-                  prev: PickerLeafGroupFieldValue,
-                ) => PickerLeafGroupFieldValue,
+                newValue: PickerLeafGroupFieldValue,
               ) => {
-                onNestedCustomTypeChange((currentFields) => {
-                  const prevCtValue = currentFields[field.id] ?? {};
-                  const prevCtValueNarrowed =
-                    prevCtValue.type === "group" ? prevCtValue.value : {};
-
-                  return {
-                    ...currentFields,
-                    [field.id]: {
-                      type: "group",
-                      value: updater(prevCtValueNarrowed),
-                    },
-                  };
+                onNestedCustomTypeChange({
+                  ...ctFieldCheckMap,
+                  [field.id]: { type: "group", value: newValue },
                 });
               };
 
@@ -460,16 +442,14 @@ function TreeViewContentRelationshipField(
 
 interface TreeViewContentRelationshipFieldGroupProps {
   group: TICustomTypeRegularFieldValues;
-  fieldCheckMap: PickerNestedCustomTypeValue;
-  onChange: (
-    updater: (prev: PickerLeafGroupFieldValue) => PickerLeafGroupFieldValue,
-  ) => void;
+  fieldCheckMap: PickerLeafGroupFieldValue;
+  onChange: (newValue: PickerLeafGroupFieldValue) => void;
 }
 
 function TreeViewContentRelationshipFieldNestedGroup(
   props: TreeViewContentRelationshipFieldGroupProps,
 ) {
-  const { group, fieldCheckMap, onChange: onGroupFieldsChange } = props;
+  const { group, fieldCheckMap, onChange: onGroupFieldChange } = props;
 
   return (
     <TreeViewSection
@@ -482,10 +462,10 @@ function TreeViewContentRelationshipFieldNestedGroup(
         const checked = fieldCheckMap[field]?.value ?? false;
 
         const onCheckedChange = (newValue: boolean) => {
-          onGroupFieldsChange((currentFields) => ({
-            ...currentFields,
+          onGroupFieldChange({
+            ...fieldCheckMap,
             [field]: { type: "checkbox", value: newValue },
-          }));
+          });
         };
 
         return (
@@ -504,31 +484,11 @@ function TreeViewContentRelationshipFieldNestedGroup(
 interface TreeViewGroupFieldProps {
   group: TIGroupFieldValues;
   fieldCheckMap: PickerFirstLevelGroupFieldValue;
-  onChange: (updater: (prev: PickerCustomType) => PickerCustomType) => void;
+  onChange: (newValue: PickerFirstLevelGroupFieldValue) => void;
 }
 
 function TreeViewGroupField(props: TreeViewGroupFieldProps) {
-  const { group, fieldCheckMap, onChange: onCustomTypeChange } = props;
-
-  const onGroupFieldChange = (
-    updater: (
-      prev: PickerFirstLevelGroupFieldValue,
-    ) => PickerFirstLevelGroupFieldValue,
-  ) => {
-    onCustomTypeChange((currentCustomTypeFields) => {
-      const prevField = currentCustomTypeFields[group.id] ?? {};
-      const prevFieldNarrowed =
-        prevField.type === "group" ? prevField.value : {};
-
-      return {
-        ...currentCustomTypeFields,
-        [group.id]: {
-          type: "group",
-          value: updater(prevFieldNarrowed),
-        },
-      };
-    });
-  };
+  const { group, fieldCheckMap, onChange: onGroupFieldChange } = props;
 
   return (
     <TreeViewSection key={group.id} title={group.id} badge="Group">
@@ -537,10 +497,10 @@ function TreeViewGroupField(props: TreeViewGroupFieldProps) {
           const checked = fieldCheckMap[field]?.value ?? false;
 
           const onCheckedChange = (newValue: boolean) => {
-            onGroupFieldChange((currentFields) => ({
-              ...currentFields,
+            onGroupFieldChange({
+              ...fieldCheckMap,
               [field]: { type: "checkbox", value: newValue },
-            }));
+            });
           };
 
           return (
@@ -554,6 +514,19 @@ function TreeViewGroupField(props: TreeViewGroupFieldProps) {
         }
 
         const crFieldCheckMap = fieldCheckMap[field.id] ?? {};
+
+        const onContentRelationshipFieldChange = (
+          newValue: PickerContentRelationshipFieldValue,
+        ) => {
+          onGroupFieldChange({
+            ...fieldCheckMap,
+            [field.id]: {
+              type: "contentRelationship",
+              value: newValue,
+            },
+          });
+        };
+
         return (
           <TreeViewContentRelationshipField
             key={field.id}
@@ -563,7 +536,7 @@ function TreeViewGroupField(props: TreeViewGroupFieldProps) {
                 ? crFieldCheckMap.value
                 : {}
             }
-            onChange={onCustomTypeChange}
+            onChange={onContentRelationshipFieldChange}
           />
         );
       })}
