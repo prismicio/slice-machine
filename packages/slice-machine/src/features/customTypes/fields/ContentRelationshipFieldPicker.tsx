@@ -21,44 +21,62 @@ import { isValidObject } from "@/utils/isValidObject";
  *
  * @example
  * {
- *   category: {
- *     name: {
- *       type: "checkbox",
- *       value: true
- *     }
- *   },
  *   author: {
- *     firstName: {
+ *     fullName: {
  *       type: "checkbox",
- *       value: true
- *     }
- *     lastName: {
- *       type: "checkbox",
- *       value: false
- *     }
- *     languages: {
+ *       value: true,
+ *     },
+ *     awards: {
  *       type: "group",
  *       value: {
- *         name: {
+ *         date: {
  *           type: "checkbox",
- *           value: true
- *         }
- *       }
- *     }
+ *           value: true,
+ *         },
+ *         awardsCr: {
+ *           type: "contentRelationship",
+ *           value: {
+ *             award: {
+ *               title: {
+ *                 type: "checkbox",
+ *                 value: true,
+ *               },
+ *               issuer: {
+ *                 type: "group",
+ *                 value: {
+ *                   name: {
+ *                     type: "checkbox",
+ *                     value: true,
+ *                   },
+ *                 },
+ *               },
+ *             },
+ *           },
+ *         },
+ *       },
+ *     },
  *     professionCr: {
  *       type: "contentRelationship",
  *       value: {
  *         profession: {
  *           name: {
  *             type: "checkbox",
- *             value: true
- *           }
- *         }
- *       }
- *     }
- *   }
+ *             value: true,
+ *           },
+ *           areas: {
+ *             type: "group",
+ *             value: {
+ *               name: {
+ *                 type: "checkbox",
+ *                 value: true,
+ *               },
+ *             },
+ *           },
+ *         },
+ *       },
+ *     },
+ *   },
  * }
- *
  **/
 interface PickerCustomTypes {
   [customTypeId: string]: PickerCustomType;
@@ -114,29 +132,47 @@ interface PickerNestedCustomTypeValue {
  * @example
  * [
  *   {
- *     id: "category",
- *     fields: ["name"]
- *   },
- *   {
  *     id: "author",
  *     fields: [
- *       "firstName",
- *       "lastName",
+ *       "fullName",
  *       {
- *         id: "languages",
- *         fields: ["name"]
+ *         id: "awards",
+ *         fields: [
+ *           "date",
+ *           {
+ *             id: "awardsCr",
+ *             customtypes: [
+ *               {
+ *                 id: "award",
+ *                 fields: [
+ *                   "title",
+ *                   {
+ *                     id: "issuer",
+ *                     fields: ["name"],
+ *                   },
+ *                 ],
+ *               },
+ *             ],
+ *           },
+ *         ],
  *       },
  *       {
  *         id: "professionCr",
  *         customtypes: [
  *           {
  *             id: "profession",
- *             fields: ["name"]
- *           }
- *         ]
- *       }
- *     ]
- *   }
+ *             fields: [
+ *               "name",
+ *               {
+ *                 id: "areas",
+ *                 fields: ["name"],
+ *               },
+ *             ],
+ *           },
+ *         ],
+ *       },
+ *     ],
+ *   },
  * ]
  */
 type TICustomTypes = readonly (string | TICustomType)[];
