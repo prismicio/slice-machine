@@ -72,7 +72,7 @@ export const linkConfigSchema = yup
       .optional()
       .oneOf(["media", "document", "web", null])
       .nullable(),
-    customtypes: yup.array(yup.string()).strict().optional(),
+    customtypes: yup.array().strict().optional(),
     masks: yup.array(yup.string()).optional(),
     tags: yup.array(yup.string()).optional(),
     allowTargetBlank: yup.boolean().strict().optional(),
