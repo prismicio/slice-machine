@@ -7010,15 +7010,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.77-alpha.bump-types-internal.1":
-  version: 0.4.77-alpha.bump-types-internal.1
-  resolution: "@prismicio/editor-fields@npm:0.4.77-alpha.bump-types-internal.1"
+"@prismicio/editor-fields@npm:0.4.77-alpha.bump-types-internal.3":
+  version: 0.4.77-alpha.bump-types-internal.3
+  resolution: "@prismicio/editor-fields@npm:0.4.77-alpha.bump-types-internal.3"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/client": 7.15.1
-    "@prismicio/editor-support": 0.4.77-alpha.bump-types-internal.1
+    "@prismicio/editor-support": 0.4.77-alpha.bump-types-internal.3
     "@prismicio/richtext": 2.1.1
-    "@prismicio/types-internal": 3.11.0
+    "@prismicio/types-internal": 3.11.2
     "@tiptap/core": 2.11.5
     "@tiptap/extension-bold": 2.11.5
     "@tiptap/extension-bullet-list": 2.11.5
@@ -7051,17 +7051,17 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.77-alpha.bump-types-internal.1
+    "@prismicio/editor-ui": ^0.4.77-alpha.bump-types-internal.3
     "@tanstack/react-query": 5.55.4
     react: 18
     react-dom: 18
-  checksum: 67b13ced6bf3f8ca05524ce10bc805a21c3c3273d1f036c78fc3ff94bee71c791a01a8c1d1a91c9575863a4a31fcf5c355a6bd5e26e0ad954303b14d18347711
+  checksum: a6226490552c27a4141b6e472b9cf8fee350b6c8b0e5c90bb0c22a58f9b1d6756c72e5a01be0714fc6f444e0c95f2e9ae90f1701cda6aeb35420421144d08c38
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.77-alpha.bump-types-internal.1":
-  version: 0.4.77-alpha.bump-types-internal.1
-  resolution: "@prismicio/editor-support@npm:0.4.77-alpha.bump-types-internal.1"
+"@prismicio/editor-support@npm:0.4.77-alpha.bump-types-internal.3":
+  version: 0.4.77-alpha.bump-types-internal.3
+  resolution: "@prismicio/editor-support@npm:0.4.77-alpha.bump-types-internal.3"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -7072,19 +7072,19 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 3fe38b35803ae02c16ce915f67c0c582a185209b830891fc81518a1ceea5b3bcaf53b290c819db89e83cc6e77e49e0578ee4c690cd512bf76b15e0e89da97b65
+  checksum: 26893fae11d13e6fe0d585897956c9e9c1faa39741e13efae08ab4727d1d3c6c48185fac81954e298e9cdd22cdf41e95f0c84bad3abb89d7480ab79e28ccdd8f
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.77-alpha.bump-types-internal.1":
-  version: 0.4.77-alpha.bump-types-internal.1
-  resolution: "@prismicio/editor-ui@npm:0.4.77-alpha.bump-types-internal.1"
+"@prismicio/editor-ui@npm:0.4.77-alpha.bump-types-internal.3":
+  version: 0.4.77-alpha.bump-types-internal.3
+  resolution: "@prismicio/editor-ui@npm:0.4.77-alpha.bump-types-internal.3"
   dependencies:
     "@internationalized/date": 3.8.1
     "@nivo/bar": 0.96.0
     "@nivo/core": 0.96.0
     "@nivo/tooltip": 0.96.0
-    "@prismicio/editor-support": 0.4.77-alpha.bump-types-internal.1
+    "@prismicio/editor-support": 0.4.77-alpha.bump-types-internal.3
     "@radix-ui/react-focus-scope": 1.1.7
     "@react-aria/calendar": 3.8.1
     "@react-aria/color": 3.0.0-rc.0
@@ -7115,7 +7115,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: b3c9200217cf4e766b3b7d301d5e8801da78cb4a11cd0bb9cf98dd307bdabb3c040df9891b6592b225c3efb73e2e4a9307eae0031541510c78b92b3c90b7d80f
+  checksum: 5463dd562de495f93086df9a6845baf0bbaa9fbeca3d3e6c1e7a3c979587b079c0256fcbd07220a0b365feee45e34c29755ec694b3b8bd2d7599df1de70f05b6
   languageName: node
   linkType: hard
 
@@ -7182,7 +7182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:^3.8.0, @prismicio/types-internal@npm:^3.9.0":
+"@prismicio/types-internal@npm:3.11.2, @prismicio/types-internal@npm:^3.8.0, @prismicio/types-internal@npm:^3.9.0":
   version: 3.11.2
   resolution: "@prismicio/types-internal@npm:3.11.2"
   dependencies:
@@ -34605,9 +34605,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.17.0
-    "@prismicio/editor-fields": 0.4.77-alpha.bump-types-internal.1
-    "@prismicio/editor-support": 0.4.77-alpha.bump-types-internal.1
-    "@prismicio/editor-ui": 0.4.77-alpha.bump-types-internal.1
+    "@prismicio/editor-fields": 0.4.77-alpha.bump-types-internal.3
+    "@prismicio/editor-support": 0.4.77-alpha.bump-types-internal.3
+    "@prismicio/editor-ui": 0.4.77-alpha.bump-types-internal.3
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.13.0
     "@prismicio/simulator": 0.1.4
