@@ -626,11 +626,10 @@ function getExposedFieldsLabel(count: number) {
 }
 
 /**
- * Get all the existing local custom types from the store and process them into
- * a single array to be rendered by the picker. For this we use the same as the
- * Link config `customtypes` structure {@link TICustomTypes}.
+ * Gets all the existing local custom types from the store, filters and sorts
+ * them.
  */
-function useCustomTypes() {
+function useCustomTypes(): CustomTypeSM[] {
   const allCustomTypes = useSelector(selectAllCustomTypes);
   const localCustomTypes = allCustomTypes.flatMap<CustomTypeSM>((ct) => {
     // In the store we have remote and local custom types, we want to show
@@ -839,12 +838,11 @@ function countPickedFields(
   if (!fields) return 0;
   return Object.values(fields).reduce<number>((count, value) => {
     if (!isValidObject(value)) return count;
-    if (isCheckboxField(value)) return count + (value.value ? 1 : 0);
+    if (isCheckboxValue(value)) return count + (value.value ? 1 : 0);
     return count + countPickedFields(value);
   }, 0);
 }
-
-function isCheckboxField(value: unknown): value is PickerCheckboxField {
+function isCheckboxValue(value: unknown): value is PickerCheckboxField {
   if (!isValidObject(value)) return false;
   return "type" in value && value.type === "checkbox";
 }
