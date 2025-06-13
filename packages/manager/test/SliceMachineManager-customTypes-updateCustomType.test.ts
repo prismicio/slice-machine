@@ -71,7 +71,7 @@ function getMockModelFields(customtypes: LinkConfig["customtypes"] = []) {
 				customtypes,
 			},
 		},
-	} as const satisfies CustomType["json"][keyof CustomType["json"]];
+	} as const satisfies CustomType["json"][string];
 }
 
 function getTestFn(type: "customType" | "sharedSlice") {
@@ -138,15 +138,15 @@ describe.each([
 			};
 		},
 	},
-])("updateContentRelationships", (ctx) => {
-	const { name, updateContentRelationships, getModel } = ctx;
+])("updateContentRelationships", (scenario) => {
+	const { name, updateContentRelationships, getModel } = scenario;
 
 	describe(name, () => {
 		beforeEach(() => {
-			vi.clearAllMocks();
+			onUpdate.mockClear();
 		});
 
-		it("should update content relationship ids", async () => {
+		it("should update content relationship ids", () => {
 			updateContentRelationships({
 				models: [
 					{ model: getModel([{ id: "author", fields: ["authorLastName"] }]) },
@@ -179,7 +179,7 @@ describe.each([
 			});
 		});
 
-		it("should update the ids of fields inside a GROUP", async () => {
+		it("should update the ids of fields inside a GROUP", () => {
 			updateContentRelationships({
 				models: [
 					{
@@ -247,7 +247,7 @@ describe.each([
 			});
 		});
 
-		it("should update the id of a GROUP", async () => {
+		it("should update the id of a GROUP", () => {
 			updateContentRelationships({
 				models: [
 					{
@@ -280,7 +280,7 @@ describe.each([
 			});
 		});
 
-		it("should update the ids of fields inside a GROUP along with the group id", async () => {
+		it("should update the ids of fields inside a GROUP along with the group id", () => {
 			updateContentRelationships({
 				models: [
 					{
@@ -317,7 +317,7 @@ describe.each([
 			});
 		});
 
-		it("should update NESTED content relationship ids", async () => {
+		it("should update NESTED content relationship ids", () => {
 			updateContentRelationships({
 				models: [
 					{
@@ -445,6 +445,8 @@ describe.each([
 				onUpdate,
 			});
 
+			expect(onUpdate).toHaveBeenCalledTimes(3);
+
 			expect(onUpdate).toHaveBeenCalledWith({
 				previousModel: getModel([
 					{
@@ -471,7 +473,7 @@ describe.each([
 			});
 		});
 
-		it("should update NESTED GROUP field ids", async () => {
+		it("should update NESTED GROUP field ids", () => {
 			updateContentRelationships({
 				models: [
 					{
@@ -659,6 +661,8 @@ describe.each([
 				onUpdate,
 			});
 
+			expect(onUpdate).toHaveBeenCalledTimes(3);
+
 			expect(onUpdate).toHaveBeenCalledWith({
 				previousModel: getModel([
 					{
@@ -701,7 +705,7 @@ describe.each([
 			});
 		});
 
-		it("should not update anything if the ids don't match", async () => {
+		it("should not update anything if the ids don't match", () => {
 			// Wrong custom type id
 
 			updateContentRelationships({
@@ -793,7 +797,7 @@ describe.each([
 			expect(onUpdate).not.toHaveBeenCalled();
 		});
 
-		it("should throw if previousPath or newPath are invalid", async () => {
+		it("should throw if previousPath or newPath are invalid", () => {
 			expect(() => {
 				return updateContentRelationships({
 					models: [
