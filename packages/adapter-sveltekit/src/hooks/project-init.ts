@@ -9,14 +9,21 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
+import { loadFile } from "magicast";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
+import { getSvelteMajor } from "../lib/getSvelteMajor";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
-import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
+import {
+	previewAPIRouteTemplate,
+	prismicIOFileTemplate,
+	rootLayoutTemplate,
+	sliceSimulatorPageTemplate,
+} from "./project-init.templates";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];
@@ -39,10 +46,6 @@ const createPrismicIOFile = async ({
 	helpers,
 	options,
 }: CreatePrismicIOFileArgs) => {
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = path.join(`src/lib/prismicio.${extension}`);
 
@@ -50,105 +53,8 @@ const createPrismicIOFile = async ({
 		return;
 	}
 
-	let contents: string;
-
-	if (isTypeScriptProject) {
-		contents = source`
-			import * as prismic from "@prismicio/client";
-			import { type CreateClientConfig, enableAutoPreviews } from '@prismicio/svelte/kit';
-			import config from "../../slicemachine.config.json";
-
-			/**
-			 * The project's Prismic repository name.
-			 */
-			export const repositoryName =
-				import${"."}meta${"."}env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || config.repositoryName;
-
-			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
-			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-			 */
-			// TODO: Update the routes array to match your project's route structure.
-			const routes: prismic.ClientConfig["routes"] = [
-				// Examples:
-				// {
-				// 	type: "homepage",
-				// 	path: "/",
-				// },
-				// {
-				// 	type: "page",
-				// 	path: "/:uid",
-				// },
-			];
-
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param config - Configuration for the Prismic client.
-			 */
-			export const createClient = ({ cookies, ...config }: CreateClientConfig = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				enableAutoPreviews({ client, cookies });
-
-				return client;
-			};
-		`;
-	} else {
-		contents = source`
-			import * as prismic from "@prismicio/client";
-			import { enableAutoPreviews } from '@prismicio/svelte/kit';
-			import config from "../../slicemachine.config.json";
-
-			/**
-			 * The project's Prismic repository name.
-			 */
-			export const repositoryName =
-				import${"."}meta${"."}env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || config.repositoryName;
-
-			/**
-			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
-			 *
-			 * {@link https://prismic.io/docs/route-resolver#route-resolver}
-			 *
-			 * @type {prismic.ClientConfig["routes"]}
-			 */
-			// TODO: Update the routes array to match your project's route structure.
-			const routes = [
-				// Examples:
-				// {
-				// 	type: "homepage",
-				// 	path: "/",
-				// },
-				// {
-				// 	type: "page",
-				// 	path: "/:uid",
-				// },
-			];
-
-			/**
-			 * Creates a Prismic client for the project's repository. The client is used to
-			 * query content from the Prismic API.
-			 *
-			 * @param {import('@prismicio/svelte/kit').CreateClientConfig} config - Configuration for the Prismic client.
-			 */
-			export const createClient = ({ cookies, ...config } = {}) => {
-				const client = prismic.createClient(repositoryName, {
-					routes,
-					...config,
-				});
-
-				enableAutoPreviews({ client, cookies });
-
-				return client;
-			};
-		`;
-	}
+	const typescript = await checkIsTypeScriptProject({ helpers, options });
+	const contents = prismicIOFileTemplate({ typescript });
 
 	await writeProjectFile({
 		filename,
@@ -173,17 +79,9 @@ const createSliceSimulatorPage = async ({
 		return;
 	}
 
-	const contents = source`
-		<script>
-			import { SliceSimulator } from '@slicemachine/adapter-sveltekit/simulator';
-			import { SliceZone } from '@prismicio/svelte';
-			import { components } from '$lib/slices';
-		</script>
-
-		<SliceSimulator let:slices>
-			<SliceZone {slices} {components} />
-		</SliceSimulator>
-	`;
+	const contents = sliceSimulatorPageTemplate({
+		version: await getSvelteMajor(),
+	});
 
 	await writeProjectFile({
 		filename,
@@ -241,16 +139,8 @@ const createPreviewAPIRoute = async ({
 		return;
 	}
 
-	const contents = source`
-		import { redirectToPreviewURL } from '@prismicio/svelte/kit';
-		import { createClient } from '$lib/prismicio';
-
-		export async function GET({ fetch, request, cookies }) {
-			const client = createClient({ fetch });
-
-			return await redirectToPreviewURL({ client, request, cookies });
-		}
-	`;
+	const typescript = await checkIsTypeScriptProject({ helpers, options });
+	const contents = previewAPIRouteTemplate({ typescript });
 
 	await writeProjectFile({
 		filename,
@@ -327,28 +217,7 @@ const createRootLayoutFile = async ({
 		return;
 	}
 
-	const contents = source`
-		<script>
-			import { isFilled, asImageSrc } from '@prismicio/client';
-			import { PrismicPreview } from '@prismicio/svelte/kit';
-			import { page } from '$app/state';
-			import { repositoryName } from '$lib/prismicio';
-		</script>
-
-		<svelte:head>
-			<title>{page.data.page?.data.meta_title}</title>
-			<meta property="og:title" content={page.data.page?.data.meta_title} />
-			{#if isFilled.keyText(page.data.page?.data.meta_description)}
-				<meta name="description" content={page.data.page.data.meta_description} />
-				<meta property="og:description" content={page.data.page.data.meta_description} />
-			{/if}
-			{#if isFilled.image(page.data.page?.data.meta_image)}
-				<meta property="og:image" content={asImageSrc(page.data.page.data.meta_image)} />
-			{/if}
-		</svelte:head>
-		<slot />
-		<PrismicPreview {repositoryName} />
-	`;
+	const contents = rootLayoutTemplate({ version: await getSvelteMajor() });
 
 	await writeProjectFile({
 		filename,
@@ -421,6 +290,46 @@ const upsertSliceLibraryIndexFiles = async (
 	);
 };
 
+const modifyViteConfig = async ({
+	helpers,
+	options,
+}: SliceMachineContext<PluginOptions>) => {
+	let filename = "vite.config.js";
+	if (!(await checkHasProjectFile({ filename, helpers }))) {
+		filename = "vite.config.ts";
+	}
+	if (!(await checkHasProjectFile({ filename, helpers }))) {
+		// Couldn't find the config file.
+		return;
+	}
+	const filepath = helpers.joinPathFromRoot(filename);
+
+	const mod = await loadFile(filepath);
+	if (mod.exports.default.$type !== "function-call") {
+		// Invalid config file.
+		return;
+	}
+
+	// Add `./slicemachine.config.json` to allowed files.
+	const config = mod.exports.default.$args[0];
+	config.server ??= {};
+	config.server.fs ??= {};
+	config.server.fs.allow ??= [];
+	if (!config.server.fs.allow.includes("./slicemachine.config.json")) {
+		config.server.fs.allow.push("./slicemachine.config.json");
+	}
+
+	// Remove an empty line above the `server` property.
+	const contents = mod.generate().code.replace(/\n\s*\n(?=\s*server:)/, "\n");
+
+	await writeProjectFile({
+		filename,
+		contents,
+		format: options.format,
+		helpers,
+	});
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
@@ -436,6 +345,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			createPreviewRouteMatcherFile(context),
 			createRootLayoutServerFile(context),
 			createRootLayoutFile(context),
+			modifyViteConfig(context),
 		]),
 	);
 

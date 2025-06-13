@@ -7,8 +7,103 @@ import { describe, expect, test, vi } from "vitest";
 import EditModal from "@/legacy/lib/builders/common/EditModal";
 
 import { act, fireEvent, render } from "../../__testutils__";
+import { SliceMachineStoreType } from "@/redux/type";
 
 vi.mock("next/router", () => require("next-router-mock"));
+
+const preloadedState: Partial<SliceMachineStoreType> = {
+  availableCustomTypes: {
+    page: {
+      local: {
+        id: "page",
+        label: "Page",
+        format: "page",
+        repeatable: true,
+        status: true,
+        tabs: [
+          {
+            key: "Main",
+            value: [
+              {
+                key: "uid",
+                value: {
+                  type: "UID",
+                  config: {
+                    label: "UID",
+                    placeholder: "",
+                  },
+                },
+              },
+              {
+                key: "title",
+                value: {
+                  type: "StructuredText",
+                  config: {
+                    label: "Title",
+                    placeholder: "",
+                    allowTargetBlank: true,
+                    single: "heading1",
+                  },
+                },
+              },
+            ],
+            sliceZone: {
+              key: "slices",
+              value: [
+                {
+                  key: "rich_text",
+                  value: {
+                    type: "SharedSlice",
+                  },
+                },
+              ],
+            },
+          },
+          {
+            key: "SEO & Metadata",
+            value: [
+              {
+                key: "meta_title",
+                value: {
+                  type: "Text",
+                  config: {
+                    label: "Meta Title",
+                    placeholder:
+                      "A title of the page used for social media and search engines",
+                  },
+                },
+              },
+              {
+                key: "meta_description",
+                value: {
+                  type: "Text",
+                  config: {
+                    label: "Meta Description",
+                    placeholder: "A brief summary of the page",
+                  },
+                },
+              },
+              {
+                key: "meta_image",
+                value: {
+                  type: "Image",
+                  config: {
+                    label: "Meta Image",
+                    constraint: {
+                      width: 2400,
+                      height: 1260,
+                    },
+                    thumbnails: [],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  },
+};
 
 describe("EditModal", () => {
   const div = document.createElement("div");
@@ -45,6 +140,7 @@ describe("EditModal", () => {
         fields={fields}
         zoneType="slice"
       />,
+      { preloadedState },
     );
 
     const removeButton = document.querySelector(
@@ -52,12 +148,12 @@ describe("EditModal", () => {
     )?.nextSibling;
 
     // @ts-expect-error TS(2345) FIXME: Argument of type 'ChildNode | null | undefined' is... Remove this comment to see the full error message
-    await act(async () => fireEvent.click(removeButton));
+    await act(() => fireEvent.click(removeButton));
 
     const saveButton = document.querySelector('button[type="submit"]');
 
     // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-    await act(async () => fireEvent.click(saveButton));
+    await act(() => fireEvent.click(saveButton));
 
     expect(saveFn).toHaveBeenCalled();
 
@@ -100,25 +196,26 @@ describe("EditModal", () => {
         fields={fields}
         zoneType="slice"
       />,
+      { preloadedState },
     );
 
     const labelInput = document.querySelector('input[name="config.label"]');
     const fakeLabel = "rich text";
-    await act(async () =>
+    await act(() =>
       // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(labelInput, { target: { value: fakeLabel } }),
     );
 
     const idInput = document.querySelector('input[name="id"]');
     const fakeId = "some_id";
-    await act(async () =>
+    await act(() =>
       // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
       fireEvent.change(idInput, { target: { value: fakeId } }),
     );
 
     const saveButton = document.querySelector('button[type="submit"]');
     // @ts-expect-error TS(2345) FIXME: Argument of type 'Element | null' is not assignabl... Remove this comment to see the full error message
-    await act(async () => fireEvent.click(saveButton));
+    await act(() => fireEvent.click(saveButton));
 
     expect(saveFn).toHaveBeenCalled();
     const saveData = saveFn.mock.calls[0][0];

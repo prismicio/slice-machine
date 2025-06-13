@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/adapter-nuxt2",
-	"version": "0.3.77",
+	"version": "0.3.78",
 	"description": "Slice Machine adapter for Nuxt 2.",
 	"keywords": [
 		"typescript",
@@ -60,7 +60,7 @@
 	},
 	"dependencies": {
 		"@prismicio/simulator": "^0.1.4",
-		"@prismicio/types-internal": "3.11.0",
+		"@prismicio/types-internal": "3.11.2",
 		"@slicemachine/plugin-kit": "workspace:*",
 		"common-tags": "^1.8.2",
 		"fp-ts": "^2.13.1",

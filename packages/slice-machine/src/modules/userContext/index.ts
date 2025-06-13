@@ -2,12 +2,7 @@ import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
 import ErrorWithStatus from "@/legacy/lib/models/common/ErrorWithStatus";
-import {
-  AuthStatus,
-  UserContextStoreType,
-  UserReviewState,
-  UserReviewType,
-} from "@/modules/userContext/types";
+import { AuthStatus, UserContextStoreType } from "@/modules/userContext/types";
 import { SliceMachineStoreType } from "@/redux/type";
 
 import { refreshStateCreator } from "../environment";
@@ -15,9 +10,6 @@ import { refreshStateCreator } from "../environment";
 // NOTE: Be careful every key written in this store is persisted in the localstorage
 
 const initialState: UserContextStoreType = {
-  userReview: {
-    onboarding: false,
-  },
   hasSeenSimulatorToolTip: false,
   hasSeenChangesToolTip: false,
   authStatus: AuthStatus.UNKNOWN,
@@ -25,14 +17,6 @@ const initialState: UserContextStoreType = {
 };
 
 // Actions Creators
-export const sendAReviewCreator = createAction("USER_CONTEXT/SEND_REVIEW")<{
-  reviewType: UserReviewType;
-}>();
-
-export const skipReviewCreator = createAction("USER_CONTEXT/SKIP_REVIEW")<{
-  reviewType: UserReviewType;
-}>();
-
 export const hasSeenSimulatorToolTipCreator = createAction(
   "USER_CONTEXT/VIEW_SIMULATOR_TOOL_TIP",
 )();
@@ -46,8 +30,6 @@ export const changesPushSuccess = createAction(
 )();
 
 type userContextActions = ActionType<
-  | typeof sendAReviewCreator
-  | typeof skipReviewCreator
   | typeof hasSeenSimulatorToolTipCreator
   | typeof hasSeenChangesToolTipCreator
   | typeof refreshStateCreator
@@ -55,11 +37,6 @@ type userContextActions = ActionType<
 >;
 
 // Selectors
-export const getUserReview = (state: SliceMachineStoreType): UserReviewState =>
-  state.userContext.userReview ?? {
-    onboarding: state.userContext.hasSendAReview ?? false,
-  };
-
 export const userHasSeenSimulatorToolTip = (
   state: SliceMachineStoreType,
 ): boolean => state.userContext.hasSeenSimulatorToolTip || false;
@@ -78,15 +55,6 @@ export const userContextReducer: Reducer<
   userContextActions
 > = (state = initialState, action) => {
   switch (action.type) {
-    case getType(sendAReviewCreator):
-    case getType(skipReviewCreator):
-      return {
-        ...state,
-        userReview: {
-          ...state.userReview,
-          [action.payload.reviewType]: true,
-        },
-      };
     case getType(hasSeenSimulatorToolTipCreator): {
       return {
         ...state,

@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import { useSelector } from "react-redux";
 import { Box, Button, Close, Flex, useThemeUI } from "theme-ui";
 import * as yup from "yup";
 
@@ -12,8 +13,10 @@ import {
   createInitialValues,
 } from "@/legacy/lib/forms";
 import { DeprecatedMockConfigMessage } from "@/legacy/lib/models/common/DeprecatedMockConfigMessage";
+import { hasLocal } from "@/legacy/lib/models/common/ModelData";
 import { Widgets } from "@/legacy/lib/models/common/widgets";
 import { removeProp } from "@/legacy/lib/utils";
+import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 
 import { findWidgetByConfigOrType } from "../../utils";
 import WidgetFormField from "./Field";
@@ -27,6 +30,7 @@ const FORM_ID = "edit-modal-form";
 
 const EditModal = ({ close, data, fields, onSave, zoneType }) => {
   const { theme } = useThemeUI();
+  const localCustomTypes = useSelector(selectAllCustomTypes).filter(hasLocal);
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
   if (!data.isOpen) {
@@ -65,7 +69,11 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions
     ...(maybeWidget.prepareInitialValues
       ? // eslint-disable-next-line
-        maybeWidget.prepareInitialValues(initialModelValues.config)
+        maybeWidget.prepareInitialValues(
+          localCustomTypes,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          initialModelValues.config,
+        )
       : // eslint-disable-next-line
         initialModelValues.config),
   };
