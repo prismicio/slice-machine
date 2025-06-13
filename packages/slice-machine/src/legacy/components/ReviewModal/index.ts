@@ -1,1 +1,0 @@
-export { ReviewModal } from "./ReviewModal";

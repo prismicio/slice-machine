@@ -1,13 +1,11 @@
 import { Locator, Page, expect } from "@playwright/test";
 
 import { Menu } from "./components/Menu";
-import { ReviewDialog } from "./components/ReviewDialog";
 import { LoginDialog } from "./components/LoginDialog";
 
 export class SliceMachinePage {
   readonly page: Page;
   readonly menu: Menu;
-  readonly reviewDialog: ReviewDialog;
   readonly loginDialog: LoginDialog;
   readonly body: Locator;
   readonly breadcrumb: Locator;
@@ -18,7 +16,6 @@ export class SliceMachinePage {
      */
     this.page = page;
     this.menu = new Menu(page);
-    this.reviewDialog = new ReviewDialog(page);
     this.loginDialog = new LoginDialog(page);
 
     /**
