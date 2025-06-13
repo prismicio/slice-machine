@@ -305,9 +305,6 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
         .map((field) => {
           if (isUidField(field)) return null;
 
-          const crOrGroupFieldCheckMap =
-            customTypeFieldCheckMap[field.key] ?? {};
-
           // Group field
 
           if (isGroupField(field)) {
@@ -319,6 +316,9 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 [field.key]: { type: "group", value: newGroupFields },
               });
             };
+
+            const crOrGroupFieldCheckMap =
+              customTypeFieldCheckMap[field.key] ?? {};
 
             return (
               <TreeViewGroupField
@@ -349,6 +349,9 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 },
               });
             };
+
+            const crOrGroupFieldCheckMap =
+              customTypeFieldCheckMap[field.key] ?? {};
 
             return (
               <TreeViewContentRelationshipField
