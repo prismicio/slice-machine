@@ -76,7 +76,7 @@
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.7.1",
-		"@prismicio/types-internal": "3.10.0",
+		"@prismicio/types-internal": "3.11.2",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
 		"@types/fs-extra": "11.0.1",
