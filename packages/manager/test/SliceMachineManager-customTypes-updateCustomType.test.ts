@@ -233,13 +233,15 @@ describe.each([
 				previousModel: getModel([
 					{
 						id: "author",
-						fields: [{ id: "languages", fields: ["shortCode"] }],
+						fields: [{ id: "languages", fields: ["shortCode", "flag"] }],
 					},
 				]),
 				model: getModel([
 					{
 						id: "author",
-						fields: [{ id: "languages", fields: ["shortCode_CHANGED"] }],
+						fields: [
+							{ id: "languages", fields: ["shortCode_CHANGED", "flag"] },
+						],
 					},
 				]),
 			});
