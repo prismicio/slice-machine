@@ -298,7 +298,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       subtitle={getExposedFieldsLabel(
         countPickedFields(customTypeFieldCheckMap),
       )}
-      badge="Custom type"
+      badge={customType.format === "page" ? "Page type" : "Custom type"}
     >
       {customType.tabs
         .flatMap((tab) => tab.value)
@@ -441,7 +441,7 @@ function TreeViewContentRelationshipField(
             subtitle={getExposedFieldsLabel(
               countPickedFields(nestedCtFieldsCheckMap),
             )}
-            badge="Custom type"
+            badge={customType.format === "page" ? "Page type" : "Custom type"}
           >
             {customType.tabs
               .flatMap((tab) => tab.value)
