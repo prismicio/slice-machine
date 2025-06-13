@@ -7,7 +7,6 @@ import useSMTracker from "@/hooks/useSMTracker";
 import { AppLayout, AppLayoutContent } from "@/legacy/components/AppLayout";
 import LoginModal from "@/legacy/components/LoginModal";
 import { MissingLibraries } from "@/legacy/components/MissingLibraries";
-import { ReviewModal } from "@/legacy/components/ReviewModal";
 import { getLibraries } from "@/modules/slices";
 import { SliceMachineStoreType } from "@/redux/type";
 
@@ -37,7 +36,6 @@ const SliceMachineApp: FC<Props> = ({ children }) => {
         </AppLayout>
       )}
       <LoginModal />
-      <ReviewModal />
     </>
   );
 };

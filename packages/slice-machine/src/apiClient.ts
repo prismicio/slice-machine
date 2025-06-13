@@ -72,15 +72,17 @@ export const getState = async (): Promise<ServerState> => {
 export type CustomTypeUpdateMeta = {
   fieldIdChanged?: {
     /**
-     * Previous path of the changed field. Can be used to identify the field
-     * that had an API ID rename (e.g. ["page", "title"])
+     * Previous path of the changed field, excluding the custom type id. Can be
+     * used to identify the field that had an API ID rename (e.g. ["fieldA"] or
+     * ["groupA", "fieldA"])
      */
-    previousPath: string[];
+    previousPath: [string] | [string, string];
     /**
-     * New path of the changed field. Can be used to identify the field that
-     * had an API ID rename (e.g. ["page", "title2"])
+     * New path of the changed field, excluding the custom type id. Can be used to
+     * identify the field that had an API ID rename (e.g. ["fieldB"] or ["groupA",
+     * "fieldB"])
      */
-    newPath: string[];
+    newPath: [string] | [string, string];
   };
 };
 

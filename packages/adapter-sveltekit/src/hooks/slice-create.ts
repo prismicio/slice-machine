@@ -8,14 +8,14 @@ import {
 	writeSliceFile,
 	writeSliceModel,
 } from "@slicemachine/plugin-kit/fs";
-import { source } from "common-tags";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
-import { pascalCase } from "../lib/pascalCase";
+import { getSvelteMajor } from "../lib/getSvelteMajor";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
+import { sliceTemplate } from "./slice-create.templates";
 
 type Args = {
 	data: SliceCreateHookData;
@@ -27,71 +27,12 @@ const createComponentFile = async ({
 	actions,
 	options,
 }: Args) => {
-	const pascalName = pascalCase(data.model.name);
+	const { model, componentContents } = data;
 
-	let contents: string;
-
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
-
-	const placeholder = `
-		Placeholder component for {slice.slice_type} (variation: {slice.variation}) slices.
-		<br />
-		<strong>You can edit this slice directly in your code editor.</strong>
-		<!--
-	💡 Use Prismic MCP with your code editor
-
-	Get AI-powered help to build your slice components — based on your actual model.
-
-	▶️ Setup:
-	1. Add a new MCP Server in your code editor:
-
-	{
-		"mcpServers": {
-			"Prismic MCP": {
-				"command": "npx",
-				"args": ["-y", "@prismicio/mcp-server"]
-			}
-		}
-	}
-
-	2. Select a model optimized for coding (e.g. Claude 3.7 Sonnet or similar)
-
-	✅ Then open your slice file and ask your code editor:
-		"Code this slice"
-
-	Your code editor reads your slice model and helps you code faster ⚡
-	📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
--->`;
-
-	if (data.componentContents) {
-		contents = data.componentContents;
-	} else if (isTypeScriptProject) {
-		contents = source`
-			<script lang="ts">
-				import type { Content } from '@prismicio/client';
-
-				export let slice: Content.${pascalName}Slice;
-			</script>
-
-			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
-				${placeholder}
-			</section>
-		`;
-	} else {
-		contents = source`
-			<script>
-				/** @type {import("@prismicio/client").Content.${pascalName}Slice} */
-				export let slice;
-			</script>
-
-			<section data-slice-type={slice.slice_type} data-slice-variation={slice.variation}>
-				${placeholder}
-			</section>
-		`;
-	}
+	const typescript = await checkIsTypeScriptProject({ helpers, options });
+	const contents =
+		componentContents ??
+		sliceTemplate({ model, typescript, version: await getSvelteMajor() });
 
 	await writeSliceFile({
 		libraryID: data.libraryID,

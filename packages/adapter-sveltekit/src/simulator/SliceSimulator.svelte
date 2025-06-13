@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import {
 		SimulatorManager,
 		StateEventType,
@@ -10,13 +10,14 @@
 		simulatorClass,
 		simulatorRootClass,
 	} from "@prismicio/simulator/kit";
+	import { type SliceZone } from "@prismicio/client";
 
 	const defaultProps = getDefaultProps();
 
 	export let zIndex = defaultProps.zIndex;
 	export let background = defaultProps.background;
 
-	let slices = getDefaultSlices();
+	let slices: SliceZone = getDefaultSlices();
 	let message = getDefaultMessage();
 
 	if (typeof window !== "undefined") {
