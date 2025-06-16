@@ -286,7 +286,7 @@ interface TreeViewCustomTypeProps {
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   const {
     customType,
-    fieldCheckMap: customTypeFieldCheckMap,
+    fieldCheckMap: customTypeFieldsCheckMap,
     onChange: onCustomTypeChange,
     customTypes,
   } = props;
@@ -296,7 +296,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       key={customType.id}
       title={customType.id}
       subtitle={getExposedFieldsLabel(
-        countPickedFields(customTypeFieldCheckMap),
+        countPickedFields(customTypeFieldsCheckMap),
       )}
       badge={customType.format === "page" ? "Page type" : "Custom type"}
     >
@@ -312,16 +312,16 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
               newGroupFields: PickerFirstLevelGroupFieldValue,
             ) => {
               onCustomTypeChange({
-                ...customTypeFieldCheckMap,
+                ...customTypeFieldsCheckMap,
                 [field.key]: { type: "group", value: newGroupFields },
               });
             };
 
             const crOrGroupFieldCheckMap =
-              customTypeFieldCheckMap[field.key] ?? {};
+              customTypeFieldsCheckMap[field.key] ?? {};
 
             return (
-              <TreeViewGroupField
+              <TreeViewFirstLevelGroupField
                 key={field.key}
                 group={field}
                 onChange={onGroupFieldChange}
@@ -342,7 +342,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
               newCrFields: PickerContentRelationshipFieldValue,
             ) => {
               onCustomTypeChange({
-                ...customTypeFieldCheckMap,
+                ...customTypeFieldsCheckMap,
                 [field.key]: {
                   type: "contentRelationship",
                   value: newCrFields,
@@ -351,7 +351,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
             };
 
             const crOrGroupFieldCheckMap =
-              customTypeFieldCheckMap[field.key] ?? {};
+              customTypeFieldsCheckMap[field.key] ?? {};
 
             return (
               <TreeViewContentRelationshipField
@@ -370,11 +370,11 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
           // Checkbox field
 
-          const checked = customTypeFieldCheckMap[field.key]?.value ?? false;
+          const checked = customTypeFieldsCheckMap[field.key]?.value ?? false;
 
           const onCheckedChange = (newValue: boolean) => {
             onCustomTypeChange({
-              ...customTypeFieldCheckMap,
+              ...customTypeFieldsCheckMap,
               [field.key]: { type: "checkbox", value: newValue },
             });
           };
@@ -465,7 +465,7 @@ function TreeViewContentRelationshipField(
                   };
 
                   return (
-                    <TreeViewContentRelationshipFieldNestedGroup
+                    <TreeViewLeafGroupField
                       key={field.key}
                       group={field}
                       onChange={onGroupFieldsChange}
@@ -504,15 +504,13 @@ function TreeViewContentRelationshipField(
   );
 }
 
-interface TreeViewContentRelationshipFieldGroupProps {
+interface TreeViewLeafGroupFieldProps {
   group: { key: string; value: GroupSM };
   fieldCheckMap: PickerLeafGroupFieldValue;
   onChange: (newValue: PickerLeafGroupFieldValue) => void;
 }
 
-function TreeViewContentRelationshipFieldNestedGroup(
-  props: TreeViewContentRelationshipFieldGroupProps,
-) {
+function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
   const {
     group,
     fieldCheckMap: groupFieldsCheckMap,
@@ -551,14 +549,16 @@ function TreeViewContentRelationshipFieldNestedGroup(
   );
 }
 
-interface TreeViewGroupFieldProps {
+interface TreeViewFirstLevelGroupFieldProps {
   group: { key: string; value: GroupSM };
   fieldCheckMap: PickerFirstLevelGroupFieldValue;
   onChange: (newValue: PickerFirstLevelGroupFieldValue) => void;
   customTypes: CustomTypeSM[];
 }
 
-function TreeViewGroupField(props: TreeViewGroupFieldProps) {
+function TreeViewFirstLevelGroupField(
+  props: TreeViewFirstLevelGroupFieldProps,
+) {
   const {
     group,
     fieldCheckMap: groupFieldsCheckMap,
