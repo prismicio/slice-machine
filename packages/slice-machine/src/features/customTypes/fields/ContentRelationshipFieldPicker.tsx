@@ -18,7 +18,6 @@ import { useSelector } from "react-redux";
 import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 import { isValidObject } from "@/utils/isValidObject";
-import { mapCustomTypeStaticFields, mapGroupFields } from "@/domain/customType";
 
 /**
  * Picker fields check map types. Used internally to keep track of the checked
@@ -861,4 +860,42 @@ function isContentRelationshipField(
     field.config?.select === "document" &&
     field.config?.customtypes !== undefined
   );
+}
+
+function mapCustomTypeStaticFields<T>(
+  customType: CustomType,
+  callback: (args: { fieldId: string; field: NestableWidget | Group }) => T,
+): T[] {
+  const fields: T[] = [];
+  for (const [_, tabFields] of Object.entries(customType.json)) {
+    for (const [fieldId, field] of Object.entries(tabFields)) {
+      if (
+        field.type !== "Slices" &&
+        field.type !== "Choice" &&
+        // Filter out uid fields because it's a special field returned by the
+        // API and is not part of the data object in the document.
+        // We also filter by key "uid", because (as of the time of writing
+        // this), creating any field with that API id will result in it being
+        // used for metadata.
+        (field.type !== "UID" || fieldId !== "uid")
+      ) {
+        fields.push(
+          callback({ fieldId, field: field as NestableWidget | Group }),
+        );
+      }
+    }
+  }
+  return fields;
+}
+
+function mapGroupFields<T>(
+  group: Group,
+  callback: (args: { fieldId: string; field: NestableWidget }) => T,
+): T[] {
+  if (!group.config?.fields) return [];
+  const fields: T[] = [];
+  for (const [fieldId, field] of Object.entries(group.config.fields)) {
+    fields.push(callback({ fieldId, field: field as NestableWidget }));
+  }
+  return fields;
 }
