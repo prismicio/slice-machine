@@ -1,6 +1,11 @@
 import { pluralize } from "@prismicio/editor-support/String";
 import {
   Box,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
   Text,
   TreeView,
   TreeViewCheckbox,
@@ -205,7 +210,7 @@ export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
   const { value, onChange } = props;
-  const customTypes = useCustomTypes();
+  const { availableCustomTypes, pickedCustomTypes } = useCustomTypes(value);
 
   const fieldCheckMap = value
     ? convertLinkCustomtypesToFieldCheckMap(value)
@@ -220,6 +225,10 @@ export function ContentRelationshipFieldPicker(
     );
   }
 
+  function onCustomTypeSelect(customTypeId: string) {
+    onChange([...(value ?? []), customTypeId]);
+  }
+
   return (
     <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
       <Box
@@ -228,28 +237,43 @@ export function ContentRelationshipFieldPicker(
         flexDirection="column"
         gap={8}
       >
-        <Box flexDirection="column">
-          <Text variant="h4" color="grey12">
-            Types
-          </Text>
-          <Text color="grey12">
-            Choose which fields you want to expose from the linked document.
-          </Text>
-        </Box>
-        <TreeView
-          title="Exposed fields"
-          subtitle={`(${countPickedFields(fieldCheckMap)})`}
-        >
-          {customTypes.map((customType) => (
-            <TreeViewCustomType
-              key={customType.id}
-              customType={customType}
-              onChange={(value) => onCustomTypesChange(customType.id, value)}
-              fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
-              customTypes={customTypes}
+        {value && value.length > 0 ? (
+          <>
+            <Box flexDirection="column">
+              <Text variant="h4" color="grey12">
+                Types
+              </Text>
+              <Text color="grey12">
+                Choose which fields you want to expose from the linked document.
+              </Text>
+            </Box>
+            <TreeView
+              title="Exposed fields"
+              subtitle={`(${countPickedFields(fieldCheckMap)})`}
+            >
+              {pickedCustomTypes.map((customType) => (
+                <TreeViewCustomType
+                  key={customType.id}
+                  customType={customType}
+                  onChange={(value) =>
+                    onCustomTypesChange(customType.id, value)
+                  }
+                  fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
+                  customTypes={pickedCustomTypes}
+                />
+              ))}
+            </TreeView>
+            <AddTypeButton
+              customTypes={availableCustomTypes}
+              onSelect={onCustomTypeSelect}
             />
-          ))}
-        </TreeView>
+          </>
+        ) : (
+          <EmptyView
+            customTypes={availableCustomTypes}
+            onSelect={onCustomTypeSelect}
+          />
+        )}
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
         <Text variant="normal" color="grey11">
@@ -266,6 +290,70 @@ export function ContentRelationshipFieldPicker(
         </Text>
       </Box>
     </Box>
+  );
+}
+
+type EmptyViewProps = {
+  customTypes: CustomTypeSM[];
+  onSelect: (customTypeId: string) => void;
+};
+
+function EmptyView(props: EmptyViewProps) {
+  const { customTypes, onSelect } = props;
+
+  return (
+    <Box
+      flexDirection="column"
+      gap={8}
+      alignItems="center"
+      padding={{ block: 24 }}
+    >
+      <Box flexDirection="column" alignItems="center" gap={4}>
+        <Text variant="h5" color="grey12">
+          No types selected yet.
+        </Text>
+        <Text color="grey11" component="p" align="center">
+          Add one or more document types your content editors can link to.
+          <br />
+          For each type, select the fields to include in the API response (used
+          in your frontend queries).
+        </Text>
+      </Box>
+      <Box>
+        <AddTypeButton customTypes={customTypes} onSelect={onSelect} />
+      </Box>
+    </Box>
+  );
+}
+
+type AddTypeButtonProps = {
+  customTypes: CustomTypeSM[];
+  onSelect: (customTypeId: string) => void;
+};
+
+function AddTypeButton(props: AddTypeButtonProps) {
+  const { customTypes, onSelect } = props;
+
+  if (customTypes.length === 0) return null;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button startIcon="add" color="grey">
+          Add type
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {customTypes.map((customType) => (
+          <DropdownMenuItem
+            key={customType.id}
+            onSelect={() => onSelect(customType.id)}
+          >
+            <Text>{customType.id}</Text>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -619,9 +707,10 @@ function getExposedFieldsLabel(count: number) {
  * Gets all the existing local custom types from the store, filters and sorts
  * them.
  */
-function useCustomTypes(): CustomTypeSM[] {
-  const allCustomTypes = useSelector(selectAllCustomTypes);
-  const localCustomTypes = allCustomTypes.flatMap<CustomTypeSM>((ct) => {
+function useCustomTypes(value: LinkCustomtypes | undefined) {
+  const allCustomTypes = useSelector(
+    selectAllCustomTypes,
+  ).flatMap<CustomTypeSM>((ct) => {
     // In the store we have remote and local custom types, we want to show
     // the local ones, so that the user is able to create a content
     // relationship with custom types present on the user's computer (pushed
@@ -629,9 +718,27 @@ function useCustomTypes(): CustomTypeSM[] {
     return "local" in ct ? ct.local : [];
   });
 
-  localCustomTypes.sort((a, b) => a.id.localeCompare(b.id));
+  if (!value) {
+    return { availableCustomTypes: allCustomTypes, pickedCustomTypes: [] };
+  }
 
-  return localCustomTypes;
+  const pickedCustomTypes = value
+    .flatMap((v) => {
+      const matchingCt = allCustomTypes.find(
+        (ct) => ct.id === (typeof v === "string" ? v : v.id),
+      );
+      return matchingCt ?? [];
+    })
+    .sort((a, b) => a.id.localeCompare(b.id));
+
+  const availableCustomTypes = allCustomTypes.filter(
+    (ct) => pickedCustomTypes.some((v) => v.id === ct.id) === false,
+  );
+
+  return {
+    availableCustomTypes,
+    pickedCustomTypes,
+  };
 }
 
 function resolveContentRelationshipCustomTypes(
