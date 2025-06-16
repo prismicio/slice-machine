@@ -275,14 +275,13 @@ export function ContentRelationshipFieldPicker(
             {pickedCustomTypes.map((customType) => (
               <Box
                 key={customType.id}
-                flexDirection="row"
-                justifyContent="space-between"
+                gap={6}
                 padding={8}
                 border
-                borderColor="grey6"
                 borderRadius={6}
+                borderColor="grey6"
                 backgroundColor="white"
-                gap={6}
+                justifyContent="space-between"
               >
                 <TreeView>
                   <TreeViewCustomType
@@ -301,14 +300,14 @@ export function ContentRelationshipFieldPicker(
             ))}
             <AddTypeButton
               onSelect={onAddCustomType}
-              customTypes={availableCustomTypes}
+              availableCustomType={availableCustomTypes}
               pickedCustomTypes={pickedCustomTypes}
             />
           </>
         ) : (
           <EmptyView
-            customTypes={availableCustomTypes}
             onSelect={onAddCustomType}
+            availableCustomType={availableCustomTypes}
           />
         )}
       </Box>
@@ -347,12 +346,12 @@ function RemoveButton(props: RemoveButtonProps) {
 }
 
 type EmptyViewProps = {
-  customTypes: CustomType[];
+  availableCustomType: CustomType[];
   onSelect: (customTypeId: string) => void;
 };
 
 function EmptyView(props: EmptyViewProps) {
-  const { customTypes, onSelect } = props;
+  const { availableCustomType, onSelect } = props;
 
   return (
     <Box
@@ -373,45 +372,49 @@ function EmptyView(props: EmptyViewProps) {
         </Text>
       </Box>
       <Box>
-        <AddTypeButton customTypes={customTypes} onSelect={onSelect} />
+        <AddTypeButton
+          availableCustomType={availableCustomType}
+          onSelect={onSelect}
+        />
       </Box>
     </Box>
   );
 }
 
 type AddTypeButtonProps = {
-  customTypes: CustomType[];
   onSelect: (customTypeId: string) => void;
   disabled?: boolean;
+  availableCustomType: CustomType[];
   pickedCustomTypes?: CustomType[];
 };
 
 function AddTypeButton(props: AddTypeButtonProps) {
-  const { customTypes, onSelect, pickedCustomTypes = [] } = props;
+  const { availableCustomType, onSelect, pickedCustomTypes = [] } = props;
 
   const triggerButton = (
-    <Button startIcon="add" color="grey" disabled={customTypes.length === 0}>
+    <Button
+      startIcon="add"
+      color="grey"
+      disabled={availableCustomType.length === 0}
+    >
       {pickedCustomTypes.length > 0 ? "Add another type" : "Add type"}
     </Button>
   );
 
   return (
     <Box>
-      {pickedCustomTypes.length > 0 ? (
-        <Box>
-          <Tooltip
-            content="All available custom types have been added"
-            side="bottom"
-            visible={customTypes.length === 0}
-          >
-            {triggerButton}
-          </Tooltip>
-        </Box>
+      {availableCustomType.length === 0 ? (
+        <Tooltip
+          content="All available custom types have been added"
+          side="bottom"
+        >
+          {triggerButton}
+        </Tooltip>
       ) : (
         <DropdownMenu>
           <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
           <DropdownMenuContent>
-            {customTypes.map((customType) => (
+            {availableCustomType.map((customType) => (
               <DropdownMenuItem
                 key={customType.id}
                 onSelect={() => onSelect(customType.id)}
