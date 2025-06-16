@@ -827,11 +827,7 @@ function updateFieldContentRelationships<
 	}
 
 	const newCustomTypes = field.config.customtypes.map((customType) => {
-		return updateCRCustomType({
-			// TODO: Remove cast in https://linear.app/prismic/issue/DT-2704/
-			customType: customType as CrCustomType,
-			...updateMeta,
-		});
+		return updateCRCustomType({ ...updateMeta, customType });
 	});
 
 	return {
