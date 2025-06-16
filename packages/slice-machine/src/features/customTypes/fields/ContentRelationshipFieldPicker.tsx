@@ -274,6 +274,7 @@ export function ContentRelationshipFieldPicker(
             </Box>
             {pickedCustomTypes.map((customType) => (
               <Box
+                key={customType.id}
                 flexDirection="row"
                 justifyContent="space-between"
                 padding={8}
@@ -283,7 +284,7 @@ export function ContentRelationshipFieldPicker(
                 backgroundColor="white"
                 gap={6}
               >
-                <TreeView key={customType.id}>
+                <TreeView>
                   <TreeViewCustomType
                     customType={customType}
                     onChange={(value) =>
