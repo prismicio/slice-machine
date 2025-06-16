@@ -15,6 +15,7 @@ import {
 } from "@prismicio/editor-ui";
 import {
   CustomType,
+  DynamicWidget,
   Group,
   Link,
   LinkConfig,
@@ -300,14 +301,14 @@ export function ContentRelationshipFieldPicker(
             ))}
             <AddTypeButton
               onSelect={onAddCustomType}
-              availableCustomType={availableCustomTypes}
               pickedCustomTypes={pickedCustomTypes}
+              availableCustomTypes={availableCustomTypes}
             />
           </>
         ) : (
           <EmptyView
             onSelect={onAddCustomType}
-            availableCustomType={availableCustomTypes}
+            availableCustomTypes={availableCustomTypes}
           />
         )}
       </Box>
@@ -346,12 +347,12 @@ function RemoveButton(props: RemoveButtonProps) {
 }
 
 type EmptyViewProps = {
-  availableCustomType: CustomType[];
   onSelect: (customTypeId: string) => void;
+  availableCustomTypes: CustomType[];
 };
 
 function EmptyView(props: EmptyViewProps) {
-  const { availableCustomType, onSelect } = props;
+  const { availableCustomTypes, onSelect } = props;
 
   return (
     <Box
@@ -373,7 +374,7 @@ function EmptyView(props: EmptyViewProps) {
       </Box>
       <Box>
         <AddTypeButton
-          availableCustomType={availableCustomType}
+          availableCustomTypes={availableCustomTypes}
           onSelect={onSelect}
         />
       </Box>
@@ -384,47 +385,51 @@ function EmptyView(props: EmptyViewProps) {
 type AddTypeButtonProps = {
   onSelect: (customTypeId: string) => void;
   disabled?: boolean;
-  availableCustomType: CustomType[];
+  availableCustomTypes: CustomType[];
   pickedCustomTypes?: CustomType[];
 };
 
 function AddTypeButton(props: AddTypeButtonProps) {
-  const { availableCustomType, onSelect, pickedCustomTypes = [] } = props;
+  const { availableCustomTypes, onSelect, pickedCustomTypes = [] } = props;
+
+  const menuItems = availableCustomTypes.flatMap((customType) => {
+    if (!customTypeHasValidFields(customType)) return [];
+
+    return (
+      <DropdownMenuItem
+        key={customType.id}
+        onSelect={() => onSelect(customType.id)}
+      >
+        <Text>{customType.id}</Text>
+      </DropdownMenuItem>
+    );
+  });
 
   const triggerButton = (
-    <Button
-      startIcon="add"
-      color="grey"
-      disabled={availableCustomType.length === 0}
-    >
+    <Button startIcon="add" color="grey" disabled={menuItems.length === 0}>
       {pickedCustomTypes.length > 0 ? "Add another type" : "Add type"}
     </Button>
   );
 
+  const disabledButton = (
+    <Box>
+      <Tooltip
+        content="All available custom types have been added"
+        side="bottom"
+      >
+        {triggerButton}
+      </Tooltip>
+    </Box>
+  );
+
+  if (menuItems.length === 0) return disabledButton;
+
   return (
     <Box>
-      {availableCustomType.length === 0 ? (
-        <Tooltip
-          content="All available custom types have been added"
-          side="bottom"
-        >
-          {triggerButton}
-        </Tooltip>
-      ) : (
-        <DropdownMenu>
-          <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {availableCustomType.map((customType) => (
-              <DropdownMenuItem
-                key={customType.id}
-                onSelect={() => onSelect(customType.id)}
-              >
-                <Text>{customType.id}</Text>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+      <DropdownMenu>
+        <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
+        <DropdownMenuContent>{menuItems}</DropdownMenuContent>
+      </DropdownMenu>
     </Box>
   );
 }
@@ -1055,6 +1060,19 @@ function isContentRelationshipField(
   );
 }
 
+function isValidField(fieldId: string, field: DynamicWidget): boolean {
+  return (
+    field.type !== "Slices" &&
+    field.type !== "Choice" &&
+    // Filter out uid fields because it's a special field returned by the
+    // API and is not part of the data object in the document.
+    // We also filter by key "uid", because (as of the time of writing
+    // this), creating any field with that API id will result in it being
+    // used for metadata.
+    (field.type !== "UID" || fieldId !== "uid")
+  );
+}
+
 function mapCustomTypeStaticFields<T>(
   customType: CustomType,
   callback: (args: { fieldId: string; field: NestableWidget | Group }) => T,
@@ -1062,16 +1080,7 @@ function mapCustomTypeStaticFields<T>(
   const fields: T[] = [];
   for (const [_, tabFields] of Object.entries(customType.json)) {
     for (const [fieldId, field] of Object.entries(tabFields)) {
-      if (
-        field.type !== "Slices" &&
-        field.type !== "Choice" &&
-        // Filter out uid fields because it's a special field returned by the
-        // API and is not part of the data object in the document.
-        // We also filter by key "uid", because (as of the time of writing
-        // this), creating any field with that API id will result in it being
-        // used for metadata.
-        (field.type !== "UID" || fieldId !== "uid")
-      ) {
+      if (isValidField(fieldId, field)) {
         fields.push(
           callback({ fieldId, field: field as NestableWidget | Group }),
         );
@@ -1108,4 +1117,12 @@ function mergeLinkCustomtypes(
     obj[key] = customType;
   }
   return Object.values(obj);
+}
+
+function customTypeHasValidFields(customType: CustomType) {
+  return Object.values(customType.json).some((tabFields) => {
+    return Object.entries(tabFields).some(([fieldId, field]) => {
+      return isValidField(fieldId, field);
+    });
+  });
 }
