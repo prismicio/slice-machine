@@ -6,7 +6,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  Icon,
   Text,
+  Tooltip,
   TreeView,
   TreeViewCheckbox,
   TreeViewSection,
@@ -212,9 +214,26 @@ export function ContentRelationshipFieldPicker(
   const { value, onChange } = props;
   const { availableCustomTypes, pickedCustomTypes } = useCustomTypes(value);
 
+  console.log({ value });
+
   const fieldCheckMap = value
     ? convertLinkCustomtypesToFieldCheckMap(value)
     : {};
+
+  function onAddCustomType(customTypeId: string) {
+    onChange([...(value ?? []), customTypeId]);
+  }
+
+  function onRemoveCustomType(customTypeId: string) {
+    if (!value) return;
+
+    onChange(
+      value.filter((customType) => {
+        if (typeof customType === "string") return customType !== customTypeId;
+        return customType.id !== customTypeId;
+      }),
+    );
+  }
 
   function onCustomTypesChange(customTypeId: string, value: PickerCustomType) {
     onChange(
@@ -223,10 +242,6 @@ export function ContentRelationshipFieldPicker(
         [customTypeId]: value,
       }),
     );
-  }
-
-  function onCustomTypeSelect(customTypeId: string) {
-    onChange([...(value ?? []), customTypeId]);
   }
 
   return (
@@ -241,37 +256,51 @@ export function ContentRelationshipFieldPicker(
           <>
             <Box flexDirection="column">
               <Text variant="h4" color="grey12">
-                Types
+                Allowed Types
               </Text>
-              <Text color="grey12">
-                Choose which fields you want to expose from the linked document.
+              <Text color="grey11">
+                Restrict the selection to specific types your content editors
+                can link to in the Page Builder.
+                <br />
+                For each type, choose which fields to expose in the API
+                response.
               </Text>
             </Box>
-            <TreeView
-              title="Exposed fields"
-              subtitle={`(${countPickedFields(fieldCheckMap)})`}
-            >
-              {pickedCustomTypes.map((customType) => (
-                <TreeViewCustomType
-                  key={customType.id}
-                  customType={customType}
-                  onChange={(value) =>
-                    onCustomTypesChange(customType.id, value)
-                  }
-                  fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
-                  customTypes={pickedCustomTypes}
+            {pickedCustomTypes.map((customType) => (
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                padding={8}
+                border
+                borderColor="grey6"
+                borderRadius={6}
+                backgroundColor="white"
+                gap={6}
+              >
+                <TreeView key={customType.id}>
+                  <TreeViewCustomType
+                    customType={customType}
+                    onChange={(value) =>
+                      onCustomTypesChange(customType.id, value)
+                    }
+                    fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
+                    customTypes={pickedCustomTypes}
+                  />
+                </TreeView>
+                <RemoveButton
+                  onClick={() => onRemoveCustomType(customType.id)}
                 />
-              ))}
-            </TreeView>
+              </Box>
+            ))}
             <AddTypeButton
               customTypes={availableCustomTypes}
-              onSelect={onCustomTypeSelect}
+              onSelect={onAddCustomType}
             />
           </>
         ) : (
           <EmptyView
             customTypes={availableCustomTypes}
-            onSelect={onCustomTypeSelect}
+            onSelect={onAddCustomType}
           />
         )}
       </Box>
@@ -289,6 +318,22 @@ export function ContentRelationshipFieldPicker(
           </a>
         </Text>
       </Box>
+    </Box>
+  );
+}
+
+type RemoveButtonProps = {
+  onClick: () => void;
+};
+
+function RemoveButton(props: RemoveButtonProps) {
+  const { onClick } = props;
+
+  return (
+    <Box padding={{ top: 6 }}>
+      <Button size="small" color="grey" onClick={onClick} invisible>
+        <Icon name="close" size="medium" />
+      </Button>
     </Box>
   );
 }
@@ -329,31 +374,38 @@ function EmptyView(props: EmptyViewProps) {
 type AddTypeButtonProps = {
   customTypes: CustomTypeSM[];
   onSelect: (customTypeId: string) => void;
+  disabled?: boolean;
 };
 
 function AddTypeButton(props: AddTypeButtonProps) {
   const { customTypes, onSelect } = props;
 
-  if (customTypes.length === 0) return null;
-
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <Button startIcon="add" color="grey">
-          Add type
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {customTypes.map((customType) => (
-          <DropdownMenuItem
-            key={customType.id}
-            onSelect={() => onSelect(customType.id)}
-          >
-            <Text>{customType.id}</Text>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Box>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Tooltip content="All custom types have been added" side="bottom">
+            <Button
+              startIcon="add"
+              color="grey"
+              disabled={customTypes.length === 0}
+            >
+              Add another type
+            </Button>
+          </Tooltip>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {customTypes.map((customType) => (
+            <DropdownMenuItem
+              key={customType.id}
+              onSelect={() => onSelect(customType.id)}
+            >
+              <Text>{customType.id}</Text>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Box>
   );
 }
 
@@ -722,18 +774,16 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
     return { availableCustomTypes: allCustomTypes, pickedCustomTypes: [] };
   }
 
-  const pickedCustomTypes = value
-    .flatMap((v) => {
-      const matchingCt = allCustomTypes.find(
-        (ct) => ct.id === (typeof v === "string" ? v : v.id),
-      );
-      return matchingCt ?? [];
-    })
-    .sort((a, b) => a.id.localeCompare(b.id));
+  const pickedCustomTypes = value.flatMap((v) => {
+    const matchingCt = allCustomTypes.find(
+      (ct) => ct.id === (typeof v === "string" ? v : v.id),
+    );
+    return matchingCt ?? [];
+  });
 
-  const availableCustomTypes = allCustomTypes.filter(
-    (ct) => pickedCustomTypes.some((v) => v.id === ct.id) === false,
-  );
+  const availableCustomTypes = allCustomTypes
+    .filter((ct) => pickedCustomTypes.some((v) => v.id === ct.id) === false)
+    .sort((a, b) => a.id.localeCompare(b.id));
 
   return {
     availableCustomTypes,
