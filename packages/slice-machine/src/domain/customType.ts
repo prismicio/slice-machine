@@ -682,8 +682,7 @@ export function mapCustomTypeStaticFields<T>(
         // We also filter by key "uid", because (as of the time of writing
         // this), creating any field with that API id will result in it being
         // used for metadata.
-        field.type !== "UID" &&
-        fieldId !== "uid"
+        (field.type !== "UID" || fieldId !== "uid")
       ) {
         fields.push(
           callback({ fieldId, field: field as NestableWidget | Group }),
