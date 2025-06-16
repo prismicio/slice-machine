@@ -666,3 +666,42 @@ const DEFAULT_SEO_TAB: CustomType["json"] = {
     },
   },
 };
+
+export function mapCustomTypeStaticFields<T>(
+  customType: CustomType,
+  callback: (args: { fieldId: string; field: NestableWidget | Group }) => T,
+): T[] {
+  const fields: T[] = [];
+  for (const [_, tabFields] of Object.entries(customType.json)) {
+    for (const [fieldId, field] of Object.entries(tabFields)) {
+      if (
+        field.type !== "Slices" &&
+        field.type !== "Choice" &&
+        // Filter out uid fields because it's a special field returned by the
+        // API and is not part of the data object in the document.
+        // We also filter by key "uid", because (as of the time of writing
+        // this), creating any field with that API id will result in it being
+        // used for metadata.
+        field.type !== "UID" &&
+        fieldId !== "uid"
+      ) {
+        fields.push(
+          callback({ fieldId, field: field as NestableWidget | Group }),
+        );
+      }
+    }
+  }
+  return fields;
+}
+
+export function mapGroupFields<T>(
+  group: Group,
+  callback: (args: { fieldId: string; field: NestableWidget }) => T,
+): T[] {
+  if (!group.config?.fields) return [];
+  const fields: T[] = [];
+  for (const [fieldId, field] of Object.entries(group.config.fields)) {
+    fields.push(callback({ fieldId, field: field as NestableWidget }));
+  }
+  return fields;
+}
