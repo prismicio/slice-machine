@@ -215,8 +215,6 @@ export function ContentRelationshipFieldPicker(
   const { value, onChange } = props;
   const { availableCustomTypes, pickedCustomTypes } = useCustomTypes(value);
 
-  console.log({ value });
-
   const fieldCheckMap = value
     ? convertLinkCustomtypesToFieldCheckMap(value)
     : {};
@@ -236,13 +234,20 @@ export function ContentRelationshipFieldPicker(
     );
   }
 
-  function onCustomTypesChange(customTypeId: string, value: PickerCustomType) {
-    onChange(
-      convertFieldCheckMapToLinkCustomtypes({
-        ...fieldCheckMap,
-        [customTypeId]: value,
-      }),
-    );
+  function onCustomTypesChange(
+    customTypeId: string,
+    newCustomtypes: PickerCustomType,
+  ) {
+    // The picker does not handle string customtypes, as it's only meant to pick
+    // fields from custom types. So we need to merge it with the existing value,
+    // which can have strings in the first level, which represent new types added
+    // without any picked fields.
+    const newLinkCustomtypes = convertFieldCheckMapToLinkCustomtypes({
+      ...fieldCheckMap,
+      [customTypeId]: newCustomtypes,
+    });
+
+    onChange(mergeLinkCustomtypes(value ?? [], newLinkCustomtypes));
   }
 
   return (
@@ -253,7 +258,7 @@ export function ContentRelationshipFieldPicker(
         flexDirection="column"
         gap={8}
       >
-        {value && value.length > 0 ? (
+        {pickedCustomTypes.length > 0 ? (
           <>
             <Box flexDirection="column">
               <Text variant="h4" color="grey12">
@@ -294,8 +299,9 @@ export function ContentRelationshipFieldPicker(
               </Box>
             ))}
             <AddTypeButton
-              customTypes={availableCustomTypes}
               onSelect={onAddCustomType}
+              customTypes={availableCustomTypes}
+              pickedCustomTypes={pickedCustomTypes}
             />
           </>
         ) : (
@@ -376,36 +382,45 @@ type AddTypeButtonProps = {
   customTypes: CustomType[];
   onSelect: (customTypeId: string) => void;
   disabled?: boolean;
+  pickedCustomTypes?: CustomType[];
 };
 
 function AddTypeButton(props: AddTypeButtonProps) {
-  const { customTypes, onSelect } = props;
+  const { customTypes, onSelect, pickedCustomTypes = [] } = props;
+
+  const triggerButton = (
+    <Button startIcon="add" color="grey" disabled={customTypes.length === 0}>
+      {pickedCustomTypes.length > 0 ? "Add another type" : "Add type"}
+    </Button>
+  );
 
   return (
     <Box>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Tooltip content="All custom types have been added" side="bottom">
-            <Button
-              startIcon="add"
-              color="grey"
-              disabled={customTypes.length === 0}
-            >
-              Add another type
-            </Button>
+      {pickedCustomTypes.length > 0 ? (
+        <Box>
+          <Tooltip
+            content="All available custom types have been added"
+            side="bottom"
+            visible={customTypes.length === 0}
+          >
+            {triggerButton}
           </Tooltip>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          {customTypes.map((customType) => (
-            <DropdownMenuItem
-              key={customType.id}
-              onSelect={() => onSelect(customType.id)}
-            >
-              <Text>{customType.id}</Text>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </Box>
+      ) : (
+        <DropdownMenu>
+          <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {customTypes.map((customType) => (
+              <DropdownMenuItem
+                key={customType.id}
+                onSelect={() => onSelect(customType.id)}
+              >
+                <Text>{customType.id}</Text>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </Box>
   );
 }
@@ -1072,4 +1087,21 @@ function mapGroupFields<T>(
     fields.push(callback({ fieldId, field: field as NestableWidget }));
   }
   return fields;
+}
+
+/**
+ * Merges Link `customtypes`, ensuring that there are no duplicate custom types
+ * in the first level (strings or objects). `customtypesB` overrides the values
+ * of `customtypesA`.
+ */
+function mergeLinkCustomtypes(
+  customtypesA: LinkCustomtypes,
+  customtypesB: LinkCustomtypes,
+) {
+  const obj: Record<string, LinkCustomtypes[number]> = {};
+  for (const customType of [...customtypesA, ...customtypesB]) {
+    const key = typeof customType === "string" ? customType : customType.id;
+    obj[key] = customType;
+  }
+  return Object.values(obj);
 }
