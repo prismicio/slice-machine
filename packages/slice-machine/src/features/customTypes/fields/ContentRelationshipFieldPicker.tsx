@@ -216,11 +216,11 @@ export function ContentRelationshipFieldPicker(
 ) {
   const { value, onChange } = props;
   const customTypes = useCustomTypes();
-  const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
+  const fieldCheckMap = value ? convertCrCustomtypesToFieldCheckMap(value) : {};
 
   function onCustomTypesChange(customTypeId: string, value: PickerCustomType) {
     onChange(
-      convertFieldCheckMapToCustomTypes({
+      convertFieldCheckMapToCrCustomtypes({
         ...fieldCheckMap,
         [customTypeId]: value,
       }),
@@ -663,7 +663,7 @@ function resolveContentRelationshipCustomTypes(
  * Converts a Link config `customtypes` ({@link TICustomTypes}) structure into
  * picker fields check map ({@link PickerCustomTypes}).
  */
-function convertCustomTypesToFieldCheckMap(
+function convertCrCustomtypesToFieldCheckMap(
   customTypes: TICustomTypes,
 ): PickerCustomTypes {
   return customTypes.reduce<PickerCustomTypes>((customTypes, customType) => {
@@ -676,10 +676,11 @@ function convertCustomTypesToFieldCheckMap(
           customTypeFields[field] = { type: "checkbox", value: true };
         } else if ("fields" in field && field.fields !== undefined) {
           // Group field
-          customTypeFields[field.id] = createGroupField(field);
+          customTypeFields[field.id] = createGroupFieldCheckMap(field);
         } else if ("customtypes" in field && field.customtypes !== undefined) {
           // Content relationship field
-          customTypeFields[field.id] = createNestedCustomTypeField(field);
+          customTypeFields[field.id] =
+            createContentRelationshipFieldCheckMap(field);
         }
 
         return customTypeFields;
@@ -690,7 +691,7 @@ function convertCustomTypesToFieldCheckMap(
   }, {});
 }
 
-function createGroupField(
+function createGroupFieldCheckMap(
   group: TIGroupFieldValues,
 ): PickerFirstLevelGroupField {
   return {
@@ -702,7 +703,7 @@ function createGroupField(
           fields[field] = { type: "checkbox", value: true };
         } else if ("customtypes" in field && field.customtypes !== undefined) {
           // Content relationship field
-          fields[field.id] = createNestedCustomTypeField(field);
+          fields[field.id] = createContentRelationshipFieldCheckMap(field);
         }
 
         return fields;
@@ -712,7 +713,7 @@ function createGroupField(
   };
 }
 
-function createNestedCustomTypeField(
+function createContentRelationshipFieldCheckMap(
   field: TIContentRelationshipFieldValue,
 ): PickerContentRelationshipField {
   const crField: PickerContentRelationshipField = {
@@ -755,15 +756,12 @@ function createNestedCustomTypeField(
  * Link config `customtypes` ({@link TICustomTypes}) and filter out empty Custom
  * types.
  */
-function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
+function convertFieldCheckMapToCrCustomtypes(map: PickerCustomTypes) {
   return Object.entries(map).flatMap<TICustomType>(([ctId, ctFields]) => {
     const fields = Object.entries(ctFields).flatMap<
       string | TIContentRelationshipFieldValue | TIGroupFieldValues
     >(([fieldId, fieldValue]) => {
-      if (fieldValue.type === "checkbox") {
-        return fieldValue.value ? fieldId : [];
-      }
-
+      // First level group field
       if (fieldValue.type === "group") {
         const fields = Object.entries(fieldValue.value).flatMap<
           string | TIContentRelationshipFieldValue
@@ -772,7 +770,7 @@ function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
             return fieldValue.value ? fieldId : [];
           }
 
-          const customTypes = convertContentRelationshipFieldValueToCustomTypes(
+          const customTypes = createContentRelationshipCrCustomtypes(
             fieldValue.value,
           );
 
@@ -785,20 +783,25 @@ function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
       }
 
       // Content relationship field
-      const customTypes = convertContentRelationshipFieldValueToCustomTypes(
-        fieldValue.value,
-      );
+      if (fieldValue.type === "contentRelationship") {
+        const customTypes = createContentRelationshipCrCustomtypes(
+          fieldValue.value,
+        );
 
-      return customTypes.length > 0
-        ? { id: fieldId, customtypes: customTypes }
-        : [];
+        return customTypes.length > 0
+          ? { id: fieldId, customtypes: customTypes }
+          : [];
+      }
+
+      // Regular field
+      return fieldValue.value ? fieldId : [];
     });
 
     return fields.length > 0 ? { id: ctId, fields } : [];
   });
 }
 
-function convertContentRelationshipFieldValueToCustomTypes(
+function createContentRelationshipCrCustomtypes(
   value: PickerContentRelationshipFieldValue,
 ): TICustomTypeFieldValues[] {
   return Object.entries(value).flatMap<TICustomTypeFieldValues>(
@@ -806,10 +809,12 @@ function convertContentRelationshipFieldValueToCustomTypes(
       const fields = Object.entries(nestedCustomTypeFields).flatMap<
         string | TICustomTypeRegularFieldValues
       >(([nestedFieldId, nestedFieldValue]) => {
+        // Leaf group field
         if (nestedFieldValue.type === "group") {
           const nestedGroupFields = Object.entries(
             nestedFieldValue.value,
           ).flatMap<string>(([fieldId, fieldValue]) => {
+            // Regular field
             return fieldValue.type === "checkbox" && fieldValue.value
               ? fieldId
               : [];
