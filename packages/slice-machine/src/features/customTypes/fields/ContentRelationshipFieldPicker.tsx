@@ -332,7 +332,7 @@ function ContentRelationshipFieldPickerContent(
                       onCustomTypesChange(customType.id, value)
                     }
                     fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
-                    customTypes={pickedCustomTypes}
+                    availableCustomTypes={availableCustomTypes}
                   />
                 </TreeView>
                 <IconButton
@@ -464,7 +464,7 @@ interface TreeViewCustomTypeProps {
   customType: CustomType;
   fieldCheckMap: PickerCustomType;
   onChange: (newValue: PickerCustomType) => void;
-  customTypes: CustomType[];
+  availableCustomTypes: CustomType[];
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
@@ -472,7 +472,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     customType,
     fieldCheckMap: customTypeFieldsCheckMap,
     onChange: onCustomTypeChange,
-    customTypes,
+    availableCustomTypes,
   } = props;
 
   const renderedFields = mapCustomTypeStaticFields(
@@ -503,7 +503,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 ? groupFieldCheckMap.value
                 : {}
             }
-            customTypes={customTypes}
+            availableCustomTypes={availableCustomTypes}
           />
         );
       }
@@ -536,7 +536,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 ? crFieldCheckMap.value
                 : {}
             }
-            customTypes={customTypes}
+            availableCustomTypes={availableCustomTypes}
           />
         );
       }
@@ -587,7 +587,7 @@ interface TreeViewContentRelationshipFieldProps {
   field: Link;
   fieldCheckMap: PickerContentRelationshipFieldValue;
   onChange: (newValue: PickerContentRelationshipFieldValue) => void;
-  customTypes: CustomType[];
+  availableCustomTypes: CustomType[];
 }
 
 function TreeViewContentRelationshipField(
@@ -598,14 +598,14 @@ function TreeViewContentRelationshipField(
     fieldId,
     fieldCheckMap: crFieldsCheckMap,
     onChange: onCrFieldChange,
-    customTypes,
+    availableCustomTypes,
   } = props;
 
   if (!field.config?.customtypes) return null;
 
   const resolvedCustomTypes = resolveContentRelationshipCustomTypes(
     field.config.customtypes,
-    customTypes,
+    availableCustomTypes,
   );
 
   if (resolvedCustomTypes.length === 0) return null;
@@ -754,7 +754,7 @@ interface TreeViewFirstLevelGroupFieldProps {
   groupId: string;
   fieldCheckMap: PickerFirstLevelGroupFieldValue;
   onChange: (newValue: PickerFirstLevelGroupFieldValue) => void;
-  customTypes: CustomType[];
+  availableCustomTypes: CustomType[];
 }
 
 function TreeViewFirstLevelGroupField(
@@ -765,7 +765,7 @@ function TreeViewFirstLevelGroupField(
     groupId,
     fieldCheckMap: groupFieldsCheckMap,
     onChange: onGroupFieldChange,
-    customTypes,
+    availableCustomTypes,
   } = props;
 
   if (!group.config?.fields) return null;
@@ -799,7 +799,7 @@ function TreeViewFirstLevelGroupField(
                   : {}
               }
               onChange={onContentRelationshipFieldChange}
-              customTypes={customTypes}
+              availableCustomTypes={availableCustomTypes}
             />
           );
         }
