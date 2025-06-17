@@ -1,5 +1,4 @@
 import { pluralize } from "@prismicio/editor-support/String";
-import { revalidateData, useRequest } from "@prismicio/editor-support/Suspense";
 import {
   AnimatedSuspense,
   Badge,
@@ -27,10 +26,10 @@ import {
   LinkConfig,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { ErrorBoundary } from "@/ErrorBoundary";
-import { managerClient } from "@/managerClient";
+import { useCustomTypes as useCustomTypesRequest } from "@/features/customTypes/customTypesTable/useCustomTypes";
 import { isValidObject } from "@/utils/isValidObject";
 
 type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
@@ -877,12 +876,15 @@ function getTypeFormatLabel(format: CustomType["format"]) {
 }
 
 /** Retrieves all existing page & custom types. */
-function useCustomTypes(value: LinkCustomtypes | undefined) {
-  const allCustomTypes = useRequest(getCustomTypes, []);
-
-  useEffect(() => {
-    void revalidateData(getCustomTypes, []);
-  }, []);
+function useCustomTypes(value: LinkCustomtypes | undefined): {
+  /** Every existing custom type, used to discover nested custom types down the tree. */
+  allCustomTypes: CustomType[];
+  /** The custom types that are not yet picked. */
+  availableCustomTypes: CustomType[];
+  /** The custom types that are already picked. */
+  pickedCustomTypes: CustomType[];
+} {
+  const { customTypes: allCustomTypes } = useCustomTypesRequest();
 
   if (!value) {
     return {
@@ -897,26 +899,12 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
   );
 
   return {
-    /**
-     * Every existing custom type, used to discover nested custom types down the
-     * tree
-     */
     allCustomTypes,
-    /** The custom types that are already picked */
     pickedCustomTypes,
-    /** The custom types that are not yet picked */
     availableCustomTypes: allCustomTypes.filter(
       (ct) => pickedCustomTypes.some((pct) => pct.id === ct.id) === false,
     ),
   };
-}
-
-async function getCustomTypes(): Promise<CustomType[]> {
-  const { errors, models } =
-    await managerClient.customTypes.readAllCustomTypes();
-
-  if (errors.length > 0) throw errors;
-  return models.map(({ model }) => model);
 }
 
 function resolveContentRelationshipCustomTypes(

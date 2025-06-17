@@ -11,6 +11,7 @@ import {
 
 import { CustomTypeUpdateMeta, getState, updateCustomType } from "@/apiClient";
 import { getFormat } from "@/domain/customType";
+import { revalidateGetCustomTypes } from "@/features/customTypes/customTypesTable/useCustomTypes";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { ActionQueueStatus, useActionQueue } from "@/hooks/useActionQueue";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
@@ -66,12 +67,13 @@ export function CustomTypeProvider(props: CustomTypeProviderProps) {
         // Refresh the store with the latest server state to get the updated
         // custom types
         stableRefreshState(await getState());
+        revalidateGetCustomTypes(format);
 
         syncChanges();
         onSaveCallback?.();
       });
     },
-    [setNextAction, stableRefreshState, syncChanges],
+    [setNextAction, stableRefreshState, syncChanges, format],
   );
 
   const contextValue: CustomTypeContext = useMemo(
