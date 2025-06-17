@@ -6,18 +6,23 @@ import {
   TreeViewCheckbox,
   TreeViewSection,
 } from "@prismicio/editor-ui";
-import { UID } from "@prismicio/types-internal/lib/customtypes";
-import { useMemo } from "react";
+import {
+  CustomType,
+  Group,
+  Link,
+  LinkConfig,
+  NestableWidget,
+} from "@prismicio/types-internal/lib/customtypes";
 import { useSelector } from "react-redux";
 
-import { CustomTypeSM, TabFields } from "@/legacy/lib/models/common/CustomType";
+import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
 import { isValidObject } from "@/utils/isValidObject";
 
 /**
  * Picker fields check map types. Used internally to keep track of the checked
  * fields in the TreeView, as it's easier to handle objects than arrays and
- * also ensure field uniqueness.
+ * also ensures field uniqueness.
  *
  * @example
  * {
@@ -127,7 +132,7 @@ interface PickerNestedCustomTypeValue {
 }
 
 /**
- * Copy of types-internal Link customtypes.
+ * Content relationship Link customtypes property structure.
  *
  * @example
  * [
@@ -175,40 +180,26 @@ interface PickerNestedCustomTypeValue {
  *   },
  * ]
  */
-type TICustomTypes = readonly (string | TICustomType)[];
+type LinkCustomtypes = NonNullable<LinkConfig["customtypes"]>;
 
-interface TICustomType {
-  id: string;
-  fields: readonly (
-    | string
-    | TIContentRelationshipFieldValue
-    | TIGroupFieldValues
-  )[];
-}
+type LinkCustomtypesFields = Exclude<
+  LinkCustomtypes[number],
+  string
+>["fields"][number];
 
-interface TICustomTypeRegularFieldValues {
-  id: string;
-  fields: readonly string[];
-}
+type LinkCustomtypesContentRelationshipFieldValue = Exclude<
+  LinkCustomtypesFields,
+  string | { fields: unknown }
+>;
 
-interface TIGroupFieldValues {
-  id: string;
-  fields: readonly (string | TIContentRelationshipFieldValue)[];
-}
-
-interface TIContentRelationshipFieldValue {
-  id: string;
-  customtypes: readonly (string | TICustomTypeFieldValues)[];
-}
-
-interface TICustomTypeFieldValues {
-  id: string;
-  fields: readonly (string | TICustomTypeRegularFieldValues)[];
-}
+type LinkCustomtypesGroupFieldValue = Exclude<
+  LinkCustomtypesFields,
+  string | { customtypes: unknown }
+>;
 
 interface ContentRelationshipFieldPickerProps {
-  value: TICustomTypes | undefined;
-  onChange: (fields: TICustomTypes) => void;
+  value: LinkCustomtypes | undefined;
+  onChange: (fields: LinkCustomtypes) => void;
 }
 
 export function ContentRelationshipFieldPicker(
@@ -216,11 +207,14 @@ export function ContentRelationshipFieldPicker(
 ) {
   const { value, onChange } = props;
   const customTypes = useCustomTypes();
-  const fieldCheckMap = value ? convertCustomTypesToFieldCheckMap(value) : {};
+
+  const fieldCheckMap = value
+    ? convertLinkCustomtypesToFieldCheckMap(value)
+    : {};
 
   function onCustomTypesChange(customTypeId: string, value: PickerCustomType) {
     onChange(
-      convertFieldCheckMapToCustomTypes({
+      convertFieldCheckMapToLinkCustomtypes({
         ...fieldCheckMap,
         [customTypeId]: value,
       }),
@@ -253,6 +247,7 @@ export function ContentRelationshipFieldPicker(
               customType={customType}
               onChange={(value) => onCustomTypesChange(customType.id, value)}
               fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
+              customTypes={customTypes}
             />
           ))}
         </TreeView>
@@ -276,130 +271,156 @@ export function ContentRelationshipFieldPicker(
 }
 
 interface TreeViewCustomTypeProps {
-  customType: TICustomType;
+  customType: CustomType;
   fieldCheckMap: PickerCustomType;
   onChange: (newValue: PickerCustomType) => void;
+  customTypes: CustomType[];
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   const {
     customType,
-    fieldCheckMap: customTypeFieldCheckMap,
+    fieldCheckMap: customTypeFieldsCheckMap,
     onChange: onCustomTypeChange,
+    customTypes,
   } = props;
+
+  const renderedFields = getCustomTypeStaticFields(customType).map(
+    ({ fieldId, field }) => {
+      // Group field
+
+      if (isGroupField(field)) {
+        const onGroupFieldChange = (
+          newGroupFields: PickerFirstLevelGroupFieldValue,
+        ) => {
+          onCustomTypeChange({
+            ...customTypeFieldsCheckMap,
+            [fieldId]: { type: "group", value: newGroupFields },
+          });
+        };
+
+        const groupFieldCheckMap = customTypeFieldsCheckMap[fieldId] ?? {};
+
+        return (
+          <TreeViewFirstLevelGroupField
+            key={fieldId}
+            group={field}
+            groupId={fieldId}
+            onChange={onGroupFieldChange}
+            fieldCheckMap={
+              groupFieldCheckMap.type === "group"
+                ? groupFieldCheckMap.value
+                : {}
+            }
+            customTypes={customTypes}
+          />
+        );
+      }
+
+      // Content relationship field
+
+      if (isContentRelationshipField(field)) {
+        const onContentRelationshipFieldChange = (
+          newCrFields: PickerContentRelationshipFieldValue,
+        ) => {
+          onCustomTypeChange({
+            ...customTypeFieldsCheckMap,
+            [fieldId]: {
+              type: "contentRelationship",
+              value: newCrFields,
+            },
+          });
+        };
+
+        const crFieldCheckMap = customTypeFieldsCheckMap[fieldId] ?? {};
+
+        return (
+          <TreeViewContentRelationshipField
+            key={fieldId}
+            field={field}
+            fieldId={fieldId}
+            onChange={onContentRelationshipFieldChange}
+            fieldCheckMap={
+              crFieldCheckMap.type === "contentRelationship"
+                ? crFieldCheckMap.value
+                : {}
+            }
+            customTypes={customTypes}
+          />
+        );
+      }
+
+      // Regular field
+
+      const onCheckedChange = (newValue: boolean) => {
+        onCustomTypeChange({
+          ...customTypeFieldsCheckMap,
+          [fieldId]: { type: "checkbox", value: newValue },
+        });
+      };
+
+      return (
+        <TreeViewCheckbox
+          key={fieldId}
+          title={fieldId}
+          checked={customTypeFieldsCheckMap[fieldId]?.value === true}
+          onCheckedChange={onCheckedChange}
+        />
+      );
+    },
+  );
+
+  if (renderedFields.length === 0) return null;
 
   return (
     <TreeViewSection
       key={customType.id}
       title={customType.id}
       subtitle={getExposedFieldsLabel(
-        countPickedFields(customTypeFieldCheckMap),
+        countPickedFields(customTypeFieldsCheckMap),
       )}
-      badge="Custom type"
+      badge={customType.format === "page" ? "Page type" : "Custom type"}
     >
-      {customType.fields.map((field) => {
-        // Checkbox field
-
-        if (typeof field === "string") {
-          const checked = customTypeFieldCheckMap[field]?.value ?? false;
-
-          const onCheckedChange = (newValue: boolean) => {
-            onCustomTypeChange({
-              ...customTypeFieldCheckMap,
-              [field]: { type: "checkbox", value: newValue },
-            });
-          };
-
-          return (
-            <TreeViewCheckbox
-              key={field}
-              title={field}
-              checked={checked === true}
-              onCheckedChange={onCheckedChange}
-            />
-          );
-        }
-
-        const crOrGroupFieldCheckMap = customTypeFieldCheckMap[field.id] ?? {};
-
-        // Group field
-
-        if ("fields" in field) {
-          const onGroupFieldChange = (
-            newGroupFields: PickerFirstLevelGroupFieldValue,
-          ) => {
-            onCustomTypeChange({
-              ...customTypeFieldCheckMap,
-              [field.id]: { type: "group", value: newGroupFields },
-            });
-          };
-
-          return (
-            <TreeViewGroupField
-              key={field.id}
-              group={field}
-              onChange={onGroupFieldChange}
-              fieldCheckMap={
-                crOrGroupFieldCheckMap.type === "group"
-                  ? crOrGroupFieldCheckMap.value
-                  : {}
-              }
-            />
-          );
-        }
-
-        // Content relationship field
-
-        const onContentRelationshipFieldChange = (
-          newCrFields: PickerContentRelationshipFieldValue,
-        ) => {
-          onCustomTypeChange({
-            ...customTypeFieldCheckMap,
-            [field.id]: { type: "contentRelationship", value: newCrFields },
-          });
-        };
-
-        return (
-          <TreeViewContentRelationshipField
-            key={field.id}
-            field={field}
-            onChange={onContentRelationshipFieldChange}
-            fieldCheckMap={
-              crOrGroupFieldCheckMap.type === "contentRelationship"
-                ? crOrGroupFieldCheckMap.value
-                : {}
-            }
-          />
-        );
-      })}
+      {renderedFields}
     </TreeViewSection>
   );
 }
 
 interface TreeViewContentRelationshipFieldProps {
-  field: TIContentRelationshipFieldValue;
+  field: Link;
+  fieldId: string;
   fieldCheckMap: PickerContentRelationshipFieldValue;
   onChange: (newValue: PickerContentRelationshipFieldValue) => void;
+  customTypes: CustomType[];
 }
 
 function TreeViewContentRelationshipField(
   props: TreeViewContentRelationshipFieldProps,
 ) {
   const {
-    field: crField,
+    field,
+    fieldId,
     fieldCheckMap: crFieldsCheckMap,
     onChange: onCrFieldChange,
+    customTypes,
   } = props;
+
+  if (!field.config?.customtypes) return null;
+
+  const resolvedCustomTypes = resolveContentRelationshipCustomTypes(
+    field.config.customtypes,
+    customTypes,
+  );
+
+  if (resolvedCustomTypes.length === 0) return null;
 
   return (
     <TreeViewSection
-      title={crField.id}
+      title={fieldId}
       subtitle={getExposedFieldsLabel(countPickedFields(crFieldsCheckMap))}
     >
-      {crField.customtypes.map((customType) => {
+      {resolvedCustomTypes.map((customType) => {
         if (typeof customType === "string") return null;
-
-        const nestedCtFieldsCheckMap = crFieldsCheckMap[customType.id] ?? {};
 
         const onNestedCustomTypeChange = (
           newNestedCustomTypeFields: PickerNestedCustomTypeValue,
@@ -410,51 +431,29 @@ function TreeViewContentRelationshipField(
           });
         };
 
-        return (
-          <TreeViewSection
-            key={customType.id}
-            title={customType.id}
-            subtitle={getExposedFieldsLabel(
-              countPickedFields(nestedCtFieldsCheckMap),
-            )}
-            badge="Custom type"
-          >
-            {customType.fields.map((field) => {
-              if (typeof field === "string") {
-                const checked = nestedCtFieldsCheckMap[field]?.value === true;
+        const nestedCtFieldsCheckMap = crFieldsCheckMap[customType.id] ?? {};
 
-                const onCheckedChange = (newChecked: boolean) => {
-                  onNestedCustomTypeChange({
-                    ...nestedCtFieldsCheckMap,
-                    [field]: { type: "checkbox", value: newChecked },
-                  });
-                };
+        const renderedFields = getCustomTypeStaticFields(customType).map(
+          ({ fieldId, field }) => {
+            // Group field
 
-                return (
-                  <TreeViewCheckbox
-                    key={field}
-                    title={field}
-                    checked={checked}
-                    onCheckedChange={onCheckedChange}
-                  />
-                );
-              }
-
-              const groupFieldCheckMap = nestedCtFieldsCheckMap[field.id] ?? {};
-
+            if (isGroupField(field)) {
               const onGroupFieldsChange = (
                 newGroupFields: PickerLeafGroupFieldValue,
               ) => {
                 onNestedCustomTypeChange({
                   ...nestedCtFieldsCheckMap,
-                  [field.id]: { type: "group", value: newGroupFields },
+                  [fieldId]: { type: "group", value: newGroupFields },
                 });
               };
 
+              const groupFieldCheckMap = nestedCtFieldsCheckMap[fieldId] ?? {};
+
               return (
-                <TreeViewContentRelationshipFieldNestedGroup
-                  key={field.id}
+                <TreeViewLeafGroupField
+                  key={fieldId}
                   group={field}
+                  groupId={fieldId}
                   onChange={onGroupFieldsChange}
                   fieldCheckMap={
                     groupFieldCheckMap.type === "group"
@@ -463,7 +462,40 @@ function TreeViewContentRelationshipField(
                   }
                 />
               );
-            })}
+            }
+
+            // Regular field
+
+            const onCheckedChange = (newChecked: boolean) => {
+              onNestedCustomTypeChange({
+                ...nestedCtFieldsCheckMap,
+                [fieldId]: { type: "checkbox", value: newChecked },
+              });
+            };
+
+            return (
+              <TreeViewCheckbox
+                key={fieldId}
+                title={fieldId}
+                checked={nestedCtFieldsCheckMap[fieldId]?.value === true}
+                onCheckedChange={onCheckedChange}
+              />
+            );
+          },
+        );
+
+        if (renderedFields.length === 0) return null;
+
+        return (
+          <TreeViewSection
+            key={customType.id}
+            title={customType.id}
+            subtitle={getExposedFieldsLabel(
+              countPickedFields(nestedCtFieldsCheckMap),
+            )}
+            badge={customType.format === "page" ? "Page type" : "Custom type"}
+          >
+            {renderedFields}
           </TreeViewSection>
         );
       })}
@@ -471,108 +503,128 @@ function TreeViewContentRelationshipField(
   );
 }
 
-interface TreeViewContentRelationshipFieldGroupProps {
-  group: TICustomTypeRegularFieldValues;
+interface TreeViewLeafGroupFieldProps {
+  group: Group;
+  groupId: string;
   fieldCheckMap: PickerLeafGroupFieldValue;
   onChange: (newValue: PickerLeafGroupFieldValue) => void;
 }
 
-function TreeViewContentRelationshipFieldNestedGroup(
-  props: TreeViewContentRelationshipFieldGroupProps,
-) {
+function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
   const {
     group,
+    groupId,
     fieldCheckMap: groupFieldsCheckMap,
     onChange: onGroupFieldChange,
   } = props;
 
+  if (!group.config?.fields) return null;
+
+  const renderedFields = getGroupFields(group).map(({ fieldId }) => {
+    const onCheckedChange = (newChecked: boolean) => {
+      onGroupFieldChange({
+        ...groupFieldsCheckMap,
+        [fieldId]: { type: "checkbox", value: newChecked },
+      });
+    };
+
+    return (
+      <TreeViewCheckbox
+        key={fieldId}
+        title={fieldId}
+        checked={groupFieldsCheckMap[fieldId]?.value === true}
+        onCheckedChange={onCheckedChange}
+      />
+    );
+  });
+
+  if (renderedFields.length === 0) return null;
+
   return (
     <TreeViewSection
-      key={group.id}
-      title={group.id}
+      key={groupId}
+      title={groupId}
       subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
       badge="Group"
     >
-      {group.fields.map((field) => {
-        const checked = groupFieldsCheckMap[field]?.value ?? false;
+      {renderedFields}
+    </TreeViewSection>
+  );
+}
+
+interface TreeViewFirstLevelGroupFieldProps {
+  group: Group;
+  groupId: string;
+  fieldCheckMap: PickerFirstLevelGroupFieldValue;
+  onChange: (newValue: PickerFirstLevelGroupFieldValue) => void;
+  customTypes: CustomType[];
+}
+
+function TreeViewFirstLevelGroupField(
+  props: TreeViewFirstLevelGroupFieldProps,
+) {
+  const {
+    group,
+    groupId,
+    fieldCheckMap: groupFieldsCheckMap,
+    onChange: onGroupFieldChange,
+    customTypes,
+  } = props;
+
+  if (!group.config?.fields) return null;
+
+  return (
+    <TreeViewSection
+      key={groupId}
+      title={groupId}
+      subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      badge="Group"
+    >
+      {getGroupFields(group).map(({ fieldId, field }) => {
+        if (isContentRelationshipField(field)) {
+          const onContentRelationshipFieldChange = (
+            newCrFields: PickerContentRelationshipFieldValue,
+          ) => {
+            onGroupFieldChange({
+              ...groupFieldsCheckMap,
+              [fieldId]: {
+                type: "contentRelationship",
+                value: newCrFields,
+              },
+            });
+          };
+
+          const crFieldCheckMap = groupFieldsCheckMap[fieldId] ?? {};
+
+          return (
+            <TreeViewContentRelationshipField
+              key={fieldId}
+              field={field}
+              fieldId={fieldId}
+              fieldCheckMap={
+                crFieldCheckMap.type === "contentRelationship"
+                  ? crFieldCheckMap.value
+                  : {}
+              }
+              onChange={onContentRelationshipFieldChange}
+              customTypes={customTypes}
+            />
+          );
+        }
 
         const onCheckedChange = (newChecked: boolean) => {
           onGroupFieldChange({
             ...groupFieldsCheckMap,
-            [field]: { type: "checkbox", value: newChecked },
+            [fieldId]: { type: "checkbox", value: newChecked },
           });
         };
 
         return (
           <TreeViewCheckbox
-            key={field}
-            title={field}
-            checked={checked === true}
+            key={fieldId}
+            title={fieldId}
+            checked={groupFieldsCheckMap[fieldId]?.value === true}
             onCheckedChange={onCheckedChange}
-          />
-        );
-      })}
-    </TreeViewSection>
-  );
-}
-
-interface TreeViewGroupFieldProps {
-  group: TIGroupFieldValues;
-  fieldCheckMap: PickerFirstLevelGroupFieldValue;
-  onChange: (newValue: PickerFirstLevelGroupFieldValue) => void;
-}
-
-function TreeViewGroupField(props: TreeViewGroupFieldProps) {
-  const {
-    group,
-    fieldCheckMap: groupFieldsCheckMap,
-    onChange: onGroupFieldChange,
-  } = props;
-
-  return (
-    <TreeViewSection key={group.id} title={group.id} badge="Group">
-      {group.fields.map((field) => {
-        if (typeof field === "string") {
-          const checked = groupFieldsCheckMap[field]?.value ?? false;
-
-          const onCheckedChange = (newChecked: boolean) => {
-            onGroupFieldChange({
-              ...groupFieldsCheckMap,
-              [field]: { type: "checkbox", value: newChecked },
-            });
-          };
-
-          return (
-            <TreeViewCheckbox
-              key={field}
-              title={field}
-              checked={checked === true}
-              onCheckedChange={onCheckedChange}
-            />
-          );
-        }
-
-        const crFieldCheckMap = groupFieldsCheckMap[field.id] ?? {};
-
-        const onContentRelationshipFieldChange = (
-          newCrFields: PickerContentRelationshipFieldValue,
-        ) => {
-          onGroupFieldChange({
-            ...groupFieldsCheckMap,
-            [field.id]: { type: "contentRelationship", value: newCrFields },
-          });
-        };
-
-        return (
-          <TreeViewContentRelationshipField
-            key={field.id}
-            field={field}
-            fieldCheckMap={
-              crFieldCheckMap.type === "contentRelationship"
-                ? crFieldCheckMap.value
-                : {}
-            }
-            onChange={onContentRelationshipFieldChange}
           />
         );
       })}
@@ -586,120 +638,42 @@ function getExposedFieldsLabel(count: number) {
 }
 
 /**
- * Get all the existing local custom types from the store and process them into
- * a single array to be rendered by the picker. For this we use the same as the
- * Link config `customtypes` structure {@link TICustomTypes}.
+ * Gets all the existing local custom types from the store, filters and sorts
+ * them.
  */
-function useCustomTypes() {
+function useCustomTypes(): CustomType[] {
   const allCustomTypes = useSelector(selectAllCustomTypes);
-  const localCustomTypes = allCustomTypes.flatMap((ct) => {
+  const localCustomTypes = allCustomTypes.flatMap<CustomType>((ct) => {
     // In the store we have remote and local custom types, we want to show
     // the local ones, so that the user is able to create a content
     // relationship with custom types present on the user's computer (pushed
     // or not).
-    return "local" in ct ? ct.local : [];
+    return "local" in ct ? CustomTypes.fromSM(ct.local) : [];
   });
 
-  return useMemo(() => {
-    const customTypes = localCustomTypes.flatMap<TICustomType>((customType) => {
-      const tabFields = customType.tabs.flatMap((tab) => {
-        return tab.value.flatMap((field) => {
-          if (isUidField(field)) return [];
+  localCustomTypes.sort((a, b) => a.id.localeCompare(b.id));
 
-          // Check if it's a content relationship link/field
-          if (
-            field.value.type === "Link" &&
-            field.value.config?.select === "document" &&
-            field.value.config.customtypes
-          ) {
-            const resolvedFields = resolveContentRelationshipFields(
-              field.value.config.customtypes,
-              localCustomTypes,
-            );
-
-            return resolvedFields.length > 0
-              ? { id: field.key, customtypes: resolvedFields }
-              : [];
-          }
-
-          if (field.value.type === "Group" && field.value.config?.fields) {
-            return {
-              id: field.key,
-              fields: field.value.config.fields.map((field) => field.key),
-            };
-          }
-
-          return field.key;
-        });
-      });
-
-      return tabFields.length > 0
-        ? { id: customType.id, fields: tabFields }
-        : [];
-    });
-
-    customTypes.sort((a, b) => a.id.localeCompare(b.id));
-
-    return customTypes;
-  }, [localCustomTypes]);
+  return localCustomTypes;
 }
 
-function resolveContentRelationshipFields(
-  customTypesArray: TICustomTypes,
-  localCustomTypes: CustomTypeSM[],
-): TICustomTypeFieldValues[] {
-  const fields = customTypesArray.flatMap<TICustomTypeFieldValues>(
-    (customType) => {
-      if (typeof customType === "string") return [];
-
-      // Didn't find a custom type with a matching id in the store
-      const matchingCustomType = localCustomTypes.find(
-        (ct) => ct.id === customType.id,
-      );
-      if (!matchingCustomType) return [];
-
-      const tabFields = matchingCustomType.tabs.flatMap((tab) => {
-        return tab.value.flatMap((field) => {
-          if (isUidField(field)) return [];
-
-          // Group inside content relationship field
-          if (field.value.type === "Group" && field.value.config?.fields) {
-            return {
-              id: field.key,
-              fields: field.value.config.fields.map((field) => field.key),
-            };
-          }
-
-          return field.key;
-        });
-      });
-
-      return tabFields.length > 0
-        ? { id: customType.id, fields: tabFields }
-        : [];
-    },
-  );
+function resolveContentRelationshipCustomTypes(
+  customTypes: LinkCustomtypes,
+  localCustomTypes: CustomType[],
+): CustomType[] {
+  const fields = customTypes.flatMap<CustomType>((customType) => {
+    if (typeof customType === "string") return [];
+    return localCustomTypes.find((ct) => ct.id === customType.id) ?? [];
+  });
 
   return fields;
 }
 
-function isUidField(
-  field: TabFields[number],
-): field is { key: string; value: UID } {
-  // Filter out uid fields because it's a special field returned by the
-  // API and is not part of the data object in the document.
-  // We also filter by key "uid", because (as of the time of writing
-  // this), creating any field with that API id will result in it being
-  // used for metadata.
-  return field.key === "uid" && field.value.type === "UID";
-}
-
 /**
- * Converts a Link config `customtypes` ({@link TICustomTypes}) structure into
+ * Converts a Link config `customtypes` ({@link LinkCustomtypes}) structure into
  * picker fields check map ({@link PickerCustomTypes}).
  */
-function convertCustomTypesToFieldCheckMap(
-  customTypes: TICustomTypes,
+function convertLinkCustomtypesToFieldCheckMap(
+  customTypes: LinkCustomtypes,
 ): PickerCustomTypes {
   return customTypes.reduce<PickerCustomTypes>((customTypes, customType) => {
     if (typeof customType === "string") return customTypes;
@@ -711,10 +685,11 @@ function convertCustomTypesToFieldCheckMap(
           customTypeFields[field] = { type: "checkbox", value: true };
         } else if ("fields" in field && field.fields !== undefined) {
           // Group field
-          customTypeFields[field.id] = createGroupField(field);
+          customTypeFields[field.id] = createGroupFieldCheckMap(field);
         } else if ("customtypes" in field && field.customtypes !== undefined) {
           // Content relationship field
-          customTypeFields[field.id] = createNestedCustomTypeField(field);
+          customTypeFields[field.id] =
+            createContentRelationshipFieldCheckMap(field);
         }
 
         return customTypeFields;
@@ -725,8 +700,8 @@ function convertCustomTypesToFieldCheckMap(
   }, {});
 }
 
-function createGroupField(
-  group: TIGroupFieldValues,
+function createGroupFieldCheckMap(
+  group: LinkCustomtypesGroupFieldValue,
 ): PickerFirstLevelGroupField {
   return {
     type: "group",
@@ -737,7 +712,7 @@ function createGroupField(
           fields[field] = { type: "checkbox", value: true };
         } else if ("customtypes" in field && field.customtypes !== undefined) {
           // Content relationship field
-          fields[field.id] = createNestedCustomTypeField(field);
+          fields[field.id] = createContentRelationshipFieldCheckMap(field);
         }
 
         return fields;
@@ -747,8 +722,8 @@ function createGroupField(
   };
 }
 
-function createNestedCustomTypeField(
-  field: TIContentRelationshipFieldValue,
+function createContentRelationshipFieldCheckMap(
+  field: LinkCustomtypesContentRelationshipFieldValue,
 ): PickerContentRelationshipField {
   const crField: PickerContentRelationshipField = {
     type: "contentRelationship",
@@ -787,76 +762,84 @@ function createNestedCustomTypeField(
 
 /**
  * Converts a picker fields check map structure ({@link PickerCustomTypes}) into
- * Link config `customtypes` ({@link TICustomTypes}) and filter out empty Custom
+ * Link config `customtypes` ({@link LinkCustomtypes}) and filter out empty Custom
  * types.
  */
-function convertFieldCheckMapToCustomTypes(map: PickerCustomTypes) {
-  return Object.entries(map).flatMap<TICustomType>(([ctId, ctFields]) => {
-    const fields = Object.entries(ctFields).flatMap<
-      string | TIContentRelationshipFieldValue | TIGroupFieldValues
-    >(([fieldId, fieldValue]) => {
-      if (fieldValue.type === "checkbox") {
-        return fieldValue.value ? fieldId : [];
-      }
+function convertFieldCheckMapToLinkCustomtypes(map: PickerCustomTypes) {
+  return Object.entries(map).flatMap<LinkCustomtypes[number]>(
+    ([ctId, ctFields]) => {
+      const fields = Object.entries(ctFields).flatMap<
+        | string
+        | LinkCustomtypesContentRelationshipFieldValue
+        | LinkCustomtypesGroupFieldValue
+      >(([fieldId, fieldValue]) => {
+        // First level group field
+        if (fieldValue.type === "group") {
+          const fields = Object.entries(fieldValue.value).flatMap<
+            string | LinkCustomtypesContentRelationshipFieldValue
+          >(([fieldId, fieldValue]) => {
+            if (fieldValue.type === "checkbox") {
+              return fieldValue.value ? fieldId : [];
+            }
 
-      if (fieldValue.type === "group") {
-        const fields = Object.entries(fieldValue.value).flatMap<
-          string | TIContentRelationshipFieldValue
-        >(([fieldId, fieldValue]) => {
-          if (fieldValue.type === "checkbox") {
-            return fieldValue.value ? fieldId : [];
-          }
+            const customTypes = createContentRelationshipLinkCustomtypes(
+              fieldValue.value,
+            );
 
-          const customTypes = convertContentRelationshipFieldValueToCustomTypes(
+            return customTypes.length > 0
+              ? { id: fieldId, customtypes: customTypes }
+              : [];
+          });
+
+          return fields.length > 0 ? { id: fieldId, fields } : [];
+        }
+
+        // Content relationship field
+        if (fieldValue.type === "contentRelationship") {
+          const customTypes = createContentRelationshipLinkCustomtypes(
             fieldValue.value,
           );
 
           return customTypes.length > 0
             ? { id: fieldId, customtypes: customTypes }
             : [];
-        });
-
-        return fields.length > 0 ? { id: fieldId, fields } : [];
-      }
-
-      // Content relationship field
-      const customTypes = convertContentRelationshipFieldValueToCustomTypes(
-        fieldValue.value,
-      );
-
-      return customTypes.length > 0
-        ? { id: fieldId, customtypes: customTypes }
-        : [];
-    });
-
-    return fields.length > 0 ? { id: ctId, fields } : [];
-  });
-}
-
-function convertContentRelationshipFieldValueToCustomTypes(
-  value: PickerContentRelationshipFieldValue,
-): TICustomTypeFieldValues[] {
-  return Object.entries(value).flatMap<TICustomTypeFieldValues>(
-    ([nestedCustomTypeId, nestedCustomTypeFields]) => {
-      const fields = Object.entries(nestedCustomTypeFields).flatMap<
-        string | TICustomTypeRegularFieldValues
-      >(([nestedFieldId, nestedFieldValue]) => {
-        if (nestedFieldValue.type === "group") {
-          const nestedGroupFields = Object.entries(
-            nestedFieldValue.value,
-          ).flatMap<string>(([fieldId, fieldValue]) => {
-            return fieldValue.type === "checkbox" && fieldValue.value
-              ? fieldId
-              : [];
-          });
-
-          return nestedGroupFields.length > 0
-            ? { id: nestedFieldId, fields: nestedGroupFields }
-            : [];
         }
 
-        return nestedFieldValue.value ? nestedFieldId : [];
+        // Regular field
+        return fieldValue.value ? fieldId : [];
       });
+
+      return fields.length > 0 ? { id: ctId, fields } : [];
+    },
+  );
+}
+
+function createContentRelationshipLinkCustomtypes(
+  value: PickerContentRelationshipFieldValue,
+): LinkCustomtypesContentRelationshipFieldValue["customtypes"] {
+  return Object.entries(value).flatMap(
+    ([nestedCustomTypeId, nestedCustomTypeFields]) => {
+      const fields = Object.entries(nestedCustomTypeFields).flatMap(
+        ([nestedFieldId, nestedFieldValue]) => {
+          // Leaf group field
+          if (nestedFieldValue.type === "group") {
+            const nestedGroupFields = Object.entries(
+              nestedFieldValue.value,
+            ).flatMap<string>(([fieldId, fieldValue]) => {
+              // Regular field
+              return fieldValue.type === "checkbox" && fieldValue.value
+                ? fieldId
+                : [];
+            });
+
+            return nestedGroupFields.length > 0
+              ? { id: nestedFieldId, fields: nestedGroupFields }
+              : [];
+          }
+
+          return nestedFieldValue.value ? nestedFieldId : [];
+        },
+      );
 
       return fields.length > 0 ? { id: nestedCustomTypeId, fields } : [];
     },
@@ -876,12 +859,53 @@ function countPickedFields(
   if (!fields) return 0;
   return Object.values(fields).reduce<number>((count, value) => {
     if (!isValidObject(value)) return count;
-    if (isCheckboxField(value)) return count + (value.value ? 1 : 0);
+    if (isCheckboxValue(value)) return count + (value.value ? 1 : 0);
     return count + countPickedFields(value);
   }, 0);
 }
-
-function isCheckboxField(value: unknown): value is PickerCheckboxField {
+function isCheckboxValue(value: unknown): value is PickerCheckboxField {
   if (!isValidObject(value)) return false;
   return "type" in value && value.type === "checkbox";
+}
+
+function isGroupField(field: NestableWidget | Group): field is Group {
+  return field.type === "Group";
+}
+
+function isContentRelationshipField(
+  field: NestableWidget | Group,
+): field is Link {
+  return (
+    field.type === "Link" &&
+    field.config?.select === "document" &&
+    field.config?.customtypes !== undefined
+  );
+}
+
+function getCustomTypeStaticFields(customType: CustomType) {
+  return Object.values(customType.json).flatMap((tabFields) => {
+    return Object.entries(tabFields).flatMap(([fieldId, field]) => {
+      if (
+        field.type !== "Slices" &&
+        field.type !== "Choice" &&
+        // Filter out uid fields because it's a special field returned by the
+        // API and is not part of the data object in the document.
+        // We also filter by key "uid", because (as of the time of writing
+        // this), creating any field with that API id will result in it being
+        // used for metadata.
+        (field.type !== "UID" || fieldId !== "uid")
+      ) {
+        return { fieldId, field: field as NestableWidget | Group };
+      }
+
+      return [];
+    });
+  });
+}
+
+function getGroupFields(group: Group) {
+  if (!group.config?.fields) return [];
+  return Object.entries(group.config.fields).map(([fieldId, field]) => {
+    return { fieldId, field: field as NestableWidget };
+  });
 }
