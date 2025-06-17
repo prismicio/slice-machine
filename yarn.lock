@@ -6834,13 +6834,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.77":
-  version: 0.4.77
-  resolution: "@prismicio/editor-fields@npm:0.4.77"
+"@prismicio/editor-fields@npm:0.4.78":
+  version: 0.4.78
+  resolution: "@prismicio/editor-fields@npm:0.4.78"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/client": 7.15.1
-    "@prismicio/editor-support": 0.4.77
+    "@prismicio/editor-support": 0.4.78
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.11.2
     "@tiptap/core": 2.11.5
@@ -6875,17 +6875,17 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.77
+    "@prismicio/editor-ui": ^0.4.78
     "@tanstack/react-query": 5.55.4
     react: 18
     react-dom: 18
-  checksum: fb40ae8ff395ebd55d28a94eb6c6bea0c2acaa46bd811b4107cdc2a04932cc0a3e077f9eb4ae1f963fb072a47b174278d67d7d1e086cc6f555053e844f2d6760
+  checksum: 6321960b9ba4bec39f075a8296439b41dd9679f46d37c673b70501aaa28ae5cafda28b6bc8040736577bfca7491a77d7501ca648c1d9848646daa2db5896bb24
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.77":
-  version: 0.4.77
-  resolution: "@prismicio/editor-support@npm:0.4.77"
+"@prismicio/editor-support@npm:0.4.78":
+  version: 0.4.78
+  resolution: "@prismicio/editor-support@npm:0.4.78"
   dependencies:
     tslib: 2.4.0
   peerDependencies:
@@ -6896,19 +6896,19 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 1c3f25fcf9a2b5c610d48c342e8aea18fc6fafe15135f1a16de4cff69ac60bc3241601d9e546c3e8553e88f33155419fe5aeb5260dff8c890d1668175ac84f4f
+  checksum: bab0a59f86bbc65815df6a8b3bcebc76ed1782e9b9c7ae1f1079632deaa72c9ab8cc55a9346593c689e75471e70cb7fb0f2c3d076befab164293373dcbc22822
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.77":
-  version: 0.4.77
-  resolution: "@prismicio/editor-ui@npm:0.4.77"
+"@prismicio/editor-ui@npm:0.4.78":
+  version: 0.4.78
+  resolution: "@prismicio/editor-ui@npm:0.4.78"
   dependencies:
     "@internationalized/date": 3.8.1
     "@nivo/bar": 0.96.0
     "@nivo/core": 0.96.0
     "@nivo/tooltip": 0.96.0
-    "@prismicio/editor-support": 0.4.77
+    "@prismicio/editor-support": 0.4.78
     "@radix-ui/react-focus-scope": 1.1.7
     "@react-aria/calendar": 3.8.1
     "@react-aria/color": 3.0.0-rc.0
@@ -6939,7 +6939,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 795dd776e9dfe8d066f27887fd433073cefa26079a36cd806f1a89cb516fb800c309bb0ddbf4ab3050c1821d901571dcf73310e9afbdef4280b2cd9e028b8c01
+  checksum: f9a1e79fb0b5339b464eab23bebaebb5f1b38dc585f6b0e598fa4020f6b41966f99532918534fa8c3d843febe43eb6d146a23289a8db7612c958847e8655f8b9
   languageName: node
   linkType: hard
 
@@ -6970,12 +6970,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mocks@npm:2.14.0":
-  version: 2.14.0
-  resolution: "@prismicio/mocks@npm:2.14.0"
+"@prismicio/mocks@npm:2.15.0":
+  version: 2.15.0
+  resolution: "@prismicio/mocks@npm:2.15.0"
   dependencies:
     "@prismicio/api-renderer": ^6.4.0
-    "@prismicio/types-internal": ^3.11.2
+    "@prismicio/types-internal": 3.12.0-alpha.2
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
@@ -6984,7 +6984,7 @@ __metadata:
     newtype-ts: ^0.3.5
     tslib: ^2.3.1
     uuid: ^9.0.1
-  checksum: d7bb8021e5e83226e60196f9f06ea1e0779cdf298d551cff5270b9ac9abb9aa98461c6486c863736be69363ee21140965a75ea2966b1ac229a3e2c6c80ff4297
+  checksum: 980ce1d2c09807919c73e216b697d3ff74db2e20813f417e1a2736c4f9a070960d6662e883e0528e77c178652bd72a8e5aa47c61963d8c5658db9edb4554785d
   languageName: node
   linkType: hard
 
@@ -7024,9 +7024,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:^3.11.2":
-  version: 3.12.0
-  resolution: "@prismicio/types-internal@npm:3.12.0"
+"@prismicio/types-internal@npm:3.12.0-alpha.2":
+  version: 3.12.0-alpha.2
+  resolution: "@prismicio/types-internal@npm:3.12.0-alpha.2"
   dependencies:
     monocle-ts: ^2.3.11
     newtype-ts: ^0.3.5
@@ -7036,7 +7036,7 @@ __metadata:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
-  checksum: 85b0fd9c3a274fe950db2a12845bad9775532942a2d2607e1d5c830e55c2850f59af23d1ba5f9fd0467dd579e46c2efc3e54407b8ca9fd6a3c6e33f4702281d1
+  checksum: 5d9eedfeaea37aa565a932b77e46a83a0d76f8267f41db39bb02c7dbddda28b711d5e35517ae7847b80cc5201034f691a67fd979876a8552c6a05922110d3a03
   languageName: node
   linkType: hard
 
@@ -34422,11 +34422,11 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.17.0
-    "@prismicio/editor-fields": 0.4.77
-    "@prismicio/editor-support": 0.4.77
-    "@prismicio/editor-ui": 0.4.77
+    "@prismicio/editor-fields": 0.4.78
+    "@prismicio/editor-support": 0.4.78
+    "@prismicio/editor-ui": 0.4.78
     "@prismicio/mock": 0.7.1
-    "@prismicio/mocks": 2.14.0
+    "@prismicio/mocks": 2.15.0
     "@prismicio/simulator": 0.1.4
     "@prismicio/types-internal": 3.11.2
     "@radix-ui/react-hover-card": 1.0.6
