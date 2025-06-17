@@ -876,10 +876,7 @@ function getTypeFormatLabel(format: CustomType["format"]) {
   return format === "page" ? "Page type" : "Custom type";
 }
 
-/**
- * Gets all the existing local custom types from the store, filters and sorts
- * them.
- */
+/** Retrieves all existing page & custom types. */
 function useCustomTypes(value: LinkCustomtypes | undefined) {
   const allCustomTypes = useRequest(getCustomTypes, []);
 
@@ -1022,8 +1019,8 @@ function createContentRelationshipFieldCheckMap(
 
 /**
  * Merges the existing Link `customtypes` array with the picker state, ensuring
- * that conversions from to string (custom type id) to object and vice versa and
- * that the order is preserved.
+ * that conversions from to string (custom type id) to object and vice versa are
+ * made correctly and that the order is preserved.
  */
 function mergeAndConvertCheckMapToLinkCustomtypes(args: {
   existingLinkCustomtypes: LinkCustomtypes | undefined;
