@@ -7024,6 +7024,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@prismicio/types-internal@npm:3.12.0":
+  version: 3.12.0
+  resolution: "@prismicio/types-internal@npm:3.12.0"
+  dependencies:
+    monocle-ts: ^2.3.11
+    newtype-ts: ^0.3.5
+    tslib: ^2.3.1
+    uuid: ^9.0.0
+  peerDependencies:
+    fp-ts: ^2.11.8
+    io-ts: ^2.2.16
+    io-ts-types: ^0.5.16
+  checksum: 85b0fd9c3a274fe950db2a12845bad9775532942a2d2607e1d5c830e55c2850f59af23d1ba5f9fd0467dd579e46c2efc3e54407b8ca9fd6a3c6e33f4702281d1
+  languageName: node
+  linkType: hard
+
 "@prismicio/types-internal@npm:3.12.0-alpha.2":
   version: 3.12.0-alpha.2
   resolution: "@prismicio/types-internal@npm:3.12.0-alpha.2"
@@ -10529,7 +10545,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -10574,7 +10590,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@typescript-eslint/eslint-plugin": 5.55.0
@@ -10615,7 +10631,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -10657,7 +10673,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@sveltejs/kit": 2.20.6
@@ -10712,7 +10728,7 @@ __metadata:
     "@msgpack/msgpack": 2.8.0
     "@playwright/test": ^1
     "@prismicio/e2e-tests-utils": 1.11.0
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@slicemachine/manager": "workspace:*"
     "@types/node": 22.15.17
     "@typescript-eslint/eslint-plugin": 7.17.0
@@ -10784,7 +10800,7 @@ __metadata:
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.13.0
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
@@ -10842,7 +10858,7 @@ __metadata:
   dependencies:
     "@prismicio/client": 7.17.0
     "@prismicio/mock": 0.7.1
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@size-limit/preset-small-lib": 8.2.4
     "@types/common-tags": 1.8.1
     "@types/fs-extra": 11.0.1
@@ -34428,7 +34444,7 @@ __metadata:
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.15.0
     "@prismicio/simulator": 0.1.4
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@radix-ui/react-hover-card": 1.0.6
     "@radix-ui/react-tabs": 1.0.4
     "@radix-ui/react-visually-hidden": 1.1.1
@@ -34897,7 +34913,7 @@ __metadata:
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
     "@prismicio/mocks": 2.13.0
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.12.0
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:*"
     "@types/body-parser": 1.19.2
