@@ -1,5 +1,5 @@
 import { pluralize } from "@prismicio/editor-support/String";
-import { useRequest } from "@prismicio/editor-support/Suspense";
+import { revalidateData, useRequest } from "@prismicio/editor-support/Suspense";
 import {
   AnimatedSuspense,
   Badge,
@@ -31,6 +31,7 @@ import {
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { managerClient } from "@/managerClient";
 import { isValidObject } from "@/utils/isValidObject";
+import { useEffect } from "react";
 
 type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
 
@@ -874,6 +875,10 @@ function getTypeFormatLabel(format: CustomType["format"]) {
  */
 function useCustomTypes(value: LinkCustomtypes | undefined) {
   const allCustomTypes = useRequest(getCustomTypes, []);
+
+  useEffect(() => {
+    void revalidateData(getCustomTypes, []);
+  }, []);
 
   if (!value) {
     return {
