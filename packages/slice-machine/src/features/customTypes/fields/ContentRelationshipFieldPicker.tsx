@@ -285,8 +285,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     customTypes,
   } = props;
 
-  const renderedFields = mapCustomTypeStaticFields(
-    customType,
+  const renderedFields = getCustomTypeStaticFields(customType).map(
     ({ fieldId, field }) => {
       // Group field
 
@@ -434,8 +433,7 @@ function TreeViewContentRelationshipField(
 
         const nestedCtFieldsCheckMap = crFieldsCheckMap[customType.id] ?? {};
 
-        const renderedFields = mapCustomTypeStaticFields(
-          customType,
+        const renderedFields = getCustomTypeStaticFields(customType).map(
           ({ fieldId, field }) => {
             // Group field
 
@@ -522,7 +520,7 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
 
   if (!group.config?.fields) return null;
 
-  const renderedFields = mapGroupFields(group, ({ fieldId }) => {
+  const renderedFields = getGroupFields(group).map(({ fieldId }) => {
     const onCheckedChange = (newChecked: boolean) => {
       onGroupFieldChange({
         ...groupFieldsCheckMap,
@@ -577,7 +575,7 @@ function TreeViewFirstLevelGroupField(
 
   return (
     <TreeViewSection key={groupId} title={groupId} badge="Group">
-      {mapGroupFields(group, ({ fieldId, field }) => {
+      {getGroupFields(group).map(({ fieldId, field }) => {
         if (isContentRelationshipField(field)) {
           const onContentRelationshipFieldChange = (
             newCrFields: PickerContentRelationshipFieldValue,
@@ -879,13 +877,9 @@ function isContentRelationshipField(
   );
 }
 
-function mapCustomTypeStaticFields<T>(
-  customType: CustomType,
-  callback: (args: { fieldId: string; field: NestableWidget | Group }) => T,
-): T[] {
-  const fields: T[] = [];
-  for (const [_, tabFields] of Object.entries(customType.json)) {
-    for (const [fieldId, field] of Object.entries(tabFields)) {
+function getCustomTypeStaticFields(customType: CustomType) {
+  return Object.values(customType.json).flatMap((tabFields) => {
+    return Object.entries(tabFields).flatMap(([fieldId, field]) => {
       if (
         field.type !== "Slices" &&
         field.type !== "Choice" &&
@@ -896,23 +890,17 @@ function mapCustomTypeStaticFields<T>(
         // used for metadata.
         (field.type !== "UID" || fieldId !== "uid")
       ) {
-        fields.push(
-          callback({ fieldId, field: field as NestableWidget | Group }),
-        );
+        return { fieldId, field: field as NestableWidget | Group };
       }
-    }
-  }
-  return fields;
+
+      return [];
+    });
+  });
 }
 
-function mapGroupFields<T>(
-  group: Group,
-  callback: (args: { fieldId: string; field: NestableWidget }) => T,
-): T[] {
+function getGroupFields(group: Group) {
   if (!group.config?.fields) return [];
-  const fields: T[] = [];
-  for (const [fieldId, field] of Object.entries(group.config.fields)) {
-    fields.push(callback({ fieldId, field: field as NestableWidget }));
-  }
-  return fields;
+  return Object.entries(group.config.fields).map(([fieldId, field]) => {
+    return { fieldId, field: field as NestableWidget };
+  });
 }
