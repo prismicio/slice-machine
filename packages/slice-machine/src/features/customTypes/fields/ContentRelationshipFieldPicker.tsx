@@ -574,7 +574,12 @@ function TreeViewFirstLevelGroupField(
   if (!group.config?.fields) return null;
 
   return (
-    <TreeViewSection key={groupId} title={groupId} badge="Group">
+    <TreeViewSection
+      key={groupId}
+      title={groupId}
+      subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      badge="Group"
+    >
       {getGroupFields(group).map(({ fieldId, field }) => {
         if (isContentRelationshipField(field)) {
           const onContentRelationshipFieldChange = (
