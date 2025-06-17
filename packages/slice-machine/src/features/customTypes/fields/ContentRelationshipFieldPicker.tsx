@@ -569,7 +569,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       subtitle={
         exposedFieldsCount > 0
           ? getExposedFieldsLabel(exposedFieldsCount)
-          : "(No fields returned in API)"
+          : "(No fields returned in the API)"
       }
       badge={customType.format === "page" ? "Page type" : "Custom type"}
     >
@@ -826,7 +826,11 @@ function TreeViewFirstLevelGroupField(
 
 function getExposedFieldsLabel(count: number) {
   if (count === 0) return undefined;
-  return `(${count} ${pluralize(count, "field", "fields")} returned in API)`;
+  return `(${count} ${pluralize(
+    count,
+    "field",
+    "fields",
+  )} returned in the API)`;
 }
 
 /**
