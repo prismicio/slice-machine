@@ -249,35 +249,35 @@ function ContentRelationshipFieldPickerContent(
     ? convertLinkCustomtypesToFieldCheckMap(value)
     : {};
 
-  function onAddCustomType(customTypeId: string) {
-    onChange([...(value ?? []), customTypeId]);
-  }
-
-  function onRemoveCustomType(customTypeId: string) {
-    if (!value) return;
-
+  function onCustomTypesChange(id: string, newCustomTypes: PickerCustomType) {
+    // The picker does not handle strings (custom type ids), as it's only meant
+    // to pick fields from custom types (objects). So we need to merge it with
+    // the existing value, which can have strings in the first level that
+    // represent new types added without any picked fields.
     onChange(
-      value.filter((customType) => {
-        if (typeof customType === "string") return customType !== customTypeId;
-        return customType.id !== customTypeId;
-      }),
+      mergeLinkCustomtypes(
+        value ?? [],
+        convertFieldCheckMapToLinkCustomtypes({
+          ...fieldCheckMap,
+          [id]: newCustomTypes,
+        }),
+      ),
     );
   }
 
-  function onCustomTypesChange(
-    customTypeId: string,
-    newCustomtypes: PickerCustomType,
-  ) {
-    // The picker does not handle string customtypes, as it's only meant to pick
-    // fields from custom types. So we need to merge it with the existing value,
-    // which can have strings in the first level, which represent new types added
-    // without any picked fields.
-    const newLinkCustomtypes = convertFieldCheckMapToLinkCustomtypes({
-      ...fieldCheckMap,
-      [customTypeId]: newCustomtypes,
-    });
+  function addCustomType(id: string) {
+    onChange([...(value ?? []), id]);
+  }
 
-    onChange(mergeLinkCustomtypes(value ?? [], newLinkCustomtypes));
+  function removeCustomType(id: string) {
+    if (value) {
+      onChange(
+        value.filter((customType) => {
+          if (typeof customType === "string") return customType !== id;
+          return customType.id !== id;
+        }),
+      );
+    }
   }
 
   return (
@@ -332,20 +332,21 @@ function ContentRelationshipFieldPickerContent(
                 <IconButton
                   icon="close"
                   size="small"
-                  onClick={() => onRemoveCustomType(customType.id)}
+                  onClick={() => removeCustomType(customType.id)}
                   sx={{ height: 24, width: 24 }}
+                  hiddenLabel="Remove type"
                 />
               </Box>
             ))}
             <AddTypeButton
-              onSelect={onAddCustomType}
+              onSelect={addCustomType}
               pickedCustomTypes={pickedCustomTypes}
               availableCustomTypes={availableCustomTypes}
             />
           </>
         ) : (
           <EmptyView
-            onSelect={onAddCustomType}
+            onSelect={addCustomType}
             availableCustomTypes={availableCustomTypes}
           />
         )}
@@ -414,21 +415,12 @@ type AddTypeButtonProps = {
 function AddTypeButton(props: AddTypeButtonProps) {
   const { availableCustomTypes, onSelect, pickedCustomTypes = [] } = props;
 
-  const menuItems = availableCustomTypes.flatMap((customType) => {
-    if (!customTypeHasValidFields(customType)) return [];
-
-    return (
-      <DropdownMenuItem
-        key={customType.id}
-        onSelect={() => onSelect(customType.id)}
-      >
-        <Text>{customType.id}</Text>
-      </DropdownMenuItem>
-    );
-  });
-
   const triggerButton = (
-    <Button startIcon="add" color="grey" disabled={menuItems.length === 0}>
+    <Button
+      startIcon="add"
+      color="grey"
+      disabled={availableCustomTypes.length === 0}
+    >
       {pickedCustomTypes.length > 0 ? "Add another type" : "Add type"}
     </Button>
   );
@@ -441,13 +433,22 @@ function AddTypeButton(props: AddTypeButtonProps) {
     </Box>
   );
 
-  if (menuItems.length === 0) return disabledButton;
+  if (availableCustomTypes.length === 0) return disabledButton;
 
   return (
     <Box>
       <DropdownMenu>
         <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
-        <DropdownMenuContent>{menuItems}</DropdownMenuContent>
+        <DropdownMenuContent>
+          {availableCustomTypes.flatMap((customType) => (
+            <DropdownMenuItem
+              key={customType.id}
+              onSelect={() => onSelect(customType.id)}
+            >
+              <Text>{customType.id}</Text>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
       </DropdownMenu>
     </Box>
   );
@@ -554,8 +555,6 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     },
   );
 
-  if (renderedFields.length === 0) return null;
-
   return (
     <TreeViewSection
       key={customType.id}
@@ -565,7 +564,11 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       )}
       badge={customType.format === "page" ? "Page type" : "Custom type"}
     >
-      {renderedFields}
+      {renderedFields.length > 0 ? (
+        renderedFields
+      ) : (
+        <Text color="grey11">No available fields</Text>
+      )}
     </TreeViewSection>
   );
 }
@@ -963,8 +966,8 @@ function createContentRelationshipFieldCheckMap(
  * Link config `customtypes` ({@link LinkCustomtypes}) and filter out empty Custom
  * types.
  */
-function convertFieldCheckMapToLinkCustomtypes(map: PickerCustomTypes) {
-  return Object.entries(map).flatMap<LinkCustomtypes[number]>(
+function convertFieldCheckMapToLinkCustomtypes(checkMap: PickerCustomTypes) {
+  return Object.entries(checkMap).flatMap<LinkCustomtypes[number]>(
     ([ctId, ctFields]) => {
       const fields = Object.entries(ctFields).flatMap<
         | string
@@ -1137,12 +1140,4 @@ function mergeLinkCustomtypes(
     obj[key] = customType;
   }
   return Object.values(obj);
-}
-
-function customTypeHasValidFields(customType: CustomType) {
-  return Object.values(customType.json).some((tabFields) => {
-    return Object.entries(tabFields).some(([fieldId, field]) => {
-      return isValidField(fieldId, field);
-    });
-  });
 }
