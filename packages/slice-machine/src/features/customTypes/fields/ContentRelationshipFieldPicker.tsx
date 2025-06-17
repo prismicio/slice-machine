@@ -387,8 +387,8 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 }
 
 interface TreeViewContentRelationshipFieldProps {
-  fieldId: string;
   field: Link;
+  fieldId: string;
   fieldCheckMap: PickerContentRelationshipFieldValue;
   onChange: (newValue: PickerContentRelationshipFieldValue) => void;
   customTypes: CustomType[];
