@@ -883,21 +883,16 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
     };
   }
 
-  const pickedCustomTypes = value.flatMap((pickedCt) => {
-    const matchingCt = allCustomTypes.find(
-      (existingCt) => existingCt.id === getId(pickedCt),
-    );
-    return matchingCt ?? [];
-  });
-
-  const availableCustomTypes = allCustomTypes.filter(
-    (ct) => pickedCustomTypes.some((v) => v.id === ct.id) === false,
+  const pickedCustomTypes = value.flatMap(
+    (pickedCt) => allCustomTypes.find((ct) => ct.id === getId(pickedCt)) ?? [],
   );
 
   return {
     allCustomTypes,
-    availableCustomTypes,
     pickedCustomTypes,
+    availableCustomTypes: allCustomTypes.filter(
+      (ct) => pickedCustomTypes.some((pct) => pct.id === ct.id) === false,
+    ),
   };
 }
 
