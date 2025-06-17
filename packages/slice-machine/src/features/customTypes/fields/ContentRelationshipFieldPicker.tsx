@@ -255,7 +255,8 @@ function ContentRelationshipFieldPickerContent(
   props: ContentRelationshipFieldPickerProps,
 ) {
   const { value, onChange } = props;
-  const { availableCustomTypes, pickedCustomTypes } = useCustomTypes(value);
+  const { allCustomTypes, availableCustomTypes, pickedCustomTypes } =
+    useCustomTypes(value);
 
   const fieldCheckMap = value
     ? convertLinkCustomtypesToFieldCheckMap(value)
@@ -332,7 +333,7 @@ function ContentRelationshipFieldPickerContent(
                       onCustomTypesChange(customType.id, value)
                     }
                     fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
-                    availableCustomTypes={availableCustomTypes}
+                    allCustomTypes={allCustomTypes}
                   />
                 </TreeView>
                 <IconButton
@@ -464,7 +465,7 @@ interface TreeViewCustomTypeProps {
   customType: CustomType;
   fieldCheckMap: PickerCustomType;
   onChange: (newValue: PickerCustomType) => void;
-  availableCustomTypes: CustomType[];
+  allCustomTypes: CustomType[];
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
@@ -472,7 +473,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     customType,
     fieldCheckMap: customTypeFieldsCheckMap,
     onChange: onCustomTypeChange,
-    availableCustomTypes,
+    allCustomTypes,
   } = props;
 
   const renderedFields = mapCustomTypeStaticFields(
@@ -503,7 +504,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 ? groupFieldCheckMap.value
                 : {}
             }
-            availableCustomTypes={availableCustomTypes}
+            allCustomTypes={allCustomTypes}
           />
         );
       }
@@ -536,7 +537,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 ? crFieldCheckMap.value
                 : {}
             }
-            availableCustomTypes={availableCustomTypes}
+            allCustomTypes={allCustomTypes}
           />
         );
       }
@@ -576,7 +577,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       {renderedFields.length > 0 ? (
         renderedFields
       ) : (
-        <Text color="grey11">No available fields</Text>
+        <Text color="grey11">No available fields to select</Text>
       )}
     </TreeViewSection>
   );
@@ -587,7 +588,7 @@ interface TreeViewContentRelationshipFieldProps {
   field: Link;
   fieldCheckMap: PickerContentRelationshipFieldValue;
   onChange: (newValue: PickerContentRelationshipFieldValue) => void;
-  availableCustomTypes: CustomType[];
+  allCustomTypes: CustomType[];
 }
 
 function TreeViewContentRelationshipField(
@@ -598,14 +599,14 @@ function TreeViewContentRelationshipField(
     fieldId,
     fieldCheckMap: crFieldsCheckMap,
     onChange: onCrFieldChange,
-    availableCustomTypes,
+    allCustomTypes,
   } = props;
 
   if (!field.config?.customtypes) return null;
 
   const resolvedCustomTypes = resolveContentRelationshipCustomTypes(
     field.config.customtypes,
-    availableCustomTypes,
+    allCustomTypes,
   );
 
   if (resolvedCustomTypes.length === 0) return null;
@@ -754,7 +755,7 @@ interface TreeViewFirstLevelGroupFieldProps {
   groupId: string;
   fieldCheckMap: PickerFirstLevelGroupFieldValue;
   onChange: (newValue: PickerFirstLevelGroupFieldValue) => void;
-  availableCustomTypes: CustomType[];
+  allCustomTypes: CustomType[];
 }
 
 function TreeViewFirstLevelGroupField(
@@ -765,7 +766,7 @@ function TreeViewFirstLevelGroupField(
     groupId,
     fieldCheckMap: groupFieldsCheckMap,
     onChange: onGroupFieldChange,
-    availableCustomTypes,
+    allCustomTypes,
   } = props;
 
   if (!group.config?.fields) return null;
@@ -799,7 +800,7 @@ function TreeViewFirstLevelGroupField(
                   : {}
               }
               onChange={onContentRelationshipFieldChange}
-              availableCustomTypes={availableCustomTypes}
+              allCustomTypes={allCustomTypes}
             />
           );
         }
@@ -841,7 +842,11 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
   const allCustomTypes = useRequest(getCustomTypes, []);
 
   if (!value) {
-    return { availableCustomTypes: allCustomTypes, pickedCustomTypes: [] };
+    return {
+      allCustomTypes,
+      availableCustomTypes: allCustomTypes,
+      pickedCustomTypes: [],
+    };
   }
 
   const pickedCustomTypes = value.flatMap((pickedCt) => {
@@ -856,6 +861,7 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
   );
 
   return {
+    allCustomTypes,
     availableCustomTypes,
     pickedCustomTypes,
   };
