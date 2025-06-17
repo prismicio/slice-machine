@@ -473,9 +473,7 @@ function AddTypeButton(props: AddTypeButtonProps) {
                 <Badge
                   title={
                     <Text variant="extraSmall" color="purple11">
-                      {customType.format === "page"
-                        ? "Page type"
-                        : "Custom type"}
+                      {getTypeFormatLabel(customType.format)}
                     </Text>
                   }
                   color="purple"
@@ -600,7 +598,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           ? getExposedFieldsLabel(exposedFieldsCount)
           : "(No fields returned in the API)"
       }
-      badge={customType.format === "page" ? "Page type" : "Custom type"}
+      badge={getTypeFormatLabel(customType.format)}
     >
       {renderedFields.length > 0 ? (
         renderedFields
@@ -718,7 +716,7 @@ function TreeViewContentRelationshipField(
             subtitle={getExposedFieldsLabel(
               countPickedFields(nestedCtFieldsCheckMap),
             )}
-            badge={customType.format === "page" ? "Page type" : "Custom type"}
+            badge={getTypeFormatLabel(customType.format)}
           >
             {renderedFields}
           </TreeViewSection>
@@ -864,6 +862,10 @@ function getExposedFieldsLabel(count: number) {
     "field",
     "fields",
   )} returned in the API)`;
+}
+
+function getTypeFormatLabel(format: CustomType["format"]) {
+  return format === "page" ? "Page type" : "Custom type";
 }
 
 /**
