@@ -897,8 +897,14 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
   );
 
   return {
+    /**
+     * Every existing custom type, used to discover nested custom types down the
+     * tree
+     */
     allCustomTypes,
+    /** The custom types that are already picked */
     pickedCustomTypes,
+    /** The custom types that are not yet picked */
     availableCustomTypes: allCustomTypes.filter(
       (ct) => pickedCustomTypes.some((pct) => pct.id === ct.id) === false,
     ),
