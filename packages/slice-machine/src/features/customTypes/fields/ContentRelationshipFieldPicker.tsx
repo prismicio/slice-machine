@@ -466,7 +466,7 @@ function AddTypeButton(props: AddTypeButtonProps) {
           <DropdownMenuLabel>
             <Text color="grey11">Types</Text>
           </DropdownMenuLabel>
-          {availableCustomTypes.flatMap((customType) => (
+          {availableCustomTypes.map((customType) => (
             <DropdownMenuItem
               key={customType.id}
               onSelect={() => onSelect(customType.id)}
