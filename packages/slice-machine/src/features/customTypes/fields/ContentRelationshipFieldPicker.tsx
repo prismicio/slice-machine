@@ -31,7 +31,7 @@ import {
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { managerClient } from "@/managerClient";
 import { isValidObject } from "@/utils/isValidObject";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
 
@@ -261,6 +261,8 @@ function ContentRelationshipFieldPickerContent(
   const { allCustomTypes, availableCustomTypes, pickedCustomTypes } =
     useCustomTypes(value);
 
+  const [isNewType, setIsNewType] = useState(false);
+
   const fieldCheckMap = value
     ? convertLinkCustomtypesToFieldCheckMap(value)
     : {};
@@ -281,6 +283,7 @@ function ContentRelationshipFieldPickerContent(
   }
 
   function addCustomType(id: string) {
+    setIsNewType(true);
     onChange([...(value ?? []), id]);
   }
 
@@ -337,6 +340,7 @@ function ContentRelationshipFieldPickerContent(
                     }
                     fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
                     allCustomTypes={allCustomTypes}
+                    isNewType={isNewType}
                   />
                 </TreeView>
                 <IconButton
@@ -494,6 +498,7 @@ interface TreeViewCustomTypeProps {
   fieldCheckMap: PickerCustomType;
   onChange: (newValue: PickerCustomType) => void;
   allCustomTypes: CustomType[];
+  isNewType: boolean;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
@@ -502,6 +507,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     fieldCheckMap: customTypeFieldsCheckMap,
     onChange: onCustomTypeChange,
     allCustomTypes,
+    isNewType,
   } = props;
 
   const renderedFields = getCustomTypeStaticFields(customType).map(
@@ -600,6 +606,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           : "(No fields returned in the API)"
       }
       badge={getTypeFormatLabel(customType.format)}
+      defaultOpen={isNewType}
     >
       {renderedFields.length > 0 ? (
         renderedFields
