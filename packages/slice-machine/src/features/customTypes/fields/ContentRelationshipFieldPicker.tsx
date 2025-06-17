@@ -26,6 +26,7 @@ import {
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
 
+import { ErrorBoundary } from "@/ErrorBoundary";
 import { managerClient } from "@/managerClient";
 import { isValidObject } from "@/utils/isValidObject";
 
@@ -218,26 +219,35 @@ export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
   return (
-    <AnimatedSuspense
-      fallback={
-        <Box flexDirection="column" position="relative">
-          <Skeleton height={240} />
-          <Box
-            position="absolute"
-            top="50%"
-            left="50%"
-            transform="translate(-50%, -50%)"
-            alignItems="center"
-            gap={8}
-          >
-            <Icon name="autorenew" size="small" color="grey11" />
-            <Text color="grey11">Loading your types...</Text>
-          </Box>
+    <ErrorBoundary
+      renderError={() => (
+        <Box alignItems="center" gap={8}>
+          <Icon name="alert" size="small" color="tomato10" />
+          <Text color="tomato10">Error loading your types</Text>
         </Box>
-      }
+      )}
     >
-      <ContentRelationshipFieldPickerContent {...props} />
-    </AnimatedSuspense>
+      <AnimatedSuspense
+        fallback={
+          <Box flexDirection="column" position="relative">
+            <Skeleton height={240} />
+            <Box
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+              alignItems="center"
+              gap={8}
+            >
+              <Icon name="autorenew" size="small" color="grey11" />
+              <Text color="grey11">Loading your types...</Text>
+            </Box>
+          </Box>
+        }
+      >
+        <ContentRelationshipFieldPickerContent {...props} />
+      </AnimatedSuspense>
+    </ErrorBoundary>
   );
 }
 
@@ -851,8 +861,7 @@ async function getCustomTypes(): Promise<CustomType[]> {
   const { errors, models } =
     await managerClient.customTypes.readAllCustomTypes();
 
-  throw errors;
-
+  if (errors.length > 0) throw errors;
   return models.map(({ model }) => model);
 }
 
