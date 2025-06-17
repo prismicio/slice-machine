@@ -29,6 +29,8 @@ import {
 import { managerClient } from "@/managerClient";
 import { isValidObject } from "@/utils/isValidObject";
 
+type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
+
 /**
  * Picker fields check map types. Used internally to keep track of the checked
  * fields in the TreeView, as it's easier to handle objects than arrays and
@@ -249,19 +251,18 @@ function ContentRelationshipFieldPickerContent(
     ? convertLinkCustomtypesToFieldCheckMap(value)
     : {};
 
-  function onCustomTypesChange(id: string, newCustomTypes: PickerCustomType) {
+  function onCustomTypesChange(id: string, newCustomType: PickerCustomType) {
     // The picker does not handle strings (custom type ids), as it's only meant
     // to pick fields from custom types (objects). So we need to merge it with
     // the existing value, which can have strings in the first level that
     // represent new types added without any picked fields.
     onChange(
-      mergeLinkCustomtypes(
-        value ?? [],
-        convertFieldCheckMapToLinkCustomtypes({
-          ...fieldCheckMap,
-          [id]: newCustomTypes,
-        }),
-      ),
+      mergeAndConvertCheckMapToLinkCustomtypes({
+        existingLinkCustomtypes: value,
+        previousPickerCustomtypes: fieldCheckMap,
+        customTypeId: id,
+        newCustomType,
+      }),
     );
   }
 
@@ -271,12 +272,7 @@ function ContentRelationshipFieldPickerContent(
 
   function removeCustomType(id: string) {
     if (value) {
-      onChange(
-        value.filter((customType) => {
-          if (typeof customType === "string") return customType !== id;
-          return customType.id !== id;
-        }),
-      );
+      onChange(value.filter((existingCt) => getId(existingCt) !== id));
     }
   }
 
@@ -555,13 +551,16 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     },
   );
 
+  const exposedFieldsCount = countPickedFields(customTypeFieldsCheckMap);
   return (
     <TreeViewSection
       key={customType.id}
       title={customType.id}
-      subtitle={getExposedFieldsLabel(
-        countPickedFields(customTypeFieldsCheckMap),
-      )}
+      subtitle={
+        exposedFieldsCount > 0
+          ? getExposedFieldsLabel(exposedFieldsCount)
+          : "(No fields returned in API)"
+      }
       badge={customType.format === "page" ? "Page type" : "Custom type"}
     >
       {renderedFields.length > 0 ? (
@@ -817,7 +816,7 @@ function TreeViewFirstLevelGroupField(
 
 function getExposedFieldsLabel(count: number) {
   if (count === 0) return undefined;
-  return `(${count} ${pluralize(count, "field", "fields")} exposed)`;
+  return `(${count} ${pluralize(count, "field", "fields")} returned in API)`;
 }
 
 /**
@@ -831,9 +830,9 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
     return { availableCustomTypes: allCustomTypes, pickedCustomTypes: [] };
   }
 
-  const pickedCustomTypes = value.flatMap((v) => {
+  const pickedCustomTypes = value.flatMap((pickedCt) => {
     const matchingCt = allCustomTypes.find(
-      (ct) => ct.id === (typeof v === "string" ? v : v.id),
+      (existingCt) => existingCt.id === getId(pickedCt),
     );
     return matchingCt ?? [];
   });
@@ -852,7 +851,7 @@ async function getCustomTypes(): Promise<CustomType[]> {
   const { errors, models } =
     await managerClient.customTypes.readAllCustomTypes();
 
-  if (errors.length > 0) throw errors;
+  throw errors;
 
   return models.map(({ model }) => model);
 }
@@ -962,11 +961,59 @@ function createContentRelationshipFieldCheckMap(
 }
 
 /**
+ * Merges the existing Link `customtypes` array with the picker state, ensuring
+ * that conversions from to string (custom type id) to object and vice versa and
+ * that the order is preserved.
+ */
+function mergeAndConvertCheckMapToLinkCustomtypes(args: {
+  existingLinkCustomtypes: LinkCustomtypes | undefined;
+  previousPickerCustomtypes: PickerCustomTypes;
+  newCustomType: PickerCustomType;
+  customTypeId: string;
+}): LinkCustomtypes {
+  const {
+    existingLinkCustomtypes,
+    previousPickerCustomtypes,
+    newCustomType,
+    customTypeId,
+  } = args;
+
+  const result: NonReadonly<LinkCustomtypes> = [];
+  const pickerLinkCustomtypes = convertFieldCheckMapToLinkCustomtypes({
+    ...previousPickerCustomtypes,
+    [customTypeId]: newCustomType,
+  });
+
+  if (!existingLinkCustomtypes) return pickerLinkCustomtypes;
+
+  for (const existingLinkCt of existingLinkCustomtypes) {
+    const existingPickerLinkCt = pickerLinkCustomtypes.find((ct) => {
+      return getId(ct) === getId(existingLinkCt);
+    });
+
+    if (existingPickerLinkCt !== undefined) {
+      // Custom type with exposed fields, keep the customtypes object
+      result.push(existingPickerLinkCt);
+    } else if (getId(existingLinkCt) === customTypeId) {
+      // Custom type that had exposed fields, but now has none, change to string
+      result.push(getId(existingLinkCt));
+    } else {
+      // Custom type without exposed fields, keep the string
+      result.push(existingLinkCt);
+    }
+  }
+
+  return result;
+}
+
+/**
  * Converts a picker fields check map structure ({@link PickerCustomTypes}) into
  * Link config `customtypes` ({@link LinkCustomtypes}) and filter out empty Custom
  * types.
  */
-function convertFieldCheckMapToLinkCustomtypes(checkMap: PickerCustomTypes) {
+function convertFieldCheckMapToLinkCustomtypes(
+  checkMap: PickerCustomTypes,
+): LinkCustomtypes {
   return Object.entries(checkMap).flatMap<LinkCustomtypes[number]>(
     ([ctId, ctFields]) => {
       const fields = Object.entries(ctFields).flatMap<
@@ -1124,20 +1171,8 @@ function mapGroupFields<T>(
   }
   return fields;
 }
-
-/**
- * Merges Link `customtypes`, ensuring that there are no duplicate custom types
- * in the first level (strings or objects). `customtypesB` overrides the values
- * of `customtypesA`.
- */
-function mergeLinkCustomtypes(
-  customtypesA: LinkCustomtypes,
-  customtypesB: LinkCustomtypes,
-) {
-  const obj: Record<string, LinkCustomtypes[number]> = {};
-  for (const customType of [...customtypesA, ...customtypesB]) {
-    const key = typeof customType === "string" ? customType : customType.id;
-    obj[key] = customType;
-  }
-  return Object.values(obj);
+/** If it's a string, return it, otherwise return the `id` property. */
+function getId<T extends string | { id: string }>(customType: T): string {
+  if (typeof customType === "string") return customType;
+  return customType.id;
 }
