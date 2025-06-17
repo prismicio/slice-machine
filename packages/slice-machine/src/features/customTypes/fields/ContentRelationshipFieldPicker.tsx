@@ -2,16 +2,19 @@ import { pluralize } from "@prismicio/editor-support/String";
 import { useRequest } from "@prismicio/editor-support/Suspense";
 import {
   AnimatedSuspense,
+  Badge,
   Box,
   Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
   Icon,
   IconButton,
   Skeleton,
   Text,
+  TextOverflow,
   Tooltip,
   TreeView,
   TreeViewCheckbox,
@@ -434,7 +437,12 @@ function AddTypeButton(props: AddTypeButtonProps) {
 
   const disabledButton = (
     <Box>
-      <Tooltip content="All available types have been added" side="bottom">
+      <Tooltip
+        content="All available types have been added"
+        side="bottom"
+        align="start"
+        disableHoverableContent
+      >
         {triggerButton}
       </Tooltip>
     </Box>
@@ -446,13 +454,35 @@ function AddTypeButton(props: AddTypeButtonProps) {
     <Box>
       <DropdownMenu>
         <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent
+          maxHeight={400}
+          minWidth={256}
+          align={pickedCustomTypes.length > 0 ? "start" : "center"}
+        >
+          <DropdownMenuLabel>
+            <Text color="grey11">Types</Text>
+          </DropdownMenuLabel>
           {availableCustomTypes.flatMap((customType) => (
             <DropdownMenuItem
               key={customType.id}
               onSelect={() => onSelect(customType.id)}
             >
-              <Text>{customType.id}</Text>
+              <Box alignItems="center" justifyContent="space-between" gap={8}>
+                <TextOverflow>
+                  <Text>{customType.id}</Text>
+                </TextOverflow>
+                <Badge
+                  title={
+                    <Text variant="extraSmall" color="purple11">
+                      {customType.format === "page"
+                        ? "Page type"
+                        : "Custom type"}
+                    </Text>
+                  }
+                  color="purple"
+                  size="small"
+                />
+              </Box>
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
