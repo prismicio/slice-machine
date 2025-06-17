@@ -22,7 +22,6 @@ import {
 } from "@prismicio/editor-ui";
 import {
   CustomType,
-  DynamicWidget,
   Group,
   Link,
   LinkConfig,
@@ -506,8 +505,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     allCustomTypes,
   } = props;
 
-  const renderedFields = mapCustomTypeStaticFields(
-    customType,
+  const renderedFields = getCustomTypeStaticFields(customType).map(
     ({ fieldId, field }) => {
       // Group field
 
@@ -660,8 +658,7 @@ function TreeViewContentRelationshipField(
 
         const nestedCtFieldsCheckMap = crFieldsCheckMap[customType.id] ?? {};
 
-        const renderedFields = mapCustomTypeStaticFields(
-          customType,
+        const renderedFields = getCustomTypeStaticFields(customType).map(
           ({ fieldId, field }) => {
             // Group field
 
@@ -748,7 +745,7 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
 
   if (!group.config?.fields) return null;
 
-  const renderedFields = mapGroupFields(group, ({ fieldId }) => {
+  const renderedFields = getGroupFields(group).map(({ fieldId }) => {
     const onCheckedChange = (newChecked: boolean) => {
       onGroupFieldChange({
         ...groupFieldsCheckMap,
@@ -802,8 +799,13 @@ function TreeViewFirstLevelGroupField(
   if (!group.config?.fields) return null;
 
   return (
-    <TreeViewSection key={groupId} title={groupId} badge="Group">
-      {mapGroupFields(group, ({ fieldId, field }) => {
+    <TreeViewSection
+      key={groupId}
+      title={groupId}
+      subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      badge="Group"
+    >
+      {getGroupFields(group).map(({ fieldId, field }) => {
         if (isContentRelationshipField(field)) {
           const onContentRelationshipFieldChange = (
             newCrFields: PickerContentRelationshipFieldValue,
@@ -1179,46 +1181,32 @@ function isContentRelationshipField(
   );
 }
 
-function isValidField(fieldId: string, field: DynamicWidget): boolean {
-  return (
-    field.type !== "Slices" &&
-    field.type !== "Choice" &&
-    // Filter out uid fields because it's a special field returned by the
-    // API and is not part of the data object in the document.
-    // We also filter by key "uid", because (as of the time of writing
-    // this), creating any field with that API id will result in it being
-    // used for metadata.
-    (field.type !== "UID" || fieldId !== "uid")
-  );
-}
-
-function mapCustomTypeStaticFields<T>(
-  customType: CustomType,
-  callback: (args: { fieldId: string; field: NestableWidget | Group }) => T,
-): T[] {
-  const fields: T[] = [];
-  for (const [_, tabFields] of Object.entries(customType.json)) {
-    for (const [fieldId, field] of Object.entries(tabFields)) {
-      if (isValidField(fieldId, field)) {
-        fields.push(
-          callback({ fieldId, field: field as NestableWidget | Group }),
-        );
+function getCustomTypeStaticFields(customType: CustomType) {
+  return Object.values(customType.json).flatMap((tabFields) => {
+    return Object.entries(tabFields).flatMap(([fieldId, field]) => {
+      if (
+        field.type !== "Slices" &&
+        field.type !== "Choice" &&
+        // Filter out uid fields because it's a special field returned by the
+        // API and is not part of the data object in the document.
+        // We also filter by key "uid", because (as of the time of writing
+        // this), creating any field with that API id will result in it being
+        // used for metadata.
+        (field.type !== "UID" || fieldId !== "uid")
+      ) {
+        return { fieldId, field: field as NestableWidget | Group };
       }
-    }
-  }
-  return fields;
+
+      return [];
+    });
+  });
 }
 
-function mapGroupFields<T>(
-  group: Group,
-  callback: (args: { fieldId: string; field: NestableWidget }) => T,
-): T[] {
+function getGroupFields(group: Group) {
   if (!group.config?.fields) return [];
-  const fields: T[] = [];
-  for (const [fieldId, field] of Object.entries(group.config.fields)) {
-    fields.push(callback({ fieldId, field: field as NestableWidget }));
-  }
-  return fields;
+  return Object.entries(group.config.fields).map(([fieldId, field]) => {
+    return { fieldId, field: field as NestableWidget };
+  });
 }
 /** If it's a string, return it, otherwise return the `id` property. */
 function getId<T extends string | { id: string }>(customType: T): string {
