@@ -1,5 +1,7 @@
 import { pluralize } from "@prismicio/editor-support/String";
+import { useRequest } from "@prismicio/editor-support/Suspense";
 import {
+  AnimatedSuspense,
   Box,
   Button,
   DropdownMenu,
@@ -7,6 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   Icon,
+  IconButton,
+  Skeleton,
   Text,
   Tooltip,
   TreeView,
@@ -21,10 +25,8 @@ import {
   LinkConfig,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
-import { useSelector } from "react-redux";
 
-import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
-import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
+import { managerClient } from "@/managerClient";
 import { isValidObject } from "@/utils/isValidObject";
 
 /**
@@ -213,6 +215,33 @@ interface ContentRelationshipFieldPickerProps {
 export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
+  return (
+    <AnimatedSuspense
+      fallback={
+        <Box flexDirection="column" position="relative">
+          <Skeleton height={240} />
+          <Box
+            position="absolute"
+            top="50%"
+            left="50%"
+            transform="translate(-50%, -50%)"
+            alignItems="center"
+            gap={8}
+          >
+            <Icon name="autorenew" size="small" color="grey11" />
+            <Text color="grey11">Loading your types...</Text>
+          </Box>
+        </Box>
+      }
+    >
+      <ContentRelationshipFieldPickerContent {...props} />
+    </AnimatedSuspense>
+  );
+}
+
+function ContentRelationshipFieldPickerContent(
+  props: ContentRelationshipFieldPickerProps,
+) {
   const { value, onChange } = props;
   const { availableCustomTypes, pickedCustomTypes } = useCustomTypes(value);
 
@@ -252,7 +281,13 @@ export function ContentRelationshipFieldPicker(
   }
 
   return (
-    <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
+    <Box
+      overflow="hidden"
+      flexDirection="column"
+      border
+      borderRadius={6}
+      width="100%"
+    >
       <Box
         border={{ bottom: true }}
         padding={{ inline: 16, bottom: 16, top: 12 }}
@@ -276,7 +311,7 @@ export function ContentRelationshipFieldPicker(
             {pickedCustomTypes.map((customType) => (
               <Box
                 key={customType.id}
-                gap={6}
+                gap={4}
                 padding={8}
                 border
                 borderRadius={6}
@@ -294,8 +329,11 @@ export function ContentRelationshipFieldPicker(
                     customTypes={pickedCustomTypes}
                   />
                 </TreeView>
-                <RemoveButton
+                <IconButton
+                  icon="close"
+                  size="small"
                   onClick={() => onRemoveCustomType(customType.id)}
+                  sx={{ height: 24, width: 24 }}
                 />
               </Box>
             ))}
@@ -326,22 +364,6 @@ export function ContentRelationshipFieldPicker(
           </a>
         </Text>
       </Box>
-    </Box>
-  );
-}
-
-type RemoveButtonProps = {
-  onClick: () => void;
-};
-
-function RemoveButton(props: RemoveButtonProps) {
-  const { onClick } = props;
-
-  return (
-    <Box padding={{ top: 6 }}>
-      <Button size="small" color="grey" onClick={onClick} invisible>
-        <Icon name="close" size="medium" />
-      </Button>
     </Box>
   );
 }
@@ -413,10 +435,7 @@ function AddTypeButton(props: AddTypeButtonProps) {
 
   const disabledButton = (
     <Box>
-      <Tooltip
-        content="All available custom types have been added"
-        side="bottom"
-      >
+      <Tooltip content="All available types have been added" side="bottom">
         {triggerButton}
       </Tooltip>
     </Box>
@@ -803,15 +822,7 @@ function getExposedFieldsLabel(count: number) {
  * them.
  */
 function useCustomTypes(value: LinkCustomtypes | undefined) {
-  const allCustomTypes = useSelector(selectAllCustomTypes).flatMap<CustomType>(
-    (ct) => {
-      // In the store we have remote and local custom types, we want to show
-      // the local ones, so that the user is able to create a content
-      // relationship with custom types present on the user's computer (pushed
-      // or not).
-      return "local" in ct ? CustomTypes.fromSM(ct.local) : [];
-    },
-  );
+  const allCustomTypes = useRequest(getCustomTypes, []);
 
   if (!value) {
     return { availableCustomTypes: allCustomTypes, pickedCustomTypes: [] };
@@ -824,14 +835,23 @@ function useCustomTypes(value: LinkCustomtypes | undefined) {
     return matchingCt ?? [];
   });
 
-  const availableCustomTypes = allCustomTypes
-    .filter((ct) => pickedCustomTypes.some((v) => v.id === ct.id) === false)
-    .sort((a, b) => a.id.localeCompare(b.id));
+  const availableCustomTypes = allCustomTypes.filter(
+    (ct) => pickedCustomTypes.some((v) => v.id === ct.id) === false,
+  );
 
   return {
     availableCustomTypes,
     pickedCustomTypes,
   };
+}
+
+async function getCustomTypes(): Promise<CustomType[]> {
+  const { errors, models } =
+    await managerClient.customTypes.readAllCustomTypes();
+
+  if (errors.length > 0) throw errors;
+
+  return models.map(({ model }) => model);
 }
 
 function resolveContentRelationshipCustomTypes(
