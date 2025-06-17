@@ -27,11 +27,11 @@ import {
   LinkConfig,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
+import { useEffect, useState } from "react";
 
 import { ErrorBoundary } from "@/ErrorBoundary";
 import { managerClient } from "@/managerClient";
 import { isValidObject } from "@/utils/isValidObject";
-import { useEffect, useState } from "react";
 
 type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
 
