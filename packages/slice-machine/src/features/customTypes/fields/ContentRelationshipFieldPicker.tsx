@@ -26,10 +26,13 @@ import {
   LinkConfig,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ErrorBoundary } from "@/ErrorBoundary";
-import { useCustomTypes as useCustomTypesRequest } from "@/features/customTypes/customTypesTable/useCustomTypes";
+import {
+  revalidateGetCustomTypes,
+  useCustomTypes as useCustomTypesRequest,
+} from "@/features/customTypes/useCustomTypes";
 import { isValidObject } from "@/utils/isValidObject";
 
 type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
@@ -283,7 +286,9 @@ function ContentRelationshipFieldPickerContent(
 
   function addCustomType(id: string) {
     setIsNewType(true);
-    onChange([...(value ?? []), id]);
+
+    const newFields = value ? [...value, id] : [id];
+    onChange(newFields);
   }
 
   function removeCustomType(id: string) {
@@ -885,6 +890,10 @@ function useCustomTypes(value: LinkCustomtypes | undefined): {
   pickedCustomTypes: CustomType[];
 } {
   const { customTypes: allCustomTypes } = useCustomTypesRequest();
+
+  useEffect(() => {
+    void revalidateGetCustomTypes();
+  }, []);
 
   if (!value) {
     return {
