@@ -51,7 +51,7 @@ const createComponentFile = async ({
 				"mcpServers": {
 					"Prismic MCP": {
 						"command": "npx",
-						"args": ["-y", "@prismicio/mcp-server"]
+						"args": ["-y", "@prismicio/mcp-server@latest"]
 					}
 				}
 			}
