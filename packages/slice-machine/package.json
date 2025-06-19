@@ -46,7 +46,7 @@
     "@prismicio/editor-support": "0.4.77",
     "@prismicio/editor-ui": "0.4.77",
     "@prismicio/mock": "0.7.1",
-    "@prismicio/mocks": "2.13.0",
+    "@prismicio/mocks": "2.14.0",
     "@prismicio/simulator": "0.1.4",
     "@prismicio/types-internal": "3.11.2",
     "@radix-ui/react-hover-card": "1.0.6",
