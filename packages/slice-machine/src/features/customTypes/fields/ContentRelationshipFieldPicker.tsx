@@ -1,7 +1,20 @@
 import { pluralize } from "@prismicio/editor-support/String";
 import {
+  AnimatedSuspense,
+  Badge,
   Box,
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  Icon,
+  IconButton,
+  Skeleton,
   Text,
+  TextOverflow,
+  Tooltip,
   TreeView,
   TreeViewCheckbox,
   TreeViewSection,
@@ -13,11 +26,16 @@ import {
   LinkConfig,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
-import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
-import { selectAllCustomTypes } from "@/modules/availableCustomTypes";
+import { ErrorBoundary } from "@/ErrorBoundary";
+import {
+  revalidateGetCustomTypes,
+  useCustomTypes as useCustomTypesRequest,
+} from "@/features/customTypes/useCustomTypes";
 import { isValidObject } from "@/utils/isValidObject";
+
+type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
 
 /**
  * Picker fields check map types. Used internally to keep track of the checked
@@ -205,52 +223,151 @@ interface ContentRelationshipFieldPickerProps {
 export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
+  return (
+    <ErrorBoundary
+      renderError={() => (
+        <Box alignItems="center" gap={8}>
+          <Icon name="alert" size="small" color="tomato10" />
+          <Text color="tomato10">Error loading your types</Text>
+        </Box>
+      )}
+    >
+      <AnimatedSuspense
+        fallback={
+          <Box flexDirection="column" position="relative">
+            <Skeleton height={240} />
+            <Box
+              position="absolute"
+              top="50%"
+              left="50%"
+              transform="translate(-50%, -50%)"
+              alignItems="center"
+              gap={8}
+            >
+              <Icon name="autorenew" size="small" color="grey11" />
+              <Text color="grey11">Loading your types...</Text>
+            </Box>
+          </Box>
+        }
+      >
+        <ContentRelationshipFieldPickerContent {...props} />
+      </AnimatedSuspense>
+    </ErrorBoundary>
+  );
+}
+
+function ContentRelationshipFieldPickerContent(
+  props: ContentRelationshipFieldPickerProps,
+) {
   const { value, onChange } = props;
-  const customTypes = useCustomTypes();
+  const { allCustomTypes, availableCustomTypes, pickedCustomTypes } =
+    useCustomTypes(value);
+
+  const [isNewType, setIsNewType] = useState(false);
 
   const fieldCheckMap = value
     ? convertLinkCustomtypesToFieldCheckMap(value)
     : {};
 
-  function onCustomTypesChange(customTypeId: string, value: PickerCustomType) {
+  function onCustomTypesChange(id: string, newCustomType: PickerCustomType) {
+    // The picker does not handle strings (custom type ids), as it's only meant
+    // to pick fields from custom types (objects). So we need to merge it with
+    // the existing value, which can have strings in the first level that
+    // represent new types added without any picked fields.
     onChange(
-      convertFieldCheckMapToLinkCustomtypes({
-        ...fieldCheckMap,
-        [customTypeId]: value,
+      mergeAndConvertCheckMapToLinkCustomtypes({
+        existingLinkCustomtypes: value,
+        previousPickerCustomtypes: fieldCheckMap,
+        customTypeId: id,
+        newCustomType,
       }),
     );
   }
 
+  function addCustomType(id: string) {
+    setIsNewType(true);
+
+    const newFields = value ? [...value, id] : [id];
+    onChange(newFields);
+  }
+
+  function removeCustomType(id: string) {
+    if (value) {
+      onChange(value.filter((existingCt) => getId(existingCt) !== id));
+    }
+  }
+
   return (
-    <Box overflow="hidden" flexDirection="column" border borderRadius={6}>
+    <Box
+      overflow="hidden"
+      flexDirection="column"
+      border
+      borderRadius={6}
+      width="100%"
+    >
       <Box
         border={{ bottom: true }}
         padding={{ inline: 16, bottom: 16, top: 12 }}
         flexDirection="column"
         gap={8}
       >
-        <Box flexDirection="column">
-          <Text variant="h4" color="grey12">
-            Types
-          </Text>
-          <Text color="grey12">
-            Choose which fields you want to expose from the linked document.
-          </Text>
-        </Box>
-        <TreeView
-          title="Exposed fields"
-          subtitle={`(${countPickedFields(fieldCheckMap)})`}
-        >
-          {customTypes.map((customType) => (
-            <TreeViewCustomType
-              key={customType.id}
-              customType={customType}
-              onChange={(value) => onCustomTypesChange(customType.id, value)}
-              fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
-              customTypes={customTypes}
+        {pickedCustomTypes.length > 0 ? (
+          <>
+            <Box flexDirection="column">
+              <Text variant="h4" color="grey12">
+                Allowed Types
+              </Text>
+              <Text color="grey11">
+                Restrict the selection to specific types your content editors
+                can link to in the Page Builder.
+                <br />
+                For each type, choose which fields to expose in the API
+                response.
+              </Text>
+            </Box>
+            {pickedCustomTypes.map((customType) => (
+              <Box
+                key={customType.id}
+                gap={4}
+                padding={8}
+                border
+                borderRadius={6}
+                borderColor="grey6"
+                backgroundColor="white"
+                justifyContent="space-between"
+              >
+                <TreeView>
+                  <TreeViewCustomType
+                    customType={customType}
+                    onChange={(value) =>
+                      onCustomTypesChange(customType.id, value)
+                    }
+                    fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
+                    allCustomTypes={allCustomTypes}
+                    isNewType={isNewType}
+                  />
+                </TreeView>
+                <IconButton
+                  icon="close"
+                  size="small"
+                  onClick={() => removeCustomType(customType.id)}
+                  sx={{ height: 24, width: 24 }}
+                  hiddenLabel="Remove type"
+                />
+              </Box>
+            ))}
+            <AddTypeButton
+              onSelect={addCustomType}
+              pickedCustomTypes={pickedCustomTypes}
+              availableCustomTypes={availableCustomTypes}
             />
-          ))}
-        </TreeView>
+          </>
+        ) : (
+          <EmptyView
+            onSelect={addCustomType}
+            availableCustomTypes={availableCustomTypes}
+          />
+        )}
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
         <Text variant="normal" color="grey11">
@@ -270,11 +387,122 @@ export function ContentRelationshipFieldPicker(
   );
 }
 
+type EmptyViewProps = {
+  onSelect: (customTypeId: string) => void;
+  availableCustomTypes: CustomType[];
+};
+
+function EmptyView(props: EmptyViewProps) {
+  const { availableCustomTypes, onSelect } = props;
+
+  return (
+    <Box
+      flexDirection="column"
+      gap={8}
+      alignItems="center"
+      padding={{ block: 24 }}
+    >
+      <Box flexDirection="column" alignItems="center" gap={4}>
+        <Text variant="h5" color="grey12">
+          No types selected yet.
+        </Text>
+        <Text color="grey11" component="p" align="center">
+          Add one or more document types your content editors can link to.
+          <br />
+          For each type, select the fields to include in the API response (used
+          in your frontend queries).
+        </Text>
+      </Box>
+      <Box>
+        <AddTypeButton
+          availableCustomTypes={availableCustomTypes}
+          onSelect={onSelect}
+        />
+      </Box>
+    </Box>
+  );
+}
+
+type AddTypeButtonProps = {
+  onSelect: (customTypeId: string) => void;
+  disabled?: boolean;
+  availableCustomTypes: CustomType[];
+  pickedCustomTypes?: CustomType[];
+};
+
+function AddTypeButton(props: AddTypeButtonProps) {
+  const { availableCustomTypes, onSelect, pickedCustomTypes = [] } = props;
+
+  const triggerButton = (
+    <Button
+      startIcon="add"
+      color="grey"
+      disabled={availableCustomTypes.length === 0}
+    >
+      {pickedCustomTypes.length > 0 ? "Add another type" : "Add type"}
+    </Button>
+  );
+
+  const disabledButton = (
+    <Box>
+      <Tooltip
+        content="All available types have been added"
+        side="bottom"
+        align="start"
+        disableHoverableContent
+      >
+        {triggerButton}
+      </Tooltip>
+    </Box>
+  );
+
+  if (availableCustomTypes.length === 0) return disabledButton;
+
+  return (
+    <Box>
+      <DropdownMenu>
+        <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
+        <DropdownMenuContent
+          maxHeight={400}
+          minWidth={256}
+          align={pickedCustomTypes.length > 0 ? "start" : "center"}
+        >
+          <DropdownMenuLabel>
+            <Text color="grey11">Types</Text>
+          </DropdownMenuLabel>
+          {availableCustomTypes.map((customType) => (
+            <DropdownMenuItem
+              key={customType.id}
+              onSelect={() => onSelect(customType.id)}
+            >
+              <Box alignItems="center" justifyContent="space-between" gap={8}>
+                <TextOverflow>
+                  <Text>{customType.id}</Text>
+                </TextOverflow>
+                <Badge
+                  title={
+                    <Text variant="extraSmall" color="purple11">
+                      {getTypeFormatLabel(customType.format)}
+                    </Text>
+                  }
+                  color="purple"
+                  size="small"
+                />
+              </Box>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Box>
+  );
+}
+
 interface TreeViewCustomTypeProps {
   customType: CustomType;
   fieldCheckMap: PickerCustomType;
   onChange: (newValue: PickerCustomType) => void;
-  customTypes: CustomType[];
+  allCustomTypes: CustomType[];
+  isNewType: boolean;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
@@ -282,7 +510,8 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     customType,
     fieldCheckMap: customTypeFieldsCheckMap,
     onChange: onCustomTypeChange,
-    customTypes,
+    allCustomTypes,
+    isNewType,
   } = props;
 
   const renderedFields = getCustomTypeStaticFields(customType).map(
@@ -312,7 +541,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 ? groupFieldCheckMap.value
                 : {}
             }
-            customTypes={customTypes}
+            allCustomTypes={allCustomTypes}
           />
         );
       }
@@ -345,7 +574,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
                 ? crFieldCheckMap.value
                 : {}
             }
-            customTypes={customTypes}
+            allCustomTypes={allCustomTypes}
           />
         );
       }
@@ -370,28 +599,34 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     },
   );
 
-  if (renderedFields.length === 0) return null;
-
+  const exposedFieldsCount = countPickedFields(customTypeFieldsCheckMap);
   return (
     <TreeViewSection
       key={customType.id}
       title={customType.id}
-      subtitle={getExposedFieldsLabel(
-        countPickedFields(customTypeFieldsCheckMap),
-      )}
-      badge={customType.format === "page" ? "Page type" : "Custom type"}
+      subtitle={
+        exposedFieldsCount > 0
+          ? getExposedFieldsLabel(exposedFieldsCount)
+          : "(No fields returned in the API)"
+      }
+      badge={getTypeFormatLabel(customType.format)}
+      defaultOpen={isNewType}
     >
-      {renderedFields}
+      {renderedFields.length > 0 ? (
+        renderedFields
+      ) : (
+        <Text color="grey11">No available fields to select</Text>
+      )}
     </TreeViewSection>
   );
 }
 
 interface TreeViewContentRelationshipFieldProps {
-  field: Link;
   fieldId: string;
+  field: Link;
   fieldCheckMap: PickerContentRelationshipFieldValue;
   onChange: (newValue: PickerContentRelationshipFieldValue) => void;
-  customTypes: CustomType[];
+  allCustomTypes: CustomType[];
 }
 
 function TreeViewContentRelationshipField(
@@ -402,14 +637,14 @@ function TreeViewContentRelationshipField(
     fieldId,
     fieldCheckMap: crFieldsCheckMap,
     onChange: onCrFieldChange,
-    customTypes,
+    allCustomTypes,
   } = props;
 
   if (!field.config?.customtypes) return null;
 
   const resolvedCustomTypes = resolveContentRelationshipCustomTypes(
     field.config.customtypes,
-    customTypes,
+    allCustomTypes,
   );
 
   if (resolvedCustomTypes.length === 0) return null;
@@ -493,7 +728,7 @@ function TreeViewContentRelationshipField(
             subtitle={getExposedFieldsLabel(
               countPickedFields(nestedCtFieldsCheckMap),
             )}
-            badge={customType.format === "page" ? "Page type" : "Custom type"}
+            badge={getTypeFormatLabel(customType.format)}
           >
             {renderedFields}
           </TreeViewSection>
@@ -557,7 +792,7 @@ interface TreeViewFirstLevelGroupFieldProps {
   groupId: string;
   fieldCheckMap: PickerFirstLevelGroupFieldValue;
   onChange: (newValue: PickerFirstLevelGroupFieldValue) => void;
-  customTypes: CustomType[];
+  allCustomTypes: CustomType[];
 }
 
 function TreeViewFirstLevelGroupField(
@@ -568,7 +803,7 @@ function TreeViewFirstLevelGroupField(
     groupId,
     fieldCheckMap: groupFieldsCheckMap,
     onChange: onGroupFieldChange,
-    customTypes,
+    allCustomTypes,
   } = props;
 
   if (!group.config?.fields) return null;
@@ -607,7 +842,7 @@ function TreeViewFirstLevelGroupField(
                   : {}
               }
               onChange={onContentRelationshipFieldChange}
-              customTypes={customTypes}
+              allCustomTypes={allCustomTypes}
             />
           );
         }
@@ -634,26 +869,51 @@ function TreeViewFirstLevelGroupField(
 
 function getExposedFieldsLabel(count: number) {
   if (count === 0) return undefined;
-  return `(${count} ${pluralize(count, "field", "fields")} exposed)`;
+  return `(${count} ${pluralize(
+    count,
+    "field",
+    "fields",
+  )} returned in the API)`;
 }
 
-/**
- * Gets all the existing local custom types from the store, filters and sorts
- * them.
- */
-function useCustomTypes(): CustomType[] {
-  const allCustomTypes = useSelector(selectAllCustomTypes);
-  const localCustomTypes = allCustomTypes.flatMap<CustomType>((ct) => {
-    // In the store we have remote and local custom types, we want to show
-    // the local ones, so that the user is able to create a content
-    // relationship with custom types present on the user's computer (pushed
-    // or not).
-    return "local" in ct ? CustomTypes.fromSM(ct.local) : [];
-  });
+function getTypeFormatLabel(format: CustomType["format"]) {
+  return format === "page" ? "Page type" : "Custom type";
+}
 
-  localCustomTypes.sort((a, b) => a.id.localeCompare(b.id));
+/** Retrieves all existing page & custom types. */
+function useCustomTypes(value: LinkCustomtypes | undefined): {
+  /** Every existing custom type, used to discover nested custom types down the tree. */
+  allCustomTypes: CustomType[];
+  /** The custom types that are not yet picked. */
+  availableCustomTypes: CustomType[];
+  /** The custom types that are already picked. */
+  pickedCustomTypes: CustomType[];
+} {
+  const { customTypes: allCustomTypes } = useCustomTypesRequest();
 
-  return localCustomTypes;
+  useEffect(() => {
+    void revalidateGetCustomTypes();
+  }, []);
+
+  if (!value) {
+    return {
+      allCustomTypes,
+      availableCustomTypes: allCustomTypes,
+      pickedCustomTypes: [],
+    };
+  }
+
+  const pickedCustomTypes = value.flatMap(
+    (pickedCt) => allCustomTypes.find((ct) => ct.id === getId(pickedCt)) ?? [],
+  );
+
+  return {
+    allCustomTypes,
+    pickedCustomTypes,
+    availableCustomTypes: allCustomTypes.filter(
+      (ct) => pickedCustomTypes.some((pct) => pct.id === ct.id) === false,
+    ),
+  };
 }
 
 function resolveContentRelationshipCustomTypes(
@@ -761,12 +1021,60 @@ function createContentRelationshipFieldCheckMap(
 }
 
 /**
+ * Merges the existing Link `customtypes` array with the picker state, ensuring
+ * that conversions from to string (custom type id) to object and vice versa are
+ * made correctly and that the order is preserved.
+ */
+function mergeAndConvertCheckMapToLinkCustomtypes(args: {
+  existingLinkCustomtypes: LinkCustomtypes | undefined;
+  previousPickerCustomtypes: PickerCustomTypes;
+  newCustomType: PickerCustomType;
+  customTypeId: string;
+}): LinkCustomtypes {
+  const {
+    existingLinkCustomtypes,
+    previousPickerCustomtypes,
+    newCustomType,
+    customTypeId,
+  } = args;
+
+  const result: NonReadonly<LinkCustomtypes> = [];
+  const pickerLinkCustomtypes = convertFieldCheckMapToLinkCustomtypes({
+    ...previousPickerCustomtypes,
+    [customTypeId]: newCustomType,
+  });
+
+  if (!existingLinkCustomtypes) return pickerLinkCustomtypes;
+
+  for (const existingLinkCt of existingLinkCustomtypes) {
+    const existingPickerLinkCt = pickerLinkCustomtypes.find((ct) => {
+      return getId(ct) === getId(existingLinkCt);
+    });
+
+    if (existingPickerLinkCt !== undefined) {
+      // Custom type with exposed fields, keep the customtypes object
+      result.push(existingPickerLinkCt);
+    } else if (getId(existingLinkCt) === customTypeId) {
+      // Custom type that had exposed fields, but now has none, change to string
+      result.push(getId(existingLinkCt));
+    } else {
+      // Custom type without exposed fields, keep the string
+      result.push(existingLinkCt);
+    }
+  }
+
+  return result;
+}
+
+/**
  * Converts a picker fields check map structure ({@link PickerCustomTypes}) into
  * Link config `customtypes` ({@link LinkCustomtypes}) and filter out empty Custom
  * types.
  */
-function convertFieldCheckMapToLinkCustomtypes(map: PickerCustomTypes) {
-  return Object.entries(map).flatMap<LinkCustomtypes[number]>(
+function convertFieldCheckMapToLinkCustomtypes(
+  checkMap: PickerCustomTypes,
+): LinkCustomtypes {
+  return Object.entries(checkMap).flatMap<LinkCustomtypes[number]>(
     ([ctId, ctFields]) => {
       const fields = Object.entries(ctFields).flatMap<
         | string
@@ -908,4 +1216,9 @@ function getGroupFields(group: Group) {
   return Object.entries(group.config.fields).map(([fieldId, field]) => {
     return { fieldId, field: field as NestableWidget };
   });
+}
+/** If it's a string, return it, otherwise return the `id` property. */
+function getId<T extends string | { id: string }>(customType: T): string {
+  if (typeof customType === "string") return customType;
+  return customType.id;
 }
