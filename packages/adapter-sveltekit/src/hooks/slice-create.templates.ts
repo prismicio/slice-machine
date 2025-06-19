@@ -19,7 +19,7 @@ Get AI-powered help to build your slice components — based on your actual mode
   "mcpServers": {
     "Prismic MCP": {
       "command": "npx",
-      "args": ["-y", "@prismicio/mcp-server"]
+      "args": ["-y", "@prismicio/mcp-server@latest"]
     }
   }
 }
