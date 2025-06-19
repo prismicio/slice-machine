@@ -19,6 +19,10 @@ assignees: ""
 - slice-machine-ui: <!-- ex: v0.1.0 -->
 - node: <!-- ex: v12.14.0 -->
 
+### When did this happen?
+
+<!-- Please provide the date and time (with timezone) when the issue occurred. This helps us check logs and troubleshoot more effectively. -->
+
 ### Reproduction
 
 <!-- Link to a minimal test case, without a reproduction, it is so hard to address problem :( -->
