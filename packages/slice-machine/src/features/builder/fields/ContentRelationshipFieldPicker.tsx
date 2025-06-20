@@ -314,17 +314,48 @@ function ContentRelationshipFieldPickerContent(
                 Allowed type
               </Text>
               <Text color="grey11">
-                Restrict the selection to a specific type your content editors
-                can link to in the Page Builder.
+                Select a single type that editors can link to in the Page
+                Builder.
                 <br />
-                For the selected type, choose which fields to expose in the API
+                For the selected type, choose which fields to include in the API
                 response.
               </Text>
               {pickedCustomTypes.length > 1 && (
                 <Box margin={{ block: 12 }}>
                   <Alert
                     color="warn"
-                    subtitle="This field is using the legacy types selection feature. We recommend having only one type selected in order to switch to the new type selection feature."
+                    icon="alert"
+                    subtitle={
+                      <>
+                        <Text color="inherit" variant="bold">
+                          Legacy mode. Keep one custom type to enable the
+                          improved Content Relationship feature.
+                        </Text>
+                        <br />
+                        <a
+                          href="https://prismic.io/docs/fields/content-relationship"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            color: "inherit",
+                            textDecoration: "none",
+                            fontWeight: "bold",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 4,
+                          }}
+                        >
+                          <Text color="inherit" variant="bold">
+                            See documentation
+                          </Text>
+                          <Icon
+                            name="arrowForward"
+                            size="small"
+                            color="inherit"
+                          />
+                        </a>
+                      </>
+                    }
                   />
                 </Box>
               )}
@@ -404,13 +435,12 @@ function EmptyView(props: EmptyViewProps) {
     >
       <Box flexDirection="column" alignItems="center" gap={4}>
         <Text variant="h5" color="grey12">
-          No types selected yet.
+          No type selected
         </Text>
         <Text color="grey11" component="p" align="center">
-          Add one type your content editors can link to.
+          Select a type editors can link to.
           <br />
-          For the selected type, select the fields to include in the API
-          response (used in your frontend queries).
+          Then, choose which fields to return in the API.
         </Text>
       </Box>
       <Box>
@@ -437,7 +467,7 @@ function AddTypeButton(props: AddTypeButtonProps) {
   const disabledButton = (
     <Box>
       <Tooltip
-        content="No custom type available"
+        content="No type available"
         side="bottom"
         align="start"
         disableHoverableContent
