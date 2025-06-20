@@ -29,10 +29,8 @@ import { SingleIcon } from "@/icons/SingleIcon";
 
 import { CUSTOM_TYPES_CONFIG } from "../customTypesConfig";
 import { EditDropdown } from "../EditDropdown";
-import {
-  useCustomTypes,
-  useCustomTypesAutoRevalidation,
-} from "./useCustomTypes";
+import { useCustomTypes } from "../useCustomTypes";
+import { useCustomTypesAutoRevalidation } from "./useCustomTypesAutoRevalidation";
 
 type CustomTypesTableProps = {
   format: CustomTypeFormat;
