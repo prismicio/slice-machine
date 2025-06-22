@@ -1,5 +1,6 @@
 import { pluralize } from "@prismicio/editor-support/String";
 import {
+  Alert,
   AnimatedSuspense,
   Badge,
   Box,
@@ -26,7 +27,7 @@ import {
   LinkConfig,
   NestableWidget,
 } from "@prismicio/types-internal/lib/customtypes";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { ErrorBoundary } from "@/ErrorBoundary";
 import {
@@ -260,10 +261,7 @@ function ContentRelationshipFieldPickerContent(
   props: ContentRelationshipFieldPickerProps,
 ) {
   const { value, onChange } = props;
-  const { allCustomTypes, availableCustomTypes, pickedCustomTypes } =
-    useCustomTypes(value);
-
-  const [isNewType, setIsNewType] = useState(false);
+  const { allCustomTypes, pickedCustomTypes } = useCustomTypes(value);
 
   const fieldCheckMap = value
     ? convertLinkCustomtypesToFieldCheckMap(value)
@@ -285,8 +283,6 @@ function ContentRelationshipFieldPickerContent(
   }
 
   function addCustomType(id: string) {
-    setIsNewType(true);
-
     const newFields = value ? [...value, id] : [id];
     onChange(newFields);
   }
@@ -315,15 +311,54 @@ function ContentRelationshipFieldPickerContent(
           <>
             <Box flexDirection="column">
               <Text variant="h4" color="grey12">
-                Allowed Types
+                Allowed type
               </Text>
               <Text color="grey11">
-                Restrict the selection to specific types your content editors
-                can link to in the Page Builder.
+                Select a single type that editors can link to in the Page
+                Builder.
                 <br />
-                For each type, choose which fields to expose in the API
+                For the selected type, choose which fields to include in the API
                 response.
               </Text>
+              {pickedCustomTypes.length > 1 && (
+                <Box margin={{ block: 12 }}>
+                  <Alert
+                    color="warn"
+                    icon="alert"
+                    subtitle={
+                      <>
+                        <Text color="inherit" variant="bold">
+                          Legacy mode. Keep only one type to enable the improved
+                          Content Relationship feature.
+                        </Text>
+                        <br />
+                        <a
+                          href="https://prismic.io/docs/fields/content-relationship"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            color: "inherit",
+                            textDecoration: "none",
+                            fontWeight: "bold",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 4,
+                          }}
+                        >
+                          <Text color="inherit" variant="bold">
+                            See documentation
+                          </Text>
+                          <Icon
+                            name="arrowForward"
+                            size="small"
+                            color="inherit"
+                          />
+                        </a>
+                      </>
+                    }
+                  />
+                </Box>
+              )}
             </Box>
             {pickedCustomTypes.map((customType) => (
               <Box
@@ -336,17 +371,21 @@ function ContentRelationshipFieldPickerContent(
                 backgroundColor="white"
                 justifyContent="space-between"
               >
-                <TreeView>
-                  <TreeViewCustomType
-                    customType={customType}
-                    onChange={(value) =>
-                      onCustomTypesChange(customType.id, value)
-                    }
-                    fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
-                    allCustomTypes={allCustomTypes}
-                    isNewType={isNewType}
-                  />
-                </TreeView>
+                {pickedCustomTypes.length > 1 ? (
+                  <Text>{customType.id}</Text>
+                ) : (
+                  <TreeView>
+                    <TreeViewCustomType
+                      customType={customType}
+                      onChange={(value) =>
+                        onCustomTypesChange(customType.id, value)
+                      }
+                      fieldCheckMap={fieldCheckMap[customType.id] ?? {}}
+                      allCustomTypes={allCustomTypes}
+                    />
+                  </TreeView>
+                )}
+
                 <IconButton
                   icon="close"
                   size="small"
@@ -356,17 +395,9 @@ function ContentRelationshipFieldPickerContent(
                 />
               </Box>
             ))}
-            <AddTypeButton
-              onSelect={addCustomType}
-              pickedCustomTypes={pickedCustomTypes}
-              availableCustomTypes={availableCustomTypes}
-            />
           </>
         ) : (
-          <EmptyView
-            onSelect={addCustomType}
-            availableCustomTypes={availableCustomTypes}
-          />
+          <EmptyView onSelect={addCustomType} allCustomTypes={allCustomTypes} />
         )}
       </Box>
       <Box backgroundColor="white" flexDirection="column" padding={12}>
@@ -389,11 +420,11 @@ function ContentRelationshipFieldPickerContent(
 
 type EmptyViewProps = {
   onSelect: (customTypeId: string) => void;
-  availableCustomTypes: CustomType[];
+  allCustomTypes: CustomType[];
 };
 
 function EmptyView(props: EmptyViewProps) {
-  const { availableCustomTypes, onSelect } = props;
+  const { allCustomTypes, onSelect } = props;
 
   return (
     <Box
@@ -404,20 +435,16 @@ function EmptyView(props: EmptyViewProps) {
     >
       <Box flexDirection="column" alignItems="center" gap={4}>
         <Text variant="h5" color="grey12">
-          No types selected yet.
+          No type selected
         </Text>
         <Text color="grey11" component="p" align="center">
-          Add one or more document types your content editors can link to.
+          Select the type editors can link to.
           <br />
-          For each type, select the fields to include in the API response (used
-          in your frontend queries).
+          Then, choose which fields to return in the API.
         </Text>
       </Box>
       <Box>
-        <AddTypeButton
-          availableCustomTypes={availableCustomTypes}
-          onSelect={onSelect}
-        />
+        <AddTypeButton allCustomTypes={allCustomTypes} onSelect={onSelect} />
       </Box>
     </Box>
   );
@@ -425,28 +452,22 @@ function EmptyView(props: EmptyViewProps) {
 
 type AddTypeButtonProps = {
   onSelect: (customTypeId: string) => void;
-  disabled?: boolean;
-  availableCustomTypes: CustomType[];
-  pickedCustomTypes?: CustomType[];
+  allCustomTypes: CustomType[];
 };
 
 function AddTypeButton(props: AddTypeButtonProps) {
-  const { availableCustomTypes, onSelect, pickedCustomTypes = [] } = props;
+  const { allCustomTypes, onSelect } = props;
 
   const triggerButton = (
-    <Button
-      startIcon="add"
-      color="grey"
-      disabled={availableCustomTypes.length === 0}
-    >
-      {pickedCustomTypes.length > 0 ? "Add another type" : "Add type"}
+    <Button startIcon="add" color="grey" disabled={allCustomTypes.length === 0}>
+      Add type
     </Button>
   );
 
   const disabledButton = (
     <Box>
       <Tooltip
-        content="All available types have been added"
+        content="No type available"
         side="bottom"
         align="start"
         disableHoverableContent
@@ -456,21 +477,17 @@ function AddTypeButton(props: AddTypeButtonProps) {
     </Box>
   );
 
-  if (availableCustomTypes.length === 0) return disabledButton;
+  if (allCustomTypes.length === 0) return disabledButton;
 
   return (
     <Box>
       <DropdownMenu>
         <DropdownMenuTrigger>{triggerButton}</DropdownMenuTrigger>
-        <DropdownMenuContent
-          maxHeight={400}
-          minWidth={256}
-          align={pickedCustomTypes.length > 0 ? "start" : "center"}
-        >
+        <DropdownMenuContent maxHeight={400} minWidth={256} align="center">
           <DropdownMenuLabel>
             <Text color="grey11">Types</Text>
           </DropdownMenuLabel>
-          {availableCustomTypes.map((customType) => (
+          {allCustomTypes.map((customType) => (
             <DropdownMenuItem
               key={customType.id}
               onSelect={() => onSelect(customType.id)}
@@ -502,7 +519,6 @@ interface TreeViewCustomTypeProps {
   fieldCheckMap: PickerCustomType;
   onChange: (newValue: PickerCustomType) => void;
   allCustomTypes: CustomType[];
-  isNewType: boolean;
 }
 
 function TreeViewCustomType(props: TreeViewCustomTypeProps) {
@@ -511,7 +527,6 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     fieldCheckMap: customTypeFieldsCheckMap,
     onChange: onCustomTypeChange,
     allCustomTypes,
-    isNewType,
   } = props;
 
   const renderedFields = getCustomTypeStaticFields(customType).map(
@@ -610,7 +625,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
           : "(No fields returned in the API)"
       }
       badge={getTypeFormatLabel(customType.format)}
-      defaultOpen={isNewType}
+      defaultOpen
     >
       {renderedFields.length > 0 ? (
         renderedFields
@@ -882,10 +897,8 @@ function getTypeFormatLabel(format: CustomType["format"]) {
 
 /** Retrieves all existing page & custom types. */
 function useCustomTypes(value: LinkCustomtypes | undefined): {
-  /** Every existing custom type, used to discover nested custom types down the tree. */
+  /** Every existing custom type, used to discover nested custom types down the tree and the add type dropdown. */
   allCustomTypes: CustomType[];
-  /** The custom types that are not yet picked. */
-  availableCustomTypes: CustomType[];
   /** The custom types that are already picked. */
   pickedCustomTypes: CustomType[];
 } {
@@ -898,7 +911,6 @@ function useCustomTypes(value: LinkCustomtypes | undefined): {
   if (!value) {
     return {
       allCustomTypes,
-      availableCustomTypes: allCustomTypes,
       pickedCustomTypes: [],
     };
   }
@@ -910,9 +922,6 @@ function useCustomTypes(value: LinkCustomtypes | undefined): {
   return {
     allCustomTypes,
     pickedCustomTypes,
-    availableCustomTypes: allCustomTypes.filter(
-      (ct) => pickedCustomTypes.some((pct) => pct.id === ct.id) === false,
-    ),
   };
 }
 
