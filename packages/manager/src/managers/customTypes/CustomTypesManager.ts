@@ -827,7 +827,7 @@ function updateFieldContentRelationships<
 	}
 
 	const newCustomTypes = field.config.customtypes.map((customType) => {
-		return updateCRCustomType({ customType, ...updateMeta });
+		return updateCRCustomType({ ...updateMeta, customType });
 	});
 
 	return {
