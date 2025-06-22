@@ -328,8 +328,8 @@ function ContentRelationshipFieldPickerContent(
                     subtitle={
                       <>
                         <Text color="inherit" variant="bold">
-                          Legacy mode. Keep one custom type to enable the
-                          improved Content Relationship feature.
+                          Legacy mode. Keep only one type to enable the improved
+                          Content Relationship feature.
                         </Text>
                         <br />
                         <a
@@ -438,7 +438,7 @@ function EmptyView(props: EmptyViewProps) {
           No type selected
         </Text>
         <Text color="grey11" component="p" align="center">
-          Select a type editors can link to.
+          Select the type editors can link to.
           <br />
           Then, choose which fields to return in the API.
         </Text>
