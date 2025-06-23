@@ -3,7 +3,7 @@ import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
 
-import { ContentRelationshipFieldPicker } from "@/features/customTypes/fields/ContentRelationshipFieldPicker";
+import { ContentRelationshipFieldPicker } from "@/features/builder/fields/ContentRelationshipFieldPicker";
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
@@ -12,31 +12,8 @@ import { DefaultFields } from "@/legacy/lib/forms/defaults";
 const FormFields = {
   label: DefaultFields.label,
   id: DefaultFields.id,
-  // TODO: Validate customtypes using existing types-internal codec
   customtypes: {
-    validate: () =>
-      yup.array(
-        yup.object({
-          id: yup.string().required(),
-          fields: yup.array(
-            yup.lazy((value) =>
-              typeof value === "object"
-                ? yup.object({
-                    id: yup.string().required(),
-                    customtypes: yup
-                      .array(
-                        yup.object({
-                          id: yup.string().required(),
-                          fields: yup.array(yup.string()).required(),
-                        }),
-                      )
-                      .required(),
-                  })
-                : yup.string(),
-            ),
-          ),
-        }),
-      ),
+    validate: () => yup.array(),
   },
 };
 

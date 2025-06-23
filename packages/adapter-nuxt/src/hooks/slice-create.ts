@@ -51,7 +51,7 @@ const createComponentFile = async ({
 				"mcpServers": {
 					"Prismic MCP": {
 						"command": "npx",
-						"args": ["-y", "@prismicio/mcp-server"]
+						"args": ["-y", "@prismicio/mcp-server@latest"]
 					}
 				}
 			}
@@ -62,7 +62,8 @@ const createComponentFile = async ({
 				"Code this slice"
 
 			Your code editor reads your slice model and helps you code faster ⚡
-			📚 Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
+			🎙️ Give your feedback: https://community.prismic.io/t/help-us-shape-the-future-of-slice-creation/19505
+			📚 Documentation: https://prismic.io/docs/ai#code-with-prismics-mcp-server
 		-->`;
 
 	if (data.componentContents) {

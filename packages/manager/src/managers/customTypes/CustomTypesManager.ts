@@ -77,23 +77,29 @@ type SliceMachineManagerUpdateCustomTypeMocksConfigArgs = {
 	mocksConfig: Record<string, unknown>;
 };
 
-export type SliceMachineManagerUpdateCustomTypeArgs =
-	CustomTypeUpdateHookData & {
-		updateMeta?: {
-			fieldIdChanged?: {
-				/**
-				 * Previous path of the changed field. Can be used to identify the field
-				 * that had an API ID rename (e.g. ["page", "title"])
-				 */
-				previousPath: string[];
-				/**
-				 * New path of the changed field. Can be used to identify the field that
-				 * had an API ID rename (e.g. ["page", "title2"])
-				 */
-				newPath: string[];
-			};
-		};
+/** `[field]` or `[group, field]` – path **inside** the Custom Type */
+type PathWithoutCustomType = [string] | [string, string];
+
+type SliceMachineManagerUpdateCustomTypeFieldIdChanged = {
+	/**
+	 * Previous path of the changed field, excluding the custom type id. Can be
+	 * used to identify the field that had an API ID rename (e.g. ["fieldA"] or
+	 * ["groupA", "fieldA"])
+	 */
+	previousPath: PathWithoutCustomType;
+	/**
+	 * New path of the changed field, excluding the custom type id. Can be used to
+	 * identify the field that had an API ID rename (e.g. ["fieldB"] or ["groupA",
+	 * "fieldB"])
+	 */
+	newPath: PathWithoutCustomType;
+};
+
+type SliceMachineManagerUpdateCustomTypeArgs = CustomTypeUpdateHookData & {
+	updateMeta?: {
+		fieldIdChanged?: SliceMachineManagerUpdateCustomTypeFieldIdChanged;
 	};
+};
 
 type SliceMachineManagerUpdateCustomTypeMocksConfigArgsReturnType = {
 	errors: HookError[];
@@ -111,9 +117,12 @@ type CustomTypesMachineManagerUpdateCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
+/** `[ct, field]` or `[ct, group, field]` – path **with** Custom Type ID */
+type PathWithCustomType = [string, string] | [string, string, string];
+
 type CustomTypeFieldIdChangedMeta = {
-	previousPath: string[];
-	newPath: string[];
+	previousPath: PathWithCustomType;
+	newPath: PathWithCustomType;
 };
 
 type LinkCustomType = NonNullable<LinkConfig["customtypes"]>[number];
@@ -209,7 +218,9 @@ export class CustomTypesManager extends BaseManager {
 	 * property.
 	 */
 	private async updateContentRelationships(
-		args: { model: CustomType } & CustomTypeFieldIdChangedMeta,
+		args: {
+			model: CustomType;
+		} & SliceMachineManagerUpdateCustomTypeFieldIdChanged,
 	): Promise<
 		OnlyHookErrors<CallHookReturnType<CustomTypeUpdateHook>> & {
 			rollback?: () => Promise<void>;
@@ -217,12 +228,16 @@ export class CustomTypesManager extends BaseManager {
 	> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
-		const { model } = args;
-		let { newPath, previousPath } = args;
+		const {
+			model,
+			previousPath: previousFieldPath,
+			newPath: newFieldPath,
+		} = args;
 
-		if (previousPath.join(".") !== newPath.join(".")) {
-			previousPath = [model.id, ...previousPath];
-			newPath = [model.id, ...newPath];
+		if (previousFieldPath.join(".") !== newFieldPath.join(".")) {
+			const { id: ctId } = model;
+			const previousPath: PathWithCustomType = [ctId, ...previousFieldPath];
+			const newPath: PathWithCustomType = [ctId, ...newFieldPath];
 
 			const crUpdates: {
 				updatePromise: Promise<{ errors: HookError[] }>;
@@ -578,13 +593,21 @@ function updateCRCustomType(
 
 	if (!previousPath.customTypeId || !newPath.customTypeId) {
 		throw new Error(
-			"Could not find a customtype id in previousPath and/or newPath, which should not be possible.",
+			`Could not find a customtype id in previousPath (${args.previousPath.join(
+				".",
+			)}) and/or newPath (${args.newPath.join(
+				".",
+			)}), which should not be possible.`,
 		);
 	}
 
 	if (!previousPath.fieldId || !newPath.fieldId) {
 		throw new Error(
-			"Could not find a field id in previousPath and/or newPath, which should not be possible.",
+			`Could not find a field id in previousPath (${args.previousPath.join(
+				".",
+			)}) and/or newPath (${args.newPath.join(
+				".",
+			)}), which should not be possible.`,
 		);
 	}
 
@@ -706,8 +729,8 @@ function updateContentRelationshipFields(args: {
 				fields: readonly (string | { id: string; fields: readonly string[] })[];
 		  }
 	)[];
-	previousPath: CrUpdatePath;
-	newPath: CrUpdatePath;
+	previousPath: CrUpdatePathIds;
+	newPath: CrUpdatePathIds;
 }) {
 	const { customtypes, previousPath, newPath } = args;
 
@@ -804,7 +827,7 @@ function updateFieldContentRelationships<
 	}
 
 	const newCustomTypes = field.config.customtypes.map((customType) => {
-		return updateCRCustomType({ customType, ...updateMeta });
+		return updateCRCustomType({ ...updateMeta, customType });
 	});
 
 	return {
@@ -869,13 +892,21 @@ export function updateSharedSliceContentRelationships(
 	}
 }
 
-interface CrUpdatePath {
+interface CrUpdatePathIds {
 	customTypeId: string;
 	groupId: string | undefined;
 	fieldId: string;
 }
 
-function getPathIds(path: string[]): CrUpdatePath {
+function getPathIds(path: PathWithCustomType): CrUpdatePathIds {
+	if (path.length < 2) {
+		throw new Error(
+			`Unexpected path length ${
+				path.length
+			}. Expected at least 2 segments (got: ${path.join(".")}).`,
+		);
+	}
+
 	const [customTypeId, groupOrFieldId, fieldId] = path;
 
 	return {
