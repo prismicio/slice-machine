@@ -53,8 +53,10 @@ test("I see that linked content relationships are updated when a custom type API
     .getEditFieldButton("my_content_relationship")
     .click();
 
-  const section = page.getByRole("button", { name: "Expand item" });
-  await section.getByText(ct1Id).click();
+  await page.getByRole("button", { name: "Add type" }).click();
+
+  // click on a div menuitem with the text ct1Id
+  await page.getByRole("menuitem", { name: ct1Id }).click();
 
   await page.getByLabel("my_rich_text").click();
 
@@ -95,11 +97,6 @@ test("I see that linked content relationships are updated when a custom type API
 
   await pageTypesBuilderPage
     .getEditFieldButton("my_content_relationship")
-    .click();
-
-  await page
-    .getByRole("button", { name: "Expand item" })
-    .getByText(ct1Id)
     .click();
 
   await expect(page.getByLabel("my_rich_text_renamed")).toBeChecked();
