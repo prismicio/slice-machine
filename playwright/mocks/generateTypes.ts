@@ -54,8 +54,8 @@ type GenerateTypeArgs = {
   fields?: CustomType["json"][string];
 };
 
-export function generateType(args: GenerateTypeArgs): CustomType {
-  const { format = "page", libraries, fields, id } = args;
+export function generateType(args?: GenerateTypeArgs): CustomType {
+  const { format = "page", libraries, fields, id } = args ?? {};
 
   return {
     id: id || `MyType0ID${generateRandomId()}`,

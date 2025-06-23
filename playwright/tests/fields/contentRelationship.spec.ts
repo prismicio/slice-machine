@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { generateRandomId } from "../../utils";
 
-test("I see that linked content relationships are updated when a custom type API ID is renamed", async ({
+test("I see that linked content relationships are updated when a field API ID is renamed", async ({
   customTypesTablePage,
   pageTypesBuilderPage,
   customTypesBuilderPage,
@@ -24,8 +24,20 @@ test("I see that linked content relationships are updated when a custom type API
 
   await pageTypesBuilderPage.addStaticField({
     type: "Rich Text",
-    name: "My Rich Text",
-    expectedId: "my_rich_text",
+    name: "My Regular Field",
+    expectedId: "my_regular_field",
+  });
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Repeatable Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Field Inside Group",
+    expectedId: "my_field_inside_group",
+    groupFieldId: "my_group",
   });
 
   await customTypesTablePage.goto();
@@ -58,7 +70,13 @@ test("I see that linked content relationships are updated when a custom type API
   // click on a div menuitem with the text ct1Id
   await page.getByRole("menuitem", { name: ct1Id }).click();
 
-  await page.getByLabel("my_rich_text").click();
+  await page.getByLabel("my_regular_field").click();
+
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_group")
+    .click();
+  await page.getByLabel("my_field_inside_group").click();
 
   await pageTypesBuilderPage.editFieldDialog.submitButton.click();
 
@@ -72,18 +90,26 @@ test("I see that linked content relationships are updated when a custom type API
   await customTypeRow.click();
 
   await expect(
-    pageTypesBuilderPage.getListItemFieldId("my_rich_text"),
+    pageTypesBuilderPage.getListItemFieldId("my_regular_field"),
   ).toBeVisible();
 
-  await pageTypesBuilderPage.getEditFieldButton("my_rich_text").click();
+  await pageTypesBuilderPage.getEditFieldButton("my_regular_field").click();
 
   await pageTypesBuilderPage.editFieldDialog.editField({
-    name: "My Rich Text",
-    newName: "My Rich Text Renamed",
-    newId: "my_rich_text_renamed",
+    name: "My Regular Field",
+    newName: "My Regular Field Renamed",
+    newId: "my_regular_field_renamed",
   });
 
   await expect(pageTypesBuilderPage.autoSaveStatusSaved).toBeVisible();
+
+  await pageTypesBuilderPage.getEditFieldButton("my_group").first().click();
+
+  await pageTypesBuilderPage.editFieldDialog.editField({
+    name: "My Group",
+    newName: "My Group Renamed",
+    newId: "my_group_renamed",
+  });
 
   // Check that the custom relationship was also updated
 
@@ -99,5 +125,12 @@ test("I see that linked content relationships are updated when a custom type API
     .getEditFieldButton("my_content_relationship")
     .click();
 
-  await expect(page.getByLabel("my_rich_text_renamed")).toBeChecked();
+  await expect(page.getByLabel("my_regular_field_renamed")).toBeChecked();
+
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_group_renamed")
+    .click();
+  await expect(page.getByText("my_group_renamed")).toBeVisible();
+  await expect(page.getByLabel("my_field_inside_group")).toBeChecked();
 });
