@@ -95,7 +95,7 @@
 		"next": "14.2.30",
 		"prettier": "3.0.3",
 		"prettier-plugin-jsdoc": "1.1.1",
-		"prismic-ts-codegen": "0.1.25",
+		"prismic-ts-codegen": "0.1.27-alpha.1",
 		"react": "18.2.0",
 		"rollup-plugin-preserve-directives": "0.4.0",
 		"size-limit": "8.2.4",

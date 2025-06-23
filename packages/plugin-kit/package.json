@@ -72,7 +72,7 @@
 		"io-ts-reporters": "^2.0.1",
 		"p-limit": "^4.0.0",
 		"prettier": "^3.0.3",
-		"prismic-ts-codegen": "0.1.25"
+		"prismic-ts-codegen": "0.1.27-alpha.1"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "0.7.1",
