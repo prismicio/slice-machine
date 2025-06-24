@@ -4,6 +4,7 @@ import {
   DynamicSection,
   DynamicSlices,
   DynamicSlicesConfig,
+  DynamicWidget,
   Group,
   NestableWidget,
   SlicesFieldType,
@@ -73,6 +74,11 @@ type CreateArgs = {
 
 export function getFormat(customType: CustomType): CustomTypeFormat {
   return customType.format ?? "custom";
+}
+
+export function getFormatLabel(customType: CustomType) {
+  const format = getFormat(customType);
+  return format === "page" ? "Page type" : "Custom type";
 }
 
 export function getSectionEntries(
@@ -666,3 +672,27 @@ const DEFAULT_SEO_TAB: CustomType["json"] = {
     },
   },
 };
+
+function isStaticZoneField(
+  field: DynamicWidget,
+): field is UID | NestableWidget | Group {
+  return field.type !== "Choice" && field.type !== "Slices";
+}
+
+export function getAllStaticZoneFields(
+  customType: CustomType,
+): Record<string, UID | NestableWidget | Group> {
+  const sectionEntries = getSectionEntries(customType);
+
+  return sectionEntries.reduce<Record<string, UID | NestableWidget | Group>>(
+    (allFields, [_, section]) => {
+      Object.entries(section).forEach(([fieldId, field]) => {
+        if (isStaticZoneField(field)) {
+          allFields[fieldId] = field;
+        }
+      });
+      return allFields;
+    },
+    {},
+  );
+}

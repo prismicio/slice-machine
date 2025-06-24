@@ -87,3 +87,17 @@ export function deleteFieldFromGroup(args: {
 
   return newGroup;
 }
+
+/**
+ * Returns all fields in a group.
+ *
+ * @returns An array of objects with the field id and field.
+ */
+export function getGroupFields(
+  group: Group,
+): { fieldId: string; field: NestableWidget | Group }[] {
+  if (!group.config?.fields) return [];
+  return Object.entries(group.config.fields).map(([fieldId, field]) => {
+    return { fieldId, field };
+  });
+}
