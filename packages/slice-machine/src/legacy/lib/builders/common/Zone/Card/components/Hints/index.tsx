@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 
-import { Hint as ContentRelationshipHint } from "@/features/contentRelationship/Hint";
+import { Hint as ContentRelationshipHint } from "@/features/builder/fields/contentRelationship/Hint";
 import { managerClient } from "@/managerClient";
 
 import CodeBlock, { Item, RenderHintBaseFN } from "./CodeBlock";
