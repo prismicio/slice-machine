@@ -3,7 +3,7 @@ import { Link } from "@prismicio/types-internal/lib/customtypes/widgets";
 import {
   convertLinkCustomtypesToFieldCheckMap,
   countPickedFields,
-} from "@/features/builder/fields/ContentRelationshipFieldPicker";
+} from "@/features/builder/fields/contentRelationship/ContentRelationshipFieldPicker";
 
 export function getLinkTrackingProperties(field: Link) {
   return {
