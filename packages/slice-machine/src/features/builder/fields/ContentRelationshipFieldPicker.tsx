@@ -1179,30 +1179,28 @@ function createContentRelationshipLinkCustomtypes(
  * It's not type safe, but checks the type of the values at runtime so that
  * it only recurses into valid objects, and only counts checkbox fields.
  */
+type CountPickedFieldsResult = {
+  pickedFields: number;
+  nestedPickedFields: number;
+};
+
 export function countPickedFields(
   fields: Record<string, unknown> | undefined,
   isNested = false,
-): {
-  pickedFields: number;
-  nestedPickedFields: number;
-} {
+): CountPickedFieldsResult {
   if (!fields) return { pickedFields: 0, nestedPickedFields: 0 };
 
-  return Object.values(fields).reduce<{
-    pickedFields: number;
-    nestedPickedFields: number;
-  }>(
-    (accumulator, value) => {
-      if (!isValidObject(value)) return accumulator;
+  return Object.values(fields).reduce<CountPickedFieldsResult>(
+    (result, value) => {
+      if (!isValidObject(value)) return result;
 
       if ("type" in value && value.type === "checkbox") {
         const isChecked = Boolean(value.value);
-        if (!isChecked) return accumulator;
+        if (!isChecked) return result;
 
         return {
-          pickedFields: accumulator.pickedFields + 1,
-          nestedPickedFields:
-            accumulator.nestedPickedFields + (isNested ? 1 : 0),
+          pickedFields: result.pickedFields + 1,
+          nestedPickedFields: result.nestedPickedFields + (isNested ? 1 : 0),
         };
       }
 
@@ -1211,9 +1209,8 @@ export function countPickedFields(
         const { nestedPickedFields } = countPickedFields(value, true);
 
         return {
-          pickedFields: accumulator.pickedFields + pickedFields,
-          nestedPickedFields:
-            accumulator.nestedPickedFields + nestedPickedFields,
+          pickedFields: result.pickedFields + pickedFields,
+          nestedPickedFields: result.nestedPickedFields + nestedPickedFields,
         };
       }
 
@@ -1221,8 +1218,8 @@ export function countPickedFields(
       const { nestedPickedFields } = countPickedFields(value, isNested);
 
       return {
-        pickedFields: accumulator.pickedFields + pickedFields,
-        nestedPickedFields: accumulator.nestedPickedFields + nestedPickedFields,
+        pickedFields: result.pickedFields + pickedFields,
+        nestedPickedFields: result.nestedPickedFields + nestedPickedFields,
       };
     },
     {
