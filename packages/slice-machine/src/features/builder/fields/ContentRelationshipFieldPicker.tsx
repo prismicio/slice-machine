@@ -1216,7 +1216,7 @@ function getCustomTypeStaticFields(customType: CustomType) {
         // used for metadata.
         (field.type !== "UID" || fieldId !== "uid")
       ) {
-        return { fieldId, field };
+        return { fieldId, field: field as NestableWidget | Group };
       }
 
       return [];
@@ -1226,10 +1226,9 @@ function getCustomTypeStaticFields(customType: CustomType) {
 
 function getGroupFields(group: Group) {
   if (!group.config?.fields) return [];
-  return Object.entries(group.config.fields).map(([fieldId, field]) => ({
-    fieldId,
-    field,
-  }));
+  return Object.entries(group.config.fields).map(([fieldId, field]) => {
+    return { fieldId, field: field as NestableWidget };
+  });
 }
 
 /** If it's a string, return it, otherwise return the `id` property. */
