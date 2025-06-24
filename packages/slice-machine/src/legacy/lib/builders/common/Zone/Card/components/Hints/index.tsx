@@ -1,7 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 
-import { Hint as NewContentRelationshipHint } from "@/features/contentRelationship/Hint";
+import { Hint as ContentRelationshipHint } from "@/features/contentRelationship/Hint";
 import { managerClient } from "@/managerClient";
 
 import CodeBlock, { Item, RenderHintBaseFN } from "./CodeBlock";
@@ -66,12 +66,8 @@ const RegularHint: React.FC<HintProps> = ({
 const Hint: React.FC<HintProps> = (props) => {
   const { item } = props;
 
-  if (
-    item.value.type === "Link" &&
-    item.value.config?.customtypes !== undefined &&
-    item.value.config.customtypes.some((ct) => typeof ct === "object") === true
-  ) {
-    return <NewContentRelationshipHint show={props.show} />;
+  if (item.value.type === "Link" && item.value.config?.select === "document") {
+    return <ContentRelationshipHint show={props.show} />;
   }
 
   return <RegularHint {...props} />;
