@@ -11,17 +11,16 @@ export function Hint(args: { show: boolean }) {
     >
       <Text variant="normal" color="grey11">
         No code snippet for this field.{" "}
-        <a
+        <Text
+          component="a"
           href="https://prismic.io/docs/fields/content-relationship"
-          target="_blank"
           rel="noopener noreferrer"
-          style={{
-            color: "inherit",
-            textDecoration: "underline",
-          }}
+          target="_blank"
+          color="grey11"
+          underline
         >
           Check the docs
-        </a>{" "}
+        </Text>{" "}
         for an example.
       </Text>
     </Box>
