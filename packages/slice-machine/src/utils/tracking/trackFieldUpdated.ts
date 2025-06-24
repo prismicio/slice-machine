@@ -8,6 +8,7 @@ import { telemetry } from "@/apiClient";
 import { SlicePrimaryFieldSM } from "@/legacy/lib/models/common/Slice";
 
 import { getContentTypeForTracking } from "./getContentTypeForTracking";
+import { getLinkTrackingProperties } from "./getLinkTrackingProperties";
 
 type TrackFieldUpdatedArgs = {
   id: string;
@@ -28,10 +29,6 @@ export function trackFieldUpdated(args: TrackFieldUpdatedArgs) {
     type: field.type,
     isInAGroup,
     contentType: getContentTypeForTracking(window.location.pathname),
-    ...(field.type === "Link" && {
-      allowText: field.config?.allowText,
-      repeat: field.config?.repeat,
-      variants: field.config?.variants,
-    }),
+    ...(field.type === "Link" && getLinkTrackingProperties(field)),
   });
 }

@@ -533,7 +533,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     ({ fieldId, field }) => {
       // Group field
 
-      if (isGroupField(field)) {
+      if (field.type === "Group") {
         const onGroupFieldChange = (
           newGroupFields: PickerFirstLevelGroupFieldValue,
         ) => {
@@ -620,8 +620,8 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       key={customType.id}
       title={customType.id}
       subtitle={
-        exposedFieldsCount > 0
-          ? getExposedFieldsLabel(exposedFieldsCount)
+        exposedFieldsCount.pickedFields > 0
+          ? getExposedFieldsLabel(exposedFieldsCount.pickedFields)
           : "(No fields returned in the API)"
       }
       badge={getTypeFormatLabel(customType.format)}
@@ -667,7 +667,9 @@ function TreeViewContentRelationshipField(
   return (
     <TreeViewSection
       title={fieldId}
-      subtitle={getExposedFieldsLabel(countPickedFields(crFieldsCheckMap))}
+      subtitle={getExposedFieldsLabel(
+        countPickedFields(crFieldsCheckMap).pickedFields,
+      )}
     >
       {resolvedCustomTypes.map((customType) => {
         if (typeof customType === "string") return null;
@@ -687,7 +689,7 @@ function TreeViewContentRelationshipField(
           ({ fieldId, field }) => {
             // Group field
 
-            if (isGroupField(field)) {
+            if (field.type === "Group") {
               const onGroupFieldsChange = (
                 newGroupFields: PickerLeafGroupFieldValue,
               ) => {
@@ -741,7 +743,7 @@ function TreeViewContentRelationshipField(
             key={customType.id}
             title={customType.id}
             subtitle={getExposedFieldsLabel(
-              countPickedFields(nestedCtFieldsCheckMap),
+              countPickedFields(nestedCtFieldsCheckMap).pickedFields,
             )}
             badge={getTypeFormatLabel(customType.format)}
           >
@@ -794,7 +796,9 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      subtitle={getExposedFieldsLabel(
+        countPickedFields(groupFieldsCheckMap).pickedFields,
+      )}
       badge="Group"
     >
       {renderedFields}
@@ -827,7 +831,9 @@ function TreeViewFirstLevelGroupField(
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      subtitle={getExposedFieldsLabel(
+        countPickedFields(groupFieldsCheckMap).pickedFields,
+      )}
       badge="Group"
     >
       {getGroupFields(group).map(({ fieldId, field }) => {
@@ -941,7 +947,7 @@ function resolveContentRelationshipCustomTypes(
  * Converts a Link config `customtypes` ({@link LinkCustomtypes}) structure into
  * picker fields check map ({@link PickerCustomTypes}).
  */
-function convertLinkCustomtypesToFieldCheckMap(
+export function convertLinkCustomtypesToFieldCheckMap(
   customTypes: LinkCustomtypes,
 ): PickerCustomTypes {
   return customTypes.reduce<PickerCustomTypes>((customTypes, customType) => {
@@ -1167,26 +1173,63 @@ function createContentRelationshipLinkCustomtypes(
  * Generic recursive function that goes down the fields check map and counts all
  * the properties that are set to true, which correspond to selected fields.
  *
+ * Distinguishes between all picked fields and nested picked fields within a
+ * content relationship field.
+ *
  * It's not type safe, but checks the type of the values at runtime so that
  * it only recurses into valid objects, and only counts checkbox fields.
  */
-function countPickedFields(
+export function countPickedFields(
   fields: Record<string, unknown> | undefined,
-): number {
-  if (!fields) return 0;
-  return Object.values(fields).reduce<number>((count, value) => {
-    if (!isValidObject(value)) return count;
-    if (isCheckboxValue(value)) return count + (value.value ? 1 : 0);
-    return count + countPickedFields(value);
-  }, 0);
-}
-function isCheckboxValue(value: unknown): value is PickerCheckboxField {
-  if (!isValidObject(value)) return false;
-  return "type" in value && value.type === "checkbox";
-}
+  isNested = false,
+): {
+  pickedFields: number;
+  nestedPickedFields: number;
+} {
+  if (!fields) return { pickedFields: 0, nestedPickedFields: 0 };
 
-function isGroupField(field: NestableWidget | Group): field is Group {
-  return field.type === "Group";
+  return Object.values(fields).reduce<{
+    pickedFields: number;
+    nestedPickedFields: number;
+  }>(
+    (accumulator, value) => {
+      if (!isValidObject(value)) return accumulator;
+
+      if ("type" in value && value.type === "checkbox") {
+        const isChecked = Boolean(value.value);
+        if (!isChecked) return accumulator;
+
+        return {
+          pickedFields: accumulator.pickedFields + 1,
+          nestedPickedFields:
+            accumulator.nestedPickedFields + (isNested ? 1 : 0),
+        };
+      }
+
+      if ("type" in value && value.type === "contentRelationship") {
+        const { pickedFields } = countPickedFields(value, isNested);
+        const { nestedPickedFields } = countPickedFields(value, true);
+
+        return {
+          pickedFields: accumulator.pickedFields + pickedFields,
+          nestedPickedFields:
+            accumulator.nestedPickedFields + nestedPickedFields,
+        };
+      }
+
+      const { pickedFields } = countPickedFields(value, isNested);
+      const { nestedPickedFields } = countPickedFields(value, isNested);
+
+      return {
+        pickedFields: accumulator.pickedFields + pickedFields,
+        nestedPickedFields: accumulator.nestedPickedFields + nestedPickedFields,
+      };
+    },
+    {
+      pickedFields: 0,
+      nestedPickedFields: 0,
+    },
+  );
 }
 
 function isContentRelationshipField(
