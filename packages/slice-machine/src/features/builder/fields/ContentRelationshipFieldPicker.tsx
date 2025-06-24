@@ -628,11 +628,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       badge={getTypeFormatLabel(customType.format)}
       defaultOpen
     >
-      {renderedFields.length > 0 ? (
-        renderedFields
-      ) : (
-        <Text color="grey11">No available fields to select</Text>
-      )}
+      {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
     </TreeViewSection>
   );
 }
@@ -744,16 +740,16 @@ function TreeViewContentRelationshipField(
             )}
             badge={getTypeFormatLabel(customType.format)}
           >
-            {renderedFields.length > 0 ? (
-              renderedFields
-            ) : (
-              <Text color="grey11">No available fields to select</Text>
-            )}
+            {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
           </TreeViewSection>
         );
       })}
     </TreeViewSection>
   );
+}
+
+function NoFieldsAvailable() {
+  return <Text color="grey11">No available fields to select</Text>;
 }
 
 interface TreeViewLeafGroupFieldProps {
@@ -791,8 +787,6 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
     );
   });
 
-  if (renderedFields.length === 0) return null;
-
   return (
     <TreeViewSection
       key={groupId}
@@ -800,7 +794,7 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
       subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
       badge="Group"
     >
-      {renderedFields}
+      {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
     </TreeViewSection>
   );
 }
@@ -824,7 +818,58 @@ function TreeViewFirstLevelGroupField(
     allCustomTypes,
   } = props;
 
-  if (!group.config?.fields) return null;
+  const renderedFields = getGroupFields(group).map(({ fieldId, field }) => {
+    // Content relationship field with custom types
+
+    if (isContentRelationshipFieldWithCustomTypes(field)) {
+      const onContentRelationshipFieldChange = (
+        newCrFields: PickerContentRelationshipFieldValue,
+      ) => {
+        onGroupFieldChange({
+          ...groupFieldsCheckMap,
+          [fieldId]: {
+            type: "contentRelationship",
+            value: newCrFields,
+          },
+        });
+      };
+
+      const crFieldCheckMap = groupFieldsCheckMap[fieldId] ?? {};
+
+      return (
+        <TreeViewContentRelationshipField
+          key={fieldId}
+          field={field}
+          fieldId={fieldId}
+          fieldCheckMap={
+            crFieldCheckMap.type === "contentRelationship"
+              ? crFieldCheckMap.value
+              : {}
+          }
+          onChange={onContentRelationshipFieldChange}
+          allCustomTypes={allCustomTypes}
+        />
+      );
+    }
+
+    // Regular field
+
+    const onCheckedChange = (newChecked: boolean) => {
+      onGroupFieldChange({
+        ...groupFieldsCheckMap,
+        [fieldId]: { type: "checkbox", value: newChecked },
+      });
+    };
+
+    return (
+      <TreeViewCheckbox
+        key={fieldId}
+        title={fieldId}
+        checked={groupFieldsCheckMap[fieldId]?.value === true}
+        onCheckedChange={onCheckedChange}
+      />
+    );
+  });
 
   return (
     <TreeViewSection
@@ -833,58 +878,7 @@ function TreeViewFirstLevelGroupField(
       subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
       badge="Group"
     >
-      {getGroupFields(group).map(({ fieldId, field }) => {
-        // Content relationship field with custom types
-
-        if (isContentRelationshipFieldWithCustomTypes(field)) {
-          const onContentRelationshipFieldChange = (
-            newCrFields: PickerContentRelationshipFieldValue,
-          ) => {
-            onGroupFieldChange({
-              ...groupFieldsCheckMap,
-              [fieldId]: {
-                type: "contentRelationship",
-                value: newCrFields,
-              },
-            });
-          };
-
-          const crFieldCheckMap = groupFieldsCheckMap[fieldId] ?? {};
-
-          return (
-            <TreeViewContentRelationshipField
-              key={fieldId}
-              field={field}
-              fieldId={fieldId}
-              fieldCheckMap={
-                crFieldCheckMap.type === "contentRelationship"
-                  ? crFieldCheckMap.value
-                  : {}
-              }
-              onChange={onContentRelationshipFieldChange}
-              allCustomTypes={allCustomTypes}
-            />
-          );
-        }
-
-        // Regular field
-
-        const onCheckedChange = (newChecked: boolean) => {
-          onGroupFieldChange({
-            ...groupFieldsCheckMap,
-            [fieldId]: { type: "checkbox", value: newChecked },
-          });
-        };
-
-        return (
-          <TreeViewCheckbox
-            key={fieldId}
-            title={fieldId}
-            checked={groupFieldsCheckMap[fieldId]?.value === true}
-            onCheckedChange={onCheckedChange}
-          />
-        );
-      })}
+      {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
     </TreeViewSection>
   );
 }
@@ -1234,10 +1228,15 @@ function getCustomTypeStaticFields(customType: CustomType) {
 
 function getGroupFields(group: Group) {
   if (!group.config?.fields) return [];
-  return Object.entries(group.config.fields).map(([fieldId, field]) => {
+
+  const groupFieldEntries = Object.entries(group.config.fields);
+  if (groupFieldEntries.length === 0) return [];
+
+  return groupFieldEntries.map(([fieldId, field]) => {
     return { fieldId, field: field as NestableWidget };
   });
 }
+
 /** If it's a string, return it, otherwise return the `id` property. */
 function getId<T extends string | { id: string }>(customType: T): string {
   if (typeof customType === "string") return customType;
