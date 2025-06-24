@@ -926,11 +926,9 @@ function resolveContentRelationshipCustomTypes(
   linkCustomtypes: LinkCustomtypes,
   localCustomTypes: CustomType[],
 ): CustomType[] {
-  const fields = linkCustomtypes.flatMap<CustomType>((linkCustomtype) => {
+  return linkCustomtypes.flatMap((linkCustomtype) => {
     return localCustomTypes.find((ct) => ct.id === getId(linkCustomtype)) ?? [];
   });
-
-  return fields;
 }
 
 /**
