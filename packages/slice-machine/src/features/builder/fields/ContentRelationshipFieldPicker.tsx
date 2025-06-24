@@ -622,7 +622,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       title={customType.id}
       subtitle={
         exposedFieldsCount > 0
-          ? getExposedFieldsLabel(exposedFieldsCount)
+          ? getSelectedFieldsLabel(exposedFieldsCount, "returned in the API")
           : "(No fields returned in the API)"
       }
       badge={getTypeFormatLabel(customType.format)}
@@ -664,7 +664,7 @@ function TreeViewContentRelationshipField(
   return (
     <TreeViewSection
       title={fieldId}
-      subtitle={getExposedFieldsLabel(countPickedFields(crFieldsCheckMap))}
+      subtitle={getSelectedFieldsLabel(countPickedFields(crFieldsCheckMap))}
     >
       {resolvedCustomTypes.map((customType) => {
         if (typeof customType === "string") return null;
@@ -735,7 +735,7 @@ function TreeViewContentRelationshipField(
           <TreeViewSection
             key={customType.id}
             title={customType.id}
-            subtitle={getExposedFieldsLabel(
+            subtitle={getSelectedFieldsLabel(
               countPickedFields(nestedCtFieldsCheckMap),
             )}
             badge={getTypeFormatLabel(customType.format)}
@@ -791,7 +791,7 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      subtitle={getSelectedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
       badge="Group"
     >
       {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
@@ -875,7 +875,7 @@ function TreeViewFirstLevelGroupField(
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getExposedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      subtitle={getSelectedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
       badge="Group"
     >
       {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
@@ -883,13 +883,9 @@ function TreeViewFirstLevelGroupField(
   );
 }
 
-function getExposedFieldsLabel(count: number) {
+function getSelectedFieldsLabel(count: number, suffix = "selected") {
   if (count === 0) return undefined;
-  return `(${count} ${pluralize(
-    count,
-    "field",
-    "fields",
-  )} returned in the API)`;
+  return `(${count} ${pluralize(count, "field", "fields")} ${suffix})`;
 }
 
 function getTypeFormatLabel(format: CustomType["format"]) {
@@ -1201,7 +1197,7 @@ function isContentRelationshipFieldWithCustomTypes(
   return !!(
     isContentRelationshipField(field) &&
     field.config?.customtypes &&
-    field.config.customtypes.length > 0
+    field.config.customtypes.length === 1
   );
 }
 
