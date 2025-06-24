@@ -923,11 +923,11 @@ function useCustomTypes(value: LinkCustomtypes | undefined): {
 }
 
 function resolveContentRelationshipCustomTypes(
-  customTypes: LinkCustomtypes,
+  linkCustomtypes: LinkCustomtypes,
   localCustomTypes: CustomType[],
 ): CustomType[] {
-  const fields = customTypes.flatMap<CustomType>((customType) => {
-    return localCustomTypes.find((ct) => ct.id === getId(customType)) ?? [];
+  const fields = linkCustomtypes.flatMap<CustomType>((linkCustomtype) => {
+    return localCustomTypes.find((ct) => ct.id === getId(linkCustomtype)) ?? [];
   });
 
   return fields;
