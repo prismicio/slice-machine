@@ -1,5 +1,6 @@
+import { Text as EditorUiText } from "@prismicio/editor-ui";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { Box, Text } from "theme-ui";
+import { Box, Flex, Text } from "theme-ui";
 
 import Li from "@/legacy/components/Li";
 import ListItem from "@/legacy/components/ListItem";
@@ -92,7 +93,34 @@ const FieldZone = ({
                   testId: `list-item-${item.key}`,
                 };
 
-                const HintElement = (
+                const HintElement = isNewContentRelationshipField(item) ? (
+                  <Flex
+                    sx={{
+                      p: 2,
+                      px: 3,
+                      alignItems: "center",
+                      borderTop: "1px solid",
+                      borderColor: "borders",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <EditorUiText variant="normal" color="grey11">
+                      No code snippet for this field.{" "}
+                      <a
+                        href="https://prismic.io/docs/fields/content-relationship"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "inherit",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        Check the docs
+                      </a>{" "}
+                      for an example.
+                    </EditorUiText>
+                  </Flex>
+                ) : (
                   <Hint
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
                     item={item}
@@ -128,5 +156,16 @@ const FieldZone = ({
     </DragDropContext>
   );
 };
+
+function isNewContentRelationshipField(item) {
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    item.value.type === "Link" &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    item.value.config?.customtypes !== undefined &&
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    item.value.config.customtypes.some((ct) => typeof ct === "object") === true
+  );
+}
 
 export default FieldZone;
