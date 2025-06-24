@@ -561,9 +561,13 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
         );
       }
 
-      // Content relationship field
+      // Content relationship field with custom types
 
-      if (isContentRelationshipField(field)) {
+      if (
+        isContentRelationshipField(field) &&
+        field.config?.customtypes &&
+        field.config.customtypes.length > 0
+      ) {
         const onContentRelationshipFieldChange = (
           newCrFields: PickerContentRelationshipFieldValue,
         ) => {
@@ -734,8 +738,6 @@ function TreeViewContentRelationshipField(
           },
         );
 
-        if (renderedFields.length === 0) return null;
-
         return (
           <TreeViewSection
             key={customType.id}
@@ -745,7 +747,11 @@ function TreeViewContentRelationshipField(
             )}
             badge={getTypeFormatLabel(customType.format)}
           >
-            {renderedFields}
+            {renderedFields.length > 0 ? (
+              renderedFields
+            ) : (
+              <Text color="grey11">No available fields to select</Text>
+            )}
           </TreeViewSection>
         );
       })}
@@ -930,8 +936,7 @@ function resolveContentRelationshipCustomTypes(
   localCustomTypes: CustomType[],
 ): CustomType[] {
   const fields = customTypes.flatMap<CustomType>((customType) => {
-    if (typeof customType === "string") return [];
-    return localCustomTypes.find((ct) => ct.id === customType.id) ?? [];
+    return localCustomTypes.find((ct) => ct.id === getId(customType)) ?? [];
   });
 
   return fields;
@@ -1192,11 +1197,7 @@ function isGroupField(field: NestableWidget | Group): field is Group {
 function isContentRelationshipField(
   field: NestableWidget | Group,
 ): field is Link {
-  return (
-    field.type === "Link" &&
-    field.config?.select === "document" &&
-    field.config?.customtypes !== undefined
-  );
+  return field.type === "Link" && field.config?.select === "document";
 }
 
 function getCustomTypeStaticFields(customType: CustomType) {
