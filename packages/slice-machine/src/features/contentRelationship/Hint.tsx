@@ -1,19 +1,13 @@
-import { Text } from "@prismicio/editor-ui";
-import { Flex } from "theme-ui";
+import { Box, Text } from "@prismicio/editor-ui";
 
 export function Hint(args: { show: boolean }) {
   if (!args.show) return null;
 
   return (
-    <Flex
-      sx={{
-        p: 2,
-        px: 3,
-        alignItems: "center",
-        borderTop: "1px solid",
-        borderColor: "borders",
-        justifyContent: "space-between",
-      }}
+    <Box
+      padding={{ block: 8, inline: 16 }}
+      border={{ top: true }}
+      borderColor="grey6"
     >
       <Text variant="normal" color="grey11">
         No code snippet for this field.{" "}
@@ -30,6 +24,6 @@ export function Hint(args: { show: boolean }) {
         </a>{" "}
         for an example.
       </Text>
-    </Flex>
+    </Box>
   );
 }
