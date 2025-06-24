@@ -1,6 +1,7 @@
 import React from "react";
 import useSWR from "swr";
 
+import { Hint as NewContentRelationshipHint } from "@/features/contentRelationship/Hint";
 import { managerClient } from "@/managerClient";
 
 import CodeBlock, { Item, RenderHintBaseFN } from "./CodeBlock";
@@ -12,7 +13,7 @@ interface HintProps {
   hintItemName?: string;
 }
 
-const Hint: React.FC<HintProps> = ({
+const RegularHint: React.FC<HintProps> = ({
   show,
   renderHintBase,
   item,
@@ -60,6 +61,20 @@ const Hint: React.FC<HintProps> = ({
       <CodeBlock code={snippets[0].code} lang={snippets[0].language} />
     </div>
   );
+};
+
+const Hint: React.FC<HintProps> = (props) => {
+  const { item } = props;
+
+  if (
+    item.value.type === "Link" &&
+    item.value.config?.customtypes !== undefined &&
+    item.value.config.customtypes.some((ct) => typeof ct === "object") === true
+  ) {
+    return <NewContentRelationshipHint show={props.show} />;
+  }
+
+  return <RegularHint {...props} />;
 };
 
 export default Hint;
