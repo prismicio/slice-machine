@@ -563,11 +563,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
       // Content relationship field with custom types
 
-      if (
-        isContentRelationshipField(field) &&
-        field.config?.customtypes &&
-        field.config.customtypes.length > 0
-      ) {
+      if (isContentRelationshipFieldWithCustomTypes(field)) {
         const onContentRelationshipFieldChange = (
           newCrFields: PickerContentRelationshipFieldValue,
         ) => {
@@ -619,6 +615,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   );
 
   const exposedFieldsCount = countPickedFields(customTypeFieldsCheckMap);
+
   return (
     <TreeViewSection
       key={customType.id}
@@ -837,7 +834,9 @@ function TreeViewFirstLevelGroupField(
       badge="Group"
     >
       {getGroupFields(group).map(({ fieldId, field }) => {
-        if (isContentRelationshipField(field)) {
+        // Content relationship field with custom types
+
+        if (isContentRelationshipFieldWithCustomTypes(field)) {
           const onContentRelationshipFieldChange = (
             newCrFields: PickerContentRelationshipFieldValue,
           ) => {
@@ -867,6 +866,8 @@ function TreeViewFirstLevelGroupField(
             />
           );
         }
+
+        // Regular field
 
         const onCheckedChange = (newChecked: boolean) => {
           onGroupFieldChange({
@@ -1198,6 +1199,16 @@ function isContentRelationshipField(
   field: NestableWidget | Group,
 ): field is Link {
   return field.type === "Link" && field.config?.select === "document";
+}
+
+function isContentRelationshipFieldWithCustomTypes(
+  field: NestableWidget | Group,
+): field is Link {
+  return !!(
+    isContentRelationshipField(field) &&
+    field.config?.customtypes &&
+    field.config.customtypes.length > 0
+  );
 }
 
 function getCustomTypeStaticFields(customType: CustomType) {
