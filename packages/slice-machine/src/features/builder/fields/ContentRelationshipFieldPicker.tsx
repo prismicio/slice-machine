@@ -563,7 +563,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
       // Content relationship field with custom types
 
-      if (isContentRelationshipFieldWithCustomTypes(field)) {
+      if (isContentRelationshipFieldWithSingleCustomtype(field)) {
         const onContentRelationshipFieldChange = (
           newCrFields: PickerContentRelationshipFieldValue,
         ) => {
@@ -821,7 +821,7 @@ function TreeViewFirstLevelGroupField(
   const renderedFields = getGroupFields(group).map(({ fieldId, field }) => {
     // Content relationship field with custom types
 
-    if (isContentRelationshipFieldWithCustomTypes(field)) {
+    if (isContentRelationshipFieldWithSingleCustomtype(field)) {
       const onContentRelationshipFieldChange = (
         newCrFields: PickerContentRelationshipFieldValue,
       ) => {
@@ -1191,7 +1191,11 @@ function isContentRelationshipField(
   return field.type === "Link" && field.config?.select === "document";
 }
 
-function isContentRelationshipFieldWithCustomTypes(
+/**
+ * Check if the field is a Content Relationship Link with a **single** custom
+ * type. CRs with multiple custom types are not currently supported (legacy).
+ */
+function isContentRelationshipFieldWithSingleCustomtype(
   field: NestableWidget | Group,
 ): field is Link {
   return !!(
