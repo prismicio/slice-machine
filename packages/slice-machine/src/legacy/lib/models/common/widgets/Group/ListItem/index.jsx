@@ -253,53 +253,53 @@ export const CustomListItem = ({
                           testId: `list-item-group-${groupItem.key}-${item.key}`,
                         };
 
-                        const HintElement = isNewContentRelationshipField(
-                          item,
-                        ) ? (
-                          <Flex
-                            sx={{
-                              p: 2,
-                              px: 3,
-                              alignItems: "center",
-                              borderTop: "1px solid",
-                              borderColor: "borders",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <EditorUiText variant="normal" color="grey11">
-                              No code snippet for this field.{" "}
-                              <a
-                                href="https://prismic.io/docs/fields/content-relationship"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                  color: "inherit",
-                                  textDecoration: "underline",
-                                }}
-                              >
-                                Check the docs
-                              </a>{" "}
-                              for an example.
-                            </EditorUiText>
-                          </Flex>
-                        ) : (
-                          <Hint
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
-                            item={item}
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            show={showHints}
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            isRepeatable={isRepeatable}
-                            renderHintBase={({ item }) =>
-                              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
-                              `${hintBase}${transformKeyAccessor(item.key)}`
-                            }
-                            hintItemName={widget.hintItemName}
-                            Widgets={Widgets}
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
-                          />
-                        );
+                        const HintElement =
+                          isNewContentRelationshipField(item) &&
+                          showHints === true ? (
+                            <Flex
+                              sx={{
+                                p: 2,
+                                px: 3,
+                                alignItems: "center",
+                                borderTop: "1px solid",
+                                borderColor: "borders",
+                                justifyContent: "space-between",
+                              }}
+                            >
+                              <EditorUiText variant="normal" color="grey11">
+                                No code snippet for this field.{" "}
+                                <a
+                                  href="https://prismic.io/docs/fields/content-relationship"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{
+                                    color: "inherit",
+                                    textDecoration: "underline",
+                                  }}
+                                >
+                                  Check the docs
+                                </a>{" "}
+                                for an example.
+                              </EditorUiText>
+                            </Flex>
+                          ) : (
+                            <Hint
+                              // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
+                              item={item}
+                              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                              show={showHints}
+                              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                              isRepeatable={isRepeatable}
+                              renderHintBase={({ item }) =>
+                                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions, @typescript-eslint/no-unsafe-member-access
+                                `${hintBase}${transformKeyAccessor(item.key)}`
+                              }
+                              hintItemName={widget.hintItemName}
+                              Widgets={Widgets}
+                              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                              typeName={widget.CUSTOM_NAME || widget.TYPE_NAME}
+                            />
+                          );
 
                         if (widget.CustomListItem) {
                           const { CustomListItem } = widget;
