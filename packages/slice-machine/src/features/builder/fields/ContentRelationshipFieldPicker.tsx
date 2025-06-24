@@ -1169,6 +1169,11 @@ function createContentRelationshipLinkCustomtypes(
   );
 }
 
+type CountPickedFieldsResult = {
+  pickedFields: number;
+  nestedPickedFields: number;
+};
+
 /**
  * Generic recursive function that goes down the fields check map and counts all
  * the properties that are set to true, which correspond to selected fields.
@@ -1179,11 +1184,6 @@ function createContentRelationshipLinkCustomtypes(
  * It's not type safe, but checks the type of the values at runtime so that
  * it only recurses into valid objects, and only counts checkbox fields.
  */
-type CountPickedFieldsResult = {
-  pickedFields: number;
-  nestedPickedFields: number;
-};
-
 export function countPickedFields(
   fields: Record<string, unknown> | undefined,
   isNested = false,
