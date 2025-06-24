@@ -1205,8 +1205,10 @@ export function countPickedFields(
       }
 
       if ("type" in value && value.type === "contentRelationship") {
-        const { pickedFields } = countPickedFields(value, isNested);
-        const { nestedPickedFields } = countPickedFields(value, true);
+        const { pickedFields, nestedPickedFields } = countPickedFields(
+          value,
+          true,
+        );
 
         return {
           pickedFields: result.pickedFields + pickedFields,
@@ -1214,8 +1216,10 @@ export function countPickedFields(
         };
       }
 
-      const { pickedFields } = countPickedFields(value, isNested);
-      const { nestedPickedFields } = countPickedFields(value, isNested);
+      const { pickedFields, nestedPickedFields } = countPickedFields(
+        value,
+        isNested,
+      );
 
       return {
         pickedFields: result.pickedFields + pickedFields,
