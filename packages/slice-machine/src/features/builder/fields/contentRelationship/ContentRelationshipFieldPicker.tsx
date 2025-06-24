@@ -404,8 +404,7 @@ function ContentRelationshipFieldPickerContent(
         <Text variant="normal" color="grey11">
           Have ideas for improving this field?{" "}
           <a
-            // TODO: Add real URL: https://linear.app/prismic/issue/DT-2693
-            href="https://community.prismic.io/t/TODO"
+            href="https://community.prismic.io/t/content-relationship-share-your-requests-and-feedback/19843"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: "inherit", textDecoration: "underline" }}
