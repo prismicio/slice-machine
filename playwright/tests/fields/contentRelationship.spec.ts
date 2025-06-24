@@ -10,7 +10,6 @@ test("I see that linked content relationships are updated when a field API ID is
   page,
 }) => {
   // Setup: Create two custom types and add a relationship between them
-  // TODO: Replace manual creation of custom types with something faster
 
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
@@ -67,7 +66,6 @@ test("I see that linked content relationships are updated when a field API ID is
 
   await page.getByRole("button", { name: "Add type" }).click();
 
-  // click on a div menuitem with the text ct1Id
   await page.getByRole("menuitem", { name: ct1Id }).click();
 
   await page.getByLabel("my_regular_field").click();
