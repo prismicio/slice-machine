@@ -398,9 +398,6 @@ describe("ContentRelationshipFieldPicker", () => {
             geoPointField: {
               type: "GeoPoint",
             },
-            slicesField: {
-              type: "GeoPoint",
-            },
             numberField: {
               type: "Number",
             },
@@ -439,7 +436,6 @@ describe("ContentRelationshipFieldPicker", () => {
               "colorField",
               "dateField",
               "geoPointField",
-              "slicesField",
               "numberField",
               "rangeField",
               "selectField",
@@ -484,10 +480,6 @@ describe("ContentRelationshipFieldPicker", () => {
             value: true,
           },
           geoPointField: {
-            type: "checkbox",
-            value: true,
-          },
-          slicesField: {
             type: "checkbox",
             value: true,
           },
