@@ -968,11 +968,8 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
       // Regular field
       if (typeof field === "string") {
-        if (
-          allCustomTypes &&
-          existingField &&
-          existingField?.type === "Group"
-        ) {
+        // Check if the field matched the existing one in the custom type
+        if (allCustomTypes && existingField && existingField.type === "Group") {
           return fields;
         }
 
@@ -982,11 +979,8 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
       // Group field
       if ("fields" in field && field.fields !== undefined) {
-        if (
-          allCustomTypes &&
-          existingField &&
-          existingField?.type !== "Group"
-        ) {
+        // Check if the field matched the existing one in the custom type
+        if (allCustomTypes && existingField && existingField.type !== "Group") {
           return fields;
         }
 
@@ -1005,6 +999,7 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
       // Content relationship field
       if ("customtypes" in field && field.customtypes !== undefined) {
+        // Check if the field matched the existing one in the custom type
         if (
           allCustomTypes &&
           existingField &&
@@ -1052,7 +1047,8 @@ function createGroupFieldCheckMap(args: {
 
     // Regular field
     if (typeof field === "string") {
-      if (allCustomTypes && existingField && existingField?.type === "Group") {
+      // Check if the field matched the existing one in the custom type
+      if (allCustomTypes && existingField && existingField.type === "Group") {
         return fields;
       }
 
@@ -1062,6 +1058,7 @@ function createGroupFieldCheckMap(args: {
 
     // Content relationship field
     if ("customtypes" in field && field.customtypes !== undefined) {
+      // Check if the field matched the existing one in the custom type
       if (
         allCustomTypes &&
         existingField &&
@@ -1110,6 +1107,7 @@ function createContentRelationshipFieldCheckMap(args: {
     const ctFields = customType.fields.reduce((nestedFields, nestedField) => {
       // Regular field
       if (typeof nestedField === "string") {
+        // Check if the field matched the existing one in the custom type
         if (allCustomTypes && !ctFlatFieldMap.has(nestedField)) {
           return nestedFields;
         }
@@ -1120,6 +1118,7 @@ function createContentRelationshipFieldCheckMap(args: {
 
       // Group field
       const groupFields = nestedField.fields.reduce((fields, field) => {
+        // Check if the field matched the existing one in the custom type
         if (
           allCustomTypes &&
           !ctFlatFieldMap.has(`${nestedField.id}.${field}`)
