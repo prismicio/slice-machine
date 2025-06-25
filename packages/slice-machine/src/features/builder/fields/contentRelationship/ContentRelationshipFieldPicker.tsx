@@ -969,23 +969,33 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
           fields[field] = { type: "checkbox", value: true };
         } else if ("fields" in field && field.fields !== undefined) {
           // Group field
-          fields[field.id] = createGroupFieldCheckMap({
+          const groupFieldCheckMap = createGroupFieldCheckMap({
             group: field,
             allCustomTypes,
             ctFieldMap,
           });
+
+          if (groupFieldCheckMap) {
+            fields[field.id] = groupFieldCheckMap;
+          }
         } else if ("customtypes" in field && field.customtypes !== undefined) {
           // Content relationship field
-          fields[field.id] = createContentRelationshipFieldCheckMap({
+          const crFieldCheckMap = createContentRelationshipFieldCheckMap({
             field,
             allCustomTypes,
           });
+
+          if (crFieldCheckMap) {
+            fields[field.id] = crFieldCheckMap;
+          }
         }
 
         return fields;
       }, {} as PickerCustomType);
 
-      customTypes[customType.id] = customTypeFields;
+      if (Object.keys(customTypeFields).length > 0) {
+        customTypes[customType.id] = customTypeFields;
+      }
 
       return customTypes;
     },
@@ -997,54 +1007,58 @@ function createGroupFieldCheckMap(args: {
   group: LinkCustomtypesGroupFieldValue;
   allCustomTypes: CustomType[];
   ctFieldMap: Map<string, DynamicWidget>;
-}): PickerFirstLevelGroupField {
+}): PickerFirstLevelGroupField | undefined {
   const { group, ctFieldMap, allCustomTypes } = args;
+
+  const value = group.fields.reduce<PickerFirstLevelGroupFieldValue>(
+    (fields, field) => {
+      // Check if the field exists
+      if (!ctFieldMap.has(`${group.id}.${getId(field)}`)) return fields;
+
+      if (typeof field === "string") {
+        // Regular field
+        fields[field] = { type: "checkbox", value: true };
+      } else if ("customtypes" in field && field.customtypes !== undefined) {
+        // Content relationship field
+        const crFieldCheckMap = createContentRelationshipFieldCheckMap({
+          field,
+          allCustomTypes,
+        });
+
+        if (crFieldCheckMap) {
+          fields[field.id] = crFieldCheckMap;
+        }
+      }
+
+      return fields;
+    },
+    {},
+  );
+
+  if (Object.keys(value).length === 0) return undefined;
 
   return {
     type: "group",
-    value: group.fields.reduce<PickerFirstLevelGroupFieldValue>(
-      (fields, field) => {
-        // Check if the field exists
-        if (!ctFieldMap.has(`${group.id}.${getId(field)}`)) return fields;
-
-        if (typeof field === "string") {
-          // Regular field
-          fields[field] = { type: "checkbox", value: true };
-        } else if ("customtypes" in field && field.customtypes !== undefined) {
-          // Content relationship field
-          fields[field.id] = createContentRelationshipFieldCheckMap({
-            field,
-            allCustomTypes,
-          });
-        }
-
-        return fields;
-      },
-      {},
-    ),
+    value,
   };
 }
 
 function createContentRelationshipFieldCheckMap(args: {
   field: LinkCustomtypesContentRelationshipFieldValue;
   allCustomTypes: CustomType[];
-}): PickerContentRelationshipField {
+}): PickerContentRelationshipField | undefined {
   const { field, allCustomTypes } = args;
 
-  const crField: PickerContentRelationshipField = {
-    type: "contentRelationship",
-    value: {},
-  };
-  const crFieldCustomTypes = crField.value;
+  const value: PickerContentRelationshipFieldValue = {};
 
   for (const customType of field.customtypes) {
     if (typeof customType === "string") continue;
 
-    crFieldCustomTypes[customType.id] ??= {};
-    const customTypeFields = crFieldCustomTypes[customType.id];
-
     const existingCt = allCustomTypes.find((ct) => ct.id === customType.id);
     if (!existingCt) continue;
+
+    value[customType.id] ??= {};
+    const customTypeFields = value[customType.id];
 
     const ctFieldMap = createCustomTypeFieldMap(existingCt);
 
@@ -1073,7 +1087,12 @@ function createContentRelationshipFieldCheckMap(args: {
     }
   }
 
-  return crField;
+  if (Object.keys(value).length === 0) return undefined;
+
+  return {
+    type: "contentRelationship",
+    value,
+  };
 }
 
 /**
