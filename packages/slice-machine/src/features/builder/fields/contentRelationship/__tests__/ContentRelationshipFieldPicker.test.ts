@@ -885,5 +885,60 @@ describe("ContentRelationshipFieldPicker", () => {
 
       expect(result).toEqual({});
     });
+
+    it.only("do not check for valid field if allCustomTypes is not provided", () => {
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customTypeA",
+            fields: [
+              "fieldA",
+              {
+                id: "groupA",
+                fields: ["groupFieldA"],
+              },
+              {
+                id: "contentRelationshipA",
+                customtypes: [
+                  {
+                    id: "customTypeB",
+                    fields: ["fieldB"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+
+      expect(result).toEqual({
+        customTypeA: {
+          fieldA: {
+            type: "checkbox",
+            value: true,
+          },
+          groupA: {
+            type: "group",
+            value: {
+              groupFieldA: {
+                type: "checkbox",
+                value: true,
+              },
+            },
+          },
+          contentRelationshipA: {
+            type: "contentRelationship",
+            value: {
+              customTypeB: {
+                fieldB: {
+                  type: "checkbox",
+                  value: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    });
   });
 });
