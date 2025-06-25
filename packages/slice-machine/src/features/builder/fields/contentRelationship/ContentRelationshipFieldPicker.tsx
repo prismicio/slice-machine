@@ -621,7 +621,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       title={customType.id}
       subtitle={
         exposedFieldsCount.pickedFields > 0
-          ? getSelectedFieldsLabel(
+          ? getPickedFieldsLabel(
               exposedFieldsCount.pickedFields,
               "returned in the API",
             )
@@ -666,7 +666,7 @@ function TreeViewContentRelationshipField(
   return (
     <TreeViewSection
       title={fieldId}
-      subtitle={getSelectedFieldsLabel(
+      subtitle={getPickedFieldsLabel(
         countPickedFields(crFieldsCheckMap).pickedFields,
       )}
     >
@@ -739,7 +739,7 @@ function TreeViewContentRelationshipField(
           <TreeViewSection
             key={customType.id}
             title={customType.id}
-            subtitle={getSelectedFieldsLabel(
+            subtitle={getPickedFieldsLabel(
               countPickedFields(nestedCtFieldsCheckMap).pickedFields,
             )}
             badge={getTypeFormatLabel(customType.format)}
@@ -795,7 +795,7 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getSelectedFieldsLabel(
+      subtitle={getPickedFieldsLabel(
         countPickedFields(groupFieldsCheckMap).pickedFields,
       )}
       badge="Group"
@@ -881,7 +881,7 @@ function TreeViewFirstLevelGroupField(
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getSelectedFieldsLabel(
+      subtitle={getPickedFieldsLabel(
         countPickedFields(groupFieldsCheckMap).pickedFields,
       )}
       badge="Group"
@@ -891,7 +891,7 @@ function TreeViewFirstLevelGroupField(
   );
 }
 
-function getSelectedFieldsLabel(count: number, suffix = "selected") {
+function getPickedFieldsLabel(count: number, suffix = "selected") {
   if (count === 0) return undefined;
   return `(${count} ${pluralize(count, "field", "fields")} ${suffix})`;
 }
