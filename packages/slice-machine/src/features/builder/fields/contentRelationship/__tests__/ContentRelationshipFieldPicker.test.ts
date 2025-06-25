@@ -815,8 +815,6 @@ describe("ContentRelationshipFieldPicker", () => {
         allCustomTypes: [customType, customTypeWithField],
       });
 
-      console.log(JSON.stringify(result, null, 2));
-
       expect(result).toEqual({});
     });
 
