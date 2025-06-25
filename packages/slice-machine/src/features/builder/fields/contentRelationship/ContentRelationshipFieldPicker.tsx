@@ -1229,12 +1229,6 @@ export function countPickedFields(
   );
 }
 
-function isContentRelationshipField(
-  field: NestableWidget | Group,
-): field is Link {
-  return field.type === "Link" && field.config?.select === "document";
-}
-
 /**
  * Check if the field is a Content Relationship Link with a **single** custom
  * type. CRs with multiple custom types are not currently supported (legacy).
@@ -1243,7 +1237,8 @@ function isContentRelationshipFieldWithSingleCustomtype(
   field: NestableWidget | Group,
 ): field is Link {
   return !!(
-    isContentRelationshipField(field) &&
+    field.type === "Link" &&
+    field.config?.select === "document" &&
     field.config?.customtypes &&
     field.config.customtypes.length === 1
   );
