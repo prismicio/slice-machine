@@ -633,6 +633,78 @@ describe("ContentRelationshipFieldPicker", () => {
       });
     });
 
+    it("should not include the field if it incorrectly references a regular field as a group field", () => {
+      const customType: CustomType = {
+        id: "customType",
+        label: "Custom Type",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            booleanField: {
+              type: "Boolean",
+            },
+          },
+        },
+      };
+
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customType",
+            fields: [
+              {
+                id: "groupField",
+                fields: ["booleanField"],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [customType],
+      });
+
+      expect(result).toEqual({});
+    });
+
+    it("should not include the field if it incorrectly references a group field as a regular field (no picked fields)", () => {
+      const customType: CustomType = {
+        id: "customType",
+        label: "Custom Type",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            groupField: {
+              type: "Group",
+              config: {
+                label: "Group Field",
+                fields: {
+                  booleanField: {
+                    type: "Boolean",
+                    config: {
+                      label: "Boolean Field",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customType",
+            fields: ["groupField"],
+          },
+        ],
+        allCustomTypes: [customType],
+      });
+
+      expect(result).toEqual({});
+    });
+
     it("should not include the a content relationship field if it references a non existing custom type", () => {
       const customTypeWithField: CustomType = {
         id: "customTypeWithField",
