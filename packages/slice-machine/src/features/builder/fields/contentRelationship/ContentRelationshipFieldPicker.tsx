@@ -1362,7 +1362,9 @@ type CustomTypeFlatFieldMap = {
 function getCustomTypeFlatFieldMap(
   customType?: CustomType,
 ): CustomTypeFlatFieldMap | { isAvailable: false; get: null; has: null } {
-  if (!customType) return { isAvailable: false, get: null, has: null };
+  if (!customType) {
+    return { isAvailable: false, get: null, has: null };
+  }
 
   const ctFieldMap = Object.values(customType.json).reduce((acc, tabFields) => {
     for (const [fieldId, field] of Object.entries(tabFields)) {
