@@ -886,7 +886,7 @@ describe("ContentRelationshipFieldPicker", () => {
       expect(result).toEqual({});
     });
 
-    it.only("do not check for valid field if allCustomTypes is not provided", () => {
+    it("do not check for valid field if allCustomTypes is not provided", () => {
       const result = convertLinkCustomtypesToFieldCheckMap({
         linkCustomtypes: [
           {
