@@ -267,6 +267,13 @@ function ContentRelationshipFieldPickerContent(
     ? convertLinkCustomtypesToFieldCheckMap(value)
     : {};
 
+  useEffect(() => {
+    // Make sure the field has a customtypes property. We did not create it
+    // before for new Content Relationship fields, but now we do, and we want to
+    // correct most of the cases where it's missing.
+    if (!value) onChange([]);
+  }, [value]);
+
   function onCustomTypesChange(id: string, newCustomType: PickerCustomType) {
     // The picker does not handle strings (custom type ids), as it's only meant
     // to pick fields from custom types (objects). So we need to merge it with
