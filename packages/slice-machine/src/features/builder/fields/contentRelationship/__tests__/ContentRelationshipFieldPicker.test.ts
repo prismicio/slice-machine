@@ -850,7 +850,7 @@ describe("ContentRelationshipFieldPicker", () => {
       expect(result).toEqual({});
     });
 
-    it("should not include a field incorrectly referenced as a group when it's not", () => {
+    it("should not include a field referenced as a group field when it's not one", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -917,6 +917,57 @@ describe("ContentRelationshipFieldPicker", () => {
           },
         ],
         allCustomTypes: [customType],
+      });
+
+      expect(result).toEqual({});
+    });
+
+    it("should not include a field referenced as a content relationship field when it's not one", () => {
+      const customTypeA: CustomType = {
+        id: "customTypeA",
+        label: "Custom Type A",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            booleanField: {
+              type: "Boolean",
+            },
+          },
+        },
+      };
+      const customTypeB: CustomType = {
+        id: "customTypeB",
+        label: "Custom Type B",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            colorField: {
+              type: "Color",
+            },
+          },
+        },
+      };
+
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customTypeA",
+            fields: [
+              {
+                id: "booleanField",
+                customtypes: [
+                  {
+                    id: "customTypeB",
+                    fields: ["colorField"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [customTypeB, customTypeA],
       });
 
       expect(result).toEqual({});
