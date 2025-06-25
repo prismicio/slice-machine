@@ -374,24 +374,148 @@ describe("ContentRelationshipFieldPicker", () => {
         status: true,
         json: {
           Main: {
+            textField: {
+              type: "Text",
+            },
             booleanField: {
               type: "Boolean",
-              config: {
-                label: "Boolean Field",
-              },
+            },
+            structuredTextField: {
+              type: "StructuredText",
+            },
+            imageField: {
+              type: "Image",
+            },
+            linkField: {
+              type: "Link",
+            },
+            colorField: {
+              type: "Color",
+            },
+            dateField: {
+              type: "Date",
+            },
+            geoPointField: {
+              type: "GeoPoint",
+            },
+            slicesField: {
+              type: "GeoPoint",
+            },
+            numberField: {
+              type: "Number",
+            },
+            rangeField: {
+              type: "Range",
+            },
+            selectField: {
+              type: "Select",
+            },
+            timestampField: {
+              type: "Timestamp",
+            },
+            separatorField: {
+              type: "Separator",
+            },
+            tableField: {
+              type: "Table",
+            },
+            integrationFieldsField: {
+              type: "IntegrationFields",
             },
           },
         },
       };
 
       const result = convertLinkCustomtypesToFieldCheckMap({
-        linkCustomtypes: [{ id: "customType", fields: ["booleanField"] }],
+        linkCustomtypes: [
+          {
+            id: "customType",
+            fields: [
+              "textField",
+              "booleanField",
+              "structuredTextField",
+              "imageField",
+              "linkField",
+              "colorField",
+              "dateField",
+              "geoPointField",
+              "slicesField",
+              "numberField",
+              "rangeField",
+              "selectField",
+              "timestampField",
+              "separatorField",
+              "tableField",
+              "integrationFieldsField",
+            ],
+          },
+        ],
         allCustomTypes: [customType],
       });
 
       expect(result).toEqual({
         customType: {
+          textField: {
+            type: "checkbox",
+            value: true,
+          },
           booleanField: {
+            type: "checkbox",
+            value: true,
+          },
+          structuredTextField: {
+            type: "checkbox",
+            value: true,
+          },
+          imageField: {
+            type: "checkbox",
+            value: true,
+          },
+          linkField: {
+            type: "checkbox",
+            value: true,
+          },
+          colorField: {
+            type: "checkbox",
+            value: true,
+          },
+          dateField: {
+            type: "checkbox",
+            value: true,
+          },
+          geoPointField: {
+            type: "checkbox",
+            value: true,
+          },
+          slicesField: {
+            type: "checkbox",
+            value: true,
+          },
+          numberField: {
+            type: "checkbox",
+            value: true,
+          },
+          rangeField: {
+            type: "checkbox",
+            value: true,
+          },
+          selectField: {
+            type: "checkbox",
+            value: true,
+          },
+          timestampField: {
+            type: "checkbox",
+            value: true,
+          },
+          separatorField: {
+            type: "checkbox",
+            value: true,
+          },
+          tableField: {
+            type: "checkbox",
+            value: true,
+          },
+          integrationFieldsField: {
             type: "checkbox",
             value: true,
           },
