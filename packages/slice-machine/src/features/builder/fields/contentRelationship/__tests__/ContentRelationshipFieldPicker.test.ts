@@ -400,6 +400,20 @@ describe("ContentRelationshipFieldPicker", () => {
     });
 
     it("should not include the field if the field is not a static zone field", () => {
+      const customType2: CustomType = {
+        id: "customType2",
+        label: "Custom Type 2",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            booleanField: {
+              type: "Boolean",
+            },
+          },
+        },
+      };
+
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -407,10 +421,27 @@ describe("ContentRelationshipFieldPicker", () => {
         status: true,
         json: {
           Main: {
-            rtField: {
+            mdField: {
               type: "StructuredText",
               config: {
                 label: "Structured Text Field",
+              },
+            },
+            crField: {
+              type: "Link",
+              config: {
+                select: "document",
+                customtypes: ["customType2"],
+              },
+            },
+            groupField: {
+              type: "Group",
+              config: {
+                fields: {
+                  groupFieldA: {
+                    type: "Boolean",
+                  },
+                },
               },
             },
           },
@@ -418,8 +449,32 @@ describe("ContentRelationshipFieldPicker", () => {
       };
 
       const result = convertLinkCustomtypesToFieldCheckMap({
-        linkCustomtypes: [{ id: "customType", fields: ["booleanField"] }],
-        allCustomTypes: [customType],
+        linkCustomtypes: [
+          {
+            id: "customType",
+            fields: [
+              "nonExistingField",
+              {
+                id: "groupField",
+                fields: ["nonExistingGroupField"],
+              },
+              {
+                id: "nonExistingGroup",
+                fields: ["groupFieldA"],
+              },
+              {
+                id: "crField",
+                customtypes: [
+                  {
+                    id: "customType2",
+                    fields: ["nonExistingNestedField"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [customType, customType2],
       });
 
       expect(result).toEqual({});
