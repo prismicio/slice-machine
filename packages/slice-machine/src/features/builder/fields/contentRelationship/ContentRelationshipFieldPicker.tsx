@@ -412,8 +412,9 @@ function ContentRelationshipFieldPickerContent(
             rel="noopener noreferrer"
             style={{ color: "inherit", textDecoration: "underline" }}
           >
-            Please provide your feedback here.
+            Please provide your feedback here
           </a>
+          .
         </Text>
       </Box>
     </Box>
