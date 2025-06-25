@@ -404,8 +404,7 @@ function ContentRelationshipFieldPickerContent(
         <Text variant="normal" color="grey11">
           Have ideas for improving this field?{" "}
           <a
-            // TODO: Add real URL: https://linear.app/prismic/issue/DT-2693
-            href="https://community.prismic.io/t/TODO"
+            href="https://community.prismic.io/t/content-relationship-share-your-requests-and-feedback/19843"
             target="_blank"
             rel="noopener noreferrer"
             style={{ color: "inherit", textDecoration: "underline" }}
@@ -533,7 +532,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
     ({ fieldId, field }) => {
       // Group field
 
-      if (isGroupField(field)) {
+      if (field.type === "Group") {
         const onGroupFieldChange = (
           newGroupFields: PickerFirstLevelGroupFieldValue,
         ) => {
@@ -621,8 +620,11 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
       key={customType.id}
       title={customType.id}
       subtitle={
-        exposedFieldsCount > 0
-          ? getSelectedFieldsLabel(exposedFieldsCount, "returned in the API")
+        exposedFieldsCount.pickedFields > 0
+          ? getSelectedFieldsLabel(
+              exposedFieldsCount.pickedFields,
+              "returned in the API",
+            )
           : "(No fields returned in the API)"
       }
       badge={getTypeFormatLabel(customType.format)}
@@ -664,7 +666,9 @@ function TreeViewContentRelationshipField(
   return (
     <TreeViewSection
       title={fieldId}
-      subtitle={getSelectedFieldsLabel(countPickedFields(crFieldsCheckMap))}
+      subtitle={getSelectedFieldsLabel(
+        countPickedFields(crFieldsCheckMap).pickedFields,
+      )}
     >
       {resolvedCustomTypes.map((customType) => {
         if (typeof customType === "string") return null;
@@ -684,7 +688,7 @@ function TreeViewContentRelationshipField(
           ({ fieldId, field }) => {
             // Group field
 
-            if (isGroupField(field)) {
+            if (field.type === "Group") {
               const onGroupFieldsChange = (
                 newGroupFields: PickerLeafGroupFieldValue,
               ) => {
@@ -736,7 +740,7 @@ function TreeViewContentRelationshipField(
             key={customType.id}
             title={customType.id}
             subtitle={getSelectedFieldsLabel(
-              countPickedFields(nestedCtFieldsCheckMap),
+              countPickedFields(nestedCtFieldsCheckMap).pickedFields,
             )}
             badge={getTypeFormatLabel(customType.format)}
           >
@@ -791,7 +795,9 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getSelectedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      subtitle={getSelectedFieldsLabel(
+        countPickedFields(groupFieldsCheckMap).pickedFields,
+      )}
       badge="Group"
     >
       {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
@@ -875,7 +881,9 @@ function TreeViewFirstLevelGroupField(
     <TreeViewSection
       key={groupId}
       title={groupId}
-      subtitle={getSelectedFieldsLabel(countPickedFields(groupFieldsCheckMap))}
+      subtitle={getSelectedFieldsLabel(
+        countPickedFields(groupFieldsCheckMap).pickedFields,
+      )}
       badge="Group"
     >
       {renderedFields.length > 0 ? renderedFields : <NoFieldsAvailable />}
@@ -935,7 +943,7 @@ function resolveContentRelationshipCustomTypes(
  * Converts a Link config `customtypes` ({@link LinkCustomtypes}) structure into
  * picker fields check map ({@link PickerCustomTypes}).
  */
-function convertLinkCustomtypesToFieldCheckMap(
+export function convertLinkCustomtypesToFieldCheckMap(
   customTypes: LinkCustomtypes,
 ): PickerCustomTypes {
   return customTypes.reduce<PickerCustomTypes>((customTypes, customType) => {
@@ -1157,30 +1165,68 @@ function createContentRelationshipLinkCustomtypes(
   );
 }
 
+type CountPickedFieldsResult = {
+  pickedFields: number;
+  nestedPickedFields: number;
+};
+
 /**
  * Generic recursive function that goes down the fields check map and counts all
  * the properties that are set to true, which correspond to selected fields.
  *
+ * Distinguishes between all picked fields and nested picked fields within a
+ * content relationship field.
+ *
  * It's not type safe, but checks the type of the values at runtime so that
  * it only recurses into valid objects, and only counts checkbox fields.
  */
-function countPickedFields(
+export function countPickedFields(
   fields: Record<string, unknown> | undefined,
-): number {
-  if (!fields) return 0;
-  return Object.values(fields).reduce<number>((count, value) => {
-    if (!isValidObject(value)) return count;
-    if (isCheckboxValue(value)) return count + (value.value ? 1 : 0);
-    return count + countPickedFields(value);
-  }, 0);
-}
-function isCheckboxValue(value: unknown): value is PickerCheckboxField {
-  if (!isValidObject(value)) return false;
-  return "type" in value && value.type === "checkbox";
-}
+  isNested = false,
+): CountPickedFieldsResult {
+  if (!fields) return { pickedFields: 0, nestedPickedFields: 0 };
 
-function isGroupField(field: NestableWidget | Group): field is Group {
-  return field.type === "Group";
+  return Object.values(fields).reduce<CountPickedFieldsResult>(
+    (result, value) => {
+      if (!isValidObject(value)) return result;
+
+      if ("type" in value && value.type === "checkbox") {
+        const isChecked = Boolean(value.value);
+        if (!isChecked) return result;
+
+        return {
+          pickedFields: result.pickedFields + 1,
+          nestedPickedFields: result.nestedPickedFields + (isNested ? 1 : 0),
+        };
+      }
+
+      if ("type" in value && value.type === "contentRelationship") {
+        const { pickedFields, nestedPickedFields } = countPickedFields(
+          value,
+          true,
+        );
+
+        return {
+          pickedFields: result.pickedFields + pickedFields,
+          nestedPickedFields: result.nestedPickedFields + nestedPickedFields,
+        };
+      }
+
+      const { pickedFields, nestedPickedFields } = countPickedFields(
+        value,
+        isNested,
+      );
+
+      return {
+        pickedFields: result.pickedFields + pickedFields,
+        nestedPickedFields: result.nestedPickedFields + nestedPickedFields,
+      };
+    },
+    {
+      pickedFields: 0,
+      nestedPickedFields: 0,
+    },
+  );
 }
 
 function isContentRelationshipField(
