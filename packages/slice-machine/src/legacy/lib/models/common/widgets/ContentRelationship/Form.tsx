@@ -3,7 +3,7 @@ import { FormikProps } from "formik";
 import { Box } from "theme-ui";
 import * as yup from "yup";
 
-import { ContentRelationshipFieldPicker } from "@/features/builder/fields/ContentRelationshipFieldPicker";
+import { ContentRelationshipFieldPicker } from "@/features/builder/fields/contentRelationship/ContentRelationshipFieldPicker";
 import { Col, Flex as FlexGrid } from "@/legacy/components/Flex";
 import WidgetFormField from "@/legacy/lib/builders/common/EditModal/Field";
 import { createFieldNameFromKey } from "@/legacy/lib/forms";
