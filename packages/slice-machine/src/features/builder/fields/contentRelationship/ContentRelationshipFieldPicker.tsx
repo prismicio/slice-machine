@@ -948,26 +948,27 @@ function resolveContentRelationshipCustomTypes(
  */
 export function convertLinkCustomtypesToFieldCheckMap(args: {
   linkCustomtypes: LinkCustomtypes;
-  allCustomTypes: CustomType[];
+  allCustomTypes?: CustomType[];
 }): PickerCustomTypes {
   const { linkCustomtypes, allCustomTypes } = args;
 
-  return linkCustomtypes.reduce((customTypes, customType) => {
+  const checkMap = linkCustomtypes.reduce((customTypes, customType) => {
     if (typeof customType === "string") return customTypes;
 
-    const existingCt = allCustomTypes.find((ct) => ct.id === customType.id);
-    if (!existingCt) return customTypes;
+    const ctFlatFieldMap = getCustomTypeFlatFieldMap(
+      allCustomTypes?.find((ct) => ct.id === customType.id),
+    );
 
-    const ctFieldMap = createCustomTypeFieldMap(existingCt);
+    if (!ctFlatFieldMap.isAvailable) return customTypes;
 
     const customTypeFields = customType.fields.reduce((fields, field) => {
       // Check if the field exists
-      const existingField = ctFieldMap.get(getId(field));
-      if (!existingField) return fields;
+      const existingField = ctFlatFieldMap.get(getId(field));
+      if (allCustomTypes && !existingField) return fields;
 
       // Regular field
       if (typeof field === "string") {
-        if (existingField.type === "Group") return fields;
+        if (allCustomTypes && existingField?.type === "Group") return fields;
 
         fields[field] = { type: "checkbox", value: true };
         return fields;
@@ -975,12 +976,12 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
       // Group field
       if ("fields" in field && field.fields !== undefined) {
-        if (existingField.type !== "Group") return fields;
+        if (allCustomTypes && existingField?.type !== "Group") return fields;
 
         const groupFieldCheckMap = createGroupFieldCheckMap({
           group: field,
           allCustomTypes,
-          ctFieldMap,
+          ctFlatFieldMap,
         });
 
         if (groupFieldCheckMap) {
@@ -992,7 +993,12 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
       // Content relationship field
       if ("customtypes" in field && field.customtypes !== undefined) {
-        if (!isContentRelationshipField(existingField)) return fields;
+        if (
+          allCustomTypes &&
+          existingField &&
+          !isContentRelationshipField(existingField)
+        )
+          return fields;
 
         const crFieldCheckMap = createContentRelationshipFieldCheckMap({
           field,
@@ -1015,23 +1021,25 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
     return customTypes;
   }, {} as PickerCustomTypes);
+
+  return checkMap;
 }
 
 function createGroupFieldCheckMap(args: {
   group: LinkCustomtypesGroupFieldValue;
-  allCustomTypes: CustomType[];
-  ctFieldMap: Map<string, DynamicWidget>;
+  allCustomTypes?: CustomType[];
+  ctFlatFieldMap: CustomTypeFlatFieldMap;
 }): PickerFirstLevelGroupField | undefined {
-  const { group, ctFieldMap, allCustomTypes } = args;
+  const { group, ctFlatFieldMap, allCustomTypes } = args;
 
   const fieldEntries = group.fields.reduce((fields, field) => {
     // Check if the field exists
-    const existingField = ctFieldMap.get(`${group.id}.${getId(field)}`);
-    if (!existingField) return fields;
+    const existingField = ctFlatFieldMap.get(`${group.id}.${getId(field)}`);
+    if (allCustomTypes && !existingField) return fields;
 
     // Regular field
     if (typeof field === "string") {
-      if (existingField.type === "Group") return fields;
+      if (allCustomTypes && existingField?.type === "Group") return fields;
 
       fields[field] = { type: "checkbox", value: true };
       return fields;
@@ -1039,7 +1047,13 @@ function createGroupFieldCheckMap(args: {
 
     // Content relationship field
     if ("customtypes" in field && field.customtypes !== undefined) {
-      if (!isContentRelationshipField(existingField)) return fields;
+      if (
+        allCustomTypes &&
+        existingField &&
+        !isContentRelationshipField(existingField)
+      ) {
+        return fields;
+      }
 
       const crFieldCheckMap = createContentRelationshipFieldCheckMap({
         field,
@@ -1066,51 +1080,49 @@ function createGroupFieldCheckMap(args: {
 
 function createContentRelationshipFieldCheckMap(args: {
   field: LinkCustomtypesContentRelationshipFieldValue;
-  allCustomTypes: CustomType[];
+  allCustomTypes?: CustomType[];
 }): PickerContentRelationshipField | undefined {
   const { field, allCustomTypes } = args;
 
   const fieldEntries = field.customtypes.reduce((customTypes, customType) => {
     if (typeof customType === "string") return customTypes;
 
-    const existingCt = allCustomTypes.find((ct) => ct.id === customType.id);
-    if (!existingCt) return customTypes;
-
-    const ctFieldMap = createCustomTypeFieldMap(existingCt);
-
-    const customTypeFields = customType.fields.reduce(
-      (nestedFields, nestedField) => {
-        // Regular field
-        if (typeof nestedField === "string") {
-          if (ctFieldMap.has(nestedField)) {
-            nestedFields[nestedField] = { type: "checkbox", value: true };
-          }
-          return nestedFields;
-        }
-
-        // Group field
-        const groupFields = nestedField.fields.reduce((fields, field) => {
-          if (ctFieldMap.has(`${nestedField.id}.${field}`)) {
-            fields[field] = { type: "checkbox", value: true };
-          }
-          return fields;
-        }, {} as PickerLeafGroupFieldValue);
-
-        if (Object.keys(groupFields).length > 0) {
-          nestedFields[nestedField.id] = {
-            type: "group",
-            value: groupFields,
-          };
-          return nestedFields;
-        }
-
-        return nestedFields;
-      },
-      {} as PickerNestedCustomTypeValue,
+    const ctFlatFieldMap = getCustomTypeFlatFieldMap(
+      allCustomTypes?.find((ct) => ct.id === customType.id),
     );
 
-    if (Object.keys(customTypeFields).length > 0) {
-      customTypes[customType.id] = customTypeFields;
+    if (!ctFlatFieldMap.isAvailable) return customTypes;
+
+    const ctFields = customType.fields.reduce((nestedFields, nestedField) => {
+      // Regular field
+      if (typeof nestedField === "string") {
+        if (ctFlatFieldMap.has(nestedField)) {
+          nestedFields[nestedField] = { type: "checkbox", value: true };
+        }
+        return nestedFields;
+      }
+
+      // Group field
+      const groupFields = nestedField.fields.reduce((fields, field) => {
+        if (ctFlatFieldMap.has(`${nestedField.id}.${field}`)) {
+          fields[field] = { type: "checkbox", value: true };
+        }
+        return fields;
+      }, {} as PickerLeafGroupFieldValue);
+
+      if (Object.keys(groupFields).length > 0) {
+        nestedFields[nestedField.id] = {
+          type: "group",
+          value: groupFields,
+        };
+        return nestedFields;
+      }
+
+      return nestedFields;
+    }, {} as PickerNestedCustomTypeValue);
+
+    if (Object.keys(ctFields).length > 0) {
+      customTypes[customType.id] = ctFields;
     }
 
     return customTypes;
@@ -1335,8 +1347,23 @@ function isContentRelationshipFieldWithSingleCustomtype(
   );
 }
 
-function createCustomTypeFieldMap(customType: CustomType) {
-  return Object.values(customType.json).reduce((acc, tabFields) => {
+type CustomTypeFlatFieldMap = {
+  isAvailable: true;
+  get: (fieldId: string) => DynamicWidget | undefined;
+  has: (fieldId: string) => boolean;
+};
+
+/**
+ * Util that flattens a custom type's fields into a map of field ids to fields and
+ * returns functions to get and check if a field exists by key.
+ * For group fields, the key is separated by a dot (e.g. "group.fieldId").
+ */
+function getCustomTypeFlatFieldMap(
+  customType?: CustomType,
+): CustomTypeFlatFieldMap | { isAvailable: false; get: null; has: null } {
+  if (!customType) return { isAvailable: false, get: null, has: null };
+
+  const ctFieldMap = Object.values(customType.json).reduce((acc, tabFields) => {
     for (const [fieldId, field] of Object.entries(tabFields)) {
       if (!isValidField(fieldId, field)) continue;
 
@@ -1355,6 +1382,12 @@ function createCustomTypeFieldMap(customType: CustomType) {
     }
     return acc;
   }, new Map<string, DynamicWidget>());
+
+  return {
+    isAvailable: true,
+    get: (fieldId) => ctFieldMap.get(fieldId),
+    has: (fieldId) => ctFieldMap.has(fieldId),
+  };
 }
 
 function getCustomTypeStaticFields(customType: CustomType) {

@@ -15,7 +15,9 @@ export function getLinkTrackingProperties(field: Link) {
       field.config?.customtypes &&
       (() => {
         const { pickedFields, nestedPickedFields } = countPickedFields(
-          convertLinkCustomtypesToFieldCheckMap(field.config?.customtypes),
+          convertLinkCustomtypesToFieldCheckMap({
+            linkCustomtypes: field.config?.customtypes,
+          }),
         );
         return {
           linkPickedFields: pickedFields,
