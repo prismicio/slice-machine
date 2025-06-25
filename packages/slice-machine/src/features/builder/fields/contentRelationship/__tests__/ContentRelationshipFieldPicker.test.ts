@@ -791,6 +791,20 @@ describe("ContentRelationshipFieldPicker", () => {
                 customtypes: ["customTypeWithField"],
               },
             },
+            groupField: {
+              type: "Group",
+              config: {
+                fields: {
+                  contentRelationshipFieldInsideGroup: {
+                    type: "Link",
+                    config: {
+                      select: "document",
+                      customtypes: ["customTypeWithField"],
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       };
@@ -806,6 +820,20 @@ describe("ContentRelationshipFieldPicker", () => {
                   {
                     id: "nonExistingCustomType",
                     fields: ["colorField"],
+                  },
+                ],
+              },
+              {
+                id: "groupField",
+                fields: [
+                  {
+                    id: "contentRelationshipFieldInsideGroup",
+                    customtypes: [
+                      {
+                        id: "nonExistingCustomType",
+                        fields: ["colorField"],
+                      },
+                    ],
                   },
                 ],
               },
@@ -884,7 +912,7 @@ describe("ContentRelationshipFieldPicker", () => {
       expect(result).toEqual({});
     });
 
-    it("do not check for valid field if allCustomTypes is not provided", () => {
+    it("should not check for valid fields if allCustomTypes prop is not provided", () => {
       const result = convertLinkCustomtypesToFieldCheckMap({
         linkCustomtypes: [
           {
