@@ -86,7 +86,7 @@
 		"nuxt": "3.16.0",
 		"prettier": "3.0.3",
 		"prettier-plugin-jsdoc": "1.1.1",
-		"prismic-ts-codegen": "0.1.27-alpha.3",
+		"prismic-ts-codegen": "0.1.27",
 		"size-limit": "8.2.4",
 		"ts-morph": "17.0.1",
 		"typescript": "4.9.5",
