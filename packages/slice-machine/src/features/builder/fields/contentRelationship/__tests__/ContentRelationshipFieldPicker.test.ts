@@ -366,7 +366,7 @@ describe("ContentRelationshipFieldPicker", () => {
   });
 
   describe("createContentRelationshipFieldCheckMap", () => {
-    it("should include the field if it is a static zone field", () => {
+    it("should include existing/valid referenced fields", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -523,7 +523,7 @@ describe("ContentRelationshipFieldPicker", () => {
       });
     });
 
-    it("should not include the field if the field is not a static zone field", () => {
+    it("should not include non-existing/invalid referenced fields", () => {
       const customType2: CustomType = {
         id: "customType2",
         label: "Custom Type 2",
@@ -547,9 +547,6 @@ describe("ContentRelationshipFieldPicker", () => {
           Main: {
             mdField: {
               type: "StructuredText",
-              config: {
-                label: "Structured Text Field",
-              },
             },
             crField: {
               type: "Link",
@@ -577,11 +574,8 @@ describe("ContentRelationshipFieldPicker", () => {
           {
             id: "customType",
             fields: [
+              "mdField",
               "nonExistingField",
-              {
-                id: "groupField",
-                fields: ["nonExistingGroupField"],
-              },
               {
                 id: "nonExistingGroup",
                 fields: ["groupFieldA"],
@@ -595,16 +589,27 @@ describe("ContentRelationshipFieldPicker", () => {
                   },
                 ],
               },
+              {
+                id: "groupField",
+                fields: ["nonExistingGroupField"],
+              },
             ],
           },
         ],
         allCustomTypes: [customType, customType2],
       });
 
-      expect(result).toEqual({});
+      expect(result).toEqual({
+        customType: {
+          mdField: {
+            type: "checkbox",
+            value: true,
+          },
+        },
+      });
     });
 
-    it("should not include the field if it is invalid (uid, slices & choice)", () => {
+    it("should not include an invalid field (uid, slices & choice)", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -612,7 +617,7 @@ describe("ContentRelationshipFieldPicker", () => {
         status: true,
         json: {
           Main: {
-            bool: {
+            booleanField: {
               type: "Boolean",
             },
             typeUid: {
@@ -649,7 +654,7 @@ describe("ContentRelationshipFieldPicker", () => {
         linkCustomtypes: [
           {
             id: "customType",
-            fields: ["bool", "typeUid", "uid", "choice", "slices"],
+            fields: ["booleanField", "typeUid", "uid", "choice", "slices"],
           },
         ],
         allCustomTypes: [customType],
@@ -657,7 +662,7 @@ describe("ContentRelationshipFieldPicker", () => {
 
       expect(result).toEqual({
         customType: {
-          bool: {
+          booleanField: {
             type: "checkbox",
             value: true,
           },
@@ -665,7 +670,7 @@ describe("ContentRelationshipFieldPicker", () => {
       });
     });
 
-    it("should include the field if it correctly references a group field", () => {
+    it("should include a correctly referenced group field", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -721,7 +726,7 @@ describe("ContentRelationshipFieldPicker", () => {
       });
     });
 
-    it("should include the field if it correctly references a group field inside a nested custom type", () => {
+    it("should include a field correctly referenced as a group inside a nested custom type", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -812,7 +817,7 @@ describe("ContentRelationshipFieldPicker", () => {
       });
     });
 
-    it("should not include the field if it incorrectly references a regular field as a group field", () => {
+    it("should not include a regular field incorrectly referenced as a group", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -845,7 +850,40 @@ describe("ContentRelationshipFieldPicker", () => {
       expect(result).toEqual({});
     });
 
-    it("should not include the field if it incorrectly references a group field as a regular field (no picked fields)", () => {
+    it("should not include a field incorrectly referenced as a group when it's not", () => {
+      const customType: CustomType = {
+        id: "customType",
+        label: "Custom Type",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            booleanField: {
+              type: "Boolean",
+            },
+          },
+        },
+      };
+
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customType",
+            fields: [
+              {
+                id: "booleanField",
+                fields: ["fieldA"],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [customType],
+      });
+
+      expect(result).toEqual({});
+    });
+
+    it("should not include a group field referenced as a regular field (string/no picked fields)", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -884,7 +922,7 @@ describe("ContentRelationshipFieldPicker", () => {
       expect(result).toEqual({});
     });
 
-    it("should not include the a content relationship field if it references a non existing custom type", () => {
+    it("should not include a content relationship field if it references a non existing custom type", () => {
       const customTypeWithField: CustomType = {
         id: "customTypeWithField",
         label: "Custom Type With Field",
