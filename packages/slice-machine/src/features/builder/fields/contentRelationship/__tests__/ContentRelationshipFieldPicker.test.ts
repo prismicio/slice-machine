@@ -1,10 +1,10 @@
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { describe, expect, it } from "vitest";
 
 import {
   convertLinkCustomtypesToFieldCheckMap,
   countPickedFields,
 } from "../ContentRelationshipFieldPicker";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 describe("ContentRelationshipFieldPicker", () => {
   describe("countPickedFields", () => {
@@ -761,6 +761,72 @@ describe("ContentRelationshipFieldPicker", () => {
       });
 
       console.log(JSON.stringify(result, null, 2));
+
+      expect(result).toEqual({});
+    });
+
+    it("should not include a regular field referenced as a content relationship field", () => {
+      const customType: CustomType = {
+        id: "customType",
+        label: "Custom Type",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            booleanField: {
+              type: "Boolean",
+            },
+          },
+        },
+      };
+
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customType",
+            fields: [
+              {
+                id: "booleanField",
+                customtypes: [],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [customType],
+      });
+
+      expect(result).toEqual({});
+    });
+
+    it("should not include a regular field referenced as a group field", () => {
+      const customType: CustomType = {
+        id: "customType",
+        label: "Custom Type",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            booleanField: {
+              type: "Boolean",
+            },
+          },
+        },
+      };
+
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customType",
+            fields: [
+              {
+                id: "booleanField",
+                fields: [],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [customType],
+      });
 
       expect(result).toEqual({});
     });
