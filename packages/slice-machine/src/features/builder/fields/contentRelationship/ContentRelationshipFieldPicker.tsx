@@ -961,28 +961,25 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
       const ctFieldMap = createCustomTypeFieldMap(existingCt);
 
       const customTypeFields = customType.fields.reduce((fields, field) => {
+        // Check if the field exists
+        if (!ctFieldMap.has(getId(field))) return fields;
+
         if (typeof field === "string") {
           // Regular field
-          if (ctFieldMap.has(field)) {
-            fields[field] = { type: "checkbox", value: true };
-          }
+          fields[field] = { type: "checkbox", value: true };
         } else if ("fields" in field && field.fields !== undefined) {
           // Group field
-          if (ctFieldMap.has(field.id)) {
-            fields[field.id] = createGroupFieldCheckMap({
-              group: field,
-              allCustomTypes,
-              ctFieldMap,
-            });
-          }
+          fields[field.id] = createGroupFieldCheckMap({
+            group: field,
+            allCustomTypes,
+            ctFieldMap,
+          });
         } else if ("customtypes" in field && field.customtypes !== undefined) {
           // Content relationship field
-          if (ctFieldMap.has(field.id)) {
-            fields[field.id] = createContentRelationshipFieldCheckMap({
-              field,
-              allCustomTypes,
-            });
-          }
+          fields[field.id] = createContentRelationshipFieldCheckMap({
+            field,
+            allCustomTypes,
+          });
         }
 
         return fields;
@@ -1007,19 +1004,18 @@ function createGroupFieldCheckMap(args: {
     type: "group",
     value: group.fields.reduce<PickerFirstLevelGroupFieldValue>(
       (fields, field) => {
+        // Check if the field exists
+        if (!ctFieldMap.has(`${group.id}.${getId(field)}`)) return fields;
+
         if (typeof field === "string") {
           // Regular field
-          if (ctFieldMap.has(`${group.id}.${field}`)) {
-            fields[field] = { type: "checkbox", value: true };
-          }
+          fields[field] = { type: "checkbox", value: true };
         } else if ("customtypes" in field && field.customtypes !== undefined) {
           // Content relationship field
-          if (ctFieldMap.has(`${group.id}.${field.id}`)) {
-            fields[field.id] = createContentRelationshipFieldCheckMap({
-              field,
-              allCustomTypes,
-            });
-          }
+          fields[field.id] = createContentRelationshipFieldCheckMap({
+            field,
+            allCustomTypes,
+          });
         }
 
         return fields;
@@ -1294,7 +1290,7 @@ function createCustomTypeFieldMap(customType: CustomType) {
       if (!isValidField(fieldId, field)) continue;
 
       if (field.type === "Group") {
-        acc.set(fieldId, field)
+        acc.set(fieldId, field);
 
         if (!field.config?.fields) continue;
 
