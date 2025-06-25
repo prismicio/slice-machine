@@ -1080,6 +1080,7 @@ function createContentRelationshipFieldCheckMap(args: {
 
     const customTypeFields = customType.fields.reduce(
       (nestedFields, nestedField) => {
+        // Regular field
         if (typeof nestedField === "string") {
           if (ctFieldMap.has(nestedField)) {
             nestedFields[nestedField] = { type: "checkbox", value: true };
@@ -1087,6 +1088,7 @@ function createContentRelationshipFieldCheckMap(args: {
           return nestedFields;
         }
 
+        // Group field
         const groupFields = nestedField.fields.reduce((fields, field) => {
           if (ctFieldMap.has(`${nestedField.id}.${field}`)) {
             fields[field] = { type: "checkbox", value: true };
@@ -1330,14 +1332,6 @@ function isContentRelationshipFieldWithSingleCustomtype(
     isContentRelationshipField(field) &&
     field.config?.customtypes &&
     field.config.customtypes.length === 1
-  );
-}
-
-function isEmptyContentRelationshipField(field: DynamicWidget): field is Link {
-  return (
-    isContentRelationshipField(field) &&
-    (field.config?.customtypes === undefined ||
-      field.config.customtypes.length === 0)
   );
 }
 
