@@ -70,12 +70,13 @@ const schema = yup.object().shape({
 });
 
 export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
-  create: (label: string) => ({
+  create: (label: string): Link => ({
     type: "Link",
     config: {
       label,
       select: "document",
       repeat: false,
+      customtypes: [],
     },
   }),
   Meta,
