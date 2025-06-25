@@ -1171,5 +1171,34 @@ describe("ContentRelationshipFieldPicker", () => {
         },
       });
     });
+
+    it("should check for valid fields if allCustomTypes is empty", () => {
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customTypeA",
+            fields: [
+              "fieldA",
+              {
+                id: "groupA",
+                fields: ["groupFieldA"],
+              },
+              {
+                id: "contentRelationshipA",
+                customtypes: [
+                  {
+                    id: "customTypeB",
+                    fields: ["fieldB"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [],
+      });
+
+      expect(result).toEqual({});
+    });
   });
 });
