@@ -4,13 +4,87 @@ import {
   convertLinkCustomtypesToFieldCheckMap,
   countPickedFields,
 } from "../ContentRelationshipFieldPicker";
+import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+
+const allCustomTypes: CustomType[] = [
+  {
+    id: "ct1",
+    label: "CT 1",
+    repeatable: false,
+    status: true,
+    json: {
+      Main: {
+        f1: {
+          type: "Link",
+          config: {
+            select: "document",
+            customtypes: ["ct2"],
+          },
+        },
+        f2: {
+          type: "Link",
+          config: {
+            select: "document",
+            customtypes: ["ct2"],
+          },
+        },
+        g1: {
+          type: "Group",
+          config: {
+            fields: {
+              f1: {
+                type: "Boolean",
+              },
+              f2: {
+                type: "Link",
+                config: {
+                  select: "document",
+                  customtypes: ["ct2"],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    id: "ct2",
+    label: "CT 2",
+    repeatable: false,
+    status: true,
+    json: {
+      Main: {
+        f1: {
+          type: "Boolean",
+        },
+        g2: {
+          type: "Group",
+          config: {
+            fields: {
+              f1: {
+                type: "Boolean",
+              },
+              f2: {
+                type: "Boolean",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+];
 
 describe("ContentRelationshipFieldPicker", () => {
   it("should count picked fields with a custom type as string", () => {
     const customtypes = ["ct1"];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -23,7 +97,10 @@ describe("ContentRelationshipFieldPicker", () => {
     const customtypes = ["ct1", "ct2"];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -41,7 +118,10 @@ describe("ContentRelationshipFieldPicker", () => {
     ];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -69,7 +149,10 @@ describe("ContentRelationshipFieldPicker", () => {
     ];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -91,9 +174,11 @@ describe("ContentRelationshipFieldPicker", () => {
       },
     ];
 
-    const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
-    );
+    const test = convertLinkCustomtypesToFieldCheckMap({
+      linkCustomtypes: customtypes,
+      allCustomTypes,
+    });
+    const result = countPickedFields(test);
 
     expect(result).toEqual({
       pickedFields: 2,
@@ -126,7 +211,10 @@ describe("ContentRelationshipFieldPicker", () => {
     ];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -166,7 +254,10 @@ describe("ContentRelationshipFieldPicker", () => {
     ];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -201,7 +292,10 @@ describe("ContentRelationshipFieldPicker", () => {
     ];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -230,7 +324,10 @@ describe("ContentRelationshipFieldPicker", () => {
     ];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({
@@ -254,7 +351,10 @@ describe("ContentRelationshipFieldPicker", () => {
     ];
 
     const result = countPickedFields(
-      convertLinkCustomtypesToFieldCheckMap(customtypes),
+      convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: customtypes,
+        allCustomTypes,
+      }),
     );
 
     expect(result).toEqual({

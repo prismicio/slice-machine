@@ -1294,6 +1294,8 @@ function createCustomTypeFieldMap(customType: CustomType) {
       if (!isValidField(fieldId, field)) continue;
 
       if (field.type === "Group") {
+        acc.set(fieldId, field)
+
         if (!field.config?.fields) continue;
 
         for (const [groupId, group] of Object.entries(field.config.fields)) {
