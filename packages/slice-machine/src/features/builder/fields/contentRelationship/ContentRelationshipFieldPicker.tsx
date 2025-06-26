@@ -974,14 +974,14 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
         (fields, field) => {
           // Check if the field exists (only if validating)
           const existingField = ctFlatFieldMap[getId(field)];
-          if (shouldValidate && !existingField) return fields;
+          if (shouldValidate && existingField === undefined) return fields;
 
           // Regular field
           if (typeof field === "string") {
             // Check if the field matched the existing one in the custom type (only if validating)
             if (
               shouldValidate &&
-              existingField &&
+              existingField !== undefined &&
               existingField.type === "Group"
             ) {
               return fields;
@@ -996,7 +996,7 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
             // Check if the field matched the existing one in the custom type (only if validating)
             if (
               shouldValidate &&
-              existingField &&
+              existingField !== undefined &&
               existingField.type !== "Group"
             ) {
               return fields;
@@ -1020,7 +1020,7 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
             // Check if the field matched the existing one in the custom type (only if validating)
             if (
               shouldValidate &&
-              existingField &&
+              existingField !== undefined &&
               !isContentRelationshipField(existingField)
             ) {
               return fields;
@@ -1151,7 +1151,7 @@ function createContentRelationshipFieldCheckMap(args: {
             // Regular field
             if (typeof nestedField === "string") {
               // Check if the field matched the existing one in the custom type (only if validating)
-              if (shouldValidate && !ctFlatFieldMap[nestedField]) {
+              if (shouldValidate && ctFlatFieldMap[nestedField] === undefined) {
                 return nestedFields;
               }
 
@@ -1447,12 +1447,10 @@ function getGroupFieldFromMap(
   flattenFields: Record<string, NestableWidget | Group>,
   groupId: string,
   fieldId: string,
-): Group | undefined {
+) {
   const group = flattenFields[groupId];
-  if (!group || group.type !== "Group") return undefined;
-
-  const field = group.config?.fields?.[fieldId];
-  return field && field.type === "Group" ? field : undefined;
+  if (group === undefined || group.type !== "Group") return undefined;
+  return group.config?.fields?.[fieldId];
 }
 
 function isValidField(
