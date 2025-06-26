@@ -736,6 +736,7 @@ function TreeViewContentRelationshipField(
   return (
     <TreeViewSection
       key={customType.id}
+      // https://linear.app/prismic/issue/DT-2736/
       // @ts-expect-error - TODO: Fix this when we are able to release editor packages
       title={
         <Text>
