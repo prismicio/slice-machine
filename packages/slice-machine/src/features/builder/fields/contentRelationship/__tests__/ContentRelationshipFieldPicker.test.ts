@@ -366,7 +366,7 @@ describe("ContentRelationshipFieldPicker", () => {
   });
 
   describe("createContentRelationshipFieldCheckMap", () => {
-    it("should include existing/valid referenced fields", () => {
+    it("should include existing/valid referenced regular root fields", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -711,6 +711,75 @@ describe("ContentRelationshipFieldPicker", () => {
               booleanField: {
                 type: "checkbox",
                 value: true,
+              },
+            },
+          },
+        },
+      });
+    });
+
+    it("should include a correctly referenced content relationship field", () => {
+      const customType: CustomType = {
+        id: "customType",
+        label: "Custom Type",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            booleanField: {
+              type: "Boolean",
+            },
+          },
+        },
+      };
+      const customTypeWithContentRelationship: CustomType = {
+        id: "customTypeWithContentRelationship",
+        label: "Custom Type With Content Relationship",
+        repeatable: false,
+        status: true,
+        json: {
+          Main: {
+            contentRelationshipField: {
+              type: "Link",
+              config: {
+                select: "document",
+                customtypes: ["customType"],
+              },
+            },
+          },
+        },
+      };
+
+      const result = convertLinkCustomtypesToFieldCheckMap({
+        linkCustomtypes: [
+          {
+            id: "customTypeWithContentRelationship",
+            fields: [
+              {
+                id: "contentRelationshipField",
+                customtypes: [
+                  {
+                    id: "customType",
+                    fields: ["booleanField"],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        allCustomTypes: [customType, customTypeWithContentRelationship],
+      });
+
+      expect(result).toEqual({
+        customTypeWithContentRelationship: {
+          contentRelationshipField: {
+            type: "contentRelationship",
+            value: {
+              customType: {
+                booleanField: {
+                  type: "checkbox",
+                  value: true,
+                },
               },
             },
           },

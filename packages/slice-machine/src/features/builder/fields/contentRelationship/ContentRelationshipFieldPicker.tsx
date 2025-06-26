@@ -936,10 +936,10 @@ function useCustomTypes(linkCustomtypes: LinkCustomtypes | undefined): {
 
 function resolveContentRelationshipCustomTypes(
   linkCustomtypes: LinkCustomtypes,
-  localCustomTypes: CustomType[],
+  allCustomTypes: CustomType[],
 ): CustomType[] {
   return linkCustomtypes.flatMap((linkCustomtype) => {
-    return localCustomTypes.find((ct) => ct.id === getId(linkCustomtype)) ?? [];
+    return allCustomTypes.find((ct) => ct.id === getId(linkCustomtype)) ?? [];
   });
 }
 
