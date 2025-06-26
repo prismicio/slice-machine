@@ -1421,17 +1421,10 @@ function isContentRelationshipFieldWithSingleCustomtype(
   field: NestableWidget | Group,
   allCustomTypes: CustomType[],
 ): field is Link {
-  if (
-    !isContentRelationshipField(field) ||
-    !field.config?.customtypes ||
-    field.config.customtypes.length !== 1
-  ) {
-    return false;
-  }
-
   return (
+    isContentRelationshipField(field) &&
     resolveContentRelationshipCustomTypes(
-      field.config.customtypes,
+      field.config?.customtypes,
       allCustomTypes,
     ).length === 1
   );
