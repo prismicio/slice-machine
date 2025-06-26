@@ -842,7 +842,7 @@ describe("ContentRelationshipFieldPicker", () => {
       expect(result).toEqual({});
     });
 
-    it("should not include a regular field that's actually referencing a group", () => {
+    it("should not include a field referencing a group as a regular field (string/no picked fields)", () => {
       const customType: CustomType = {
         id: "customType",
         label: "Custom Type",
@@ -870,6 +870,16 @@ describe("ContentRelationshipFieldPicker", () => {
         status: true,
         json: {
           Main: {
+            groupField: {
+              type: "Group",
+              config: {
+                fields: {
+                  booleanField: {
+                    type: "Boolean",
+                  },
+                },
+              },
+            },
             contentRelationshipField: {
               type: "Link",
               config: {
@@ -886,6 +896,7 @@ describe("ContentRelationshipFieldPicker", () => {
           {
             id: "customTypeWithContentRelationship",
             fields: [
+              "groupField",
               {
                 id: "contentRelationshipField",
                 customtypes: [
@@ -899,45 +910,6 @@ describe("ContentRelationshipFieldPicker", () => {
           },
         ],
         allCustomTypes: [customType, customTypeWithContentRelationship],
-      });
-
-      expect(result).toEqual({});
-    });
-
-    it("should not include a group field referenced as a regular field (string/no picked fields)", () => {
-      const customType: CustomType = {
-        id: "customType",
-        label: "Custom Type",
-        repeatable: false,
-        status: true,
-        json: {
-          Main: {
-            groupField: {
-              type: "Group",
-              config: {
-                label: "Group Field",
-                fields: {
-                  booleanField: {
-                    type: "Boolean",
-                    config: {
-                      label: "Boolean Field",
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      };
-
-      const result = convertLinkCustomtypesToFieldCheckMap({
-        linkCustomtypes: [
-          {
-            id: "customType",
-            fields: ["groupField"],
-          },
-        ],
-        allCustomTypes: [customType],
       });
 
       expect(result).toEqual({});
