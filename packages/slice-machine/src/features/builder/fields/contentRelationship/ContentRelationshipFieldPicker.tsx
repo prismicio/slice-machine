@@ -1168,36 +1168,38 @@ function createContentRelationshipFieldCheckMap(args: {
               return nestedFields;
             }
 
-            // Group field
-            const groupFields =
-              nestedField.fields.reduce<PickerLeafGroupFieldValue>(
-                (groupFields, groupField) => {
-                  const existingField = getGroupFieldFromMap(
-                    ctFlatFieldMap,
-                    nestedField.id,
-                    groupField,
-                  );
+            if ("fields" in nestedField && nestedField.fields !== undefined) {
+              // Group field
+              const groupFields =
+                nestedField.fields.reduce<PickerLeafGroupFieldValue>(
+                  (groupFields, groupField) => {
+                    const existingField = getGroupFieldFromMap(
+                      ctFlatFieldMap,
+                      nestedField.id,
+                      groupField,
+                    );
 
-                  // Check if the field matched the existing one in the custom type (only if validating)
-                  if (
-                    shouldValidate &&
-                    (existingField === undefined ||
-                      existingField.type === "Group")
-                  ) {
+                    // Check if the field matched the existing one in the custom type (only if validating)
+                    if (
+                      shouldValidate &&
+                      (existingField === undefined ||
+                        existingField.type === "Group")
+                    ) {
+                      return groupFields;
+                    }
+
+                    groupFields[groupField] = { type: "checkbox", value: true };
                     return groupFields;
-                  }
+                  },
+                  {},
+                );
 
-                  groupFields[groupField] = { type: "checkbox", value: true };
-                  return groupFields;
-                },
-                {},
-              );
-
-            if (Object.keys(groupFields).length > 0) {
-              nestedFields[nestedField.id] = {
-                type: "group",
-                value: groupFields,
-              };
+              if (Object.keys(groupFields).length > 0) {
+                nestedFields[nestedField.id] = {
+                  type: "group",
+                  value: groupFields,
+                };
+              }
             }
 
             return nestedFields;
