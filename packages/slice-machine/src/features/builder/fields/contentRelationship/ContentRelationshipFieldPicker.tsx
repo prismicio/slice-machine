@@ -533,7 +533,7 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
   } = props;
 
   const renderedFields = getCustomTypeStaticFields(customType).map(
-    ({ fieldId, field }) => {
+    ([fieldId, field]) => {
       // Group field
 
       if (field.type === "Group") {
@@ -689,7 +689,7 @@ function TreeViewContentRelationshipField(
         const nestedCtFieldsCheckMap = crFieldsCheckMap[customType.id] ?? {};
 
         const renderedFields = getCustomTypeStaticFields(customType).map(
-          ({ fieldId, field }) => {
+          ([fieldId, field]) => {
             // Group field
 
             if (field.type === "Group") {
@@ -960,22 +960,20 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
     (customTypes, customType) => {
       if (typeof customType === "string") return customTypes;
 
-      let ctFlatFieldMap: CustomTypeFlatFieldMap;
+      let ctFlatFieldMap: Record<string, NestableWidget | Group> = {};
 
       if (shouldValidate) {
         const existingCt = allCustomTypes.find((c) => c.id === customType.id);
         // Exit early if the custom type doesn't exist
         if (!existingCt) return customTypes;
 
-        ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
-      } else {
-        ctFlatFieldMap = getCustomTypeFlatFieldMap(undefined);
+        ctFlatFieldMap = getCustomTypeStaticFieldsMap(existingCt);
       }
 
       const customTypeFields = customType.fields.reduce<PickerCustomType>(
         (fields, field) => {
           // Check if the field exists (only if validating)
-          const existingField = ctFlatFieldMap.get(getId(field));
+          const existingField = ctFlatFieldMap[getId(field)];
           if (shouldValidate && !existingField) return fields;
 
           // Regular field
@@ -1060,7 +1058,7 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 function createGroupFieldCheckMap(args: {
   group: LinkCustomtypesGroupFieldValue;
   allCustomTypes?: CustomType[];
-  ctFlatFieldMap: CustomTypeFlatFieldMap;
+  ctFlatFieldMap: Record<string, NestableWidget | Group>;
 }): PickerFirstLevelGroupField | undefined {
   const { group, ctFlatFieldMap, allCustomTypes } = args;
 
@@ -1070,7 +1068,11 @@ function createGroupFieldCheckMap(args: {
   const fieldEntries = group.fields.reduce<PickerFirstLevelGroupFieldValue>(
     (fields, field) => {
       // Check if the field exists (only if validating)
-      const existingField = ctFlatFieldMap.get(`${group.id}.${getId(field)}`);
+      const existingField = getGroupFieldFromMap(
+        ctFlatFieldMap,
+        group.id,
+        getId(field),
+      );
       if (shouldValidate && !existingField) return fields;
 
       // Regular field
@@ -1134,16 +1136,14 @@ function createContentRelationshipFieldCheckMap(args: {
       (customTypes, customType) => {
         if (typeof customType === "string") return customTypes;
 
-        let ctFlatFieldMap: CustomTypeFlatFieldMap;
+        let ctFlatFieldMap: Record<string, NestableWidget | Group> = {};
 
         if (shouldValidate) {
           const existingCt = allCustomTypes.find((c) => c.id === customType.id);
           // Exit early if the custom type doesn't exist
           if (!existingCt) return customTypes;
 
-          ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
-        } else {
-          ctFlatFieldMap = getCustomTypeFlatFieldMap(undefined);
+          ctFlatFieldMap = getCustomTypeStaticFieldsMap(existingCt);
         }
 
         const ctFields = customType.fields.reduce<PickerNestedCustomTypeValue>(
@@ -1151,7 +1151,7 @@ function createContentRelationshipFieldCheckMap(args: {
             // Regular field
             if (typeof nestedField === "string") {
               // Check if the field matched the existing one in the custom type (only if validating)
-              if (shouldValidate && !ctFlatFieldMap.has(nestedField)) {
+              if (shouldValidate && !ctFlatFieldMap[nestedField]) {
                 return nestedFields;
               }
 
@@ -1166,7 +1166,7 @@ function createContentRelationshipFieldCheckMap(args: {
                   // Check if the field matched the existing one in the custom type (only if validating)
                   if (
                     shouldValidate &&
-                    !ctFlatFieldMap.has(`${nestedField.id}.${field}`)
+                    !getGroupFieldFromMap(ctFlatFieldMap, nestedField.id, field)
                   ) {
                     return fields;
                   }
@@ -1417,53 +1417,42 @@ function isContentRelationshipFieldWithSingleCustomtype(
   );
 }
 
-type CustomTypeFlatFieldMap = {
-  get: (fieldId: string) => DynamicWidget | undefined;
-  has: (fieldId: string) => boolean;
-};
-
 /**
- * Util that flattens a custom type's fields into a map of field ids to fields and
- * returns functions to get and check if a field exists by key.
- * For group fields, the key is separated by a dot (e.g. "group.fieldId").
+ * Flattens all custom type tabs and fields into an array of [fieldId, field] tuples.
+ * Also filters out invalid fields.
  */
-function getCustomTypeFlatFieldMap(
-  customType: CustomType | undefined,
-): CustomTypeFlatFieldMap {
-  if (!customType) return { get: () => undefined, has: () => false };
-
-  const ctFieldMap = Object.values(customType.json).reduce((acc, tabFields) => {
-    for (const [fieldId, field] of Object.entries(tabFields)) {
-      if (!isValidField(fieldId, field)) continue;
-
-      if (field.type === "Group") {
-        acc.set(fieldId, field);
-
-        if (!field.config?.fields) continue;
-
-        for (const [groupId, group] of Object.entries(field.config.fields)) {
-          if (!isValidField(groupId, group)) continue;
-          acc.set(`${fieldId}.${groupId}`, group);
-        }
-      } else {
-        acc.set(fieldId, field);
-      }
-    }
-    return acc;
-  }, new Map<string, DynamicWidget>());
-
-  return {
-    get: (fieldId) => ctFieldMap.get(fieldId),
-    has: (fieldId) => ctFieldMap.has(fieldId),
-  };
+function getCustomTypeStaticFields(
+  customType: CustomType,
+): [fieldId: string, field: NestableWidget | Group][] {
+  return Object.values(customType.json).flatMap((tabFields) => {
+    return Object.entries(tabFields).flatMap<[string, NestableWidget | Group]>(
+      ([fieldId, field]) => {
+        return isValidField(fieldId, field) ? [[fieldId, field]] : [];
+      },
+    );
+  });
 }
 
-function getCustomTypeStaticFields(customType: CustomType) {
-  return Object.values(customType.json).flatMap((tabFields) => {
-    return Object.entries(tabFields).flatMap(([fieldId, field]) => {
-      return isValidField(fieldId, field) ? { fieldId, field } : [];
-    });
-  });
+/**
+ * Flattens all custom type tabs and fields into a map of field ids to fields.
+ * Also filters out invalid fields.
+ */
+function getCustomTypeStaticFieldsMap(
+  customType: CustomType,
+): Record<string, NestableWidget | Group> {
+  return Object.fromEntries(getCustomTypeStaticFields(customType));
+}
+
+function getGroupFieldFromMap(
+  flattenFields: Record<string, NestableWidget | Group>,
+  groupId: string,
+  fieldId: string,
+): Group | undefined {
+  const group = flattenFields[groupId];
+  if (!group || group.type !== "Group") return undefined;
+
+  const field = group.config?.fields?.[fieldId];
+  return field && field.type === "Group" ? field : undefined;
 }
 
 function isValidField(
