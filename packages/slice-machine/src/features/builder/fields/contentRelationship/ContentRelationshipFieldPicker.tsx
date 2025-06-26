@@ -665,7 +665,7 @@ function TreeViewContentRelationshipField(
     allCustomTypes,
   );
 
-  if (resolvedCustomTypes.length !== 1) return null;
+  if (resolvedCustomTypes.length === 0) return null;
 
   const [customType] = resolvedCustomTypes;
 
