@@ -953,26 +953,36 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 }): PickerCustomTypes {
   const { linkCustomtypes, allCustomTypes } = args;
 
+  // If allCustomTypes is undefined, avoid checking if the fields exist.
+  const shouldValidate = allCustomTypes !== undefined;
+
   const checkMap = linkCustomtypes.reduce<PickerCustomTypes>(
     (customTypes, customType) => {
       if (typeof customType === "string") return customTypes;
 
-      const existingCt = allCustomTypes?.find((ct) => ct.id === customType.id);
-      if (allCustomTypes && !existingCt) return customTypes;
+      let ctFlatFieldMap: CustomTypeFlatFieldMap;
 
-      const ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
+      if (shouldValidate) {
+        const existingCt = allCustomTypes.find((c) => c.id === customType.id);
+        // Exit early if the custom type doesn't exist
+        if (!existingCt) return customTypes;
+
+        ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
+      } else {
+        ctFlatFieldMap = getCustomTypeFlatFieldMap(undefined);
+      }
 
       const customTypeFields = customType.fields.reduce<PickerCustomType>(
         (fields, field) => {
-          // Check if the field exists
+          // Check if the field exists (only if validating)
           const existingField = ctFlatFieldMap.get(getId(field));
-          if (allCustomTypes && !existingField) return fields;
+          if (shouldValidate && !existingField) return fields;
 
           // Regular field
           if (typeof field === "string") {
-            // Check if the field matched the existing one in the custom type
+            // Check if the field matched the existing one in the custom type (only if validating)
             if (
-              allCustomTypes &&
+              shouldValidate &&
               existingField &&
               existingField.type === "Group"
             ) {
@@ -985,9 +995,9 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
           // Group field
           if ("fields" in field && field.fields !== undefined) {
-            // Check if the field matched the existing one in the custom type
+            // Check if the field matched the existing one in the custom type (only if validating)
             if (
-              allCustomTypes &&
+              shouldValidate &&
               existingField &&
               existingField.type !== "Group"
             ) {
@@ -1009,9 +1019,9 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 
           // Content relationship field
           if ("customtypes" in field && field.customtypes !== undefined) {
-            // Check if the field matched the existing one in the custom type
+            // Check if the field matched the existing one in the custom type (only if validating)
             if (
-              allCustomTypes &&
+              shouldValidate &&
               existingField &&
               !isContentRelationshipField(existingField)
             ) {
@@ -1054,16 +1064,19 @@ function createGroupFieldCheckMap(args: {
 }): PickerFirstLevelGroupField | undefined {
   const { group, ctFlatFieldMap, allCustomTypes } = args;
 
+  // If allCustomTypes is undefined, avoid checking if the fields exist.
+  const shouldValidate = allCustomTypes !== undefined;
+
   const fieldEntries = group.fields.reduce<PickerFirstLevelGroupFieldValue>(
     (fields, field) => {
-      // Check if the field exists
+      // Check if the field exists (only if validating)
       const existingField = ctFlatFieldMap.get(`${group.id}.${getId(field)}`);
-      if (allCustomTypes && !existingField) return fields;
+      if (shouldValidate && !existingField) return fields;
 
       // Regular field
       if (typeof field === "string") {
-        // Check if the field matched the existing one in the custom type
-        if (allCustomTypes && existingField && existingField.type === "Group") {
+        // Check if the field matched the existing one in the custom type (only if validating)
+        if (shouldValidate && existingField && existingField.type === "Group") {
           return fields;
         }
 
@@ -1073,9 +1086,9 @@ function createGroupFieldCheckMap(args: {
 
       // Content relationship field
       if ("customtypes" in field && field.customtypes !== undefined) {
-        // Check if the field matched the existing one in the custom type
+        // Check if the field matched the existing one in the custom type (only if validating)
         if (
-          allCustomTypes &&
+          shouldValidate &&
           existingField &&
           !isContentRelationshipField(existingField)
         ) {
@@ -1113,24 +1126,32 @@ function createContentRelationshipFieldCheckMap(args: {
 }): PickerContentRelationshipField | undefined {
   const { field, allCustomTypes } = args;
 
+  // If allCustomTypes is undefined, avoid checking if the fields exists.
+  const shouldValidate = allCustomTypes !== undefined;
+
   const fieldEntries =
     field.customtypes.reduce<PickerContentRelationshipFieldValue>(
       (customTypes, customType) => {
         if (typeof customType === "string") return customTypes;
 
-        const existingCt = allCustomTypes?.find(
-          (ct) => ct.id === customType.id,
-        );
-        if (allCustomTypes && !existingCt) return customTypes;
+        let ctFlatFieldMap: CustomTypeFlatFieldMap;
 
-        const ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
+        if (shouldValidate) {
+          const existingCt = allCustomTypes.find((c) => c.id === customType.id);
+          // Exit early if the custom type doesn't exist
+          if (!existingCt) return customTypes;
+
+          ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
+        } else {
+          ctFlatFieldMap = getCustomTypeFlatFieldMap(undefined);
+        }
 
         const ctFields = customType.fields.reduce<PickerNestedCustomTypeValue>(
           (nestedFields, nestedField) => {
             // Regular field
             if (typeof nestedField === "string") {
-              // Check if the field matched the existing one in the custom type
-              if (allCustomTypes && !ctFlatFieldMap.has(nestedField)) {
+              // Check if the field matched the existing one in the custom type (only if validating)
+              if (shouldValidate && !ctFlatFieldMap.has(nestedField)) {
                 return nestedFields;
               }
 
@@ -1142,9 +1163,9 @@ function createContentRelationshipFieldCheckMap(args: {
             const groupFields =
               nestedField.fields.reduce<PickerLeafGroupFieldValue>(
                 (fields, field) => {
-                  // Check if the field matched the existing one in the custom type
+                  // Check if the field matched the existing one in the custom type (only if validating)
                   if (
-                    allCustomTypes &&
+                    shouldValidate &&
                     !ctFlatFieldMap.has(`${nestedField.id}.${field}`)
                   ) {
                     return fields;
