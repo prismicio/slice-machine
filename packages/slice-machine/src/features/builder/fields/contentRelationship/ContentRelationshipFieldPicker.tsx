@@ -566,7 +566,9 @@ function TreeViewCustomType(props: TreeViewCustomTypeProps) {
 
       // Content relationship field with custom types
 
-      if (isContentRelationshipFieldWithSingleCustomtype(field)) {
+      if (
+        isContentRelationshipFieldWithSingleCustomtype(field, allCustomTypes)
+      ) {
         const onContentRelationshipFieldChange = (
           newCrFields: PickerContentRelationshipFieldValue,
         ) => {
@@ -658,18 +660,12 @@ function TreeViewContentRelationshipField(
     allCustomTypes,
   } = props;
 
-  if (!field.config?.customtypes) return null;
-
   const resolvedCustomTypes = resolveContentRelationshipCustomTypes(
-    field.config.customtypes,
+    field.config?.customtypes,
     allCustomTypes,
   );
 
-  if (resolvedCustomTypes.length === 0) return null;
-
   const [customType] = resolvedCustomTypes;
-
-  if (typeof customType === "string") return null;
 
   const onNestedCustomTypeChange = (
     newNestedCustomTypeFields: PickerNestedCustomTypeValue,
@@ -772,8 +768,6 @@ function TreeViewLeafGroupField(props: TreeViewLeafGroupFieldProps) {
     onChange: onGroupFieldChange,
   } = props;
 
-  if (!group.config?.fields) return null;
-
   const renderedFields = getGroupFields(group).map(({ fieldId }) => {
     const onCheckedChange = (newChecked: boolean) => {
       onGroupFieldChange({
@@ -828,7 +822,7 @@ function TreeViewFirstLevelGroupField(
   const renderedFields = getGroupFields(group).map(({ fieldId, field }) => {
     // Content relationship field with custom types
 
-    if (isContentRelationshipFieldWithSingleCustomtype(field)) {
+    if (isContentRelationshipFieldWithSingleCustomtype(field, allCustomTypes)) {
       const onContentRelationshipFieldChange = (
         newCrFields: PickerContentRelationshipFieldValue,
       ) => {
@@ -932,9 +926,10 @@ function useCustomTypes(linkCustomtypes: LinkCustomtypes | undefined): {
 }
 
 function resolveContentRelationshipCustomTypes(
-  linkCustomtypes: LinkCustomtypes,
+  linkCustomtypes: LinkCustomtypes | undefined,
   allCustomTypes: CustomType[],
 ): CustomType[] {
+  if (!linkCustomtypes) return [];
   return linkCustomtypes.flatMap((linkCustomtype) => {
     return allCustomTypes.find((ct) => ct.id === getId(linkCustomtype)) ?? [];
   });
@@ -1424,11 +1419,21 @@ function isContentRelationshipField(field: DynamicWidget): field is Link {
  */
 function isContentRelationshipFieldWithSingleCustomtype(
   field: NestableWidget | Group,
+  allCustomTypes: CustomType[],
 ): field is Link {
-  return !!(
-    isContentRelationshipField(field) &&
-    field.config?.customtypes &&
-    field.config.customtypes.length === 1
+  if (
+    !isContentRelationshipField(field) ||
+    !field.config?.customtypes ||
+    field.config.customtypes.length !== 1
+  ) {
+    return false;
+  }
+
+  return (
+    resolveContentRelationshipCustomTypes(
+      field.config.customtypes,
+      allCustomTypes,
+    ).length === 1
   );
 }
 
