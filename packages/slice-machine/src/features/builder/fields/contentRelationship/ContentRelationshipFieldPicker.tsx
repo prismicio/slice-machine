@@ -953,17 +953,111 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
 }): PickerCustomTypes {
   const { linkCustomtypes, allCustomTypes } = args;
 
-  const checkMap = linkCustomtypes.reduce((customTypes, customType) => {
-    if (typeof customType === "string") return customTypes;
+  const checkMap = linkCustomtypes.reduce<PickerCustomTypes>(
+    (customTypes, customType) => {
+      if (typeof customType === "string") return customTypes;
 
-    const existingCt = allCustomTypes?.find((ct) => ct.id === customType.id);
-    if (allCustomTypes && !existingCt) return customTypes;
+      const existingCt = allCustomTypes?.find((ct) => ct.id === customType.id);
+      if (allCustomTypes && !existingCt) return customTypes;
 
-    const ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
+      const ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
 
-    const customTypeFields = customType.fields.reduce((fields, field) => {
+      const customTypeFields = customType.fields.reduce<PickerCustomType>(
+        (fields, field) => {
+          // Check if the field exists
+          const existingField = ctFlatFieldMap.get(getId(field));
+          if (allCustomTypes && !existingField) return fields;
+
+          // Regular field
+          if (typeof field === "string") {
+            // Check if the field matched the existing one in the custom type
+            if (
+              allCustomTypes &&
+              existingField &&
+              existingField.type === "Group"
+            ) {
+              return fields;
+            }
+
+            fields[field] = { type: "checkbox", value: true };
+            return fields;
+          }
+
+          // Group field
+          if ("fields" in field && field.fields !== undefined) {
+            // Check if the field matched the existing one in the custom type
+            if (
+              allCustomTypes &&
+              existingField &&
+              existingField.type !== "Group"
+            ) {
+              return fields;
+            }
+
+            const groupFieldCheckMap = createGroupFieldCheckMap({
+              group: field,
+              allCustomTypes,
+              ctFlatFieldMap,
+            });
+
+            if (groupFieldCheckMap) {
+              fields[field.id] = groupFieldCheckMap;
+            }
+
+            return fields;
+          }
+
+          // Content relationship field
+          if ("customtypes" in field && field.customtypes !== undefined) {
+            // Check if the field matched the existing one in the custom type
+            if (
+              allCustomTypes &&
+              existingField &&
+              !isContentRelationshipField(existingField)
+            ) {
+              return fields;
+            }
+
+            const crFieldCheckMap = createContentRelationshipFieldCheckMap({
+              field,
+              allCustomTypes,
+            });
+
+            if (crFieldCheckMap) {
+              fields[field.id] = crFieldCheckMap;
+            }
+
+            return fields;
+          }
+
+          return fields;
+        },
+        {},
+      );
+
+      if (Object.keys(customTypeFields).length > 0) {
+        customTypes[customType.id] = customTypeFields;
+      }
+
+      return customTypes;
+    },
+    {},
+  );
+
+  return checkMap;
+}
+
+function createGroupFieldCheckMap(args: {
+  group: LinkCustomtypesGroupFieldValue;
+  allCustomTypes?: CustomType[];
+  ctFlatFieldMap: CustomTypeFlatFieldMap;
+}): PickerFirstLevelGroupField | undefined {
+  const { group, ctFlatFieldMap, allCustomTypes } = args;
+
+  const fieldEntries = group.fields.reduce<PickerFirstLevelGroupFieldValue>(
+    (fields, field) => {
       // Check if the field exists
-      const existingField = ctFlatFieldMap.get(getId(field));
+      const existingField = ctFlatFieldMap.get(`${group.id}.${getId(field)}`);
       if (allCustomTypes && !existingField) return fields;
 
       // Regular field
@@ -974,26 +1068,6 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
         }
 
         fields[field] = { type: "checkbox", value: true };
-        return fields;
-      }
-
-      // Group field
-      if ("fields" in field && field.fields !== undefined) {
-        // Check if the field matched the existing one in the custom type
-        if (allCustomTypes && existingField && existingField.type !== "Group") {
-          return fields;
-        }
-
-        const groupFieldCheckMap = createGroupFieldCheckMap({
-          group: field,
-          allCustomTypes,
-          ctFlatFieldMap,
-        });
-
-        if (groupFieldCheckMap) {
-          fields[field.id] = groupFieldCheckMap;
-        }
-
         return fields;
       }
 
@@ -1021,66 +1095,9 @@ export function convertLinkCustomtypesToFieldCheckMap(args: {
       }
 
       return fields;
-    }, {} as PickerCustomType);
-
-    if (Object.keys(customTypeFields).length > 0) {
-      customTypes[customType.id] = customTypeFields;
-    }
-
-    return customTypes;
-  }, {} as PickerCustomTypes);
-
-  return checkMap;
-}
-
-function createGroupFieldCheckMap(args: {
-  group: LinkCustomtypesGroupFieldValue;
-  allCustomTypes?: CustomType[];
-  ctFlatFieldMap: CustomTypeFlatFieldMap;
-}): PickerFirstLevelGroupField | undefined {
-  const { group, ctFlatFieldMap, allCustomTypes } = args;
-
-  const fieldEntries = group.fields.reduce((fields, field) => {
-    // Check if the field exists
-    const existingField = ctFlatFieldMap.get(`${group.id}.${getId(field)}`);
-    if (allCustomTypes && !existingField) return fields;
-
-    // Regular field
-    if (typeof field === "string") {
-      // Check if the field matched the existing one in the custom type
-      if (allCustomTypes && existingField && existingField.type === "Group") {
-        return fields;
-      }
-
-      fields[field] = { type: "checkbox", value: true };
-      return fields;
-    }
-
-    // Content relationship field
-    if ("customtypes" in field && field.customtypes !== undefined) {
-      // Check if the field matched the existing one in the custom type
-      if (
-        allCustomTypes &&
-        existingField &&
-        !isContentRelationshipField(existingField)
-      ) {
-        return fields;
-      }
-
-      const crFieldCheckMap = createContentRelationshipFieldCheckMap({
-        field,
-        allCustomTypes,
-      });
-
-      if (crFieldCheckMap) {
-        fields[field.id] = crFieldCheckMap;
-      }
-
-      return fields;
-    }
-
-    return fields;
-  }, {} as PickerFirstLevelGroupFieldValue);
+    },
+    {},
+  );
 
   if (Object.keys(fieldEntries).length === 0) return undefined;
 
@@ -1096,56 +1113,69 @@ function createContentRelationshipFieldCheckMap(args: {
 }): PickerContentRelationshipField | undefined {
   const { field, allCustomTypes } = args;
 
-  const fieldEntries = field.customtypes.reduce((customTypes, customType) => {
-    if (typeof customType === "string") return customTypes;
+  const fieldEntries =
+    field.customtypes.reduce<PickerContentRelationshipFieldValue>(
+      (customTypes, customType) => {
+        if (typeof customType === "string") return customTypes;
 
-    const existingCt = allCustomTypes?.find((ct) => ct.id === customType.id);
-    if (allCustomTypes && !existingCt) return customTypes;
+        const existingCt = allCustomTypes?.find(
+          (ct) => ct.id === customType.id,
+        );
+        if (allCustomTypes && !existingCt) return customTypes;
 
-    const ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
+        const ctFlatFieldMap = getCustomTypeFlatFieldMap(existingCt);
 
-    const ctFields = customType.fields.reduce((nestedFields, nestedField) => {
-      // Regular field
-      if (typeof nestedField === "string") {
-        // Check if the field matched the existing one in the custom type
-        if (allCustomTypes && !ctFlatFieldMap.has(nestedField)) {
-          return nestedFields;
+        const ctFields = customType.fields.reduce<PickerNestedCustomTypeValue>(
+          (nestedFields, nestedField) => {
+            // Regular field
+            if (typeof nestedField === "string") {
+              // Check if the field matched the existing one in the custom type
+              if (allCustomTypes && !ctFlatFieldMap.has(nestedField)) {
+                return nestedFields;
+              }
+
+              nestedFields[nestedField] = { type: "checkbox", value: true };
+              return nestedFields;
+            }
+
+            // Group field
+            const groupFields =
+              nestedField.fields.reduce<PickerLeafGroupFieldValue>(
+                (fields, field) => {
+                  // Check if the field matched the existing one in the custom type
+                  if (
+                    allCustomTypes &&
+                    !ctFlatFieldMap.has(`${nestedField.id}.${field}`)
+                  ) {
+                    return fields;
+                  }
+
+                  fields[field] = { type: "checkbox", value: true };
+                  return fields;
+                },
+                {},
+              );
+
+            if (Object.keys(groupFields).length > 0) {
+              nestedFields[nestedField.id] = {
+                type: "group",
+                value: groupFields,
+              };
+            }
+
+            return nestedFields;
+          },
+          {},
+        );
+
+        if (Object.keys(ctFields).length > 0) {
+          customTypes[customType.id] = ctFields;
         }
 
-        nestedFields[nestedField] = { type: "checkbox", value: true };
-        return nestedFields;
-      }
-
-      // Group field
-      const groupFields = nestedField.fields.reduce((fields, field) => {
-        // Check if the field matched the existing one in the custom type
-        if (
-          allCustomTypes &&
-          !ctFlatFieldMap.has(`${nestedField.id}.${field}`)
-        ) {
-          return fields;
-        }
-
-        fields[field] = { type: "checkbox", value: true };
-        return fields;
-      }, {} as PickerLeafGroupFieldValue);
-
-      if (Object.keys(groupFields).length > 0) {
-        nestedFields[nestedField.id] = {
-          type: "group",
-          value: groupFields,
-        };
-      }
-
-      return nestedFields;
-    }, {} as PickerNestedCustomTypeValue);
-
-    if (Object.keys(ctFields).length > 0) {
-      customTypes[customType.id] = ctFields;
-    }
-
-    return customTypes;
-  }, {} as PickerContentRelationshipFieldValue);
+        return customTypes;
+      },
+      {},
+    );
 
   if (Object.keys(fieldEntries).length === 0) return undefined;
 
