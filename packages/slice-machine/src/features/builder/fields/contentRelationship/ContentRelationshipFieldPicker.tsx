@@ -1078,7 +1078,11 @@ function createGroupFieldCheckMap(args: {
       // Regular field
       if (typeof field === "string") {
         // Check if the field matched the existing one in the custom type (only if validating)
-        if (shouldValidate && existingField && existingField.type === "Group") {
+        if (
+          shouldValidate &&
+          existingField !== undefined &&
+          existingField.type === "Group"
+        ) {
           return fields;
         }
 
@@ -1091,7 +1095,7 @@ function createGroupFieldCheckMap(args: {
         // Check if the field matched the existing one in the custom type (only if validating)
         if (
           shouldValidate &&
-          existingField &&
+          existingField !== undefined &&
           !isContentRelationshipField(existingField)
         ) {
           return fields;
@@ -1150,8 +1154,13 @@ function createContentRelationshipFieldCheckMap(args: {
           (nestedFields, nestedField) => {
             // Regular field
             if (typeof nestedField === "string") {
+              const existingField = ctFlatFieldMap[nestedField];
+
               // Check if the field matched the existing one in the custom type (only if validating)
-              if (shouldValidate && ctFlatFieldMap[nestedField] === undefined) {
+              if (
+                shouldValidate &&
+                (existingField === undefined || existingField.type === "Group")
+              ) {
                 return nestedFields;
               }
 
@@ -1162,17 +1171,24 @@ function createContentRelationshipFieldCheckMap(args: {
             // Group field
             const groupFields =
               nestedField.fields.reduce<PickerLeafGroupFieldValue>(
-                (fields, field) => {
+                (groupFields, groupField) => {
+                  const existingField = getGroupFieldFromMap(
+                    ctFlatFieldMap,
+                    nestedField.id,
+                    groupField,
+                  );
+
                   // Check if the field matched the existing one in the custom type (only if validating)
                   if (
                     shouldValidate &&
-                    !getGroupFieldFromMap(ctFlatFieldMap, nestedField.id, field)
+                    (existingField === undefined ||
+                      existingField.type === "Group")
                   ) {
-                    return fields;
+                    return groupFields;
                   }
 
-                  fields[field] = { type: "checkbox", value: true };
-                  return fields;
+                  groupFields[groupField] = { type: "checkbox", value: true };
+                  return groupFields;
                 },
                 {},
               );
