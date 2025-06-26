@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.24.15",
+	"version": "0.25.0",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
