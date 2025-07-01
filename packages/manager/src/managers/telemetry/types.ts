@@ -1,4 +1,7 @@
-import { FieldType } from "@prismicio/types-internal/lib/customtypes/widgets";
+import {
+	FieldType,
+	LinkConfig,
+} from "@prismicio/types-internal/lib/customtypes/widgets";
 
 import { CustomTypeFormat } from "../customTypes/types";
 import type { PushChangesLimitType } from "../prismicRepository/types";
@@ -196,6 +199,9 @@ type FieldAddedSegmentEvent = SegmentEvent<
 		allowText?: boolean;
 		repeat?: boolean;
 		variants?: string[];
+		linkSelect?: LinkConfig["select"];
+		linkPickedFields?: number;
+		linkNestedPickedFields?: number;
 	}
 >;
 
@@ -212,6 +218,9 @@ type FieldUpdatedSegmentEvent = SegmentEvent<
 		allowText?: boolean;
 		repeat?: boolean;
 		variants?: string[];
+		linkSelect?: LinkConfig["select"];
+		linkPickedFields?: number;
+		linkNestedPickedFields?: number;
 	}
 >;
 
