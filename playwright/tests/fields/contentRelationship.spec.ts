@@ -14,8 +14,11 @@ test("I see that linked content relationships are updated when a field API ID is
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
-  const ct1Id = `custom_type_${generateRandomId()}`;
-  await customTypesTablePage.createTypeDialog.createType(ct1Id, "reusable");
+  const customTypeAId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeAId,
+    "reusable",
+  );
 
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
@@ -42,8 +45,11 @@ test("I see that linked content relationships are updated when a field API ID is
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
-  const ct2Id = `custom_type_${generateRandomId()}`;
-  await customTypesTablePage.createTypeDialog.createType(ct2Id, "reusable");
+  const customTypeBId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeBId,
+    "reusable",
+  );
 
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
@@ -63,7 +69,7 @@ test("I see that linked content relationships are updated when a field API ID is
 
   await page.getByRole("button", { name: "Add type" }).click();
 
-  await page.getByRole("menuitem", { name: ct1Id }).click();
+  await page.getByRole("menuitem", { name: customTypeAId }).click();
 
   await page.getByLabel("my_regular_field").click();
 
@@ -79,7 +85,7 @@ test("I see that linked content relationships are updated when a field API ID is
 
   await customTypesTablePage.goto();
 
-  const customTypeRow = customTypesTablePage.getRow(ct1Id);
+  const customTypeRow = customTypesTablePage.getRow(customTypeAId);
   await expect(customTypeRow).toBeVisible();
 
   await customTypeRow.click();
@@ -110,7 +116,7 @@ test("I see that linked content relationships are updated when a field API ID is
 
   await customTypesTablePage.goto();
 
-  await customTypesTablePage.getRow(ct2Id).click();
+  await customTypesTablePage.getRow(customTypeBId).click();
 
   await expect(
     pageTypesBuilderPage.getListItemFieldId("my_content_relationship"),
@@ -141,8 +147,11 @@ test("I can select fields from a nested content relationship", async ({
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
-  const ct1Id = `custom_type_${generateRandomId()}`;
-  await customTypesTablePage.createTypeDialog.createType(ct1Id, "reusable");
+  const customTypeAId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeAId,
+    "reusable",
+  );
 
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
@@ -169,8 +178,11 @@ test("I can select fields from a nested content relationship", async ({
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
-  const ct2Id = `custom_type_${generateRandomId()}`;
-  await customTypesTablePage.createTypeDialog.createType(ct2Id, "reusable");
+  const customTypeBId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeBId,
+    "reusable",
+  );
 
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
@@ -189,7 +201,7 @@ test("I can select fields from a nested content relationship", async ({
     .click();
 
   await page.getByRole("button", { name: "Add type" }).click();
-  await page.getByRole("menuitem", { name: ct1Id }).click();
+  await page.getByRole("menuitem", { name: customTypeAId }).click();
 
   await pageTypesBuilderPage.editFieldDialog.submitButton.click();
 
@@ -198,8 +210,11 @@ test("I can select fields from a nested content relationship", async ({
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
-  const ct3Id = `custom_type_${generateRandomId()}`;
-  await customTypesTablePage.createTypeDialog.createType(ct3Id, "reusable");
+  const customTypeCId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeCId,
+    "reusable",
+  );
 
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
@@ -218,7 +233,7 @@ test("I can select fields from a nested content relationship", async ({
     .click();
 
   await page.getByRole("button", { name: "Add type" }).click();
-  await page.getByRole("menuitem", { name: ct2Id }).click();
+  await page.getByRole("menuitem", { name: customTypeBId }).click();
 
   // Expand every section
   await page
@@ -264,4 +279,106 @@ test("I can select fields from a nested content relationship", async ({
 
   // group
   await expect(page.getByText("(1 field selected)")).toBeVisible();
+});
+
+test("I can a 'No available fields to select' label for groups and nested custom types", async ({
+  customTypesTablePage,
+  pageTypesBuilderPage,
+  customTypesBuilderPage,
+  page,
+}) => {
+  // Create custom type A
+
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  const customTypeAId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeAId,
+    "reusable",
+  );
+
+  // Create custom type B
+
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  const customTypeBId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeBId,
+    "reusable",
+  );
+
+  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Content Relationship",
+    name: "My Content Relationship With CT A",
+    expectedId: "my_content_relationship_with_ct_a",
+  });
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Repeatable Group",
+    name: "My Group B",
+    expectedId: "my_group_b",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_content_relationship_with_ct_a",
+    ),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_content_relationship_with_ct_a")
+    .click();
+
+  await page.getByRole("button", { name: "Add type" }).click();
+  await page.getByRole("menuitem", { name: customTypeAId }).click();
+
+  await pageTypesBuilderPage.editFieldDialog.submitButton.click();
+
+  // Create custom type C
+
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  const customTypeCId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeCId,
+    "reusable",
+  );
+
+  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Content Relationship",
+    name: "My Content Relationship With CT B",
+    expectedId: "my_content_relationship_with_ct_b",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_content_relationship_with_ct_b",
+    ),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_content_relationship_with_ct_b")
+    .click();
+
+  await page.getByRole("button", { name: "Add type" }).click();
+  await page.getByRole("menuitem", { name: customTypeBId }).click();
+
+  // Expand every section
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_content_relationship_with_ct_a")
+    .click();
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_group_b")
+    .click();
+
+  await expect(page.getByText("No available fields to select")).toHaveCount(2);
 });
