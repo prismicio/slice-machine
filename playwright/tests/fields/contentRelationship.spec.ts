@@ -136,13 +136,13 @@ test("I see that linked content relationships are updated when a field API ID is
   await expect(page.getByLabel("my_field_inside_group")).toBeChecked();
 });
 
-test("I can select fields from a nested content relationship and then remove the type", async ({
+test("I can select fields from a nested content relationship up to level 2 and then remove the type", async ({
   customTypesTablePage,
   pageTypesBuilderPage,
   customTypesBuilderPage,
   page,
 }) => {
-  // Create custom type A
+  // Create a custom type A
 
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
@@ -153,27 +153,7 @@ test("I can select fields from a nested content relationship and then remove the
     "reusable",
   );
 
-  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
-
-  await pageTypesBuilderPage.addStaticField({
-    type: "Rich Text",
-    name: "My Regular Field",
-    expectedId: "my_regular_field",
-  });
-
-  await pageTypesBuilderPage.addStaticField({
-    type: "Repeatable Group",
-    name: "My Group",
-    expectedId: "my_group",
-  });
-  await pageTypesBuilderPage.addStaticField({
-    type: "Rich Text",
-    name: "My Field Inside Group",
-    expectedId: "my_field_inside_group",
-    groupFieldId: "my_group",
-  });
-
-  // Create custom type B
+  // Create custom type A
 
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
@@ -187,23 +167,29 @@ test("I can select fields from a nested content relationship and then remove the
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
   await pageTypesBuilderPage.addStaticField({
-    type: "Content Relationship",
-    name: "My Content Relationship With CT1",
-    expectedId: "my_content_relationship_with_ct1",
+    type: "Rich Text",
+    name: "My Regular Field",
+    expectedId: "my_regular_field",
   });
 
-  await expect(
-    pageTypesBuilderPage.getListItemFieldId("my_content_relationship_with_ct1"),
-  ).toBeVisible();
+  await pageTypesBuilderPage.addStaticField({
+    type: "Content Relationship",
+    name: "My Content Relationship With CT A",
+    expectedId: "my_content_relationship_with_ct_a",
+  });
 
-  await pageTypesBuilderPage
-    .getEditFieldButton("my_content_relationship_with_ct1")
-    .click();
+  await pageTypesBuilderPage.addStaticField({
+    type: "Repeatable Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
 
-  await page.getByRole("button", { name: "Add type" }).click();
-  await page.getByRole("menuitem", { name: customTypeAId }).click();
-
-  await pageTypesBuilderPage.editFieldDialog.submitButton.click();
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Field Inside Group",
+    expectedId: "my_field_inside_group",
+    groupFieldId: "my_group",
+  });
 
   // Create custom type C
 
@@ -220,33 +206,71 @@ test("I can select fields from a nested content relationship and then remove the
 
   await pageTypesBuilderPage.addStaticField({
     type: "Content Relationship",
-    name: "My Content Relationship With CT2",
-    expectedId: "my_content_relationship_with_ct2",
+    name: "My Content Relationship With CT B",
+    expectedId: "my_content_relationship_with_ct_b",
   });
 
   await expect(
-    pageTypesBuilderPage.getListItemFieldId("my_content_relationship_with_ct2"),
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_content_relationship_with_ct_b",
+    ),
   ).toBeVisible();
 
   await pageTypesBuilderPage
-    .getEditFieldButton("my_content_relationship_with_ct2")
+    .getEditFieldButton("my_content_relationship_with_ct_b")
     .click();
 
   await page.getByRole("button", { name: "Add type" }).click();
   await page.getByRole("menuitem", { name: customTypeBId }).click();
 
+  await pageTypesBuilderPage.editFieldDialog.submitButton.click();
+
+  // Create custom type D
+
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  const customTypeDId = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(
+    customTypeDId,
+    "reusable",
+  );
+
+  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Content Relationship",
+    name: "My Content Relationship With CT C",
+    expectedId: "my_content_relationship_with_ct_c",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_content_relationship_with_ct_c",
+    ),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_content_relationship_with_ct_c")
+    .click();
+
+  await page.getByRole("button", { name: "Add type" }).click();
+  await page.getByRole("menuitem", { name: customTypeCId }).click();
+
   // Expand every section
   await page
     .getByRole("button", { name: "Expand item" })
-    .getByText("my_content_relationship_with_ct1")
+    .getByText("my_content_relationship_with_ct_b")
     .click();
   await page
     .getByRole("button", { name: "Expand item" })
     .getByText("my_group")
     .click();
 
-  await page.getByLabel("my_field_inside_group").click();
+  // Check the fields
 
+  await page.getByLabel("my_field_inside_group").click();
+  await page.getByLabel("my_content_relationship_with_ct_a").click();
   await page.getByLabel("my_regular_field").click();
 
   await pageTypesBuilderPage.editFieldDialog.submitButton.click();
@@ -254,29 +278,37 @@ test("I can select fields from a nested content relationship and then remove the
   // Expect UI changes
 
   await expect(
-    pageTypesBuilderPage.getListItemFieldId("my_content_relationship_with_ct2"),
+    pageTypesBuilderPage.getListItemFieldId(
+      "my_content_relationship_with_ct_c",
+    ),
   ).toBeVisible();
 
   await pageTypesBuilderPage
-    .getEditFieldButton("my_content_relationship_with_ct2")
+    .getEditFieldButton("my_content_relationship_with_ct_c")
     .click();
 
   // Expand every section
   await page
     .getByRole("button", { name: "Expand item" })
-    .getByText("my_content_relationship_with_ct1")
+    .getByText("my_content_relationship_with_ct_b")
     .click();
   await page
     .getByRole("button", { name: "Expand item" })
     .getByText("my_group")
     .click();
 
+  // Check that the fields are still checked
+
+  await expect(page.getByLabel("my_field_inside_group")).toBeChecked();
+  await expect(
+    page.getByLabel("my_content_relationship_with_ct_a"),
+  ).toBeChecked();
+  await expect(page.getByLabel("my_regular_field")).toBeChecked();
+
   // root custom type
-  await expect(page.getByText("(2 fields returned in the API)")).toBeVisible();
-
+  await expect(page.getByText("(3 fields returned in the API)")).toBeVisible();
   // nested custom type
-  await expect(page.getByText("(2 fields selected)")).toBeVisible();
-
+  await expect(page.getByText("(3 fields selected)")).toBeVisible();
   // group
   await expect(page.getByText("(1 field selected)")).toBeVisible();
 
