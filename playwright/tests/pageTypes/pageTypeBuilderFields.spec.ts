@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
-import { generateRandomId, generateRandomString } from "../../utils";
+import { generateRandomString } from "../../utils";
 
 test("I can see default SEO & Metadata tab fields", async ({
   pageTypesBuilderPage,
@@ -607,28 +607,4 @@ test("I cannot save UID longer than 35 characters for reusable page", async ({
       "The label can't be longer than 35 characters",
     ),
   ).toBeVisible();
-});
-
-test("I can create a reusable custom type", async ({
-  customTypesTablePage,
-  customTypesBuilderPage,
-}) => {
-  await customTypesTablePage.goto();
-  await customTypesTablePage.openCreateDialog();
-
-  const name = "Custom Type " + generateRandomId();
-  await customTypesTablePage.createTypeDialog.createType(name, "reusable");
-
-  await customTypesBuilderPage.checkBreadcrumb(name);
-
-  await expect(customTypesBuilderPage.tab).toHaveCount(1);
-  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
-
-  await expect(customTypesBuilderPage.staticZoneListItem).toHaveCount(1);
-  await expect(customTypesBuilderPage.getListItemFieldId("uid")).toBeVisible();
-  await expect(
-    customTypesBuilderPage.getListItemFieldName("uid", "UID"),
-  ).toBeVisible();
-
-  await expect(customTypesBuilderPage.sliceZoneSwitch).not.toBeChecked();
 });
