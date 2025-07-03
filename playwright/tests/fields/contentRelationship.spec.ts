@@ -317,7 +317,7 @@ test("I can select fields from a nested content relationship up to level 2 and t
   await expect(page.getByText("No type selected")).toBeVisible();
 });
 
-test("I can a 'No available fields to select' label for groups and nested custom types", async ({
+test("I can see a 'No available fields to select' label for groups and nested custom types", async ({
   customTypesTablePage,
   pageTypesBuilderPage,
   customTypesBuilderPage,
