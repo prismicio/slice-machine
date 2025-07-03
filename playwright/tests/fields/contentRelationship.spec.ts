@@ -9,15 +9,13 @@ test("I see that linked content relationships are updated when a field API ID is
   customTypesBuilderPage,
   page,
 }) => {
-  // Setup: Create two custom types and add a relationship between them
+  // Create custom type A
 
   await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
-  const randomId = generateRandomId();
-  const ct1Name = "Custom Type " + randomId;
-  const ct1Id = `custom_type_${randomId}`;
-  await customTypesTablePage.createTypeDialog.createType(ct1Name, "reusable");
+  const ct1Id = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(ct1Id, "reusable");
 
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
@@ -39,14 +37,13 @@ test("I see that linked content relationships are updated when a field API ID is
     groupFieldId: "my_group",
   });
 
-  await customTypesTablePage.goto();
+  // Create custom type B
 
+  await customTypesTablePage.goto();
   await customTypesTablePage.openCreateDialog();
 
-  const randomId2 = generateRandomId();
-  const ct2Name = "Custom Type " + randomId2;
-  const ct2Id = `custom_type_${randomId2}`;
-  await customTypesTablePage.createTypeDialog.createType(ct2Name, "reusable");
+  const ct2Id = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(ct2Id, "reusable");
 
   await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
 
@@ -131,4 +128,140 @@ test("I see that linked content relationships are updated when a field API ID is
     .click();
   await expect(page.getByText("my_group_renamed")).toBeVisible();
   await expect(page.getByLabel("my_field_inside_group")).toBeChecked();
+});
+
+test("I can select fields from a nested content relationship", async ({
+  customTypesTablePage,
+  pageTypesBuilderPage,
+  customTypesBuilderPage,
+  page,
+}) => {
+  // Create custom type A
+
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  const ct1Id = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(ct1Id, "reusable");
+
+  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Regular Field",
+    expectedId: "my_regular_field",
+  });
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Repeatable Group",
+    name: "My Group",
+    expectedId: "my_group",
+  });
+  await pageTypesBuilderPage.addStaticField({
+    type: "Rich Text",
+    name: "My Field Inside Group",
+    expectedId: "my_field_inside_group",
+    groupFieldId: "my_group",
+  });
+
+  // Create custom type B
+
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  const ct2Id = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(ct2Id, "reusable");
+
+  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Content Relationship",
+    name: "My Content Relationship With CT1",
+    expectedId: "my_content_relationship_with_ct1",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_content_relationship_with_ct1"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_content_relationship_with_ct1")
+    .click();
+
+  await page.getByRole("button", { name: "Add type" }).click();
+  await page.getByRole("menuitem", { name: ct1Id }).click();
+
+  await pageTypesBuilderPage.editFieldDialog.submitButton.click();
+
+  // Create custom type C
+
+  await customTypesTablePage.goto();
+  await customTypesTablePage.openCreateDialog();
+
+  const ct3Id = `custom_type_${generateRandomId()}`;
+  await customTypesTablePage.createTypeDialog.createType(ct3Id, "reusable");
+
+  await expect(customTypesBuilderPage.getTab("Main")).toBeVisible();
+
+  await pageTypesBuilderPage.addStaticField({
+    type: "Content Relationship",
+    name: "My Content Relationship With CT2",
+    expectedId: "my_content_relationship_with_ct2",
+  });
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_content_relationship_with_ct2"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_content_relationship_with_ct2")
+    .click();
+
+  await page.getByRole("button", { name: "Add type" }).click();
+  await page.getByRole("menuitem", { name: ct2Id }).click();
+
+  // Expand every section
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_content_relationship_with_ct1")
+    .click();
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_group")
+    .click();
+
+  await page.getByLabel("my_field_inside_group").click();
+
+  await page.getByLabel("my_regular_field").click();
+
+  await pageTypesBuilderPage.editFieldDialog.submitButton.click();
+
+  // Expect UI changes
+
+  await expect(
+    pageTypesBuilderPage.getListItemFieldId("my_content_relationship_with_ct2"),
+  ).toBeVisible();
+
+  await pageTypesBuilderPage
+    .getEditFieldButton("my_content_relationship_with_ct2")
+    .click();
+
+  // Expand every section
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_content_relationship_with_ct1")
+    .click();
+  await page
+    .getByRole("button", { name: "Expand item" })
+    .getByText("my_group")
+    .click();
+
+  // root custom type
+  await expect(page.getByText("(2 fields returned in the API)")).toBeVisible();
+
+  // nested custom type
+  await expect(page.getByText("(2 fields selected)")).toBeVisible();
+
+  // group
+  await expect(page.getByText("(1 field selected)")).toBeVisible();
 });
