@@ -136,7 +136,7 @@ test("I see that linked content relationships are updated when a field API ID is
   await expect(page.getByLabel("my_field_inside_group")).toBeChecked();
 });
 
-test("I can select fields from a nested content relationship", async ({
+test("I can select fields from a nested content relationship and then remove the type", async ({
   customTypesTablePage,
   pageTypesBuilderPage,
   customTypesBuilderPage,
@@ -279,6 +279,10 @@ test("I can select fields from a nested content relationship", async ({
 
   // group
   await expect(page.getByText("(1 field selected)")).toBeVisible();
+
+  // Remove the type
+  await page.getByRole("button", { name: "Remove type" }).click();
+  await expect(page.getByText("No type selected")).toBeVisible();
 });
 
 test("I can a 'No available fields to select' label for groups and nested custom types", async ({
