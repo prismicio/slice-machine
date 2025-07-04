@@ -50,7 +50,7 @@ test("I see that linked content relationships are updated when a field API ID is
   });
 
   // Link to custom type A
-  
+
   await pageTypesBuilderPage.getEditFieldButton("cr_with_a").click();
   await page.getByRole("button", { name: "Add type" }).click();
   await page.getByRole("menuitem", { name: customTypeAId }).click();
