@@ -10613,7 +10613,7 @@ __metadata:
     vitest: 0.32.0
     vue: 3.2.47
   peerDependencies:
-    nuxt: ^3.0.0 || ^4.0.0-rc.0 || ^4.0.0
+    nuxt: ^3.0.0 || ^4.0.0
   languageName: unknown
   linkType: soft
 
