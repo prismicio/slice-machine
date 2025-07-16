@@ -7,7 +7,7 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-[Slice Machine][slicemachine] adapter for [Nuxt][nuxt] 3.
+[Slice Machine][slicemachine] adapter for [Nuxt][nuxt].
 
 <!--
 

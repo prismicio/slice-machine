@@ -101,7 +101,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		prismicDocumentation: "https://prismic.dev/init/nuxt",
 		adapterName: "@slicemachine/adapter-nuxt",
 		compatibility: {
-			nuxt: "^3.0.0 || ^4.0.0-rc.0",
+			nuxt: "^3.0.0 || ^4.0.0",
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,

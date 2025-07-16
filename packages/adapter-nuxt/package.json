@@ -1,7 +1,7 @@
 {
 	"name": "@slicemachine/adapter-nuxt",
 	"version": "0.3.80",
-	"description": "Slice Machine adapter for Nuxt 3.",
+	"description": "Slice Machine adapter for Nuxt.",
 	"keywords": [
 		"typescript",
 		"prismic"
@@ -96,7 +96,7 @@
 		"vue": "3.2.47"
 	},
 	"peerDependencies": {
-		"nuxt": "^3.0.0"
+		"nuxt": "^3.0.0 || ^4.0.0"
 	},
 	"engines": {
 		"node": ">=14.15.0"

@@ -108,7 +108,7 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 
 					${`~~~vue [~/pages/${filePath}]\n${fileContent}\n~~~`}
 
-					Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/nuxt-3-setup) for more information.
+					Make sure all of your import paths are correct. See the [install guide](https://prismic.io/docs/nuxt#set-up-a-nuxt-website) for more information.
 				`,
 			},
 		];
