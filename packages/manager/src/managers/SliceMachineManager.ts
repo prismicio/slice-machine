@@ -17,6 +17,7 @@ import {
 	PrismicUserProfile,
 } from "../auth/PrismicAuthManager";
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
+import { UnauthenticatedError } from "../errors";
 
 import { API_ENDPOINTS, APIEndpoints } from "../constants/API_ENDPOINTS";
 
@@ -207,16 +208,17 @@ export class SliceMachineManager {
 								name: "__stub__",
 								message: "__stub__",
 								reason: "__stub__",
-								status: 401,
+								status: 403,
 							};
 						} else if (
+							error instanceof UnauthenticatedError ||
 							error instanceof prismicCustomTypesClient.UnauthorizedError
 						) {
 							authError = {
 								name: "__stub__",
 								message: "__stub__",
 								reason: "__stub__",
-								status: 403,
+								status: 401,
 							};
 						} else {
 							throw error;
