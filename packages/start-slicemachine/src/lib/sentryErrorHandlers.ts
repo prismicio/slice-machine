@@ -1,18 +1,29 @@
 import type { ErrorRequestHandler } from "express";
 import * as Sentry from "@sentry/node";
 
-import { CreateSliceMachineManagerMiddlewareArgs } from "@slicemachine/manager";
+import {
+	CreateSliceMachineManagerMiddlewareArgs,
+	UnauthenticatedError,
+	UnauthorizedError,
+} from "@slicemachine/manager";
 
 import { checkIsSentryEnabled } from "./checkIsSentryEnabled";
 
 export const node = (name: string, error: unknown): void => {
 	if (checkIsSentryEnabled()) {
-		Sentry.withScope(function (scope) {
-			scope.setTransactionName(name);
-			Sentry.captureException(error, {
-				...(error instanceof Error ? { extra: { cause: error.cause } } : {}),
+		if (
+			error instanceof UnauthenticatedError ||
+			error instanceof UnauthorizedError
+		) {
+			// noop - User is not logged in or does not have access to the repository, no need to track this error in Sentry.
+		} else {
+			Sentry.withScope(function (scope) {
+				scope.setTransactionName(name);
+				Sentry.captureException(error, {
+					...(error instanceof Error ? { extra: { cause: error.cause } } : {}),
+				});
 			});
-		});
+		}
 	}
 };
 
