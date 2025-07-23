@@ -120,7 +120,19 @@ export class StartSliceMachineProcess {
 		const app = await createSliceMachineExpressApp({
 			sliceMachineManager: this._sliceMachineManager,
 		});
+
 		const server = app.listen(this.port);
+		server.on("error", (error: NodeJS.ErrnoException) => {
+			if (error.code === "EADDRINUSE") {
+				console.error(
+					`Error starting Slice Machine: Port ${this.port} is already in use. Please try a different port.`,
+				);
+			} else {
+				console.error("Error starting Slice Machine:", error);
+			}
+			process.exit(1);
+		});
+
 		const address = server.address() as AddressInfo;
 		const url = `http://localhost:${address.port}`;
 
