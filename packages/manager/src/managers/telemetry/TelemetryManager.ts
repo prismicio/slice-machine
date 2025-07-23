@@ -116,9 +116,14 @@ export class TelemetryManager extends BaseManager {
 		if (_includeEnvironmentKind) {
 			if (this.project.checkSupportsEnvironments()) {
 				try {
-					const { activeEnvironment } =
+					const { activeEnvironment, error } =
 						await this.project.fetchActiveEnvironment();
-					environmentKind = activeEnvironment.kind;
+
+					if (activeEnvironment) {
+						environmentKind = activeEnvironment.kind;
+					} else {
+						throw error;
+					}
 				} catch {
 					environmentKind = "_unknown";
 				}

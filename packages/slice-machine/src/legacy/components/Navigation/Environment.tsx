@@ -21,7 +21,8 @@ import { SideNavEnvironmentSelector } from "./SideNavEnvironmentSelector/SideNav
 
 export function Environment() {
   const { environments, error: useEnvironmentsError } = useEnvironments();
-  const { activeEnvironment } = useActiveEnvironment();
+  const { activeEnvironment, error: activeEnvironmentError } =
+    useActiveEnvironment();
   const { refreshState, openLoginModal } = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const isOnline = useNetwork();
@@ -82,7 +83,10 @@ export function Environment() {
     return <SideNavEnvironmentSelector variant="offline" />;
   }
 
-  if (useEnvironmentsError === undefined) {
+  if (
+    useEnvironmentsError === undefined &&
+    activeEnvironmentError === undefined
+  ) {
     return (
       <SideNavEnvironmentSelector
         environments={environments}
@@ -110,5 +114,9 @@ export function Environment() {
     );
   }
 
-  throw useEnvironmentsError;
+  if (useEnvironmentsError !== undefined) {
+    throw useEnvironmentsError;
+  }
+
+  throw activeEnvironmentError;
 }
