@@ -103,13 +103,18 @@ const _fetchGitHubReleaseBodyForRelease = async (
 	const cache = args.cache || {};
 
 	if (Object.keys(cache).length < 1) {
-		const releases = await fetchAllGitHubReleases({
-			repositoryOwner: args.repositoryOwner,
-			repositoryName: args.repositoryName,
-		});
+		try {
+			const releases = await fetchAllGitHubReleases({
+				repositoryOwner: args.repositoryOwner,
+				repositoryName: args.repositoryName,
+			});
 
-		for (const release of releases) {
-			cache[release.name] = release;
+			for (const release of releases) {
+				cache[release.name] = release;
+			}
+		} catch (error) {
+			// noop - Fetch all releases failed, no need to track this error in Sentry.
+			return undefined;
 		}
 	}
 
