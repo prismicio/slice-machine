@@ -75,7 +75,7 @@ it("returns the active environment", async (ctx) => {
 	});
 });
 
-it("throws SMInvalidSelectedEnvironmentError if the active environment is invalid", async (ctx) => {
+it("returns SMInvalidSelectedEnvironmentError if the active environment is invalid", async (ctx) => {
 	const shortId = "user-foo";
 	const environments: Environment[] = [
 		{
@@ -130,7 +130,10 @@ it("throws SMInvalidSelectedEnvironmentError if the active environment is invali
 		},
 	});
 
-	await expect(async () => {
-		await manager.project.fetchActiveEnvironment();
-	}).rejects.toThrow(InvalidActiveEnvironmentError);
+	const res = await manager.project.fetchActiveEnvironment();
+
+	expect(res).toStrictEqual({
+		activeEnvironment: undefined,
+		error: expect.any(InvalidActiveEnvironmentError),
+	});
 });

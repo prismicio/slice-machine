@@ -85,9 +85,15 @@ type ProjectManagerUpdateEnvironmentArgs = {
 	environment: string | undefined;
 };
 
-type ProjectManagerFetchActiveEnvironmentReturnType = {
-	activeEnvironment: Environment;
-};
+type ProjectManagerFetchActiveEnvironmentReturnType =
+	| {
+			activeEnvironment: Environment;
+			error?: never;
+	  }
+	| {
+			activeEnvironment: undefined;
+			error: InvalidActiveEnvironmentError;
+	  };
 
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;
@@ -472,7 +478,10 @@ export class ProjectManager extends BaseManager {
 		);
 
 		if (!activeEnvironment) {
-			throw new InvalidActiveEnvironmentError();
+			return {
+				activeEnvironment: undefined,
+				error: new InvalidActiveEnvironmentError(),
+			};
 		}
 
 		return { activeEnvironment };

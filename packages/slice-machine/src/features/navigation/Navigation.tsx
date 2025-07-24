@@ -60,11 +60,9 @@ export function Navigation() {
       minWidth={0}
     >
       <Box flexDirection="column" gap={16}>
-        <ErrorBoundary>
-          <Suspense fallback={<Skeleton height={40} />}>
-            <Environment />
-          </Suspense>
-        </ErrorBoundary>
+        <Suspense fallback={<Skeleton height={40} />}>
+          <Environment />
+        </Suspense>
 
         <Separator style="dashed" />
 
