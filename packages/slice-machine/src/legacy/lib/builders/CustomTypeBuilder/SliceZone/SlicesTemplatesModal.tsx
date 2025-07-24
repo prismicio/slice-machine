@@ -14,7 +14,6 @@ import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { pluralize } from "@/utils/textConversion";
 
-import { sliceTemplatesComingSoon } from "./sliceTemplatesComingSoon";
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
 interface UpdateSliceModalProps {
@@ -101,29 +100,25 @@ export const SlicesTemplatesModal: FC<UpdateSliceModalProps> = ({
       {({ values }) => (
         <UpdateSliceZoneModalList
           values={values}
-          placeholderSlices={sliceTemplatesComingSoon}
-          availableSlices={[
-            ...availableSlicesTemplates.map(
-              (slice): ComponentUI => ({
-                extension: "",
-                fileName: "",
-                from: "",
-                href: "",
-                pathToSlice: "",
-                model: Slices.toSM(slice.model),
-                screenshots: Object.entries(slice.screenshots).reduce(
-                  (acc, curr) => ({
-                    ...acc,
-                    [curr[0]]: {
-                      url: curr[1],
-                    },
-                  }),
-                  {},
-                ),
-              }),
-            ),
-            ...sliceTemplatesComingSoon,
-          ]}
+          availableSlices={availableSlicesTemplates.map(
+            (slice): ComponentUI => ({
+              extension: "",
+              fileName: "",
+              from: "",
+              href: "",
+              pathToSlice: "",
+              model: Slices.toSM(slice.model),
+              screenshots: Object.entries(slice.screenshots).reduce(
+                (acc, curr) => ({
+                  ...acc,
+                  [curr[0]]: {
+                    url: curr[1],
+                  },
+                }),
+                {},
+              ),
+            }),
+          )}
         />
       )}
     </ModalFormCard>

@@ -27,7 +27,6 @@ import { AddPhotoAlternateIcon } from "@/icons/AddPhotoAlternateIcon";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
 type SharedSliceCardProps = {
-  isComingSoon?: boolean;
   isDeleted?: boolean;
   onUpdateScreenshot?: () => void;
   slice: ComponentUI;
@@ -36,7 +35,7 @@ type SharedSliceCardProps = {
 } & (
   | /*
    * Props for rendering a `Card` with a Next.js `Link` component (or with a
-   * non-interactive element if either `isComingSoon` or `isDeleted` is true).
+   * non-interactive element if `isDeleted` is true).
    */
   {
       mode: "navigation";
@@ -66,7 +65,6 @@ type Action =
 export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
   const {
     action,
-    isComingSoon = false,
     isDeleted = false,
     onUpdateScreenshot,
     selected = false,
@@ -79,7 +77,7 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
   if (!variation) return null;
   const src = getScreenshotUrl(slice, variation);
 
-  const disabled = isComingSoon || isDeleted;
+  const disabled = isDeleted;
   const canUpdateScreenshot = !disabled && !!onUpdateScreenshot;
   const disableOverlay = variant === "outlined";
   const hasVariationId = variationId !== undefined;
@@ -224,12 +222,6 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
               : `${slice.model.variations.length} variation${
                   slice.model.variations.length > 1 ? "s" : ""
                 }`}
-            {isComingSoon ? (
-              <Text color="purple11" component="span" variant="small">
-                {" "}
-                • (coming soon)
-              </Text>
-            ) : undefined}
           </>
         }
         title={hasVariationId ? variation.name : slice.model.name}

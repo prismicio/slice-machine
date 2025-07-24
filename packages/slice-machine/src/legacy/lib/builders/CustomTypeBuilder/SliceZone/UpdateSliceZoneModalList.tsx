@@ -9,8 +9,7 @@ import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
 const UpdateSliceZoneModalList: React.FC<{
   availableSlices: ReadonlyArray<ComponentUI>;
   values: SliceZoneFormValues;
-  placeholderSlices?: ReadonlyArray<ComponentUI>;
-}> = ({ availableSlices, values, placeholderSlices }) => (
+}> = ({ availableSlices, values }) => (
   <FieldArray
     name="sliceKeys"
     render={(arrayHelpers) => (
@@ -19,14 +18,10 @@ const UpdateSliceZoneModalList: React.FC<{
         elems={availableSlices}
         defineElementKey={(slice) => `${slice.from}-${slice.model.name}`}
         renderElem={(slice) => {
-          const isComingSoon =
-            placeholderSlices?.some((s) => s.model.id === slice.model.id) ??
-            false;
           const isInSliceZone = values.sliceKeys.includes(slice.model.id);
           return (
             <SharedSliceCard
               action={{ type: "checkbox" }}
-              isComingSoon={isComingSoon}
               mode="selection"
               onSelectedChange={(selected) => {
                 if (selected) {
