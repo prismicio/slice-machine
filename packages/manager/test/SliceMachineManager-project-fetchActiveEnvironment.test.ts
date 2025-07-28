@@ -71,6 +71,7 @@ it("returns the active environment", async (ctx) => {
 	const res = await manager.project.fetchActiveEnvironment();
 
 	expect(res).toStrictEqual({
+		type: "ok",
 		activeEnvironment: environments[1],
 	});
 });
@@ -133,7 +134,7 @@ it("returns SMInvalidSelectedEnvironmentError if the active environment is inval
 	const res = await manager.project.fetchActiveEnvironment();
 
 	expect(res).toStrictEqual({
-		activeEnvironment: undefined,
+		type: "error",
 		error: expect.any(InvalidActiveEnvironmentError),
 	});
 });

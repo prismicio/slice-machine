@@ -20,6 +20,7 @@ test.skip("I can see the auto-sync succeed when making a change", async ({
     "project.fetchActiveEnvironment",
     () => ({
       // Dev environment
+      type: "ok",
       activeEnvironment: environments[2],
     }),
     { execute: false },
@@ -64,6 +65,7 @@ test.skip("I can see the auto-sync succeed after a failed attempt", async ({
     "project.fetchActiveEnvironment",
     () => ({
       // Dev environment
+      type: "ok",
       activeEnvironment: environments[2],
     }),
     { execute: false },
@@ -124,6 +126,7 @@ test.skip("I can see the auto-sync fail because of an hard limit", async ({
     "project.fetchActiveEnvironment",
     () => ({
       // Dev environment
+      type: "ok",
       activeEnvironment: environments[2],
     }),
     { execute: false },

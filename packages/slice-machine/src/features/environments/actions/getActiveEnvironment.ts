@@ -19,16 +19,16 @@ export async function getActiveEnvironment(
   isRetry = false,
 ): Promise<GetActiveEnvironmentReturnType> {
   try {
-    const { activeEnvironment, error } =
+    const activeEnvironmentResult =
       await managerClient.project.fetchActiveEnvironment();
 
-    if (error) {
-      const errorInstance = new Error(error.message);
-      errorInstance.name = error.name;
+    if (activeEnvironmentResult.type === "error") {
+      const errorInstance = new Error(activeEnvironmentResult.error.message);
+      errorInstance.name = activeEnvironmentResult.error.name;
       throw errorInstance;
     }
 
-    return { activeEnvironment };
+    return { activeEnvironment: activeEnvironmentResult.environment };
   } catch (error) {
     if (isInvalidActiveEnvironmentError(error) && !isRetry) {
       // Reset to the production environment.
