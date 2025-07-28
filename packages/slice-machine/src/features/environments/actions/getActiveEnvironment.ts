@@ -34,7 +34,7 @@ export async function getActiveEnvironment(
       throw errorInstance;
     }
 
-    return { activeEnvironment: activeEnvironmentResult.environment };
+    return { activeEnvironment: activeEnvironmentResult.activeEnvironment };
   } catch (error) {
     if (isInvalidActiveEnvironmentError(error) && !retried) {
       // Reset to the production environment.

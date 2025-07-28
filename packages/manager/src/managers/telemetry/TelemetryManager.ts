@@ -120,7 +120,7 @@ export class TelemetryManager extends BaseManager {
 						await this.project.fetchActiveEnvironment();
 
 					if (activeEnvironmentResult.type === "ok") {
-						environmentKind = activeEnvironmentResult.environment.kind;
+						environmentKind = activeEnvironmentResult.activeEnvironment.kind;
 					} else {
 						throw activeEnvironmentResult.error;
 					}
