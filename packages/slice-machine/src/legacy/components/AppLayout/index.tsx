@@ -1,4 +1,12 @@
-import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
+import {
+  BlankSlate,
+  BlankSlateDescription,
+  BlankSlateIcon,
+  BlankSlateTitle,
+  Box,
+  Button,
+  ButtonGroup,
+} from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { FC, PropsWithChildren, Suspense } from "react";
 
@@ -18,7 +26,31 @@ export const AppLayout: FC<PropsWithChildren> = ({
   ...otherProps
 }) => {
   return (
-    <ErrorBoundary>
+    <ErrorBoundary
+      renderError={(error) => {
+        return (
+          <Box
+            position="absolute"
+            top={64}
+            width="100%"
+            justifyContent="center"
+            flexDirection="column"
+          >
+            <BlankSlate>
+              <BlankSlateIcon
+                lineColor="tomato11"
+                backgroundColor="tomato3"
+                name="alert"
+              />
+              <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
+              <BlankSlateDescription>
+                {JSON.stringify(error)}
+              </BlankSlateDescription>
+            </BlankSlate>
+          </Box>
+        );
+      }}
+    >
       <Suspense>
         <PageLayoutWithActiveEnvironment {...otherProps}>
           <PageLayoutPane>

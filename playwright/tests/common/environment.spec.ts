@@ -71,7 +71,7 @@ test('I can see "Production" environment when an invalid environment is set', as
     () => {
       const error = new Error();
       error.name = "SMInvalidActiveEnvironmentError";
-      throw error;
+      return { type: "error", error };
     },
     { execute: false, times: 1 },
   );
@@ -93,7 +93,7 @@ test("I can see my current environment if I have one selected", async ({
   );
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[1] }),
+    () => ({ type: "ok", activeEnvironment: environments[1] }),
     { execute: false },
   );
 
@@ -114,7 +114,7 @@ test("I can change my current environment", async ({
   );
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[0] }),
+    () => ({ type: "ok", activeEnvironment: environments[0] }),
     { execute: false },
   );
 
@@ -122,7 +122,7 @@ test("I can change my current environment", async ({
 
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[1] }),
+    () => ({ type: "ok", activeEnvironment: environments[1] }),
     { execute: false },
   );
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(
@@ -170,7 +170,7 @@ test("I can see the dot on the logo depending on the environment", async ({
 
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[0] }),
+    () => ({ type: "ok", activeEnvironment: environments[0] }),
     { execute: false },
   );
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(
@@ -182,7 +182,7 @@ test("I can see the dot on the logo depending on the environment", async ({
 
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[1] }),
+    () => ({ type: "ok", activeEnvironment: environments[1] }),
     { execute: false },
   );
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(
@@ -194,7 +194,7 @@ test("I can see the dot on the logo depending on the environment", async ({
 
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[2] }),
+    () => ({ type: "ok", activeEnvironment: environments[2] }),
     { execute: false },
   );
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(
@@ -216,7 +216,7 @@ test("I can see the window top border depending on the environment", async ({
   );
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[0] }),
+    () => ({ type: "ok", activeEnvironment: environments[0] }),
     { execute: false },
   );
 
@@ -231,7 +231,7 @@ test("I can see the window top border depending on the environment", async ({
 
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[1] }),
+    () => ({ type: "ok", activeEnvironment: environments[1] }),
     { execute: false },
   );
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(
@@ -243,7 +243,7 @@ test("I can see the window top border depending on the environment", async ({
 
   procedures.mock(
     "project.fetchActiveEnvironment",
-    () => ({ activeEnvironment: environments[2] }),
+    () => ({ type: "ok", activeEnvironment: environments[2] }),
     { execute: false },
   );
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(

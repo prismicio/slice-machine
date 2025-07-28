@@ -85,9 +85,9 @@ type ProjectManagerUpdateEnvironmentArgs = {
 	environment: string | undefined;
 };
 
-type ProjectManagerFetchActiveEnvironmentReturnType = {
-	activeEnvironment: Environment;
-};
+type ProjectManagerFetchActiveEnvironmentReturnType =
+	| { type: "ok"; activeEnvironment: Environment }
+	| { type: "error"; error: InvalidActiveEnvironmentError };
 
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;
@@ -451,7 +451,7 @@ export class ProjectManager extends BaseManager {
 			this._cachedEnvironments || [],
 		);
 		if (cachedActiveEnvironment) {
-			return { activeEnvironment: cachedActiveEnvironment };
+			return { type: "ok", activeEnvironment: cachedActiveEnvironment };
 		}
 
 		// If the environment is not in the cached environments list, we
@@ -472,10 +472,13 @@ export class ProjectManager extends BaseManager {
 		);
 
 		if (!activeEnvironment) {
-			throw new InvalidActiveEnvironmentError();
+			return {
+				type: "error",
+				error: new InvalidActiveEnvironmentError(),
+			};
 		}
 
-		return { activeEnvironment };
+		return { type: "ok", activeEnvironment: activeEnvironment };
 	}
 
 	async detectVersionControlSystem(): Promise<string | "_unknown"> {
