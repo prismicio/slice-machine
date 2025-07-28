@@ -5,6 +5,10 @@ import {
 
 import { managerClient } from "@/managerClient";
 
+type GetActiveEnvironmentArgs = {
+  retried?: boolean;
+};
+
 type GetActiveEnvironmentReturnType =
   | {
       activeEnvironment: Environment;
@@ -16,8 +20,10 @@ type GetActiveEnvironmentReturnType =
     };
 
 export async function getActiveEnvironment(
-  isRetry = false,
+  args?: GetActiveEnvironmentArgs,
 ): Promise<GetActiveEnvironmentReturnType> {
+  const { retried = false } = args ?? {};
+
   try {
     const activeEnvironmentResult =
       await managerClient.project.fetchActiveEnvironment();
@@ -30,12 +36,12 @@ export async function getActiveEnvironment(
 
     return { activeEnvironment: activeEnvironmentResult.environment };
   } catch (error) {
-    if (isInvalidActiveEnvironmentError(error) && !isRetry) {
+    if (isInvalidActiveEnvironmentError(error) && !retried) {
       // Reset to the production environment.
       await managerClient.project.updateEnvironment({ environment: undefined });
 
       // Call recursively with isRetry=true to prevent infinite loop if it fails again and again.
-      return await getActiveEnvironment(true);
+      return await getActiveEnvironment({ retried: true });
     }
 
     return { error };
