@@ -7,8 +7,6 @@ export type {
 	SliceMachineManagerClient,
 } from "../managers/createSliceMachineManagerClient";
 
-export { GIT_PROVIDER, type GitProvider } from "../constants/GIT_PROVIDER";
-
 export type { Environment } from "../managers/prismicRepository/types";
 
 export type { SliceMachineManagerPushSliceReturnType } from "../managers/slices/SlicesManager";
