@@ -10,8 +10,6 @@ import {
 } from "@prismicio/editor-ui";
 import { FC } from "react";
 
-import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
-
 export type SliceZoneBlankSlateProps = {
   openUpdateSliceZoneModal: () => void;
   openCreateSliceModal: () => void;
@@ -29,8 +27,6 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
-  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
-
   return (
     <BlankSlate data-testid="slice-zone-blank-slate" sx={{ width: 648 }}>
       <BlankSlateIcon
@@ -46,24 +42,22 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
       </BlankSlateDescription>
       <BlankSlateActions>
         <ActionList>
-          {aiSliceGenerationExperiment.eligible && (
-            <ActionListItem
-              renderStartIcon={() => (
-                <BackgroundIcon
-                  name="autoFixHigh"
-                  size="small"
-                  iconSize="medium"
-                  color="purple"
-                  variant="solid"
-                  radius={6}
-                />
-              )}
-              onClick={openCreateSliceFromImageModal}
-              description="Build a slice based on your design image."
-            >
-              Generate from image
-            </ActionListItem>
-          )}
+          <ActionListItem
+            renderStartIcon={() => (
+              <BackgroundIcon
+                name="autoFixHigh"
+                size="small"
+                iconSize="medium"
+                color="purple"
+                variant="solid"
+                radius={6}
+              />
+            )}
+            onClick={openCreateSliceFromImageModal}
+            description="Build a slice based on your design image."
+          >
+            Generate from image
+          </ActionListItem>
           <ActionListItem
             renderStartIcon={() => (
               <BackgroundIcon

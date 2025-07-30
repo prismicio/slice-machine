@@ -15,7 +15,6 @@ import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
@@ -45,7 +44,6 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
@@ -126,24 +124,22 @@ const SlicesIndex: React.FunctionComponent = () => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end">
-                {aiSliceGenerationExperiment.eligible && (
-                  <DropdownMenuItem
-                    renderStartIcon={() => (
-                      <BackgroundIcon
-                        name="autoFixHigh"
-                        size="extraSmall"
-                        iconSize="small"
-                        radius={6}
-                        variant="solid"
-                        color="purple"
-                      />
-                    )}
-                    onSelect={() => void openCreateSliceFromImageModal()}
-                    description="Build a slice based on your design image."
-                  >
-                    Generate from image
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem
+                  renderStartIcon={() => (
+                    <BackgroundIcon
+                      name="autoFixHigh"
+                      size="extraSmall"
+                      iconSize="small"
+                      radius={6}
+                      variant="solid"
+                      color="purple"
+                    />
+                  )}
+                  onSelect={() => void openCreateSliceFromImageModal()}
+                  description="Build a slice based on your design image."
+                >
+                  Generate from image
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   renderStartIcon={() => (
                     <BackgroundIcon
