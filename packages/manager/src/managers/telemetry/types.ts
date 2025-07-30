@@ -354,7 +354,6 @@ type SliceMachineStart = SegmentEvent<
 	{
 		adapter?: string;
 		adapterVersion?: string;
-		gitProvider?: string;
 		isAdapterUpdateAvailable?: boolean;
 		isLoggedIn?: boolean;
 		isSliceMachineUpdateAvailable?: boolean;

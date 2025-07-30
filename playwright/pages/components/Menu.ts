@@ -12,7 +12,6 @@ export class Menu {
   readonly slicesLink: Locator;
   readonly changesLink: Locator;
   readonly documentationLink: Locator;
-  readonly settingsLink: Locator;
   readonly changelogLink: Locator;
   readonly appVersion: Locator;
   readonly updatesAvailableTitle: Locator;
@@ -58,10 +57,7 @@ export class Menu {
       name: "Documentation",
       exact: true,
     });
-    this.settingsLink = this.menu.getByRole("link", {
-      name: "Settings",
-      exact: true,
-    });
+
     this.changelogLink = this.menu.getByRole("link", {
       name: "Changelog",
       exact: false,

@@ -12,7 +12,7 @@ import { CustomTypesBuilderPage } from "../pages/CustomTypesBuilderPage";
 import { SlicesListPage } from "../pages/SlicesListPage";
 import { SliceBuilderPage } from "../pages/SliceBuilderPage";
 import { ChangesPage } from "../pages/ChangesPage";
-import { SettingsPage } from "../pages/SettingsPage";
+
 import { ChangelogPage } from "../pages/ChangelogPage";
 import { SimulatorPage } from "../pages/SimulatorPage";
 import { SliceMachinePage } from "../pages/SliceMachinePage";
@@ -38,7 +38,7 @@ type Fixtures = {
   slicesListPage: SlicesListPage;
   sliceBuilderPage: SliceBuilderPage;
   changesPage: ChangesPage;
-  settingsPage: SettingsPage;
+
   changelogPage: ChangelogPage;
   simulatorPage: SimulatorPage;
 
@@ -101,9 +101,7 @@ export const test = baseTest.extend<Options & Fixtures>({
   changesPage: async ({ page }, use) => {
     await use(new ChangesPage(page));
   },
-  settingsPage: async ({ page }, use) => {
-    await use(new SettingsPage(page));
-  },
+
   changelogPage: async ({ page }, use) => {
     await use(new ChangelogPage(page));
   },

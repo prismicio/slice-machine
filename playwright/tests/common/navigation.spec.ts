@@ -10,7 +10,6 @@ test("I can navigate through all menu entries", async ({
   customTypesTablePage,
   slicesListPage,
   changesPage,
-  settingsPage,
   changelogPage,
 }) => {
   procedures.mock("telemetry.getExperimentVariant", () => experimentVariant, {
@@ -41,12 +40,6 @@ test("I can navigate through all menu entries", async ({
   await expect(changesPage.breadcrumbLabel).toBeVisible();
   expect(await sliceMachinePage.page.title()).toContain(
     "Changes - Slice Machine",
-  );
-
-  await settingsPage.menu.settingsLink.click();
-  await expect(settingsPage.breadcrumbLabel).toBeVisible();
-  expect(await sliceMachinePage.page.title()).toContain(
-    "Settings - Slice Machine",
   );
 
   await changelogPage.menu.changelogLink.click();
