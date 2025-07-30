@@ -17,7 +17,7 @@ const FailedConnect = ({ onRetrigger }: { onRetrigger: () => void }) => (
         fontWeight: "600",
       }}
     >
-      Slice Machine can't render your Slice
+      Slice Machine can't render your slice
     </Text>
     <Text
       sx={{

@@ -242,7 +242,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                       />
                     )}
                     onSelect={() => void openCreateSliceFromImageModal()}
-                    description="Build a Slice based on your design image."
+                    description="Build a slice based on your design image."
                   >
                     Generate from image
                   </DropdownMenuItem>
@@ -259,7 +259,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     />
                   )}
                   onSelect={openCreateSliceModal}
-                  description="Build a custom Slice your way."
+                  description="Build a custom slice your way."
                 >
                   Start from scratch
                 </DropdownMenuItem>
@@ -296,9 +296,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                         color="white"
                       />
                     )}
-                    description="Select from your created Slices."
+                    description="Select from your created slices."
                   >
-                    Reuse an existing Slice
+                    Reuse an existing slice
                   </DropdownMenuItem>
                 ) : undefined}
               </DropdownMenuContent>

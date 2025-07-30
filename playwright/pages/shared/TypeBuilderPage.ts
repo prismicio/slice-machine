@@ -109,7 +109,7 @@ export class TypeBuilderPage extends BuilderPage {
         exact: true,
       });
     this.sliceZoneBlankSlateSelectExistingAction =
-      this.sliceZoneBlankSlate.getByText("Reuse an existing Slice", {
+      this.sliceZoneBlankSlate.getByText("Reuse an existing slice", {
         exact: true,
       });
     this.sliceZoneBlankSlateCreateNewAction =
@@ -122,7 +122,7 @@ export class TypeBuilderPage extends BuilderPage {
       .getByText("Use a template", { exact: true });
     this.sliceZoneAddDropdownSelectExistingAction = page
       .getByRole("menu")
-      .getByText("Reuse an existing Slice", { exact: true });
+      .getByText("Reuse an existing slice", { exact: true });
     this.sliceZoneAddDropdownCreateNewAction = page
       .getByRole("menu")
       .getByText("Start from scratch", { exact: true });

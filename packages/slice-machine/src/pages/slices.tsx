@@ -139,7 +139,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                       />
                     )}
                     onSelect={() => void openCreateSliceFromImageModal()}
-                    description="Build a Slice based on your design image."
+                    description="Build a slice based on your design image."
                   >
                     Generate from image
                   </DropdownMenuItem>
@@ -156,7 +156,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                     />
                   )}
                   onSelect={() => setIsCreateSliceModalOpen(true)}
-                  description="Build a custom Slice your way."
+                  description="Build a custom slice your way."
                 >
                   Start from scratch
                 </DropdownMenuItem>
@@ -182,20 +182,20 @@ const SlicesIndex: React.FunctionComponent = () => {
                     }}
                   >
                     <EmptyState
-                      title={"What are Slices?"}
+                      title="What are slices?"
                       onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
                       }}
-                      buttonText={"Create one"}
+                      buttonText="Create one"
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                       documentationComponent={
                         <>
                           Slices are sections of your website. Prismic documents
                           contain a dynamic "Slice Zone" that allows content
-                          creators to add, edit, and rearrange Slices to compose
+                          creators to add, edit, and rearrange slices to compose
                           dynamic layouts for any page design.{" "}
                           <Link
-                            target={"_blank"}
+                            target="_blank"
                             href={
                               "https://prismic.io/docs/core-concepts/slices"
                             }

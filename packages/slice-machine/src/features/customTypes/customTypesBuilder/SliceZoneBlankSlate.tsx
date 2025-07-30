@@ -59,7 +59,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                 />
               )}
               onClick={openCreateSliceFromImageModal}
-              description="Build a Slice based on your design image."
+              description="Build a slice based on your design image."
             >
               Generate from image
             </ActionListItem>
@@ -76,7 +76,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
               />
             )}
             onClick={openCreateSliceModal}
-            description="Build a custom Slice your way."
+            description="Build a custom slice your way."
           >
             Start from scratch
           </ActionListItem>
@@ -111,9 +111,9 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
                 />
               )}
               onClick={openUpdateSliceZoneModal}
-              description="Select from your created Slices."
+              description="Select from your created slices."
             >
-              Reuse an existing Slice
+              Reuse an existing slice
             </ActionListItem>
           )}
         </ActionList>
