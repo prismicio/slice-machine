@@ -1,10 +1,8 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { Text } from "theme-ui";
 
-import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
-import { pluralize } from "@/utils/textConversion";
 
 import UpdateSliceZoneModalList from "./UpdateSliceZoneModalList";
 
@@ -25,8 +23,6 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
   onSubmit,
   availableSlices,
 }) => {
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
-
   return (
     <ModalFormCard
       isOpen
@@ -47,7 +43,7 @@ const UpdateSliceZoneModal: React.FC<UpdateSliceModalProps> = ({
         sliceKeys: [],
       }}
       content={{
-        title: `Select existing ${pluralize(sectionsNamingExperiment.value)}`,
+        title: "Select existing slices",
       }}
       testId="update-slices-modal"
       validate={(values) => {

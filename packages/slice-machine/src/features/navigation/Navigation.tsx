@@ -15,11 +15,9 @@ import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
 import { MenuBookIcon } from "@/icons/MenuBookIcon";
 import { SettingsIcon } from "@/icons/SettingsIcon";
-import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { ChangesItem } from "../../legacy/components/Navigation/ChangesItem";
 import { Environment } from "../../legacy/components/Navigation/Environment";
-import { useSectionsNamingExperiment } from "../builder/useSectionsNamingExperiment";
 import { NavigationItem } from "./NavigationItem";
 import { SliceMachineVersion } from "./SliceMachineVersion";
 import { UpdateInfo } from "./UpdateInfo";
@@ -29,7 +27,6 @@ export function Navigation() {
 
   const gitIntegrationExperiment = useGitIntegrationExperiment();
   const { documentationLink } = useMarketingContent();
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const adapter = useAdapterName();
 
   interface CustomTypeNavigationItemProps {
@@ -78,9 +75,7 @@ export function Navigation() {
           <CustomTypeNavigationItem type="custom" />
 
           <NavigationItem
-            title={pluralize(
-              capitalizeFirstLetter(sectionsNamingExperiment.value),
-            )}
+            title="Slices"
             href="/slices"
             Icon={FolderIcon}
             active={router.asPath.startsWith("/slices")}
@@ -101,7 +96,6 @@ export function Navigation() {
               <OnboardingGuide />
             </Suspense>
           </ErrorBoundary>
-
           <NavigationItem
             title="Documentation"
             href={documentationLink}

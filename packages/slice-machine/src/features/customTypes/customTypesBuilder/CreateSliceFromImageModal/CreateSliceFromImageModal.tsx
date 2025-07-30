@@ -22,15 +22,10 @@ import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
-import {
-  useSectionsNamingExperiment,
-  UseSectionsNamingExperimentReturnType,
-} from "@/features/builder/useSectionsNamingExperiment";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
-import { pluralize } from "@/utils/textConversion";
 
 import { Slice, SliceCard } from "./SliceCard";
 
@@ -58,7 +53,7 @@ export function CreateSliceFromImageModal(
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
+
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
@@ -244,8 +239,7 @@ export function CreateSliceFromImageModal(
       <DialogHeader title="Generate from image" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
-          Upload images to generate {pluralize(sectionsNamingExperiment.value)}{" "}
-          with AI
+          Upload images to generate slices with AI
         </DialogDescription>
         {slices.length === 0 ? (
           <Box padding={16} height="100%">
@@ -285,8 +279,7 @@ export function CreateSliceFromImageModal(
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            {getSubmitButtonLabel({ location, sectionsNamingExperiment })} (
-            {readySlices.length})
+            {getSubmitButtonLabel(location)} ({readySlices.length})
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
@@ -298,7 +291,6 @@ function UploadBlankSlate(props: {
   droppingFiles?: boolean;
   onFilesSelected: (files: File[]) => void;
 }) {
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const { droppingFiles = false, onFilesSelected } = props;
 
   return (
@@ -320,8 +312,7 @@ function UploadBlankSlate(props: {
         />
         <BlankSlateTitle>Upload your design images.</BlankSlateTitle>
         <BlankSlateDescription>
-          Once uploaded, you can generate{" "}
-          {pluralize(sectionsNamingExperiment.value)} automatically using AI.
+          Once uploaded, you can generate slices automatically using AI.
         </BlankSlateDescription>
         <BlankSlateActions>
           <FileUploadButton
@@ -469,19 +460,15 @@ async function addSlices(newSlices: NewSlice[]) {
   return { library, slices };
 }
 
-const getSubmitButtonLabel = ({
-  location,
-  sectionsNamingExperiment,
-}: {
-  location: "custom_type" | "page_type" | "slices";
-  sectionsNamingExperiment: UseSectionsNamingExperimentReturnType;
-}) => {
+const getSubmitButtonLabel = (
+  location: "custom_type" | "page_type" | "slices",
+) => {
   switch (location) {
     case "custom_type":
       return "Add to type";
     case "page_type":
       return "Add to page";
     case "slices":
-      return `Add to ${pluralize(sectionsNamingExperiment.value)}`;
+      return "Add to slices";
   }
 };
