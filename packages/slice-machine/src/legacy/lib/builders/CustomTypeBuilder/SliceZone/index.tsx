@@ -15,7 +15,6 @@ import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
-import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
@@ -116,7 +115,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   sliceZone,
   tabId,
 }) => {
-  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const availableSlicesTemplates = useSlicesTemplates();
   const [isSlicesTemplatesModalOpen, setIsSlicesTemplatesModalOpen] =
     useState(false);
@@ -236,17 +234,15 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end">
-                {aiSliceGenerationExperiment.eligible && (
-                  <DropdownMenuItem
-                    renderStartIcon={() =>
-                      sliceCreationOptions.fromImage.BackgroundIcon
-                    }
-                    onSelect={() => void openCreateSliceFromImageModal()}
-                    description={sliceCreationOptions.fromImage.description}
-                  >
-                    {sliceCreationOptions.fromImage.title}
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem
+                  renderStartIcon={() =>
+                    sliceCreationOptions.fromImage.BackgroundIcon
+                  }
+                  onSelect={() => void openCreateSliceFromImageModal()}
+                  description={sliceCreationOptions.fromImage.description}
+                >
+                  {sliceCreationOptions.fromImage.title}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   renderStartIcon={() =>
                     sliceCreationOptions.fromScratch.BackgroundIcon

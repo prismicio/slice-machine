@@ -9,7 +9,6 @@ import {
 } from "@prismicio/editor-ui";
 import { FC } from "react";
 
-import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
@@ -32,7 +31,6 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
-  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const sectionsNamingExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "ActionList",
@@ -58,17 +56,15 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
       </BlankSlateDescription>
       <BlankSlateActions>
         <ActionList>
-          {aiSliceGenerationExperiment.eligible && (
-            <ActionListItem
-              renderStartIcon={() =>
-                sliceCreationOptions.fromImage.BackgroundIcon
-              }
-              onClick={openCreateSliceFromImageModal}
-              description={sliceCreationOptions.fromImage.description}
-            >
-              {sliceCreationOptions.fromImage.title}
-            </ActionListItem>
-          )}
+          <ActionListItem
+            renderStartIcon={() =>
+              sliceCreationOptions.fromImage.BackgroundIcon
+            }
+            onClick={openCreateSliceFromImageModal}
+            description={sliceCreationOptions.fromImage.description}
+          >
+            {sliceCreationOptions.fromImage.title}
+          </ActionListItem>
           <ActionListItem
             renderStartIcon={() =>
               sliceCreationOptions.fromScratch.BackgroundIcon

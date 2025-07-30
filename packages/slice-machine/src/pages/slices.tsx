@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { useAiSliceGenerationExperiment } from "@/features/builder/useAiSliceGenerationExperiment";
 import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
@@ -47,7 +46,6 @@ import { SliceMachineStoreType } from "@/redux/type";
 import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 const SlicesIndex: React.FunctionComponent = () => {
-  const aiSliceGenerationExperiment = useAiSliceGenerationExperiment();
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
@@ -138,17 +136,15 @@ const SlicesIndex: React.FunctionComponent = () => {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end">
-                {aiSliceGenerationExperiment.eligible && (
-                  <DropdownMenuItem
-                    renderStartIcon={() =>
-                      sliceCreationOptions.fromImage.BackgroundIcon
-                    }
-                    onSelect={() => void openCreateSliceFromImageModal()}
-                    description={sliceCreationOptions.fromImage.description}
-                  >
-                    {sliceCreationOptions.fromImage.title}
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem
+                  renderStartIcon={() =>
+                    sliceCreationOptions.fromImage.BackgroundIcon
+                  }
+                  onSelect={() => void openCreateSliceFromImageModal()}
+                  description={sliceCreationOptions.fromImage.description}
+                >
+                  {sliceCreationOptions.fromImage.title}
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   renderStartIcon={() =>
                     sliceCreationOptions.fromScratch.BackgroundIcon
