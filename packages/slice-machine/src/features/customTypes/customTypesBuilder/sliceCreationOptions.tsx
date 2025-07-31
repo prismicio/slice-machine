@@ -20,7 +20,7 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
         />
       ),
       title: "Generate from image",
-      description: `Build a slice based on your design image.`,
+      description: "Build a slice based on your design image.",
     },
     fromScratch: {
       BackgroundIcon: (
@@ -34,7 +34,7 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
         />
       ),
       title: "Start from scratch",
-      description: `Build a custom slice your way.`,
+      description: "Build a custom slice your way.",
     },
     fromTemplate: {
       BackgroundIcon: (
@@ -61,8 +61,8 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
           radius={6}
         />
       ),
-      title: `Reuse an existing slice`,
-      description: `Select from your created slices.`,
+      title: "Reuse an existing slice",
+      description: "Select from your created slices.",
     },
   };
 };
