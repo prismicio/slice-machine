@@ -8,13 +8,11 @@ import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import { RepositoryInfo } from "@/features/navigation/RepositoryInfo";
 import { OnboardingGuide } from "@/features/onboarding";
-import { useGitIntegrationExperiment } from "@/features/settings/git/useGitIntegrationExperiment";
 import { useAdapterName } from "@/hooks/useAdapterName";
 import { useMarketingContent } from "@/hooks/useMarketingContent";
 import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
 import { MenuBookIcon } from "@/icons/MenuBookIcon";
-import { SettingsIcon } from "@/icons/SettingsIcon";
 
 import { ChangesItem } from "../../legacy/components/Navigation/ChangesItem";
 import { Environment } from "../../legacy/components/Navigation/Environment";
@@ -25,7 +23,6 @@ import { UpdateInfo } from "./UpdateInfo";
 export function Navigation() {
   const router = useRouter();
 
-  const gitIntegrationExperiment = useGitIntegrationExperiment();
   const { documentationLink } = useMarketingContent();
   const adapter = useAdapterName();
 
@@ -108,15 +105,6 @@ export function Navigation() {
               });
             }}
           />
-
-          {gitIntegrationExperiment.eligible && (
-            <NavigationItem
-              title="Settings"
-              href="/settings"
-              Icon={SettingsIcon}
-              active={router.asPath.startsWith("/settings")}
-            />
-          )}
 
           <NavigationItem
             title="Changelog"

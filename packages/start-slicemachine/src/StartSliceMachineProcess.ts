@@ -253,7 +253,6 @@ export class StartSliceMachineProcess {
 			adapter,
 			adapterVersion,
 			customTypes,
-			gitProvider,
 			isAdapterUpdateAvailable,
 			isLoggedIn,
 			isSliceMachineUpdateAvailable,
@@ -271,7 +270,6 @@ export class StartSliceMachineProcess {
 			safelyExecute(() =>
 				this._sliceMachineManager.customTypes.readAllCustomTypes(),
 			),
-			safelyExecute(() => this._sliceMachineManager.git.detectGitProvider()),
 			safelyExecute(() =>
 				this._sliceMachineManager.versions.checkIsAdapterUpdateAvailable(),
 			),
@@ -302,7 +300,6 @@ export class StartSliceMachineProcess {
 			_includeEnvironmentKind: true,
 			adapter,
 			adapterVersion,
-			gitProvider,
 			isAdapterUpdateAvailable,
 			isLoggedIn,
 			isSliceMachineUpdateAvailable,
