@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
@@ -43,16 +42,13 @@ import { managerClient } from "@/managerClient";
 import { getLibraries, getRemoteSlices } from "@/modules/slices";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { SliceMachineStoreType } from "@/redux/type";
-import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "Dropdown",
-    sectionsNamingExperiment,
   });
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
@@ -111,17 +107,12 @@ const SlicesIndex: React.FunctionComponent = () => {
   return (
     <>
       <Head>
-        <title>
-          {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))} -
-          Slice Machine
-        </title>
+        <title>Slices - Slice Machine</title>
       </Head>
       <AppLayout>
         <AppLayoutHeader>
           <AppLayoutBreadcrumb>
-            <BreadcrumbItem>
-              {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))}
-            </BreadcrumbItem>
+            <BreadcrumbItem>Slices</BreadcrumbItem>
           </AppLayoutBreadcrumb>
           {localLibraries?.length !== 0 && sliceCount !== 0 ? (
             <DropdownMenu>
@@ -176,9 +167,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                     }}
                   >
                     <EmptyState
-                      title={`What are ${pluralize(
-                        sectionsNamingExperiment.value,
-                      )}?`}
+                      title="What are slices?"
                       onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
                       }}
@@ -186,19 +175,10 @@ const SlicesIndex: React.FunctionComponent = () => {
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                       documentationComponent={
                         <>
-                          {pluralize(
-                            capitalizeFirstLetter(
-                              sectionsNamingExperiment.value,
-                            ),
-                          )}{" "}
-                          are sections of your website. Prismic documents
-                          contain a dynamic "
-                          {capitalizeFirstLetter(
-                            sectionsNamingExperiment.value,
-                          )}{" "}
-                          Zone" that allows content creators to add, edit, and
-                          rearrange {pluralize(sectionsNamingExperiment.value)}{" "}
-                          to compose dynamic layouts for any page design.{" "}
+                          Slices are sections of your website. Prismic documents
+                          contain a dynamic "Slice Zone" that allows content
+                          creators to add, edit, and rearrange slices to compose
+                          dynamic layouts for any page design.{" "}
                           <Link
                             target={"_blank"}
                             href={
@@ -245,11 +225,8 @@ const SlicesIndex: React.FunctionComponent = () => {
                             }}
                           >
                             <Text>
-                              {sectionsNamingExperiment.eligible &&
-                              sortedLibraries.length === 1
-                                ? `Your ${pluralize(
-                                    sectionsNamingExperiment.value,
-                                  )}`
+                              {sortedLibraries.length === 1
+                                ? `Your slices`
                                 : name}
                             </Text>
                           </Flex>
@@ -317,7 +294,6 @@ const SlicesIndex: React.FunctionComponent = () => {
                 void router.push(sliceLocation);
                 toast.success(
                   SliceToastMessage({
-                    sectionsNamingExperiment,
                     path: `${libraryName}/${newSlice.name}/model.json`,
                   }),
                 );
@@ -353,11 +329,7 @@ const SlicesIndex: React.FunctionComponent = () => {
             onSuccess={({ library }) => {
               toast.success(
                 <ToastMessageWithPath
-                  message={`${capitalizeFirstLetter(
-                    sectionsNamingExperiment.value,
-                  )}(s) added to ${
-                    sectionsNamingExperiment.value
-                  } zone and created at: `}
+                  message="Slice(s) added to slice zone and created at: "
                   path={library}
                 />,
               );

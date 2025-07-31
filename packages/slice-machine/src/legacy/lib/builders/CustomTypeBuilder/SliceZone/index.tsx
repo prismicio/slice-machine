@@ -15,7 +15,6 @@ import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
-import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
@@ -41,7 +40,6 @@ import {
 } from "@/modules/slices";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import type { SliceMachineStoreType } from "@/redux/type";
-import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
 
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";
@@ -133,10 +131,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
   const { openLoginModal } = useSliceMachineActions();
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "Dropdown",
-    sectionsNamingExperiment,
   });
 
   const localLibraries: readonly LibraryUI[] = libraries.filter(
@@ -297,7 +293,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           ) : undefined
         }
       >
-        {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))}
+        Slices
       </ListHeader>
 
       {sliceZone ? (
@@ -374,11 +370,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               onSaveCallback: () => {
                 toast.success(
                   <ToastMessageWithPath
-                    message={`${capitalizeFirstLetter(
-                      sectionsNamingExperiment.value,
-                    )} template(s) added to ${
-                      sectionsNamingExperiment.value
-                    } zone and created at: `}
+                    message="Slice template(s) added to slice zone and created at: "
                     path={`${localLibraries[0].name}/`}
                   />,
                 );
@@ -414,7 +406,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               onSaveCallback: () => {
                 toast.success(
                   <ToastMessageWithPath
-                    message={`New ${sectionsNamingExperiment.value} added to ${sectionsNamingExperiment.value} zone and created at: `}
+                    message="New slice added to slice zone and created at: "
                     path={`${localLibraries[0].name}/`}
                   />,
                 );
@@ -442,11 +434,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
             onSaveCallback: () => {
               toast.success(
                 <ToastMessageWithPath
-                  message={`${capitalizeFirstLetter(
-                    sectionsNamingExperiment.value,
-                  )}(s) added to ${
-                    sectionsNamingExperiment.value
-                  } zone and created at: `}
+                  message="Slice(s) added to slice zone and created at: "
                   path={library}
                 />,
               );

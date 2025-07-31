@@ -4,7 +4,6 @@ import Select from "react-select";
 import { Box, Label } from "theme-ui";
 
 import { getState } from "@/apiClient";
-import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { createSlice } from "@/features/slices/actions/createSlice";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
@@ -12,7 +11,6 @@ import ModalFormCard from "@/legacy/components/ModalFormCard";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
-import { capitalizeFirstLetter } from "@/utils/textConversion";
 
 import { InputBox } from "../components/InputBox";
 import { validateSliceModalValues } from "../formsValidator";
@@ -38,7 +36,6 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
   const [isCreatingSlice, setIsCreatingSlice] = useState(false);
   const { syncChanges } = useAutoSync();
   const { completeStep } = useOnboarding();
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
 
   const onSubmit = async (values: FormValues) => {
     const sliceName = values.sliceName;
@@ -82,17 +79,15 @@ export const CreateSliceModal: FC<CreateSliceModalProps> = ({
         validateSliceModalValues(values, localLibraries, remoteSlices)
       }
       content={{
-        title: `Create a new ${sectionsNamingExperiment.value}`,
+        title: "Create a new slice",
       }}
     >
       {({ touched, values, setFieldValue, errors }) => (
         <Box>
           <InputBox
             name="sliceName"
-            label={`${capitalizeFirstLetter(
-              sectionsNamingExperiment.value,
-            )} name`}
-            placeholder={`Pascalised ${sectionsNamingExperiment.value} API ID (e.g. TextBlock)`}
+            label="Slice name"
+            placeholder="Pascalised slice API ID (e.g. TextBlock)"
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             error={touched.sliceName ? errors.sliceName : undefined}
             testId="slice-name-input"

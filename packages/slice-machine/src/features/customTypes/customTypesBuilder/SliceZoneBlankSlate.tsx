@@ -9,9 +9,6 @@ import {
 } from "@prismicio/editor-ui";
 import { FC } from "react";
 
-import { useSectionsNamingExperiment } from "@/features/builder/useSectionsNamingExperiment";
-import { capitalizeFirstLetter, pluralize } from "@/utils/textConversion";
-
 import { getSliceCreationOptions } from "./sliceCreationOptions";
 
 export type SliceZoneBlankSlateProps = {
@@ -31,10 +28,8 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
-  const sectionsNamingExperiment = useSectionsNamingExperiment();
   const sliceCreationOptions = getSliceCreationOptions({
     menuType: "ActionList",
-    sectionsNamingExperiment,
   });
 
   return (
@@ -45,14 +40,11 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
         name="add"
         size="large"
       />
-      <BlankSlateTitle size="big">
-        Add {pluralize(sectionsNamingExperiment.value)}
-      </BlankSlateTitle>
+      <BlankSlateTitle size="big">Add slices</BlankSlateTitle>
       <BlankSlateDescription>
-        {pluralize(capitalizeFirstLetter(sectionsNamingExperiment.value))} are
-        website sections that you can reuse on different pages with different
-        content. Each on different pages with different content. Each{" "}
-        {sectionsNamingExperiment.value} has its own component in your code.
+        Slices are website sections that you can reuse on different pages with
+        different content. Each on different pages with different content. Each{" "}
+        slice has its own component in your code.
       </BlankSlateDescription>
       <BlankSlateActions>
         <ActionList>
