@@ -1,5 +1,4 @@
 import {
-  BackgroundIcon,
   Button,
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +15,7 @@ import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
+import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";
@@ -47,6 +47,9 @@ const SlicesIndex: React.FunctionComponent = () => {
   const router = useRouter();
   const { modalPayload, onOpenModal } = useScreenshotChangesModal();
   const { openLoginModal } = useSliceMachineActions();
+  const sliceCreationOptions = getSliceCreationOptions({
+    menuType: "Dropdown",
+  });
 
   const { sliceFilterFn, defaultVariationSelector } = modalPayload;
 
@@ -125,36 +128,22 @@ const SlicesIndex: React.FunctionComponent = () => {
 
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
-                  renderStartIcon={() => (
-                    <BackgroundIcon
-                      name="autoFixHigh"
-                      size="extraSmall"
-                      iconSize="small"
-                      radius={6}
-                      variant="solid"
-                      color="purple"
-                    />
-                  )}
+                  renderStartIcon={() =>
+                    sliceCreationOptions.fromImage.BackgroundIcon
+                  }
                   onSelect={() => void openCreateSliceFromImageModal()}
-                  description="Build a slice based on your design image."
+                  description={sliceCreationOptions.fromImage.description}
                 >
-                  Generate from image
+                  {sliceCreationOptions.fromImage.title}
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  renderStartIcon={() => (
-                    <BackgroundIcon
-                      name="add"
-                      size="extraSmall"
-                      iconSize="small"
-                      radius={6}
-                      variant="solid"
-                      color="white"
-                    />
-                  )}
+                  renderStartIcon={() =>
+                    sliceCreationOptions.fromScratch.BackgroundIcon
+                  }
                   onSelect={() => setIsCreateSliceModalOpen(true)}
-                  description="Build a custom slice your way."
+                  description={sliceCreationOptions.fromScratch.description}
                 >
-                  Start from scratch
+                  {sliceCreationOptions.fromScratch.title}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -182,7 +171,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                       onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
                       }}
-                      buttonText="Create one"
+                      buttonText={"Create one"}
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                       documentationComponent={
                         <>
@@ -191,7 +180,7 @@ const SlicesIndex: React.FunctionComponent = () => {
                           creators to add, edit, and rearrange slices to compose
                           dynamic layouts for any page design.{" "}
                           <Link
-                            target="_blank"
+                            target={"_blank"}
                             href={
                               "https://prismic.io/docs/core-concepts/slices"
                             }
@@ -235,7 +224,11 @@ const SlicesIndex: React.FunctionComponent = () => {
                               mb: 1,
                             }}
                           >
-                            <Text>{name}</Text>
+                            <Text>
+                              {sortedLibraries.length === 1
+                                ? `Your slices`
+                                : name}
+                            </Text>
                           </Flex>
                           {!isLocal && (
                             <p>⚠️ External libraries are read-only</p>

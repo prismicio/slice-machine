@@ -1,7 +1,6 @@
 import {
   ActionList,
   ActionListItem,
-  BackgroundIcon,
   BlankSlate,
   BlankSlateActions,
   BlankSlateDescription,
@@ -9,6 +8,8 @@ import {
   BlankSlateTitle,
 } from "@prismicio/editor-ui";
 import { FC } from "react";
+
+import { getSliceCreationOptions } from "./sliceCreationOptions";
 
 export type SliceZoneBlankSlateProps = {
   openUpdateSliceZoneModal: () => void;
@@ -27,6 +28,10 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
+  const sliceCreationOptions = getSliceCreationOptions({
+    menuType: "ActionList",
+  });
+
   return (
     <BlankSlate data-testid="slice-zone-blank-slate" sx={{ width: 648 }}>
       <BlankSlateIcon
@@ -38,76 +43,49 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
       <BlankSlateTitle size="big">Add slices</BlankSlateTitle>
       <BlankSlateDescription>
         Slices are website sections that you can reuse on different pages with
-        different content. Each slice has its own component in your code.
+        different content. Each on different pages with different content. Each{" "}
+        slice has its own component in your code.
       </BlankSlateDescription>
       <BlankSlateActions>
         <ActionList>
           <ActionListItem
-            renderStartIcon={() => (
-              <BackgroundIcon
-                name="autoFixHigh"
-                size="small"
-                iconSize="medium"
-                color="purple"
-                variant="solid"
-                radius={6}
-              />
-            )}
+            renderStartIcon={() =>
+              sliceCreationOptions.fromImage.BackgroundIcon
+            }
             onClick={openCreateSliceFromImageModal}
-            description="Build a slice based on your design image."
+            description={sliceCreationOptions.fromImage.description}
           >
-            Generate from image
+            {sliceCreationOptions.fromImage.title}
           </ActionListItem>
           <ActionListItem
-            renderStartIcon={() => (
-              <BackgroundIcon
-                name="add"
-                size="small"
-                iconSize="medium"
-                color="white"
-                variant="solid"
-                radius={6}
-              />
-            )}
+            renderStartIcon={() =>
+              sliceCreationOptions.fromScratch.BackgroundIcon
+            }
             onClick={openCreateSliceModal}
-            description="Build a custom slice your way."
+            description={sliceCreationOptions.fromScratch.description}
           >
-            Start from scratch
+            {sliceCreationOptions.fromScratch.title}
           </ActionListItem>
           {isSlicesTemplatesSupported && (
             <ActionListItem
-              renderStartIcon={() => (
-                <BackgroundIcon
-                  name="contentCopy"
-                  size="small"
-                  iconSize="medium"
-                  color="white"
-                  variant="solid"
-                  radius={6}
-                />
-              )}
+              renderStartIcon={() =>
+                sliceCreationOptions.fromTemplate.BackgroundIcon
+              }
               onClick={openSlicesTemplatesModal}
-              description="Choose from ready-made examples."
+              description={sliceCreationOptions.fromTemplate.description}
             >
-              Use a template
+              {sliceCreationOptions.fromTemplate.title}
             </ActionListItem>
           )}
           {projectHasAvailableSlices && (
             <ActionListItem
-              renderStartIcon={() => (
-                <BackgroundIcon
-                  name="folder"
-                  size="small"
-                  iconSize="medium"
-                  color="white"
-                  variant="solid"
-                  radius={6}
-                />
-              )}
+              renderStartIcon={() =>
+                sliceCreationOptions.fromExisting.BackgroundIcon
+              }
               onClick={openUpdateSliceZoneModal}
-              description="Select from your created slices."
+              description={sliceCreationOptions.fromExisting.description}
             >
-              Reuse an existing slice
+              {sliceCreationOptions.fromExisting.title}
             </ActionListItem>
           )}
         </ActionList>
