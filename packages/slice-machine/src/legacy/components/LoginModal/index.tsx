@@ -13,7 +13,7 @@ import {
   Text,
 } from "theme-ui";
 
-import { checkAuthStatus, getState, startAuth } from "@/apiClient";
+import { checkAuthStatus, getState, logout } from "@/apiClient";
 import { getActiveEnvironment } from "@/features/environments/actions/getActiveEnvironment";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { getUnSyncedChanges } from "@/features/sync/getUnSyncChanges";
@@ -64,7 +64,7 @@ const LoginModal: React.FunctionComponent = () => {
 
     try {
       startLoadingLogin();
-      await startAuth();
+      await logout();
       window.open(loginRedirectUrl, "_blank");
       await startPolling<CheckAuthStatusResponse, ValidAuthStatus>(
         checkAuthStatus,

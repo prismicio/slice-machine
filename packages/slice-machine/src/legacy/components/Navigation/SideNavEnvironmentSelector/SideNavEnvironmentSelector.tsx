@@ -30,6 +30,7 @@ type SideNavEnvironmentSelectorProps = {
   loading?: boolean;
   variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
   onLogInClick?: () => void;
+  onLogOutClick?: () => void;
   onSelect?: (environment: Environment) => void | Promise<void>;
 };
 
@@ -43,6 +44,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
     loading = false,
     variant = "default",
     onLogInClick,
+    onLogOutClick,
     onSelect,
   } = props;
 
@@ -114,7 +116,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
             ) : undefined}
           </Box>
           <Box flexShrink={0}>
-            {variant === "unauthenticated" ? (
+            {variant === "unauthenticated" && (
               <Tooltip content="Log in" side="right">
                 <IconButton
                   icon={<LoginIcon className={styles.loginIcon} />}
@@ -122,7 +124,13 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
                   hiddenLabel="Log in to enable environments"
                 />
               </Tooltip>
-            ) : undefined}
+            )}
+
+            {variant === "default" && onLogOutClick && (
+              <Tooltip content="Log out" side="right">
+                <IconButton icon="logout" onClick={onLogOutClick} />
+              </Tooltip>
+            )}
 
             {environments.length > 1 ? (
               <EnvironmentDropdownMenu

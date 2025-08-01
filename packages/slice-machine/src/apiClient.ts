@@ -163,7 +163,7 @@ export const pushChanges: SliceMachineManagerClient["prismicRepository"]["pushCh
 
 /** Auth Routes * */
 
-export const startAuth = async (): Promise<void> => {
+export const logout = async (): Promise<void> => {
   return await managerClient.user.logout();
 };
 

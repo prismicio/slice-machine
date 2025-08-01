@@ -5,7 +5,7 @@ import {
 } from "@slicemachine/manager/client";
 import { useState } from "react";
 
-import { getState, telemetry } from "@/apiClient";
+import { getState, logout, telemetry } from "@/apiClient";
 import { setEnvironment } from "@/features/environments/actions/setEnvironment";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { useEnvironments } from "@/features/environments/useEnvironments";
@@ -83,6 +83,11 @@ export function Environment() {
     return <SideNavEnvironmentSelector variant="offline" />;
   }
 
+  const onLogOutClick = async () => {
+    await logout();
+    window.location.reload();
+  };
+
   if (
     useEnvironmentsError === undefined &&
     activeEnvironmentError === undefined
@@ -94,6 +99,7 @@ export function Environment() {
         onSelect={onSelect}
         disabled={isSwitchingEnv || autoSyncStatus === "syncing"}
         loading={isSwitchingEnv}
+        onLogOutClick={() => void onLogOutClick()}
       />
     );
   }
