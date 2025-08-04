@@ -15,6 +15,8 @@ import {
 
 import { checkAuthStatus, getState, logout } from "@/apiClient";
 import { getActiveEnvironment } from "@/features/environments/actions/getActiveEnvironment";
+import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
+import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { getUnSyncedChanges } from "@/features/sync/getUnSyncChanges";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
@@ -75,6 +77,10 @@ const LoginModal: React.FunctionComponent = () => {
         3000,
         60,
       );
+
+      // refresh queries to update the UI
+      invalidateEnvironmentsData();
+      invalidateActiveEnvironmentData();
 
       toast.success("Logged in");
       stopLoadingLogin();
