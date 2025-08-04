@@ -10,7 +10,7 @@ import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { LocalOrRemoteSlice } from "@/legacy/lib/models/common/ModelData";
 import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/slices";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
-import { logout } from "@/modules/common";
+import { logout } from "@/modules/auth";
 import { refreshStateCreator } from "@/modules/environment";
 import { SliceMachineStoreType } from "@/redux/type";
 

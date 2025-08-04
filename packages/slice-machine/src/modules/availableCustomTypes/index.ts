@@ -14,7 +14,7 @@ import {
   normalizeFrontendCustomTypes,
 } from "@/legacy/lib/models/common/normalizers/customType";
 import { filterSliceFromCustomType } from "@/legacy/lib/utils/shared/customTypes";
-import { logout } from "@/modules/common";
+import { logout } from "@/modules/auth";
 import { refreshStateCreator } from "@/modules/environment";
 import { SliceMachineStoreType } from "@/redux/type";
 

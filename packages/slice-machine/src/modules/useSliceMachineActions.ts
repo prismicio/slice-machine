@@ -10,7 +10,7 @@ import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
 import ServerState from "@/legacy/lib/models/server/ServerState";
-import { logout as logoutAction } from "@/modules/common";
+import { logout as logoutAction } from "@/modules/auth";
 
 import {
   customTypeCreateSuccess,

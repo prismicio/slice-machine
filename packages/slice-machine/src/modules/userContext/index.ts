@@ -2,7 +2,7 @@ import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
 import ErrorWithStatus from "@/legacy/lib/models/common/ErrorWithStatus";
-import { logout } from "@/modules/common";
+import { logout } from "@/modules/auth";
 import { AuthStatus, UserContextStoreType } from "@/modules/userContext/types";
 import { SliceMachineStoreType } from "@/redux/type";
 
