@@ -125,8 +125,6 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
               </Tooltip>
             )}
 
-            {variant === "default" && <LogoutButton />}
-
             {environments.length > 1 ? (
               <EnvironmentDropdownMenu
                 activeEnvironment={activeEnvironment}
@@ -141,6 +139,8 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
                 }
               />
             ) : undefined}
+
+            {variant === "default" && <LogoutButton />}
           </Box>
         </>
       )}
