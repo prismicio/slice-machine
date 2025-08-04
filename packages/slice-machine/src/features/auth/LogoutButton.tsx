@@ -22,7 +22,11 @@ export function LogoutButton() {
 
   return (
     <Tooltip content="Log out" side="right">
-      <IconButton icon="logout" onClick={() => void onClick()} />
+      <IconButton
+        icon="logout"
+        onClick={() => void onClick()}
+        hiddenLabel="Log out"
+      />
     </Tooltip>
   );
 }
