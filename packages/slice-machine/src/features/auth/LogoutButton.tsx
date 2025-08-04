@@ -1,22 +1,22 @@
 import { IconButton, Tooltip } from "@prismicio/editor-ui";
 import { toast } from "react-toastify";
 
-import { logout } from "@/apiClient";
+import { logout as managerLogout } from "@/apiClient";
 import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
 import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 export function LogoutButton() {
-  const { clearAuthStatus, clearRemoteCustomTypes, clearRemoteSlices } =
-    useSliceMachineActions();
+  const { logout: storeLogout } = useSliceMachineActions();
 
   async function onClick() {
-    await logout();
-    clearAuthStatus();
-    clearRemoteCustomTypes();
-    clearRemoteSlices();
+    await managerLogout();
+    storeLogout();
+
+    // refresh queries to update the UI
     invalidateEnvironmentsData();
     invalidateActiveEnvironmentData();
+
     toast.success("Logged out");
   }
 

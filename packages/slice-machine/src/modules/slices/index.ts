@@ -10,6 +10,7 @@ import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { LocalOrRemoteSlice } from "@/legacy/lib/models/common/ModelData";
 import { normalizeFrontendSlices } from "@/legacy/lib/models/common/normalizers/slices";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
+import { logout } from "@/modules/common";
 import { refreshStateCreator } from "@/modules/environment";
 import { SliceMachineStoreType } from "@/redux/type";
 
@@ -34,8 +35,6 @@ export const sliceUpdateSuccess = createAction("SLICE/UPDATE_SUCCESS")<{
   component: ComponentUI;
 }>();
 
-export const sliceClearRemote = createAction("SLICE/CLEAR_REMOTE")();
-
 export const sliceGenerateCustomScreenshotSuccess = createAction(
   "SLICE/GENERATE_CUSTOM_SCREENSHOT_SUCCESS",
 )<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
@@ -52,7 +51,7 @@ type SlicesActions =
   | ActionType<typeof sliceUpdateSuccess>
   | ActionType<typeof sliceGenerateCustomScreenshotSuccess>
   | ActionType<typeof sliceUpdateMockSuccess>
-  | ActionType<typeof sliceClearRemote>;
+  | ActionType<typeof logout>;
 
 // Selectors
 export const getLibraries = (
@@ -196,7 +195,7 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       };
     }
 
-    case getType(sliceClearRemote): {
+    case getType(logout): {
       return {
         ...state,
         remoteSlices: [],

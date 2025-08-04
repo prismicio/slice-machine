@@ -2,6 +2,7 @@ import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
 import ErrorWithStatus from "@/legacy/lib/models/common/ErrorWithStatus";
+import { logout } from "@/modules/common";
 import { AuthStatus, UserContextStoreType } from "@/modules/userContext/types";
 import { SliceMachineStoreType } from "@/redux/type";
 
@@ -29,14 +30,12 @@ export const changesPushSuccess = createAction(
   "USER_CONTEXT/CHANGES_PUSH_SUCCESS",
 )();
 
-export const clearAuthStatus = createAction("USER_CONTEXT/CLEAR_AUTH")();
-
 type userContextActions = ActionType<
   | typeof hasSeenSimulatorToolTipCreator
   | typeof hasSeenChangesToolTipCreator
   | typeof refreshStateCreator
   | typeof changesPushSuccess
-  | typeof clearAuthStatus
+  | typeof logout
 >;
 
 // Selectors
@@ -82,7 +81,7 @@ export const userContextReducer: Reducer<
         lastSyncChange: Date.now(),
       };
     }
-    case getType(clearAuthStatus): {
+    case getType(logout): {
       return {
         ...initialState,
         authStatus: AuthStatus.UNAUTHORIZED,

@@ -14,6 +14,7 @@ import {
   normalizeFrontendCustomTypes,
 } from "@/legacy/lib/models/common/normalizers/customType";
 import { filterSliceFromCustomType } from "@/legacy/lib/utils/shared/customTypes";
+import { logout } from "@/modules/common";
 import { refreshStateCreator } from "@/modules/environment";
 import { SliceMachineStoreType } from "@/redux/type";
 
@@ -43,10 +44,6 @@ export const customTypeDeleteSuccess = createAction(
   customTypeId: string;
 }>();
 
-export const customTypeClearRemote = createAction(
-  "CUSTOM_TYPES/CLEAR_REMOTE",
-)();
-
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof customTypeCreateSuccess>
@@ -54,7 +51,7 @@ type CustomTypesActions =
   | ActionType<typeof customTypeSaveSuccess>
   | ActionType<typeof customTypeDeleteSuccess>
   | ActionType<typeof sliceDeleteSuccess>
-  | ActionType<typeof customTypeClearRemote>;
+  | ActionType<typeof logout>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -193,7 +190,7 @@ export const availableCustomTypesReducer: Reducer<
       return customTypesUpdated;
     }
 
-    case getType(customTypeClearRemote): {
+    case getType(logout): {
       return Object.fromEntries(
         Object.entries(state).flatMap(([customTypeId, customType]) => {
           if (!hasLocal(customType)) return [];

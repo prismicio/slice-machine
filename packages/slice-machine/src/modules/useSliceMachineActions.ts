@@ -10,9 +10,9 @@ import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
 import ServerState from "@/legacy/lib/models/server/ServerState";
+import { logout as logoutAction } from "@/modules/common";
 
 import {
-  customTypeClearRemote,
   customTypeCreateSuccess,
   customTypeDeleteSuccess,
   customTypeRenameSuccess,
@@ -24,7 +24,6 @@ import { LoadingKeysEnum } from "./loading/types";
 import { modalCloseCreator, modalOpenCreator } from "./modal";
 import { ModalKeysEnum } from "./modal/types";
 import {
-  sliceClearRemote,
   sliceCreateSuccess,
   sliceDeleteSuccess,
   sliceGenerateCustomScreenshotSuccess,
@@ -34,7 +33,6 @@ import {
 } from "./slices";
 import {
   changesPushSuccess,
-  clearAuthStatus as clearAuthStatusCreator,
   hasSeenChangesToolTipCreator,
   hasSeenSimulatorToolTipCreator,
 } from "./userContext";
@@ -63,7 +61,6 @@ const useSliceMachineActions = () => {
   const setSeenSimulatorToolTip = () =>
     dispatch(hasSeenSimulatorToolTipCreator());
   const setSeenChangesToolTip = () => dispatch(hasSeenChangesToolTipCreator());
-  const clearAuthStatus = () => dispatch(clearAuthStatusCreator());
 
   // State Action (used by multiple stores)
   const refreshState = (serverState: ServerState) => {
@@ -111,10 +108,6 @@ const useSliceMachineActions = () => {
       }),
     );
 
-  const clearRemoteCustomTypes = () => {
-    dispatch(customTypeClearRemote());
-  };
-
   /**
    * Slice module
    */
@@ -156,15 +149,12 @@ const useSliceMachineActions = () => {
     );
   const updateSliceMockSuccess = (args: SaveSliceMockRequest) =>
     dispatch(sliceUpdateMockSuccess(args));
-
-  const clearRemoteSlices = () => {
-    dispatch(sliceClearRemote());
-  };
-
   /**
    * Changes module
    */
   const pushChangesSuccess = () => dispatch(changesPushSuccess());
+
+  const logout = () => dispatch(logoutAction());
 
   return {
     refreshState,
@@ -175,7 +165,6 @@ const useSliceMachineActions = () => {
     deleteCustomTypeSuccess,
     renameCustomTypeSuccess,
     saveCustomTypeSuccess,
-    clearRemoteCustomTypes,
     saveSliceSuccess,
     saveSliceCustomScreenshotSuccess,
     createSliceSuccess,
@@ -183,13 +172,12 @@ const useSliceMachineActions = () => {
     deleteSliceSuccess,
     setSeenSimulatorToolTip,
     setSeenChangesToolTip,
-    clearAuthStatus,
     openScreenshotPreviewModal,
     closeModals,
     pushChangesSuccess,
     createCustomTypeSuccess,
     updateSliceMockSuccess,
-    clearRemoteSlices,
+    logout,
   };
 };
 
