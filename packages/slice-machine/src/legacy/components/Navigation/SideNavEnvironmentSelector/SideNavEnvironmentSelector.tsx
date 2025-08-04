@@ -115,7 +115,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
             ) : undefined}
           </Box>
           <Box flexShrink={0}>
-            {variant === "unauthenticated" && (
+            {variant === "unauthenticated" ? (
               <Tooltip content="Log in" side="right">
                 <IconButton
                   icon={<LoginIcon className={styles.loginIcon} />}
@@ -123,7 +123,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
                   hiddenLabel="Log in to enable environments"
                 />
               </Tooltip>
-            )}
+            ) : undefined}
 
             {environments.length > 1 ? (
               <EnvironmentDropdownMenu
