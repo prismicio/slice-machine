@@ -43,13 +43,18 @@ export const customTypeDeleteSuccess = createAction(
   customTypeId: string;
 }>();
 
+export const customTypeClearRemote = createAction(
+  "CUSTOM_TYPES/CLEAR_REMOTE",
+)();
+
 type CustomTypesActions =
   | ActionType<typeof refreshStateCreator>
   | ActionType<typeof customTypeCreateSuccess>
   | ActionType<typeof customTypeRenameSuccess>
   | ActionType<typeof customTypeSaveSuccess>
   | ActionType<typeof customTypeDeleteSuccess>
-  | ActionType<typeof sliceDeleteSuccess>;
+  | ActionType<typeof sliceDeleteSuccess>
+  | ActionType<typeof customTypeClearRemote>;
 
 // Selectors
 export const selectAllCustomTypes = (
@@ -186,6 +191,15 @@ export const availableCustomTypesReducer: Reducer<
         );
 
       return customTypesUpdated;
+    }
+
+    case getType(customTypeClearRemote): {
+      return Object.fromEntries(
+        Object.entries(state).flatMap(([customTypeId, customType]) => {
+          if (!hasLocal(customType)) return [];
+          return [[customTypeId, { local: customType.local }]];
+        }),
+      );
     }
 
     default:

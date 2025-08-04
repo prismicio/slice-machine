@@ -29,11 +29,14 @@ export const changesPushSuccess = createAction(
   "USER_CONTEXT/CHANGES_PUSH_SUCCESS",
 )();
 
+export const clearAuthStatus = createAction("USER_CONTEXT/CLEAR_AUTH")();
+
 type userContextActions = ActionType<
   | typeof hasSeenSimulatorToolTipCreator
   | typeof hasSeenChangesToolTipCreator
   | typeof refreshStateCreator
   | typeof changesPushSuccess
+  | typeof clearAuthStatus
 >;
 
 // Selectors
@@ -77,6 +80,12 @@ export const userContextReducer: Reducer<
       return {
         ...state,
         lastSyncChange: Date.now(),
+      };
+    }
+    case getType(clearAuthStatus): {
+      return {
+        ...initialState,
+        authStatus: AuthStatus.UNAUTHORIZED,
       };
     }
 

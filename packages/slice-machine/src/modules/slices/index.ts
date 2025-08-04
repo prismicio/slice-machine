@@ -34,6 +34,8 @@ export const sliceUpdateSuccess = createAction("SLICE/UPDATE_SUCCESS")<{
   component: ComponentUI;
 }>();
 
+export const sliceClearRemote = createAction("SLICE/CLEAR_REMOTE")();
+
 export const sliceGenerateCustomScreenshotSuccess = createAction(
   "SLICE/GENERATE_CUSTOM_SCREENSHOT_SUCCESS",
 )<{ variationId: string; screenshot: ScreenshotUI; component: ComponentUI }>();
@@ -49,7 +51,8 @@ type SlicesActions =
   | ActionType<typeof sliceDeleteSuccess>
   | ActionType<typeof sliceUpdateSuccess>
   | ActionType<typeof sliceGenerateCustomScreenshotSuccess>
-  | ActionType<typeof sliceUpdateMockSuccess>;
+  | ActionType<typeof sliceUpdateMockSuccess>
+  | ActionType<typeof sliceClearRemote>;
 
 // Selectors
 export const getLibraries = (
@@ -190,6 +193,13 @@ export const slicesReducer: Reducer<SlicesStoreType | null, SlicesActions> = (
       return {
         ...state,
         libraries,
+      };
+    }
+
+    case getType(sliceClearRemote): {
+      return {
+        ...state,
+        remoteSlices: [],
       };
     }
 

@@ -4,11 +4,18 @@ import {
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import { getState, logout, telemetry } from "@/apiClient";
 import { setEnvironment } from "@/features/environments/actions/setEnvironment";
-import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
-import { useEnvironments } from "@/features/environments/useEnvironments";
+import {
+  invalidateActiveEnvironmentData,
+  useActiveEnvironment,
+} from "@/features/environments/useActiveEnvironment";
+import {
+  invalidateEnvironmentsData,
+  useEnvironments,
+} from "@/features/environments/useEnvironments";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { getUnSyncedChanges } from "@/features/sync/getUnSyncChanges";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
@@ -23,7 +30,13 @@ export function Environment() {
   const { environments, error: useEnvironmentsError } = useEnvironments();
   const { activeEnvironment, error: activeEnvironmentError } =
     useActiveEnvironment();
-  const { refreshState, openLoginModal } = useSliceMachineActions();
+  const {
+    refreshState,
+    openLoginModal,
+    clearAuthStatus,
+    clearRemoteCustomTypes,
+    clearRemoteSlices,
+  } = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const isOnline = useNetwork();
   const authStatus = useAuthStatus();
@@ -85,7 +98,12 @@ export function Environment() {
 
   const onLogOutClick = async () => {
     await logout();
-    window.location.reload();
+    clearAuthStatus();
+    clearRemoteCustomTypes();
+    clearRemoteSlices();
+    invalidateEnvironmentsData();
+    invalidateActiveEnvironmentData();
+    toast.success("Logged out");
   };
 
   if (
