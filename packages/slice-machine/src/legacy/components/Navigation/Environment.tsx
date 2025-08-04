@@ -4,18 +4,11 @@ import {
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
 import { useState } from "react";
-import { toast } from "react-toastify";
 
-import { getState, logout, telemetry } from "@/apiClient";
+import { getState, telemetry } from "@/apiClient";
 import { setEnvironment } from "@/features/environments/actions/setEnvironment";
-import {
-  invalidateActiveEnvironmentData,
-  useActiveEnvironment,
-} from "@/features/environments/useActiveEnvironment";
-import {
-  invalidateEnvironmentsData,
-  useEnvironments,
-} from "@/features/environments/useEnvironments";
+import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
+import { useEnvironments } from "@/features/environments/useEnvironments";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { getUnSyncedChanges } from "@/features/sync/getUnSyncChanges";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
@@ -30,13 +23,7 @@ export function Environment() {
   const { environments, error: useEnvironmentsError } = useEnvironments();
   const { activeEnvironment, error: activeEnvironmentError } =
     useActiveEnvironment();
-  const {
-    refreshState,
-    openLoginModal,
-    clearAuthStatus,
-    clearRemoteCustomTypes,
-    clearRemoteSlices,
-  } = useSliceMachineActions();
+  const { refreshState, openLoginModal } = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const isOnline = useNetwork();
   const authStatus = useAuthStatus();
@@ -96,16 +83,6 @@ export function Environment() {
     return <SideNavEnvironmentSelector variant="offline" />;
   }
 
-  const onLogOutClick = async () => {
-    await logout();
-    clearAuthStatus();
-    clearRemoteCustomTypes();
-    clearRemoteSlices();
-    invalidateEnvironmentsData();
-    invalidateActiveEnvironmentData();
-    toast.success("Logged out");
-  };
-
   if (
     useEnvironmentsError === undefined &&
     activeEnvironmentError === undefined
@@ -117,7 +94,6 @@ export function Environment() {
         onSelect={onSelect}
         disabled={isSwitchingEnv || autoSyncStatus === "syncing"}
         loading={isSwitchingEnv}
-        onLogOutClick={() => void onLogOutClick()}
       />
     );
   }

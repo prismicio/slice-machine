@@ -18,6 +18,7 @@ import type { Environment } from "@slicemachine/manager/client";
 import { clsx } from "clsx";
 import type { FC, ReactNode } from "react";
 
+import { LogoutButton } from "@/features/auth/LogoutButton";
 import { LoginIcon } from "@/icons/LoginIcon";
 import { LogoIcon } from "@/icons/LogoIcon";
 
@@ -30,7 +31,6 @@ type SideNavEnvironmentSelectorProps = {
   loading?: boolean;
   variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
   onLogInClick?: () => void;
-  onLogOutClick?: () => void;
   onSelect?: (environment: Environment) => void | Promise<void>;
 };
 
@@ -44,7 +44,6 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
     loading = false,
     variant = "default",
     onLogInClick,
-    onLogOutClick,
     onSelect,
   } = props;
 
@@ -126,11 +125,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
               </Tooltip>
             )}
 
-            {variant === "default" && onLogOutClick && (
-              <Tooltip content="Log out" side="right">
-                <IconButton icon="logout" onClick={onLogOutClick} />
-              </Tooltip>
-            )}
+            {variant === "default" && <LogoutButton />}
 
             {environments.length > 1 ? (
               <EnvironmentDropdownMenu
