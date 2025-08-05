@@ -33,7 +33,12 @@ export class EditFieldDialog extends Dialog {
   /**
    * Dynamic locators
    */
-  getLabel() {
+
+  getTitle(name: string) {
+    return this.title.getByText(name, { exact: true });
+  }
+
+  getLabelValue() {
     return this.dialog.locator('input[name="config.label"]').inputValue();
   }
 
@@ -47,9 +52,9 @@ export class EditFieldDialog extends Dialog {
   async editField(args: { name: string; newName: string; newId: string }) {
     const { name, newName, newId } = args;
 
-    expect(await this.getLabel()).toEqual(name);
+    expect(await this.getLabelValue()).toEqual(name);
     await this.labelInput.fill(newName);
-    expect(await this.getLabel()).toEqual(newName);
+    expect(await this.getLabelValue()).toEqual(newName);
     await this.apiIdInput.fill(newId);
     await this.submitButton.click();
   }
