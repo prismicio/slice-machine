@@ -3,7 +3,7 @@ import * as CSS from "csstype";
 import { IconType } from "react-icons";
 import { Flex, Text, Theme } from "theme-ui";
 
-import { Field, fieldLabels } from "@/domain/fields";
+import { CustomFieldType, fieldLabels } from "@/domain/fields";
 import { TextWithTooltip } from "@/legacy/components/Tooltip/TextWithTooltip";
 
 interface ItemHeaderProps {
@@ -11,7 +11,7 @@ interface ItemHeaderProps {
   sliceFieldName: string | undefined;
   theme: Theme;
   WidgetIcon: IconType;
-  type: Field["type"];
+  type: CustomFieldType;
 }
 
 const ItemHeader: React.FC<ItemHeaderProps> = ({

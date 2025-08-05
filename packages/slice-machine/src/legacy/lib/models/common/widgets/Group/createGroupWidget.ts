@@ -1,6 +1,7 @@
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import * as yup from "yup";
 
+import { CustomFieldType } from "@/domain/fields";
 import { TabField } from "@/legacy/lib/models/common/CustomType";
 import {
   type GroupSM,
@@ -33,7 +34,7 @@ type CreateGroupWidgetArgsBase<T extends TabField> = {
   schemaTypeRegex: RegExp;
   customListItem: (props: GroupListItemProps<T>) => JSX.Element;
   hintItemName: string;
-  customName?: string;
+  customName?: CustomFieldType;
 };
 type CreateTopGroupWidgetArgs = CreateGroupWidgetArgsBase<GroupSM>;
 type CreateNestedGroupWidgetArgs = CreateGroupWidgetArgsBase<NestedGroupSM> & {

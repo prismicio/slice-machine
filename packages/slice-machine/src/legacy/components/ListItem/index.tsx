@@ -110,7 +110,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                       theme={theme}
                       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/strict-boolean-expressions, @typescript-eslint/prefer-nullish-coalescing
                       text={config?.label || key}
-                      type={type}
+                      type={widget.CUSTOM_NAME ?? widget.TYPE_NAME}
                       sliceFieldName={
                         renderFieldAccessor && renderFieldAccessor(key)
                       }

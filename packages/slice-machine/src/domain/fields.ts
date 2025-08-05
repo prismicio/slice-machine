@@ -34,9 +34,13 @@ export interface GroupField extends BaseField {
 
 export type Field = NestableField | UIDField | GroupField;
 
-export type CustomFieldType = "LinkToMedia" | "ContentRelationship";
+export type CustomFieldType =
+  | FieldType
+  | "LinkToMedia"
+  | "ContentRelationship"
+  | "NestedGroup";
 
-export const fieldLabels: Record<FieldType | CustomFieldType, string> = {
+export const fieldLabels: Record<CustomFieldType, string> = {
   Text: "Text",
   StructuredText: "Rich Text",
   Boolean: "Boolean",
@@ -47,6 +51,7 @@ export const fieldLabels: Record<FieldType | CustomFieldType, string> = {
   UID: "UID",
   Image: "Image",
   Group: "Repeatable Group",
+  NestedGroup: "Nested Group",
   Color: "Color",
   Date: "Date",
   Table: "Table",
