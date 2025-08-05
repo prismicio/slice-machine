@@ -22,13 +22,12 @@ const ItemHeader: React.FC<ItemHeaderProps> = ({
   type,
 }) => (
   <Flex sx={{ alignItems: "center", position: "relative" }}>
-    <Tooltip content={fieldLabels[type]}>
-      <Box>
+    <Tooltip content={fieldLabels[type]} sideOffset={2} disableHoverableContent>
+      <Box margin={{ right: 8 }}>
         <WidgetIcon
           size={28}
           style={{
             color: theme.colors?.primary as CSS.Property.Color,
-            marginRight: "8px",
             borderRadius: "4px",
             padding: "4px",
             border: "2px solid",
