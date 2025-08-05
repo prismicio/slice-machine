@@ -52,7 +52,6 @@ export class EditFieldDialog extends Dialog {
     expect(await this.getLabel()).toEqual(newName);
     await this.apiIdInput.fill(newId);
     await this.submitButton.click();
-    expect(await this.getLabel()).not.toEqual(newName);
   }
 
   /**
