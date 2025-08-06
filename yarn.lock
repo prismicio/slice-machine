@@ -6834,13 +6834,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.86-alpha.jp-fix-navigation-icon.1":
-  version: 0.4.86-alpha.jp-fix-navigation-icon.1
-  resolution: "@prismicio/editor-fields@npm:0.4.86-alpha.jp-fix-navigation-icon.1"
+"@prismicio/editor-fields@npm:0.4.87":
+  version: 0.4.87
+  resolution: "@prismicio/editor-fields@npm:0.4.87"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/client": 7.15.1
-    "@prismicio/editor-support": 0.4.86-alpha.jp-fix-navigation-icon.1
+    "@prismicio/editor-support": 0.4.87
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.16.0
     "@tiptap/core": 2.11.5
@@ -6876,17 +6876,17 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.86-alpha.jp-fix-navigation-icon.1
+    "@prismicio/editor-ui": ^0.4.87
     "@tanstack/react-query": 5.55.4
     react: 18
     react-dom: 18
-  checksum: e5e72e946e8270599476033bbdb491808cfba97799563a1cd1ba51834f004e5d1c6679e0305c969bc8142ff9bf18a6ba25ab910890319a74c9c6699388e5b3c3
+  checksum: 8025b9dc9d47a5c1a809fe1a721d7c09035c865b9b8cb0beab493e7661e5381dc8b85e84756d83f61b1dfa3d555b56d15224e0b5f416bd198bf2df0a9a411081
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.86-alpha.jp-fix-navigation-icon.1":
-  version: 0.4.86-alpha.jp-fix-navigation-icon.1
-  resolution: "@prismicio/editor-support@npm:0.4.86-alpha.jp-fix-navigation-icon.1"
+"@prismicio/editor-support@npm:0.4.87":
+  version: 0.4.87
+  resolution: "@prismicio/editor-support@npm:0.4.87"
   dependencies:
     dom-confetti: 0.2.2
     tslib: 2.4.0
@@ -6898,19 +6898,19 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 9e10ba2b0d75ffd715be4561ffd11083e3846ccd3423dcf048a1a0d3601470fe47536c40e62e262d603130291ca97803c264044de77ae9f5c5b74617888af03a
+  checksum: dfe469be7b81b5f2dd3c2dd21cd50dc1cf9af99daaab688e0cc1130d25b1c7e541ba69706523da2babff40e9a94f9f1fcfe2bcbd25db740b6d39faaf56e7f0ab
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.86-alpha.jp-fix-navigation-icon.1":
-  version: 0.4.86-alpha.jp-fix-navigation-icon.1
-  resolution: "@prismicio/editor-ui@npm:0.4.86-alpha.jp-fix-navigation-icon.1"
+"@prismicio/editor-ui@npm:0.4.87":
+  version: 0.4.87
+  resolution: "@prismicio/editor-ui@npm:0.4.87"
   dependencies:
     "@internationalized/date": 3.8.1
     "@nivo/bar": 0.96.0
     "@nivo/core": 0.96.0
     "@nivo/tooltip": 0.96.0
-    "@prismicio/editor-support": 0.4.86-alpha.jp-fix-navigation-icon.1
+    "@prismicio/editor-support": 0.4.87
     "@radix-ui/react-focus-scope": 1.1.7
     "@react-aria/calendar": 3.8.1
     "@react-aria/color": 3.0.0-rc.0
@@ -6942,7 +6942,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 563ad4ec6f35ddad3143099909ff0a21b5accd8cb2420316b938f10a31f48358aeb33f5498c775fca2ea46c347c108d4d03731610c7633054a93ff10e4df0d93
+  checksum: 3aec05bd6981836a4a73b587113c9e4573ba71fa1ff0fc2fcbc0008e27419f878a8fee3432dafd924127c5fe53e0b912540e7312fe951c993a4950d5adb143ae
   languageName: node
   linkType: hard
 
@@ -34526,9 +34526,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.17.0
-    "@prismicio/editor-fields": 0.4.86-alpha.jp-fix-navigation-icon.1
-    "@prismicio/editor-support": 0.4.86-alpha.jp-fix-navigation-icon.1
-    "@prismicio/editor-ui": 0.4.86-alpha.jp-fix-navigation-icon.1
+    "@prismicio/editor-fields": 0.4.87
+    "@prismicio/editor-support": 0.4.87
+    "@prismicio/editor-ui": 0.4.87
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.14.0
     "@prismicio/simulator": 0.1.4
