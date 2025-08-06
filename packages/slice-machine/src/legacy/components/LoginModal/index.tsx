@@ -13,7 +13,7 @@ import {
   Text,
 } from "theme-ui";
 
-import { checkAuthStatus, getState, logout } from "@/apiClient";
+import { checkAuthStatus, clearAuth,getState } from "@/apiClient";
 import { getActiveEnvironment } from "@/features/environments/actions/getActiveEnvironment";
 import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
 import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
@@ -66,7 +66,7 @@ const LoginModal: React.FunctionComponent = () => {
 
     try {
       startLoadingLogin();
-      await logout();
+      await clearAuth();
       window.open(loginRedirectUrl, "_blank");
       await startPolling<CheckAuthStatusResponse, ValidAuthStatus>(
         checkAuthStatus,
