@@ -6834,15 +6834,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.77":
-  version: 0.4.77
-  resolution: "@prismicio/editor-fields@npm:0.4.77"
+"@prismicio/editor-fields@npm:0.4.86":
+  version: 0.4.86
+  resolution: "@prismicio/editor-fields@npm:0.4.86"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/client": 7.15.1
-    "@prismicio/editor-support": 0.4.77
+    "@prismicio/editor-support": 0.4.86
     "@prismicio/richtext": 2.1.1
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.16.0
     "@tiptap/core": 2.11.5
     "@tiptap/extension-bold": 2.11.5
     "@tiptap/extension-bullet-list": 2.11.5
@@ -6872,21 +6872,23 @@ __metadata:
     json-edit-react: 1.22.0
     monocle-ts: ""
     newtype-ts: ""
+    react-hotkeys-hook: 5.1.0
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.77
+    "@prismicio/editor-ui": ^0.4.86
     "@tanstack/react-query": 5.55.4
     react: 18
     react-dom: 18
-  checksum: fb40ae8ff395ebd55d28a94eb6c6bea0c2acaa46bd811b4107cdc2a04932cc0a3e077f9eb4ae1f963fb072a47b174278d67d7d1e086cc6f555053e844f2d6760
+  checksum: 3fac9fc0d2d85b64e4a61390b9b79a5dee33dcd2f0f3b00858d1a7fe8ab4fddfefaa6cf93a7e48a1c1a5a4684b1af37570369989fac1e75cba12d9e7b32094e6
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.77":
-  version: 0.4.77
-  resolution: "@prismicio/editor-support@npm:0.4.77"
+"@prismicio/editor-support@npm:0.4.86":
+  version: 0.4.86
+  resolution: "@prismicio/editor-support@npm:0.4.86"
   dependencies:
+    dom-confetti: 0.2.2
     tslib: 2.4.0
   peerDependencies:
     react: 17 || 18
@@ -6896,25 +6898,26 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 1c3f25fcf9a2b5c610d48c342e8aea18fc6fafe15135f1a16de4cff69ac60bc3241601d9e546c3e8553e88f33155419fe5aeb5260dff8c890d1668175ac84f4f
+  checksum: d18b75ea4d5908402133fd128d7d0552a86650d1052bd367e8cb2af0a2476e0a524fc271d9e69cce42b887f0a4dcde15af27ccc06ecd2eeb7604bc691cd8a3ad
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.77":
-  version: 0.4.77
-  resolution: "@prismicio/editor-ui@npm:0.4.77"
+"@prismicio/editor-ui@npm:0.4.86":
+  version: 0.4.86
+  resolution: "@prismicio/editor-ui@npm:0.4.86"
   dependencies:
     "@internationalized/date": 3.8.1
     "@nivo/bar": 0.96.0
     "@nivo/core": 0.96.0
     "@nivo/tooltip": 0.96.0
-    "@prismicio/editor-support": 0.4.77
+    "@prismicio/editor-support": 0.4.86
     "@radix-ui/react-focus-scope": 1.1.7
     "@react-aria/calendar": 3.8.1
     "@react-aria/color": 3.0.0-rc.0
     "@react-aria/datepicker": 3.14.1
     "@react-aria/focus": 3.18.0
     "@react-aria/i18n": 3.12.0
+    "@react-aria/interactions": 3.25.1
     "@react-stately/calendar": 3.8.1
     "@react-stately/color": 3.7.0
     "@react-stately/datepicker": 3.14.1
@@ -6932,14 +6935,14 @@ __metadata:
     csstype: 3.1.2
     radix-ui: 1.4.2
     react-easy-crop: 4.6.1
-    react-hotkeys-hook: 4.5.0
+    react-hotkeys-hook: 5.1.0
     react-remove-scroll: 2.5.6
     react-syntax-highlighter: 15.5.0
     tslib: 2.4.0
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 795dd776e9dfe8d066f27887fd433073cefa26079a36cd806f1a89cb516fb800c309bb0ddbf4ab3050c1821d901571dcf73310e9afbdef4280b2cd9e028b8c01
+  checksum: c23bc62139513309744f95f933aebd97b948783367704cebef93a25e0c0e924322662130f0dff659d2ad3f05932a34fab7071ba58c9827c58aa59d6789088fcb
   languageName: node
   linkType: hard
 
@@ -9132,6 +9135,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-aria/interactions@npm:3.25.1":
+  version: 3.25.1
+  resolution: "@react-aria/interactions@npm:3.25.1"
+  dependencies:
+    "@react-aria/ssr": ^3.9.8
+    "@react-aria/utils": ^3.29.0
+    "@react-stately/flags": ^3.1.1
+    "@react-types/shared": ^3.29.1
+    "@swc/helpers": ^0.5.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+    react-dom: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+  checksum: aa2ec8e380a2befe7967951f55469daff4485a7e9ac42ce59fc603f958d1f68518d6b3247db65732700628e8e2e2c479d3dd1bf6b5070303475e7e440a449897
+  languageName: node
+  linkType: hard
+
 "@react-aria/interactions@npm:^3.22.0, @react-aria/interactions@npm:^3.22.2":
   version: 3.22.2
   resolution: "@react-aria/interactions@npm:3.22.2"
@@ -9290,6 +9309,17 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0
   checksum: cf6b256325c8a3d7983383e2b977f266c57e1f6113782a29054ce0399a227ea1613ffa4e557fec55f9d9508e69218a09d469d2843f2450769f7b3ced7eee0f31
+  languageName: node
+  linkType: hard
+
+"@react-aria/ssr@npm:^3.9.8":
+  version: 3.9.10
+  resolution: "@react-aria/ssr@npm:3.9.10"
+  dependencies:
+    "@swc/helpers": ^0.5.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
+  checksum: 45307c53beee3a48f79f361ba07d4306250a051a0da5c258a545b47495983743975ad193e05542d28d15087e597049c74c850fe4fd920157a7d190d47f19dd52
   languageName: node
   linkType: hard
 
@@ -9541,7 +9571,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-stately/flags@npm:^3.1.2":
+"@react-stately/flags@npm:^3.1.1, @react-stately/flags@npm:^3.1.2":
   version: 3.1.2
   resolution: "@react-stately/flags@npm:3.1.2"
   dependencies:
@@ -19286,6 +19316,13 @@ __metadata:
   version: 0.5.16
   resolution: "dom-accessibility-api@npm:0.5.16"
   checksum: 005eb283caef57fc1adec4d5df4dd49189b628f2f575af45decb210e04d634459e3f1ee64f18b41e2dcf200c844bc1d9279d80807e686a30d69a4756151ad248
+  languageName: node
+  linkType: hard
+
+"dom-confetti@npm:0.2.2":
+  version: 0.2.2
+  resolution: "dom-confetti@npm:0.2.2"
+  checksum: 6b14f4432fa758b038d63cfb7c8d56577d4ce99b11b7a7c74d261e5fb2fb4e2495c6b6787ba78c778cfad2627730612234424f675c524d903ad8d7485319af22
   languageName: node
   linkType: hard
 
@@ -32374,13 +32411,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hotkeys-hook@npm:4.5.0":
-  version: 4.5.0
-  resolution: "react-hotkeys-hook@npm:4.5.0"
+"react-hotkeys-hook@npm:5.1.0":
+  version: 5.1.0
+  resolution: "react-hotkeys-hook@npm:5.1.0"
   peerDependencies:
-    react: ">=16.8.1"
-    react-dom: ">=16.8.1"
-  checksum: 38e331c729606ad427c852aa45bfa43fe6090c35bf7c98f202599680b81f2614d4a4f565c11c9f4cf41ccc497c1e8001fff0ad2d3a7af78a2cc8e251e30143e0
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 0e3068e98089ea9729105a5fd608f336bea055f4cf81d180c25a247b50ce0140193619a51d0727ed943e3408ca9d688f963ca5a9e10eff66751409499ea19b97
   languageName: node
   linkType: hard
 
@@ -34489,9 +34526,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.17.0
-    "@prismicio/editor-fields": 0.4.77
-    "@prismicio/editor-support": 0.4.77
-    "@prismicio/editor-ui": 0.4.77
+    "@prismicio/editor-fields": 0.4.86
+    "@prismicio/editor-support": 0.4.86
+    "@prismicio/editor-ui": 0.4.86
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.14.0
     "@prismicio/simulator": 0.1.4
