@@ -112,7 +112,7 @@ export const contentRelationshipField: NestableField = {
 };
 
 export const linkToMediaField: NestableField = {
-  name: "Link To Media",
+  name: "Link to Media",
   description: "A link to a media asset.",
   icon: "attachFile",
   thumbnail:
