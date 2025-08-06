@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from "@prismicio/editor-ui";
 import { toast } from "react-toastify";
 
-import { getState, clearAuth as managerLogout } from "@/apiClient";
+import { clearAuth as managerLogout, getState } from "@/apiClient";
 import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
 import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
