@@ -5,12 +5,10 @@ import {
 
 import { getEnvironments } from "./actions/getEnvironments";
 
-const fetcher = () => getEnvironments();
-
 export function invalidateEnvironmentsData() {
-  invalidateFetcherData(fetcher);
+  invalidateFetcherData(getEnvironments);
 }
 
 export function useEnvironments() {
-  return useRequest(fetcher, []);
+  return useRequest(getEnvironments, []);
 }
