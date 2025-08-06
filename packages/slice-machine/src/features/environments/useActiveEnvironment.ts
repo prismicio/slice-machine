@@ -7,7 +7,7 @@ import {
 import { getActiveEnvironment } from "./actions/getActiveEnvironment";
 
 export function invalidateActiveEnvironmentData() {
-  invalidateFetcherData(getActiveEnvironment as Fetcher<undefined[], unknown>);
+  invalidateFetcherData(getActiveEnvironment as Fetcher);
 }
 
 export function useActiveEnvironment() {
