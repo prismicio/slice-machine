@@ -10,7 +10,6 @@ import { CustomTypes } from "@/legacy/lib/models/common/CustomType";
 import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import { SliceSM } from "@/legacy/lib/models/common/Slice";
 import ServerState from "@/legacy/lib/models/server/ServerState";
-import { logout as logoutAction } from "@/modules/auth";
 
 import {
   customTypeCreateSuccess,
@@ -154,8 +153,6 @@ const useSliceMachineActions = () => {
    */
   const pushChangesSuccess = () => dispatch(changesPushSuccess());
 
-  const logout = () => dispatch(logoutAction());
-
   return {
     refreshState,
     openScreenshotsModal,
@@ -177,7 +174,6 @@ const useSliceMachineActions = () => {
     pushChangesSuccess,
     createCustomTypeSuccess,
     updateSliceMockSuccess,
-    logout,
   };
 };
 
