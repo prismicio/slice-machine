@@ -1,6 +1,7 @@
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 import * as yup from "yup";
 
+import { groupField } from "@/domain/fields";
 import { TabField } from "@/legacy/lib/models/common/CustomType";
 import {
   type GroupSM,
@@ -76,5 +77,6 @@ export function createGroupWidget({
     TYPE_NAME: "Group",
     CUSTOM_NAME: customName,
     hintItemName,
+    label: groupField.name,
   };
 }

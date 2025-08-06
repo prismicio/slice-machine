@@ -18,7 +18,7 @@ import {
   FieldVariant,
   groupField,
   nestableFields,
-  UIDField,
+  uidField,
 } from "@/domain/fields";
 
 export type AddFieldDropdownProps = {
@@ -47,7 +47,7 @@ export function AddFieldDropdown(props: AddFieldDropdownProps) {
     (field) =>
       nestableFields.some(
         (nestableField) => nestableField.name === field.name,
-      ) || field.name === UIDField.name,
+      ) || field.name === uidField.name,
   );
   const groupFieldToRender = fields.find(
     (field) => field.name === groupField.name,

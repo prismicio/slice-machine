@@ -1,6 +1,8 @@
 import { Date } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdDateRange } from "react-icons/md";
 
+import { dateField } from "@/domain/fields";
+
 import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
 
@@ -32,4 +34,5 @@ export const DateWidget: Widget<Date, typeof schema> = {
   TYPE_NAME: "Date",
   schema,
   Meta,
+  label: dateField.name,
 };

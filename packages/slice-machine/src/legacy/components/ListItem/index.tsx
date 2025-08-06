@@ -114,6 +114,7 @@ function ListItem<F extends TabField, S extends AnyObjectSchema>({
                         renderFieldAccessor && renderFieldAccessor(key)
                       }
                       WidgetIcon={widget.Meta.icon}
+                      widgetIconTooltip={widget.label}
                     />
                     <Flex sx={{ flex: "0 0 auto" }}>
                       {shouldDisplayRepeatableBadge && (

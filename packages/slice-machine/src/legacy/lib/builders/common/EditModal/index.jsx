@@ -60,6 +60,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     FormFields,
     Form: CustomForm,
     schema: widgetSchema,
+    label: widgetLabel,
   } = maybeWidget;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -163,15 +164,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
       >
         {(props) => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment
-          const {
-            values: {
-              id,
-              config: { label },
-            },
-            isValid,
-            isSubmitting,
-            initialValues,
-          } = props;
+          const { isValid, isSubmitting, initialValues } = props;
 
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           const fieldModelTabContent = CustomForm ? (
@@ -226,7 +219,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                   <ItemHeader
                     theme={theme}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
-                    text={label || id}
+                    text={widgetLabel}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     WidgetIcon={WidgetIcon}
                   />

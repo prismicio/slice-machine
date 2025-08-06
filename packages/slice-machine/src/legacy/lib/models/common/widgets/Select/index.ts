@@ -2,6 +2,8 @@ import { Select } from "@prismicio/types-internal/lib/customtypes/widgets/nestab
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import * as yup from "yup";
 
+import { selectField } from "@/domain/fields";
+
 import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
@@ -45,4 +47,5 @@ export const SelectWidget: Widget<Select, typeof schema> = {
   schema,
   Meta,
   TYPE_NAME: "Select",
+  label: selectField.name,
 };

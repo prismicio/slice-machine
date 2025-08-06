@@ -2,6 +2,8 @@ import { UID } from "@prismicio/types-internal/lib/customtypes/widgets";
 import { MdTag } from "react-icons/md";
 import * as yup from "yup";
 
+import { uidField } from "@/domain/fields";
+
 import { createValidationSchema } from "../../../../forms";
 import { DefaultFields } from "../../../../forms/defaults";
 /**
@@ -50,4 +52,5 @@ export const UIDWidget: Widget<UID, typeof schema> = {
   schema,
   TYPE_NAME: "UID",
   FormFields,
+  label: uidField.name,
 };

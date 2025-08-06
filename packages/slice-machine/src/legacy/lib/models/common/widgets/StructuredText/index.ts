@@ -2,6 +2,8 @@ import { RichText } from "@prismicio/types-internal/lib/customtypes/widgets/nest
 import { MdTextFields } from "react-icons/md";
 import * as yup from "yup";
 
+import { richTextField } from "@/domain/fields";
+
 import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
@@ -55,4 +57,5 @@ export const StructuredTextWidget: Widget<RichText, typeof schema> = {
   schema,
   TYPE_NAME: "StructuredText",
   Form,
+  label: richTextField.name,
 };

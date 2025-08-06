@@ -2,6 +2,8 @@ import { Image } from "@prismicio/types-internal/lib/customtypes/widgets/nestabl
 import { MdOutlineImage } from "react-icons/md";
 import * as yup from "yup";
 
+import { imageField } from "@/domain/fields";
+
 import { createValidationSchema } from "../../../../forms";
 import { removeProp } from "../../../../utils";
 import { Widget } from "../Widget";
@@ -55,4 +57,5 @@ export const ImageWidget: Widget<Image, typeof schema> = {
   }),
   FormFields,
   TYPE_NAME: "Image",
+  label: imageField.name,
 };
