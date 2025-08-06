@@ -148,6 +148,7 @@ const useSliceMachineActions = () => {
     );
   const updateSliceMockSuccess = (args: SaveSliceMockRequest) =>
     dispatch(sliceUpdateMockSuccess(args));
+
   /**
    * Changes module
    */
