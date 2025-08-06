@@ -2,6 +2,8 @@ import { BooleanField } from "@prismicio/types-internal/lib/customtypes/widgets/
 import { MdOutlineToggleOff } from "react-icons/md";
 import * as yup from "yup";
 
+import { booleanField } from "@/domain/fields";
+
 import { createValidationSchema } from "../../../../forms";
 import { DefaultFields } from "../../../../forms/defaults";
 import { CheckBox, Input } from "../../../../forms/fields";
@@ -68,4 +70,5 @@ export const BooleanWidget: Widget<BooleanField, typeof schema> = {
   Meta,
   schema,
   FormFields,
+  label: booleanField.name,
 };

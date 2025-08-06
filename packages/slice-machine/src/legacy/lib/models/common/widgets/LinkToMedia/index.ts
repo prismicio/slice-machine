@@ -2,6 +2,7 @@ import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable
 import { MdAttachFile } from "react-icons/md";
 import * as yup from "yup";
 
+import { linkToMediaField } from "@/domain/fields";
 import { linkConfigSchema } from "@/legacy/lib/models/common/widgets/Link";
 
 import { Widget } from "../Widget";
@@ -45,4 +46,5 @@ export const LinkToMediaWidget: Widget<Link, typeof schema> = {
   }),
   TYPE_NAME: "Link",
   CUSTOM_NAME: "LinkToMedia",
+  label: linkToMediaField.name,
 };

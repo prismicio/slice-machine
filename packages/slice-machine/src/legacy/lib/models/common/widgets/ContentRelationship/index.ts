@@ -2,6 +2,8 @@ import { Link } from "@prismicio/types-internal/lib/customtypes/widgets/nestable
 import { MdSettingsEthernet } from "react-icons/md";
 import * as yup from "yup";
 
+import { contentRelationshipField } from "@/domain/fields";
+
 import { linkConfigSchema } from "../Link";
 import { Widget } from "../Widget";
 import Form, { FormFields } from "./Form";
@@ -102,4 +104,5 @@ export const ContentRelationshipWidget: Widget<Link, typeof schema> = {
       ),
     };
   },
+  label: contentRelationshipField.name,
 };

@@ -60,8 +60,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
     FormFields,
     Form: CustomForm,
     schema: widgetSchema,
-    CUSTOM_NAME: widgetCustomName,
-    TYPE_NAME: widgetTypeName,
+    label: widgetLabel,
   } = maybeWidget;
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -220,7 +219,7 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
                   <ItemHeader
                     theme={theme}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/strict-boolean-expressions
-                    type={widgetCustomName ?? widgetTypeName}
+                    text={widgetLabel}
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                     WidgetIcon={WidgetIcon}
                   />

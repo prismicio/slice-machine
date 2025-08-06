@@ -3,7 +3,6 @@ import * as CSS from "csstype";
 import { IconType } from "react-icons";
 import { Flex, Text, Theme } from "theme-ui";
 
-import { CustomFieldType, fieldLabels } from "@/domain/fields";
 import { TextWithTooltip } from "@/legacy/components/Tooltip/TextWithTooltip";
 
 interface ItemHeaderProps {
@@ -11,7 +10,7 @@ interface ItemHeaderProps {
   sliceFieldName: string | undefined;
   theme: Theme;
   WidgetIcon: IconType;
-  type: CustomFieldType;
+  widgetIconTooltip: string;
 }
 
 const ItemHeader: React.FC<ItemHeaderProps> = ({
@@ -19,10 +18,10 @@ const ItemHeader: React.FC<ItemHeaderProps> = ({
   sliceFieldName,
   theme,
   WidgetIcon,
-  type,
+  widgetIconTooltip,
 }) => (
   <Flex sx={{ alignItems: "center", position: "relative" }}>
-    <Tooltip content={fieldLabels[type]} sideOffset={2} disableHoverableContent>
+    <Tooltip content={widgetIconTooltip} sideOffset={2} disableHoverableContent>
       <Box margin={{ right: 8 }}>
         <WidgetIcon
           size={28}

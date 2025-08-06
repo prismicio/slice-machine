@@ -34,44 +34,12 @@ export interface GroupField extends BaseField {
 
 export type Field = NestableField | UIDField | GroupField;
 
-export type CustomFieldType =
-  | FieldType
-  | "LinkToMedia"
-  | "ContentRelationship"
-  | "NestedGroup";
-
-export const fieldLabels: Record<CustomFieldType, string> = {
-  Text: "Text",
-  StructuredText: "Rich Text",
-  Boolean: "Boolean",
-  Number: "Number",
-  Select: "Select",
-  Link: "Link",
-  LinkToMedia: "Link To Media",
-  UID: "UID",
-  Image: "Image",
-  Group: "Repeatable Group",
-  NestedGroup: "Nested Group",
-  Color: "Color",
-  Date: "Date",
-  Table: "Table",
-  Timestamp: "Timestamp",
-  Embed: "Embed",
-  GeoPoint: "Geopoint",
-  ContentRelationship: "Content Relationship",
-  IntegrationFields: "Integration Fields",
-  Range: "Range",
-  Separator: "Separator",
-  Slices: "Slices",
-  Choice: "Choice",
-};
-
 /**
  * Nestable fields
  */
 
 export const booleanField: NestableField = {
-  name: fieldLabels.Boolean,
+  name: "Boolean",
   description: "A true or false toggle.",
   icon: "toggleOff",
   thumbnail:
@@ -80,7 +48,7 @@ export const booleanField: NestableField = {
 };
 
 export const colorField: NestableField = {
-  name: fieldLabels.Color,
+  name: "Color",
   description: "A color in hex format.",
   icon: "colorLens",
   thumbnail:
@@ -89,7 +57,7 @@ export const colorField: NestableField = {
 };
 
 export const dateField: NestableField = {
-  name: fieldLabels.Date,
+  name: "Date",
   description: "A date without time.",
   icon: "dateRange",
   thumbnail:
@@ -98,7 +66,7 @@ export const dateField: NestableField = {
 };
 
 export const embedField: NestableField = {
-  name: fieldLabels.Embed,
+  name: "Embed",
   description: "A video, song, or oEmbed link.",
   icon: "code",
   thumbnail:
@@ -107,7 +75,7 @@ export const embedField: NestableField = {
 };
 
 export const geoPointField: NestableField = {
-  name: fieldLabels.GeoPoint,
+  name: "Geopoint",
   description: "A geographical coordinate.",
   icon: "place",
   thumbnail:
@@ -116,7 +84,7 @@ export const geoPointField: NestableField = {
 };
 
 export const imageField: NestableField = {
-  name: fieldLabels.Image,
+  name: "Image",
   description: "A responsive image.",
   icon: "image",
   thumbnail:
@@ -124,8 +92,8 @@ export const imageField: NestableField = {
   type: "Image",
 };
 
-export const LinkField: NestableField = {
-  name: fieldLabels.Link,
+export const linkField: NestableField = {
+  name: "Link",
   description: "A link to a website, asset, or document.",
   icon: "link",
   thumbnail:
@@ -134,7 +102,7 @@ export const LinkField: NestableField = {
 };
 
 export const contentRelationshipField: NestableField = {
-  name: fieldLabels.ContentRelationship,
+  name: "Content Relationship",
   description: "A reference to a Prismic document.",
   icon: "settingsEthernet",
   thumbnail:
@@ -143,8 +111,8 @@ export const contentRelationshipField: NestableField = {
   variant: "ContentRelationship",
 };
 
-export const LinkToMediaField: NestableField = {
-  name: fieldLabels.LinkToMedia,
+export const linkToMediaField: NestableField = {
+  name: "Link To Media",
   description: "A link to a media asset.",
   icon: "attachFile",
   thumbnail:
@@ -154,7 +122,7 @@ export const LinkToMediaField: NestableField = {
 };
 
 export const numberField: NestableField = {
-  name: fieldLabels.Number,
+  name: "Number",
   description: "An integer or float.",
   icon: "pin",
   thumbnail:
@@ -163,7 +131,7 @@ export const numberField: NestableField = {
 };
 
 export const richTextField: NestableField = {
-  name: fieldLabels.StructuredText,
+  name: "Rich Text",
   description: "Text with formatting options.",
   icon: "textFields",
   thumbnail:
@@ -172,7 +140,7 @@ export const richTextField: NestableField = {
 };
 
 export const selectField: NestableField = {
-  name: fieldLabels.Select,
+  name: "Select",
   description: "A dropdown of options.",
   icon: "arrowDropDownCircle",
   thumbnail:
@@ -181,7 +149,7 @@ export const selectField: NestableField = {
 };
 
 export const tableField: NestableField = {
-  name: fieldLabels.Table,
+  name: "Table",
   description: "A structured table.",
   icon: "table",
   thumbnail:
@@ -190,7 +158,7 @@ export const tableField: NestableField = {
 };
 
 export const textField: NestableField = {
-  name: fieldLabels.Text,
+  name: "Text",
   description: "A text string without formatting.",
   icon: "title",
   thumbnail:
@@ -199,7 +167,7 @@ export const textField: NestableField = {
 };
 
 export const timestampField: NestableField = {
-  name: fieldLabels.Timestamp,
+  name: "Timestamp",
   description: "A date and time.",
   icon: "schedule",
   thumbnail:
@@ -214,8 +182,8 @@ export const nestableFields: NestableField[] = [
   booleanField,
   numberField,
   selectField,
-  LinkField,
-  LinkToMediaField,
+  linkField,
+  linkToMediaField,
   colorField,
   dateField,
   tableField,
@@ -229,8 +197,8 @@ export const nestableFields: NestableField[] = [
  * UID
  */
 
-export const UIDField: UIDField = {
-  name: fieldLabels.UID,
+export const uidField: UIDField = {
+  name: "UID",
   description: "Unique Identifier",
   icon: "tag",
   thumbnail:
@@ -243,7 +211,7 @@ export const UIDField: UIDField = {
  */
 
 export const groupField: GroupField = {
-  name: fieldLabels.Group,
+  name: "Repeatable Group",
   description: "A set of fields that editors can repeat.",
   icon: "createNewFolder",
   thumbnail:
@@ -262,4 +230,4 @@ export const groupFields: GroupField[] = [groupField, nestedGroupField];
  * All fields
  */
 
-export const fields = [...nestableFields, UIDField, ...groupFields];
+export const fields = [...nestableFields, uidField, ...groupFields];

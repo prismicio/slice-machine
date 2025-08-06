@@ -1,16 +1,13 @@
-import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 import React from "react";
 import type { Theme } from "theme-ui";
 import { Flex, Text } from "theme-ui";
 
-import { fieldLabels } from "@/domain/fields";
-
 const ItemHeader: React.FC<{
-  type: FieldType;
+  text: React.ReactNode;
   sliceFieldName: React.ReactNode;
   theme: Theme;
   WidgetIcon: React.ElementType;
-}> = ({ type, sliceFieldName, theme, WidgetIcon }) => (
+}> = ({ text, sliceFieldName, theme, WidgetIcon }) => (
   <Flex sx={{ alignItems: "center" }}>
     <WidgetIcon
       size={28}
@@ -33,7 +30,7 @@ const ItemHeader: React.FC<{
         fontSize: "15px",
       }}
     >
-      {fieldLabels[type]}
+      {text}
     </Text>
     <Text
       as="p"

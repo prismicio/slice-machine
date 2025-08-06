@@ -2,7 +2,6 @@ import { FieldType } from "@prismicio/types-internal/lib/customtypes";
 import { IconType } from "react-icons";
 import { AnyObjectSchema } from "yup";
 
-import { CustomFieldType } from "@/domain/fields";
 import { TabField } from "@/legacy/lib/models/common/CustomType";
 import { GroupSM, NestedGroupSM } from "@/legacy/lib/models/common/Group";
 import { LocalOnlyCustomType } from "@/legacy/lib/models/common/ModelData";
@@ -16,7 +15,7 @@ interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
   schema: S;
   // eslint-disable-next-line @typescript-eslint/ban-types
   FormFields: {};
-  CUSTOM_NAME?: CustomFieldType;
+  CUSTOM_NAME?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   CustomListItem?: (props: any) => React.ReactElement;
   // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
@@ -25,6 +24,7 @@ interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
     customTypes: LocalOnlyCustomType[],
     initialValues: F["config"],
   ) => F["config"];
+  label: string;
 }
 
 export type Widget<F extends TabField, S extends AnyObjectSchema> = F extends

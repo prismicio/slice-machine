@@ -3,6 +3,8 @@ import { Table } from "@prismicio/types-internal/lib/customtypes/widgets/nestabl
 import { FaTable } from "react-icons/fa";
 import * as yup from "yup";
 
+import { tableField } from "@/domain/fields";
+
 import { DefaultFields } from "../../../../forms/defaults";
 import { Widget } from "../Widget";
 
@@ -49,4 +51,5 @@ export const TableWidget: Widget<Table, typeof schema> = {
   TYPE_NAME: "Table",
   schema,
   Meta,
+  label: tableField.name,
 };
