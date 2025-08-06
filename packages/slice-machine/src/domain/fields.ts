@@ -92,7 +92,7 @@ export const imageField: NestableField = {
   type: "Image",
 };
 
-export const LinkField: NestableField = {
+export const linkField: NestableField = {
   name: "Link",
   description: "A link to a website, asset, or document.",
   icon: "link",
@@ -111,8 +111,8 @@ export const contentRelationshipField: NestableField = {
   variant: "ContentRelationship",
 };
 
-export const LinkToMediaField: NestableField = {
-  name: "Link To Media",
+export const linkToMediaField: NestableField = {
+  name: "Link to Media",
   description: "A link to a media asset.",
   icon: "attachFile",
   thumbnail:
@@ -182,8 +182,8 @@ export const nestableFields: NestableField[] = [
   booleanField,
   numberField,
   selectField,
-  LinkField,
-  LinkToMediaField,
+  linkField,
+  linkToMediaField,
   colorField,
   dateField,
   tableField,
@@ -197,7 +197,7 @@ export const nestableFields: NestableField[] = [
  * UID
  */
 
-export const UIDField: UIDField = {
+export const uidField: UIDField = {
   name: "UID",
   description: "Unique Identifier",
   icon: "tag",
@@ -230,4 +230,4 @@ export const groupFields: GroupField[] = [groupField, nestedGroupField];
  * All fields
  */
 
-export const fields = [...nestableFields, UIDField, ...groupFields];
+export const fields = [...nestableFields, uidField, ...groupFields];

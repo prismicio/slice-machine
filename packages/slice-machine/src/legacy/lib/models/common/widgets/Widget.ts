@@ -24,6 +24,7 @@ interface WidgetBase<F extends TabField, S extends AnyObjectSchema> {
     customTypes: LocalOnlyCustomType[],
     initialValues: F["config"],
   ) => F["config"];
+  label: string;
 }
 
 export type Widget<F extends TabField, S extends AnyObjectSchema> = F extends

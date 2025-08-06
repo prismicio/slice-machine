@@ -2,6 +2,8 @@ import { Timestamp } from "@prismicio/types-internal/lib/customtypes/widgets/nes
 import { MdSchedule } from "react-icons/md";
 import * as yup from "yup";
 
+import { timestampField } from "@/domain/fields";
+
 import { createValidationSchema } from "../../../../forms";
 import { DefaultFields } from "../../../../forms/defaults";
 /** {
@@ -43,4 +45,5 @@ export const TimestampWidget: Widget<Timestamp, typeof schema> = {
   FormFields,
   TYPE_NAME: "Timestamp",
   Meta,
+  label: timestampField.name,
 };

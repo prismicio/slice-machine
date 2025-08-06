@@ -1,3 +1,4 @@
+import { Box, Tooltip } from "@prismicio/editor-ui";
 import * as CSS from "csstype";
 import { IconType } from "react-icons";
 import { Flex, Text, Theme } from "theme-ui";
@@ -9,6 +10,7 @@ interface ItemHeaderProps {
   sliceFieldName: string | undefined;
   theme: Theme;
   WidgetIcon: IconType;
+  widgetIconTooltip: string;
 }
 
 const ItemHeader: React.FC<ItemHeaderProps> = ({
@@ -16,20 +18,24 @@ const ItemHeader: React.FC<ItemHeaderProps> = ({
   sliceFieldName,
   theme,
   WidgetIcon,
+  widgetIconTooltip,
 }) => (
   <Flex sx={{ alignItems: "center", position: "relative" }}>
-    <WidgetIcon
-      size={28}
-      style={{
-        color: theme.colors?.primary as CSS.Property.Color,
-        marginRight: "8px",
-        borderRadius: "4px",
-        padding: "4px",
-        border: "2px solid",
-        borderColor: theme.colors?.primary as CSS.Property.Color,
-        flexShrink: 0,
-      }}
-    />
+    <Tooltip content={widgetIconTooltip} sideOffset={2} disableHoverableContent>
+      <Box margin={{ right: 8 }}>
+        <WidgetIcon
+          size={28}
+          style={{
+            color: theme.colors?.primary as CSS.Property.Color,
+            borderRadius: "4px",
+            padding: "4px",
+            border: "2px solid",
+            borderColor: theme.colors?.primary as CSS.Property.Color,
+            flexShrink: 0,
+          }}
+        />
+      </Box>
+    </Tooltip>
     <TextWithTooltip
       text={text}
       as="p"
