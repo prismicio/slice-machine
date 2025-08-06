@@ -1,5 +1,4 @@
 import {
-  Fetcher,
   invalidateFetcherData,
   useRequest,
 } from "@prismicio/editor-support/Suspense";
@@ -7,7 +6,7 @@ import {
 import { getActiveEnvironment } from "./actions/getActiveEnvironment";
 
 export function invalidateActiveEnvironmentData() {
-  invalidateFetcherData(getActiveEnvironment as Fetcher);
+  invalidateFetcherData(getActiveEnvironment);
 }
 
 export function useActiveEnvironment() {
