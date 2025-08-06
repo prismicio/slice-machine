@@ -13,7 +13,7 @@ import {
   Text,
 } from "theme-ui";
 
-import { checkAuthStatus, clearAuth,getState } from "@/apiClient";
+import { checkAuthStatus, clearAuth, getState } from "@/apiClient";
 import { getActiveEnvironment } from "@/features/environments/actions/getActiveEnvironment";
 import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
 import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
@@ -52,7 +52,7 @@ const LoginModal: React.FunctionComponent = () => {
     }),
   );
   const { syncChanges } = useAutoSync();
-  const { closeModals, startLoadingLogin, stopLoadingLogin } =
+  const { closeModals, startLoadingLogin, stopLoadingLogin, refreshState } =
     useSliceMachineActions();
 
   const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
@@ -87,6 +87,8 @@ const LoginModal: React.FunctionComponent = () => {
       closeModals();
 
       const serverState = await getState();
+      refreshState(serverState);
+
       const slices = normalizeFrontendSlices(
         serverState.libraries,
         serverState.remoteSlices,
