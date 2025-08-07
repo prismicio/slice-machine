@@ -152,7 +152,7 @@ type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
 	errors: HookError[];
 };
 
-type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
+type SlicesManagerUpsertHostedSliceScreenshotsArgs = {
 	libraryID: string;
 	model: SharedSlice;
 	/**
@@ -1014,7 +1014,7 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async updateSliceModelScreenshotsInPlace(
-		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
+		args: SlicesManagerUpsertHostedSliceScreenshotsArgs,
 	): Promise<SharedSlice> {
 		const repositoryName = await this.project.getResolvedRepositoryName();
 
@@ -1034,13 +1034,17 @@ export class SlicesManager extends BaseManager {
 					};
 				}
 
-				const hasScreenshotChanged = !args.variationImageUrlMap[
-					variation.id
-				]?.includes(createContentDigest(screenshot.data));
+				const remoteImageUrl = args.variationImageUrlMap[variation.id];
+				const hasScreenshotChanged = !remoteImageUrl?.includes(
+					createContentDigest(screenshot.data),
+				);
 
 				// If screenshot hasn't changed, do nothing
 				if (!hasScreenshotChanged) {
-					return variation;
+					return {
+						...variation,
+						imageUrl: remoteImageUrl ?? variation.imageUrl,
+					};
 				}
 
 				const keyPrefix = [

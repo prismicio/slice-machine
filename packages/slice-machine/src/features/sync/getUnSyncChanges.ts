@@ -77,11 +77,11 @@ export function getUnSyncedChanges(
   );
 
   const changedSlices = unSyncedSlices
-    .map((unsyncedSlice) => {
-      const status = modelsStatuses.slices[unsyncedSlice.model.id];
+    .map((slice) => {
+      const status = modelsStatuses.slices[slice.model.id];
 
       const sliceWithRemote = slices.find((s) => {
-        return hasRemote(s) && s.remote.id === unsyncedSlice.model.id;
+        return hasRemote(s) && s.remote.id === slice.model.id;
       }) as RemoteOnlySlice | undefined;
 
       const imageUrlMap = sliceWithRemote?.remote.variations.reduce<
@@ -93,11 +93,7 @@ export function getUnSyncedChanges(
         return result;
       }, {});
 
-      return {
-        status,
-        slice: unsyncedSlice,
-        variationImageUrlMap: imageUrlMap ?? {},
-      };
+      return { status, slice, variationImageUrlMap: imageUrlMap ?? {} };
     })
     .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status));
 
