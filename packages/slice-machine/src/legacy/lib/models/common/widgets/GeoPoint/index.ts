@@ -2,6 +2,8 @@ import { GeoPoint } from "@prismicio/types-internal/lib/customtypes/widgets/nest
 import { MdOutlinePlace } from "react-icons/md";
 import * as yup from "yup";
 
+import { geoPointField } from "@/domain/fields";
+
 import { DefaultFields } from "../../../../forms/defaults";
 import { Widget } from "../Widget";
 
@@ -52,4 +54,5 @@ export const GeoPointWidget: Widget<GeoPoint, typeof schema> = {
   TYPE_NAME: "GeoPoint",
   schema,
   Meta,
+  label: geoPointField.name,
 };

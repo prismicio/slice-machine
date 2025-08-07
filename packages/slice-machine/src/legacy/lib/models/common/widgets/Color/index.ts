@@ -1,6 +1,8 @@
 import { Color } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdOutlineColorLens } from "react-icons/md";
 
+import { colorField } from "@/domain/fields";
+
 import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
 
@@ -31,4 +33,5 @@ export const ColorWidget: Widget<Color, typeof schema> = {
   TYPE_NAME,
   schema,
   Meta,
+  label: colorField.name,
 };

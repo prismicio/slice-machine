@@ -2,6 +2,8 @@ import { Link } from "@prismicio/types-internal/lib/customtypes";
 import { MdLink } from "react-icons/md";
 import * as yup from "yup";
 
+import { linkField } from "@/domain/fields";
+
 import { Widget } from "../Widget";
 import Form, { FormFields } from "./Form";
 
@@ -115,4 +117,5 @@ export const LinkWidget: Widget<Link, typeof schema> = {
     },
   }),
   TYPE_NAME: "Link",
+  label: linkField.name,
 };

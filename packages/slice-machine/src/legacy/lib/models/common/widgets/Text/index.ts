@@ -2,6 +2,8 @@ import { Text } from "@prismicio/types-internal/lib/customtypes/widgets/nestable
 import { MdTitle } from "react-icons/md";
 import * as yup from "yup";
 
+import { textField } from "@/domain/fields";
+
 import { createValidationSchema } from "../../../../forms";
 import { DefaultFields } from "../../../../forms/defaults";
 /**
@@ -45,4 +47,5 @@ export const TextWidget: Widget<Text, typeof schema> = {
   TYPE_NAME: "Text",
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   FormFields,
+  label: textField.name,
 };

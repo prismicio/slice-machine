@@ -1,6 +1,8 @@
 import { Number as PrismicNumber } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdOutlinePin } from "react-icons/md";
 
+import { numberField } from "@/domain/fields";
+
 import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
 
@@ -32,4 +34,5 @@ export const NumberWidget: Widget<PrismicNumber, typeof schema> = {
   TYPE_NAME: "Number",
   schema,
   Meta,
+  label: numberField.name,
 };

@@ -1,6 +1,8 @@
 import { Embed } from "@prismicio/types-internal/lib/customtypes/widgets/nestable";
 import { MdCode } from "react-icons/md";
 
+import { embedField } from "@/domain/fields";
+
 import { createDefaultWidgetValues } from "../../../../utils";
 import { Widget } from "../Widget";
 
@@ -32,4 +34,5 @@ export const EmbedWidget: Widget<Embed, typeof schema> = {
   TYPE_NAME: "Embed",
   schema,
   Meta,
+  label: embedField.name,
 };
