@@ -18,6 +18,7 @@ import type { Environment } from "@slicemachine/manager/client";
 import { clsx } from "clsx";
 import type { FC, ReactNode } from "react";
 
+import { LogoutButton } from "@/features/auth/LogoutButton";
 import { LoginIcon } from "@/icons/LoginIcon";
 import { LogoIcon } from "@/icons/LogoIcon";
 
@@ -138,6 +139,8 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
                 }
               />
             ) : undefined}
+
+            {variant === "default" && <LogoutButton />}
           </Box>
         </>
       )}

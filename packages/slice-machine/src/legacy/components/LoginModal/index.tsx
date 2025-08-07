@@ -13,8 +13,10 @@ import {
   Text,
 } from "theme-ui";
 
-import { checkAuthStatus, getState, startAuth } from "@/apiClient";
+import { checkAuthStatus, clearAuth, getState } from "@/apiClient";
 import { getActiveEnvironment } from "@/features/environments/actions/getActiveEnvironment";
+import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
+import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { getUnSyncedChanges } from "@/features/sync/getUnSyncChanges";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
@@ -50,7 +52,7 @@ const LoginModal: React.FunctionComponent = () => {
     }),
   );
   const { syncChanges } = useAutoSync();
-  const { closeModals, startLoadingLogin, stopLoadingLogin } =
+  const { closeModals, startLoadingLogin, stopLoadingLogin, refreshState } =
     useSliceMachineActions();
 
   const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
@@ -64,7 +66,7 @@ const LoginModal: React.FunctionComponent = () => {
 
     try {
       startLoadingLogin();
-      await startAuth();
+      await clearAuth();
       window.open(loginRedirectUrl, "_blank");
       await startPolling<CheckAuthStatusResponse, ValidAuthStatus>(
         checkAuthStatus,
@@ -76,11 +78,17 @@ const LoginModal: React.FunctionComponent = () => {
         60,
       );
 
+      // refresh queries to update the UI
+      invalidateEnvironmentsData();
+      invalidateActiveEnvironmentData();
+
       toast.success("Logged in");
       stopLoadingLogin();
       closeModals();
 
       const serverState = await getState();
+      refreshState(serverState);
+
       const slices = normalizeFrontendSlices(
         serverState.libraries,
         serverState.remoteSlices,
