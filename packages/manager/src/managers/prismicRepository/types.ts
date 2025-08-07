@@ -124,6 +124,10 @@ type SliceChange = {
 	type: "Slice";
 	status: ChangeStatus;
 	libraryID: string;
+	/**
+	 * A map of variation IDs to remote screenshot URLs. Used to detect if a
+	 * screenshot has changed when comparing with local ones.
+	 */
 	variationImageUrlMap: Record<string, string>;
 };
 
