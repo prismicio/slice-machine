@@ -3,6 +3,7 @@ import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import {
   getModelId,
   hasLocal,
+  hasRemote,
   isRemoteOnly,
   LocalOrRemoteCustomType,
   LocalOrRemoteSlice,
@@ -30,10 +31,14 @@ const unSyncStatuses = [
   ModelStatus.Deleted,
 ];
 
+type ChangedSliceWithRemote = ChangedSlice & {
+  variationImageUrlMap: Record<string, string>;
+};
+
 export type UnSyncedChanges = {
   changedCustomTypes: ChangedCustomType[];
   unSyncedCustomTypes: LocalOrRemoteCustomType[];
-  changedSlices: ChangedSlice[];
+  changedSlices: ChangedSliceWithRemote[];
   unSyncedSlices: ComponentUI[];
   modelsStatuses: ModelsStatuses;
 };
@@ -76,11 +81,32 @@ export function getUnSyncedChanges(
   );
 
   const changedSlices = unSyncedSlices
-    .map((s) => ({
-      slice: s,
-      status: modelsStatuses.slices[s.model.id],
-    }))
-    .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status));
+    .map((unsyncedSlice) => {
+      const status = modelsStatuses.slices[unsyncedSlice.model.id];
+
+      const sliceWithRemote = slices.find((s) => {
+        return hasRemote(s) && s.remote.id === unsyncedSlice.model.id;
+      }) as RemoteOnlySlice | undefined;
+
+      const imageUrlMap = sliceWithRemote?.remote.variations.reduce<
+        Record<string, string>
+      >((acc, variation) => {
+        console.log("variation", variation);
+        if (variation.imageUrl === undefined) return acc;
+        acc[variation.id] = variation.imageUrl;
+        return acc;
+      }, {});
+
+      return {
+        status,
+        slice: unsyncedSlice,
+        variationImageUrlMap: imageUrlMap ?? {},
+      };
+    })
+    .filter((slice): slice is ChangedSliceWithRemote => {
+      return unSyncStatuses.includes(slice.status);
+    });
+
   const changedCustomTypes = unSyncedCustomTypes
     .map((model) => (hasLocal(model) ? model.local : model.remote))
     .map((ct) => ({

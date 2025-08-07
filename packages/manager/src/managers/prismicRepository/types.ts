@@ -124,6 +124,7 @@ type SliceChange = {
 	type: "Slice";
 	status: ChangeStatus;
 	libraryID: string;
+	variationImageUrlMap: Record<string, string>;
 };
 
 export type TransactionalMergeArgs = {

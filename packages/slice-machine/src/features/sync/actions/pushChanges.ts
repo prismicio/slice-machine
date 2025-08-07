@@ -9,7 +9,9 @@ import {
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
 
 type PushChangesArgs = {
-  changedSlices: ReadonlyArray<ChangedSlice>;
+  changedSlices: ReadonlyArray<
+    ChangedSlice & { variationImageUrlMap: Record<string, string> }
+  >;
   changedCustomTypes: ReadonlyArray<ChangedCustomType>;
   confirmDeleteDocuments?: boolean;
 };
@@ -29,6 +31,7 @@ export async function pushChanges(
     type: "Slice" as const,
     libraryID: sliceChange.slice.from,
     status: sliceChange.status,
+    variationImageUrlMap: sliceChange.variationImageUrlMap,
   }));
   const customTypeChanges = changedCustomTypes.map((customTypeChange) => ({
     id: customTypeChange.customType.id,

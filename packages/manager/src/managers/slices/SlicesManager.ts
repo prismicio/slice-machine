@@ -82,6 +82,7 @@ type SliceMachineManagerPushSliceArgs = {
 	libraryID: string;
 	sliceID: string;
 	userAgent?: string;
+	variationImageUrlMap: Record<string, string>;
 };
 
 export type SliceMachineManagerPushSliceReturnType = {
@@ -150,6 +151,7 @@ type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
 type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
 	libraryID: string;
 	model: SharedSlice;
+	variationImageUrlMap: Record<string, string>;
 };
 
 type SliceMachineManagerDeleteSliceArgs = {
@@ -760,6 +762,7 @@ export class SlicesManager extends BaseManager {
 			const modelWithScreenshots =
 				await this.updateSliceModelScreenshotsInPlace({
 					libraryID: args.libraryID,
+					variationImageUrlMap: args.variationImageUrlMap,
 					model,
 				});
 
@@ -1023,9 +1026,9 @@ export class SlicesManager extends BaseManager {
 					};
 				}
 
-				const hasScreenshotChanged = !variation.imageUrl?.includes(
-					createContentDigest(screenshot.data),
-				);
+				const hasScreenshotChanged = !args.variationImageUrlMap[
+					variation.id
+				]?.includes(createContentDigest(screenshot.data));
 
 				// If screenshot hasn't changed, do nothing
 				if (!hasScreenshotChanged) {
