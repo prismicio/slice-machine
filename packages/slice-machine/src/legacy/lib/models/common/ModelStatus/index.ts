@@ -30,7 +30,11 @@ export type ChangesStatus =
   | ModelStatus.New
   | ModelStatus.Modified;
 
-export type ChangedSlice = { status: ChangesStatus; slice: ComponentUI };
+export type ChangedSlice = {
+  status: ChangesStatus;
+  slice: ComponentUI;
+  variationImageUrlMap: Record<string, string>;
+};
 export type ChangedCustomType = {
   status: ChangesStatus;
   customType: CustomTypeSM;

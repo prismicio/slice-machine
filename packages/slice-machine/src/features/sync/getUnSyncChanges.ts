@@ -31,14 +31,10 @@ const unSyncStatuses = [
   ModelStatus.Deleted,
 ];
 
-type ChangedSliceWithRemote = ChangedSlice & {
-  variationImageUrlMap: Record<string, string>;
-};
-
 export type UnSyncedChanges = {
   changedCustomTypes: ChangedCustomType[];
   unSyncedCustomTypes: LocalOrRemoteCustomType[];
-  changedSlices: ChangedSliceWithRemote[];
+  changedSlices: ChangedSlice[];
   unSyncedSlices: ComponentUI[];
   modelsStatuses: ModelsStatuses;
 };
@@ -103,9 +99,7 @@ export function getUnSyncedChanges(
         variationImageUrlMap: imageUrlMap ?? {},
       };
     })
-    .filter((slice): slice is ChangedSliceWithRemote => {
-      return unSyncStatuses.includes(slice.status);
-    });
+    .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status));
 
   const changedCustomTypes = unSyncedCustomTypes
     .map((model) => (hasLocal(model) ? model.local : model.remote))

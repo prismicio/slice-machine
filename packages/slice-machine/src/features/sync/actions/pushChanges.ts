@@ -9,9 +9,7 @@ import {
 import { trackPushChangesSuccess } from "./trackPushChangesSuccess";
 
 type PushChangesArgs = {
-  changedSlices: ReadonlyArray<
-    ChangedSlice & { variationImageUrlMap: Record<string, string> }
-  >;
+  changedSlices: ReadonlyArray<ChangedSlice>;
   changedCustomTypes: ReadonlyArray<ChangedCustomType>;
   confirmDeleteDocuments?: boolean;
 };
