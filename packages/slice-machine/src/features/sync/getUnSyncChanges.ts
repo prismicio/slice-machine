@@ -90,11 +90,11 @@ export function getUnSyncedChanges(
 
       const imageUrlMap = sliceWithRemote?.remote.variations.reduce<
         Record<string, string>
-      >((acc, variation) => {
-        console.log("variation", variation);
-        if (variation.imageUrl === undefined) return acc;
-        acc[variation.id] = variation.imageUrl;
-        return acc;
+      >((result, variation) => {
+        const { imageUrl } = variation;
+        if (imageUrl === undefined || imageUrl === "") return result;
+        result[variation.id] = imageUrl;
+        return result;
       }, {});
 
       return {
