@@ -81,13 +81,10 @@ export function getUnSyncedChanges(
     .map((slice) => {
       const status = modelsStatuses.slices[slice.model.id];
 
-      const sliceWithRemote = slices.find((s) => {
-        return hasRemote(s) && s.remote.id === slice.model.id;
-      }) as { remote: SliceSM } | undefined;
-
-      const imageUrlMap = sliceWithRemote?.remote.variations.reduce<
-        Record<string, string>
-      >((result, variation) => {
+      const imageUrlMap = findRemoteSlice(
+        slices,
+        slice.model.id,
+      )?.variations.reduce<Record<string, string>>((result, variation) => {
         const { imageUrl } = variation;
         if (imageUrl === undefined || imageUrl === "") return result;
         result[variation.id] = imageUrl;
@@ -113,6 +110,14 @@ export function getUnSyncedChanges(
     unSyncedSlices,
     modelsStatuses,
   };
+}
+
+function findRemoteSlice(
+  slices: LocalOrRemoteSlice[],
+  sliceId: string,
+): SliceSM | undefined {
+  const slice = slices.find((s) => hasRemote(s) && s.remote.id === sliceId);
+  return slice && hasRemote(slice) ? slice.remote : undefined;
 }
 
 // ComponentUI are manipulated on all the relevant pages
