@@ -15,7 +15,6 @@ import {
   computeStatuses,
   ModelStatus,
 } from "@/legacy/lib/models/common/ModelStatus";
-import { SliceSM } from "@/legacy/lib/models/common/Slice";
 import { AuthStatus } from "@/modules/userContext/types";
 
 type GetUnSyncedChangesArgs = {
@@ -112,10 +111,7 @@ export function getUnSyncedChanges(
   };
 }
 
-function findRemoteSlice(
-  slices: LocalOrRemoteSlice[],
-  sliceId: string,
-): SliceSM | undefined {
+function findRemoteSlice(slices: LocalOrRemoteSlice[], sliceId: string) {
   const slice = slices.find((s) => hasRemote(s) && s.remote.id === sliceId);
   return slice && hasRemote(slice) ? slice.remote : undefined;
 }
