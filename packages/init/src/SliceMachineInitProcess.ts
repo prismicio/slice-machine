@@ -1197,6 +1197,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 										await this.manager.slices.pushSlice({
 											...slice,
 											userAgent: SLICE_MACHINE_INIT_USER_AGENT,
+											variationImageUrlMap: {},
 										});
 										pushed++;
 										task.title = `Pushing slices... (${pushed}/${slices.length})`;
