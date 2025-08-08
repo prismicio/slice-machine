@@ -82,13 +82,6 @@ type SliceMachineManagerPushSliceArgs = {
 	libraryID: string;
 	sliceID: string;
 	userAgent?: string;
-	/**
-	 * A map of variation IDs to remote screenshot URLs. These URLs are used to
-	 * detect if a screenshot has changed when comparing with local ones and to
-	 * push slices with the current screenshot. If a matching screenshot is not
-	 * found in this map, the current local screenshot is uploaded again.
-	 */
-	variationImageUrlMap?: Record<string, string>;
 };
 
 export type SliceMachineManagerPushSliceReturnType = {
@@ -163,7 +156,7 @@ type SlicesManagerUpsertHostedSliceScreenshotsArgs = {
 	 * push slices with the current screenshot. If a matching screenshot is not
 	 * found in this map, the current local screenshot is uploaded again.
 	 */
-	variationImageUrlMap?: Record<string, string>;
+	variationImageUrlMap: Record<string, string>;
 };
 
 type SliceMachineManagerDeleteSliceArgs = {
@@ -773,9 +766,11 @@ export class SlicesManager extends BaseManager {
 		if (model) {
 			const modelWithScreenshots =
 				await this.updateSliceModelScreenshotsInPlace({
-					libraryID: args.libraryID,
-					variationImageUrlMap: args.variationImageUrlMap,
 					model,
+					libraryID: args.libraryID,
+					// We are pushing it for the first time here, no remote image URLs to
+					// use during the update.
+					variationImageUrlMap: {},
 				});
 
 			const authenticationToken = await this.user.getAuthenticationToken();

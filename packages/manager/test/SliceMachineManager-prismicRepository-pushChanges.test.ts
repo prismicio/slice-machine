@@ -22,6 +22,7 @@ const pushChangesPayload = (
 			status: "NEW" as const,
 			type: "Slice" as const,
 			libraryID: "slice-library",
+			variationImageUrlMap: {},
 		})),
 		...customTypeIDs.map((id) => ({
 			id,
