@@ -16,7 +16,7 @@ import { Variation } from "@prismicio/types-internal/lib/customtypes";
 const pushChangesPayload = (
 	sliceIDs = ["slice1"],
 	customTypeIDs = ["slice1"],
-	variationImageUrlMap: Record<string, string>,
+	variationImageUrlMap: Record<string, string> = {},
 ) => ({
 	confirmDeleteDocuments: false,
 	changes: [
