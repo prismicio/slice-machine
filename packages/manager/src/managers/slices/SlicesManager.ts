@@ -88,7 +88,7 @@ type SliceMachineManagerPushSliceArgs = {
 	 * push slices with the current screenshot. If a matching screenshot is not
 	 * found in this map, the current local screenshot is uploaded again.
 	 */
-	variationImageUrlMap: Record<string, string>;
+	variationImageUrlMap?: Record<string, string>;
 };
 
 export type SliceMachineManagerPushSliceReturnType = {
@@ -163,7 +163,7 @@ type SlicesManagerUpsertHostedSliceScreenshotsArgs = {
 	 * push slices with the current screenshot. If a matching screenshot is not
 	 * found in this map, the current local screenshot is uploaded again.
 	 */
-	variationImageUrlMap: Record<string, string>;
+	variationImageUrlMap?: Record<string, string>;
 };
 
 type SliceMachineManagerDeleteSliceArgs = {
@@ -1038,7 +1038,7 @@ export class SlicesManager extends BaseManager {
 					};
 				}
 
-				const remoteImageUrl = args.variationImageUrlMap[variation.id];
+				const remoteImageUrl = args.variationImageUrlMap?.[variation.id];
 				const hasScreenshotChanged = !remoteImageUrl?.includes(
 					createContentDigest(screenshot.data),
 				);

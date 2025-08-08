@@ -130,7 +130,7 @@ type SliceChange = {
 	 * push slices with the current screenshot. If a matching screenshot is not
 	 * found in this map, the current local screenshot is uploaded again.
 	 */
-	variationImageUrlMap: Record<string, string>;
+	variationImageUrlMap?: Record<string, string>;
 };
 
 export type TransactionalMergeArgs = {
