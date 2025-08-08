@@ -105,7 +105,7 @@ it("pushes changes using the push API", async (ctx) => {
 	expect(sentModel).toStrictEqual(expectedAPIPayload);
 });
 
-it("pushes slice changes while keeping the same screenshot", async (ctx) => {
+it("pushes slice changes while keeping the same screenshot if it hasn't changed", async (ctx) => {
 	const customTypeModel = ctx.mockPrismic.model.customType();
 
 	const mockScreenshotBuffer = Buffer.from("foo");
