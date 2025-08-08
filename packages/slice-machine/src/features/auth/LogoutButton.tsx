@@ -1,7 +1,6 @@
 import { Button, Icon, IconButton, Tooltip } from "@prismicio/editor-ui";
 import * as Sentry from "@sentry/nextjs";
 import { ReactNode } from "react";
-import { toast } from "react-toastify";
 
 import { clearAuth as managerLogout, getState } from "@/apiClient";
 import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
@@ -10,10 +9,11 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 interface LogoutButtonProps {
   children?: ReactNode;
+  onLogoutSuccess?: () => void;
 }
 
 export function LogoutButton(props: LogoutButtonProps) {
-  const { children } = props;
+  const { children, onLogoutSuccess } = props;
 
   const { refreshState } = useSliceMachineActions();
 
@@ -29,7 +29,7 @@ export function LogoutButton(props: LogoutButtonProps) {
     invalidateEnvironmentsData();
     invalidateActiveEnvironmentData();
 
-    toast.success("Logged out");
+    onLogoutSuccess?.();
   }
 
   if (children !== undefined) {

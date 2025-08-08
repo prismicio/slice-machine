@@ -49,7 +49,11 @@ export const AppLayout: FC<PropsWithChildren> = ({
                 <Box alignItems="center" flexDirection="column" gap={16}>
                   {JSON.stringify(error)}
                   {isUnauthorizedError(error) && (
-                    <LogoutButton>Log out</LogoutButton>
+                    <LogoutButton
+                      onLogoutSuccess={() => window.location.reload()}
+                    >
+                      Log out
+                    </LogoutButton>
                   )}
                 </Box>
               </BlankSlateDescription>
