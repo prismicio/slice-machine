@@ -119,7 +119,7 @@ it("pushes slice changes while keeping the same screenshot if it hasn't changed"
 		}>(
 			(result) => {
 				const variation = ctx.mockPrismic.model.sharedSliceVariation();
-				const imageUrl = `https://wroom-io.imgix.net/play-macaron-4fd9/shared-slices/rich_text/default/${mockScreenshotBufferDigest}.png?auto=compress%2Cformat`;
+				const imageUrl = `https://example.com/${mockScreenshotBufferDigest}.png`;
 
 				result.expectedVariations.push({ ...variation, imageUrl });
 				result.inputVariations.push({ ...variation, imageUrl: "" });
