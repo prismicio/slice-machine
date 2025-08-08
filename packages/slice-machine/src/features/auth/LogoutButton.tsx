@@ -1,13 +1,20 @@
-import { IconButton, Tooltip } from "@prismicio/editor-ui";
+import { Button, Icon, IconButton, Tooltip } from "@prismicio/editor-ui";
 import * as Sentry from "@sentry/nextjs";
-import { toast } from "react-toastify";
+import { ReactNode } from "react";
 
 import { clearAuth as managerLogout, getState } from "@/apiClient";
 import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
 import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+  children?: ReactNode;
+  onLogoutSuccess?: () => void;
+}
+
+export function LogoutButton(props: LogoutButtonProps) {
+  const { children, onLogoutSuccess } = props;
+
   const { refreshState } = useSliceMachineActions();
 
   async function onClick() {
@@ -22,7 +29,19 @@ export function LogoutButton() {
     invalidateEnvironmentsData();
     invalidateActiveEnvironmentData();
 
-    toast.success("Logged out");
+    onLogoutSuccess?.();
+  }
+
+  if (children !== undefined) {
+    return (
+      <Button
+        onClick={() => void onClick()}
+        renderEndIcon={() => <Icon name="logout" size="extraSmall" />}
+        color="grey"
+      >
+        {children}
+      </Button>
+    );
   }
 
   return (

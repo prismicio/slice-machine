@@ -1,7 +1,6 @@
 import {
   Environment as EnvironmentType,
   isUnauthenticatedError,
-  isUnauthorizedError,
 } from "@slicemachine/manager/client";
 import { useState } from "react";
 
@@ -98,17 +97,10 @@ export function Environment() {
     );
   }
 
-  if (
-    isUnauthenticatedError(useEnvironmentsError) ||
-    isUnauthorizedError(useEnvironmentsError)
-  ) {
+  if (isUnauthenticatedError(useEnvironmentsError)) {
     return (
       <SideNavEnvironmentSelector
-        variant={
-          isUnauthenticatedError(useEnvironmentsError)
-            ? "unauthenticated"
-            : "unauthorized"
-        }
+        variant="unauthenticated"
         onLogInClick={() => openLoginModal()}
       />
     );
