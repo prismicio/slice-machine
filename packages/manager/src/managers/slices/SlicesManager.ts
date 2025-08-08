@@ -1038,7 +1038,7 @@ export class SlicesManager extends BaseManager {
 					createContentDigest(screenshot.data),
 				);
 
-				// If screenshot hasn't changed, no need to upload it again, just used
+				// If screenshot hasn't changed, no need to upload it again, just use
 				// the existing variation with the remote image URL if it exists.
 				if (!hasScreenshotChanged) {
 					return {
