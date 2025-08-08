@@ -1047,6 +1047,7 @@ export class SlicesManager extends BaseManager {
 				if (!hasScreenshotChanged) {
 					return {
 						...variation,
+						// Keep the existing remote screenshot URL if it exists.
 						imageUrl: remoteImageUrl ?? variation.imageUrl,
 					};
 				}
