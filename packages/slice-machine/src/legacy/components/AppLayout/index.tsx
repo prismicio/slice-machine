@@ -7,6 +7,7 @@ import {
   Button,
   ButtonGroup,
 } from "@prismicio/editor-ui";
+import { isUnauthorizedError } from "@slicemachine/manager/client";
 import { useRouter } from "next/router";
 import { FC, PropsWithChildren, Suspense } from "react";
 
@@ -18,6 +19,7 @@ import {
   PageLayoutPane,
 } from "@/components/PageLayout";
 import { ErrorBoundary } from "@/ErrorBoundary";
+import { LogoutButton } from "@/features/auth/LogoutButton";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { Navigation } from "@/features/navigation/Navigation";
 
@@ -44,7 +46,12 @@ export const AppLayout: FC<PropsWithChildren> = ({
               />
               <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
               <BlankSlateDescription>
-                {JSON.stringify(error)}
+                <Box alignItems="center" flexDirection="column" gap={8}>
+                  {JSON.stringify(error)}
+                  {isUnauthorizedError(error) && (
+                    <LogoutButton>Log out</LogoutButton>
+                  )}
+                </Box>
               </BlankSlateDescription>
             </BlankSlate>
           </Box>
