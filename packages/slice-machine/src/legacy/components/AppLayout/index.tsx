@@ -46,7 +46,7 @@ export const AppLayout: FC<PropsWithChildren> = ({
               />
               <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
               <BlankSlateDescription>
-                <Box alignItems="center" flexDirection="column" gap={8}>
+                <Box alignItems="center" flexDirection="column" gap={16}>
                   {JSON.stringify(error)}
                   {isUnauthorizedError(error) && (
                     <LogoutButton>Log out</LogoutButton>
