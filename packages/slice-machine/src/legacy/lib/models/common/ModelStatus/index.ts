@@ -34,8 +34,9 @@ export type ChangedSlice = {
   status: ChangesStatus;
   slice: ComponentUI;
   /**
-   * A map of variation IDs to remote screenshot URLs. Used to detect if a
-   * screenshot has changed when comparing with local ones.
+   * A map of variation IDs to remote screenshot URLs. These URLs are used to
+   * detect if a screenshot has changed when comparing with local ones and to
+   * push slices with the current screenshot.
    */
   variationImageUrlMap: Record<string, string>;
 };
