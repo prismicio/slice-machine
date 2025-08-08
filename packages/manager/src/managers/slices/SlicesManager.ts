@@ -147,9 +147,16 @@ type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
 	errors: HookError[];
 };
 
-type SlicesManagerUpsertHostedSliceScrenshotsArgs = {
+type SlicesManagerUpsertHostedSliceScreenshotsArgs = {
 	libraryID: string;
 	model: SharedSlice;
+	/**
+	 * A map of variation IDs to remote screenshot URLs. These URLs are used to
+	 * detect if a screenshot has changed when comparing with local ones and to
+	 * push slices with the current screenshot. If a matching screenshot is not
+	 * found in this map, the current local screenshot is uploaded again.
+	 */
+	variationImageUrlMap: Record<string, string>;
 };
 
 type SliceMachineManagerDeleteSliceArgs = {
@@ -759,8 +766,11 @@ export class SlicesManager extends BaseManager {
 		if (model) {
 			const modelWithScreenshots =
 				await this.updateSliceModelScreenshotsInPlace({
-					libraryID: args.libraryID,
 					model,
+					libraryID: args.libraryID,
+					// We are pushing it for the first time here, no remote image URLs to
+					// use during the update.
+					variationImageUrlMap: {},
 				});
 
 			const authenticationToken = await this.user.getAuthenticationToken();
@@ -1003,7 +1013,7 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async updateSliceModelScreenshotsInPlace(
-		args: SlicesManagerUpsertHostedSliceScrenshotsArgs,
+		args: SlicesManagerUpsertHostedSliceScreenshotsArgs,
 	): Promise<SharedSlice> {
 		const repositoryName = await this.project.getResolvedRepositoryName();
 
@@ -1023,13 +1033,19 @@ export class SlicesManager extends BaseManager {
 					};
 				}
 
-				const hasScreenshotChanged = !variation.imageUrl?.includes(
+				const remoteImageUrl = args.variationImageUrlMap?.[variation.id];
+				const hasScreenshotChanged = !remoteImageUrl?.includes(
 					createContentDigest(screenshot.data),
 				);
 
-				// If screenshot hasn't changed, do nothing
+				// If screenshot hasn't changed, no need to upload it again, just use
+				// the existing variation with the remote image URL if it exists.
 				if (!hasScreenshotChanged) {
-					return variation;
+					return {
+						...variation,
+						// Keep the existing remote screenshot URL if it exists.
+						imageUrl: remoteImageUrl ?? variation.imageUrl,
+					};
 				}
 
 				const keyPrefix = [

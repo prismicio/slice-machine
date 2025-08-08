@@ -29,6 +29,7 @@ export async function pushChanges(
     type: "Slice" as const,
     libraryID: sliceChange.slice.from,
     status: sliceChange.status,
+    variationImageUrlMap: sliceChange.variationImageUrlMap,
   }));
   const customTypeChanges = changedCustomTypes.map((customTypeChange) => ({
     id: customTypeChange.customType.id,

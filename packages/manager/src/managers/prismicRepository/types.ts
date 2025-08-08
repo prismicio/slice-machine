@@ -124,6 +124,13 @@ type SliceChange = {
 	type: "Slice";
 	status: ChangeStatus;
 	libraryID: string;
+	/**
+	 * A map of variation IDs to remote screenshot URLs. These URLs are used to
+	 * detect if a screenshot has changed when comparing with local ones and to
+	 * push slices with the current screenshot. If a matching screenshot is not
+	 * found in this map, the current local screenshot is uploaded again.
+	 */
+	variationImageUrlMap: Record<string, string>;
 };
 
 export type TransactionalMergeArgs = {

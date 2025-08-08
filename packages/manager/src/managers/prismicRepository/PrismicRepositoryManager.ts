@@ -319,6 +319,7 @@ export class PrismicRepositoryManager extends BaseManager {
 								const modelWithScreenshots =
 									await this.slices.updateSliceModelScreenshotsInPlace({
 										libraryID: change.libraryID,
+										variationImageUrlMap: change.variationImageUrlMap,
 										model,
 									});
 
@@ -341,6 +342,7 @@ export class PrismicRepositoryManager extends BaseManager {
 								const modelWithScreenshots =
 									await this.slices.updateSliceModelScreenshotsInPlace({
 										libraryID: change.libraryID,
+										variationImageUrlMap: change.variationImageUrlMap,
 										model,
 									});
 

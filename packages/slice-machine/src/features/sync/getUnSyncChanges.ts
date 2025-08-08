@@ -3,6 +3,7 @@ import { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
 import {
   getModelId,
   hasLocal,
+  hasRemote,
   isRemoteOnly,
   LocalOrRemoteCustomType,
   LocalOrRemoteSlice,
@@ -76,11 +77,23 @@ export function getUnSyncedChanges(
   );
 
   const changedSlices = unSyncedSlices
-    .map((s) => ({
-      slice: s,
-      status: modelsStatuses.slices[s.model.id],
-    }))
+    .map((slice) => {
+      const status = modelsStatuses.slices[slice.model.id];
+
+      const imageUrlMap = findRemoteSlice(
+        slices,
+        slice.model.id,
+      )?.variations.reduce<Record<string, string>>((result, variation) => {
+        const { imageUrl } = variation;
+        if (imageUrl === undefined || imageUrl === "") return result;
+        result[variation.id] = imageUrl;
+        return result;
+      }, {});
+
+      return { status, slice, variationImageUrlMap: imageUrlMap ?? {} };
+    })
     .filter((s): s is ChangedSlice => unSyncStatuses.includes(s.status));
+
   const changedCustomTypes = unSyncedCustomTypes
     .map((model) => (hasLocal(model) ? model.local : model.remote))
     .map((ct) => ({
@@ -96,6 +109,11 @@ export function getUnSyncedChanges(
     unSyncedSlices,
     modelsStatuses,
   };
+}
+
+function findRemoteSlice(slices: LocalOrRemoteSlice[], sliceId: string) {
+  const slice = slices.find((s) => hasRemote(s) && s.remote.id === sliceId);
+  return slice && hasRemote(slice) ? slice.remote : undefined;
 }
 
 // ComponentUI are manipulated on all the relevant pages

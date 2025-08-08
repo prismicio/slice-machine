@@ -10,10 +10,13 @@ import { mockSliceMachineAPI } from "./__testutils__/mockSliceMachineAPI";
 
 import { createSliceMachineManager } from "../src";
 import { PushBody, ChangeTypes } from "../src/managers/prismicRepository/types";
+import { createContentDigest } from "../src/lib/createContentDigest";
+import { Variation } from "@prismicio/types-internal/lib/customtypes";
 
 const pushChangesPayload = (
 	sliceIDs = ["slice1"],
 	customTypeIDs = ["slice1"],
+	variationImageUrlMap: Record<string, string> = {},
 ) => ({
 	confirmDeleteDocuments: false,
 	changes: [
@@ -22,6 +25,7 @@ const pushChangesPayload = (
 			status: "NEW" as const,
 			type: "Slice" as const,
 			libraryID: "slice-library",
+			variationImageUrlMap,
 		})),
 		...customTypeIDs.map((id) => ({
 			id,
@@ -88,6 +92,113 @@ it("pushes changes using the push API", async (ctx) => {
 				id: sharedSliceModel.id,
 				type: ChangeTypes.SLICE_INSERT,
 				payload: sharedSliceModel,
+			},
+			{
+				id: customTypeModel.id,
+				type: ChangeTypes.CUSTOM_TYPE_UPDATE,
+				payload: customTypeModel,
+			},
+		],
+		confirmDeleteDocuments: false,
+	};
+
+	expect(sentModel).toStrictEqual(expectedAPIPayload);
+});
+
+it("pushes slice changes while keeping the same screenshot if it hasn't changed", async (ctx) => {
+	const customTypeModel = ctx.mockPrismic.model.customType();
+
+	const mockScreenshotBuffer = Buffer.from("foo");
+	const mockScreenshotBufferDigest = createContentDigest(mockScreenshotBuffer);
+
+	const { inputVariations, variationImageUrlMap, expectedVariations } =
+		Array.from({ length: 3 }).reduce<{
+			inputVariations: Variation[];
+			expectedVariations: Variation[];
+			variationImageUrlMap: Record<string, string>;
+		}>(
+			(result) => {
+				const variation = ctx.mockPrismic.model.sharedSliceVariation();
+				const imageUrl = `https://example.com/${mockScreenshotBufferDigest}.png`;
+
+				result.expectedVariations.push({ ...variation, imageUrl });
+				result.inputVariations.push({ ...variation, imageUrl: "" });
+				result.variationImageUrlMap[variation.id] = imageUrl;
+
+				return result;
+			},
+			{ inputVariations: [], variationImageUrlMap: {}, expectedVariations: [] },
+		);
+	const sharedSliceModel = ctx.mockPrismic.model.sharedSlice({
+		variations: inputVariations,
+	});
+
+	const adapter = createTestPlugin({
+		setup: ({ hook }) => {
+			hook("custom-type:read", () => {
+				return { model: customTypeModel };
+			});
+			hook("slice:read", () => {
+				return { model: sharedSliceModel };
+			});
+			hook("slice:asset:read", () => {
+				return { data: mockScreenshotBuffer, errors: [] };
+			});
+		},
+	});
+	const cwd = await createTestProject({ adapter });
+	const manager = createSliceMachineManager({
+		nativePlugins: { [adapter.meta.name]: adapter },
+		cwd,
+	});
+
+	await manager.plugins.initPlugins();
+
+	let sentModel;
+
+	mockPrismicUserAPI(ctx);
+	mockPrismicAuthAPI(ctx);
+	mockSliceMachineAPI(ctx, {
+		async onPush(req, res, ctx) {
+			if (req.headers.get("user-agent") === "slice-machine") {
+				sentModel = await req.json();
+
+				return res(ctx.status(204));
+			}
+		},
+	});
+
+	await manager.user.login(createPrismicAuthLoginResponse());
+
+	const authenticationToken = await manager.user.getAuthenticationToken();
+	const sliceMachineConfig = await manager.project.getSliceMachineConfig();
+
+	mockAWSACLAPI(ctx, {
+		createEndpoint: {
+			expectedPrismicRepository: sliceMachineConfig.repositoryName,
+			expectedAuthenticationToken: authenticationToken,
+		},
+	});
+
+	await manager.prismicRepository.pushChanges(
+		pushChangesPayload(
+			[sharedSliceModel.id],
+			[customTypeModel.id],
+			variationImageUrlMap,
+		),
+	);
+
+	const expectedSharedSliceModel = {
+		...sharedSliceModel,
+		variations: expectedVariations,
+	};
+
+	const expectedAPIPayload: PushBody = {
+		changes: [
+			{
+				id: sharedSliceModel.id,
+				type: ChangeTypes.SLICE_INSERT,
+				payload: expectedSharedSliceModel,
 			},
 			{
 				id: customTypeModel.id,

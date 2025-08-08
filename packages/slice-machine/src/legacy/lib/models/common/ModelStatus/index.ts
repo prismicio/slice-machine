@@ -30,7 +30,12 @@ export type ChangesStatus =
   | ModelStatus.New
   | ModelStatus.Modified;
 
-export type ChangedSlice = { status: ChangesStatus; slice: ComponentUI };
+export type ChangedSlice = {
+  status: ChangesStatus;
+  slice: ComponentUI;
+  /** A map of variation IDs to remote screenshot URLs. */
+  variationImageUrlMap: Record<string, string>;
+};
 export type ChangedCustomType = {
   status: ChangesStatus;
   customType: CustomTypeSM;
