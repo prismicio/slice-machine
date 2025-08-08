@@ -15,6 +15,7 @@ import {
   computeStatuses,
   ModelStatus,
 } from "@/legacy/lib/models/common/ModelStatus";
+import { SliceSM } from "@/legacy/lib/models/common/Slice";
 import { AuthStatus } from "@/modules/userContext/types";
 
 type GetUnSyncedChangesArgs = {
@@ -82,7 +83,7 @@ export function getUnSyncedChanges(
 
       const sliceWithRemote = slices.find((s) => {
         return hasRemote(s) && s.remote.id === slice.model.id;
-      }) as RemoteOnlySlice | undefined;
+      }) as { remote: SliceSM } | undefined;
 
       const imageUrlMap = sliceWithRemote?.remote.variations.reduce<
         Record<string, string>
