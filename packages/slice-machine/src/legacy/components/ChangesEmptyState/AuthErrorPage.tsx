@@ -5,7 +5,7 @@ import { AuthStatus } from "@/modules/userContext/types";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 export type AuthErrorPageProps = {
-  authStatus: AuthStatus.UNAUTHORIZED | AuthStatus.FORBIDDEN;
+  authStatus: AuthStatus.FORBIDDEN;
 };
 
 export const AuthErrorPage: FC<AuthErrorPageProps> = (props) => {
@@ -20,22 +20,12 @@ export const AuthErrorPage: FC<AuthErrorPageProps> = (props) => {
       justifyContent="center"
       gap={8}
     >
-      {authStatus === AuthStatus.FORBIDDEN ? (
+      {authStatus === AuthStatus.FORBIDDEN && (
         <>
           <Text variant="h3" align="center">
             It seems like you are logged out
           </Text>
           <Text align="center">Log in to connect to your repository.</Text>
-        </>
-      ) : (
-        <>
-          <Text variant="h3" align="center">
-            It seems like you don't have access to this repository
-          </Text>
-          <Text align="center">
-            Check that the repository name is correct, then contact your
-            repository administrator.
-          </Text>
         </>
       )}
       <Text align="center">

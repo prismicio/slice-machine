@@ -130,9 +130,9 @@ test("I can change my current environment", async ({
   );
 });
 
-test("I don't see login text or the select if I'm not authorized", async ({
-  sliceMachinePage,
+test("I see an error page if I'm not authorized", async ({
   procedures,
+  page,
 }) => {
   procedures.mock(
     "prismicRepository.fetchEnvironments",
@@ -144,16 +144,12 @@ test("I don't see login text or the select if I'm not authorized", async ({
     { execute: false },
   );
 
-  await sliceMachinePage.gotoDefaultPage();
+  await page.goto("/");
+  await expect(page.getByText("Failed to load Slice Machine")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
   await expect(
-    sliceMachinePage.menu.environmentSelector.loginTextButton,
-  ).not.toBeVisible();
-  await expect(
-    sliceMachinePage.menu.environmentSelector.loginIconButton,
-  ).not.toBeVisible();
-  await expect(
-    sliceMachinePage.menu.environmentSelector.dropdownTrigger,
-  ).not.toBeVisible();
+    page.getByText("It seems like you don't have access to this repository"),
+  ).toBeVisible();
 });
 
 test("I can see the dot on the logo depending on the environment", async ({
