@@ -114,10 +114,7 @@ const Changes: React.FunctionComponent = () => {
     if (!isOnline) {
       return <OfflinePage />;
     }
-    if (
-      authStatus === AuthStatus.UNAUTHORIZED ||
-      authStatus === AuthStatus.FORBIDDEN
-    ) {
+    if (authStatus === AuthStatus.FORBIDDEN) {
       return <AuthErrorPage authStatus={authStatus} />;
     }
     if (numberOfChanges === 0) {
