@@ -1,4 +1,5 @@
 import { Button, Icon, IconButton, Tooltip } from "@prismicio/editor-ui";
+import { SX } from "@prismicio/editor-ui/dist/theme";
 import * as Sentry from "@sentry/nextjs";
 import { ReactNode } from "react";
 
@@ -10,10 +11,12 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 interface LogoutButtonProps {
   children?: ReactNode;
   onLogoutSuccess?: () => void;
+  isLoading?: boolean;
+  sx?: SX;
 }
 
 export function LogoutButton(props: LogoutButtonProps) {
-  const { children, onLogoutSuccess } = props;
+  const { children, onLogoutSuccess, isLoading, sx } = props;
 
   const { refreshState } = useSliceMachineActions();
 
@@ -38,6 +41,8 @@ export function LogoutButton(props: LogoutButtonProps) {
         onClick={() => void onClick()}
         renderEndIcon={() => <Icon name="logout" size="extraSmall" />}
         color="grey"
+        loading={isLoading}
+        sx={sx}
       >
         {children}
       </Button>
@@ -50,6 +55,8 @@ export function LogoutButton(props: LogoutButtonProps) {
         icon="logout"
         onClick={() => void onClick()}
         hiddenLabel="Log out"
+        loading={isLoading}
+        sx={sx}
       />
     </Tooltip>
   );

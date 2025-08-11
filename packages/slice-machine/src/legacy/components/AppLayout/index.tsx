@@ -6,10 +6,11 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Text,
 } from "@prismicio/editor-ui";
 import { isUnauthorizedError } from "@slicemachine/manager/client";
 import { useRouter } from "next/router";
-import { FC, PropsWithChildren, Suspense } from "react";
+import { FC, PropsWithChildren, Suspense, useState } from "react";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 import {
@@ -46,16 +47,7 @@ export const AppLayout: FC<PropsWithChildren> = ({
               />
               <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
               <BlankSlateDescription>
-                <Box alignItems="center" flexDirection="column" gap={16}>
-                  {JSON.stringify(error)}
-                  {isUnauthorizedError(error) && (
-                    <LogoutButton
-                      onLogoutSuccess={() => window.location.reload()}
-                    >
-                      Log out
-                    </LogoutButton>
-                  )}
-                </Box>
+                <RenderError error={error} />
               </BlankSlateDescription>
             </BlankSlate>
           </Box>
@@ -73,6 +65,43 @@ export const AppLayout: FC<PropsWithChildren> = ({
     </ErrorBoundary>
   );
 };
+
+function RenderError(args: { error: unknown }) {
+  const { error } = args;
+
+  if (isUnauthorizedError(error)) {
+    return <UnauthorizedErrorView />;
+  }
+  return <>{JSON.stringify(error)}</>;
+}
+
+function UnauthorizedErrorView() {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  return (
+    <Box flexDirection="column" gap={16} margin={{ top: 8 }}>
+      <Box flexDirection="column" gap={8} alignItems="center">
+        <Text variant="h3" align="center">
+          It seems like you don't have access to this repository
+        </Text>
+        <Text align="center">
+          Check that the repository name is correct, then contact your
+          repository administrator.
+        </Text>
+      </Box>
+      <LogoutButton
+        isLoading={isLoggingOut}
+        onLogoutSuccess={() => {
+          setIsLoggingOut(true);
+          window.location.reload();
+        }}
+        sx={{ alignSelf: "center" }}
+      >
+        Log out
+      </LogoutButton>
+    </Box>
+  );
+}
 
 const environmentTopBorderColorMap = {
   prod: "purple",
