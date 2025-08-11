@@ -105,10 +105,4 @@ export function Environment() {
       />
     );
   }
-
-  if (useEnvironmentsError !== undefined) {
-    throw useEnvironmentsError;
-  }
-
-  throw activeEnvironmentError;
 }

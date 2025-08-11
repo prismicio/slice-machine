@@ -14,11 +14,21 @@ import "@/styles/tabs.css";
 import "@/styles/toaster.css";
 
 import {
+  BlankSlate,
+  BlankSlateDescription,
+  BlankSlateIcon,
+  BlankSlateTitle,
   Box,
   DefaultErrorMessage,
+  Text,
   ThemeProvider,
   TooltipProvider,
 } from "@prismicio/editor-ui";
+import {
+  isUnauthorizedError,
+  UnauthorizedError,
+} from "@slicemachine/manager/client";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectedRouter } from "connected-next-router";
 import type { NextPage } from "next";
 import type { AppContext, AppInitialProps } from "next/app";
@@ -33,7 +43,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { getState } from "@/apiClient";
-import { ErrorBoundary } from "@/ErrorBoundary";
+import {
+  BareErrorBoundary,
+  ErrorBoundary as EditorErrorBoundary,
+} from "@/ErrorBoundary";
+import { LogoutButton } from "@/features/auth/LogoutButton";
+import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
 import { RouteChangeProvider } from "@/hooks/useRouteChange";
 import SliceMachineApp from "@/legacy/components/App";
@@ -56,6 +71,17 @@ type RemoveDarkModeProps = Readonly<{
   children?: ReactNode;
 }>;
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      retry: false,
+      refetchOnWindowFocus: "always",
+    },
+  },
+});
+
 const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
   const { setColorMode } = useThemeUI();
   useEffect(() => {
@@ -68,50 +94,11 @@ const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
   return <>{children}</>;
 };
 
-function App({
-  Component,
-  pageProps,
-}: AppContextWithComponentLayout & AppInitialProps) {
-  const [serverState, setServerState] = useState<ServerState | null>(null);
-  const [smStore, setSMStore] = useState<{
-    store: Store;
-    persistor: Persistor;
-  } | null>(null);
+function App(props: AppContextWithComponentLayout & AppInitialProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const { Component, pageProps } = props;
 
-  useEffect(() => {
-    async function getInitialState() {
-      const serverState = await getState();
-      setServerState(serverState);
-    }
-    void getInitialState();
-  }, []);
-
-  useEffect(() => {
-    if (!serverState || smStore) {
-      return;
-    }
-
-    const normalizedCustomTypes = normalizeFrontendCustomTypes(
-      serverState.customTypes,
-      serverState.remoteCustomTypes,
-    );
-
-    const { store, persistor } = configureStore({
-      environment: serverState.env,
-      availableCustomTypes: {
-        ...normalizedCustomTypes,
-      },
-      slices: {
-        libraries: serverState.libraries,
-        remoteSlices: serverState.remoteSlices,
-      },
-    });
-
-    setSMStore({ store, persistor });
-  }, [serverState, smStore]);
-
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  const ComponentLayout = Component.CustomLayout || SliceMachineApp;
+  const ComponentLayout = Component.CustomLayout ?? SliceMachineApp;
 
   return (
     <>
@@ -119,49 +106,167 @@ function App({
         <title>Slice Machine</title>
       </Head>
       <ThemeUIThemeProvider theme={theme}>
-        <RemoveDarkMode>
-          <ThemeProvider mode="light">
-            <TooltipProvider>
-              {!smStore || !serverState ? (
-                <LoadingPage />
-              ) : (
-                <Provider store={smStore.store}>
-                  <ConnectedRouter Router={Router}>
-                    <PersistGate loading={null} persistor={smStore.persistor}>
-                      <ErrorBoundary
-                        renderError={() => (
-                          <Box
-                            justifyContent="center"
-                            width="100%"
-                            padding={80}
-                          >
-                            <DefaultErrorMessage
-                              title="Error"
-                              description="An error occurred while rendering the app."
-                            />
-                          </Box>
-                        )}
-                      >
-                        <Suspense fallback={<LoadingPage />}>
-                          <AutoSyncProvider>
-                            <RouteChangeProvider>
-                              <ComponentLayout>
-                                <Component {...pageProps} />
-                              </ComponentLayout>
-                            </RouteChangeProvider>
-                          </AutoSyncProvider>
-                        </Suspense>
-                      </ErrorBoundary>
-                    </PersistGate>
-                  </ConnectedRouter>
-                  <ToastContainer />
-                </Provider>
-              )}
-            </TooltipProvider>
-          </ThemeProvider>
-        </RemoveDarkMode>
+        <QueryClientProvider client={queryClient}>
+          <RemoveDarkMode>
+            <ThemeProvider mode="light">
+              <TooltipProvider>
+                <BareErrorBoundary
+                  renderError={() => (
+                    <Box justifyContent="center" width="100%" padding={80}>
+                      <DefaultErrorMessage
+                        title="Error"
+                        description="An error occurred while rendering the app."
+                      />
+                    </Box>
+                  )}
+                >
+                  <Suspense fallback={<LoadingPage />}>
+                    <AppStateBoundary>
+                      <ComponentLayout>
+                        <Component {...pageProps} />
+                      </ComponentLayout>
+                    </AppStateBoundary>
+                  </Suspense>
+                </BareErrorBoundary>
+              </TooltipProvider>
+            </ThemeProvider>
+          </RemoveDarkMode>
+        </QueryClientProvider>
       </ThemeUIThemeProvider>
     </>
+  );
+}
+
+interface AppState {
+  serverState: ServerState;
+  store: Store;
+  persistor: Persistor;
+}
+
+function AppStateBoundary({ children }: { children: ReactNode }) {
+  const [state, setState] = useState<AppState>();
+
+  useEffect(() => {
+    async function getInitialState() {
+      const serverState = await getState();
+
+      const { store, persistor } = configureStore({
+        environment: serverState.env,
+        availableCustomTypes: {
+          ...normalizeFrontendCustomTypes(
+            serverState.customTypes,
+            serverState.remoteCustomTypes,
+          ),
+        },
+        slices: {
+          libraries: serverState.libraries,
+          remoteSlices: serverState.remoteSlices,
+        },
+      });
+
+      setState({ serverState, store, persistor });
+    }
+
+    void getInitialState();
+  }, []);
+
+  if (state === undefined) {
+    return <LoadingPage />;
+  }
+
+  return (
+    <Provider store={state.store}>
+      <EditorErrorBoundary
+        renderError={(error) => {
+          return (
+            <Box
+              position="absolute"
+              top={64}
+              width="100%"
+              justifyContent="center"
+              flexDirection="column"
+            >
+              <BlankSlate>
+                <BlankSlateIcon
+                  lineColor="tomato11"
+                  backgroundColor="tomato3"
+                  name="alert"
+                />
+                <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
+                <RenderError error={error} />
+              </BlankSlate>
+            </Box>
+          );
+        }}
+      >
+        <Suspense fallback={<LoadingPage />}>
+          <GoodStateBoundary serverState={state.serverState}>
+            <ConnectedRouter Router={Router}>
+              <PersistGate loading={null} persistor={state.persistor}>
+                <AutoSyncProvider>
+                  <RouteChangeProvider>{children}</RouteChangeProvider>
+                </AutoSyncProvider>
+              </PersistGate>
+            </ConnectedRouter>
+          </GoodStateBoundary>
+          <ToastContainer />
+        </Suspense>
+      </EditorErrorBoundary>
+    </Provider>
+  );
+}
+
+function GoodStateBoundary(props: {
+  children: ReactNode;
+  serverState: ServerState;
+}) {
+  const { children, serverState } = props;
+  const activeEnvironment = useActiveEnvironment({ suspense: true });
+
+  if (serverState.clientError?.status === 401) {
+    throw new UnauthorizedError();
+  }
+  if (activeEnvironment.error != null) {
+    throw activeEnvironment.error;
+  }
+
+  return <>{children}</>;
+}
+
+function RenderError(args: { error: unknown }) {
+  const { error } = args;
+
+  if (isUnauthorizedError(error)) {
+    return <UnauthorizedErrorView />;
+  }
+  return <BlankSlateDescription>{JSON.stringify(error)}</BlankSlateDescription>;
+}
+
+function UnauthorizedErrorView() {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  return (
+    <Box flexDirection="column" gap={16} margin={{ top: 8 }}>
+      <Box flexDirection="column" gap={8} alignItems="center">
+        <Text variant="h3" align="center">
+          It seems like you don't have access to this repository
+        </Text>
+        <Text align="center">
+          Check that the repository name is correct, then contact your
+          repository administrator.
+        </Text>
+      </Box>
+      <LogoutButton
+        isLoading={isLoggingOut}
+        onLogoutSuccess={() => {
+          setIsLoggingOut(true);
+          window.location.reload();
+        }}
+        sx={{ alignSelf: "center" }}
+      >
+        Log out
+      </LogoutButton>
+    </Box>
   );
 }
 

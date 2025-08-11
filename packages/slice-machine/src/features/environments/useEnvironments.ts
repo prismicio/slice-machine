@@ -1,14 +1,23 @@
-import {
-  invalidateFetcherData,
-  useRequest,
-} from "@prismicio/editor-support/Suspense";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getEnvironments } from "./actions/getEnvironments";
 
-export function invalidateEnvironmentsData() {
-  invalidateFetcherData(getEnvironments);
+export const GetEnvironmentsQueryKey = ["getEnvironments"];
+
+export function useInvalidateEnvironmentsData() {
+  const client = useQueryClient();
+
+  return client.invalidateQueries({ queryKey: GetEnvironmentsQueryKey });
 }
 
 export function useEnvironments() {
-  return useRequest(getEnvironments, []);
+  const { data, ...rest } = useQuery({
+    queryKey: GetEnvironmentsQueryKey,
+    queryFn: () => getEnvironments(),
+  });
+
+  return {
+    environments: data,
+    ...rest,
+  };
 }

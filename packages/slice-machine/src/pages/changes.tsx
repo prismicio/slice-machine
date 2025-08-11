@@ -160,7 +160,6 @@ const Changes: React.FunctionComponent = () => {
               disabled={
                 numberOfChanges === 0 ||
                 !isOnline ||
-                authStatus === AuthStatus.UNAUTHORIZED ||
                 authStatus === AuthStatus.FORBIDDEN ||
                 isSyncing
               }

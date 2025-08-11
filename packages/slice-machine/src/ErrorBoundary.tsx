@@ -45,3 +45,11 @@ export const ErrorBoundary: FC<ErrorBoundaryProps> = (props) => {
     />
   );
 };
+
+/**
+ * Simple error boundary that doesn't access the store or have other state
+ * dependencies.
+ */
+export function BareErrorBoundary(props: ErrorBoundaryProps) {
+  return <EditorUiErrorBoundary {...props} />;
+}
