@@ -1,10 +1,6 @@
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
-import {
-  isUnauthorizedError,
-  SliceMachineManagerClient,
-  UnauthorizedError,
-} from "@slicemachine/manager/client";
+import { SliceMachineManagerClient } from "@slicemachine/manager/client";
 
 import { CheckAuthStatusResponse } from "@/legacy/lib/models/common/Auth";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";

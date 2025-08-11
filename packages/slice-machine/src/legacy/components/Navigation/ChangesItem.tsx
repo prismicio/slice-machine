@@ -115,7 +115,11 @@ export const ChangesCount: FC<ChangesCountProps> = ({ color }) => {
   const { unSyncedSlices, unSyncedCustomTypes } = useUnSyncChanges();
   const numberOfChanges = unSyncedSlices.length + unSyncedCustomTypes.length;
 
-  if (!isOnline || authStatus === AuthStatus.FORBIDDEN) {
+  if (
+    !isOnline ||
+    authStatus === AuthStatus.UNAUTHORIZED ||
+    authStatus === AuthStatus.FORBIDDEN
+  ) {
     return null;
   }
 

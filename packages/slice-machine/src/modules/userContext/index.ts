@@ -95,9 +95,9 @@ const getAuthStatus = (
     case 403: {
       return AuthStatus.FORBIDDEN;
     }
-    case 401:
-    // 401 (unauthorized) should not be handled here, but rather higher up and
-    // the UI should be blocked (see _app.tsx)
+    case 401: {
+      return AuthStatus.UNAUTHORIZED;
+    }
     default: {
       return AuthStatus.UNKNOWN;
     }

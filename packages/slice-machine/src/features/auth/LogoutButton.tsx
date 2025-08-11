@@ -1,24 +1,26 @@
 import { Button, Icon, IconButton, Tooltip } from "@prismicio/editor-ui";
 import { SX } from "@prismicio/editor-ui/dist/theme";
 import * as Sentry from "@sentry/nextjs";
+import { useQueryClient } from "@tanstack/react-query";
 import { ReactNode } from "react";
 
 import { clearAuth as managerLogout, getState } from "@/apiClient";
-import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
-import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
+import { GetActiveEnvironmentQueryKey } from "@/features/environments/useActiveEnvironment";
+import { GetEnvironmentsQueryKey } from "@/features/environments/useEnvironments";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 interface LogoutButtonProps {
   children?: ReactNode;
   onLogoutSuccess?: () => void;
-  isLoading?: boolean;
+  refetchOnSuccess?: boolean;
   sx?: SX;
 }
 
 export function LogoutButton(props: LogoutButtonProps) {
-  const { children, onLogoutSuccess, isLoading, sx } = props;
+  const { children, onLogoutSuccess, refetchOnSuccess = true, sx } = props;
 
   const { refreshState } = useSliceMachineActions();
+  const queryClient = useQueryClient();
 
   async function onClick() {
     await managerLogout();
@@ -28,9 +30,17 @@ export function LogoutButton(props: LogoutButtonProps) {
 
     Sentry.setUser({ id: serverState.env.shortId });
 
-    // refresh queries to update the UI
-    invalidateEnvironmentsData();
-    invalidateActiveEnvironmentData();
+    if (refetchOnSuccess) {
+      // refresh queries to update the UI
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: GetEnvironmentsQueryKey,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: GetActiveEnvironmentQueryKey,
+        }),
+      ]);
+    }
 
     onLogoutSuccess?.();
   }
@@ -41,7 +51,6 @@ export function LogoutButton(props: LogoutButtonProps) {
         onClick={() => void onClick()}
         renderEndIcon={() => <Icon name="logout" size="extraSmall" />}
         color="grey"
-        loading={isLoading}
         sx={sx}
       >
         {children}
@@ -55,7 +64,6 @@ export function LogoutButton(props: LogoutButtonProps) {
         icon="logout"
         onClick={() => void onClick()}
         hiddenLabel="Log out"
-        loading={isLoading}
         sx={sx}
       />
     </Tooltip>

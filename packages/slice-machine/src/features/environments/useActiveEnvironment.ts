@@ -9,13 +9,14 @@ export function useActiveEnvironment(options?: { suspense?: boolean }) {
 
   const hook = suspense === true ? useSuspenseQuery : useQuery;
 
-  const { data, ...rest } = hook({
+  const { data, error, ...rest } = hook({
     queryKey: GetActiveEnvironmentQueryKey,
     queryFn: () => getActiveEnvironment(),
   });
 
   return {
     activeEnvironment: data?.activeEnvironment,
+    error: data?.error ?? error ?? undefined,
     ...rest,
   };
 }

@@ -25,10 +25,9 @@ import {
   TooltipProvider,
 } from "@prismicio/editor-ui";
 import {
+  isInvalidActiveEnvironmentError,
   isUnauthorizedError,
-  UnauthorizedError,
 } from "@slicemachine/manager/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConnectedRouter } from "connected-next-router";
 import type { NextPage } from "next";
 import type { AppContext, AppInitialProps } from "next/app";
@@ -56,6 +55,7 @@ import LoadingPage from "@/legacy/components/LoadingPage";
 import ToastContainer from "@/legacy/components/ToasterContainer";
 import { normalizeFrontendCustomTypes } from "@/legacy/lib/models/common/normalizers/customType";
 import type ServerState from "@/legacy/lib/models/server/ServerState";
+import { QueryClientProvider } from "@/queryClient";
 import configureStore from "@/redux/store";
 import theme from "@/theme";
 
@@ -70,17 +70,6 @@ type AppContextWithComponentLayout = AppContext & {
 type RemoveDarkModeProps = Readonly<{
   children?: ReactNode;
 }>;
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
-      retry: false,
-      refetchOnWindowFocus: "always",
-    },
-  },
-});
 
 const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
   const { setColorMode } = useThemeUI();
@@ -106,7 +95,7 @@ function App(props: AppContextWithComponentLayout & AppInitialProps) {
         <title>Slice Machine</title>
       </Head>
       <ThemeUIThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider>
           <RemoveDarkMode>
             <ThemeProvider mode="light">
               <TooltipProvider>
@@ -121,11 +110,11 @@ function App(props: AppContextWithComponentLayout & AppInitialProps) {
                   )}
                 >
                   <Suspense fallback={<LoadingPage />}>
-                    <AppStateBoundary>
+                    <AppStateWrapper>
                       <ComponentLayout>
                         <Component {...pageProps} />
                       </ComponentLayout>
-                    </AppStateBoundary>
+                    </AppStateWrapper>
                   </Suspense>
                 </BareErrorBoundary>
               </TooltipProvider>
@@ -143,7 +132,7 @@ interface AppState {
   persistor: Persistor;
 }
 
-function AppStateBoundary({ children }: { children: ReactNode }) {
+function AppStateWrapper({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>();
 
   useEffect(() => {
@@ -193,14 +182,14 @@ function AppStateBoundary({ children }: { children: ReactNode }) {
                   name="alert"
                 />
                 <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
-                <RenderError error={error} />
+                <RenderErrorDescription error={error} />
               </BlankSlate>
             </Box>
           );
         }}
       >
         <Suspense fallback={<LoadingPage />}>
-          <GoodStateBoundary serverState={state.serverState}>
+          <AppStateValidator>
             <ConnectedRouter Router={Router}>
               <PersistGate loading={null} persistor={state.persistor}>
                 <AutoSyncProvider>
@@ -208,7 +197,7 @@ function AppStateBoundary({ children }: { children: ReactNode }) {
                 </AutoSyncProvider>
               </PersistGate>
             </ConnectedRouter>
-          </GoodStateBoundary>
+          </AppStateValidator>
           <ToastContainer />
         </Suspense>
       </EditorErrorBoundary>
@@ -216,58 +205,46 @@ function AppStateBoundary({ children }: { children: ReactNode }) {
   );
 }
 
-function GoodStateBoundary(props: {
-  children: ReactNode;
-  serverState: ServerState;
-}) {
-  const { children, serverState } = props;
-  const activeEnvironment = useActiveEnvironment({ suspense: true });
-
-  if (serverState.clientError?.status === 401) {
-    throw new UnauthorizedError();
-  }
-  if (activeEnvironment.error != null) {
-    throw activeEnvironment.error;
-  }
-
-  return <>{children}</>;
-}
-
-function RenderError(args: { error: unknown }) {
+function RenderErrorDescription(args: { error: unknown }) {
   const { error } = args;
 
   if (isUnauthorizedError(error)) {
-    return <UnauthorizedErrorView />;
+    return (
+      <Box flexDirection="column" gap={16} margin={{ top: 8 }}>
+        <Box flexDirection="column" gap={8} alignItems="center">
+          <Text variant="h3" align="center">
+            It seems like you don't have access to this repository
+          </Text>
+          <Text align="center">
+            Check that the repository name is correct, then contact your
+            repository administrator.
+          </Text>
+        </Box>
+        <LogoutButton
+          onLogoutSuccess={() => window.location.reload()}
+          refetchOnSuccess={false}
+          sx={{ alignSelf: "center" }}
+        >
+          Log out
+        </LogoutButton>
+      </Box>
+    );
   }
+
   return <BlankSlateDescription>{JSON.stringify(error)}</BlankSlateDescription>;
 }
 
-function UnauthorizedErrorView() {
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+function AppStateValidator(props: { children: ReactNode }) {
+  const activeEnvironment = useActiveEnvironment({ suspense: true });
 
-  return (
-    <Box flexDirection="column" gap={16} margin={{ top: 8 }}>
-      <Box flexDirection="column" gap={8} alignItems="center">
-        <Text variant="h3" align="center">
-          It seems like you don't have access to this repository
-        </Text>
-        <Text align="center">
-          Check that the repository name is correct, then contact your
-          repository administrator.
-        </Text>
-      </Box>
-      <LogoutButton
-        isLoading={isLoggingOut}
-        onLogoutSuccess={() => {
-          setIsLoggingOut(true);
-          window.location.reload();
-        }}
-        sx={{ alignSelf: "center" }}
-      >
-        Log out
-      </LogoutButton>
-    </Box>
-  );
+  if (
+    isUnauthorizedError(activeEnvironment.error) ||
+    isInvalidActiveEnvironmentError(activeEnvironment.error)
+  ) {
+    throw activeEnvironment.error;
+  }
+
+  return <>{props.children}</>;
 }
 
 export default dynamic(() => Promise.resolve(App), { ssr: false });

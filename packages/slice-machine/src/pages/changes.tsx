@@ -25,8 +25,8 @@ import {
   AppLayoutHeader,
 } from "@/legacy/components/AppLayout";
 import {
-  AuthErrorPage,
   OfflinePage,
+  UnauthenticatedView,
 } from "@/legacy/components/ChangesEmptyState";
 import { ChangesItems } from "@/legacy/components/ChangesItems";
 import {
@@ -114,8 +114,8 @@ const Changes: React.FunctionComponent = () => {
     if (!isOnline) {
       return <OfflinePage />;
     }
-    if (authStatus === AuthStatus.FORBIDDEN) {
-      return <AuthErrorPage authStatus={authStatus} />;
+    if (authStatus === AuthStatus.UNAUTHORIZED) {
+      return <UnauthenticatedView />;
     }
     if (numberOfChanges === 0) {
       return (
@@ -160,6 +160,7 @@ const Changes: React.FunctionComponent = () => {
               disabled={
                 numberOfChanges === 0 ||
                 !isOnline ||
+                authStatus === AuthStatus.UNAUTHORIZED ||
                 authStatus === AuthStatus.FORBIDDEN ||
                 isSyncing
               }
