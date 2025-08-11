@@ -10,7 +10,6 @@ export class ChangesPage extends SliceMachinePage {
   readonly pushChangesButton: Locator;
   readonly pushedMessaged: Locator;
   readonly notLoggedInTitle: Locator;
-  readonly notAuthorizedTitle: Locator;
   readonly blankSlateTitle: Locator;
   readonly postPushBlankSlateTitle: Locator;
   readonly unknownErrorMessage: Locator;
@@ -44,10 +43,6 @@ export class ChangesPage extends SliceMachinePage {
     this.notLoggedInTitle = page.getByText("It seems like you are logged out", {
       exact: true,
     });
-    this.notAuthorizedTitle = page.getByText(
-      "It seems like you don't have access to this repository",
-      { exact: true },
-    );
     this.blankSlateTitle = page.getByText("Everything is up-to-date", {
       exact: true,
     });

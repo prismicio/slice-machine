@@ -147,6 +147,9 @@ test("I see an error page if I'm not authorized", async ({
   await page.goto("/");
   await expect(page.getByText("Failed to load Slice Machine")).toBeVisible();
   await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
+  await expect(
+    page.getByText("It seems like you don't have access to this repository"),
+  ).toBeVisible();
 });
 
 test("I can see the dot on the logo depending on the environment", async ({

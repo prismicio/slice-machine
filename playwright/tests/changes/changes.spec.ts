@@ -13,7 +13,6 @@ test("I cannot see the login screen when logged in", async ({
   await changesPage.goto();
   await expect(changesPage.loginButton).not.toBeVisible();
   await expect(changesPage.notLoggedInTitle).not.toBeVisible();
-  await expect(changesPage.notAuthorizedTitle).not.toBeVisible();
 });
 
 test("I can see the login screen when logged out", async ({
@@ -45,7 +44,6 @@ test("I can see the unauthorized screen when not authorized", async ({
 
   await changesPage.goto();
   await expect(changesPage.loginButton).not.toBeVisible();
-  await expect(changesPage.notAuthorizedTitle).toBeVisible();
 });
 
 test("I can see the empty state when I don't have any changes to push", async ({
