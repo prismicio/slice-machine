@@ -73,12 +73,12 @@ function getStatusBadgeContent(
             "Data from the remote repository could not be fetched (no internet connection).",
         };
       }
-      if (args.authStatus === AuthStatus.FORBIDDEN) {
+      if (args.authStatus === AuthStatus.UNAUTHORIZED) {
         return {
           badgeColor: "grey",
           badgeTitle: "Unknown",
           tooltipContent:
-            "Data from the remote repository could not be fetched (you don't have access to the repository).",
+            "Data from the remote repository could not be fetched (not connected to Prismic).",
         };
       }
     }
