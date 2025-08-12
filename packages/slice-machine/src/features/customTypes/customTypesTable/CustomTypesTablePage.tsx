@@ -9,7 +9,7 @@ import Head from "next/head";
 import { type FC, Suspense, useState } from "react";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { ErrorBoundary } from "@/ErrorBoundary";
+import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import {
   AppLayout,
@@ -42,7 +42,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
           Machine
         </title>
       </Head>
-      <ErrorBoundary
+      <DefaultErrorBoundary
         renderError={() => (
           <AppLayout>
             <AppLayoutContent>
@@ -119,7 +119,7 @@ export const CustomTypesTablePage: FC<CustomTypesTablePageProps> = ({
             </AppLayoutContent>
           </AppLayout>
         </Suspense>
-      </ErrorBoundary>
+      </DefaultErrorBoundary>
     </>
   );
 };

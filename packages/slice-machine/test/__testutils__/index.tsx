@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { AnyAction, Store } from "redux";
 import { BaseStyles, ThemeProvider as ThemeUIThemeProvider } from "theme-ui";
 
-import { ErrorBoundary } from "@/ErrorBoundary";
+import { DefaultErrorBoundary } from "@/errorBoundaries";
 
 import configureStore from "../../src/redux/store";
 import type { SliceMachineStoreType } from "../../src/redux/type";
@@ -48,7 +48,7 @@ function render(
         <TooltipProvider>
           <BaseStyles>
             <Provider store={store}>
-              <ErrorBoundary>{children}</ErrorBoundary>
+              <DefaultErrorBoundary>{children}</DefaultErrorBoundary>
             </Provider>
           </BaseStyles>
         </TooltipProvider>

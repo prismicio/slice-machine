@@ -4,7 +4,7 @@ import { FC, Suspense } from "react";
 
 import { telemetry } from "@/apiClient";
 import { ContentTabs } from "@/components/ContentTabs";
-import { ErrorBoundary } from "@/ErrorBoundary";
+import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { MarkdownRenderer } from "@/features/documentation/MarkdownRenderer";
 import { useDocumentation } from "@/features/documentation/useDocumentation";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
@@ -68,7 +68,7 @@ type PageSnippetDialogProps = { model: CustomType };
 export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
   return (
     <div>
-      <ErrorBoundary>
+      <DefaultErrorBoundary>
         <Suspense
           fallback={
             <Button color="grey" startIcon="code">
@@ -78,7 +78,7 @@ export const PageSnippetDialog: FC<PageSnippetDialogProps> = ({ model }) => {
         >
           <PageSnippetContent model={model} />
         </Suspense>
-      </ErrorBoundary>
+      </DefaultErrorBoundary>
     </div>
   );
 };

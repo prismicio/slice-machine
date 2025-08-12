@@ -13,17 +13,7 @@ import "@/styles/starry-night.css";
 import "@/styles/tabs.css";
 import "@/styles/toaster.css";
 
-import {
-  BlankSlate,
-  BlankSlateDescription,
-  BlankSlateIcon,
-  BlankSlateTitle,
-  Box,
-  DefaultErrorMessage,
-  Text,
-  ThemeProvider,
-  TooltipProvider,
-} from "@prismicio/editor-ui";
+import { ThemeProvider, TooltipProvider } from "@prismicio/editor-ui";
 import {
   isInvalidActiveEnvironmentError,
   isUnauthorizedError,
@@ -43,10 +33,9 @@ import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { getState } from "@/apiClient";
 import {
-  BareErrorBoundary,
-  ErrorBoundary as EditorErrorBoundary,
-} from "@/ErrorBoundary";
-import { LogoutButton } from "@/features/auth/LogoutButton";
+  AppStateErrorBoundary,
+  FallbackErrorBoundary,
+} from "@/errorBoundaries";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
 import { RouteChangeProvider } from "@/hooks/useRouteChange";
@@ -99,16 +88,7 @@ function App(props: AppContextWithComponentLayout & AppInitialProps) {
           <RemoveDarkMode>
             <ThemeProvider mode="light">
               <TooltipProvider>
-                <BareErrorBoundary
-                  renderError={() => (
-                    <Box justifyContent="center" width="100%" padding={80}>
-                      <DefaultErrorMessage
-                        title="Error"
-                        description="An error occurred while rendering the app."
-                      />
-                    </Box>
-                  )}
-                >
+                <FallbackErrorBoundary>
                   <Suspense fallback={<LoadingPage />}>
                     <AppStateWrapper>
                       <ComponentLayout>
@@ -116,7 +96,7 @@ function App(props: AppContextWithComponentLayout & AppInitialProps) {
                       </ComponentLayout>
                     </AppStateWrapper>
                   </Suspense>
-                </BareErrorBoundary>
+                </FallbackErrorBoundary>
               </TooltipProvider>
             </ThemeProvider>
           </RemoveDarkMode>
@@ -165,29 +145,7 @@ function AppStateWrapper({ children }: { children: ReactNode }) {
 
   return (
     <Provider store={state.store}>
-      <EditorErrorBoundary
-        renderError={(error) => {
-          return (
-            <Box
-              position="absolute"
-              top={64}
-              width="100%"
-              justifyContent="center"
-              flexDirection="column"
-            >
-              <BlankSlate>
-                <BlankSlateIcon
-                  lineColor="tomato11"
-                  backgroundColor="tomato3"
-                  name="alert"
-                />
-                <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
-                <RenderErrorDescription error={error} />
-              </BlankSlate>
-            </Box>
-          );
-        }}
-      >
+      <AppStateErrorBoundary>
         <Suspense fallback={<LoadingPage />}>
           <AppStateValidator>
             <ConnectedRouter Router={Router}>
@@ -200,40 +158,14 @@ function AppStateWrapper({ children }: { children: ReactNode }) {
           </AppStateValidator>
           <ToastContainer />
         </Suspense>
-      </EditorErrorBoundary>
+      </AppStateErrorBoundary>
     </Provider>
   );
 }
 
-function RenderErrorDescription(args: { error: unknown }) {
-  const { error } = args;
-
-  if (isUnauthorizedError(error)) {
-    return (
-      <Box flexDirection="column" gap={16} margin={{ top: 8 }}>
-        <Box flexDirection="column" gap={8} alignItems="center">
-          <Text variant="h3" align="center">
-            It seems like you don't have access to this repository
-          </Text>
-          <Text align="center">
-            Check that the repository name is correct, then contact your
-            repository administrator.
-          </Text>
-        </Box>
-        <LogoutButton
-          onLogoutSuccess={() => window.location.reload()}
-          invalidateOnSuccess={false}
-          sx={{ alignSelf: "center" }}
-        >
-          Log out
-        </LogoutButton>
-      </Box>
-    );
-  }
-
-  return <BlankSlateDescription>{JSON.stringify(error)}</BlankSlateDescription>;
-}
-
+/** This is where we should check for unwanted states that should prevent the
+ * user from using the app, and trigger the {@link AppStateErrorBoundary} to
+ * display something explaining why. */
 function AppStateValidator(props: { children: ReactNode }) {
   const activeEnvironment = useActiveEnvironment({ suspense: true });
 

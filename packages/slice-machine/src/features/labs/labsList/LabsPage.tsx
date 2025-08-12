@@ -3,7 +3,7 @@ import Head from "next/head";
 import { type FC, ReactNode, Suspense } from "react";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { ErrorBoundary } from "@/ErrorBoundary";
+import { DefaultErrorBoundary } from "@/errorBoundaries";
 import {
   AppLayout,
   AppLayoutBreadcrumb,
@@ -19,7 +19,7 @@ export const LabsPage: FC = () => {
       <Head>
         <title>Labs - Slice Machine</title>
       </Head>
-      <ErrorBoundary
+      <DefaultErrorBoundary
         renderError={() => (
           <LabsPageLayout>
             <Box alignItems="center" justifyContent="center">
@@ -42,7 +42,7 @@ export const LabsPage: FC = () => {
             <LabsList />
           </LabsPageLayout>
         </Suspense>
-      </ErrorBoundary>
+      </DefaultErrorBoundary>
     </>
   );
 };

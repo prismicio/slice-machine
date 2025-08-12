@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
 import { saveSliceMock, telemetry } from "@/apiClient";
-import { ErrorBoundary } from "@/ErrorBoundary";
+import { DefaultErrorBoundary } from "@/errorBoundaries";
 import useThrottle from "@/hooks/useThrottle";
 import ScreenshotPreviewModal from "@/legacy/components/ScreenshotPreviewModal";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
@@ -287,7 +287,7 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
                 overflowY: "auto",
               }}
             >
-              <ErrorBoundary
+              <DefaultErrorBoundary
                 renderError={() => (
                   <DefaultErrorMessage
                     title="Editor error"
@@ -315,7 +315,7 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
                     />
                   </QueryClientProvider>
                 </Suspense>
-              </ErrorBoundary>
+              </DefaultErrorBoundary>
             </Flex>
           ) : null}
         </Flex>
