@@ -135,7 +135,7 @@ const LoginModal: React.FunctionComponent = () => {
 
   return (
     <SliceMachineModal
-      isOpen={isOpen}
+      isOpen={isLoginLoading || isOpen}
       shouldCloseOnOverlayClick
       onRequestClose={closeModals}
       contentLabel={"login_modal"}
