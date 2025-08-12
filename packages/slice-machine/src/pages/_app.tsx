@@ -222,7 +222,7 @@ function RenderErrorDescription(args: { error: unknown }) {
         </Box>
         <LogoutButton
           onLogoutSuccess={() => window.location.reload()}
-          refetchOnSuccess={false}
+          invalidateOnSuccess={false}
           sx={{ alignSelf: "center" }}
         >
           Log out

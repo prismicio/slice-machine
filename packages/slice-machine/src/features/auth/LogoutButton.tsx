@@ -12,12 +12,15 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 interface LogoutButtonProps {
   children?: ReactNode;
   onLogoutSuccess?: () => void;
-  refetchOnSuccess?: boolean;
+  /** Whether to, after logging out, invalidate queries that are currently
+   * dependent on the state of authentication.
+   * @default true */
+  invalidateOnSuccess?: boolean;
   sx?: SX;
 }
 
 export function LogoutButton(props: LogoutButtonProps) {
-  const { children, onLogoutSuccess, refetchOnSuccess = true, sx } = props;
+  const { children, onLogoutSuccess, invalidateOnSuccess = true, sx } = props;
 
   const { refreshState } = useSliceMachineActions();
   const queryClient = useQueryClient();
@@ -30,7 +33,7 @@ export function LogoutButton(props: LogoutButtonProps) {
 
     Sentry.setUser({ id: serverState.env.shortId });
 
-    if (refetchOnSuccess) {
+    if (invalidateOnSuccess) {
       // refresh queries to update the UI
       await Promise.all([
         queryClient.invalidateQueries({
