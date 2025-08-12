@@ -6,6 +6,7 @@ import { AnyAction, Store } from "redux";
 import { BaseStyles, ThemeProvider as ThemeUIThemeProvider } from "theme-ui";
 
 import { DefaultErrorBoundary } from "@/errorBoundaries";
+import { QueryClientProvider } from "@/queryClient";
 
 import configureStore from "../../src/redux/store";
 import type { SliceMachineStoreType } from "../../src/redux/type";
@@ -44,15 +45,17 @@ function render(
     children: any;
   }) {
     return (
-      <ThemeUIThemeProvider theme={theme}>
-        <TooltipProvider>
-          <BaseStyles>
-            <Provider store={store}>
-              <DefaultErrorBoundary>{children}</DefaultErrorBoundary>
-            </Provider>
-          </BaseStyles>
-        </TooltipProvider>
-      </ThemeUIThemeProvider>
+      <QueryClientProvider>
+        <ThemeUIThemeProvider theme={theme}>
+          <TooltipProvider>
+            <BaseStyles>
+              <Provider store={store}>
+                <DefaultErrorBoundary>{children}</DefaultErrorBoundary>
+              </Provider>
+            </BaseStyles>
+          </TooltipProvider>
+        </ThemeUIThemeProvider>
+      </QueryClientProvider>
     );
   }
   return {
