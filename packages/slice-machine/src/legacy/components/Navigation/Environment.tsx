@@ -5,7 +5,7 @@ import {
 import { useState } from "react";
 
 import { getState, telemetry } from "@/apiClient";
-import { setEnvironment } from "@/features/environments/actions/setEnvironment";
+import { useSetEnvironment } from "@/features/environments/actions/useSetEnvironment";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { useEnvironments } from "@/features/environments/useEnvironments";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
@@ -28,6 +28,7 @@ export function Environment() {
   const authStatus = useAuthStatus();
   const [isSwitchingEnv, setIsSwitchingEnv] = useState(false);
   const { autoSyncStatus } = useAutoSync();
+  const setEnvironment = useSetEnvironment();
 
   async function onSelect(environment: EnvironmentType) {
     if (activeEnvironment?.name === environment.name) {
