@@ -135,7 +135,7 @@ test("I see an error page if I'm not authorized", async ({
   page,
 }) => {
   procedures.mock(
-    "prismicRepository.fetchEnvironments",
+    "project.fetchActiveEnvironment",
     () => {
       const error = new Error();
       error.name = "SMUnauthorizedError";
