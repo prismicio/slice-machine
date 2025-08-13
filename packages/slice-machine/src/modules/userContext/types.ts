@@ -1,7 +1,6 @@
 export enum AuthStatus {
   AUTHORIZED = "authorized",
-  /** User is not logged in. */
-  UNAUTHORIZED = "unauthorized",
+  UNAUTHENTICATED = "unauthenticated",
   FORBIDDEN = "forbidden",
   UNKNOWN = "unknown",
 }

@@ -4,7 +4,6 @@ import {
   BlankSlateIcon,
   BlankSlateTitle,
   Box,
-  DefaultErrorMessage,
   ErrorBoundary as EditorUiErrorBoundary,
   Text,
 } from "@prismicio/editor-ui";
@@ -20,7 +19,7 @@ import {
   useRef,
 } from "react";
 
-import { LogoutButton } from "@/features/auth/LogoutButton";
+import { ReloadLogoutButton } from "@/features/auth/LogoutButton";
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 
 type DefaultErrorBoundaryProps = Pick<
@@ -56,25 +55,6 @@ export const DefaultErrorBoundary: FC<DefaultErrorBoundaryProps> = (props) => {
     />
   );
 };
-
-/** Simple error boundary that doesn't access the store or have other state
- * dependencies. Usually used as the top-level error boundary. */
-export function FallbackErrorBoundary(props: PropsWithChildren) {
-  return (
-    <EditorUiErrorBoundary
-      renderError={() => (
-        <Box justifyContent="center" width="100%" padding={80}>
-          <DefaultErrorMessage
-            title="Error"
-            description="An error occurred while rendering the app."
-          />
-        </Box>
-      )}
-    >
-      {props.children}
-    </EditorUiErrorBoundary>
-  );
-}
 
 export function AppStateErrorBoundary(props: PropsWithChildren) {
   return (
@@ -121,13 +101,7 @@ function RenderErrorDescription(args: { error: unknown }) {
             repository administrator.
           </Text>
         </Box>
-        <LogoutButton
-          onLogoutSuccess={() => window.location.reload()}
-          invalidateOnSuccess={false}
-          sx={{ alignSelf: "center" }}
-        >
-          Log out
-        </LogoutButton>
+        <ReloadLogoutButton sx={{ alignSelf: "center" }} />
       </Box>
     );
   }

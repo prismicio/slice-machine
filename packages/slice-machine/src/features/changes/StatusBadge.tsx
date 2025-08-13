@@ -73,7 +73,7 @@ function getStatusBadgeContent(
             "Data from the remote repository could not be fetched (no internet connection).",
         };
       }
-      if (args.authStatus === AuthStatus.UNAUTHORIZED) {
+      if (args.authStatus === AuthStatus.UNAUTHENTICATED) {
         return {
           badgeColor: "grey",
           badgeTitle: "Unknown",

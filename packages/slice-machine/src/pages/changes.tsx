@@ -114,7 +114,7 @@ const Changes: React.FunctionComponent = () => {
     if (!isOnline) {
       return <OfflinePage />;
     }
-    if (authStatus === AuthStatus.UNAUTHORIZED) {
+    if (authStatus === AuthStatus.UNAUTHENTICATED) {
       return <UnauthenticatedView />;
     }
     if (numberOfChanges === 0) {
@@ -160,7 +160,7 @@ const Changes: React.FunctionComponent = () => {
               disabled={
                 numberOfChanges === 0 ||
                 !isOnline ||
-                authStatus === AuthStatus.UNAUTHORIZED ||
+                authStatus === AuthStatus.UNAUTHENTICATED ||
                 authStatus === AuthStatus.FORBIDDEN ||
                 isSyncing
               }

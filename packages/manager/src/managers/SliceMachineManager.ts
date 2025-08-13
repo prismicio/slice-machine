@@ -248,7 +248,7 @@ export class SliceMachineManager {
 			(profile
 				? undefined
 				: {
-						name: "__stub__",
+						name: UnauthenticatedError.name,
 						message: "__stub__",
 						reason: "__stub__",
 						status: 401, // Needed to trigger the unauthorized flow.
