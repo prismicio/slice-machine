@@ -127,7 +127,6 @@ function AppStateWrapper({ children }: { children: ReactNode }) {
     queryKey: ["getInitialState"],
     queryFn: async () => {
       const serverState = await getState();
-
       const { store, persistor } = configureStore({
         environment: serverState.env,
         availableCustomTypes: {
@@ -144,6 +143,8 @@ function AppStateWrapper({ children }: { children: ReactNode }) {
 
       return { serverState, store, persistor };
     },
+    staleTime: Infinity,
+    gcTime: Infinity,
   });
 
   return (
