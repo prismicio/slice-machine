@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
-import { clearAuth as managerLogout, getState } from "@/apiClient";
+import { clearAuth, getState } from "@/apiClient";
 import { GetActiveEnvironmentQueryKey } from "@/features/environments/useActiveEnvironment";
 import { GetEnvironmentsQueryKey } from "@/features/environments/useEnvironments";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
@@ -15,7 +15,7 @@ export function EnvironmentLogoutButton() {
   const queryClient = useQueryClient();
 
   async function onClick() {
-    await managerLogout();
+    await clearAuth();
 
     const serverState = await getState();
     refreshState(serverState);
@@ -51,7 +51,7 @@ export function ReloadLogoutButton(props: ReloadLogoutButtonProps) {
   const router = useRouter();
 
   async function onClick() {
-    await managerLogout();
+    await clearAuth();
     Sentry.setUser({ id: undefined });
     router.reload();
   }
