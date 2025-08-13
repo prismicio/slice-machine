@@ -1,14 +1,9 @@
-import { Text, useMediaQuery } from "@prismicio/editor-ui";
+import { Text } from "@prismicio/editor-ui";
 
 import { useSliceMachineRunningVersion } from "@/hooks/useSliceMachineRunningVersion";
 
 export function SliceMachineVersion() {
   const sliceMachineRunningVersion = useSliceMachineRunningVersion();
-  const isCollapsed = useMediaQuery({ max: "medium" });
-
-  if (isCollapsed) {
-    return null;
-  }
 
   return (
     <Text
