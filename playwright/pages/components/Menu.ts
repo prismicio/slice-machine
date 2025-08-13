@@ -61,7 +61,6 @@ export class Menu {
 
     this.prismicMcpLink = this.menu.getByRole("link", {
       name: "Prismic MCP",
-      exact: true,
     });
     this.changelogLink = this.menu.getByRole("link", {
       name: "Changelog",
