@@ -102,6 +102,19 @@ export function Navigation() {
           </ErrorBoundary>
 
           <NavigationItem
+            title="Documentation"
+            href={documentationLink}
+            target="_blank"
+            Icon={MenuBookIcon}
+            onClick={() => {
+              void telemetry.track({
+                event: "navigation:documentation-link-clicked",
+                framework: adapter,
+              });
+            }}
+          />
+
+          <NavigationItem
             title="Prismic MCP"
             href="https://prismic.io/docs/ai#code-with-prismics-mcp-server"
             target="_blank"
@@ -113,19 +126,6 @@ export function Navigation() {
                 event: "sidebar:link-clicked",
                 link_name: "prismic_mcp",
                 source: "slice_machine_sidebar",
-              });
-            }}
-          />
-
-          <NavigationItem
-            title="Documentation"
-            href={documentationLink}
-            target="_blank"
-            Icon={MenuBookIcon}
-            onClick={() => {
-              void telemetry.track({
-                event: "navigation:documentation-link-clicked",
-                framework: adapter,
               });
             }}
           />
