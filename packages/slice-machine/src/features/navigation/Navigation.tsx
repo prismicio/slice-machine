@@ -1,4 +1,10 @@
-import { ActionList, Box, Separator, Skeleton } from "@prismicio/editor-ui";
+import {
+  ActionList,
+  Badge,
+  Box,
+  Separator,
+  Skeleton,
+} from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { Suspense } from "react";
 
@@ -10,6 +16,7 @@ import { RepositoryInfo } from "@/features/navigation/RepositoryInfo";
 import { OnboardingGuide } from "@/features/onboarding";
 import { useAdapterName } from "@/hooks/useAdapterName";
 import { useMarketingContent } from "@/hooks/useMarketingContent";
+import { CodeIcon } from "@/icons/CodeIcon";
 import { FolderIcon } from "@/icons/FolderIcon";
 import { LightningIcon } from "@/icons/Lightning";
 import { MenuBookIcon } from "@/icons/MenuBookIcon";
@@ -93,6 +100,7 @@ export function Navigation() {
               <OnboardingGuide />
             </Suspense>
           </ErrorBoundary>
+
           <NavigationItem
             title="Documentation"
             href={documentationLink}
@@ -102,6 +110,22 @@ export function Navigation() {
               void telemetry.track({
                 event: "navigation:documentation-link-clicked",
                 framework: adapter,
+              });
+            }}
+          />
+
+          <NavigationItem
+            title="Prismic MCP"
+            href="https://prismic.io/docs/ai#code-with-prismics-mcp-server"
+            target="_blank"
+            Icon={CodeIcon}
+            RightElement={<Badge title="New" color="indigo" />}
+            tooltip="Connect Prismic MCP to your editor (like Cursor) for AI-powered coding."
+            onClick={() => {
+              void telemetry.track({
+                event: "sidebar:link-clicked",
+                link_name: "prismic_mcp",
+                source: "slice_machine_sidebar",
               });
             }}
           />

@@ -13,6 +13,7 @@ type NavigationItemPropsBase = {
   active?: boolean;
   Icon: FC<SVGProps<SVGSVGElement>>;
   RightElement?: ReactNode;
+  tooltip?: string;
 };
 
 type NavigationLinkItemProps = NavigationItemPropsBase & {
@@ -32,7 +33,8 @@ type NavigationButtonItemProps = NavigationItemPropsBase & {
 type NavigationItemProps = NavigationLinkItemProps | NavigationButtonItemProps;
 
 export function NavigationItem(props: NavigationItemProps) {
-  const { title, href, target, active, Icon, RightElement, onClick } = props;
+  const { title, href, target, active, Icon, RightElement, onClick, tooltip } =
+    props;
 
   const isCollapsed = useMediaQuery({ max: "medium" });
 
@@ -45,7 +47,7 @@ export function NavigationItem(props: NavigationItemProps) {
       textVariant="normal"
       backgroundColor="transparent"
       renderStartIcon={ItemIcon}
-      endAdornment={RightElement}
+      endAdornment={isCollapsed ? undefined : RightElement}
       selected={active}
     >
       {isCollapsed ? null : title}
@@ -53,7 +55,11 @@ export function NavigationItem(props: NavigationItemProps) {
   );
 
   return (
-    <Tooltip content={title} side="right" visible={isCollapsed}>
+    <Tooltip
+      content={Boolean(tooltip) ? tooltip ?? "" : title}
+      side="right"
+      visible={Boolean(tooltip) ? undefined : isCollapsed}
+    >
       {href !== undefined ? (
         <Link
           href={href}
