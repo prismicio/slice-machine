@@ -46,6 +46,8 @@ export const SegmentEventType = {
 	sharedOnboarding_tutorial: "shared-onboarding:follow-tutorial",
 	sliceGenerationFeedback: "slice-generation-feedback",
 	navigation_documentationLinkClicked: "navigation:documentation-link-clicked",
+	sidebar_link_clicked: "sidebar:link-clicked",
+	mcp_promo_link_clicked: "mcp:promo-link-clicked",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -104,6 +106,8 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sliceGenerationFeedback]: "Slice Generation Feedback",
 	[SegmentEventType.navigation_documentationLinkClicked]:
 		"SliceMachine Documentation Link Clicked",
+	[SegmentEventType.sidebar_link_clicked]: "Sidebar Link Clicked",
+	[SegmentEventType.mcp_promo_link_clicked]: "MCP Promo Link Clicked",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -424,6 +428,22 @@ type NavigationDocumentationLinkClicked = SegmentEvent<
 	}
 >;
 
+type SidebarLinkClicked = SegmentEvent<
+	typeof SegmentEventType.sidebar_link_clicked,
+	{
+		link_name: string;
+		source: string;
+	}
+>;
+
+type McpPromoLinkClicked = SegmentEvent<
+	typeof SegmentEventType.mcp_promo_link_clicked,
+	{
+		source: string;
+		target: string;
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -461,4 +481,6 @@ export type SegmentEvents =
 	| SliceMachinePostPushToastCtaClicked
 	| SliceMachineExperimentExposure
 	| SliceGenerationFeedback
-	| NavigationDocumentationLinkClicked;
+	| NavigationDocumentationLinkClicked
+	| SidebarLinkClicked
+	| McpPromoLinkClicked;
