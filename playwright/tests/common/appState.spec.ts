@@ -51,10 +51,10 @@ test("I see an error page if I'm not authorized", async ({
 
   await page.goto("/");
   await expect(page.getByText("Failed to load Slice Machine")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
   await expect(
     page.getByText("You don't have access to this repository."),
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
 
   expect(fetchActiveEnvironmentCalled).toBe(true);
 });
@@ -80,6 +80,7 @@ test("I see an error page if my active environment is invalid", async ({
   await expect(
     page.getByText("Your current environment is invalid."),
   ).toBeVisible();
+  await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
 
   expect(fetchActiveEnvironmentCalled).toBe(true);
 });

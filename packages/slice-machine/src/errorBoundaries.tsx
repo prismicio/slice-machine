@@ -111,18 +111,21 @@ function RenderErrorDescription(args: { error: unknown }) {
   if (isInvalidActiveEnvironmentError(error)) {
     return (
       <CommonErrorBox>
-        <Text variant="h3" align="center">
-          Your current environment is invalid.
-        </Text>
-        <Text align="center">
-          Check with your repository administrator that you have permissions and
-          correctly configured your environment for the current repository. For
-          more details, consult the{" "}
-          <Link href="https://prismic.io/docs/environments" target="_blank">
-            documentation
-          </Link>
-          .
-        </Text>
+        <Box flexDirection="column" gap={8} alignItems="center">
+          <Text variant="h3" align="center">
+            Your current environment is invalid.
+          </Text>
+          <Text align="center">
+            Check with your repository administrator that you have permissions
+            and correctly configured your environment for the current
+            repository. For more details, consult the{" "}
+            <Link href="https://prismic.io/docs/environments" target="_blank">
+              documentation
+            </Link>
+            .
+          </Text>
+        </Box>
+        <ReloadLogoutButton sx={{ alignSelf: "center" }} />
       </CommonErrorBox>
     );
   }
