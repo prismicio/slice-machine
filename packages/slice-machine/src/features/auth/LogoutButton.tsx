@@ -63,7 +63,7 @@ export function ReloadLogoutButton(props: ReloadLogoutButtonProps) {
       color="grey"
       sx={sx}
     >
-      Logout
+      Log out
     </Button>
   );
 }
