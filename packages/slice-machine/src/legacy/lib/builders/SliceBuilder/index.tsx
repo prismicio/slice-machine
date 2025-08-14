@@ -4,6 +4,7 @@ import { type FC } from "react";
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { AutoSaveStatusIndicator } from "@/features/autoSave/AutoSaveStatusIndicator";
 import { FloatingBackButton } from "@/features/slices/sliceBuilder/FloatingBackButton";
+import { McpPromoLink } from "@/features/slices/sliceBuilder/McpPromoLink";
 import { useSliceState } from "@/features/slices/sliceBuilder/SliceBuilderProvider";
 import {
   AppLayout,
@@ -35,6 +36,7 @@ export const SliceBuilder: FC = () => {
           <BreadcrumbItem active>{slice.model.name}</BreadcrumbItem>
         </AppLayoutBreadcrumb>
         <AppLayoutActions>
+          <McpPromoLink />
           <AutoSaveStatusIndicator status={actionQueueStatus} />
           <SimulatorButton disabled={actionQueueStatus !== "done"} />
         </AppLayoutActions>
