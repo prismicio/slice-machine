@@ -3,6 +3,7 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { generateLibraries, generateTypes } from "../../mocks";
 import { savePrismicAuthFile } from "../../utils/savePrismicAuthFile";
+import { UnauthenticatedError } from "@slicemachine/manager";
 
 test("I cannot see the login screen when logged in", async ({
   changesPage,
@@ -22,6 +23,7 @@ test("I can see the login screen when logged out", async ({
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     clientError: {
+      name: new UnauthenticatedError().name,
       status: 401,
     },
   }));

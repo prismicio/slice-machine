@@ -1,6 +1,10 @@
 import { expect } from "@playwright/test";
 
 import { test } from "../../fixtures";
+import {
+  UnauthorizedError,
+  InvalidActiveEnvironmentError,
+} from "@slicemachine/manager";
 
 test("Should not render the remaining app tree when the state is not correct", async ({
   procedures,
@@ -13,7 +17,7 @@ test("Should not render the remaining app tree when the state is not correct", a
     () => {
       fetchActiveEnvironmentCalled = true;
       const error = new Error();
-      error.name = "SMUnauthorizedError";
+      error.name = new UnauthorizedError().name;
       throw error;
     },
     { execute: false },
@@ -43,7 +47,7 @@ test("I see an error page if I'm not authorized", async ({
     () => {
       fetchActiveEnvironmentCalled = true;
       const error = new Error();
-      error.name = "SMUnauthorizedError";
+      error.name = new UnauthorizedError().name;
       throw error;
     },
     { execute: false },
@@ -69,7 +73,7 @@ test("I see an error page if my active environment is invalid", async ({
     () => {
       fetchActiveEnvironmentCalled = true;
       const error = new Error();
-      error.name = "SMInvalidActiveEnvironmentError";
+      error.name = new InvalidActiveEnvironmentError().name;
       throw error;
     },
     { execute: false },

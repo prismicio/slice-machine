@@ -1,4 +1,4 @@
-import { UnauthenticatedError } from "@slicemachine/manager/client";
+import { UnauthenticatedError } from "@slicemachine/manager";
 import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
