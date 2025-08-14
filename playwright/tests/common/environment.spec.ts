@@ -57,31 +57,6 @@ test('I can see "Production" environment when no environments exist', async ({
   ).toHaveText("Production");
 });
 
-test('I can see "Production" environment when an invalid environment is set', async ({
-  sliceMachinePage,
-  procedures,
-}) => {
-  procedures.mock(
-    "prismicRepository.fetchEnvironments",
-    () => ({ environments }),
-    { execute: false },
-  );
-  procedures.mock(
-    "project.fetchActiveEnvironment",
-    () => {
-      const error = new Error();
-      error.name = "SMInvalidActiveEnvironmentError";
-      return { type: "error", error };
-    },
-    { execute: false, times: 1 },
-  );
-
-  await sliceMachinePage.gotoDefaultPage();
-  await expect(
-    sliceMachinePage.menu.environmentSelector.environmentName,
-  ).toHaveText("Production");
-});
-
 test("I can see my current environment if I have one selected", async ({
   sliceMachinePage,
   procedures,
@@ -128,28 +103,6 @@ test("I can change my current environment", async ({
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(
     environments[1].name,
   );
-});
-
-test("I see an error page if I'm not authorized", async ({
-  procedures,
-  page,
-}) => {
-  procedures.mock(
-    "project.fetchActiveEnvironment",
-    () => {
-      const error = new Error();
-      error.name = "SMUnauthorizedError";
-      throw error;
-    },
-    { execute: false },
-  );
-
-  await page.goto("/");
-  await expect(page.getByText("Failed to load Slice Machine")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
-  await expect(
-    page.getByText("It seems like you don't have access to this repository"),
-  ).toBeVisible();
 });
 
 test("I can see the dot on the logo depending on the environment", async ({

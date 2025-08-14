@@ -8,9 +8,11 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import {
+  isInvalidActiveEnvironmentError,
   isUnauthenticatedError,
   isUnauthorizedError,
 } from "@slicemachine/manager/client";
+import Link from "next/link";
 import {
   type ComponentPropsWithoutRef,
   type FC,
@@ -91,10 +93,10 @@ function RenderErrorDescription(args: { error: unknown }) {
 
   if (isUnauthorizedError(error)) {
     return (
-      <Box flexDirection="column" gap={16} margin={{ top: 8 }}>
+      <CommonErrorBox>
         <Box flexDirection="column" gap={8} alignItems="center">
           <Text variant="h3" align="center">
-            It seems like you don't have access to this repository
+            You don't have access to this repository.
           </Text>
           <Text align="center">
             Check that the repository name is correct, then contact your
@@ -102,9 +104,44 @@ function RenderErrorDescription(args: { error: unknown }) {
           </Text>
         </Box>
         <ReloadLogoutButton sx={{ alignSelf: "center" }} />
-      </Box>
+      </CommonErrorBox>
+    );
+  }
+
+  if (isInvalidActiveEnvironmentError(error)) {
+    return (
+      <CommonErrorBox>
+        <Text variant="h3" align="center">
+          Your current environment is invalid.
+        </Text>
+        <Text align="center">
+          Check with your repository administrator that you have permissions and
+          correctly configured your environment for the current repository. For
+          more details, consult the{" "}
+          <Link href="https://prismic.io/docs/environments" target="_blank">
+            documentation
+          </Link>
+          .
+        </Text>
+      </CommonErrorBox>
     );
   }
 
   return <BlankSlateDescription>{JSON.stringify(error)}</BlankSlateDescription>;
+}
+
+function CommonErrorBox(args: { children: React.ReactNode }) {
+  const { children } = args;
+
+  return (
+    <Box
+      flexDirection="column"
+      alignItems="center"
+      gap={16}
+      margin={{ top: 8 }}
+      maxWidth={768}
+    >
+      {children}
+    </Box>
+  );
 }
