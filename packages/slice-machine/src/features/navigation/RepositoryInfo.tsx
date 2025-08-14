@@ -14,27 +14,33 @@ export function RepositoryInfo() {
   const isCollapsed = useMediaQuery({ max: "medium" });
 
   return (
-    <Box justifyContent="center" height={48}>
-      {!isCollapsed && (
-        <Box flexGrow={1} flexDirection="column" gap={2} maxWidth="100%">
-          <Text noWrap component="h1" variant="h3">
+    <Box flexDirection="column" gap={2}>
+      <Box
+        justifyContent={isCollapsed ? "center" : "space-between"}
+        alignItems="center"
+        gap={2}
+      >
+        {!isCollapsed && (
+          <Text noWrap variant="h3">
             {repositoryName}
           </Text>
-
-          <Text noWrap component="h2" variant="small" color="grey11">
-            {repositoryDomain}
-          </Text>
-        </Box>
+        )}
+        <Tooltip content="Open Prismic repository" side="right">
+          <IconButton
+            data-testid="prismic-repository-link"
+            sx={{ flexShrink: 0 }}
+            icon="openInNew"
+            onClick={() => {
+              window.open(repositoryUrl, "_blank");
+            }}
+          />
+        </Tooltip>
+      </Box>
+      {!isCollapsed && (
+        <Text noWrap variant="small" color="grey11">
+          {repositoryDomain}
+        </Text>
       )}
-      <Tooltip content="Open Prismic repository" side="right">
-        <IconButton
-          data-testid="prismic-repository-link"
-          icon="openInNew"
-          onClick={() => {
-            window.open(repositoryUrl, "_blank");
-          }}
-        />
-      </Tooltip>
     </Box>
   );
 }
