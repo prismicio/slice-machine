@@ -3,7 +3,7 @@ import { expect } from "@playwright/test";
 import { test } from "../../fixtures";
 import { generateLibraries, generateTypes } from "../../mocks";
 import { savePrismicAuthFile } from "../../utils/savePrismicAuthFile";
-import { UnauthenticatedError } from "@slicemachine/manager";
+import { UnauthenticatedError } from "@slicemachine/manager/client";
 
 test("I cannot see the login screen when logged in", async ({
   changesPage,

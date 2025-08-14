@@ -4,7 +4,7 @@ import { test } from "../../fixtures";
 import {
   UnauthorizedError,
   InvalidActiveEnvironmentError,
-} from "@slicemachine/manager";
+} from "@slicemachine/manager/client";
 
 test("Should not render the remaining app tree when the state is not correct", async ({
   procedures,
