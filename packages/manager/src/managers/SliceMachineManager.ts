@@ -201,17 +201,23 @@ export class SliceMachineManager {
 					} catch (error) {
 						if (error instanceof prismicCustomTypesClient.ForbiddenError) {
 							authError = {
-								name: "__stub__",
+								name: "ForbiddenError",
 								message: "__stub__",
 								reason: "__stub__",
 								status: 403,
 							};
 						} else if (
-							error instanceof UnauthenticatedError ||
 							error instanceof prismicCustomTypesClient.UnauthorizedError
 						) {
 							authError = {
-								name: "__stub__",
+								name: "UnauthorizedError",
+								message: "__stub__",
+								reason: "__stub__",
+								status: 401,
+							};
+						} else if (error instanceof UnauthenticatedError) {
+							authError = {
+								name: new UnauthenticatedError().name,
 								message: "__stub__",
 								reason: "__stub__",
 								status: 401,
@@ -242,7 +248,7 @@ export class SliceMachineManager {
 			(profile
 				? undefined
 				: {
-						name: "__stub__",
+						name: new UnauthenticatedError().name,
 						message: "__stub__",
 						reason: "__stub__",
 						status: 401, // Needed to trigger the unauthorized flow.

@@ -22,6 +22,7 @@ test("I can see the login screen when logged out", async ({
   procedures.mock("getState", ({ data }) => ({
     ...(data as Record<string, unknown>),
     clientError: {
+      name: "SMUnauthenticatedError",
       status: 401,
     },
   }));

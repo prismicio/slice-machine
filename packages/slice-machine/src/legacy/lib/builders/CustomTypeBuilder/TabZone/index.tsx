@@ -20,7 +20,7 @@ import {
   reorderField,
   updateField,
 } from "@/domain/customType";
-import { ErrorBoundary } from "@/ErrorBoundary";
+import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import {
   CustomTypes,
@@ -246,7 +246,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
   };
 
   return (
-    <ErrorBoundary>
+    <DefaultErrorBoundary>
       <Suspense
         fallback={
           <Box padding={32}>
@@ -297,7 +297,7 @@ const TabZone: FC<TabZoneProps> = ({ tabId }) => {
           />
         </List>
       </Suspense>
-    </ErrorBoundary>
+    </DefaultErrorBoundary>
   );
 };
 

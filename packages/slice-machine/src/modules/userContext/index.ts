@@ -1,3 +1,4 @@
+import { UnauthenticatedError } from "@slicemachine/manager/client";
 import { Reducer } from "redux";
 import { ActionType, createAction, getType } from "typesafe-actions";
 
@@ -92,10 +93,12 @@ const getAuthStatus = (
     case undefined: {
       return AuthStatus.AUTHORIZED;
     }
-    case 403: {
-      return AuthStatus.UNAUTHORIZED;
-    }
     case 401: {
+      if (clientError.name === new UnauthenticatedError().name) {
+        return AuthStatus.UNAUTHENTICATED;
+      }
+    }
+    case 403: {
       return AuthStatus.FORBIDDEN;
     }
     default: {

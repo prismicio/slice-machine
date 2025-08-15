@@ -17,9 +17,8 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import type { Environment } from "@slicemachine/manager/client";
 import { clsx } from "clsx";
 import type { FC, ReactNode } from "react";
-import { toast } from "react-toastify";
 
-import { LogoutButton } from "@/features/auth/LogoutButton";
+import { EnvironmentLogoutButton } from "@/features/auth/LogoutButton";
 import { LoginIcon } from "@/icons/LoginIcon";
 import { LogoIcon } from "@/icons/LogoIcon";
 
@@ -30,7 +29,7 @@ type SideNavEnvironmentSelectorProps = {
   disabled?: boolean;
   environments?: Environment[];
   loading?: boolean;
-  variant?: "default" | "offline" | "unauthorized" | "unauthenticated";
+  variant?: "default" | "offline" | "unauthenticated";
   onLogInClick?: () => void;
   onSelect?: (environment: Environment) => void | Promise<void>;
 };
@@ -141,11 +140,7 @@ export const SideNavEnvironmentSelector: FC<SideNavEnvironmentSelectorProps> = (
               />
             ) : undefined}
 
-            {variant === "default" && (
-              <LogoutButton
-                onLogoutSuccess={() => toast.success("Logged out")}
-              />
-            )}
+            {variant === "default" && <EnvironmentLogoutButton />}
           </Box>
         </>
       )}

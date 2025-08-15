@@ -1,5 +1,5 @@
 import { it, expect } from "vitest";
-import { createSliceMachineManager } from "../src";
+import { UnauthenticatedError, createSliceMachineManager } from "../src";
 import { createTestProject } from "./__testutils__/createTestProject";
 import { createTestPlugin } from "./__testutils__/createTestPlugin";
 
@@ -30,8 +30,8 @@ it("returns global Slice Machine state", async () => {
 		CustomTypeService: "https://api.internal.prismic.io/custom-type/",
 	});
 	expect(result.clientError).toStrictEqual({
+		name: new UnauthenticatedError().name,
 		message: "__stub__",
-		name: "__stub__",
 		reason: "__stub__",
 		status: 401,
 	});

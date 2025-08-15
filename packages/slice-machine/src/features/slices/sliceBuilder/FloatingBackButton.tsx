@@ -2,7 +2,7 @@ import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type FC, Suspense, useState } from "react";
 
-import { ErrorBoundary } from "@/ErrorBoundary";
+import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { useCustomType } from "@/features/customTypes/customTypesBuilder/useCustomType";
 import {
   CUSTOM_TYPES_CONFIG,
@@ -17,7 +17,7 @@ export const FloatingBackButton: FC = () => {
   const { source } = useRouteChange();
   const sourceCustomTypeId = getSourceCustomTypeId(source);
   return sourceCustomTypeId !== undefined ? (
-    <ErrorBoundary>
+    <DefaultErrorBoundary>
       <Suspense>
         <Box
           bottom={32}
@@ -29,7 +29,7 @@ export const FloatingBackButton: FC = () => {
           <BackButton sourceCustomTypeId={sourceCustomTypeId} />
         </Box>
       </Suspense>
-    </ErrorBoundary>
+    </DefaultErrorBoundary>
   ) : null;
 };
 
