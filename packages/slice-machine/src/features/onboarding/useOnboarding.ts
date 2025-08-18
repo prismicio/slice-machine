@@ -3,7 +3,6 @@ import { useRefGetter } from "@prismicio/editor-support/React";
 import { updateData, useRequest } from "@prismicio/editor-support/Suspense";
 import { toast } from "react-toastify";
 
-import { useSharedOnboardingExperiment } from "@/features/onboarding/useSharedOnboardingExperiment";
 import { managerClient } from "@/managerClient";
 
 const { fetchOnboarding, toggleOnboarding, toggleOnboardingStep } =
@@ -18,14 +17,8 @@ async function getOnboarding() {
   }
 }
 
-const noop = () => Promise.resolve(undefined);
-
 export function useOnboarding() {
-  const isSharedExperimentEligible = useSharedOnboardingExperiment().eligible;
-  const onboarding = useRequest(
-    isSharedExperimentEligible ? getOnboarding : noop,
-    [],
-  );
+  const onboarding = useRequest(getOnboarding, []);
   const getOnboardingState = useRefGetter(onboarding);
 
   function updateCache(newOnboardingState: OnboardingState) {
@@ -33,8 +26,6 @@ export function useOnboarding() {
   }
 
   async function toggleStep(stepId: OnboardingStepId) {
-    if (!isSharedExperimentEligible) return [];
-
     const onboardingState = getOnboardingState();
     if (!onboardingState) return [];
 
@@ -52,8 +43,6 @@ export function useOnboarding() {
   }
 
   async function toggleGuide() {
-    if (!isSharedExperimentEligible) return;
-
     const onboardingState = getOnboardingState();
     if (!onboardingState) return;
 
@@ -70,8 +59,6 @@ export function useOnboarding() {
   }
 
   async function completeStep(stepId: OnboardingStepId) {
-    if (!isSharedExperimentEligible) return;
-
     const onboardingState = getOnboardingState();
     if (!onboardingState) return;
 
