@@ -68,8 +68,7 @@ const RemoveDarkMode: FC<RemoveDarkModeProps> = ({ children }) => {
 };
 
 function App(props: AppContextWithComponentLayout & AppInitialProps) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { Component, pageProps } = props;
+  const { Component } = props;
 
   const ComponentLayout = Component.CustomLayout ?? SliceMachineApp;
 
@@ -89,7 +88,7 @@ function App(props: AppContextWithComponentLayout & AppInitialProps) {
                       <AppStateWrapper>
                         <AutoSyncProvider>
                           <ComponentLayout>
-                            <Component {...pageProps} />
+                            <Component {...props.pageProps} />
                           </ComponentLayout>
                         </AutoSyncProvider>
                       </AppStateWrapper>
