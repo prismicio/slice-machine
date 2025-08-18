@@ -52,7 +52,7 @@ test('I can see "Production" environment when no environments exist', async ({
   );
   procedures.mock(
     "prismicRepository.fetchEnvironments",
-    () => ({ environments: [] }),
+    () => ({ environments: environments.slice(0, 1) }),
     { execute: false },
   );
 
