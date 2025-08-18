@@ -896,17 +896,11 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 	protected async completeOnboardingSteps(): Promise<void> {
 		try {
-			const { value: onboardingExperimentVariant } =
-				(await this.manager.telemetry.getExperimentVariant(
-					"shared-onboarding-new",
-				)) ?? {};
-			if (onboardingExperimentVariant === "with-shared-onboarding") {
-				this.manager.prismicRepository.completeOnboardingStep(
-					"chooseLocale",
-					"createProject",
-					"setupSliceMachine",
-				);
-			}
+			this.manager.prismicRepository.completeOnboardingStep(
+				"chooseLocale",
+				"createProject",
+				"setupSliceMachine",
+			);
 		} catch (error) {
 			await this.trackError(error);
 		}
