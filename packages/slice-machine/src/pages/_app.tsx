@@ -143,6 +143,7 @@ function AppStateWrapper({ children }: { children: ReactNode }) {
 
       return { serverState, store, persistor };
     },
+    // avoid refetching
     staleTime: Infinity,
     gcTime: Infinity,
   });

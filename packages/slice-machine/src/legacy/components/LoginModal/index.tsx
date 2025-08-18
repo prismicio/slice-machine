@@ -108,7 +108,7 @@ const LoginModal: React.FunctionComponent = () => {
         ),
       );
       const { changedCustomTypes, changedSlices } = getUnSyncedChanges({
-        authStatus: AuthStatus.AUTHORIZED,
+        authStatus: AuthStatus.AUTHENTICATED,
         customTypes,
         isOnline: true,
         libraries: serverState.libraries,

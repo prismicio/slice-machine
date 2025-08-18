@@ -91,15 +91,12 @@ const getAuthStatus = (
 ): AuthStatus => {
   switch (clientError?.status) {
     case undefined: {
-      return AuthStatus.AUTHORIZED;
+      return AuthStatus.AUTHENTICATED;
     }
     case 401: {
       if (clientError.name === new UnauthenticatedError().name) {
         return AuthStatus.UNAUTHENTICATED;
       }
-    }
-    case 403: {
-      return AuthStatus.FORBIDDEN;
     }
     default: {
       return AuthStatus.UNKNOWN;

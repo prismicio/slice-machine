@@ -149,7 +149,7 @@ export const getModelStatus = (args: GetModelStatusArgs): ModelsStatuses => {
   const { slices, customTypes, isOnline, authStatus } = args;
 
   const userHasAccessToModels =
-    isOnline && authStatus === AuthStatus.AUTHORIZED;
+    isOnline && authStatus === AuthStatus.AUTHENTICATED;
 
   const modelsStatuses = {
     slices: computeStatuses(slices, userHasAccessToModels),

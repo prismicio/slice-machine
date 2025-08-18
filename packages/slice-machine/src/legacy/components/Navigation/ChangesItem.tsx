@@ -117,7 +117,7 @@ export const ChangesCount: FC<ChangesCountProps> = ({ color }) => {
 
   if (
     !isOnline ||
-    authStatus !== AuthStatus.AUTHORIZED ||
+    authStatus !== AuthStatus.AUTHENTICATED ||
     numberOfChanges === 0
   ) {
     return null;
