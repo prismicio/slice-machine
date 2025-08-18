@@ -4,9 +4,9 @@ import { FC, Suspense } from "react";
 
 import { telemetry } from "@/apiClient";
 import { ContentTabs } from "@/components/ContentTabs";
-import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { MarkdownRenderer } from "@/features/documentation/MarkdownRenderer";
 import { useDocumentation } from "@/features/documentation/useDocumentation";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAdapterName } from "@/hooks/useAdapterName";
 

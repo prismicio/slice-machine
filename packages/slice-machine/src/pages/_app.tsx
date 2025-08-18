@@ -31,8 +31,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { getState } from "@/apiClient";
-import { AppStateErrorBoundary } from "@/errorBoundaries";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
+import { AppStateErrorBoundary } from "@/features/errorBoundaries";
 import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
 import { RouteChangeProvider } from "@/hooks/useRouteChange";
 import SliceMachineApp from "@/legacy/components/App";

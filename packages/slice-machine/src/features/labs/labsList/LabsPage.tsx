@@ -3,7 +3,7 @@ import Head from "next/head";
 import { type FC, ReactNode, Suspense } from "react";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { DefaultErrorBoundary } from "@/errorBoundaries";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import {
   AppLayout,
   AppLayoutBreadcrumb,

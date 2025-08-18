@@ -20,8 +20,8 @@ import {
   reorderField,
   updateField,
 } from "@/domain/customType";
-import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import {
   CustomTypes,
   type TabField,

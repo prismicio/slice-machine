@@ -9,9 +9,9 @@ import { useRouter } from "next/router";
 import { Suspense } from "react";
 
 import { telemetry } from "@/apiClient";
-import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { RepositoryInfo } from "@/features/navigation/RepositoryInfo";
 import { OnboardingGuide } from "@/features/onboarding";
 import { useAdapterName } from "@/hooks/useAdapterName";

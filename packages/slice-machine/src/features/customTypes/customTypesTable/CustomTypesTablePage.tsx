@@ -9,8 +9,8 @@ import Head from "next/head";
 import { type FC, Suspense, useState } from "react";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
-import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import {
   AppLayout,
   AppLayoutActions,

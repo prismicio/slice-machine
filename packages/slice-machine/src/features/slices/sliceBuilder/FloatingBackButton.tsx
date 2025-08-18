@@ -2,13 +2,13 @@ import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
 import { type FC, Suspense, useState } from "react";
 
-import { DefaultErrorBoundary } from "@/errorBoundaries";
 import { useCustomType } from "@/features/customTypes/customTypesBuilder/useCustomType";
 import {
   CUSTOM_TYPES_CONFIG,
   matchesBuilderPagePathname,
   readBuilderPageDynamicSegment,
 } from "@/features/customTypes/customTypesConfig";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { type Route, useRouteChange } from "@/hooks/useRouteChange";
 import { CloseIcon } from "@/icons/CloseIcon";
 import { UndoIcon } from "@/icons/UndoIcon";

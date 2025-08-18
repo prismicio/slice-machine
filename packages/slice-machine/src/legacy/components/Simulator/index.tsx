@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
 import { saveSliceMock, telemetry } from "@/apiClient";
-import { DefaultErrorBoundary } from "@/errorBoundaries";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import useThrottle from "@/hooks/useThrottle";
 import ScreenshotPreviewModal from "@/legacy/components/ScreenshotPreviewModal";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";

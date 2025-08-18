@@ -3,7 +3,7 @@ import React, { Suspense } from "react";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 import { countMissingScreenshots } from "@/domain/slice";
-import { DefaultErrorBoundary } from "@/errorBoundaries";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { ModelsStatuses } from "@/features/sync/getUnSyncChanges";
 import { useScreenshotChangesModal } from "@/hooks/useScreenshotChangesModal";

@@ -30,11 +30,11 @@ import {
 } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect } from "react";
 
-import { DefaultErrorBoundary } from "@/errorBoundaries";
 import {
   revalidateGetCustomTypes,
   useCustomTypes as useCustomTypesRequest,
 } from "@/features/customTypes/useCustomTypes";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { isValidObject } from "@/utils/isValidObject";
 
 type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };

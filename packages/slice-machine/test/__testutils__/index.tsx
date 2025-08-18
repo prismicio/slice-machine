@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { AnyAction, Store } from "redux";
 import { BaseStyles, ThemeProvider as ThemeUIThemeProvider } from "theme-ui";
 
-import { DefaultErrorBoundary } from "@/errorBoundaries";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { QueryClientProvider } from "@/queryClient";
 
 import configureStore from "../../src/redux/store";
