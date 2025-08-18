@@ -113,6 +113,11 @@ function AppStateValidator(props: { children: ReactNode }) {
   const activeEnvironment = useActiveEnvironment({ suspense: true });
 
   if (
+    // We're using the fetchEnvironments request to check this because it can
+    // return an SMUnauthorizedError or SMInvalidActiveEnvironmentError
+    // according to the API response, so we handle both cases with just one
+    // request. We also perform the request in other parts of the app, so it can
+    // reuse its cache.
     isUnauthorizedError(activeEnvironment.error) ||
     isInvalidActiveEnvironmentError(activeEnvironment.error)
   ) {
