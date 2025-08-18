@@ -46,8 +46,13 @@ test('I can see "Production" environment when no environments exist', async ({
   procedures,
 }) => {
   procedures.mock(
+    "project.fetchActiveEnvironment",
+    () => ({ type: "ok", activeEnvironment: environments[0] }),
+    { execute: false },
+  );
+  procedures.mock(
     "prismicRepository.fetchEnvironments",
-    () => ({ environments: environments.slice(0, 1) }),
+    () => ({ environments: [] }),
     { execute: false },
   );
 
@@ -114,14 +119,14 @@ test("I can see the dot on the logo depending on the environment", async ({
     () => ({ environments }),
     { execute: false },
   );
-
-  await sliceMachinePage.gotoDefaultPage();
-
   procedures.mock(
     "project.fetchActiveEnvironment",
     () => ({ type: "ok", activeEnvironment: environments[0] }),
     { execute: false },
   );
+
+  await sliceMachinePage.gotoDefaultPage();
+
   await sliceMachinePage.menu.environmentSelector.selectEnvironment(
     environments[0].name,
   );
