@@ -9,9 +9,9 @@ import { useRouter } from "next/router";
 import { Suspense } from "react";
 
 import { telemetry } from "@/apiClient";
-import { ErrorBoundary } from "@/ErrorBoundary";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { RepositoryInfo } from "@/features/navigation/RepositoryInfo";
 import { OnboardingGuide } from "@/features/onboarding";
 import { useAdapterName } from "@/hooks/useAdapterName";
@@ -86,21 +86,20 @@ export function Navigation() {
           />
         </ActionList>
 
-        <ErrorBoundary>
+        <DefaultErrorBoundary>
           <Suspense>
             <UpdateInfo />
           </Suspense>
-        </ErrorBoundary>
+        </DefaultErrorBoundary>
       </Box>
 
       <Box flexDirection="column">
         <ActionList variant="compact">
-          <ErrorBoundary>
+          <DefaultErrorBoundary>
             <Suspense>
               <OnboardingGuide />
             </Suspense>
-          </ErrorBoundary>
-
+          </DefaultErrorBoundary>
           <NavigationItem
             title="Documentation"
             href={documentationLink}
@@ -136,11 +135,11 @@ export function Navigation() {
             Icon={LightningIcon}
             active={router.asPath.startsWith("/changelog")}
             RightElement={
-              <ErrorBoundary>
+              <DefaultErrorBoundary>
                 <Suspense fallback={<Skeleton height={16} />}>
                   <SliceMachineVersion />
                 </Suspense>
-              </ErrorBoundary>
+              </DefaultErrorBoundary>
             }
           />
         </ActionList>
