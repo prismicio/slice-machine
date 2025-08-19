@@ -3,6 +3,7 @@ import { rest } from "msw";
 
 type MockPrismicAuthAPIConfig = {
 	endpoint?: string;
+	obelixServiceEndpoint?: string;
 	existsEndpoint?: {
 		isSuccessful?: boolean;
 		expectedAuthenticationToken: string;
@@ -32,20 +33,33 @@ type MockPrismicAuthAPIConfig = {
 		signature: string;
 		documents: Record<string, unknown>;
 	};
+	getOnboardingEndpoint?: {
+		isSuccessful?: boolean;
+		failureReason?: string;
+		expectedAuthenticationToken: string;
+	};
+	toggleOnboardingStepEndpoint?: {
+		isSuccessful?: boolean;
+		failureReason?: string;
+		expectedAuthenticationToken: string;
+	};
 };
 
 export const mockPrismicRepositoryAPI = (
 	ctx: TestContext,
 	config: MockPrismicAuthAPIConfig,
 ): void => {
-	const endpoint = config.endpoint ?? "https://prismic.io/";
+	const coreEndpoint = config.endpoint ?? "https://prismic.io/";
+	const obelixServiceEndpoint =
+		config.obelixServiceEndpoint ??
+		"https://api.internal.prismic.io/repository/";
 
 	if (config.existsEndpoint) {
 		ctx.msw.use(
 			rest.get(
 				new URL(
 					`./app/dashboard/repositories/:domain/exists`,
-					endpoint,
+					coreEndpoint,
 				).toString(),
 				(req, res, ctx) => {
 					if (
@@ -76,7 +90,7 @@ export const mockPrismicRepositoryAPI = (
 	if (config.newEndpoint) {
 		ctx.msw.use(
 			rest.post(
-				new URL("./authentication/newrepository", endpoint).toString(),
+				new URL("./authentication/newrepository", coreEndpoint).toString(),
 				async (req, res, ctx) => {
 					if (req.url.searchParams.get("app") !== "slicemachine") {
 						return res(ctx.text(""), ctx.status(500));
@@ -118,7 +132,7 @@ export const mockPrismicRepositoryAPI = (
 	}
 
 	if (config.deleteEndpoint) {
-		const endpointWithDomain = new URL(endpoint);
+		const endpointWithDomain = new URL(coreEndpoint);
 		endpointWithDomain.hostname = `${config.deleteEndpoint.domain}.${endpointWithDomain.hostname}`;
 
 		ctx.msw.use(
@@ -162,7 +176,7 @@ export const mockPrismicRepositoryAPI = (
 	}
 
 	if (config.starterDocumentsEndpoint) {
-		const endpointWithDomain = new URL(endpoint);
+		const endpointWithDomain = new URL(coreEndpoint);
 		endpointWithDomain.hostname = `${config.starterDocumentsEndpoint.domain}.${endpointWithDomain.hostname}`;
 
 		ctx.msw.use(
@@ -194,6 +208,60 @@ export const mockPrismicRepositoryAPI = (
 							ctx.text(config.starterDocumentsEndpoint?.failureReason || ""),
 							ctx.status(500),
 						);
+					}
+				},
+			),
+		);
+	}
+
+	if (config.getOnboardingEndpoint) {
+		const { expectedAuthenticationToken: token, isSuccessful = true } =
+			config.getOnboardingEndpoint;
+
+		ctx.msw.use(
+			rest.get(
+				new URL(`./onboarding`, obelixServiceEndpoint).toString(),
+				(req, res, ctx) => {
+					if (
+						req.headers.get("Authorization") === `Bearer ${token}` &&
+						isSuccessful
+					) {
+						return res(
+							ctx.json({
+								completedSteps: [],
+								isDismissed: false,
+								context: {
+									framework: "next",
+									starterId: null,
+								},
+							}),
+						);
+					} else {
+						return res(ctx.status(500));
+					}
+				},
+			),
+		);
+	}
+
+	if (config.toggleOnboardingStepEndpoint) {
+		const { expectedAuthenticationToken: token, isSuccessful = true } =
+			config.toggleOnboardingStepEndpoint;
+
+		ctx.msw.use(
+			rest.patch(
+				new URL(
+					`./onboarding/:stepId/toggle`,
+					obelixServiceEndpoint,
+				).toString(),
+				(req, res, ctx) => {
+					if (
+						req.headers.get("Authorization") === `Bearer ${token}` &&
+						isSuccessful
+					) {
+						return res(ctx.json({ completedSteps: [req.params.stepId] }));
+					} else {
+						return res(ctx.status(500));
 					}
 				},
 			),
