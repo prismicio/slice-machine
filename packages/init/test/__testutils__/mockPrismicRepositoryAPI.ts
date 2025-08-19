@@ -236,9 +236,9 @@ export const mockPrismicRepositoryAPI = (
 								},
 							}),
 						);
-					} else {
-						return res(ctx.status(500));
 					}
+
+					return res(ctx.status(500));
 				},
 			),
 		);
@@ -260,9 +260,9 @@ export const mockPrismicRepositoryAPI = (
 						isSuccessful
 					) {
 						return res(ctx.json({ completedSteps: [req.params.stepId] }));
-					} else {
-						return res(ctx.status(500));
 					}
+
+					return res(ctx.status(500));
 				},
 			),
 		);
