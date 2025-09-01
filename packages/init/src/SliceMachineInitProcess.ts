@@ -896,7 +896,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 
 	protected async completeOnboardingSteps(): Promise<void> {
 		try {
-			this.manager.prismicRepository.completeOnboardingStep(
+			await this.manager.prismicRepository.completeOnboardingStep(
 				"chooseLocale",
 				"createProject",
 				"setupSliceMachine",
