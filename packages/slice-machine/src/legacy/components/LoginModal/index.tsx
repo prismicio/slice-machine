@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import Modal from "react-modal";
 import { useSelector } from "react-redux";
@@ -15,8 +16,8 @@ import {
 
 import { checkAuthStatus, clearAuth, getState } from "@/apiClient";
 import { getActiveEnvironment } from "@/features/environments/actions/getActiveEnvironment";
-import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
-import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
+import { GetActiveEnvironmentQueryKey } from "@/features/environments/useActiveEnvironment";
+import { GetEnvironmentsQueryKey } from "@/features/environments/useEnvironments";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { getUnSyncedChanges } from "@/features/sync/getUnSyncChanges";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
@@ -54,6 +55,7 @@ const LoginModal: React.FunctionComponent = () => {
   const { syncChanges } = useAutoSync();
   const { closeModals, startLoadingLogin, stopLoadingLogin, refreshState } =
     useSliceMachineActions();
+  const queryClient = useQueryClient();
 
   const prismicBase = preferWroomBase(env.manifest.apiEndpoint);
   const loginRedirectUrl = `${
@@ -79,8 +81,14 @@ const LoginModal: React.FunctionComponent = () => {
       );
 
       // refresh queries to update the UI
-      invalidateEnvironmentsData();
-      invalidateActiveEnvironmentData();
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: GetEnvironmentsQueryKey,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: GetActiveEnvironmentQueryKey,
+        }),
+      ]);
 
       toast.success("Logged in");
       stopLoadingLogin();
@@ -100,7 +108,7 @@ const LoginModal: React.FunctionComponent = () => {
         ),
       );
       const { changedCustomTypes, changedSlices } = getUnSyncedChanges({
-        authStatus: AuthStatus.AUTHORIZED,
+        authStatus: AuthStatus.AUTHENTICATED,
         customTypes,
         isOnline: true,
         libraries: serverState.libraries,
@@ -127,7 +135,7 @@ const LoginModal: React.FunctionComponent = () => {
 
   return (
     <SliceMachineModal
-      isOpen={isOpen}
+      isOpen={isLoginLoading || isOpen}
       shouldCloseOnOverlayClick
       onRequestClose={closeModals}
       contentLabel={"login_modal"}

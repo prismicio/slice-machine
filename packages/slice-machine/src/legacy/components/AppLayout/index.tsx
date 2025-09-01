@@ -1,16 +1,6 @@
-import {
-  BlankSlate,
-  BlankSlateDescription,
-  BlankSlateIcon,
-  BlankSlateTitle,
-  Box,
-  Button,
-  ButtonGroup,
-  Text,
-} from "@prismicio/editor-ui";
-import { isUnauthorizedError } from "@slicemachine/manager/client";
+import { Box, Button, ButtonGroup } from "@prismicio/editor-ui";
 import { useRouter } from "next/router";
-import { FC, PropsWithChildren, Suspense, useState } from "react";
+import { FC, PropsWithChildren, Suspense } from "react";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 import {
@@ -19,8 +9,6 @@ import {
   PageLayoutHeader,
   PageLayoutPane,
 } from "@/components/PageLayout";
-import { ErrorBoundary } from "@/ErrorBoundary";
-import { LogoutButton } from "@/features/auth/LogoutButton";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { Navigation } from "@/features/navigation/Navigation";
 
@@ -29,79 +17,16 @@ export const AppLayout: FC<PropsWithChildren> = ({
   ...otherProps
 }) => {
   return (
-    <ErrorBoundary
-      renderError={(error) => {
-        return (
-          <Box
-            position="absolute"
-            top={64}
-            width="100%"
-            justifyContent="center"
-            flexDirection="column"
-          >
-            <BlankSlate>
-              <BlankSlateIcon
-                lineColor="tomato11"
-                backgroundColor="tomato3"
-                name="alert"
-              />
-              <BlankSlateTitle>Failed to load Slice Machine</BlankSlateTitle>
-              <BlankSlateDescription>
-                <RenderError error={error} />
-              </BlankSlateDescription>
-            </BlankSlate>
-          </Box>
-        );
-      }}
-    >
-      <Suspense>
-        <PageLayoutWithActiveEnvironment {...otherProps}>
-          <PageLayoutPane>
-            <Navigation />
-          </PageLayoutPane>
-          {children}
-        </PageLayoutWithActiveEnvironment>
-      </Suspense>
-    </ErrorBoundary>
+    <Suspense>
+      <PageLayoutWithActiveEnvironment {...otherProps}>
+        <PageLayoutPane>
+          <Navigation />
+        </PageLayoutPane>
+        {children}
+      </PageLayoutWithActiveEnvironment>
+    </Suspense>
   );
 };
-
-function RenderError(args: { error: unknown }) {
-  const { error } = args;
-
-  if (isUnauthorizedError(error)) {
-    return <UnauthorizedErrorView />;
-  }
-  return <>{JSON.stringify(error)}</>;
-}
-
-function UnauthorizedErrorView() {
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  return (
-    <Box flexDirection="column" gap={16} margin={{ top: 8 }}>
-      <Box flexDirection="column" gap={8} alignItems="center">
-        <Text variant="h3" align="center">
-          It seems like you don't have access to this repository
-        </Text>
-        <Text align="center">
-          Check that the repository name is correct, then contact your
-          repository administrator.
-        </Text>
-      </Box>
-      <LogoutButton
-        isLoading={isLoggingOut}
-        onLogoutSuccess={() => {
-          setIsLoggingOut(true);
-          window.location.reload();
-        }}
-        sx={{ alignSelf: "center" }}
-      >
-        Log out
-      </LogoutButton>
-    </Box>
-  );
-}
 
 const environmentTopBorderColorMap = {
   prod: "purple",

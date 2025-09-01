@@ -83,7 +83,7 @@ export const AutoSyncProvider: FC<PropsWithChildren> = (props) => {
 
         // We default to a full user logged in with internet access if not provider.
         // This is useful when we want to sync changes right after the user logs in.
-        loggedIn = isOnline && authStatus === AuthStatus.AUTHORIZED,
+        loggedIn = isOnline && authStatus === AuthStatus.AUTHENTICATED,
       } = args;
 
       if (!loggedIn || environment?.kind !== "dev") {
@@ -240,7 +240,7 @@ function getAutoSyncStatus(args: GetAutoSyncStatusArgs): AutoSyncStatus {
     return "offline";
   }
 
-  if (authStatus !== AuthStatus.AUTHORIZED) {
+  if (authStatus !== AuthStatus.AUTHENTICATED) {
     return "not-logged-in";
   }
 

@@ -30,11 +30,11 @@ import {
 } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect } from "react";
 
-import { ErrorBoundary } from "@/ErrorBoundary";
 import {
   revalidateGetCustomTypes,
   useCustomTypes as useCustomTypesRequest,
 } from "@/features/customTypes/useCustomTypes";
+import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import { isValidObject } from "@/utils/isValidObject";
 
 type NonReadonly<T> = { -readonly [P in keyof T]: T[P] };
@@ -226,7 +226,7 @@ export function ContentRelationshipFieldPicker(
   props: ContentRelationshipFieldPickerProps,
 ) {
   return (
-    <ErrorBoundary
+    <DefaultErrorBoundary
       renderError={() => (
         <Box alignItems="center" gap={8}>
           <Icon name="alert" size="small" color="tomato10" />
@@ -254,7 +254,7 @@ export function ContentRelationshipFieldPicker(
       >
         <ContentRelationshipFieldPickerContent {...props} />
       </AnimatedSuspense>
-    </ErrorBoundary>
+    </DefaultErrorBoundary>
   );
 }
 

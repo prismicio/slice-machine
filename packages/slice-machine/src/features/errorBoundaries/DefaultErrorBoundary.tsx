@@ -12,13 +12,13 @@ import {
 
 import { useAuthStatus } from "@/hooks/useAuthStatus";
 
-type ErrorBoundaryProps = Pick<
+type DefaultErrorBoundaryProps = Pick<
   // TODO(DT-1979): Export the `ErrorBoundaryProps` type from `@prismicio/editor-ui`.
   ComponentPropsWithoutRef<typeof EditorUiErrorBoundary>,
   "children" | "renderError"
 >;
 
-export const ErrorBoundary: FC<ErrorBoundaryProps> = (props) => {
+export const DefaultErrorBoundary: FC<DefaultErrorBoundaryProps> = (props) => {
   const errorRef = useRef<unknown>();
   const authStatus = useAuthStatus();
   return (

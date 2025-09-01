@@ -1,52 +1,34 @@
 import { Button, Icon, IconButton, Tooltip } from "@prismicio/editor-ui";
 import { SX } from "@prismicio/editor-ui/dist/theme";
 import * as Sentry from "@sentry/nextjs";
-import { ReactNode } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
-import { clearAuth as managerLogout, getState } from "@/apiClient";
-import { invalidateActiveEnvironmentData } from "@/features/environments/useActiveEnvironment";
-import { invalidateEnvironmentsData } from "@/features/environments/useEnvironments";
+import { clearAuth, getState } from "@/apiClient";
+import { GetActiveEnvironmentQueryKey } from "@/features/environments/useActiveEnvironment";
+import { GetEnvironmentsQueryKey } from "@/features/environments/useEnvironments";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
-interface LogoutButtonProps {
-  children?: ReactNode;
-  onLogoutSuccess?: () => void;
-  isLoading?: boolean;
-  sx?: SX;
-}
-
-export function LogoutButton(props: LogoutButtonProps) {
-  const { children, onLogoutSuccess, isLoading, sx } = props;
-
+export function EnvironmentLogoutButton() {
   const { refreshState } = useSliceMachineActions();
+  const queryClient = useQueryClient();
 
   async function onClick() {
-    await managerLogout();
+    await clearAuth();
 
     const serverState = await getState();
     refreshState(serverState);
-
     Sentry.setUser({ id: serverState.env.shortId });
 
-    // refresh queries to update the UI
-    invalidateEnvironmentsData();
-    invalidateActiveEnvironmentData();
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: GetEnvironmentsQueryKey }),
+      queryClient.invalidateQueries({
+        queryKey: GetActiveEnvironmentQueryKey,
+      }),
+    ]);
 
-    onLogoutSuccess?.();
-  }
-
-  if (children !== undefined) {
-    return (
-      <Button
-        onClick={() => void onClick()}
-        renderEndIcon={() => <Icon name="logout" size="extraSmall" />}
-        color="grey"
-        loading={isLoading}
-        sx={sx}
-      >
-        {children}
-      </Button>
-    );
+    toast.success("Logged out");
   }
 
   return (
@@ -55,9 +37,33 @@ export function LogoutButton(props: LogoutButtonProps) {
         icon="logout"
         onClick={() => void onClick()}
         hiddenLabel="Log out"
-        loading={isLoading}
-        sx={sx}
       />
     </Tooltip>
+  );
+}
+
+interface ReloadLogoutButtonProps {
+  sx?: SX;
+}
+
+export function ReloadLogoutButton(props: ReloadLogoutButtonProps) {
+  const { sx } = props;
+  const router = useRouter();
+
+  async function onClick() {
+    await clearAuth();
+    Sentry.setUser({ id: undefined });
+    router.reload();
+  }
+
+  return (
+    <Button
+      onClick={() => void onClick()}
+      renderEndIcon={() => <Icon name="logout" size="extraSmall" />}
+      color="grey"
+      sx={sx}
+    >
+      Log out
+    </Button>
   );
 }

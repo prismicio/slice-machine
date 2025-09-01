@@ -1,2 +1,2 @@
-export { AuthErrorPage } from "./AuthErrorPage";
 export { OfflinePage } from "./OfflinePage";
+export { UnauthenticatedView } from "./UnauthenticatedView";
