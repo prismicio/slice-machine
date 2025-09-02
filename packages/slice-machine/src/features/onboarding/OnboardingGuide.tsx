@@ -3,15 +3,12 @@ import { useMediaQuery } from "@prismicio/editor-ui";
 import { useUpdateAvailable } from "@/hooks/useUpdateAvailable";
 
 import { SharedOnboardingGuide } from "./SharedOnboardingGuide";
-import { useSharedOnboardingExperiment } from "./useSharedOnboardingExperiment";
 
 export function OnboardingGuide() {
   const isVisible = useIsOnboardingGuideVisible();
-  const isSharedExperimentEligible = useSharedOnboardingExperiment().eligible;
 
-  return isVisible && isSharedExperimentEligible ? (
-    <SharedOnboardingGuide />
-  ) : null;
+  if (!isVisible) return null;
+  return <SharedOnboardingGuide />;
 }
 
 function useIsOnboardingGuideVisible() {
