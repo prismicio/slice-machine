@@ -1,4 +1,6 @@
 import * as t from "io-ts";
+import * as fs from "fs";
+import { z } from "zod";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
@@ -20,6 +22,7 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 } from "@slicemachine/plugin-kit";
+import { query } from "@anthropic-ai/claude-code";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -36,6 +39,9 @@ import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
+import { Anima } from "@animaapp/anima-sdk";
+import path from "path";
+import { writeFile } from "fs/promises";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -213,6 +219,18 @@ type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
 type SliceMachineManagerConvertLegacySliceToSharedSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
+
+type InferFigmaSliceResponse = z.infer<typeof InferFigmaSliceResponse>;
+
+const InferFigmaSliceResponse = z.string();
+
+type FigmaFileInfo = {
+	fileKey: string;
+	nodesId: string;
+};
+
+const FIGMA_TOKEN = "***";
+const ANIMA_TOKEN = "***";
 
 export class SlicesManager extends BaseManager {
 	async readSliceLibrary(
@@ -1071,6 +1089,250 @@ export class SlicesManager extends BaseManager {
 			...args.model,
 			variations,
 		};
+	}
+
+	_parseFigmaFrameUrl(figmaFrameUrl: string): FigmaFileInfo {
+		const url = new URL(figmaFrameUrl);
+		const fileKey = url.pathname.split("/")[2];
+		const nodesId = url.searchParams
+			.get("node-id")
+			?.split("-")
+			.join(":") as string;
+
+		return {
+			fileKey,
+			nodesId,
+		};
+	}
+
+	async _getFilesFromAnima(figmaFileInfo: FigmaFileInfo) {
+		const anima = new Anima({
+			auth: {
+				token: ANIMA_TOKEN,
+			},
+		});
+
+		const { files } = await anima.generateCode({
+			fileKey: figmaFileInfo.fileKey,
+			figmaToken: FIGMA_TOKEN,
+			nodesId: [figmaFileInfo.nodesId],
+			settings: {
+				language: "typescript",
+				framework: "react",
+				styling: "inline_styles",
+				enableCompactStructure: true,
+			},
+		});
+
+		return files;
+	}
+
+	_saveAnimaProject(
+		files: Record<string, { content: string; isBinary: boolean }>,
+		folderName: string = "anima-output-tmp",
+	) {
+		const outputDir = path.join(process.cwd(), folderName);
+
+		// Delete folder if already exists (even with content)
+		if (fs.existsSync(outputDir)) {
+			fs.rmSync(outputDir, { recursive: true });
+		}
+		fs.mkdirSync(outputDir, { recursive: true });
+
+		// Save each file in the output directory
+		for (const [filePath, { content, isBinary }] of Object.entries(files)) {
+			const fullPathOutputDir = path.join(outputDir, filePath);
+
+			// create directory for the file (parent directory)
+			fs.mkdirSync(path.dirname(fullPathOutputDir), { recursive: true });
+
+			if (isBinary) {
+				fs.writeFileSync(fullPathOutputDir, Buffer.from(content, "base64"));
+			} else {
+				fs.writeFileSync(fullPathOutputDir, content, "utf8");
+			}
+		}
+	}
+
+	async _saveFigmaFramePng(
+		figmaFileInfo: FigmaFileInfo,
+		folderName: string = "anima-output-tmp",
+	) {
+		await writeFile(
+			path.join(folderName, "screenshot-default.png"),
+			Buffer.from(
+				await (
+					await fetch(
+						(
+							(await (
+								await fetch(
+									`https://api.figma.com/v1/images/${figmaFileInfo.fileKey}?ids=${figmaFileInfo.nodesId}&format=png`,
+									{
+										headers: {
+											"X-Figma-Token": FIGMA_TOKEN,
+										},
+									},
+								)
+							).json()) as { images: Record<string, string> }
+						).images[figmaFileInfo.nodesId],
+					)
+				).arrayBuffer(),
+			),
+		);
+	}
+
+	async _createSliceFromAnimaProject(pageType: string) {
+		for await (const message of query({
+			prompt: `
+					You are a senior React developer specializing in component migration and refactoring.
+					
+					## OBJECTIVE
+					Migrate a single section component from Anima platform export to Slice Machine format by moving the file from 'src/screens' to the existing 'slices' folder with proper structure.
+					
+					## TASK REQUIREMENTS
+					
+					### 1. File Discovery
+					- Locate the target section file in 'src/screens' directory (or similar path)
+					- Identify the main component file and any associated assets, styles, or utilities
+					- Note the current file structure and dependencies
+					
+					### 2. Migration Process  
+					- Create a new folder in 'slices' folder named after the section component
+					- Move the section file into the new slice folder
+					- Rename the file to match slice naming conventions if needed
+					- Update all import/export statements to reflect the new location
+					- Ensure the slice style respect how the other slices are styled (e.g.: CSS modules, etc.)
+
+					### 3. Move and rename the screenshot-default.png file to the new slice folder
+					- Move the screenshot-default.png file to the new slice folder
+					- Rename the file to match slice naming conventions
+
+					### 4. Add the slice to the custom type ${pageType}
+					- Add the slice to the custom type ${pageType}
+					- In the property 'slices' of the custom type, add the slice with the correct id in "config.choices"
+					- Respect the format by looking at other custom types
+					- It's in the "Slice Zone" that the slice need to be added
+
+					### 5. Update slice/index.ts file
+					- Add the slice to the slices/index.ts file with the other exported slices
+					- Even if it's written do not edit, you need to update the index.ts file to export the new slice
+					- Follow the same structure as the other slices
+					
+					### 6. Validation Checklist
+					- Verify the moved component renders without errors
+					- Confirm all imports resolve correctly
+					- Check that no Anima platform artifacts remain
+					- Ensure the component is properly exported from its new location
+					- Validate that the screenshot-default.png file is at the correct location with the correct name
+					
+					## Code Quality Standards
+					- Preserve existing coding style and patterns from the project
+					- Maintain all functionality - this is a structural move, not a rewrite  
+					- Remove any Anima-specific dependencies or references
+					- Ensure no external dependencies are introduced unnecessarily
+					- Update relative import paths to work from the new location
+
+					## IMPORTANT NOTES
+					- You have to use MCP tools for the steps when needed
+					- Do not remove the anima project files, keep everything related to anima folders
+					- DO NOT FORGET to add the slice to the custom type
+					- DO NOT FORGET to update the slices/index.ts file
+					- DO NOT try to run slice machine 
+					- DO NOT try to build the project
+					
+					## LAST VALIDATION
+					- BE SURE TO CHECK OTHERS SLICES AND EVERYTHING YOU TOUCH THAT SHOULD LOOK LIKE THE EXISTING CODE OF THE PROJECT
+					
+					## SUCCESS CRITERIA
+					The single section component should be successfully relocated to 'slices/{SectionName}/' and function identically to its original implementation, with all Anima dependencies removed.
+				`,
+			options: {
+				cwd: path.join(process.cwd()),
+				abortController: new AbortController(),
+				mcpServers: {
+					prismic: {
+						command: "npx",
+						args: ["-y", "@prismicio/mcp-server@latest"],
+					},
+				},
+				allowedTools: [
+					"Bash",
+					"Read",
+					"Write",
+					"FileSearch",
+					"Grep",
+					"Glob",
+					"MultiEdit",
+					"mcp__prismic__how_to_code_slice",
+				],
+				permissionMode: "bypassPermissions",
+			},
+		})) {
+			console.log("Claude message", JSON.stringify(message, null, 2));
+		}
+	}
+
+	_removeAnimaProject() {
+		const outputDir = path.join(process.cwd(), "anima-output-tmp");
+		fs.rmSync(outputDir, { recursive: true, force: true });
+	}
+
+	async inferFigmaSlice({
+		figmaFrameUrl,
+		pageType,
+	}: {
+		figmaFrameUrl: string;
+		pageType: string;
+	}): Promise<InferFigmaSliceResponse> {
+		console.log("START", {
+			figmaFrameUrl,
+			pageType,
+			currentDir: process.cwd(),
+		});
+
+		// Extract Figma file ID and nodes ID from the URL
+		const figmaFileInfo = this._parseFigmaFrameUrl(figmaFrameUrl);
+
+		console.log("2");
+
+		if (
+			figmaFileInfo === undefined ||
+			figmaFileInfo.fileKey === undefined ||
+			figmaFileInfo.nodesId === undefined ||
+			figmaFileInfo.fileKey === "" ||
+			figmaFileInfo.nodesId === ""
+		) {
+			throw new Error("Invalid Figma URL");
+		}
+
+		console.log("3");
+
+		// Get project files from Figma URL
+		const files = await this._getFilesFromAnima(figmaFileInfo);
+
+		console.log("4");
+
+		// Save project files
+		this._saveAnimaProject(files);
+
+		console.log("5");
+
+		// Save Figma frame png to the project
+		await this._saveFigmaFramePng(figmaFileInfo);
+
+		console.log("6");
+
+		// Move the section generated from Anima to the slices folder
+		await this._createSliceFromAnimaProject(pageType);
+
+		console.log("7");
+
+		// Remove the Anima project files
+		this._removeAnimaProject();
+
+		console.log("END", { figmaFileInfo, pageType, currentDir: process.cwd() });
+
+		return InferFigmaSliceResponse.parse("TODO");
 	}
 
 	private async _removeSliceFromCustomTypes(sliceID: string) {

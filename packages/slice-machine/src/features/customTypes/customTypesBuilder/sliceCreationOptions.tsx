@@ -8,6 +8,20 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
   const { menuType } = args;
 
   return {
+    fromFigma: {
+      BackgroundIcon: (
+        <BackgroundIcon
+          name="attachFile"
+          size={menuType === "ActionList" ? "small" : "extraSmall"}
+          iconSize={menuType === "ActionList" ? "medium" : "small"}
+          color="purple"
+          variant="solid"
+          radius={6}
+        />
+      ),
+      title: "Generate from Figma",
+      description: "Build a slice based on your Figma design.",
+    },
     fromImage: {
       BackgroundIcon: (
         <BackgroundIcon

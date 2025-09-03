@@ -45,6 +45,7 @@ import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";
 import { SlicesTemplatesModal } from "./SlicesTemplatesModal";
 import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
+import { CreateSliceFromFigmaModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromFigmaModal";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -121,6 +122,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
     useState(false);
+  const [isCreateSliceFromFigmaModalOpen, setIsCreateSliceFromFigmaModalOpen] =
+    useState(false);
   const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
@@ -177,6 +180,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     setIsCreateSliceModalOpen(true);
   };
 
+  const openCreateSliceFromFigmaModal = () => {
+    setIsCreateSliceFromFigmaModalOpen(true);
+  };
+
   const openCreateSliceFromImageModal = async () => {
     const isLoggedIn = await managerClient.user.checkIsLoggedIn();
 
@@ -203,6 +210,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const closeCreateSliceModal = () => {
     setIsCreateSliceModalOpen(false);
+  };
+
+  const closeCreateSliceFromFigmaModal = () => {
+    setIsCreateSliceFromFigmaModalOpen(false);
   };
 
   const closeCreateSliceFromImageModal = () => {
@@ -324,6 +335,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               openCreateSliceFromImageModal={() =>
                 void openCreateSliceFromImageModal()
               }
+              openCreateSliceFromFigmaModal={() =>
+                void openCreateSliceFromFigmaModal()
+              }
               openSlicesTemplatesModal={openSlicesTemplatesModal}
               projectHasAvailableSlices={availableSlicesToAdd.length > 0}
               isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
@@ -418,6 +432,32 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           location={`${customType.format}_type`}
           remoteSlices={remoteSlices}
           onClose={closeCreateSliceModal}
+        />
+      )}
+      {isCreateSliceFromFigmaModalOpen && (
+        <CreateSliceFromFigmaModal
+          open={isCreateSliceFromFigmaModalOpen}
+          location={`${customType.format}_type`}
+          onSuccess={({ slices, library }) => {
+            const newCustomType = addSlicesToSliceZone({
+              customType,
+              tabId,
+              slices: slices.map((slice) => slice.model),
+            });
+            setCustomType({
+              customType: CustomTypes.fromSM(newCustomType),
+              onSaveCallback: () => {
+                toast.success(
+                  <ToastMessageWithPath
+                    message="Slice(s) added to slice zone and created at: "
+                    path={library}
+                  />,
+                );
+              },
+            });
+          }}
+          onClose={closeCreateSliceFromFigmaModal}
+          pageType={customType.id}
         />
       )}
       <CreateSliceFromImageModal

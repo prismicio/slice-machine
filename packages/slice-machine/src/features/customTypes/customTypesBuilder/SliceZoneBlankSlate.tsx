@@ -15,6 +15,7 @@ export type SliceZoneBlankSlateProps = {
   openUpdateSliceZoneModal: () => void;
   openCreateSliceModal: () => void;
   openCreateSliceFromImageModal: () => void;
+  openCreateSliceFromFigmaModal: () => void;
   openSlicesTemplatesModal: () => void;
   projectHasAvailableSlices: boolean;
   isSlicesTemplatesSupported: boolean;
@@ -22,6 +23,7 @@ export type SliceZoneBlankSlateProps = {
 
 export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   openCreateSliceModal,
+  openCreateSliceFromFigmaModal,
   openCreateSliceFromImageModal,
   openUpdateSliceZoneModal,
   openSlicesTemplatesModal,
@@ -48,6 +50,15 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
       </BlankSlateDescription>
       <BlankSlateActions>
         <ActionList>
+          <ActionListItem
+            renderStartIcon={() =>
+              sliceCreationOptions.fromFigma.BackgroundIcon
+            }
+            onClick={openCreateSliceFromFigmaModal}
+            description={sliceCreationOptions.fromFigma.description}
+          >
+            {sliceCreationOptions.fromFigma.title}
+          </ActionListItem>
           <ActionListItem
             renderStartIcon={() =>
               sliceCreationOptions.fromImage.BackgroundIcon

@@ -64,7 +64,11 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
+		"@animaapp/anima-sdk": "0.6.26",
 		"@antfu/ni": "^0.20.0",
+		"@anthropic-ai/claude-code": "1.0.85",
+		"@langchain/core": "0.3.40",
+		"@langchain/openai": "0.4.4",
 		"@prismicio/client": "7.17.0",
 		"@prismicio/custom-types-client": "2.1.0",
 		"@prismicio/mocks": "2.14.0",
@@ -81,6 +85,7 @@
 		"io-ts": "^2.2.20",
 		"io-ts-reporters": "^2.0.1",
 		"io-ts-types": "^0.5.19",
+		"langsmith": " 0.3.14",
 		"monocle-ts": "^2.3.13",
 		"newtype-ts": "^0.3.5",
 		"node-fetch": "^3.3.1",
