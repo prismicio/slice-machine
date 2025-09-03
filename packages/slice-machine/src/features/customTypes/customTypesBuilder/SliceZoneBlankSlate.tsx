@@ -42,9 +42,9 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
       />
       <BlankSlateTitle size="big">Add slices</BlankSlateTitle>
       <BlankSlateDescription>
-        Slices are website sections that you can reuse on different pages with
-        different content. Each on different pages with different content. Each{" "}
-        slice has its own component in your code.
+        Slices are reusable website sections. You can use them on different
+        pages and write unique content for each. Each slice has its own
+        component in your code.
       </BlankSlateDescription>
       <BlankSlateActions>
         <ActionList>
