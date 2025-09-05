@@ -160,6 +160,12 @@ const prepareEnvironment = async (
 			signature: "foo",
 			documents,
 		},
+		getOnboardingEndpoint: {
+			expectedAuthenticationToken: token,
+		},
+		toggleOnboardingStepEndpoint: {
+			expectedAuthenticationToken: token,
+		},
 	});
 
 	// Mock Amplitude
