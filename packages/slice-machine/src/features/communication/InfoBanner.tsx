@@ -21,6 +21,14 @@ export function InfoBanner() {
   const infoBannerFeatureFlag = useExperimentVariant(
     "slicemachine-info-banner",
   );
+
+  const infoBannerId = infoBannerFeatureFlag?.value;
+
+  // Early return if info banner feature flag value is not set
+  if (infoBannerId === undefined) {
+    return null;
+  }
+
   const infoBannerPayload = InfoBannerPayload.safeParse(
     infoBannerFeatureFlag?.payload,
   );
@@ -30,14 +38,8 @@ export function InfoBanner() {
     return null;
   }
 
-  const {
-    id: infoBannerId,
-    title,
-    description,
-    buttonLabel,
-    buttonLink,
-    color,
-  } = infoBannerPayload.data;
+  const { title, description, buttonLabel, buttonLink, color } =
+    infoBannerPayload.data;
 
   // Early return if info banner has already been dismissed
   if (dismissedBanners.includes(infoBannerId)) {
@@ -75,7 +77,6 @@ export function InfoBanner() {
 }
 
 const InfoBannerPayload = z.object({
-  id: z.string(),
   title: z.string(),
   description: z.string(),
   buttonLabel: z.string().optional(),
