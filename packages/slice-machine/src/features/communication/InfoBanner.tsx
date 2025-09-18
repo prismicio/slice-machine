@@ -45,7 +45,7 @@ export function InfoBanner() {
   }
 
   const onClose = () => {
-    setDismissedBanners([...dismissedBanners, infoBannerId]);
+    setDismissedBanners((prev) => [...prev, infoBannerId]);
     void telemetry.track({
       event: "info-banner:dismissed",
       infoBannerId,
