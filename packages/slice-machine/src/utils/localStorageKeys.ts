@@ -25,3 +25,5 @@ export function getAiFeedbackKey({
     ["ai-feedback", type, library, sliceId, variationId].join("#"),
   );
 }
+
+export const infoBannerKey = withPrefix("info-banner");
