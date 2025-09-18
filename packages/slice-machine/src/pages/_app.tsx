@@ -31,6 +31,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { ThemeProvider as ThemeUIThemeProvider, useThemeUI } from "theme-ui";
 
 import { getState } from "@/apiClient";
+import { InfoBanner } from "@/features/communication/InfoBanner";
 import { useActiveEnvironment } from "@/features/environments/useActiveEnvironment";
 import { AppStateErrorBoundary } from "@/features/errorBoundaries";
 import { AutoSyncProvider } from "@/features/sync/AutoSyncProvider";
@@ -88,6 +89,7 @@ function App(props: AppContextWithComponentLayout & AppInitialProps) {
                       <AppStateWrapper>
                         <AutoSyncProvider>
                           <ComponentLayout>
+                            <InfoBanner />
                             <Component {...props.pageProps} />
                           </ComponentLayout>
                         </AutoSyncProvider>

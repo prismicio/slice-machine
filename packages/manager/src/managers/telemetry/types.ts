@@ -48,6 +48,8 @@ export const SegmentEventType = {
 	navigation_documentationLinkClicked: "navigation:documentation-link-clicked",
 	sidebar_link_clicked: "sidebar:link-clicked",
 	mcp_promo_link_clicked: "mcp:promo-link-clicked",
+	info_banner_dismissed: "info-banner:dismissed",
+	info_banner_button_clicked: "info-banner:button-clicked",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -108,6 +110,10 @@ export const HumanSegmentEventType = {
 		"SliceMachine Documentation Link Clicked",
 	[SegmentEventType.sidebar_link_clicked]: "Sidebar Link Clicked",
 	[SegmentEventType.mcp_promo_link_clicked]: "MCP Promo Link Clicked",
+	[SegmentEventType.info_banner_dismissed]:
+		"SliceMachine Info Banner Dismissed",
+	[SegmentEventType.info_banner_button_clicked]:
+		"SliceMachine Info Banner Button Clicked",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -444,6 +450,20 @@ type McpPromoLinkClicked = SegmentEvent<
 	}
 >;
 
+type InfoBannerDismissed = SegmentEvent<
+	typeof SegmentEventType.info_banner_dismissed,
+	{
+		infoBannerId: string;
+	}
+>;
+
+type InfoBannerButtonClicked = SegmentEvent<
+	typeof SegmentEventType.info_banner_button_clicked,
+	{
+		infoBannerId: string;
+	}
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -483,4 +503,6 @@ export type SegmentEvents =
 	| SliceGenerationFeedback
 	| NavigationDocumentationLinkClicked
 	| SidebarLinkClicked
-	| McpPromoLinkClicked;
+	| McpPromoLinkClicked
+	| InfoBannerDismissed
+	| InfoBannerButtonClicked;
