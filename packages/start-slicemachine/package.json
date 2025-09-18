@@ -1,6 +1,6 @@
 {
 	"name": "start-slicemachine",
-	"version": "0.12.61",
+	"version": "0.12.62",
 	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
