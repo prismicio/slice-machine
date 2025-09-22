@@ -1073,6 +1073,12 @@ export class SlicesManager extends BaseManager {
 		};
 	}
 
+	async updateSliceLibrary(args: { libraryID: string }): Promise<void> {
+		await this.sliceMachinePluginRunner?.callHook("slice-library:update", {
+			libraryID: args.libraryID,
+		});
+	}
+
 	private async _removeSliceFromCustomTypes(sliceID: string) {
 		const { models, errors: customTypeReadErrors } =
 			await this.customTypes.readAllCustomTypes();
