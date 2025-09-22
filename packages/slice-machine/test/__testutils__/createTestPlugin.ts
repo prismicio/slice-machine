@@ -22,6 +22,7 @@ const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
   "slice:asset:read",
   "slice:asset:delete",
   "slice-library:read",
+  "slice-library:update",
   "custom-type:create",
   "custom-type:read",
   "custom-type:update",

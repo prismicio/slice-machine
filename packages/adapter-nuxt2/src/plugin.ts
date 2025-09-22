@@ -186,6 +186,12 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				...context,
 			});
 		});
+		hook("slice-library:update", async (data, context) => {
+			upsertSliceLibraryIndexFile({
+				libraryID: data.libraryID,
+				...context,
+			});
+		});
 
 		////////////////////////////////////////////////////////////////
 		// custom-type:*

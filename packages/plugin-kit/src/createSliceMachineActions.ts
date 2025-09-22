@@ -11,6 +11,10 @@ import {
 	SliceLibraryReadHookReturnType,
 } from "./hooks/sliceLibrary-read";
 import { SliceReadHookData, SliceReadHookReturnType } from "./hooks/slice-read";
+import {
+	SliceLibraryUpdateHookData,
+	SliceLibraryUpdateHookReturnType,
+} from "./hooks/sliceLibrary-update";
 
 export type ReadAllSliceModelsActionArgs<
 	TWithMetadata extends boolean = false,
@@ -140,6 +144,14 @@ export class SliceMachineActions {
 		}
 
 		return library;
+	};
+
+	updateSliceLibrary = async (
+		args: SliceLibraryUpdateHookData,
+	): Promise<SliceLibraryUpdateHookReturnType> => {
+		await this._hookSystem.callHook("slice-library:update", {
+			libraryID: args.libraryID,
+		});
 	};
 
 	readAllCustomTypeModels = async (): Promise<
