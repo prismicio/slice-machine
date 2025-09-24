@@ -34,6 +34,12 @@ const createComponentFile = async ({
 					:data-slice-variation="slice.variation"
 				>
 					Placeholder component for ${data.model.id} (variation: {{ slice.variation }}) Slices
+					<br />
+					<strong>You can edit this slice directly in your code editor.</strong>
+					<!--
+					💡 Use the Prismic MCP server with your code editor
+					📚 Docs: https://prismic.io/docs/ai#code-with-prismics-mcp-server
+					-->
 				</section>
 			</template>
 
