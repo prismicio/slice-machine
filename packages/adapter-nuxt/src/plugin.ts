@@ -195,12 +195,6 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				...context,
 			});
 		});
-		hook("slice-library:update", async (data, context) => {
-			await upsertSliceLibraryIndexFile({
-				libraryID: data.libraryID,
-				...context,
-			});
-		});
 
 		////////////////////////////////////////////////////////////////
 		// slice-template-library:*

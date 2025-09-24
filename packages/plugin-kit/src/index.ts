@@ -98,13 +98,6 @@ export type {
 	SliceLibraryReadHookReturnType,
 } from "./hooks/sliceLibrary-read";
 
-// slice-library:update
-export type {
-	SliceLibraryUpdateHook,
-	SliceLibraryUpdateHookData,
-	SliceLibraryUpdateHookReturnType,
-} from "./hooks/sliceLibrary-update";
-
 // custom-type:asset:update
 export type {
 	CustomTypeAssetUpdateHook,
