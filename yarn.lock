@@ -10592,7 +10592,7 @@ __metadata:
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.14.0
-    "@prismicio/types-internal": 3.11.2
+    "@prismicio/types-internal": 3.16.2-alpha.0
     "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
