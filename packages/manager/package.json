@@ -18,12 +18,12 @@
 			"import": "./dist/index.js"
 		},
 		"./client": {
-			"types": "./dist/client/index.d.js",
+			"types": "./dist/client/index.d.ts",
 			"require": "./dist/client.cjs",
 			"import": "./dist/client.js"
 		},
 		"./test": {
-			"types": "./dist/test/index.d.js",
+			"types": "./dist/test/index.d.ts",
 			"require": "./dist/test.cjs",
 			"import": "./dist/test.js"
 		},
