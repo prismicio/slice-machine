@@ -10513,6 +10513,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@slicemachine/agent@workspace:packages/agent":
+  version: 0.0.0-use.local
+  resolution: "@slicemachine/agent@workspace:packages/agent"
+  dependencies:
+    "@slicemachine/manager": "workspace:*"
+    "@types/node": ^20.11.5
+    chalk: ^4.1.2
+    prismic-ts-codegen: ^0.1.21
+    typescript: ^5.3.3
+    vite: ^5.0.11
+  bin:
+    slicemachine-agent: ./bin/agent.js
+    sm-agent: ./bin/agent.js
+  languageName: unknown
+  linkType: soft
+
 "@slicemachine/e2e@workspace:playwright":
   version: 0.0.0-use.local
   resolution: "@slicemachine/e2e@workspace:playwright"
@@ -12969,6 +12985,15 @@ __metadata:
   version: 16.18.36
   resolution: "@types/node@npm:16.18.36"
   checksum: a9d138fa1269079c60daad6984713dc0b713983f8b34a83edbc6d7957b2e38beab9b2598c9fe99f19d073e20bc212a18aaf82eabdc23ef64dce7d2089a9aab2a
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.11.5":
+  version: 20.19.21
+  resolution: "@types/node@npm:20.19.21"
+  dependencies:
+    undici-types: ~6.21.0
+  checksum: 79eeb55b109a54e212d963870d0a9184bbc1b6ed07a26a52d9aa87c15f594648d3832876b37635e5fb5c6206acd9240209394579d4e6ec0870d1b78cfa4c13d2
   languageName: node
   linkType: hard
 
@@ -31363,6 +31388,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prismic-ts-codegen@npm:^0.1.21":
+  version: 0.1.28
+  resolution: "prismic-ts-codegen@npm:0.1.28"
+  dependencies:
+    "@prismicio/custom-types-client": ^1.3.1
+    common-tags: ^1.8.2
+    fast-glob: ^3.3.3
+    jiti: ^1.21.7
+    joi: ^17.13.3
+    meow: ~12.0.1
+    node-fetch: ^3.3.2
+    pascal-case: ^3.1.2
+    quick-lru: ^6.1.2
+  peerDependencies:
+    "@prismicio/client": ^6.6 || ^7
+    "@prismicio/types": ^0.2.8
+  peerDependenciesMeta:
+    "@prismicio/client":
+      optional: true
+    "@prismicio/types":
+      optional: true
+  bin:
+    prismic-ts-codegen: bin/prismic-ts-codegen.js
+  checksum: 488bf1a9303955184ae2d44ffb9be819f41b78cefc89ec35e3c2ae7ffe06478f65bc97db3cdcfb001d7c32dfce4bd4323640470a38b0b602b0b26a08f061c81d
+  languageName: node
+  linkType: hard
+
 "prismjs@npm:^1.27.0":
   version: 1.29.0
   resolution: "prismjs@npm:1.29.0"
@@ -36692,6 +36744,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^5.3.3":
+  version: 5.9.3
+  resolution: "typescript@npm:5.9.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 0d0ffb84f2cd072c3e164c79a2e5a1a1f4f168e84cb2882ff8967b92afe1def6c2a91f6838fb58b168428f9458c57a2ba06a6737711fdd87a256bbe83e9a217f
+  languageName: node
+  linkType: hard
+
 "typescript@npm:^5.4.4":
   version: 5.8.3
   resolution: "typescript@npm:5.8.3"
@@ -36719,6 +36781,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 2373c693f3b328f3b2387c3efafe6d257b057a142f9a79291854b14ff4d5367d3d730810aee981726b677ae0fd8329b23309da3b6aaab8263dbdccf1da07a3ba
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^5.3.3#~builtin<compat/typescript>":
+  version: 5.9.3
+  resolution: "typescript@patch:typescript@npm%3A5.9.3#~builtin<compat/typescript>::version=5.9.3&hash=5da071"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 8bb8d86819ac86a498eada254cad7fb69c5f74778506c700c2a712daeaff21d3a6f51fd0d534fe16903cb010d1b74f89437a3d02d4d0ff5ca2ba9a4660de8497
   languageName: node
   linkType: hard
 
@@ -37935,7 +38007,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.20":
+"vite@npm:5.4.20, vite@npm:^5.0.11":
   version: 5.4.20
   resolution: "vite@npm:5.4.20"
   dependencies:
