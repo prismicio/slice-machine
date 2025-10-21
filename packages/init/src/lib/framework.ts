@@ -115,7 +115,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 		prismicDocumentation: "https://prismic.dev/init/next",
 		adapterName: "@slicemachine/adapter-next",
 		compatibility: {
-			next: "^11 || ^12 || ^13 || ^14 || ^15.0.0-rc.0",
+			next: "^11 || ^12 || ^13 || ^14 || ^15 || ^16.0.0-beta.0",
 		},
 		devDependencies: {
 			...DEFAULT_DEV_DEPENDENCIES,
