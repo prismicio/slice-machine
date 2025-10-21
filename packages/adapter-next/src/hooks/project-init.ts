@@ -8,6 +8,7 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
+import semver from "semver";
 
 import { buildSrcPath } from "../lib/buildSrcPath";
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
@@ -541,6 +542,11 @@ const createRevalidateRoute = async ({
 		return;
 	}
 
+	const nextPkg = await import("next/package.json").catch(() => ({
+		version: "0",
+	}));
+	const supportsCacheLife = semver.gte(nextPkg.version, "16.0.0-beta.0");
+
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = await buildSrcPath({
 		filename: `app/api/revalidate/route.${extension}`,
@@ -556,7 +562,7 @@ const createRevalidateRoute = async ({
 		import { revalidateTag } from "next/cache";
 
 		export async function POST() {
-			revalidateTag("prismic");
+			revalidateTag("prismic"${supportsCacheLife ? ', "max"' : ""});
 
 			return NextResponse.json({ revalidated: true, now: Date.now() });
 		}
