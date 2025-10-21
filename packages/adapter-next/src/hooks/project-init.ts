@@ -542,10 +542,15 @@ const createRevalidateRoute = async ({
 		return;
 	}
 
-	const nextPkg = await import("next/package.json").catch(() => ({
-		version: "0",
+	const nextPkg = await import("next/package.json", {
+		with: { type: "json" },
+	}).catch(() => ({
+		default: { version: "0.0.0" },
 	}));
-	const supportsCacheLife = semver.gte(nextPkg.version, "16.0.0-beta.0");
+	const supportsCacheLife = semver.gte(
+		nextPkg.default.version,
+		"16.0.0-beta.0",
+	);
 
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = await buildSrcPath({

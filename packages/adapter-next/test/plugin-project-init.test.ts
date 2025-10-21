@@ -1699,7 +1699,9 @@ describe("/api/revalidate route", () => {
 			const log = vi.fn();
 			const installDependencies = vi.fn();
 
-			vi.doMock("next/package.json", async () => ({ version: "15.0.0" }));
+			vi.doMock("next/package.json", async () => ({
+				default: { version: "15.0.0" },
+			}));
 
 			await ctx.pluginRunner.callHook("project:init", {
 				log,
