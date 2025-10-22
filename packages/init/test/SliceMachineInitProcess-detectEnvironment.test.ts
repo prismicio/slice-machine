@@ -35,7 +35,7 @@ it("detects framework, starter and package manager", async () => {
 		  "framework": {
 		    "adapterName": "@slicemachine/adapter-next",
 		    "compatibility": {
-		      "next": "^11 || ^12 || ^13 || ^14 || ^15.0.0-rc.0",
+		      "next": "^11 || ^12 || ^13 || ^14 || ^15 || ^16.0.0-beta.0",
 		    },
 		    "devDependencies": {
 		      "@slicemachine/adapter-next": "latest",
@@ -82,7 +82,7 @@ it("assumes unconventional tags match semver range when detecting framework", as
 		  "framework": {
 		    "adapterName": "@slicemachine/adapter-next",
 		    "compatibility": {
-		      "next": "^11 || ^12 || ^13 || ^14 || ^15.0.0-rc.0",
+		      "next": "^11 || ^12 || ^13 || ^14 || ^15 || ^16.0.0-beta.0",
 		    },
 		    "devDependencies": {
 		      "@slicemachine/adapter-next": "latest",
