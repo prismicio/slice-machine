@@ -1,7 +1,7 @@
 import { vi } from "vitest";
 import * as path from "node:path";
 
-export const mockNextJSVersion = (version: string) => {
+export const mockNextJSVersion = (version: string): (() => void) => {
 	vi.doMock("node:fs/promises", async () => {
 		const actual: typeof import("node:fs/promises") =
 			await vi.importActual("node:fs/promises");
