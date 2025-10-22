@@ -19,6 +19,7 @@ import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile"
 
 import type { PluginOptions } from "../types";
 import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
+import { getNextJSVersion } from "../lib/getNextJSVersion";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];
@@ -542,15 +543,8 @@ const createRevalidateRoute = async ({
 		return;
 	}
 
-	const nextPkg = await import("next/package.json", {
-		with: { type: "json" },
-	}).catch(() => ({
-		default: { version: "0.0.0" },
-	}));
-	const supportsCacheLife = semver.gte(
-		nextPkg.default.version,
-		"16.0.0-beta.0",
-	);
+	const nextJSVersion = await getNextJSVersion();
+	const supportsCacheLife = semver.gte(nextJSVersion, "16.0.0-beta.0");
 
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = await buildSrcPath({

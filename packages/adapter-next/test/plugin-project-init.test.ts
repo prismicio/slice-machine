@@ -5,6 +5,7 @@ import * as path from "node:path";
 import prettier from "prettier";
 
 import adapter from "../src";
+import { mockNextJSVersion } from "./__testutils__/mockNextJSVersion";
 
 test("installs dependencies", async (ctx) => {
 	const log = vi.fn();
@@ -1699,9 +1700,7 @@ describe("/api/revalidate route", () => {
 			const log = vi.fn();
 			const installDependencies = vi.fn();
 
-			vi.doMock("next/package.json", async () => ({
-				default: { version: "15.0.0" },
-			}));
+			const unmockNextJSVersion = mockNextJSVersion("15.0.0");
 
 			await ctx.pluginRunner.callHook("project:init", {
 				log,
@@ -1725,7 +1724,7 @@ describe("/api/revalidate route", () => {
 				"
 			`);
 
-			vi.doUnmock("next/package.json");
+			unmockNextJSVersion();
 		});
 	});
 
