@@ -10916,11 +10916,6 @@ __metadata:
     vite: 5.4.20
     vite-plugin-sdk: 0.1.1
     vitest: 0.32.0
-  peerDependencies:
-    msw: ^1.1.0
-  peerDependenciesMeta:
-    msw:
-      optional: true
   languageName: unknown
   linkType: soft
 
