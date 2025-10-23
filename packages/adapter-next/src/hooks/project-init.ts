@@ -8,6 +8,7 @@ import {
 	writeProjectFile,
 } from "@slicemachine/plugin-kit/fs";
 import { source } from "common-tags";
+import semver from "semver";
 
 import { buildSrcPath } from "../lib/buildSrcPath";
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
@@ -18,6 +19,7 @@ import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile"
 
 import type { PluginOptions } from "../types";
 import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
+import { getNextJSVersion } from "../lib/getNextJSVersion";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];
@@ -541,6 +543,9 @@ const createRevalidateRoute = async ({
 		return;
 	}
 
+	const nextJSVersion = await getNextJSVersion();
+	const supportsCacheLife = semver.gte(nextJSVersion, "16.0.0-beta.0");
+
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = await buildSrcPath({
 		filename: `app/api/revalidate/route.${extension}`,
@@ -556,7 +561,7 @@ const createRevalidateRoute = async ({
 		import { revalidateTag } from "next/cache";
 
 		export async function POST() {
-			revalidateTag("prismic");
+			revalidateTag("prismic"${supportsCacheLife ? ', "max"' : ""});
 
 			return NextResponse.json({ revalidated: true, now: Date.now() });
 		}

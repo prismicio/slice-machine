@@ -5,6 +5,7 @@ import * as path from "node:path";
 import prettier from "prettier";
 
 import adapter from "../src";
+import { mockNextJSVersion } from "./__testutils__/mockNextJSVersion";
 
 test("installs dependencies", async (ctx) => {
 	const log = vi.fn();
@@ -1617,7 +1618,7 @@ describe("/api/revalidate route", () => {
 				import { revalidateTag } from \\"next/cache\\";
 
 				export async function POST() {
-				  revalidateTag(\\"prismic\\");
+				  revalidateTag(\\"prismic\\", \\"max\\");
 
 				  return NextResponse.json({ revalidated: true, now: Date.now() });
 				}
@@ -1655,7 +1656,7 @@ describe("/api/revalidate route", () => {
 				import { revalidateTag } from \\"next/cache\\";
 
 				export async function POST() {
-				  revalidateTag(\\"prismic\\");
+				  revalidateTag(\\"prismic\\", \\"max\\");
 
 				  return NextResponse.json({ revalidated: true, now: Date.now() });
 				}
@@ -1687,12 +1688,43 @@ describe("/api/revalidate route", () => {
 				import { revalidateTag } from \\"next/cache\\";
 
 				export async function POST() {
+				  revalidateTag(\\"prismic\\", \\"max\\");
+
+				  return NextResponse.json({ revalidated: true, now: Date.now() });
+				}
+				"
+			`);
+		});
+
+		test("excludes cacheLife parameter when using Next.js < 16.0.0-beta.0", async (ctx) => {
+			const log = vi.fn();
+			const installDependencies = vi.fn();
+
+			const unmockNextJSVersion = mockNextJSVersion("15.0.0");
+
+			await ctx.pluginRunner.callHook("project:init", {
+				log,
+				installDependencies,
+			});
+
+			const contents = await fs.readFile(
+				path.join(ctx.project.root, "app", "api", "revalidate", "route.js"),
+				"utf8",
+			);
+
+			expect(contents).toMatchInlineSnapshot(`
+				"import { NextResponse } from \\"next/server\\";
+				import { revalidateTag } from \\"next/cache\\";
+
+				export async function POST() {
 				  revalidateTag(\\"prismic\\");
 
 				  return NextResponse.json({ revalidated: true, now: Date.now() });
 				}
 				"
 			`);
+
+			unmockNextJSVersion();
 		});
 	});
 
