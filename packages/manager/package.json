@@ -118,7 +118,7 @@
 		"vitest": "0.32.0"
 	},
 	"peerDependencies": {
-		"msw": "^1.1.0"
+		"msw": ">=1.1.0"
 	},
 	"peerDependenciesMeta": {
 		"msw": {
