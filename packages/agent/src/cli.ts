@@ -1,13 +1,27 @@
 import { createSliceMachineManager } from "@slicemachine/manager";
 import chalk from "chalk";
 import { generateTypes } from "./generateTypes";
-import { writeFile, readFile, unlink } from "node:fs/promises";
-import { join } from "node:path";
+
+// Helpers
+import { detectEnvironment } from "./lib/detectEnvironment";
+import { ensureAuthenticated } from "./lib/auth";
+import { selectRepository } from "./lib/repository";
+import { checkProjectInitialized, writeSliceMachineConfig } from "./lib/config";
+import { installDependencies } from "./lib/installDependencies";
+
+// Creating files
+import { upsertPrismicFile } from "./lib/create/prismicio";
+import { createAPIRoutes } from "./lib/create/apiRoutes";
+import { createSliceSimulator } from "./lib/create/sliceSimulator";
+import {
+  createSliceComponents,
+  updateSliceLibraryIndex,
+} from "./lib/create/slices";
+import { createPageComponents } from "./lib/create/pages";
 
 interface CLIOptions {
   help?: boolean;
   verbose: boolean;
-  repository?: string;
   environment?: string;
 }
 
@@ -19,28 +33,19 @@ async function parseArgs(): Promise<CLIOptions> {
 
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-
     switch (arg) {
-      case "-h":
       case "--help":
+      case "-h":
         options.help = true;
         break;
-
-      case "-v":
       case "--verbose":
+      case "-v":
         options.verbose = true;
         break;
-
-      case "-r":
-      case "--repository":
-        options.repository = args[++i];
-        break;
-
-      case "-e":
       case "--environment":
+      case "-e":
         options.environment = args[++i];
         break;
-
       default:
         console.error(chalk.red(`❌ Unknown option: ${arg}`));
         process.exit(1);
@@ -54,14 +59,13 @@ async function showHelp(): Promise<void> {
   console.log(`
 ${chalk.bold("Slice Machine Agent")}
 
-Headless CLI agent for syncing Prismic models and generating TypeScript types.
+Headless CLI agent for initializing and syncing Prismic projects.
 
 ${chalk.bold("Usage:")}
   slicemachine-agent [options]
   sm-agent [options]
 
 ${chalk.bold("Options:")}
-  -r, --repository <name>    Prismic repository name (required)
   -e, --environment <env>    Prismic environment (default: production)
                              Options: production, staging, dev-tools, 
                              marketing-tools, platform, development
@@ -69,57 +73,43 @@ ${chalk.bold("Options:")}
   -h, --help                 Show this help message
 
 ${chalk.bold("Environment Variables:")}
-  PRISMIC_REPOSITORY         Alternative to --repository flag
   SM_ENV                     Alternative to --environment flag
 
 ${chalk.bold("Examples:")}
-  # Sync models and generate types for a repository
-  sm-agent --repository my-repo
+  # Initialize a new project or sync an existing one
+  sm-agent
 
   # Run with verbose output
-  sm-agent -r my-repo -v
+  sm-agent -v
 
   # Use a specific Prismic environment
-  sm-agent -r my-repo -e staging
+  sm-agent -e staging
 
   # Use environment variable
-  PRISMIC_REPOSITORY=my-repo sm-agent
-
-  # Combine with SM_ENV
-  SM_ENV=staging sm-agent -r my-repo
-
-  # Use in CI/CD
-  npx @slicemachine/agent -r my-repo -v
+  SM_ENV=staging sm-agent
 
 ${chalk.bold("Authentication:")}
   This CLI uses the same authentication as other Prismic tools.
-  Run 'npx prismic login' to authenticate.
+  On first run, you'll be prompted to login via your browser.
 
-${chalk.bold("Output:")}
-  Types are always written to: prismicio-types.d.ts
-  The file is automatically formatted with Prettier.
+${chalk.bold("What it does:")}
+  First run (project not configured):
+    1. Detects your Next.js environment
+    2. Authenticates you with Prismic
+    3. Lets you select a repository
+    4. Installs Prismic dependencies
+    5. Creates configuration and core files
+    6. Creates slices and pages from your remote Prismic models
+    7. Generates TypeScript types
+
+  Subsequent runs (project already configured):
+    1. Fetches remote models
+    2. Creates any new slices/pages (skips existing)
+    3. Regenerates TypeScript types
 `);
 }
 
-async function getRepositoryName(options: CLIOptions): Promise<string> {
-  // Priority: CLI arg > env var
-  if (options.repository) {
-    return options.repository;
-  }
-
-  if (process.env.PRISMIC_REPOSITORY) {
-    return process.env.PRISMIC_REPOSITORY;
-  }
-
-  throw new Error(
-    "No repository specified. Use --repository or set PRISMIC_REPOSITORY env var",
-  );
-}
-
 export async function runCLI(): Promise<void> {
-  let temporaryConfigCreated = false;
-  const configPath = join(process.cwd(), "slicemachine.config.json");
-
   try {
     const options = await parseArgs();
 
@@ -128,125 +118,170 @@ export async function runCLI(): Promise<void> {
       return;
     }
 
-    // Check if repository is provided
-    if (!options.repository && !process.env.PRISMIC_REPOSITORY) {
-      console.error(
-        chalk.red(
-          "❌ Error: No repository specified. Use --repository or set PRISMIC_REPOSITORY env var",
-        ),
-      );
-      console.log("");
-      await showHelp();
-      process.exit(1);
-    }
+    const cwd = process.cwd();
 
-    if (options.verbose) {
-      console.log(chalk.blue("🤖 Slice Machine Agent"));
-    }
+    console.log(chalk.blue("\n🤖 Slice Machine Agent\n"));
 
-    const repositoryName = await getRepositoryName(options);
-
-    if (options.verbose) {
-      console.log(chalk.gray(`📦 Repository: ${repositoryName}`));
-      if (options.environment) {
+    // Set SM_ENV for Prismic environment if specified
+    if (options.environment) {
+      process.env.SM_ENV = options.environment;
+      if (options.verbose) {
         console.log(
           chalk.gray(`🌍 Prismic Environment: ${options.environment}`),
         );
       }
     }
 
-    // Set SM_ENV for Prismic environment if specified
-    if (options.environment) {
-      process.env.SM_ENV = options.environment;
+    if (options.verbose) {
+      console.log(chalk.gray("📦 Detecting Next.js environment..."));
     }
-
-    // Check if slicemachine.config.json exists, create temporary if needed
-    try {
-      await readFile(configPath, "utf8");
-    } catch {
-      // Create temporary config for manager
-      const tempConfig = {
-        repositoryName,
-        adapter: "@slicemachine/adapter-next",
-        libraries: [],
-      };
-      await writeFile(configPath, JSON.stringify(tempConfig, null, 2));
-      temporaryConfigCreated = true;
-
-      if (options.verbose) {
-        console.log(
-          chalk.gray("📝 Created temporary slicemachine.config.json"),
-        );
-      }
-    }
+    const env = await detectEnvironment(cwd);
 
     if (options.verbose) {
-      console.log(chalk.gray("🔐 Creating Slice Machine manager..."));
+      console.log(
+        chalk.gray(
+          `✅ Detected: ${env.hasAppRouter ? "App Router" : "Pages Router"}, ${
+            env.isTypeScript ? "TypeScript" : "JavaScript"
+          }${env.hasSrcDirectory ? ", src/ directory" : ""}`,
+        ),
+      );
+      console.log(
+        chalk.gray(`✅ Package manager: ${chalk.cyan(env.packageManager)}`),
+      );
     }
 
-    const manager = createSliceMachineManager({
-      cwd: process.cwd(),
-    });
+    const isInitialized = await checkProjectInitialized(cwd);
 
-    if (options.verbose) {
-      console.log(chalk.gray("🔌 Initializing plugins..."));
-    }
+    const manager = createSliceMachineManager({ cwd });
 
-    // Initialize plugins - this will fail to load the adapter since it's not installed,
-    // but the initialization flag will be set which is required by the manager.
-    // We catch the error since we don't actually need the adapter - we only use
-    // the manager's API methods which don't require plugin hooks.
-    try {
-      await manager.plugins.initPlugins();
-    } catch (error) {
-      // Expected error: adapter package not found. This is fine - we don't need it.
+    if (!isInitialized) {
       if (options.verbose) {
-        console.log(
-          chalk.gray(
-            "⚠️  Plugin initialization incomplete (adapter not needed for remote operations)",
-          ),
-        );
+        console.log(chalk.gray("🆕 New project detected"));
       }
+      await runInitPhase(cwd, manager, env, options.verbose);
+    } else if (options.verbose) {
+      console.log(chalk.gray("📦 Project already configured"));
     }
 
-    if (options.verbose) {
-      console.log(chalk.gray("✅ Manager created successfully"));
-    }
+    await runSyncPhase(cwd, manager, env, options.verbose);
 
-    await generateTypes({
-      manager,
-      outputPath: "prismicio-types.d.ts",
-      verbose: options.verbose,
-    });
-
-    // Clean up temporary config
-    if (temporaryConfigCreated) {
-      await unlink(configPath);
-      if (options.verbose) {
-        console.log(
-          chalk.gray("🧹 Cleaned up temporary slicemachine.config.json"),
-        );
-      }
-    }
+    console.log(chalk.green("\n✅ All done!\n"));
   } catch (error) {
-    // Clean up temporary config on error
-    if (temporaryConfigCreated) {
-      try {
-        await unlink(configPath);
-      } catch {
-        // Ignore cleanup errors
-      }
-    }
-
     console.error(
-      chalk.red("❌ Error:"),
+      chalk.red("\n❌ Error:"),
       error instanceof Error ? error.message : String(error),
     );
 
-    if (error instanceof Error && error.stack) {
+    if (error instanceof Error && error.stack && process.env.DEBUG) {
       console.error(chalk.red("Stack:"), error.stack);
     }
 
     process.exit(1);
   }
+}
+
+async function runInitPhase(
+  cwd: string,
+  manager: ReturnType<typeof createSliceMachineManager>,
+  env: Awaited<ReturnType<typeof detectEnvironment>>,
+  verbose: boolean,
+): Promise<void> {
+  if (verbose) {
+    console.log(chalk.bold("\n📋 Configuring Prismic repository...\n"));
+  }
+
+  // 1. Authenticate
+  await ensureAuthenticated(manager, verbose);
+
+  // 2. Select repository
+  const repository = await selectRepository(manager, verbose);
+
+  // 3. Install dependencies
+  await installDependencies(env.packageManager, verbose);
+
+  // 4. Create core files
+  await createAPIRoutes(cwd, env, verbose);
+  await createSliceSimulator(cwd, env, verbose);
+
+  // 5. Create slicemachine.config.json
+  const libraryPath = env.hasSrcDirectory ? "./src/slices" : "./slices";
+  await writeSliceMachineConfig(cwd, {
+    repositoryName: repository.domain,
+    adapter: "@slicemachine/adapter-next",
+    libraries: [libraryPath],
+    localSliceSimulatorURL: "http://localhost:3000/slice-simulator",
+    agentInitialized: true,
+  });
+
+  if (verbose) {
+    console.log(chalk.green("✅ Created slicemachine.config.json"));
+  }
+}
+
+async function runSyncPhase(
+  cwd: string,
+  manager: ReturnType<typeof createSliceMachineManager>,
+  env: Awaited<ReturnType<typeof detectEnvironment>>,
+  verbose: boolean,
+): Promise<void> {
+  if (verbose) {
+    console.log(chalk.bold("\n📋 Syncing pages and slices...\n"));
+  }
+
+  // Initialize plugins
+  await manager.plugins.initPlugins();
+
+  // 1. Fetch models from Prismic in parallel
+  const [customTypes, slices] = await Promise.all([
+    manager.customTypes.fetchRemoteCustomTypes(),
+    manager.slices.fetchRemoteSlices(),
+  ]);
+
+  if (verbose) {
+    console.log(
+      chalk.gray(
+        `✅ Found ${customTypes.length} ${
+          customTypes.length === 1 ? "custom type" : "custom types"
+        }, ${slices.length} ${slices.length === 1 ? "slice" : "slices"}`,
+      ),
+    );
+  }
+
+  // 2. Generate TypeScript types (only for TypeScript projects)
+  if (env.isTypeScript) {
+    await generateTypes({
+      manager,
+      outputPath: "prismicio-types.d.ts",
+      verbose: false, // Don't show individual type output
+    });
+
+    if (verbose) {
+      console.log(chalk.green("✅ Generated TypeScript types"));
+    }
+  }
+
+  // 3. Create slice components
+  const sliceResults = await createSliceComponents(cwd, env, slices, verbose);
+
+  // 4. Update slice library index (only if there are slices)
+  if (sliceResults.created > 0) {
+    await updateSliceLibraryIndex(cwd, env, slices, verbose);
+  }
+
+  // 5. Create page components
+  const pageResults = await createPageComponents(
+    cwd,
+    env,
+    customTypes,
+    verbose,
+  );
+
+  // 6. Create prismicio.ts
+  await upsertPrismicFile(
+    cwd,
+    env,
+    customTypes,
+    pageResults.created > 0,
+    verbose,
+  );
 }

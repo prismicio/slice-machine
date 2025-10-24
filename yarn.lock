@@ -10799,8 +10799,13 @@ __metadata:
   dependencies:
     "@slicemachine/manager": "workspace:*"
     "@types/node": ^20.11.5
+    "@types/prompts": ^2.4.3
     chalk: ^4.1.2
+    execa: ^7.1.1
+    open: ^8.4.2
     prismic-ts-codegen: ^0.1.21
+    prompts: ^2.4.2
+    semver: ^7.5.4
     typescript: ^5.3.3
     vite: ^5.0.11
   bin:
@@ -13344,6 +13349,16 @@ __metadata:
     "@types/node": "*"
     kleur: ^3.0.3
   checksum: f3c150132a175d8ae808da64a67638283eb360ecafe0645549a798618dddd66ac2b83d5efac97a6f31494fa08916c355a4c00f0c864cb035faf27dc626c44f9f
+  languageName: node
+  linkType: hard
+
+"@types/prompts@npm:^2.4.3":
+  version: 2.4.9
+  resolution: "@types/prompts@npm:2.4.9"
+  dependencies:
+    "@types/node": "*"
+    kleur: ^3.0.3
+  checksum: 69b8372f4c790b45fea16a46ff8d1bcc71b14579481776b67bd6263637118a7ecb1f12e1311506c29fadc81bf618dc64f1a91f903cfd5be67a0455a227b3e462
   languageName: node
   linkType: hard
 
