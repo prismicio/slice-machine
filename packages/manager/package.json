@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/manager",
-	"version": "0.25.5",
+	"version": "0.25.6",
 	"description": "Manage all aspects of a Slice Machine project.",
 	"repository": {
 		"type": "git",
@@ -118,7 +118,7 @@
 		"vitest": "0.32.0"
 	},
 	"peerDependencies": {
-		"msw": "^1.1.0"
+		"msw": ">=1.1.0"
 	},
 	"peerDependenciesMeta": {
 		"msw": {
