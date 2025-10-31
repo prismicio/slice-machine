@@ -9,9 +9,16 @@ import { createSliceMachineManager } from "@slicemachine/manager";
 import { createSliceMachineManagerMSWHandler } from "@slicemachine/manager/test";
 import { cleanup } from "@testing-library/react";
 import { FormData } from "formdata-polyfill/esm.min";
-import { SetupServer, setupServer } from "msw/node";
 import { rest } from "msw";
-import fetch, { Blob, File, Headers, Request, Response } from "node-fetch";
+import { SetupServer, setupServer } from "msw/node";
+import nodeFetch, {
+  Blob,
+  File,
+  Headers,
+  Request,
+  type RequestInit as NodeFetchRequestInit,
+  Response,
+} from "node-fetch";
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
 
 import pkg from "../package.json";
@@ -57,7 +64,7 @@ beforeEach(async (ctx) => {
     createSliceMachineManagerMSWHandler({
       url: "http://localhost:3000/_manager",
       sliceMachineManager: manager,
-    }),
+    }) as unknown as Parameters<SetupServer["use"]>[0],
   );
 
   await fs.mkdir(os.homedir(), { recursive: true });
@@ -157,7 +164,7 @@ vi.stubGlobal("Request", Request);
 vi.stubGlobal("Response", Response);
 vi.stubGlobal(
   "fetch",
-  vi.fn(async (input, init) => {
+  vi.fn(async (input, init?: NodeFetchRequestInit) => {
     // node-fetch does not support relative URLs. If a relative URL is detected,
     // we attempt to base it on `window.location.href`, if present.
     let url;
@@ -177,7 +184,7 @@ vi.stubGlobal(
       );
     }
 
-    const res = await fetch(url.toString(), init);
+    const res = await nodeFetch(url.toString(), init);
 
     // node-fetch v3 will sometimes stall when decoding a response's body with
     // `text()`, `json()`, etc. This code assumes the first chunk has all of the

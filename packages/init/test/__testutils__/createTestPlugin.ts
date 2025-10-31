@@ -1,8 +1,8 @@
 import {
 	defineSliceMachinePlugin,
 	SliceMachinePluginOptions,
-	SliceMachineHookTypes,
 	SliceMachinePlugin,
+	REQUIRED_ADAPTER_HOOKS,
 } from "@slicemachine/plugin-kit";
 import { expect } from "vitest";
 import * as crypto from "node:crypto";
@@ -11,26 +11,7 @@ const sha1 = (data: crypto.BinaryLike): string => {
 	return crypto.createHash("sha1").update(data).digest("hex");
 };
 
-const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
-	"slice:create",
-	"slice:read",
-	"slice:update",
-	"slice:rename",
-	"slice:delete",
-	"slice:asset:update",
-	"slice:asset:read",
-	"slice:asset:delete",
-	"slice-library:read",
-	"custom-type:create",
-	"custom-type:read",
-	"custom-type:update",
-	"custom-type:rename",
-	"custom-type:delete",
-	"custom-type:asset:update",
-	"custom-type:asset:read",
-	"custom-type:asset:delete",
-	"custom-type-library:read",
-];
+// Use the canonical list from plugin-kit to stay in sync with required hooks
 
 type CreateTestPluginArgs<TPluginOptions extends SliceMachinePluginOptions> =
 	Partial<SliceMachinePlugin<TPluginOptions>> & {
