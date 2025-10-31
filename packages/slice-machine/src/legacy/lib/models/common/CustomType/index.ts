@@ -21,6 +21,7 @@ export const CustomTypeSM = t.exact(
       label: StringOrNull,
       format: withFallback(t.keyof(CustomTypeFormat), "custom"),
       repeatable: withFallback(t.boolean, true),
+      route: StringOrNull,
       tabs: t.array(TabSM),
       status: withFallback(t.boolean, true),
     }),

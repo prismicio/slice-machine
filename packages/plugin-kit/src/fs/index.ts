@@ -114,6 +114,9 @@ export type {
 export { renameCustomType } from "./renameCustomType";
 export type { RenameCustomTypeArgs } from "./renameCustomType";
 
+export { updateCustomTypeRoute } from "./updateCustomTypeRoute";
+export type { UpdateCustomTypeRouteArgs } from "./updateCustomTypeRoute";
+
 export { deleteCustomTypeFile } from "./deleteCustomTypeFile";
 export type { DeleteCustomTypeFileArgs } from "./deleteCustomTypeFile";
 

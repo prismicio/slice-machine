@@ -18,6 +18,8 @@ import {
 	CustomTypeReadHookData,
 	CustomTypeRenameHook,
 	CustomTypeRenameHookData,
+	CustomTypeUpdateRouteHook,
+	CustomTypeUpdateRouteHookData,
 	CustomTypeUpdateHook,
 	CustomTypeUpdateHookData,
 	HookError,
@@ -380,6 +382,21 @@ export class CustomTypesManager extends BaseManager {
 
 		const hookResult = await this.sliceMachinePluginRunner.callHook(
 			"custom-type:rename",
+			args,
+		);
+
+		return {
+			errors: hookResult.errors,
+		};
+	}
+
+	async updateCustomTypeRoute(
+		args: CustomTypeUpdateRouteHookData,
+	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeUpdateRouteHook>>> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const hookResult = await this.sliceMachinePluginRunner.callHook(
+			"custom-type:update-route",
 			args,
 		);
 

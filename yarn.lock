@@ -7433,9 +7433,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:3.11.2":
-  version: 3.11.2
-  resolution: "@prismicio/types-internal@npm:3.11.2"
+"@prismicio/types-internal@npm:3.17.0-alpha.2":
+  version: 3.17.0-alpha.2
+  resolution: "@prismicio/types-internal@npm:3.17.0-alpha.2"
   dependencies:
     monocle-ts: ^2.3.11
     newtype-ts: ^0.3.5
@@ -7445,7 +7445,7 @@ __metadata:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
-  checksum: 0d0fad71ef0f9b3abd108b6405e04ac5e0f461d41b2168427d9f8d3ade8d3e1322b64eaae406d0768fb60ce08d5c0acc1e12c24c5165de820b1e21f855c1aece
+  checksum: 213ee8c59cd87680f461ff3d32184febe98747a7ebc1c2629a020203341f78060c17dda826a458a8e46a8df750232604912f2eedfc710b423da3708b8b878134
   languageName: node
   linkType: hard
 

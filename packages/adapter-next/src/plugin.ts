@@ -16,6 +16,7 @@ import {
 	readSliceModel,
 	readSliceTemplateLibrary,
 	renameCustomType,
+	updateCustomTypeRoute,
 	renameSlice,
 	upsertGlobalTypeScriptTypes,
 	writeCustomTypeFile,
@@ -40,6 +41,7 @@ import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 import { snippetRead } from "./hooks/snippet-read";
+import { pageRouteCreate } from "./hooks/page-route-create";
 
 // Slice Template Library
 import * as Hero from "./sliceTemplates/Hero";
@@ -268,6 +270,14 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				format: context.options.format,
 				...context,
 			});
+		});
+		hook("custom-type:update-route", async (data, context) => {
+			await updateCustomTypeRoute({
+				model: data.model,
+				...context,
+			});
+
+			await pageRouteCreate(data, context);
 		});
 		hook("custom-type:read", async (data, context) => {
 			return await readCustomTypeModel({

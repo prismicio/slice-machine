@@ -28,6 +28,7 @@ import { DocumentationReadHookBase } from "./hooks/documentation-read";
 import { SliceTemplateLibraryReadHookBase } from "./hooks/sliceTemplateLibrary-read";
 import { ProjectEnvironmentReadHookBase } from "./hooks/project-environment-read";
 import { ProjectEnvironmentUpdateHookBase } from "./hooks/project-environment-update";
+import { CustomTypeUpdateRouteHookBase } from "./hooks/customType-update-route";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
@@ -150,6 +151,7 @@ export const SliceMachineHookType = {
 	customType_create: "custom-type:create",
 	customType_update: "custom-type:update",
 	customType_rename: "custom-type:rename",
+	customType_update_route: "custom-type:update-route",
 	customType_delete: "custom-type:delete",
 	customType_read: "custom-type:read",
 	customType_asset_update: "custom-type:asset:update",
@@ -194,6 +196,7 @@ export type SliceMachineHooks = {
 	// Custom Types
 	[SliceMachineHookType.customType_create]: Hook<CustomTypeCreateHookBase>;
 	[SliceMachineHookType.customType_update]: Hook<CustomTypeUpdateHookBase>;
+	[SliceMachineHookType.customType_update_route]: Hook<CustomTypeUpdateRouteHookBase>;
 	[SliceMachineHookType.customType_rename]: Hook<CustomTypeRenameHookBase>;
 	[SliceMachineHookType.customType_delete]: Hook<CustomTypeDeleteHookBase>;
 	[SliceMachineHookType.customType_read]: Hook<CustomTypeReadHookBase>;

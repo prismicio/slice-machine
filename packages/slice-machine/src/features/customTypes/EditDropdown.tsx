@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { type FC, useState } from "react";
 
 import { DeleteCustomTypeModal } from "@/legacy/components/DeleteCTModal";
+import { CustomTypeRouteModal } from "@/legacy/components/Forms/CustomTypeRouteModal";
 import { RenameCustomTypeModal } from "@/legacy/components/Forms/RenameCustomTypeModal";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
@@ -37,6 +38,8 @@ export const EditDropdown: FC<EditDropdownProps> = ({
   const [isDeleteCustomTypeModalOpen, setIsDeleteCustomTypeModalOpen] =
     useState(false);
   const [isRenameCustomTypeModalOpen, setIsRenameCustomTypeModalOpen] =
+    useState(false);
+  const [isCustomTypeRouteModalOpen, setIsCustomTypeRouteModalOpen] =
     useState(false);
   const [isCustomTypeBeingConverted, setCustomTypeBeingConverted] =
     useState(false);
@@ -89,6 +92,16 @@ export const EditDropdown: FC<EditDropdownProps> = ({
           >
             Rename
           </DropdownMenuItem>
+          {format === "page" && (
+            <DropdownMenuItem
+              startIcon={<Icon name="link" />}
+              onSelect={() => {
+                setIsCustomTypeRouteModalOpen(true);
+              }}
+            >
+              Configure route
+            </DropdownMenuItem>
+          )}
           {format === "custom" && !isChangesLocal && (
             <DropdownMenuItem
               startIcon={<Icon name="driveFileMove" />}
@@ -122,6 +135,15 @@ export const EditDropdown: FC<EditDropdownProps> = ({
           customType={customType}
           isChangesLocal={isChangesLocal}
           onClose={() => setIsRenameCustomTypeModalOpen(false)}
+          setLocalCustomType={setLocalCustomType}
+        />
+      ) : null}
+      {isCustomTypeRouteModalOpen ? (
+        <CustomTypeRouteModal
+          // format={format}
+          customType={customType}
+          isChangesLocal={isChangesLocal}
+          onClose={() => setIsCustomTypeRouteModalOpen(false)}
           setLocalCustomType={setLocalCustomType}
         />
       ) : null}

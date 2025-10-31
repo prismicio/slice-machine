@@ -10,6 +10,7 @@ import {
   createCustomType,
   CustomTypeOrigin,
 } from "@/features/customTypes/actions/createCustomType";
+import { updateCustomTypeRoute } from "@/features/customTypes/actions/updateCustomTypeRoute";
 import { CUSTOM_TYPES_CONFIG } from "@/features/customTypes/customTypesConfig";
 import { CUSTOM_TYPES_MESSAGES } from "@/features/customTypes/customTypesMessages";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
@@ -31,6 +32,7 @@ interface FormValues {
   id: string;
   label: string;
   repeatable: boolean;
+  route: string;
 }
 
 type CreateCustomTypeModalProps = {
@@ -50,7 +52,8 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   onCreateChange,
   onOpenChange,
 }) => {
-  const { createCustomTypeSuccess } = useSliceMachineActions();
+  const { createCustomTypeSuccess, saveCustomTypeSuccess } =
+    useSliceMachineActions();
   const { completeStep } = useOnboarding();
 
   const { customTypeIds, customTypeLabels } = useSelector(
@@ -64,7 +67,7 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
   const { syncChanges } = useAutoSync();
   const router = useRouter();
 
-  const onSubmit = async ({ id, label, repeatable }: FormValues) => {
+  const onSubmit = async ({ id, label, repeatable, route }: FormValues) => {
     onCreateChange(true);
 
     await createCustomType({
@@ -88,6 +91,17 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
         syncChanges();
 
         if (format === "page") void completeStep("createPageType");
+
+        if (format === "page") {
+          await updateCustomTypeRoute({
+            model: newCustomType,
+            newRoute: route,
+            onSuccess: (savedCustomType) => {
+              saveCustomTypeSuccess(savedCustomType);
+              syncChanges();
+            },
+          });
+        }
       },
     });
 
@@ -126,6 +140,17 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
     setIsIdFieldPristine(false);
   };
 
+  const handleRouteChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setFieldValue: (
+      field: string,
+      value: string,
+      shouldValidate?: boolean,
+    ) => Promise<unknown>,
+  ) => {
+    void setFieldValue("route", e.target.value);
+  };
+
   return (
     <ModalFormCard
       testId="create-ct-modal"
@@ -145,12 +170,14 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
         repeatable: true,
         id: "",
         label: "",
+        route: "",
       }}
       validate={({ id, label }) => {
         const errors: FormikErrors<{
           repeatable: boolean;
           id: string;
           label: string;
+          route: string;
         }> = {};
 
         if (!label || !label.length) {
@@ -231,6 +258,20 @@ export const CreateCustomTypeModal: React.FC<CreateCustomTypeModalProps> = ({
             error={touched.id ? errors.id : undefined}
             onChange={(e) => handleIdChange(e, setFieldValue)}
           />
+          {format === "page" && (
+            <InputBox
+              name="route"
+              testId="ct-route-input"
+              label={`${customTypesMessages.name({
+                start: true,
+                plural: false,
+              })} Route`}
+              placeholder="/your-route"
+              // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+              error={touched.route ? errors.route : undefined}
+              onChange={(e) => handleRouteChange(e, setFieldValue)}
+            />
+          )}
         </Box>
       )}
     </ModalFormCard>

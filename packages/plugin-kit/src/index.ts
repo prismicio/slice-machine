@@ -140,6 +140,13 @@ export type {
 	CustomTypeRenameHookReturnType,
 } from "./hooks/customType-rename";
 
+// custom-type:update-route
+export type {
+	CustomTypeUpdateRouteHook,
+	CustomTypeUpdateRouteHookData,
+	CustomTypeUpdateRouteHookReturnType,
+} from "./hooks/customType-update-route";
+
 // custom-type:delete
 export type {
 	CustomTypeDeleteHook,

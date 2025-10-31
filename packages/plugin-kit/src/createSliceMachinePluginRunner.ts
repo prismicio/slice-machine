@@ -42,6 +42,7 @@ export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:create",
 	"custom-type:read",
 	"custom-type:rename",
+	"custom-type:update-route",
 	"custom-type:delete",
 	"custom-type:update",
 	"custom-type:asset:update",
