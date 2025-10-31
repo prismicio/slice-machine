@@ -95,8 +95,8 @@ const EditModal = ({ close, data, fields, onSave, zoneType }) => {
         ),
       };
     } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      return { err: e };
+      const err = e instanceof Error ? e : new Error(String(e));
+      return { err };
     }
   })();
 

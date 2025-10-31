@@ -7,6 +7,7 @@ export async function getEnvironments() {
 
     return { environments };
   } catch (error) {
-    return { error };
+    const err = error instanceof Error ? error : new Error(String(error));
+    return { error: err };
   }
 }

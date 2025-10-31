@@ -38,6 +38,7 @@ export async function getActiveEnvironment(
       return await getActiveEnvironment(true);
     }
 
-    return { error };
+    const err = error instanceof Error ? error : new Error(String(error));
+    return { error: err };
   }
 }
