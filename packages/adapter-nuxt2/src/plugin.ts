@@ -230,6 +230,9 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				...context,
 			});
 		});
+		hook("custom-type:update-route", () => {
+			return;
+		});
 		hook("custom-type:delete", async (data, context) => {
 			await deleteCustomTypeDirectory({
 				customTypeID: data.model.id,

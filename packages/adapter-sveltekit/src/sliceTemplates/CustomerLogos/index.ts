@@ -38,6 +38,7 @@ export const mocks: SharedSliceContent[] = [
 				value: [
 					{
 						__TYPE__: "GroupItemContent",
+						key: "01",
 						value: [
 							[
 								"image",
@@ -80,6 +81,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 					{
 						__TYPE__: "GroupItemContent",
+						key: "02",
 						value: [
 							[
 								"image",
@@ -123,6 +125,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 					{
 						__TYPE__: "GroupItemContent",
+						key: "03",
 						value: [
 							[
 								"image",
@@ -166,6 +169,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 					{
 						__TYPE__: "GroupItemContent",
+						key: "04",
 						value: [
 							[
 								"image",
@@ -209,6 +213,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 					{
 						__TYPE__: "GroupItemContent",
+						key: "05",
 						value: [
 							[
 								"image",

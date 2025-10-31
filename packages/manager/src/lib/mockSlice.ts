@@ -35,7 +35,11 @@ export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
 			Object.keys(variation.items || {}).length &&
 			variationMock.items.length === 0
 		) {
-			variationMock.items.push({ __TYPE__: "GroupItemContent", value: [] });
+			variationMock.items.push({
+				__TYPE__: "GroupItemContent",
+				key: "01",
+				value: [],
+			});
 		}
 		const patched = SharedSliceMock.patch(diff, variationMock, mockConfig);
 		if (!patched.ok) {

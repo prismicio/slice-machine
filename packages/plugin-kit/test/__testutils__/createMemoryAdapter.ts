@@ -121,6 +121,15 @@ export function createMemoryAdapter(
 
 				customType.model = model;
 			});
+			hook("custom-type:update-route", ({ model }) => {
+				const customType = customTypeModels.get(model.id);
+
+				if (!customType) {
+					throw new Error("Not found");
+				}
+
+				customType.model = model;
+			});
 			hook("custom-type:delete", ({ model }) => {
 				customTypeModels.delete(model.id);
 			});
