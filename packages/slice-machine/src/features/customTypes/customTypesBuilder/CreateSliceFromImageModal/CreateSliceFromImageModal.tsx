@@ -18,6 +18,7 @@ import {
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect, useRef, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
@@ -92,6 +93,80 @@ export function CreateSliceFromImageModal(
 
     images.forEach((image, index) => uploadImage({ index, image }));
   };
+
+  // Clipboard paste handler
+  const handlePaste = async () => {
+    const supportsClipboardRead =
+      typeof navigator.clipboard?.read === "function";
+
+    if (!supportsClipboardRead) {
+      toast.error("Clipboard paste is not supported in this browser.");
+      return;
+    }
+
+    try {
+      const clipboardItems = await navigator.clipboard.read();
+      if (clipboardItems.length === 0) return;
+
+      let imageName = "pasted-image.png";
+      let imageBlob: Blob | null = null;
+
+      // Try to read JSON text from clipboard to get frame name
+      for (const item of clipboardItems) {
+        console.log("item", item);
+        if (item.types.includes("text/plain")) {
+          try {
+            const textBlob = await item.getType("text/plain");
+            const text = await textBlob.text();
+            const data = JSON.parse(text) as unknown;
+            if (
+              data !== null &&
+              typeof data === "object" &&
+              "name" in data &&
+              typeof data.name === "string"
+            ) {
+              imageName = `${data.name}.png`;
+            }
+          } catch {
+            // Ignore JSON parsing errors
+          }
+        }
+      }
+
+      // Find and extract image from clipboard
+      for (const item of clipboardItems) {
+        const imageType = item.types.find((type) => type.startsWith("image/"));
+        if (imageType !== undefined) {
+          imageBlob = await item.getType(imageType);
+          break;
+        }
+      }
+
+      if (!imageBlob) {
+        toast.error("No image found in clipboard.");
+        return;
+      }
+
+      // Create File object from blob
+      const file = new File([imageBlob], imageName, { type: imageBlob.type });
+      onImagesSelected([file]);
+
+      toast.success(`Pasted ${imageName}`);
+    } catch (error) {
+      console.error("Failed to paste from clipboard:", error);
+      toast.error("Failed to paste from clipboard. Please try again.");
+    }
+  };
+
+  // Enable paste with Cmd+V / Ctrl+V when modal is open
+  useHotkeys(
+    ["meta+v", "ctrl+v"],
+    (event) => {
+      event.preventDefault();
+      void handlePaste();
+    },
+    { enabled: open },
+  );
 
   const uploadImage = (args: { index: number; image: File }) => {
     const { index, image } = args;
