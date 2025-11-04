@@ -20,6 +20,7 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "react-toastify";
+import { z } from "zod";
 
 import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
@@ -29,6 +30,11 @@ import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { Slice, SliceCard } from "./SliceCard";
+
+const clipboardDataSchema = z.object({
+  name: z.string(),
+  image: z.string().startsWith("data:image/"),
+});
 
 const IMAGE_UPLOAD_LIMIT = 10;
 
@@ -111,99 +117,44 @@ export function CreateSliceFromImageModal(
       let imageName = "pasted-image.png";
       let imageBlob: Blob | null = null;
 
-      // Method 1: Try to parse HTML with embedded metadata and image
+      // Method 1: Try to extract image from clipboard image/png blob (preferred)
       for (const item of clipboardItems) {
         console.log("Clipboard item types:", item.types);
 
-        if (item.types.includes("text/html")) {
+        const imageType = item.types.find((type) => type.startsWith("image/"));
+        if (imageType !== undefined) {
+          imageBlob = await item.getType(imageType);
+          console.log("Extracted image from clipboard image type:", imageType);
+          break;
+        }
+      }
+
+      // Method 2: Read JSON from text/plain to get metadata and base64 image as fallback
+      for (const item of clipboardItems) {
+        if (item.types.includes("text/plain")) {
           try {
-            const htmlBlob = await item.getType("text/html");
-            const html = await htmlBlob.text();
-            console.log("HTML content from clipboard:", html);
+            const textBlob = await item.getType("text/plain");
+            const text = await textBlob.text();
 
-            // Parse HTML
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, "text/html");
-            const div = doc.querySelector("[data-prismic-slice]");
+            const result = clipboardDataSchema.safeParse(JSON.parse(text));
+            if (result.success) {
+              const data = result.data;
+              imageName = `${data.name}.png`;
+              console.log("Extracted name from text/plain JSON:", data);
 
-            if (div) {
-              // Extract metadata
-              const metadataStr = div.getAttribute("data-prismic-slice");
-              if (metadataStr) {
-                const metadata = JSON.parse(metadataStr) as unknown;
-                if (
-                  metadata !== null &&
-                  typeof metadata === "object" &&
-                  "name" in metadata &&
-                  typeof metadata.name === "string"
-                ) {
-                  imageName = `${metadata.name}.png`;
-                  console.log("Extracted metadata from HTML:", metadata);
-                }
-              }
-
-              // Extract image from data URL
-              const img = div.querySelector("img");
-              if (img?.src && img.src.startsWith("data:image/")) {
-                const response = await fetch(img.src);
+              // Use base64 image as fallback if no blob was found
+              if (!imageBlob) {
+                const response = await fetch(data.image);
                 imageBlob = await response.blob();
-                console.log("Extracted image from HTML data URL");
+                console.log("Extracted image from base64 fallback");
+                console.log("Image blob type:", imageBlob.type);
               }
+            } else {
+              console.warn("Clipboard data validation failed:", result.error);
             }
           } catch (error) {
-            console.warn("Failed to parse HTML from clipboard:", error);
-            // Continue to fallback methods
-          }
-        }
-      }
-      
-      // Method 2: Fallback - try to read JSON text from clipboard to get frame name
-      if (!imageBlob || imageName === "pasted-image.png") {
-        for (const item of clipboardItems) {
-          if (item.types.includes("text/plain")) {
-            try {
-              const textBlob = await item.getType("text/plain");
-              const text = await textBlob.text();
-              const data = JSON.parse(text) as Record<string, unknown>;
-              if (
-                data !== null &&
-                typeof data === "object" &&
-                "name" in data &&
-                typeof data.name === "string"
-              ) {
-                imageName = `${data.name}.png`;
-                console.log("Extracted name from text/plain JSON:", data);
-                const base64Image = data.image as string | undefined;
-                if (
-                  base64Image !== undefined &&
-                  base64Image.startsWith("data:image/")
-                ) {
-                  const response = await fetch(base64Image);
-                  imageBlob = await response.blob();
-                  console.log("Extracted image from base64 image");
-                  console.log("Image blob type:", imageBlob);
-                }
-              }
-            } catch {
-              // Ignore JSON parsing errors
-            }
-          }
-        }
-      }
-
-      // Method 3: Find and extract image from clipboard if not already extracted from HTML
-      if (!imageBlob) {
-        for (const item of clipboardItems) {
-          const imageType = item.types.find((type) =>
-            type.startsWith("image/"),
-          );
-          if (imageType !== undefined) {
-            imageBlob = await item.getType(imageType);
-            console.log(
-              "Extracted image from clipboard image type:",
-              imageType,
-            );
-            break;
+            console.warn("Failed to parse JSON from clipboard:", error);
+            // Continue - we may still have imageBlob from Method 1
           }
         }
       }
