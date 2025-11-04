@@ -111,34 +111,100 @@ export function CreateSliceFromImageModal(
       let imageName = "pasted-image.png";
       let imageBlob: Blob | null = null;
 
-      // Try to read JSON text from clipboard to get frame name
+      // Method 1: Try to parse HTML with embedded metadata and image
       for (const item of clipboardItems) {
-        console.log("item", item);
-        if (item.types.includes("text/plain")) {
+        console.log("Clipboard item types:", item.types);
+
+        if (item.types.includes("text/html")) {
           try {
-            const textBlob = await item.getType("text/plain");
-            const text = await textBlob.text();
-            const data = JSON.parse(text) as unknown;
-            if (
-              data !== null &&
-              typeof data === "object" &&
-              "name" in data &&
-              typeof data.name === "string"
-            ) {
-              imageName = `${data.name}.png`;
+            const htmlBlob = await item.getType("text/html");
+            const html = await htmlBlob.text();
+            console.log("HTML content from clipboard:", html);
+
+            // Parse HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const div = doc.querySelector("[data-prismic-slice]");
+
+            if (div) {
+              // Extract metadata
+              const metadataStr = div.getAttribute("data-prismic-slice");
+              if (metadataStr) {
+                const metadata = JSON.parse(metadataStr) as unknown;
+                if (
+                  metadata !== null &&
+                  typeof metadata === "object" &&
+                  "name" in metadata &&
+                  typeof metadata.name === "string"
+                ) {
+                  imageName = `${metadata.name}.png`;
+                  console.log("Extracted metadata from HTML:", metadata);
+                }
+              }
+
+              // Extract image from data URL
+              const img = div.querySelector("img");
+              if (img?.src && img.src.startsWith("data:image/")) {
+                const response = await fetch(img.src);
+                imageBlob = await response.blob();
+                console.log("Extracted image from HTML data URL");
+              }
             }
-          } catch {
-            // Ignore JSON parsing errors
+          } catch (error) {
+            console.warn("Failed to parse HTML from clipboard:", error);
+            // Continue to fallback methods
+          }
+        }
+      }
+      
+      // Method 2: Fallback - try to read JSON text from clipboard to get frame name
+      if (!imageBlob || imageName === "pasted-image.png") {
+        for (const item of clipboardItems) {
+          if (item.types.includes("text/plain")) {
+            try {
+              const textBlob = await item.getType("text/plain");
+              const text = await textBlob.text();
+              const data = JSON.parse(text) as Record<string, unknown>;
+              if (
+                data !== null &&
+                typeof data === "object" &&
+                "name" in data &&
+                typeof data.name === "string"
+              ) {
+                imageName = `${data.name}.png`;
+                console.log("Extracted name from text/plain JSON:", data);
+                const base64Image = data.image as string | undefined;
+                if (
+                  base64Image !== undefined &&
+                  base64Image.startsWith("data:image/")
+                ) {
+                  const response = await fetch(base64Image);
+                  imageBlob = await response.blob();
+                  console.log("Extracted image from base64 image");
+                  console.log("Image blob type:", imageBlob);
+                }
+              }
+            } catch {
+              // Ignore JSON parsing errors
+            }
           }
         }
       }
 
-      // Find and extract image from clipboard
-      for (const item of clipboardItems) {
-        const imageType = item.types.find((type) => type.startsWith("image/"));
-        if (imageType !== undefined) {
-          imageBlob = await item.getType(imageType);
-          break;
+      // Method 3: Find and extract image from clipboard if not already extracted from HTML
+      if (!imageBlob) {
+        for (const item of clipboardItems) {
+          const imageType = item.types.find((type) =>
+            type.startsWith("image/"),
+          );
+          if (imageType !== undefined) {
+            imageBlob = await item.getType(imageType);
+            console.log(
+              "Extracted image from clipboard image type:",
+              imageType,
+            );
+            break;
+          }
         }
       }
 
