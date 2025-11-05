@@ -5,6 +5,7 @@ import {
   BlankSlateIcon,
   BlankSlateTitle,
   Box,
+  Button,
   Dialog,
   DialogActionButton,
   DialogActions,
@@ -32,6 +33,7 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { Slice, SliceCard } from "./SliceCard";
 
 const clipboardDataSchema = z.object({
+  __type: z.literal("figma-to-prismic/clipboard-data"),
   name: z.string(),
   image: z.string().startsWith("data:image/"),
 });
@@ -100,7 +102,6 @@ export function CreateSliceFromImageModal(
     images.forEach((image, index) => uploadImage({ index, image }));
   };
 
-  // Clipboard paste handler
   const handlePaste = async () => {
     const supportsClipboardRead =
       typeof navigator.clipboard?.read === "function";
@@ -342,11 +343,15 @@ export function CreateSliceFromImageModal(
               overlay={
                 <UploadBlankSlate
                   onFilesSelected={onImagesSelected}
+                  onPaste={() => void handlePaste()}
                   droppingFiles
                 />
               }
             >
-              <UploadBlankSlate onFilesSelected={onImagesSelected} />
+              <UploadBlankSlate
+                onFilesSelected={onImagesSelected}
+                onPaste={() => void handlePaste()}
+              />
             </FileDropZone>
           </Box>
         ) : (
@@ -382,8 +387,9 @@ export function CreateSliceFromImageModal(
 function UploadBlankSlate(props: {
   droppingFiles?: boolean;
   onFilesSelected: (files: File[]) => void;
+  onPaste: () => void;
 }) {
-  const { droppingFiles = false, onFilesSelected } = props;
+  const { droppingFiles = false, onFilesSelected, onPaste } = props;
 
   return (
     <Box
@@ -414,6 +420,17 @@ function UploadBlankSlate(props: {
           >
             Add images
           </FileUploadButton>
+        </BlankSlateActions>
+        Or
+        <BlankSlateActions>
+          <Button
+            size="small"
+            startIcon="contentCopy"
+            onClick={onPaste}
+            color="grey"
+          >
+            Paste from Figma
+          </Button>
         </BlankSlateActions>
       </BlankSlate>
     </Box>
