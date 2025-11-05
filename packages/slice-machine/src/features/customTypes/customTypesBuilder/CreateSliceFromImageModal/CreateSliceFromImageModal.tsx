@@ -17,7 +17,7 @@ import {
   ScrollArea,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
@@ -27,6 +27,8 @@ import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
+import { getSubmitButtonLabel } from "../shared/getSubmitButtonLabel";
+import { useExistingSlices } from "../shared/useExistingSlices";
 import { Slice, SliceCard } from "./SliceCard";
 
 const IMAGE_UPLOAD_LIMIT = 10;
@@ -352,28 +354,6 @@ type NewSlice = {
 };
 
 /**
- * Keeps track of the existing slices in the project.
- * Re-fetches them when the modal is opened.
- */
-function useExistingSlices({ open }: { open: boolean }) {
-  const ref = useRef<SharedSlice[]>([]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    ref.current = [];
-    managerClient.slices
-      .readAllSlices()
-      .then((slices) => {
-        ref.current = slices.models.map(({ model }) => model);
-      })
-      .catch(() => null);
-  }, [open]);
-
-  return ref;
-}
-
-/**
  * If needed, assigns new ids and names to avoid conflicts with existing slices.
  * Names are compared case-insensitively to avoid conflicts
  * between folder names with different casing.
@@ -459,16 +439,3 @@ async function addSlices(newSlices: NewSlice[]) {
 
   return { library, slices };
 }
-
-const getSubmitButtonLabel = (
-  location: "custom_type" | "page_type" | "slices",
-) => {
-  switch (location) {
-    case "custom_type":
-      return "Add to type";
-    case "page_type":
-      return "Add to page";
-    case "slices":
-      return "Add to slices";
-  }
-};

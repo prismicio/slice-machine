@@ -20,6 +20,8 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 } from "@slicemachine/plugin-kit";
+import { writeSliceFile } from "@slicemachine/plugin-kit/fs";
+import pLimit from "p-limit";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -96,6 +98,22 @@ type SliceMachineManagerReadSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
+};
+
+type SliceFile = {
+	path: string;
+	contents: string; // String content, or base64-encoded string for binary files
+	isBinary: boolean;
+};
+
+type SliceMachineManagerWriteSliceFilesArgs = {
+	libraryID: string;
+	sliceID: string;
+	files: SliceFile[];
+};
+
+type SliceMachineManagerWriteSliceFilesReturnType = {
+	errors: (HookError | DecodeError)[];
 };
 
 type SliceMachineManagerReadSliceScreenshotReturnType = {
@@ -1125,5 +1143,86 @@ export class SlicesManager extends BaseManager {
 		);
 
 		return { errors: customTypeReadErrors };
+	}
+
+	async writeSliceFiles(
+		args: SliceMachineManagerWriteSliceFilesArgs,
+	): Promise<SliceMachineManagerWriteSliceFilesReturnType> {
+		assertPluginsInitialized(this.sliceMachinePluginRunner);
+
+		const { libraryID, sliceID, files } = args;
+
+		// Read the slice model to get helpers
+		const { model, errors: readSliceErrors } = await this.readSlice({
+			libraryID,
+			sliceID,
+		});
+
+		if (!model) {
+			return {
+				errors: readSliceErrors,
+			};
+		}
+
+		// Write each file using writeSliceFile from plugin-kit with bounded concurrency
+		const errors: HookError[] = [];
+		const helpers = this.sliceMachinePluginRunner.rawHelpers;
+		const limit = pLimit(8);
+		await Promise.all(
+			files.map((file) =>
+				limit(async () => {
+					try {
+						let contents: string | Buffer;
+						if (file.isBinary) {
+							contents = Buffer.from(file.contents, "base64");
+						} else {
+							contents = file.contents;
+						}
+
+						const writtenPath = await writeSliceFile({
+							libraryID,
+							model,
+							filename: file.path,
+							contents,
+							helpers,
+						});
+						console.info(
+							`Successfully wrote file: ${file.path} -> ${writtenPath}`,
+						);
+					} catch (error) {
+						const errorMessage =
+							error instanceof Error
+								? error.message
+								: `Failed to write file ${file.path}`;
+
+						const errorStack = error instanceof Error ? error.stack : undefined;
+						console.error(`Error writing file ${file.path}:`, errorMessage);
+						if (errorStack) {
+							console.error(`Stack trace:`, errorStack);
+						}
+
+						const owner =
+							this.sliceMachinePluginRunner?.hooksForType(
+								"slice:asset:update",
+							)[0]?.meta.owner ?? "SlicesManager";
+
+						errors.push(
+							new HookError(
+								{
+									id: "writeSliceFile",
+									type: "slice:asset:update",
+									owner,
+								},
+								error,
+							),
+						);
+					}
+				}),
+			),
+		);
+
+		return {
+			errors,
+		};
 	}
 }

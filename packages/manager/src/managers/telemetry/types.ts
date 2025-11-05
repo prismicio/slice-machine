@@ -287,6 +287,7 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 		| { mode: "ai"; langSmithUrl?: string }
 		| { mode: "manual" }
 		| { mode: "template"; sliceTemplate: string }
+		| { mode: "import" }
 	)
 >;
 
