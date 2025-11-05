@@ -178,9 +178,30 @@ export function CreateSliceFromImageModal(
         return;
       }
 
-      // Create File object from blob
+      // Check if we're at the limit
+      const currentSliceCount = slices.length;
+      if (currentSliceCount >= IMAGE_UPLOAD_LIMIT) {
+        toast.error(
+          `You can only upload ${IMAGE_UPLOAD_LIMIT} images at a time.`,
+        );
+        return;
+      }
+
+      // Create File object from blob and append to existing slices
       const file = new File([imageBlob], imageName, { type: imageBlob.type });
-      onImagesSelected([file]);
+      const newIndex = currentSliceCount;
+
+      // Append new slice to existing ones
+      setSlices((prevSlices) => [
+        ...prevSlices,
+        {
+          status: "uploading",
+          image: file,
+        },
+      ]);
+
+      // Start uploading the new image
+      uploadImage({ index: newIndex, image: file });
 
       toast.success(`Pasted ${imageName}${success ? " from Figma" : ""}`);
     } catch (error) {
