@@ -113,10 +113,14 @@ export function CreateSliceFromImageModal(
 
     try {
       const clipboardItems = await navigator.clipboard.read();
-      if (clipboardItems.length === 0) return;
+      if (clipboardItems.length === 0) {
+        toast.error("No data found in clipboard.");
+        return;
+      }
 
       let imageName = "pasted-image.png";
       let imageBlob: Blob | null = null;
+      let success = false;
 
       // Method 1: Try to extract image from clipboard image/png blob (preferred)
       for (const item of clipboardItems) {
@@ -139,6 +143,7 @@ export function CreateSliceFromImageModal(
 
             const result = clipboardDataSchema.safeParse(JSON.parse(text));
             if (result.success) {
+              success = true;
               const data = result.data;
               imageName = `${data.name}.png`;
               console.log("Extracted name from text/plain JSON:", data);
@@ -161,7 +166,15 @@ export function CreateSliceFromImageModal(
       }
 
       if (!imageBlob) {
-        toast.error("No image found in clipboard.");
+        if (success) {
+          toast.error(
+            "Figma data found but image could not be extracted. Please try copying again from Figma.",
+          );
+        } else {
+          toast.error(
+            "No Figma data found in clipboard. Make sure you've copied a frame from Figma using the Prismic plugin.",
+          );
+        }
         return;
       }
 
@@ -169,10 +182,12 @@ export function CreateSliceFromImageModal(
       const file = new File([imageBlob], imageName, { type: imageBlob.type });
       onImagesSelected([file]);
 
-      toast.success(`Pasted ${imageName}`);
+      toast.success(`Pasted ${imageName}${success ? " from Figma" : ""}`);
     } catch (error) {
       console.error("Failed to paste from clipboard:", error);
-      toast.error("Failed to paste from clipboard. Please try again.");
+      toast.error(
+        "Failed to paste from clipboard. Please check browser permissions and try again.",
+      );
     }
   };
 
@@ -421,13 +436,13 @@ function UploadBlankSlate(props: {
             Add images
           </FileUploadButton>
         </BlankSlateActions>
-        Or
+        <BlankSlateDescription>Or</BlankSlateDescription>
         <BlankSlateActions>
           <Button
             size="small"
-            startIcon="contentCopy"
-            onClick={onPaste}
+            startIcon="contentPaste"
             color="grey"
+            onClick={onPaste}
           >
             Paste from Figma
           </Button>
