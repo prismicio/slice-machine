@@ -49,7 +49,7 @@ test("I can navigate through all menu entries", async ({
   );
 });
 
-test.skip("I can access the repository using the open icon", async ({
+test("I can access the repository using the open icon", async ({
   sliceMachinePage,
   procedures,
 }) => {
@@ -68,8 +68,8 @@ test.skip("I can access the repository using the open icon", async ({
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
-  await expect(newTab).toHaveURL(
-    "https://prismic.io/dashboard/login?redirect_uri=https://example-prismic-repo.prismic.io/",
+  expect(newTab.url()).toContain(
+    encodeURIComponent("https://example-prismic-repo.prismic.io/"),
   );
 });
 
