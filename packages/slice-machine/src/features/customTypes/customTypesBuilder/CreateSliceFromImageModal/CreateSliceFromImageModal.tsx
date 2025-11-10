@@ -1,9 +1,6 @@
 import {
-  BlankSlate,
-  BlankSlateActions,
-  BlankSlateDescription,
+  Badge,
   BlankSlateIcon,
-  BlankSlateTitle,
   Box,
   Button,
   Dialog,
@@ -16,6 +13,7 @@ import {
   FileDropZone,
   FileUploadButton,
   ScrollArea,
+  Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect, useRef, useState } from "react";
@@ -364,7 +362,7 @@ export function CreateSliceFromImageModal(
   const someSlicesReady = readySlices.length > 0;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange} size="large">
       <DialogHeader title="Generate from image" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
@@ -429,47 +427,142 @@ function UploadBlankSlate(props: {
 
   return (
     <Box
-      justifyContent="center"
-      flexDirection="column"
       height="100%"
       backgroundColor={droppingFiles ? "purple2" : "grey2"}
       border
       borderStyle="dashed"
+      borderRadius={6}
       borderColor={droppingFiles ? "purple9" : "grey6"}
+      alignItems="center"
+      padding={60}
+      gap={60}
     >
-      <BlankSlate>
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={16}
+        flexGrow={1}
+        flexBasis={0}
+      >
         <BlankSlateIcon
           lineColor="purple11"
           backgroundColor="purple5"
           name="cloudUpload"
           size="large"
         />
-        <BlankSlateTitle>Upload your design images.</BlankSlateTitle>
-        <BlankSlateDescription>
-          Once uploaded, you can generate slices automatically using AI.
-        </BlankSlateDescription>
-        <BlankSlateActions>
-          <FileUploadButton
-            startIcon="attachFile"
-            onFilesSelected={onFilesSelected}
-            color="grey"
-          >
-            Add images
-          </FileUploadButton>
-        </BlankSlateActions>
-        <BlankSlateDescription>Or</BlankSlateDescription>
-        <BlankSlateActions>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap={4}
+          alignItems="flex-start"
+        >
+          <Text>Generate slices from your designs</Text>
+          <Text variant="small" color="grey11">
+            Upload your design images or paste them directly from Figma.
+          </Text>
+        </Box>
+        <Box display="flex" alignItems="center" gap={16}>
           <Button
             size="small"
-            startIcon="contentPaste"
+            renderStartIcon={() => <FigmaIcon size="small" />}
             color="grey"
             onClick={onPaste}
           >
             Paste from Figma
           </Button>
-        </BlankSlateActions>
-      </BlankSlate>
+          <FileUploadButton
+            size="small"
+            onFilesSelected={onFilesSelected}
+            color="purple"
+            invisible
+          >
+            Add images
+          </FileUploadButton>
+        </Box>
+      </Box>
+      <Box
+        border
+        borderStyle="dashed"
+        borderRadius={12}
+        borderColor="grey6"
+        backgroundColor="grey3"
+        padding={24}
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-start"
+        gap={16}
+        flexGrow={1}
+        flexBasis={0}
+      >
+        <Badge
+          title="Faster workflow (optional)"
+          color="purple"
+          icon="outbound"
+        />
+        <Box
+          width={56}
+          height={56}
+          backgroundColor="grey12"
+          borderRadius="100%"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <FigmaIcon size="large" />
+        </Box>
+        <Box display="flex" flexDirection="column" gap={4}>
+          <Text variant="bold">Want to work faster?</Text>
+          <Text variant="small" color="grey11">
+            Copy frames from Figma with the Slice Machine plugin and paste them
+            here.
+          </Text>
+        </Box>
+        <Button
+          color="grey"
+          onClick={onPaste}
+          endIcon="arrowForward"
+          textColor="link"
+          invisible
+        >
+          Install plugin
+        </Button>
+      </Box>
     </Box>
+  );
+}
+
+function FigmaIcon(props: { size?: "small" | "large" }) {
+  const { size = "small" } = props;
+
+  return (
+    <svg
+      width={size === "small" ? 10 : 20}
+      height={size === "small" ? 16 : 30}
+      viewBox="0 0 10 16"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M5 7.83323C5 6.45253 6.11928 5.33325 7.49997 5.33325C8.8807 5.33325 10 6.45255 10 7.83328V8.16656C10 9.54728 8.8807 10.6666 7.49997 10.6666C6.11928 10.6666 5 9.54731 5 8.16661V7.83323Z"
+        fill="#1ABCFE"
+      />
+      <path
+        d="M0 13.3334C0 11.8607 1.19391 10.6667 2.66667 10.6667H5V13.5001C5 14.8808 3.88071 16.0001 2.5 16.0001C1.11929 16.0001 0 14.8808 0 13.5001L0 13.3334Z"
+        fill="#0ACF83"
+      />
+      <path
+        d="M5 0V5.33333H7.33333C8.80609 5.33333 10 4.13943 10 2.66667C10 1.19391 8.80609 0 7.33333 0L5 0Z"
+        fill="#FF7262"
+      />
+      <path
+        d="M0 2.66659C0 4.13934 1.19391 5.33325 2.66667 5.33325L5 5.33325L5 -8.15392e-05L2.66667 -8.15392e-05C1.19391 -8.15392e-05 0 1.19383 0 2.66659Z"
+        fill="#F24E1E"
+      />
+      <path
+        d="M0 8.00008C0 9.47284 1.19391 10.6667 2.66667 10.6667H5L5 5.33341L2.66667 5.33341C1.19391 5.33341 0 6.52732 0 8.00008Z"
+        fill="#A259FF"
+      />
+    </svg>
   );
 }
 
