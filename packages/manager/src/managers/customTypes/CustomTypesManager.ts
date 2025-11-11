@@ -34,6 +34,11 @@ import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { UnauthorizedError } from "../../errors";
+import { mkdtemp, rm, writeFile } from "fs/promises";
+import { tmpdir } from "os";
+import path from "path";
+import { randomUUID } from "crypto";
+import { existsSync } from "fs";
 
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
@@ -535,24 +540,42 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async inferSlice({
-		imageBase64Data,
+		imageUrl,
 	}: {
-		imageBase64Data: string;
+		imageUrl: string;
 	}): Promise<InferSliceResponse> {
 		const authToken = await this.user.getAuthenticationToken();
 		const projectRoot = await this.project.getRoot();
 
-		// eslint-disable-next-line no-console
-		console.log({
-			env: process.env,
-			projectRoot,
-			imageBase64Data,
-			endpoint: API_ENDPOINTS.LlmProxyTypeService,
-			authToken,
-		});
+		let tmpImagePath: string | undefined;
+		let tmpDir: string | undefined;
+		try {
+			// Create temporary directory
+			tmpDir = await mkdtemp(path.join(tmpdir(), "slice-machine-"));
+			tmpImagePath = path.join(tmpDir, `${randomUUID()}.png`);
 
-		const queries = queryClaude({
-			prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
+			// Download image from URL and write to temporary file
+			const response = await fetch(imageUrl);
+			if (!response.ok) {
+				throw new Error(
+					`Failed to download image: ${response.status} ${response.statusText}`,
+				);
+			}
+			const arrayBuffer = await response.arrayBuffer();
+			await writeFile(tmpImagePath, Buffer.from(arrayBuffer));
+
+			// eslint-disable-next-line no-console
+			console.log({
+				env: process.env,
+				projectRoot,
+				imageUrl,
+				tmpImagePath,
+				endpoint: API_ENDPOINTS.LlmProxyTypeService,
+				authToken,
+			});
+
+			const queries = queryClaude({
+				prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
 - You MUST start immediately with Step 1.1. DO NOT read, analyze, or explore any project files first.
 - Work step-by-step through the numbered tasks below.
 - DO NOT present any summary, explanation, or completion message after finishing.
@@ -567,9 +590,9 @@ Your goal is to analyze the design image and generate the JSON model data for th
 
 # AVAILABLE RESOURCES
 
-<design_image_base64>
-${imageBase64Data}
-</design_image_base64>
+<design_image>
+${tmpImagePath}
+</design_image>
 
 # AVAILABLE TOOLS
 
@@ -587,7 +610,7 @@ Call this tool in Step 2.1 to learn how to structure the slice model data for th
 # TASK REQUIREMENTS
 
 ## Step 1: Gather information from the design image
-1.1. Analyse the design image at <design_image_base64>.
+1.1. Analyse the design image at <design_image>.
 1.2. Identify all content elements that should be editable in Prismic (e.g., headings, paragraphs, images, links, buttons, etc.).
 
 ## Step 2: Model the Prismic slice
@@ -604,7 +627,7 @@ Call this tool in Step 2.1 to learn how to structure the slice model data for th
 
 <example>
 Assistant: Step 1.1: Analysing design image...
-[reads <design_image_base64>]
+[reads <design_image>]
 
 Step 1.3: Identifying editable content elements...
 [identifies: title field, description field, buttonText field, buttonLink field, backgroundImage field]
@@ -633,71 +656,81 @@ YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
 FINAL REMINDERS:
 - DO NOT ATTEMPT TO BUILD THE PROJECT
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
-			options: {
-				cwd: projectRoot,
-				stderr: (data) => console.error(data),
-				model: "claude-haiku-4-5",
-				permissionMode: "bypassPermissions",
-				allowedTools: [
-					"Bash",
-					"Read",
-					"FileSearch",
-					"Grep",
-					"Glob",
-					"Task",
-					"WebFetch",
-					"mcp__prismic__how_to_model_slice",
-				],
-				disallowedTools: [`Edit(model.json)`, `Write(model.json)`],
-				env: {
-					...process.env,
-					ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
-					ANTHROPIC_API_KEY: authToken,
-				},
-				mcpServers: {
-					prismic: {
-						type: "stdio",
-						command: "npx",
-						args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
+				options: {
+					cwd: projectRoot,
+					stderr: (data) => console.error(data),
+					model: "claude-haiku-4-5",
+					permissionMode: "bypassPermissions",
+					allowedTools: [
+						"Bash",
+						"Read",
+						"FileSearch",
+						"Grep",
+						"Glob",
+						"Task",
+						"WebFetch",
+						"mcp__prismic__how_to_model_slice",
+					],
+					disallowedTools: [`Edit(model.json)`, `Write(model.json)`],
+					env: {
+						...process.env,
+						ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
+						ANTHROPIC_API_KEY: authToken,
 					},
+					mcpServers: {
+						prismic: {
+							type: "stdio",
+							command: "npx",
+							args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
+						},
+					},
+					additionalDirectories: [tmpDir],
 				},
-			},
-		});
+			});
 
-		let model: string | undefined;
+			let model: string | undefined;
 
-		for await (const query of queries) {
-			switch (query.type) {
-				case "result":
-					console.log(JSON.stringify(query, null, 2));
-					if (query.subtype === "success") {
-						const modelData = query.result.match(
-							/---BEGIN-MODEL-DATA---\n(.*)\n---END-MODEL-DATA---/s,
-						)?.[1];
-						if (!modelData) {
-							throw new Error("Could not find model data in the response.");
+			for await (const query of queries) {
+				switch (query.type) {
+					case "result":
+						console.log(JSON.stringify(query, null, 2));
+						if (query.subtype === "success") {
+							const modelData = query.result.match(
+								/---BEGIN-MODEL-DATA---\n(.*)\n---END-MODEL-DATA---/s,
+							)?.[1];
+							if (!modelData) {
+								throw new Error("Could not find model data in the response.");
+							}
+
+							model = modelData;
 						}
+						break;
+					case "user":
+					case "assistant":
+						// eslint-disable-next-line no-console
+						console.log(JSON.stringify(query.message, null, 2));
+						break;
+					default:
+						// eslint-disable-next-line no-console
+						console.log(JSON.stringify(query, null, 2));
+						break;
+				}
+			}
 
-						model = modelData;
-					}
-					break;
-				case "user":
-				case "assistant":
-					// eslint-disable-next-line no-console
-					console.log(JSON.stringify(query.message, null, 2));
-					break;
-				default:
-					// eslint-disable-next-line no-console
-					console.log(JSON.stringify(query, null, 2));
-					break;
+			if (!model) {
+				throw new Error("Could not find model data in the response.");
+			}
+
+			return InferSliceResponse.parse({ slice: JSON.parse(model) });
+		} finally {
+			// Clean up temporary file and directory
+			if (tmpImagePath && existsSync(tmpImagePath)) {
+				await rm(tmpImagePath);
+			}
+			if (tmpDir && existsSync(tmpDir)) {
+				await rm(tmpDir, { recursive: true });
 			}
 		}
-
-		if (!model) {
-			throw new Error("Could not find model data in the response.");
-		}
-
-		return InferSliceResponse.parse({ slice: JSON.parse(model) });
 	}
 }
 
