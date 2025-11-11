@@ -23,6 +23,7 @@ import {
 	HookError,
 } from "@slicemachine/plugin-kit";
 import { z } from "zod";
+import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -534,36 +535,169 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async inferSlice({
-		imageUrl,
+		imageBase64Data,
 	}: {
-		imageUrl: string;
+		imageBase64Data: string;
 	}): Promise<InferSliceResponse> {
 		const authToken = await this.user.getAuthenticationToken();
-		const headers = {
-			Authorization: `Bearer ${authToken}`,
-		};
+		const projectRoot = await this.project.getRoot();
 
-		const repository = await this.project.getResolvedRepositoryName();
-		const searchParams = new URLSearchParams({
-			repository,
+		// eslint-disable-next-line no-console
+		console.log({
+			env: process.env,
+			projectRoot,
+			imageBase64Data,
+			endpoint: API_ENDPOINTS.LlmProxyTypeService,
+			authToken,
 		});
 
-		const url = new URL("./slices/infer", API_ENDPOINTS.CustomTypeService);
-		url.search = searchParams.toString();
+		const queries = queryClaude({
+			prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
+- You MUST start immediately with Step 1.1. DO NOT read, analyze, or explore any project files first.
+- Work step-by-step through the numbered tasks below.
+- DO NOT present any summary, explanation, or completion message after finishing.
+- DO NOT create TODO lists while performing tasks.
+- Keep responses minimal - only show necessary tool calls and brief progress notes.
 
-		const response = await fetch(url.toString(), {
-			method: "POST",
-			headers: headers,
-			body: JSON.stringify({ imageUrl }),
+# CONTEXT 
+
+The user wants to build a new Prismic Slice based on a design image they provided.
+
+Your goal is to analyze the design image and generate the JSON model data for the slice.
+
+# AVAILABLE RESOURCES
+
+<design_image_base64>
+${imageBase64Data}
+</design_image_base64>
+
+# AVAILABLE TOOLS
+
+You have access to specialized Prismic MCP tools for this task:
+
+<tool name="mcp__prismic__how_to_model_slice">
+<description>
+Provides detailed guidance on creating Prismic slice models, including field types, naming conventions, and best practices.
+</description>
+<when_to_use>
+Call this tool in Step 2.1 to learn how to structure the slice model data for the design you analysed.
+</when_to_use>
+</tool>
+
+# TASK REQUIREMENTS
+
+## Step 1: Gather information from the design image
+1.1. Analyse the design image at <design_image_base64>.
+1.2. Identify all content elements that should be editable in Prismic (e.g., headings, paragraphs, images, links, buttons, etc.).
+
+## Step 2: Model the Prismic slice
+2.1. Call mcp__prismic__how_to_model_slice to learn how to structure the model for this design.
+2.2. Build the complete slice JSON model data in memory based on the guidance received and the information extracted from the image.
+2.3. Present the slice model data in the following format (example):
+---BEGIN-MODEL-DATA---
+{
+  "foo": "bar",
+}
+---END-MODEL-DATA---
+
+# EXAMPLE OF CORRECT EXECUTION
+
+<example>
+Assistant: Step 1.1: Analysing design image...
+[reads <design_image_base64>]
+
+Step 1.3: Identifying editable content elements...
+[identifies: title field, description field, buttonText field, buttonLink field, backgroundImage field]
+
+Step 2.1: Getting Prismic modeling guidance...
+[calls mcp__prismic__how_to_model_slice]
+
+Step 2.2: Building slice model based on guidance and the information extracted...
+[creates model with title field, description field, buttonText field, buttonLink field, backgroundImage field]
+
+Step 2.3: Presenting slice model data...
+---BEGIN-MODEL-DATA---
+{
+  "foo": "bar",
+}
+---END-MODEL-DATA---
+</example>
+
+# DELIVERABLES
+- Slice model data presented in the correct format
+
+YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
+
+---
+
+FINAL REMINDERS:
+- DO NOT ATTEMPT TO BUILD THE PROJECT
+- START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
+			options: {
+				cwd: projectRoot,
+				stderr: (data) => console.error(data),
+				model: "claude-haiku-4-5",
+				permissionMode: "bypassPermissions",
+				allowedTools: [
+					"Bash",
+					"Read",
+					"FileSearch",
+					"Grep",
+					"Glob",
+					"Task",
+					"WebFetch",
+					"mcp__prismic__how_to_model_slice",
+				],
+				disallowedTools: [`Edit(model.json)`, `Write(model.json)`],
+				env: {
+					...process.env,
+					ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
+					ANTHROPIC_API_KEY: authToken,
+				},
+				mcpServers: {
+					prismic: {
+						type: "stdio",
+						command: "npx",
+						args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
+					},
+				},
+			},
 		});
 
-		if (!response.ok) {
-			throw new Error(`Failed to infer slice: ${response.statusText}`);
+		let model: string | undefined;
+
+		for await (const query of queries) {
+			switch (query.type) {
+				case "result":
+					console.log(JSON.stringify(query, null, 2));
+					if (query.subtype === "success") {
+						const modelData = query.result.match(
+							/---BEGIN-MODEL-DATA---\n(.*)\n---END-MODEL-DATA---/s,
+						)?.[1];
+						if (!modelData) {
+							throw new Error("Could not find model data in the response.");
+						}
+
+						model = modelData;
+					}
+					break;
+				case "user":
+				case "assistant":
+					// eslint-disable-next-line no-console
+					console.log(JSON.stringify(query.message, null, 2));
+					break;
+				default:
+					// eslint-disable-next-line no-console
+					console.log(JSON.stringify(query, null, 2));
+					break;
+			}
 		}
 
-		const json = await response.json();
+		if (!model) {
+			throw new Error("Could not find model data in the response.");
+		}
 
-		return InferSliceResponse.parse(json);
+		return InferSliceResponse.parse({ slice: JSON.parse(model) });
 	}
 }
 

@@ -235,7 +235,7 @@ export function CreateSliceFromImageModal(
     getImageUrl({ image }).then(
       (imageUrl) => {
         if (currentId !== id.current) return;
-        inferSlice({ index, imageUrl });
+        void inferSlice({ index, imageUrl, imageData: image });
       },
       () => {
         if (currentId !== id.current) return;
@@ -253,8 +253,12 @@ export function CreateSliceFromImageModal(
 
   const existingSlices = useExistingSlices({ open });
 
-  const inferSlice = (args: { index: number; imageUrl: string }) => {
-    const { index, imageUrl } = args;
+  const inferSlice = async (args: {
+    index: number;
+    imageUrl: string;
+    imageData: File;
+  }) => {
+    const { index, imageUrl, imageData } = args;
     const currentId = id.current;
 
     setSlice({
@@ -266,8 +270,12 @@ export function CreateSliceFromImageModal(
       }),
     });
 
-    managerClient.customTypes.inferSlice({ imageUrl }).then(
-      ({ slice, langSmithUrl }) => {
+    // Convert File to base64 on the client side
+    const imageBase64Data = await fileToBase64(imageData);
+
+    // @ts-expect-error - Type definition expects imageData: File but implementation expects imageBase64Data: string
+    await managerClient.customTypes.inferSlice({ imageBase64Data }).then(
+      ({ slice }) => {
         if (currentId !== id.current) return;
 
         setSlices((prevSlices) =>
@@ -282,7 +290,6 @@ export function CreateSliceFromImageModal(
                     newSlices: prevSlices,
                     slice,
                   }),
-                  langSmithUrl,
                 }
               : prevSlice,
           ),
@@ -296,7 +303,7 @@ export function CreateSliceFromImageModal(
             ...prevSlice,
             status: "generateError",
             thumbnailUrl: imageUrl,
-            onRetry: () => inferSlice({ index, imageUrl }),
+            onRetry: () => void inferSlice({ index, imageUrl, imageData }),
           }),
         });
       },
@@ -561,6 +568,22 @@ function FigmaIcon(props: { size?: "small" | "large" }) {
       />
     </svg>
   );
+}
+
+async function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result === "string") {
+        resolve(result);
+      } else {
+        reject(new Error("Failed to convert file to base64"));
+      }
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
 }
 
 async function getImageUrl({ image }: { image: File }) {
