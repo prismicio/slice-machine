@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Dialog,
-  DialogActionButton,
   DialogActions,
   DialogCancelButton,
   DialogContent,
@@ -54,18 +53,33 @@ interface CreateSliceFromImageModalProps {
 export function CreateSliceFromImageModal(
   props: CreateSliceFromImageModalProps,
 ) {
-  const { open, location, onSuccess, onClose } = props;
+  const { open, location, onClose } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
-  const [isCreatingSlices, setIsCreatingSlices] = useState(false);
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
+  const existingSlices = useExistingSlices({ open });
 
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
    */
   const id = useRef(crypto.randomUUID());
+
+  useHotkeys(
+    ["meta+v", "ctrl+v"],
+    (event) => {
+      event.preventDefault();
+      void handlePaste();
+    },
+    { enabled: open },
+  );
+
+  useEffect(() => {
+    if (slices.every((slice) => slice.status === "success")) {
+      void onAllComplete();
+    }
+  }, [slices]);
 
   const setSlice = (args: {
     index: number;
@@ -76,7 +90,7 @@ export function CreateSliceFromImageModal(
   };
 
   const onOpenChange = (open: boolean) => {
-    if (open || isCreatingSlices) return;
+    if (open) return;
     onClose();
     id.current = crypto.randomUUID();
     setSlices([]);
@@ -93,14 +107,19 @@ export function CreateSliceFromImageModal(
     setSlices(
       images.map((image) => ({
         status: "uploading",
+        source: "upload",
         image,
       })),
     );
 
-    images.forEach((image, index) => uploadImage({ index, image }));
+    images.forEach((imageData, index) => {
+      void generateSlice({ index, imageData, source: "upload" });
+    });
   };
 
   const handlePaste = async () => {
+    if (!open || slices.length > 0) return;
+
     const supportsClipboardRead =
       typeof navigator.clipboard?.read === "function";
 
@@ -122,12 +141,9 @@ export function CreateSliceFromImageModal(
 
       // Method 1: Try to extract image from clipboard image/png blob (preferred)
       for (const item of clipboardItems) {
-        console.log("Clipboard item types:", item.types);
-
         const imageType = item.types.find((type) => type.startsWith("image/"));
         if (imageType !== undefined) {
           imageBlob = await item.getType(imageType);
-          console.log("Extracted image from clipboard image type:", imageType);
           break;
         }
       }
@@ -144,14 +160,11 @@ export function CreateSliceFromImageModal(
               success = true;
               const data = result.data;
               imageName = `${data.name}.png`;
-              console.log("Extracted name from text/plain JSON:", data);
 
               // Use base64 image as fallback if no blob was found
               if (!imageBlob) {
                 const response = await fetch(data.image);
                 imageBlob = await response.blob();
-                console.log("Extracted image from base64 fallback");
-                console.log("Image blob type:", imageBlob.type);
               }
             } else {
               console.warn("Clipboard data validation failed:", result.error);
@@ -186,20 +199,23 @@ export function CreateSliceFromImageModal(
       }
 
       // Create File object from blob and append to existing slices
-      const file = new File([imageBlob], imageName, { type: imageBlob.type });
+      const imageData = new File([imageBlob], imageName, {
+        type: imageBlob.type,
+      });
       const newIndex = currentSliceCount;
 
       // Append new slice to existing ones
       setSlices((prevSlices) => [
         ...prevSlices,
         {
+          source: "figma",
           status: "uploading",
-          image: file,
+          image: imageData,
         },
       ]);
 
       // Start uploading the new image
-      uploadImage({ index: newIndex, image: file });
+      generateSlice({ index: newIndex, imageData, source: "figma" });
 
       toast.success(`Pasted ${imageName}${success ? " from Figma" : ""}`);
     } catch (error) {
@@ -210,55 +226,50 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  // Enable paste with Cmd+V / Ctrl+V when modal is open
-  useHotkeys(
-    ["meta+v", "ctrl+v"],
-    (event) => {
-      event.preventDefault();
-      void handlePaste();
-    },
-    { enabled: open },
-  );
-
-  const uploadImage = (args: { index: number; image: File }) => {
-    const { index, image } = args;
+  const generateSlice = async (args: {
+    index: number;
+    imageData: File;
+    source: "figma" | "upload";
+  }) => {
+    const { index, imageData, source } = args;
     const currentId = id.current;
+
+    const smConfig = await managerClient.project.getSliceMachineConfig();
+    const libraryID = smConfig?.libraries?.[0];
+    if (!libraryID) {
+      throw new Error("No library found in the config.");
+    }
 
     setSlice({
       index,
-      slice: (prevSlice) => ({
-        ...prevSlice,
-        status: "uploading",
-      }),
+      slice: (prevSlice) => ({ ...prevSlice, status: "uploading" }),
     });
 
-    getImageUrl({ image }).then(
-      (imageUrl) => {
-        if (currentId !== id.current) return;
-        void inferSlice({ index, imageUrl, imageData: image });
-      },
-      () => {
-        if (currentId !== id.current) return;
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
-            ...prevSlice,
-            status: "uploadError",
-            onRetry: () => uploadImage({ index, image }),
-          }),
-        });
-      },
-    );
-  };
+    try {
+      const imageUrl = await getImageUrl({ image: imageData });
+      if (currentId !== id.current) return;
 
-  const existingSlices = useExistingSlices({ open });
+      void inferSlice({ index, imageUrl, libraryID, source });
+    } catch {
+      if (currentId !== id.current) return;
+      setSlice({
+        index,
+        slice: (prevSlice) => ({
+          ...prevSlice,
+          status: "uploadError",
+          onRetry: () => generateSlice({ index, imageData, source }),
+        }),
+      });
+    }
+  };
 
   const inferSlice = async (args: {
     index: number;
     imageUrl: string;
-    imageData: File;
+    libraryID: string;
+    source: "figma" | "upload";
   }) => {
-    const { index, imageUrl, imageData } = args;
+    const { index, imageUrl, libraryID, source } = args;
     const currentId = id.current;
 
     setSlice({
@@ -270,99 +281,103 @@ export function CreateSliceFromImageModal(
       }),
     });
 
-    await managerClient.customTypes.inferSlice({ imageUrl }).then(
-      ({ slice }) => {
-        if (currentId !== id.current) return;
+    try {
+      const { slice: model } = await managerClient.customTypes.inferSlice({
+        source,
+        libraryID,
+        imageUrl,
+      });
 
-        setSlices((prevSlices) =>
-          prevSlices.map((prevSlice, i) =>
-            i === index
-              ? {
-                  ...prevSlice,
-                  status: "success",
-                  thumbnailUrl: imageUrl,
-                  model: sliceWithoutConflicts({
-                    existingSlices: existingSlices.current,
-                    newSlices: prevSlices,
-                    slice,
-                  }),
-                }
-              : prevSlice,
-          ),
-        );
-      },
-      () => {
-        if (currentId !== id.current) return;
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
+      if (currentId !== id.current) return;
+
+      setSlices((prevSlices) => {
+        return prevSlices.map((prevSlice, i) => {
+          if (i !== index) return prevSlice;
+          return {
             ...prevSlice,
-            status: "generateError",
+            status: "success",
             thumbnailUrl: imageUrl,
-            onRetry: () => void inferSlice({ index, imageUrl, imageData }),
-          }),
+            model: sliceWithoutConflicts({
+              existingSlices: existingSlices.current,
+              newSlices: slices,
+              slice: model,
+            }),
+          };
         });
-      },
-    );
+      });
+    } catch {
+      if (currentId !== id.current) return;
+      setSlice({
+        index,
+        slice: (prevSlice) => ({
+          ...prevSlice,
+          status: "generateError",
+          thumbnailUrl: imageUrl,
+          onRetry: () => {
+            void inferSlice({ index, imageUrl, libraryID, source });
+          },
+        }),
+      });
+    }
   };
 
-  const onSubmit = () => {
+  const onAllComplete = async () => {
     const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
-      if (slice.status === "success") acc.push(slice);
+      if (slice.status === "success") {
+        acc.push(slice);
+      }
       return acc;
     }, []);
+
     if (!newSlices.length) return;
 
     const currentId = id.current;
-    setIsCreatingSlices(true);
-    addSlices(newSlices)
-      .then(async ({ slices, library }) => {
-        if (currentId !== id.current) return;
+    try {
+      const { slices, library } = await addSlices(newSlices);
+      if (currentId !== id.current) return;
 
-        const serverState = await getState();
-        createSliceSuccess(serverState.libraries);
-        syncChanges();
+      id.current = crypto.randomUUID();
 
-        onSuccess({ slices, library });
+      const serverState = await getState();
+      createSliceSuccess(serverState.libraries);
+      syncChanges();
 
-        setIsCreatingSlices(false);
-        id.current = crypto.randomUUID();
-        setSlices([]);
+      void completeStep("createSlice");
 
-        void completeStep("createSlice");
+      for (const { model, langSmithUrl } of slices) {
+        void telemetry.track({
+          event: "slice:created",
+          id: model.id,
+          name: model.name,
+          library,
+          location,
+          mode: "ai",
+          langSmithUrl,
+        });
 
-        for (const { model, langSmithUrl } of slices) {
-          void telemetry.track({
-            event: "slice:created",
-            id: model.id,
-            name: model.name,
-            library,
-            location,
-            mode: "ai",
-            langSmithUrl,
-          });
+        addAiFeedback({
+          type: "model",
+          library,
+          sliceId: model.id,
+          variationId: model.variations[0].id,
+          langSmithUrl,
+        });
+      }
 
-          addAiFeedback({
-            type: "model",
-            library,
-            sliceId: model.id,
-            variationId: model.variations[0].id,
-            langSmithUrl,
-          });
-        }
-      })
-      .catch(() => {
-        if (currentId !== id.current) return;
-        setIsCreatingSlices(false);
-        toast.error("An unexpected error happened while adding slices.");
-      });
+      toast.success(
+        `${slices.length} new slice${
+          slices.length > 1 ? "s" : ""
+        } successfully generated.`,
+      );
+    } catch {
+      if (currentId !== id.current) return;
+      toast.error("An unexpected error happened while adding slices.");
+    }
   };
 
   const areSlicesLoading = slices.some(
     (slice) => slice.status === "uploading" || slice.status === "generating",
   );
-  const readySlices = slices.filter((slice) => slice.status === "success");
-  const someSlicesReady = readySlices.length > 0;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -456,14 +471,9 @@ export function CreateSliceFromImageModal(
         )}
 
         <DialogActions>
-          <DialogCancelButton disabled={isCreatingSlices} />
-          <DialogActionButton
-            disabled={!someSlicesReady || areSlicesLoading}
-            loading={isCreatingSlices}
-            onClick={onSubmit}
-          >
-            {getSubmitButtonLabel(location)} ({readySlices.length})
-          </DialogActionButton>
+          <DialogCancelButton disabled={areSlicesLoading}>
+            Close
+          </DialogCancelButton>
         </DialogActions>
       </DialogContent>
     </Dialog>
@@ -697,16 +707,3 @@ async function addSlices(newSlices: NewSlice[]) {
 
   return { library, slices };
 }
-
-const getSubmitButtonLabel = (
-  location: "custom_type" | "page_type" | "slices",
-) => {
-  switch (location) {
-    case "custom_type":
-      return "Add to type";
-    case "page_type":
-      return "Add to page";
-    case "slices":
-      return "Add to slices";
-  }
-};

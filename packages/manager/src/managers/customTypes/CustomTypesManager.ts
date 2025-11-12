@@ -539,41 +539,41 @@ export class CustomTypesManager extends BaseManager {
 		return await client.getAllCustomTypes();
 	}
 
-	async inferSlice({
-		imageUrl,
-	}: {
-		imageUrl: string;
-	}): Promise<InferSliceResponse> {
+	async inferSlice(
+		args: { imageUrl: string } & (
+			| { source: "upload" }
+			| { source: "figma"; libraryID: string }
+		),
+	): Promise<InferSliceResponse> {
+		const { source, imageUrl } = args;
 		const authToken = await this.user.getAuthenticationToken();
-		const projectRoot = await this.project.getRoot();
 
-		let tmpImagePath: string | undefined;
-		let tmpDir: string | undefined;
-		try {
-			const libraryRelPath = (await this.slices.readAllSliceLibraries())
-				.libraries[0]?.libraryID;
-			if (!libraryRelPath) {
-				throw new Error("Could not find a library to create the slice in.");
-			}
+		if (source === "figma") {
+			const { libraryID } = args;
 
-			const libraryAbsPath = path.join(projectRoot, libraryRelPath);
+			let tmpDir: string | undefined;
+			try {
+				const projectRoot = await this.project.getRoot();
+				const libraryAbsPath = path.join(projectRoot, libraryID);
 
-			// Create temporary directory
-			tmpDir = await mkdtemp(path.join(tmpdir(), "slice-machine-"));
-			tmpImagePath = path.join(tmpDir, `${randomUUID()}.png`);
-
-			// Download image from URL and write to temporary file
-			const response = await fetch(imageUrl);
-			if (!response.ok) {
-				throw new Error(
-					`Failed to download image: ${response.status} ${response.statusText}`,
+				// Create temporary directory to store the screenshot
+				tmpDir = await mkdtemp(
+					path.join(tmpdir(), "slice-machine-infer-slice-tmp-"),
 				);
-			}
-			const arrayBuffer = await response.arrayBuffer();
-			await writeFile(tmpImagePath, Buffer.from(arrayBuffer));
+				const tmpImagePath = path.join(tmpDir, `${randomUUID()}.png`);
+				const response = await fetch(imageUrl);
+				if (!response.ok) {
+					throw new Error(
+						`Failed to download image: ${response.status} ${response.statusText}`,
+					);
+				}
+				await writeFile(
+					tmpImagePath,
+					Buffer.from(await response.arrayBuffer()),
+				);
 
-			const queries = queryClaude({
-				prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
+				const queries = queryClaude({
+					prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
 - You MUST start immediately with Step 1.1. DO NOT read, analyze, or explore any project files first.
 - Work step-by-step through the numbered tasks below.
 - DO NOT present any summary, explanation, or completion message after finishing.
@@ -584,6 +584,8 @@ export class CustomTypesManager extends BaseManager {
 
 The user wants to build a new Prismic Slice based on a design image they provided.
 Your goal is to analyze the design image and generate the JSON model data for the slice.
+
+You will work under the slice library at <slice_library_path>, where all the slices are stored.
 
 # AVAILABLE RESOURCES
 
@@ -652,9 +654,9 @@ Step 2.3: Saving slice model...
 
 Step 3.1: Presenting the path to the newly created slice...
 [presents <new_slice_path>${path.join(
-					libraryAbsPath,
-					"MyNewSlice",
-				)}</new_slice_path>]
+						libraryAbsPath,
+						"MyNewSlice",
+					)}</new_slice_path>]
 
 # DELIVERABLES
 - Slice model saved to model.json using mcp__prismic__save_slice_data
@@ -669,86 +671,115 @@ FINAL REMINDERS:
 - DO NOT manually write or edit model.json with Write() or Edit() tools
 - DO NOT ATTEMPT TO BUILD THE APPLICATION
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
-				options: {
-					cwd: projectRoot,
-					stderr: (data) => console.error(data),
-					model: "claude-haiku-4-5",
-					permissionMode: "bypassPermissions",
-					allowedTools: [
-						"Bash",
-						"Read",
-						"FileSearch",
-						"Grep",
-						"Glob",
-						"Task",
-						"mcp__prismic__how_to_model_slice",
-						"mcp__prismic__save_slice_data",
-					],
-					disallowedTools: [`Edit(model.json)`, `Write(model.json)`],
-					env: {
-						...process.env,
-						ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
-						ANTHROPIC_API_KEY: authToken,
-					},
-					mcpServers: {
-						prismic: {
-							type: "stdio",
-							command: "npx",
-							args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
+					options: {
+						cwd: libraryAbsPath,
+						stderr: (data) => console.error(data),
+						model: "claude-haiku-4-5",
+						permissionMode: "bypassPermissions",
+						allowedTools: [
+							"Bash",
+							"Read",
+							"FileSearch",
+							"Grep",
+							"Glob",
+							"Task",
+							"mcp__prismic__how_to_model_slice",
+							"mcp__prismic__save_slice_data",
+						],
+						disallowedTools: [`Edit(model.json)`, `Write(model.json)`],
+						env: {
+							...process.env,
+							ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
+							ANTHROPIC_API_KEY: authToken,
+						},
+						mcpServers: {
+							prismic: {
+								type: "stdio",
+								command: "npx",
+								args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
+							},
 						},
 					},
-					additionalDirectories: [tmpDir],
-				},
+				});
+
+				let newSliceAbsPath: string | undefined;
+
+				for await (const query of queries) {
+					switch (query.type) {
+						case "result":
+							console.log(JSON.stringify(query, null, 2));
+							if (query.subtype === "success") {
+								newSliceAbsPath = query.result.match(
+									/<new_slice_path>(.*)<\/new_slice_path>/s,
+								)?.[1];
+							}
+							break;
+						case "user":
+						case "assistant":
+							// eslint-disable-next-line no-console
+							console.log(JSON.stringify(query.message, null, 2));
+							break;
+						default:
+							// eslint-disable-next-line no-console
+							console.log(JSON.stringify(query, null, 2));
+							break;
+					}
+				}
+
+				if (!newSliceAbsPath) {
+					throw new Error("Could not find path for the newly created slice.");
+				}
+
+				const model = await readFile(
+					path.join(newSliceAbsPath, "model.json"),
+					"utf8",
+				);
+
+				if (!model) {
+					throw new Error("Could not find model for the newly created slice.");
+				}
+
+				// move tmpImagePath to the new slice directory and rename to screenshot-default.png
+				await rename(
+					tmpImagePath,
+					path.join(newSliceAbsPath, "screenshot-default.png"),
+				);
+				await rm(tmpDir, { recursive: true });
+
+				return InferSliceResponse.parse({ slice: JSON.parse(model) });
+			} catch (error) {
+				if (tmpDir && existsSync(tmpDir)) {
+					await rm(tmpDir, { recursive: true });
+				}
+
+				throw error;
+			}
+		} else {
+			const headers = {
+				Authorization: `Bearer ${authToken}`,
+			};
+
+			const repository = await this.project.getResolvedRepositoryName();
+			const searchParams = new URLSearchParams({
+				repository,
 			});
 
-			let newSliceAbsPath: string | undefined;
+			const url = new URL("./slices/infer", API_ENDPOINTS.CustomTypeService);
+			url.search = searchParams.toString();
 
-			for await (const query of queries) {
-				switch (query.type) {
-					case "result":
-						console.log(JSON.stringify(query, null, 2));
-						if (query.subtype === "success") {
-							newSliceAbsPath = query.result.match(
-								/<new_slice_path>(.*)<\/new_slice_path>/s,
-							)?.[1];
-						}
-						break;
-					case "user":
-					case "assistant":
-						// eslint-disable-next-line no-console
-						console.log(JSON.stringify(query.message, null, 2));
-						break;
-					default:
-						// eslint-disable-next-line no-console
-						console.log(JSON.stringify(query, null, 2));
-						break;
-				}
+			const response = await fetch(url.toString(), {
+				method: "POST",
+				headers: headers,
+				body: JSON.stringify({ imageUrl }),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to infer slice: ${response.statusText}`);
 			}
 
-			if (!newSliceAbsPath) {
-				throw new Error("Could not find path for the newly created slice.");
-			}
+			const json = await response.json();
 
-			const model = await readFile(
-				path.join(newSliceAbsPath, "model.json"),
-				"utf8",
-			);
-
-			if (!model) {
-				throw new Error("Could not find model for the newly created slice.");
-			}
-
-			const targetImagePath = path.join(
-				newSliceAbsPath,
-				"screenshot-default.png",
-			);
-			await rename(tmpImagePath, targetImagePath);
-
-			return InferSliceResponse.parse({ slice: JSON.parse(model) });
-		} finally {
-			if (tmpDir && existsSync(tmpDir)) {
-				await rm(tmpDir, { recursive: true });
-			}
+			return InferSliceResponse.parse(json);
 		}
 	}
 }
