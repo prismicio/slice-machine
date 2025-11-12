@@ -550,13 +550,50 @@ export class CustomTypesManager extends BaseManager {
 
 		if (source === "figma") {
 			const { libraryID } = args;
+			const startTime = Date.now();
 
 			let tmpDir: string | undefined;
 			try {
+				const config = await this.project.getSliceMachineConfig();
+
+				let framework:
+					| { type: "nextjs" | "nuxt" | "sveltekit"; label: string }
+					| undefined;
+				if (config.adapter === "@slicemachine/adapter-next") {
+					framework = { type: "nextjs", label: "Next.js (React)" };
+				} else if (
+					config.adapter === "@slicemachine/adapter-nuxt" ||
+					config.adapter === "@slicemachine/adapter-nuxt2"
+				) {
+					framework = { type: "nuxt", label: "Nuxt (Vue)" };
+				} else if (config.adapter === "@slicemachine/adapter-sveltekit") {
+					framework = { type: "sveltekit", label: "SvelteKit (Svelte)" };
+				}
+
+				if (!framework) {
+					throw new Error(
+						"Could not determine framework from Slice Machine config.",
+					);
+				}
+
+				let frameworkFileExtension: string | undefined;
+				if (framework.type === "nextjs") {
+					frameworkFileExtension = "tsx";
+				} else if (framework.type === "nuxt") {
+					frameworkFileExtension = "vue";
+				} else if (framework.type === "sveltekit") {
+					frameworkFileExtension = "svelte";
+				}
+
+				if (!frameworkFileExtension) {
+					throw new Error(
+						"Could not determine framework from Slice Machine config.",
+					);
+				}
+
 				const projectRoot = await this.project.getRoot();
 				const libraryAbsPath = path.join(projectRoot, libraryID);
 
-				// Create temporary directory to store the screenshot
 				tmpDir = await mkdtemp(
 					path.join(tmpdir(), "slice-machine-infer-slice-tmp-"),
 				);
@@ -583,7 +620,7 @@ export class CustomTypesManager extends BaseManager {
 # CONTEXT 
 
 The user wants to build a new Prismic Slice based on a design image they provided.
-Your goal is to analyze the design image and generate the JSON model data for the slice.
+Your goal is to analyze the design image and generate the JSON model data and boilerplate code for the slice following Prismic requirements.
 
 You will work under the slice library at <slice_library_path>, where all the slices are stored.
 
@@ -597,6 +634,10 @@ ${tmpImagePath}
 ${libraryAbsPath}
 </slice_library_path>
 
+<framework>
+${framework.label}
+</framework>
+
 # AVAILABLE TOOLS
 
 You have access to specialized Prismic MCP tools for this task:
@@ -607,6 +648,15 @@ Provides detailed guidance on creating Prismic slice models, including field typ
 </description>
 <when_to_use>
 Call this tool in Step 2.1 to learn how to structure the slice model data for the design you analysed.
+</when_to_use>
+</tool>
+
+<tool name="mcp__prismic__how_to_code_slice">
+<description>
+Provides guidance on implementing Prismic slice components, including how to use Prismic field components, props structure, and best practices.
+</description>
+<when_to_use>
+Call this tool in Step 2.1 to learn how to properly structure the slice component with Prismic fields.
 </when_to_use>
 </tool>
 
@@ -627,11 +677,21 @@ Call this tool in Step 2.3 after you have built the complete slice model structu
 
 ## Step 2: Model the Prismic slice
 2.1. Call mcp__prismic__how_to_model_slice to learn how to structure the model for this design.
+- Make sure the name you use for the new slice does not yet exist in the slice library at <slice_library_path>. If it does, use a different name.
 2.2. Build the complete slice JSON model data in memory based on the guidance received and the information extracted from the image.
 2.3. Call mcp__prismic__save_slice_data to save the model (DO NOT manually write model.json) in the slice library at <slice_library_path>.
 
-## Step 3: Present the newly created slice path
-3.1. Present the path to the newly created slice in the following format: <new_slice_path>${libraryAbsPath}/MyNewSlice</new_slice_path>.
+## Step 3: Code a boilerplate slice component based on the model
+3.1. Call mcp__prismic__how_to_code_slice to learn how to properly structure the slice component with Prismic fields.
+3.2. Update the slice component code at <slice_library_path>/index.${frameworkFileExtension}, replacing the placeholder code at with boilerplate code with the following requirements:
+- Must define all the component to render the fields of the slice model created at <slice_model_path>.
+- Must be a valid ${framework.label} component.
+- Must NOT have any styling. No inlines styles, classNames or any other styling. Just the skeleton component structure.
+- Must NOT use any other custom component from the user's codebase.
+- Avoid creating unnecessary wrapper elements, like if they only wrap a single component (e.g., <div><PrismicRichText /></div>).
+
+## Step 4: Present the newly created slice path
+4.1. Present the path to the newly created slice in the following format: <new_slice_path>${libraryAbsPath}/MyNewSlice</new_slice_path>.
 - "MyNewSlice" must be the name of the directory of the newly created slice.
 
 # EXAMPLE OF CORRECT EXECUTION
@@ -652,14 +712,21 @@ Step 2.2: Building slice model based on guidance and the information extracted..
 Step 2.3: Saving slice model...
 [calls mcp__prismic__save_slice_data]
 
-Step 3.1: Presenting the path to the newly created slice...
+Step 3.1: Learning Prismic slice coding requirements...
+[calls mcp__prismic__how_to_code_slice]
+
+Step 3.2: Coding boilerplate slice component based on the model...
+[updates component with Prismic field components, no styling, no other components]
+
+Step 4.1: Presenting the path to the newly created slice...
 [presents <new_slice_path>${path.join(
 						libraryAbsPath,
 						"MyNewSlice",
 					)}</new_slice_path>]
 
 # DELIVERABLES
-- Slice model saved to model.json using mcp__prismic__save_slice_data
+- Slice model saved to <slice_library_path>/model.json using mcp__prismic__save_slice_data
+- Slice component at <slice_library_path>/index.${frameworkFileExtension} updated with boilerplate code
 - New slice path presented in the format mentioned in Step 3.1
 
 YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
@@ -668,7 +735,7 @@ YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
 
 FINAL REMINDERS:
 - You MUST use mcp__prismic__save_slice_data to save the model
-- DO NOT manually write or edit model.json with Write() or Edit() tools
+- You MUST call mcp__prismic__how_to_code_slice in Step 3.1
 - DO NOT ATTEMPT TO BUILD THE APPLICATION
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
 					options: {
@@ -683,10 +750,19 @@ FINAL REMINDERS:
 							"Grep",
 							"Glob",
 							"Task",
+							"Edit",
+							"Write",
+							"MultiEdit",
 							"mcp__prismic__how_to_model_slice",
+							"mcp__prismic__how_to_code_slice",
 							"mcp__prismic__save_slice_data",
 						],
-						disallowedTools: [`Edit(model.json)`, `Write(model.json)`],
+						disallowedTools: [
+							`Edit(**/model.json)`,
+							`Write(**/model.json)`,
+							"Edit(**/mocks.json)",
+							"Write(**/mocks.json)",
+						],
 						env: {
 							...process.env,
 							ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
@@ -739,12 +815,16 @@ FINAL REMINDERS:
 					throw new Error("Could not find model for the newly created slice.");
 				}
 
-				// move tmpImagePath to the new slice directory and rename to screenshot-default.png
+				// move the screenshot image to the new slice directory
 				await rename(
 					tmpImagePath,
 					path.join(newSliceAbsPath, "screenshot-default.png"),
 				);
 				await rm(tmpDir, { recursive: true });
+
+				const elapsedTimeSeconds = (Date.now() - startTime) / 1000;
+				// eslint-disable-next-line no-console
+				console.log(`inferSliceFigma took ${elapsedTimeSeconds}s`);
 
 				return InferSliceResponse.parse({ slice: JSON.parse(model) });
 			} catch (error) {

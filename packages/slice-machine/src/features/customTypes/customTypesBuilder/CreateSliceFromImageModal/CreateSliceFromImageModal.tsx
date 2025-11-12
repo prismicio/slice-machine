@@ -118,6 +118,7 @@ export function CreateSliceFromImageModal(
   };
 
   const handlePaste = async () => {
+    // Limit just to one paste at a time for now
     if (!open || slices.length > 0) return;
 
     const supportsClipboardRead =
@@ -179,11 +180,11 @@ export function CreateSliceFromImageModal(
       if (!imageBlob) {
         if (success) {
           toast.error(
-            "Figma data found but image could not be extracted. Please try copying again from Figma.",
+            "Could not extract Figma data from clipboard. Please try copying again using the Prismic Figma plugin.",
           );
         } else {
           toast.error(
-            "No Figma data found in clipboard. Make sure you've copied a frame from Figma using the Prismic plugin.",
+            "No Figma data found in clipboard. Make sure you've copied a design using the Prismic Figma plugin.",
           );
         }
         return;
@@ -282,7 +283,7 @@ export function CreateSliceFromImageModal(
     });
 
     try {
-      const { slice: model } = await managerClient.customTypes.inferSlice({
+      const inferResult = await managerClient.customTypes.inferSlice({
         source,
         libraryID,
         imageUrl,
@@ -300,7 +301,7 @@ export function CreateSliceFromImageModal(
             model: sliceWithoutConflicts({
               existingSlices: existingSlices.current,
               newSlices: slices,
-              slice: model,
+              slice: inferResult.slice,
             }),
           };
         });
@@ -333,7 +334,10 @@ export function CreateSliceFromImageModal(
 
     const currentId = id.current;
     try {
-      const { slices, library } = await addSlices(newSlices);
+      // Only the slices generated from uploaded images need this step
+      const { slices, library } = await addSlices(
+        newSlices.filter((slice) => slice.source === "upload"),
+      );
       if (currentId !== id.current) return;
 
       id.current = crypto.randomUUID();
@@ -597,6 +601,7 @@ type NewSlice = {
   image: File;
   model: SharedSlice;
   langSmithUrl?: string;
+  source: "figma" | "upload";
 };
 
 /**
