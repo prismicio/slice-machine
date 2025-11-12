@@ -34,7 +34,7 @@ import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
 import { UnauthorizedError } from "../../errors";
-import { mkdtemp, rm, writeFile } from "fs/promises";
+import { mkdtemp, readFile, rename, rm, writeFile } from "fs/promises";
 import { tmpdir } from "os";
 import path from "path";
 import { randomUUID } from "crypto";
@@ -550,6 +550,14 @@ export class CustomTypesManager extends BaseManager {
 		let tmpImagePath: string | undefined;
 		let tmpDir: string | undefined;
 		try {
+			const libraryRelPath = (await this.slices.readAllSliceLibraries())
+				.libraries[0]?.libraryID;
+			if (!libraryRelPath) {
+				throw new Error("Could not find a library to create the slice in.");
+			}
+
+			const libraryAbsPath = path.join(projectRoot, libraryRelPath);
+
 			// Create temporary directory
 			tmpDir = await mkdtemp(path.join(tmpdir(), "slice-machine-"));
 			tmpImagePath = path.join(tmpDir, `${randomUUID()}.png`);
@@ -564,16 +572,6 @@ export class CustomTypesManager extends BaseManager {
 			const arrayBuffer = await response.arrayBuffer();
 			await writeFile(tmpImagePath, Buffer.from(arrayBuffer));
 
-			// eslint-disable-next-line no-console
-			console.log({
-				env: process.env,
-				projectRoot,
-				imageUrl,
-				tmpImagePath,
-				endpoint: API_ENDPOINTS.LlmProxyTypeService,
-				authToken,
-			});
-
 			const queries = queryClaude({
 				prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
 - You MUST start immediately with Step 1.1. DO NOT read, analyze, or explore any project files first.
@@ -585,14 +583,17 @@ export class CustomTypesManager extends BaseManager {
 # CONTEXT 
 
 The user wants to build a new Prismic Slice based on a design image they provided.
-
 Your goal is to analyze the design image and generate the JSON model data for the slice.
 
 # AVAILABLE RESOURCES
 
-<design_image>
+<design_image_path>
 ${tmpImagePath}
-</design_image>
+</design_image_path>
+
+<slice_library_path>
+${libraryAbsPath}
+</slice_library_path>
 
 # AVAILABLE TOOLS
 
@@ -607,29 +608,37 @@ Call this tool in Step 2.1 to learn how to structure the slice model data for th
 </when_to_use>
 </tool>
 
+<tool name="mcp__prismic__save_slice_data">
+<description>
+Validates and saves the slice model data to model.json. This is the ONLY way to create the model file.
+</description>
+<when_to_use>
+Call this tool in Step 2.3 after you have built the complete slice model structure in memory.
+</when_to_use>
+</tool>
+
 # TASK REQUIREMENTS
 
 ## Step 1: Gather information from the design image
-1.1. Analyse the design image at <design_image>.
-1.2. Identify all content elements that should be editable in Prismic (e.g., headings, paragraphs, images, links, buttons, etc.).
+1.1. Analyse the design image at <design_image_path>.
+1.2. Identify all elements in the image that should be dynamically editable (e.g., headings, paragraphs, images, links, buttons, etc.).
 
 ## Step 2: Model the Prismic slice
 2.1. Call mcp__prismic__how_to_model_slice to learn how to structure the model for this design.
 2.2. Build the complete slice JSON model data in memory based on the guidance received and the information extracted from the image.
-2.3. Present the slice model data in the following format (example):
----BEGIN-MODEL-DATA---
-{
-  "foo": "bar",
-}
----END-MODEL-DATA---
+2.3. Call mcp__prismic__save_slice_data to save the model (DO NOT manually write model.json) in the slice library at <slice_library_path>.
+
+## Step 3: Present the newly created slice path
+3.1. Present the path to the newly created slice in the following format: <new_slice_path>${libraryAbsPath}/MyNewSlice</new_slice_path>.
+- "MyNewSlice" must be the name of the directory of the newly created slice.
 
 # EXAMPLE OF CORRECT EXECUTION
 
 <example>
 Assistant: Step 1.1: Analysing design image...
-[reads <design_image>]
+[reads <design_image_path>]
 
-Step 1.3: Identifying editable content elements...
+Step 1.2: Identifying editable content elements...
 [identifies: title field, description field, buttonText field, buttonLink field, backgroundImage field]
 
 Step 2.1: Getting Prismic modeling guidance...
@@ -638,23 +647,27 @@ Step 2.1: Getting Prismic modeling guidance...
 Step 2.2: Building slice model based on guidance and the information extracted...
 [creates model with title field, description field, buttonText field, buttonLink field, backgroundImage field]
 
-Step 2.3: Presenting slice model data...
----BEGIN-MODEL-DATA---
-{
-  "foo": "bar",
-}
----END-MODEL-DATA---
-</example>
+Step 2.3: Saving slice model...
+[calls mcp__prismic__save_slice_data]
+
+Step 3.1: Presenting the path to the newly created slice...
+[presents <new_slice_path>${path.join(
+					libraryAbsPath,
+					"MyNewSlice",
+				)}</new_slice_path>]
 
 # DELIVERABLES
-- Slice model data presented in the correct format
+- Slice model saved to model.json using mcp__prismic__save_slice_data
+- New slice path presented in the format mentioned in Step 3.1
 
 YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
 
 ---
 
 FINAL REMINDERS:
-- DO NOT ATTEMPT TO BUILD THE PROJECT
+- You MUST use mcp__prismic__save_slice_data to save the model
+- DO NOT manually write or edit model.json with Write() or Edit() tools
+- DO NOT ATTEMPT TO BUILD THE APPLICATION
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
 				options: {
 					cwd: projectRoot,
@@ -668,8 +681,8 @@ FINAL REMINDERS:
 						"Grep",
 						"Glob",
 						"Task",
-						"WebFetch",
 						"mcp__prismic__how_to_model_slice",
+						"mcp__prismic__save_slice_data",
 					],
 					disallowedTools: [`Edit(model.json)`, `Write(model.json)`],
 					env: {
@@ -688,21 +701,16 @@ FINAL REMINDERS:
 				},
 			});
 
-			let model: string | undefined;
+			let newSliceAbsPath: string | undefined;
 
 			for await (const query of queries) {
 				switch (query.type) {
 					case "result":
 						console.log(JSON.stringify(query, null, 2));
 						if (query.subtype === "success") {
-							const modelData = query.result.match(
-								/---BEGIN-MODEL-DATA---\n(.*)\n---END-MODEL-DATA---/s,
+							newSliceAbsPath = query.result.match(
+								/<new_slice_path>(.*)<\/new_slice_path>/s,
 							)?.[1];
-							if (!modelData) {
-								throw new Error("Could not find model data in the response.");
-							}
-
-							model = modelData;
 						}
 						break;
 					case "user":
@@ -717,16 +725,27 @@ FINAL REMINDERS:
 				}
 			}
 
-			if (!model) {
-				throw new Error("Could not find model data in the response.");
+			if (!newSliceAbsPath) {
+				throw new Error("Could not find path for the newly created slice.");
 			}
+
+			const model = await readFile(
+				path.join(newSliceAbsPath, "model.json"),
+				"utf8",
+			);
+
+			if (!model) {
+				throw new Error("Could not find model for the newly created slice.");
+			}
+
+			const targetImagePath = path.join(
+				newSliceAbsPath,
+				"screenshot-default.png",
+			);
+			await rename(tmpImagePath, targetImagePath);
 
 			return InferSliceResponse.parse({ slice: JSON.parse(model) });
 		} finally {
-			// Clean up temporary file and directory
-			if (tmpImagePath && existsSync(tmpImagePath)) {
-				await rm(tmpImagePath);
-			}
 			if (tmpDir && existsSync(tmpDir)) {
 				await rm(tmpDir, { recursive: true });
 			}
