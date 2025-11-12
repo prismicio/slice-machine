@@ -674,6 +674,8 @@ Call this tool in Step 2.3 after you have built the complete slice model structu
 ## Step 1: Gather information from the design image
 1.1. Analyse the design image at <design_image_path>.
 1.2. Identify all elements in the image that should be dynamically editable (e.g., headings, paragraphs, images, links, buttons, etc.).
+1.3. List the slice directories under <slice_library_path>.
+1.4. Come up with a unique name for the new slice based on the content of the image and the slice directories.
 
 ## Step 2: Model the Prismic slice
 2.1. Call mcp__prismic__how_to_model_slice to learn how to structure the model for this design.
@@ -702,6 +704,12 @@ Assistant: Step 1.1: Analysing design image...
 
 Step 1.2: Identifying editable content elements...
 [identifies: title field, description field, buttonText field, buttonLink field, backgroundImage field]
+
+Step 1.3: Listing slice directories under <slice_library_path>...
+[lists slice directories: Hero, Hero2, Hero3]
+
+Step 1.4: Coming up with a unique name for the new slice...
+[comes up with a unique name for the new slice: Hero4]
 
 Step 2.1: Getting Prismic modeling guidance...
 [calls mcp__prismic__how_to_model_slice]
