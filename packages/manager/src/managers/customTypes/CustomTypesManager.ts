@@ -776,8 +776,10 @@ FINAL REMINDERS:
 						],
 						env: {
 							...process.env,
-							ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
-							ANTHROPIC_API_KEY: authToken,
+							// ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
+							// ANTHROPIC_API_KEY: authToken,
+							// TODO: For testing purposes, remove when the proxy is ready
+							ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
 						},
 						mcpServers: {
 							prismic: {
