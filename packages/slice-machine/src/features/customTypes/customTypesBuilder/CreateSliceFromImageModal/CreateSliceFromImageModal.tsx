@@ -551,7 +551,11 @@ export function CreateSliceFromImageModal(
             color="purple"
             startIcon="autoFixHigh"
             onClick={() => void generateAllPendingSlices()}
-            disabled={hasTriggeredGeneration || slices.length === 0}
+            disabled={
+              hasTriggeredGeneration ||
+              loadingSliceCount > 0 ||
+              slices.length === 0
+            }
             loading={hasTriggeredGeneration}
             size="medium"
           >
