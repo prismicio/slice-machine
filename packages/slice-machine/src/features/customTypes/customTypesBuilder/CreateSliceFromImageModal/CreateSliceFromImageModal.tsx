@@ -423,6 +423,12 @@ export function CreateSliceFromImageModal(
     }
   };
 
+  const handleClose = () => {
+    id.current = crypto.randomUUID();
+    setSlices([]);
+    onClose();
+  };
+
   const loadingSliceCount = slices.filter((slice) => {
     return slice.status === "uploading" || slice.status === "generating";
   }).length;
@@ -438,7 +444,10 @@ export function CreateSliceFromImageModal(
   const generateSliceCount = loadingSliceCount + pendingSliceCount;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog
+      open={open}
+      onOpenChange={loadingSliceCount > 0 ? undefined : onOpenChange}
+    >
       <DialogHeader title="Generate with AI" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
@@ -548,7 +557,11 @@ export function CreateSliceFromImageModal(
         )}
 
         <DialogActions>
-          <DialogCancelButton disabled={hasTriggeredGeneration} size="medium">
+          <DialogCancelButton
+            size="medium"
+            onClick={handleClose}
+            disabled={loadingSliceCount > 0}
+          >
             Close
           </DialogCancelButton>
           <DialogActionButton
