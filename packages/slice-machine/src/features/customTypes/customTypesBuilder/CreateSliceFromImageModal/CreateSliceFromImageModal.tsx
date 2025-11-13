@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Dialog,
+  DialogActionButton,
   DialogActions,
   DialogCancelButton,
   DialogContent,
@@ -54,7 +55,7 @@ interface CreateSliceFromImageModalProps {
 export function CreateSliceFromImageModal(
   props: CreateSliceFromImageModalProps,
 ) {
-  const { open, location, onClose } = props;
+  const { open, location, onClose, onSuccess } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
@@ -105,22 +106,32 @@ export function CreateSliceFromImageModal(
       return;
     }
 
-    setSlices(
-      images.map((image) => ({
-        status: "uploading",
-        source: "upload",
-        image,
-      })),
-    );
+    const startIndex = slices.length;
+    setSlices((prevSlices) => [
+      ...prevSlices,
+      ...images.map(
+        (image): Slice => ({
+          status: "uploading",
+          source: "upload",
+          image,
+        }),
+      ),
+    ]);
 
-    images.forEach((imageData, index) => {
-      void generateSlice({ index, imageData, source: "upload" });
+    images.forEach((imageData, relativeIndex) => {
+      const index = startIndex + relativeIndex;
+      void uploadImage({ index, imageData, source: "upload" });
     });
   };
 
   const handlePaste = async () => {
-    // Limit just to one paste at a time for now
-    if (!open || slices.length > 0) return;
+    if (!open) return;
+
+    // Don't allow pasting while uploads or generation are in progress
+    const isLoading = slices.some(
+      (slice) => slice.status === "uploading" || slice.status === "generating",
+    );
+    if (isLoading) return;
 
     const supportsClipboardRead =
       typeof navigator.clipboard?.read === "function";
@@ -217,7 +228,7 @@ export function CreateSliceFromImageModal(
       ]);
 
       // Start uploading the new image
-      void generateSlice({ index: newIndex, imageData, source: "figma" });
+      void uploadImage({ index: newIndex, imageData, source: "figma" });
 
       toast.success(`Pasted ${imageName}${success ? " from Figma" : ""}`);
     } catch (error) {
@@ -228,7 +239,7 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const generateSlice = async (args: {
+  const uploadImage = async (args: {
     index: number;
     imageData: File;
     source: "figma" | "upload";
@@ -236,22 +247,28 @@ export function CreateSliceFromImageModal(
     const { index, imageData, source } = args;
     const currentId = id.current;
 
-    const smConfig = await managerClient.project.getSliceMachineConfig();
-    const libraryID = smConfig?.libraries?.[0];
-    if (libraryID === undefined) {
-      throw new Error("No library found in the config.");
-    }
-
     setSlice({
       index,
-      slice: (prevSlice) => ({ ...prevSlice, status: "uploading" }),
+      slice: (prevSlice) => ({
+        ...prevSlice,
+        status: "uploading",
+        image: imageData,
+        source,
+      }),
     });
 
     try {
       const imageUrl = await getImageUrl({ image: imageData });
       if (currentId !== id.current) return;
 
-      void inferSlice({ index, imageUrl, libraryID, source });
+      setSlice({
+        index,
+        slice: (prevSlice) => ({
+          ...prevSlice,
+          status: "pending",
+          thumbnailUrl: imageUrl,
+        }),
+      });
     } catch {
       if (currentId !== id.current) return;
       setSlice({
@@ -259,10 +276,30 @@ export function CreateSliceFromImageModal(
         slice: (prevSlice) => ({
           ...prevSlice,
           status: "uploadError",
-          onRetry: () => void generateSlice({ index, imageData, source }),
+          onRetry: () => void uploadImage({ index, imageData, source }),
         }),
       });
     }
+  };
+
+  const generateAllPendingSlices = async () => {
+    const smConfig = await managerClient.project.getSliceMachineConfig();
+    const libraryID = smConfig?.libraries?.[0];
+    if (libraryID === undefined) {
+      throw new Error("No library found in the config.");
+    }
+
+    // Generate all pending slices simultaneously
+    slices.forEach((slice, index) => {
+      if (slice.status === "pending") {
+        void inferSlice({
+          index,
+          imageUrl: slice.thumbnailUrl,
+          libraryID,
+          source: slice.source,
+        });
+      }
+    });
   };
 
   const inferSlice = async (args: {
@@ -341,11 +378,19 @@ export function CreateSliceFromImageModal(
       );
       if (currentId !== id.current) return;
 
-      id.current = crypto.randomUUID();
-
       const serverState = await getState();
       createSliceSuccess(serverState.libraries);
       syncChanges();
+
+      toast.success(
+        `${newSlices.length} new slice${
+          newSlices.length > 1 ? "s" : ""
+        } successfully generated.`,
+      );
+
+      onSuccess({ slices, library });
+      id.current = crypto.randomUUID();
+      setSlices([]);
 
       void completeStep("createSlice");
 
@@ -368,25 +413,29 @@ export function CreateSliceFromImageModal(
           langSmithUrl,
         });
       }
-
-      toast.success(
-        `${newSlices.length} new slice${
-          newSlices.length > 1 ? "s" : ""
-        } successfully generated.`,
-      );
     } catch {
       if (currentId !== id.current) return;
       toast.error("An unexpected error happened while adding slices.");
     }
   };
 
-  const areSlicesLoading = slices.some(
-    (slice) => slice.status === "uploading" || slice.status === "generating",
-  );
+  const loadingSliceCount = slices.filter((slice) => {
+    return slice.status === "uploading" || slice.status === "generating";
+  }).length;
+
+  const pendingSliceCount = slices.filter((slice) => {
+    return slice.status === "pending";
+  }).length;
+
+  const hasTriggeredGeneration = slices.some((slice) => {
+    return slice.status === "generating" || slice.status === "success";
+  });
+
+  const generateSliceCount = loadingSliceCount + pendingSliceCount;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogHeader title="Generate from image" />
+      <DialogHeader title="Generate with AI" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
           Upload images to generate slices with AI
@@ -461,24 +510,54 @@ export function CreateSliceFromImageModal(
             </FileDropZone>
           </Box>
         ) : (
-          <ScrollArea stableScrollbar={false}>
+          <>
             <Box
-              display="grid"
-              gridTemplateColumns="1fr 1fr"
-              gap={16}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
               padding={16}
             >
-              {slices.map((slice, index) => (
-                <SliceCard slice={slice} key={`slice-${index}`} />
-              ))}
+              <Text variant="h3">Design</Text>
+              <FileUploadButton
+                size="medium"
+                color="grey"
+                onFilesSelected={onImagesSelected}
+                startIcon="attachFile"
+                disabled={hasTriggeredGeneration}
+              >
+                Add images
+              </FileUploadButton>
             </Box>
-          </ScrollArea>
+            <ScrollArea stableScrollbar={false}>
+              <Box
+                display="grid"
+                gridTemplateColumns="1fr 1fr"
+                gap={16}
+                padding={16}
+              >
+                {slices.map((slice, index) => (
+                  <SliceCard slice={slice} key={`slice-${index}`} />
+                ))}
+              </Box>
+            </ScrollArea>
+          </>
         )}
 
         <DialogActions>
-          <DialogCancelButton disabled={areSlicesLoading}>
+          <DialogCancelButton disabled={hasTriggeredGeneration} size="medium">
             Close
           </DialogCancelButton>
+          <DialogActionButton
+            color="purple"
+            startIcon="autoFixHigh"
+            onClick={() => void generateAllPendingSlices()}
+            disabled={hasTriggeredGeneration || slices.length === 0}
+            loading={hasTriggeredGeneration}
+            size="medium"
+          >
+            Generate {generateSliceCount > 0 ? `(${generateSliceCount}) ` : ""}
+            {generateSliceCount === 1 ? "Slice" : "Slices"}
+          </DialogActionButton>
         </DialogActions>
       </DialogContent>
     </Dialog>

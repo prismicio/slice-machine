@@ -18,6 +18,7 @@ export function SliceCard(props: SliceCardProps) {
     slice.status === "uploadError" || slice.status === "generateError";
 
   const hasThumbnail =
+    slice.status === "pending" ||
     slice.status === "generateError" ||
     slice.status === "generating" ||
     slice.status === "success";
@@ -44,7 +45,7 @@ export function SliceCard(props: SliceCardProps) {
         loading={loading}
         startIcon={getStartIcon(slice.status)}
         title={getTitle(slice)}
-        subtitle={getSubtitle(slice.status)}
+        subtitle={getSubtitle(slice)}
         error={error}
         action={action}
       />
@@ -65,6 +66,7 @@ function getTitle(slice: Slice) {
 export type Slice = { image: File; source: "upload" | "figma" } & (
   | { status: "uploading" }
   | { status: "uploadError"; onRetry: () => void }
+  | { status: "pending"; thumbnailUrl: string }
   | { status: "generating"; thumbnailUrl: string }
   | { status: "generateError"; thumbnailUrl: string; onRetry: () => void }
   | {
@@ -87,12 +89,25 @@ function getStartIcon(status: Slice["status"]) {
   }
 }
 
-function getSubtitle(status: Slice["status"]) {
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} kB`;
+  }
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getSubtitle(slice: Slice) {
+  const { status } = slice;
   switch (status) {
     case "uploading":
       return "Uploading...";
     case "uploadError":
       return "Unable to upload image";
+    case "pending":
+      return formatFileSize(slice.image.size);
     case "generating":
       return "Generating...";
     case "generateError":
