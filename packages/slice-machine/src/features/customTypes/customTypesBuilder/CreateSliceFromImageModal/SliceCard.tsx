@@ -1,7 +1,9 @@
 import { Button } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { ReactNode } from "react";
 
 import { Card, CardFooter, CardMedia } from "@/components/Card";
+import { FigmaIcon } from "@/icons/FigmaIcon";
 
 interface SliceCardProps {
   slice: Slice;
@@ -20,6 +22,17 @@ export function SliceCard(props: SliceCardProps) {
     slice.status === "generating" ||
     slice.status === "success";
 
+  let action: ReactNode | undefined;
+  if (error) {
+    action = (
+      <Button startIcon="refresh" color="grey" onClick={slice.onRetry}>
+        Retry
+      </Button>
+    );
+  } else if (slice.source === "figma") {
+    action = <FigmaIcon variant="square" />;
+  }
+
   return (
     <Card disabled={loading}>
       {hasThumbnail ? (
@@ -30,19 +43,23 @@ export function SliceCard(props: SliceCardProps) {
       <CardFooter
         loading={loading}
         startIcon={getStartIcon(slice.status)}
-        title={slice.status === "success" ? slice.model.name : slice.image.name}
+        title={getTitle(slice)}
         subtitle={getSubtitle(slice.status)}
         error={error}
-        action={
-          error ? (
-            <Button startIcon="refresh" color="grey" onClick={slice.onRetry}>
-              Retry
-            </Button>
-          ) : undefined
-        }
+        action={action}
       />
     </Card>
   );
+}
+
+function getTitle(slice: Slice) {
+  if (slice.status === "success") {
+    return slice.model.name;
+  }
+  if (slice.source === "figma") {
+    return slice.image.name.split(".")[0];
+  }
+  return slice.image.name;
 }
 
 export type Slice = { image: File; source: "upload" | "figma" } & (

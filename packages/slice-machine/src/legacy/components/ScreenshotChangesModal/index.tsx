@@ -52,7 +52,7 @@ const FigmaTip = () => {
         minHeight: "40px",
       }}
     >
-      <FigmaIcon />
+      <FigmaIcon variant="square" />
       <div>
         Use&nbsp;{keys} to copy any frame as .png, then just paste it here
       </div>

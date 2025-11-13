@@ -550,6 +550,8 @@ export class CustomTypesManager extends BaseManager {
 
 		if (source === "figma") {
 			const { libraryID } = args;
+			// eslint-disable-next-line no-console
+			console.log(`inferSlice started`);
 			const startTime = Date.now();
 
 			let tmpDir: string | undefined;
@@ -685,11 +687,12 @@ Call this tool in Step 2.3 after you have built the complete slice model structu
 
 ## Step 3: Code a boilerplate slice component based on the model
 3.1. Call mcp__prismic__how_to_code_slice to learn how to properly structure the slice component with Prismic fields.
-3.2. Update the slice component code at <slice_library_path>/index.${frameworkFileExtension}, replacing the placeholder code at with boilerplate code with the following requirements:
-- Must define all the component to render the fields of the slice model created at <slice_model_path>.
+3.2. Update the slice component code at <slice_library_path>/index.${frameworkFileExtension}, replacing the placeholder code with boilerplate code with the following requirements:
+- Must NOT be based on existing slices or components from the codebase.
+- Must render all the Prismic components to display the fields of the slice model created at <slice_model_path>.
 - Must be a valid ${framework.label} component.
-- Must NOT have any styling. No inlines styles, classNames or any other styling. Just the skeleton component structure.
-- Must NOT use any other custom component from the user's codebase.
+- Must NOT have any styling/CSS. No inlines styles or classNames. Just the skeleton component structure.
+- Must NOT use any other custom component or functions from the user's codebase.
 - Avoid creating unnecessary wrapper elements, like if they only wrap a single component (e.g., <div><PrismicRichText /></div>).
 
 ## Step 4: Present the newly created slice path
@@ -791,21 +794,11 @@ FINAL REMINDERS:
 				for await (const query of queries) {
 					switch (query.type) {
 						case "result":
-							console.log(JSON.stringify(query, null, 2));
 							if (query.subtype === "success") {
 								newSliceAbsPath = query.result.match(
 									/<new_slice_path>(.*)<\/new_slice_path>/s,
 								)?.[1];
 							}
-							break;
-						case "user":
-						case "assistant":
-							// eslint-disable-next-line no-console
-							console.log(JSON.stringify(query.message, null, 2));
-							break;
-						default:
-							// eslint-disable-next-line no-console
-							console.log(JSON.stringify(query, null, 2));
 							break;
 					}
 				}
@@ -832,7 +825,7 @@ FINAL REMINDERS:
 
 				const elapsedTimeSeconds = (Date.now() - startTime) / 1000;
 				// eslint-disable-next-line no-console
-				console.log(`inferSliceFigma took ${elapsedTimeSeconds}s`);
+				console.log(`inferSlice took ${elapsedTimeSeconds}s`);
 
 				return InferSliceResponse.parse({ slice: JSON.parse(model) });
 			} catch (error) {

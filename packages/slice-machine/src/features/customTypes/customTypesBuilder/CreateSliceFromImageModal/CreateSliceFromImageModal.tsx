@@ -24,6 +24,7 @@ import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { FigmaIcon } from "@/icons/FigmaIcon";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
@@ -79,7 +80,7 @@ export function CreateSliceFromImageModal(
     if (slices.every((slice) => slice.status === "success")) {
       void onAllComplete();
     }
-  }, [slices]);
+  }, [slices]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setSlice = (args: {
     index: number;
@@ -216,7 +217,7 @@ export function CreateSliceFromImageModal(
       ]);
 
       // Start uploading the new image
-      generateSlice({ index: newIndex, imageData, source: "figma" });
+      void generateSlice({ index: newIndex, imageData, source: "figma" });
 
       toast.success(`Pasted ${imageName}${success ? " from Figma" : ""}`);
     } catch (error) {
@@ -237,7 +238,7 @@ export function CreateSliceFromImageModal(
 
     const smConfig = await managerClient.project.getSliceMachineConfig();
     const libraryID = smConfig?.libraries?.[0];
-    if (!libraryID) {
+    if (libraryID === undefined) {
       throw new Error("No library found in the config.");
     }
 
@@ -258,7 +259,7 @@ export function CreateSliceFromImageModal(
         slice: (prevSlice) => ({
           ...prevSlice,
           status: "uploadError",
-          onRetry: () => generateSlice({ index, imageData, source }),
+          onRetry: () => void generateSlice({ index, imageData, source }),
         }),
       });
     }
@@ -369,8 +370,8 @@ export function CreateSliceFromImageModal(
       }
 
       toast.success(
-        `${slices.length} new slice${
-          slices.length > 1 ? "s" : ""
+        `${newSlices.length} new slice${
+          newSlices.length > 1 ? "s" : ""
         } successfully generated.`,
       );
     } catch {
@@ -416,7 +417,7 @@ export function CreateSliceFromImageModal(
                   alignItems="center"
                   justifyContent="center"
                 >
-                  <FigmaIcon size="large" />
+                  <FigmaIcon variant="original" height={25} />
                 </Box>
                 <Box display="flex" flexDirection="column" flexGrow={1}>
                   <Text variant="bold">Want to work faster?</Text>
@@ -525,7 +526,9 @@ function UploadBlankSlate(props: {
           <Box display="flex" alignItems="center" gap={16}>
             <Button
               size="small"
-              renderStartIcon={() => <FigmaIcon size="small" />}
+              renderStartIcon={() => (
+                <FigmaIcon variant="original" height={16} />
+              )}
               color="grey"
               onClick={onPaste}
             >
@@ -543,40 +546,6 @@ function UploadBlankSlate(props: {
         </Box>
       </BlankSlate>
     </Box>
-  );
-}
-
-function FigmaIcon(props: { size?: "small" | "large" }) {
-  const { size = "small" } = props;
-
-  return (
-    <svg
-      viewBox="0 0 10 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      height={size === "small" ? 16 : 25}
-    >
-      <path
-        d="M5 7.83323C5 6.45253 6.11928 5.33325 7.49997 5.33325C8.8807 5.33325 10 6.45255 10 7.83328V8.16656C10 9.54728 8.8807 10.6666 7.49997 10.6666C6.11928 10.6666 5 9.54731 5 8.16661V7.83323Z"
-        fill="#1ABCFE"
-      />
-      <path
-        d="M0 13.3334C0 11.8607 1.19391 10.6667 2.66667 10.6667H5V13.5001C5 14.8808 3.88071 16.0001 2.5 16.0001C1.11929 16.0001 0 14.8808 0 13.5001L0 13.3334Z"
-        fill="#0ACF83"
-      />
-      <path
-        d="M5 0V5.33333H7.33333C8.80609 5.33333 10 4.13943 10 2.66667C10 1.19391 8.80609 0 7.33333 0L5 0Z"
-        fill="#FF7262"
-      />
-      <path
-        d="M0 2.66659C0 4.13934 1.19391 5.33325 2.66667 5.33325L5 5.33325L5 -8.15392e-05L2.66667 -8.15392e-05C1.19391 -8.15392e-05 0 1.19383 0 2.66659Z"
-        fill="#F24E1E"
-      />
-      <path
-        d="M0 8.00008C0 9.47284 1.19391 10.6667 2.66667 10.6667H5L5 5.33341L2.66667 5.33341C1.19391 5.33341 0 6.52732 0 8.00008Z"
-        fill="#A259FF"
-      />
-    </svg>
   );
 }
 
