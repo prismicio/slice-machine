@@ -361,34 +361,38 @@ export function CreateSliceFromImageModal(
   };
 
   const onAllComplete = async () => {
-    const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
-      if (slice.status === "success") {
-        acc.push(slice);
-      }
-      return acc;
-    }, []);
+    const newSlices = slices.reduce<{ upload: NewSlice[]; figma: NewSlice[] }>(
+      (acc, slice) => {
+        if (slice.status === "success") {
+          if (slice.source === "upload") {
+            acc.upload.push(slice);
+          } else {
+            acc.figma.push(slice);
+          }
+        }
+        return acc;
+      },
+      { upload: [], figma: [] },
+    );
 
-    if (!newSlices.length) return;
+    if (!newSlices.upload.length && !newSlices.figma.length) return;
 
     const currentId = id.current;
     try {
       // Only the slices generated from uploaded images need this step
-      const { slices, library } = await addSlices(
-        newSlices.filter((slice) => slice.source === "upload"),
-      );
+      const { slices, library } = await addSlices(newSlices.upload);
       if (currentId !== id.current) return;
 
       const serverState = await getState();
       createSliceSuccess(serverState.libraries);
       syncChanges();
 
+      const total = newSlices.upload.length + newSlices.figma.length;
       toast.success(
-        `${newSlices.length} new slice${
-          newSlices.length > 1 ? "s" : ""
-        } successfully generated.`,
+        `${total} new slice${total > 1 ? "s" : ""} successfully generated.`,
       );
 
-      onSuccess({ slices, library });
+      onSuccess({ slices: [...newSlices.upload, ...newSlices.figma], library });
       id.current = crypto.randomUUID();
       setSlices([]);
 
