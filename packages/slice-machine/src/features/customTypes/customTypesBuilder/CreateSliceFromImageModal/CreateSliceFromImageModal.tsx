@@ -54,6 +54,7 @@ export function CreateSliceFromImageModal(
   const { open, location, onClose, onSuccess } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
@@ -85,26 +86,6 @@ export function CreateSliceFromImageModal(
   }) => {
     const { index, slice } = args;
     setSlices((slices) => slices.map((s, i) => (i === index ? slice(s) : s)));
-  };
-
-  const cancelActiveRequests = async () => {
-    await Promise.all(
-      slices
-        .flatMap((slice) =>
-          slice.status === "generating" ? [slice.requestId] : [],
-        )
-        .map((requestId) => {
-          return managerClient.customTypes.cancelInferSlice({ requestId });
-        }),
-    );
-  };
-
-  const onOpenChange = (open: boolean) => {
-    if (open) return;
-    void cancelActiveRequests();
-    onClose();
-    id.current = crypto.randomUUID();
-    setSlices([]);
   };
 
   const onImagesSelected = (images: File[]) => {
@@ -300,22 +281,6 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const generateAllPendingSlices = () => {
-    if (libraryID === undefined) return;
-
-    // Generate all pending slices simultaneously
-    slices.forEach((slice, index) => {
-      if (slice.status === "pending") {
-        void inferSlice({
-          index,
-          libraryID,
-          imageUrl: slice.thumbnailUrl,
-          source: slice.source,
-        });
-      }
-    });
-  };
-
   const inferSlice = async (args: {
     index: number;
     imageUrl: string;
@@ -347,13 +312,12 @@ export function CreateSliceFromImageModal(
 
       if (currentId !== id.current) return;
 
-      const resolvedModel = sliceWithoutConflicts({
+      const model = sliceWithoutConflicts({
         existingSlices: existingSlices.current,
         newSlices: slices,
         slice: inferResult.slice,
       });
 
-      // Update slice state with success
       setSlices((prevSlices) => {
         return prevSlices.map((prevSlice, i) => {
           if (i !== index) return prevSlice;
@@ -361,7 +325,7 @@ export function CreateSliceFromImageModal(
             ...prevSlice,
             status: "success",
             thumbnailUrl: imageUrl,
-            model: resolvedModel,
+            model,
             langSmithUrl: inferResult.langSmithUrl,
           };
         });
@@ -373,17 +337,16 @@ export function CreateSliceFromImageModal(
 
         const { errors } = await managerClient.slices.createSlice({
           libraryID,
-          model: resolvedModel,
+          model: model,
         });
         if (errors.length) {
-          throw new Error(`Failed to create slice ${resolvedModel.id}.`);
+          throw new Error(`Failed to create slice ${model.id}.`);
         }
 
-        // Set the variation screenshot
         await managerClient.slices.updateSliceScreenshot({
           libraryID,
-          sliceID: resolvedModel.id,
-          variationID: resolvedModel.variations[0].id,
+          sliceID: model.id,
+          variationID: model.variations[0].id,
           data: currentSlice.image,
         });
 
@@ -394,8 +357,8 @@ export function CreateSliceFromImageModal(
 
       void telemetry.track({
         event: "slice:created",
-        id: resolvedModel.id,
-        name: resolvedModel.name,
+        id: model.id,
+        name: model.name,
         library: libraryID,
         location,
         mode: "ai",
@@ -405,8 +368,8 @@ export function CreateSliceFromImageModal(
       addAiFeedback({
         type: "model",
         library: libraryID,
-        sliceId: resolvedModel.id,
-        variationId: resolvedModel.variations[0].id,
+        sliceId: model.id,
+        variationId: model.variations[0].id,
         langSmithUrl: inferResult.langSmithUrl,
       });
     } catch (error) {
@@ -426,15 +389,42 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const resetState = () => {
-    id.current = crypto.randomUUID();
-    setSlices([]);
+  const generatePendingSlices = () => {
+    if (libraryID === undefined) return;
+
+    slices.forEach((slice, index) => {
+      if (slice.status === "pending") {
+        void inferSlice({
+          index,
+          libraryID,
+          imageUrl: slice.thumbnailUrl,
+          source: slice.source,
+        });
+      }
+    });
   };
 
-  const handleClose = () => {
-    void cancelActiveRequests();
-    resetState();
+  const cancelActiveRequests = async () => {
+    const cancelableIds = slices.flatMap((slice) =>
+      slice.status === "generating" ? [slice.requestId] : [],
+    );
+    if (cancelableIds.length === 0) return;
+
+    await Promise.all(
+      cancelableIds.map((requestId) => {
+        return managerClient.customTypes.cancelInferSlice({ requestId });
+      }),
+    );
+  };
+
+  const closeModal = (args?: { cancelActiveRequests?: boolean }) => {
+    if (loadingSliceCount > 0) return;
+    if (args?.cancelActiveRequests ?? true) {
+      void cancelActiveRequests();
+    }
     onClose();
+    id.current = crypto.randomUUID();
+    setTimeout(() => setSlices([]), 250); // wait for the modal fade animation
   };
 
   const onSubmit = async () => {
@@ -453,7 +443,7 @@ export function CreateSliceFromImageModal(
         library: libraryID,
       });
 
-      resetState();
+      closeModal({ cancelActiveRequests: false });
     } finally {
       setIsSubmitting(false);
     }
@@ -467,21 +457,18 @@ export function CreateSliceFromImageModal(
     return slice.status === "pending";
   }).length;
 
-  const hasTriggeredGeneration = slices.some((slice) => {
-    return slice.status === "generating" || slice.status === "success";
-  });
-
   const completedSliceCount = slices.filter((slice) => {
     return slice.status === "success";
   }).length;
 
+  const hasTriggeredGeneration = slices.some((slice) => {
+    return slice.status === "generating" || slice.status === "success";
+  });
+
   const generateSliceCount = loadingSliceCount + pendingSliceCount;
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={loadingSliceCount > 0 ? undefined : onOpenChange}
-    >
+    <Dialog open={open} onOpenChange={(open) => !open && closeModal()}>
       <DialogHeader title="Generate with AI" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
@@ -554,18 +541,14 @@ export function CreateSliceFromImageModal(
                   overlay={
                     <UploadBlankSlate
                       onFilesSelected={onImagesSelected}
-                      onPaste={() => {
-                        void handlePaste();
-                      }}
+                      onPaste={() => void handlePaste()}
                       droppingFiles
                     />
                   }
                 >
                   <UploadBlankSlate
                     onFilesSelected={onImagesSelected}
-                    onPaste={() => {
-                      void handlePaste();
-                    }}
+                    onPaste={() => void handlePaste()}
                   />
                 </FileDropZone>
               </Box>
@@ -614,7 +597,7 @@ export function CreateSliceFromImageModal(
                 </DialogCancelButton>
               ) : (
                 <DialogCancelButton
-                  onClick={handleClose}
+                  onClick={() => closeModal()}
                   size="medium"
                   sx={{ marginRight: 8 }}
                   invisible
@@ -622,11 +605,11 @@ export function CreateSliceFromImageModal(
                   Close
                 </DialogCancelButton>
               )}
-              {completedSliceCount === 0 ? (
+              {completedSliceCount === 0 || loadingSliceCount > 0 ? (
                 <DialogActionButton
                   color="purple"
                   startIcon="autoFixHigh"
-                  onClick={() => void generateAllPendingSlices()}
+                  onClick={() => void generatePendingSlices()}
                   disabled={
                     hasTriggeredGeneration ||
                     loadingSliceCount > 0 ||

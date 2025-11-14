@@ -333,7 +333,6 @@ const SlicesIndex: React.FunctionComponent = () => {
                   path={library}
                 />,
               );
-              closeCreateSliceFromImageModal();
             }}
             onClose={closeCreateSliceFromImageModal}
           />

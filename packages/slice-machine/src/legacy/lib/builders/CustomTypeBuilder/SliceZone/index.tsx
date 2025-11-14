@@ -440,7 +440,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               );
             },
           });
-          closeCreateSliceFromImageModal();
         }}
         onClose={closeCreateSliceFromImageModal}
       />
