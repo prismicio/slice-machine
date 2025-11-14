@@ -91,6 +91,8 @@ export function CreateSliceFromImageModal(
   };
 
   const onImagesSelected = (images: File[]) => {
+    if (hasTriggeredGeneration) return;
+
     if (images.length > IMAGE_UPLOAD_LIMIT) {
       toast.error(
         `You can only upload ${IMAGE_UPLOAD_LIMIT} images at a time.`,
