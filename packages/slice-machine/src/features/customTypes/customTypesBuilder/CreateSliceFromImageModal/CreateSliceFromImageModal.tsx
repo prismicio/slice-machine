@@ -379,7 +379,10 @@ export function CreateSliceFromImageModal(
         index,
         slice: (prevSlice) => ({
           ...prevSlice,
-          status: "generateError",
+          status:
+            error instanceof Error && error.name === "AbortError"
+              ? "cancelled"
+              : "generateError",
           thumbnailUrl: imageUrl,
           onRetry: () => {
             void inferSlice({ index, imageUrl, libraryID, source });
@@ -449,9 +452,15 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const loadingSliceCount = slices.filter((slice) => {
-    return slice.status === "uploading" || slice.status === "generating";
+  const generatingSliceCount = slices.filter((slice) => {
+    return slice.status === "generating";
   }).length;
+
+  const uploadingSliceCount = slices.filter((slice) => {
+    return slice.status === "uploading";
+  }).length;
+
+  const loadingSliceCount = generatingSliceCount + uploadingSliceCount;
 
   const pendingSliceCount = slices.filter((slice) => {
     return slice.status === "pending";
@@ -586,7 +595,7 @@ export function CreateSliceFromImageModal(
               </>
             )}
             <DialogActions>
-              {loadingSliceCount > 0 ? (
+              {generatingSliceCount > 0 ? (
                 <DialogCancelButton
                   onClick={() => void cancelActiveRequests()}
                   size="medium"
