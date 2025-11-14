@@ -552,7 +552,7 @@ export class CustomTypesManager extends BaseManager {
 			throw new Error("LLM proxy access is not enabled.");
 		}
 		const { llmProxyUrl } = z
-			.object({ llmProxyUrl: z.string() })
+			.object({ llmProxyUrl: z.string().url() })
 			.parse(exp.payload);
 
 		const authToken = await this.user.getAuthenticationToken();
