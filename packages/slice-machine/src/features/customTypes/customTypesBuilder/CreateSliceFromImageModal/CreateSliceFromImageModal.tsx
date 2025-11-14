@@ -571,7 +571,7 @@ export function CreateSliceFromImageModal(
             disabled={
               hasTriggeredGeneration ||
               loadingSliceCount > 0 ||
-              slices.length === 0
+              pendingSliceCount === 0
             }
             loading={hasTriggeredGeneration}
             size="medium"

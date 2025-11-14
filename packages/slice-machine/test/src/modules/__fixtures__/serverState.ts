@@ -26,7 +26,8 @@ export const dummyServerState: Pick<
       RepositoryService: "https://api.internal.prismic.io/repository/",
       LocaleService: "https://api.internal.prismic.io/locale/",
       CustomTypeService: "https://api.internal.prismic.io/custom-type/",
-      LlmProxyTypeService: "https://api.internal.prismic.io/llm-proxy/",
+      LlmProxyTypeService:
+        "https://sbqznqszdlqhjn4p4nfhtst6ra0wngjc.lambda-url.us-east-1.on.aws/",
     },
     shortId: "shortId",
   },

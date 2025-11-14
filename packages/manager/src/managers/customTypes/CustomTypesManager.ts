@@ -547,6 +547,7 @@ export class CustomTypesManager extends BaseManager {
 	): Promise<InferSliceResponse> {
 		const { source, imageUrl } = args;
 		const authToken = await this.user.getAuthenticationToken();
+		const repository = await this.project.getResolvedRepositoryName();
 
 		if (source === "figma") {
 			const { libraryID } = args;
@@ -776,10 +777,10 @@ FINAL REMINDERS:
 						],
 						env: {
 							...process.env,
-							// ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
-							// ANTHROPIC_API_KEY: authToken,
-							// TODO: For testing purposes, remove when the proxy is ready
-							ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+							ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
+							ANTHROPIC_CUSTOM_HEADERS:
+								`x-prismic-token: ${authToken}\n` +
+								`x-prismic-repository: ${repository}\n`,
 						},
 						mcpServers: {
 							prismic: {
@@ -842,7 +843,6 @@ FINAL REMINDERS:
 				Authorization: `Bearer ${authToken}`,
 			};
 
-			const repository = await this.project.getResolvedRepositoryName();
 			const searchParams = new URLSearchParams({
 				repository,
 			});
