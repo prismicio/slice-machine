@@ -455,12 +455,6 @@ export function CreateSliceFromImageModal(
 
   const generateSliceCount = loadingSliceCount + pendingSliceCount;
 
-  console.log({
-    slices,
-    generateSliceCount,
-    loadingSliceCount,
-    pendingSliceCount,
-  });
   return (
     <Dialog
       open={open}
