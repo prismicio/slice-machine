@@ -427,7 +427,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           const newCustomType = addSlicesToSliceZone({
             customType,
             tabId,
-            slices: slices.map((slice) => slice.model),
+            slices,
           });
           setCustomType({
             customType: CustomTypes.fromSM(newCustomType),
@@ -440,7 +440,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               );
             },
           });
-          closeCreateSliceFromImageModal();
         }}
         onClose={closeCreateSliceFromImageModal}
       />
