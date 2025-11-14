@@ -12,6 +12,7 @@ import {
   DialogHeader,
   FileDropZone,
   FileUploadButton,
+  ProgressCircle,
   ScrollArea,
   Text,
 } from "@prismicio/editor-ui";
@@ -23,7 +24,6 @@ import { z } from "zod";
 
 import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
-import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 import { FigmaIcon } from "@/icons/FigmaIcon";
@@ -31,6 +31,7 @@ import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { Slice, SliceCard } from "./SliceCard";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 
 const clipboardDataSchema = z.object({
   __type: z.literal("figma-to-prismic/clipboard-data"),
@@ -43,13 +44,7 @@ const IMAGE_UPLOAD_LIMIT = 10;
 interface CreateSliceFromImageModalProps {
   open: boolean;
   location: "custom_type" | "page_type" | "slices";
-  onSuccess: (args: {
-    slices: {
-      model: SharedSlice;
-      langSmithUrl?: string;
-    }[];
-    library: string;
-  }) => void;
+  onSuccess: (args: { slices: SharedSlice[]; library: string }) => void;
   onClose: () => void;
 }
 
@@ -58,10 +53,12 @@ export function CreateSliceFromImageModal(
 ) {
   const { open, location, onClose, onSuccess } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
   const existingSlices = useExistingSlices({ open });
+  const { libraryID, isLoading: isLoadingLibraryID } = useLibraryID();
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
@@ -77,12 +74,6 @@ export function CreateSliceFromImageModal(
     },
     { enabled: open && isFigmaEnabled },
   );
-
-  useEffect(() => {
-    if (slices.every((slice) => slice.status === "success")) {
-      void onAllComplete();
-    }
-  }, [slices]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setSlice = (args: {
     index: number;
@@ -126,7 +117,14 @@ export function CreateSliceFromImageModal(
   };
 
   const handlePaste = async () => {
-    if (!open || !isFigmaEnabled) return;
+    if (
+      !open ||
+      !isFigmaEnabled ||
+      // For now we only support one Figma slice at a time
+      slices.some((slice) => slice.source === "figma")
+    ) {
+      return;
+    }
 
     // Don't allow pasting while uploads or generation are in progress
     const isLoading = slices.some(
@@ -283,20 +281,16 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const generateAllPendingSlices = async () => {
-    const smConfig = await managerClient.project.getSliceMachineConfig();
-    const libraryID = smConfig?.libraries?.[0];
-    if (libraryID === undefined) {
-      throw new Error("No library found in the config.");
-    }
+  const generateAllPendingSlices = () => {
+    if (libraryID === undefined) return;
 
     // Generate all pending slices simultaneously
     slices.forEach((slice, index) => {
       if (slice.status === "pending") {
         void inferSlice({
           index,
-          imageUrl: slice.thumbnailUrl,
           libraryID,
+          imageUrl: slice.thumbnailUrl,
           source: slice.source,
         });
       }
@@ -310,7 +304,7 @@ export function CreateSliceFromImageModal(
     source: "figma" | "upload";
   }) => {
     const { index, imageUrl, libraryID, source } = args;
-    const currentId = id.current;
+    let currentId = id.current;
 
     setSlice({
       index,
@@ -330,6 +324,13 @@ export function CreateSliceFromImageModal(
 
       if (currentId !== id.current) return;
 
+      const resolvedModel = sliceWithoutConflicts({
+        existingSlices: existingSlices.current,
+        newSlices: slices,
+        slice: inferResult.slice,
+      });
+
+      // Update slice state with success
       setSlices((prevSlices) => {
         return prevSlices.map((prevSlice, i) => {
           if (i !== index) return prevSlice;
@@ -337,16 +338,57 @@ export function CreateSliceFromImageModal(
             ...prevSlice,
             status: "success",
             thumbnailUrl: imageUrl,
-            model: sliceWithoutConflicts({
-              existingSlices: existingSlices.current,
-              newSlices: slices,
-              slice: inferResult.slice,
-            }),
+            model: resolvedModel,
+            langSmithUrl: inferResult.langSmithUrl,
           };
         });
       });
+
+      if (source === "upload") {
+        currentId = id.current;
+        const currentSlice = slices[index];
+
+        const { errors } = await managerClient.slices.createSlice({
+          libraryID,
+          model: resolvedModel,
+        });
+        if (errors.length) {
+          throw new Error(`Failed to create slice ${resolvedModel.id}.`);
+        }
+
+        // Set the variation screenshot
+        await managerClient.slices.updateSliceScreenshot({
+          libraryID,
+          sliceID: resolvedModel.id,
+          variationID: resolvedModel.variations[0].id,
+          data: currentSlice.image,
+        });
+
+        if (currentId !== id.current) return;
+      }
+
+      void completeStep("createSlice");
+
+      void telemetry.track({
+        event: "slice:created",
+        id: resolvedModel.id,
+        name: resolvedModel.name,
+        library: libraryID,
+        location,
+        mode: "ai",
+        langSmithUrl: inferResult.langSmithUrl,
+      });
+
+      addAiFeedback({
+        type: "model",
+        library: libraryID,
+        sliceId: resolvedModel.id,
+        variationId: resolvedModel.variations[0].id,
+        langSmithUrl: inferResult.langSmithUrl,
+      });
     } catch {
       if (currentId !== id.current) return;
+
       setSlice({
         index,
         slice: (prevSlice) => ({
@@ -361,73 +403,36 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const onAllComplete = async () => {
-    const newSlices = slices.reduce<{ upload: NewSlice[]; figma: NewSlice[] }>(
-      (acc, slice) => {
-        if (slice.status === "success") {
-          if (slice.source === "upload") {
-            acc.upload.push(slice);
-          } else {
-            acc.figma.push(slice);
-          }
-        }
-        return acc;
-      },
-      { upload: [], figma: [] },
-    );
+  const resetState = () => {
+    id.current = crypto.randomUUID();
+    setSlices([]);
+  };
 
-    if (!newSlices.upload.length && !newSlices.figma.length) return;
+  const handleClose = () => {
+    resetState();
+    onClose();
+  };
 
-    const currentId = id.current;
+  const onSubmit = async () => {
     try {
-      // Only the slices generated from uploaded images need this step
-      const { slices, library } = await addSlices(newSlices.upload);
-      if (currentId !== id.current) return;
+      setIsSubmitting(true);
+      if (libraryID === undefined) return;
 
       const serverState = await getState();
       createSliceSuccess(serverState.libraries);
       syncChanges();
 
-      const total = newSlices.upload.length + newSlices.figma.length;
-      toast.success(
-        `${total} new slice${total > 1 ? "s" : ""} successfully generated.`,
-      );
+      onSuccess({
+        slices: slices.flatMap((slice) =>
+          slice.status === "success" ? slice.model : [],
+        ),
+        library: libraryID,
+      });
 
-      onSuccess({ slices: [...newSlices.upload, ...newSlices.figma], library });
-      id.current = crypto.randomUUID();
-      setSlices([]);
-
-      void completeStep("createSlice");
-
-      for (const { model, langSmithUrl } of slices) {
-        void telemetry.track({
-          event: "slice:created",
-          id: model.id,
-          name: model.name,
-          library,
-          location,
-          mode: "ai",
-          langSmithUrl,
-        });
-
-        addAiFeedback({
-          type: "model",
-          library,
-          sliceId: model.id,
-          variationId: model.variations[0].id,
-          langSmithUrl,
-        });
-      }
-    } catch {
-      if (currentId !== id.current) return;
-      toast.error("An unexpected error happened while adding slices.");
+      resetState();
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  const handleClose = () => {
-    id.current = crypto.randomUUID();
-    setSlices([]);
-    onClose();
   };
 
   const loadingSliceCount = slices.filter((slice) => {
@@ -442,8 +447,18 @@ export function CreateSliceFromImageModal(
     return slice.status === "generating" || slice.status === "success";
   });
 
+  const completedSliceCount = slices.filter((slice) => {
+    return slice.status === "success";
+  }).length;
+
   const generateSliceCount = loadingSliceCount + pendingSliceCount;
 
+  console.log({
+    slices,
+    generateSliceCount,
+    loadingSliceCount,
+    pendingSliceCount,
+  });
   return (
     <Dialog
       open={open}
@@ -454,135 +469,164 @@ export function CreateSliceFromImageModal(
         <DialogDescription hidden>
           Upload images to generate slices with AI
         </DialogDescription>
-        {slices.length === 0 ? (
-          <Box
-            padding={16}
-            height="100%"
-            gap={16}
-            display="flex"
-            flexDirection="column"
-          >
-            {isFigmaEnabled && (
-              <Box
-                display="flex"
-                gap={16}
-                alignItems="center"
-                backgroundColor="grey2"
-                padding={16}
-                borderRadius={12}
-              >
-                <Box display="flex" gap={8} alignItems="center" flexGrow={1}>
-                  <Box
-                    width={48}
-                    height={48}
-                    backgroundColor="grey12"
-                    borderRadius="100%"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <FigmaIcon variant="original" height={25} />
-                  </Box>
-                  <Box display="flex" flexDirection="column" flexGrow={1}>
-                    <Text variant="bold">Want to work faster?</Text>
-                    <Text variant="small" color="grey11">
-                      Copy frames from Figma with the Slice Machine plugin and
-                      paste them here.
-                    </Text>
-                  </Box>
-                </Box>
-                <Button
-                  endIcon="arrowForward"
-                  color="indigo"
-                  onClick={() =>
-                    window.open(
-                      "https://www.figma.com/community/plugin/TODO",
-                      "_blank",
-                    )
-                  }
-                  sx={{ marginRight: 8 }}
-                  invisible
-                >
-                  Install plugin
-                </Button>
-              </Box>
-            )}
-            <FileDropZone
-              onFilesSelected={onImagesSelected}
-              assetType="image"
-              maxFiles={IMAGE_UPLOAD_LIMIT}
-              overlay={
-                <UploadBlankSlate
-                  onFilesSelected={onImagesSelected}
-                  onPaste={() => void handlePaste()}
-                  droppingFiles
-                />
-              }
-            >
-              <UploadBlankSlate
-                onFilesSelected={onImagesSelected}
-                onPaste={() => void handlePaste()}
-              />
-            </FileDropZone>
-          </Box>
-        ) : (
+        {!isLoadingLibraryID ? (
           <>
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              padding={16}
-            >
-              <Text variant="h3">Design</Text>
-              <FileUploadButton
-                size="medium"
-                color="grey"
-                onFilesSelected={onImagesSelected}
-                startIcon="attachFile"
-                disabled={hasTriggeredGeneration}
-              >
-                Add images
-              </FileUploadButton>
-            </Box>
-            <ScrollArea stableScrollbar={false}>
+            {slices.length === 0 ? (
               <Box
-                display="grid"
-                gridTemplateColumns="1fr 1fr"
-                gap={16}
                 padding={16}
+                height="100%"
+                gap={16}
+                display="flex"
+                flexDirection="column"
               >
-                {slices.map((slice, index) => (
-                  <SliceCard slice={slice} key={`slice-${index}`} />
-                ))}
+                {isFigmaEnabled && (
+                  <Box
+                    display="flex"
+                    gap={16}
+                    alignItems="center"
+                    backgroundColor="grey2"
+                    padding={16}
+                    borderRadius={12}
+                  >
+                    <Box
+                      display="flex"
+                      gap={8}
+                      alignItems="center"
+                      flexGrow={1}
+                    >
+                      <Box
+                        width={48}
+                        height={48}
+                        backgroundColor="grey12"
+                        borderRadius="100%"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <FigmaIcon variant="original" height={25} />
+                      </Box>
+                      <Box display="flex" flexDirection="column" flexGrow={1}>
+                        <Text variant="bold">Want to work faster?</Text>
+                        <Text variant="small" color="grey11">
+                          Copy frames from Figma with the Slice Machine plugin
+                          and paste them here.
+                        </Text>
+                      </Box>
+                    </Box>
+                    <Button
+                      endIcon="arrowForward"
+                      color="indigo"
+                      onClick={() =>
+                        window.open(
+                          "https://www.figma.com/community/plugin/TODO",
+                          "_blank",
+                        )
+                      }
+                      sx={{ marginRight: 8 }}
+                      invisible
+                    >
+                      Install plugin
+                    </Button>
+                  </Box>
+                )}
+                <FileDropZone
+                  onFilesSelected={onImagesSelected}
+                  assetType="image"
+                  maxFiles={IMAGE_UPLOAD_LIMIT}
+                  overlay={
+                    <UploadBlankSlate
+                      onFilesSelected={onImagesSelected}
+                      onPaste={() => void handlePaste()}
+                      droppingFiles
+                    />
+                  }
+                >
+                  <UploadBlankSlate
+                    onFilesSelected={onImagesSelected}
+                    onPaste={() => void handlePaste()}
+                  />
+                </FileDropZone>
               </Box>
-            </ScrollArea>
+            ) : (
+              <>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  padding={16}
+                >
+                  <Text variant="h3">Design</Text>
+                  <FileUploadButton
+                    size="medium"
+                    color="grey"
+                    onFilesSelected={onImagesSelected}
+                    startIcon="attachFile"
+                    disabled={hasTriggeredGeneration}
+                  >
+                    Add images
+                  </FileUploadButton>
+                </Box>
+                <ScrollArea stableScrollbar={false}>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="1fr 1fr"
+                    gap={16}
+                    padding={16}
+                  >
+                    {slices.map((slice, index) => (
+                      <SliceCard slice={slice} key={`slice-${index}`} />
+                    ))}
+                  </Box>
+                </ScrollArea>
+              </>
+            )}
+            <DialogActions>
+              <DialogCancelButton
+                size="medium"
+                onClick={handleClose}
+                disabled={loadingSliceCount > 0}
+              >
+                Close
+              </DialogCancelButton>
+              {completedSliceCount === 0 ? (
+                <DialogActionButton
+                  color="purple"
+                  startIcon="autoFixHigh"
+                  onClick={() => void generateAllPendingSlices()}
+                  disabled={
+                    hasTriggeredGeneration ||
+                    loadingSliceCount > 0 ||
+                    pendingSliceCount === 0
+                  }
+                  loading={loadingSliceCount > 0}
+                  size="medium"
+                >
+                  Generate{" "}
+                  {generateSliceCount > 0 ? `(${generateSliceCount}) ` : ""}
+                  {generateSliceCount === 1 ? "Slice" : "Slices"}
+                </DialogActionButton>
+              ) : (
+                <DialogActionButton
+                  color="purple"
+                  onClick={() => void onSubmit()}
+                  loading={isSubmitting}
+                  size="medium"
+                >
+                  {getSubmitButtonLabel(location, completedSliceCount)}
+                </DialogActionButton>
+              )}
+            </DialogActions>
           </>
+        ) : (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+          >
+            <ProgressCircle color="purple9" />
+          </Box>
         )}
-
-        <DialogActions>
-          <DialogCancelButton
-            size="medium"
-            onClick={handleClose}
-            disabled={loadingSliceCount > 0}
-          >
-            Close
-          </DialogCancelButton>
-          <DialogActionButton
-            color="purple"
-            startIcon="autoFixHigh"
-            onClick={() => void generateAllPendingSlices()}
-            disabled={
-              hasTriggeredGeneration ||
-              loadingSliceCount > 0 ||
-              pendingSliceCount === 0
-            }
-            loading={hasTriggeredGeneration}
-            size="medium"
-          >
-            Generate {generateSliceCount > 0 ? `(${generateSliceCount}) ` : ""}
-            {generateSliceCount === 1 ? "Slice" : "Slices"}
-          </DialogActionButton>
-        </DialogActions>
       </DialogContent>
     </Dialog>
   );
@@ -698,6 +742,7 @@ type NewSlice = {
   model: SharedSlice;
   langSmithUrl?: string;
   source: "figma" | "upload";
+  libraryID: string;
 };
 
 /**
@@ -771,45 +816,42 @@ function sliceWithoutConflicts({
   };
 }
 
-async function addSlices(newSlices: NewSlice[]) {
-  // use the first library
-  const { libraries = [] } =
-    await managerClient.project.getSliceMachineConfig();
-  const library = libraries[0];
-  if (!library) {
-    throw new Error("No library found in the config.");
-  }
+function useLibraryID() {
+  const [libraryID, setLibraryID] = useState<string | undefined>();
 
-  for (const { model } of newSlices) {
-    const { errors } = await managerClient.slices.createSlice({
-      libraryID: library,
-      model,
-    });
-    if (errors.length) {
-      throw new Error(`Failed to create slice ${model.id}.`);
-    }
-  }
-
-  // for each added slice, set the variation screenshot
-  const slices = await Promise.all(
-    newSlices.map(async ({ model, image, langSmithUrl }) => {
-      await managerClient.slices.updateSliceScreenshot({
-        libraryID: library,
-        sliceID: model.id,
-        variationID: model.variations[0].id,
-        data: image,
+  useEffect(() => {
+    managerClient.project
+      .getSliceMachineConfig()
+      .then((smConfig) => {
+        const libraryID = smConfig?.libraries?.[0];
+        if (libraryID === undefined) {
+          throw new Error("No library found in the config.");
+        }
+        setLibraryID(libraryID);
+      })
+      .catch(() => {
+        throw new Error("Could not get library ID from the config.");
       });
-      return {
-        model,
-        langSmithUrl,
-      };
-    }),
-  );
+  }, []);
 
-  return { library, slices };
+  return { libraryID, isLoading: libraryID === undefined };
 }
 
 function useIsFigmaEnabled() {
   const experiment = useExperimentVariant("llm-proxy-access");
   return experiment?.value === "on";
 }
+
+const getSubmitButtonLabel = (
+  location: "custom_type" | "page_type" | "slices",
+  completedSliceCount: number,
+) => {
+  switch (location) {
+    case "custom_type":
+      return `Add to type (${completedSliceCount})`;
+    case "page_type":
+      return `Add to page (${completedSliceCount})`;
+    case "slices":
+      return "Done";
+  }
+};

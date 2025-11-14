@@ -427,7 +427,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           const newCustomType = addSlicesToSliceZone({
             customType,
             tabId,
-            slices: slices.map((slice) => slice.model),
+            slices,
           });
           setCustomType({
             customType: CustomTypes.fromSM(newCustomType),
