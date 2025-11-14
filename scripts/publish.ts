@@ -305,7 +305,7 @@ async function publish(options?: Options): Promise<void> {
   console.log("📦 Packing and publishing to npm...");
   const npmDistributionTag =
     mode === "stable" ? "latest" : prereleaseIdentifier;
-  await exec(
+  const publishResult = await exec(
     "yarn",
     [
       ...["workspaces", "foreach", "--all"],
@@ -316,8 +316,18 @@ async function publish(options?: Options): Promise<void> {
       ...["--tag", npmDistributionTag],
       ...(args["tolerate-republish"] ? ["--tolerate-republish"] : []),
     ],
-    { dryRun, stdio: "inherit" },
+    { dryRun },
   );
+
+  // Print published versions
+  if (!dryRun && publishResult) {
+    console.log("\n✅ Published packages:");
+    for (const [packageName, packageReleaseVersion] of packageNameToReleaseVersion) {
+      console.log(
+        chalk.green(`  ${packageName}@${packageReleaseVersion}`),
+      );
+    }
+  }
 
   // Reset the index and working tree.
   console.log("🧹 Cleaning...");
