@@ -25,6 +25,7 @@ import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 import { FigmaIcon } from "@/icons/FigmaIcon";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
@@ -61,12 +62,12 @@ export function CreateSliceFromImageModal(
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
   const existingSlices = useExistingSlices({ open });
-
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
    */
   const id = useRef(crypto.randomUUID());
+  const isFigmaEnabled = useIsFigmaEnabled();
 
   useHotkeys(
     ["meta+v", "ctrl+v"],
@@ -74,7 +75,7 @@ export function CreateSliceFromImageModal(
       event.preventDefault();
       void handlePaste();
     },
-    { enabled: open },
+    { enabled: open && isFigmaEnabled },
   );
 
   useEffect(() => {
@@ -125,7 +126,7 @@ export function CreateSliceFromImageModal(
   };
 
   const handlePaste = async () => {
-    if (!open) return;
+    if (!open || !isFigmaEnabled) return;
 
     // Don't allow pasting while uploads or generation are in progress
     const isLoading = slices.some(
@@ -461,49 +462,51 @@ export function CreateSliceFromImageModal(
             display="flex"
             flexDirection="column"
           >
-            <Box
-              display="flex"
-              gap={16}
-              alignItems="center"
-              backgroundColor="grey2"
-              padding={16}
-              borderRadius={12}
-            >
-              <Box display="flex" gap={8} alignItems="center" flexGrow={1}>
-                <Box
-                  width={48}
-                  height={48}
-                  backgroundColor="grey12"
-                  borderRadius="100%"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <FigmaIcon variant="original" height={25} />
-                </Box>
-                <Box display="flex" flexDirection="column" flexGrow={1}>
-                  <Text variant="bold">Want to work faster?</Text>
-                  <Text variant="small" color="grey11">
-                    Copy frames from Figma with the Slice Machine plugin and
-                    paste them here.
-                  </Text>
-                </Box>
-              </Box>
-              <Button
-                endIcon="arrowForward"
-                color="indigo"
-                onClick={() =>
-                  window.open(
-                    "https://www.figma.com/community/plugin/TODO",
-                    "_blank",
-                  )
-                }
-                sx={{ marginRight: 8 }}
-                invisible
+            {isFigmaEnabled && (
+              <Box
+                display="flex"
+                gap={16}
+                alignItems="center"
+                backgroundColor="grey2"
+                padding={16}
+                borderRadius={12}
               >
-                Install plugin
-              </Button>
-            </Box>
+                <Box display="flex" gap={8} alignItems="center" flexGrow={1}>
+                  <Box
+                    width={48}
+                    height={48}
+                    backgroundColor="grey12"
+                    borderRadius="100%"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <FigmaIcon variant="original" height={25} />
+                  </Box>
+                  <Box display="flex" flexDirection="column" flexGrow={1}>
+                    <Text variant="bold">Want to work faster?</Text>
+                    <Text variant="small" color="grey11">
+                      Copy frames from Figma with the Slice Machine plugin and
+                      paste them here.
+                    </Text>
+                  </Box>
+                </Box>
+                <Button
+                  endIcon="arrowForward"
+                  color="indigo"
+                  onClick={() =>
+                    window.open(
+                      "https://www.figma.com/community/plugin/TODO",
+                      "_blank",
+                    )
+                  }
+                  sx={{ marginRight: 8 }}
+                  invisible
+                >
+                  Install plugin
+                </Button>
+              </Box>
+            )}
             <FileDropZone
               onFilesSelected={onImagesSelected}
               assetType="image"
@@ -591,6 +594,7 @@ function UploadBlankSlate(props: {
   onPaste: () => void;
 }) {
   const { droppingFiles = false, onFilesSelected, onPaste } = props;
+  const isFigmaEnabled = useIsFigmaEnabled();
 
   return (
     <Box
@@ -618,30 +622,53 @@ function UploadBlankSlate(props: {
             gap={4}
             alignItems="center"
           >
-            <Text>Generate slices from your designs</Text>
-            <Text variant="small" color="grey11">
-              Upload your design images or paste them directly from Figma.
-            </Text>
+            {isFigmaEnabled ? (
+              <>
+                <Text>Generate slices from your designs</Text>
+                <Text variant="small" color="grey11">
+                  Upload your design images or paste them directly from Figma.
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text>Upload your design images.</Text>
+                <Text variant="small" color="grey11">
+                  Once uploaded, you can generate slices automatically using AI.
+                </Text>
+              </>
+            )}
           </Box>
           <Box display="flex" alignItems="center" gap={16}>
-            <Button
-              size="small"
-              renderStartIcon={() => (
-                <FigmaIcon variant="original" height={16} />
-              )}
-              color="grey"
-              onClick={onPaste}
-            >
-              Paste from Figma
-            </Button>
-            <FileUploadButton
-              size="small"
-              onFilesSelected={onFilesSelected}
-              color="purple"
-              invisible
-            >
-              Add images
-            </FileUploadButton>
+            {isFigmaEnabled ? (
+              <>
+                <Button
+                  size="small"
+                  renderStartIcon={() => (
+                    <FigmaIcon variant="original" height={16} />
+                  )}
+                  color="grey"
+                  onClick={onPaste}
+                >
+                  Paste from Figma
+                </Button>
+                <FileUploadButton
+                  size="small"
+                  onFilesSelected={onFilesSelected}
+                  color="purple"
+                  invisible
+                >
+                  Add images
+                </FileUploadButton>
+              </>
+            ) : (
+              <FileUploadButton
+                startIcon="attachFile"
+                onFilesSelected={onFilesSelected}
+                color="grey"
+              >
+                Add images
+              </FileUploadButton>
+            )}
           </Box>
         </Box>
       </BlankSlate>
@@ -780,4 +807,9 @@ async function addSlices(newSlices: NewSlice[]) {
   );
 
   return { library, slices };
+}
+
+function useIsFigmaEnabled() {
+  const experiment = useExperimentVariant("llm-proxy-access");
+  return experiment?.value === "on";
 }

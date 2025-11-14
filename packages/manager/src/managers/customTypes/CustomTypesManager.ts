@@ -546,6 +546,15 @@ export class CustomTypesManager extends BaseManager {
 		),
 	): Promise<InferSliceResponse> {
 		const { source, imageUrl } = args;
+
+		const exp = await this.telemetry.getExperimentVariant("llm-proxy-access");
+		if (exp?.value !== "on") {
+			throw new Error("LLM proxy access is not enabled.");
+		}
+		const { llmProxyUrl } = z
+			.object({ llmProxyUrl: z.string() })
+			.parse(exp.payload);
+
 		const authToken = await this.user.getAuthenticationToken();
 		const repository = await this.project.getResolvedRepositoryName();
 
@@ -777,7 +786,7 @@ FINAL REMINDERS:
 						],
 						env: {
 							...process.env,
-							ANTHROPIC_BASE_URL: API_ENDPOINTS.LlmProxyTypeService,
+							ANTHROPIC_BASE_URL: llmProxyUrl,
 							ANTHROPIC_CUSTOM_HEADERS:
 								`x-prismic-token: ${authToken}\n` +
 								`x-prismic-repository: ${repository}\n`,
