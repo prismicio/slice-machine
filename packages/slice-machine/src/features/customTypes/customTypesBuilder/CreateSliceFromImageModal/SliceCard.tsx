@@ -71,7 +71,7 @@ export type Slice = { image: File; source: "upload" | "figma" } & (
   | { status: "uploading" }
   | { status: "uploadError"; onRetry: () => void }
   | { status: "pending"; thumbnailUrl: string }
-  | { status: "generating"; thumbnailUrl: string }
+  | { status: "generating"; thumbnailUrl: string; requestId: string }
   | { status: "generateError"; thumbnailUrl: string; onRetry: () => void }
   | {
       status: "success";

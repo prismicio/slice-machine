@@ -75,6 +75,10 @@ export function CreateSliceFromImageModal(
     { enabled: open && isFigmaEnabled },
   );
 
+  useEffect(() => {
+    return () => void cancelActiveRequests();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const setSlice = (args: {
     index: number;
     slice: (prevSlice: Slice) => Slice;
@@ -83,8 +87,21 @@ export function CreateSliceFromImageModal(
     setSlices((slices) => slices.map((s, i) => (i === index ? slice(s) : s)));
   };
 
+  const cancelActiveRequests = async () => {
+    await Promise.all(
+      slices
+        .flatMap((slice) =>
+          slice.status === "generating" ? [slice.requestId] : [],
+        )
+        .map((requestId) => {
+          return managerClient.customTypes.cancelInferSlice({ requestId });
+        }),
+    );
+  };
+
   const onOpenChange = (open: boolean) => {
     if (open) return;
+    void cancelActiveRequests();
     onClose();
     id.current = crypto.randomUUID();
     setSlices([]);
@@ -308,12 +325,15 @@ export function CreateSliceFromImageModal(
     const { index, imageUrl, libraryID, source } = args;
     let currentId = id.current;
 
+    const requestId = crypto.randomUUID();
+
     setSlice({
       index,
       slice: (prevSlice) => ({
         ...prevSlice,
         status: "generating",
         thumbnailUrl: imageUrl,
+        requestId,
       }),
     });
 
@@ -322,6 +342,7 @@ export function CreateSliceFromImageModal(
         source,
         libraryID,
         imageUrl,
+        requestId,
       });
 
       if (currentId !== id.current) return;
@@ -388,7 +409,7 @@ export function CreateSliceFromImageModal(
         variationId: resolvedModel.variations[0].id,
         langSmithUrl: inferResult.langSmithUrl,
       });
-    } catch {
+    } catch (error) {
       if (currentId !== id.current) return;
 
       setSlice({
@@ -411,6 +432,7 @@ export function CreateSliceFromImageModal(
   };
 
   const handleClose = () => {
+    void cancelActiveRequests();
     resetState();
     onClose();
   };
@@ -532,14 +554,18 @@ export function CreateSliceFromImageModal(
                   overlay={
                     <UploadBlankSlate
                       onFilesSelected={onImagesSelected}
-                      onPaste={() => void handlePaste()}
+                      onPaste={() => {
+                        void handlePaste();
+                      }}
                       droppingFiles
                     />
                   }
                 >
                   <UploadBlankSlate
                     onFilesSelected={onImagesSelected}
-                    onPaste={() => void handlePaste()}
+                    onPaste={() => {
+                      void handlePaste();
+                    }}
                   />
                 </FileDropZone>
               </Box>
@@ -577,13 +603,25 @@ export function CreateSliceFromImageModal(
               </>
             )}
             <DialogActions>
-              <DialogCancelButton
-                size="medium"
-                onClick={handleClose}
-                disabled={loadingSliceCount > 0}
-              >
-                Close
-              </DialogCancelButton>
+              {loadingSliceCount > 0 ? (
+                <DialogCancelButton
+                  onClick={() => void cancelActiveRequests()}
+                  size="medium"
+                  sx={{ marginRight: 8 }}
+                  invisible
+                >
+                  Cancel
+                </DialogCancelButton>
+              ) : (
+                <DialogCancelButton
+                  onClick={handleClose}
+                  size="medium"
+                  sx={{ marginRight: 8 }}
+                  invisible
+                >
+                  Close
+                </DialogCancelButton>
+              )}
               {completedSliceCount === 0 ? (
                 <DialogActionButton
                   color="purple"

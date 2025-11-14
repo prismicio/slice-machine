@@ -134,6 +134,8 @@ type CustomTypeFieldIdChangedMeta = {
 type LinkCustomType = NonNullable<LinkConfig["customtypes"]>[number];
 
 export class CustomTypesManager extends BaseManager {
+	private inferSliceAbortControllers = new Map<string, AbortController>();
+
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
@@ -540,12 +542,12 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async inferSlice(
-		args: { imageUrl: string } & (
+		args: { imageUrl: string; requestId?: string } & (
 			| { source: "upload" }
 			| { source: "figma"; libraryID: string }
 		),
 	): Promise<InferSliceResponse> {
-		const { source, imageUrl } = args;
+		const { source, imageUrl, requestId } = args;
 
 		const exp = await this.telemetry.getExperimentVariant("llm-proxy-access");
 		if (exp?.value !== "on") {
@@ -561,8 +563,20 @@ export class CustomTypesManager extends BaseManager {
 		if (source === "figma") {
 			const { libraryID } = args;
 			// eslint-disable-next-line no-console
-			console.log(`inferSlice started`);
+			console.log(
+				`inferSlice started${requestId ? ` for request ${requestId}` : ""}`,
+			);
 			const startTime = Date.now();
+
+			let abortController: AbortController | undefined;
+			if (requestId) {
+				abortController = new AbortController();
+				abortController.signal.addEventListener("abort", () => {
+					// eslint-disable-next-line no-console
+					console.log(`inferSlice request ${requestId} aborted`);
+				});
+				this.inferSliceAbortControllers.set(requestId, abortController);
+			}
 
 			let tmpDir: string | undefined;
 			try {
@@ -798,12 +812,15 @@ FINAL REMINDERS:
 								args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
 							},
 						},
+						...(abortController && { abortController }),
 					},
 				});
 
 				let newSliceAbsPath: string | undefined;
 
 				for await (const query of queries) {
+					// eslint-disable-next-line no-console
+					console.log(`inferSlice query: ${JSON.stringify(query)}`);
 					switch (query.type) {
 						case "result":
 							if (query.subtype === "success") {
@@ -837,10 +854,22 @@ FINAL REMINDERS:
 
 				const elapsedTimeSeconds = (Date.now() - startTime) / 1000;
 				// eslint-disable-next-line no-console
-				console.log(`inferSlice took ${elapsedTimeSeconds}s`);
+				console.log(
+					`inferSlice took ${elapsedTimeSeconds}s${
+						requestId ? ` for request ${requestId}` : ""
+					}`,
+				);
+
+				if (requestId) {
+					this.inferSliceAbortControllers.delete(requestId);
+				}
 
 				return InferSliceResponse.parse({ slice: JSON.parse(model) });
 			} catch (error) {
+				if (requestId) {
+					this.inferSliceAbortControllers.delete(requestId);
+				}
+
 				if (tmpDir && existsSync(tmpDir)) {
 					await rm(tmpDir, { recursive: true });
 				}
@@ -873,6 +902,22 @@ FINAL REMINDERS:
 
 			return InferSliceResponse.parse(json);
 		}
+	}
+
+	async cancelInferSlice(args: {
+		requestId: string;
+	}): Promise<{ cancelled: boolean }> {
+		const { requestId } = args;
+		const abortController = this.inferSliceAbortControllers.get(requestId);
+
+		if (abortController) {
+			abortController.abort();
+			this.inferSliceAbortControllers.delete(requestId);
+
+			return { cancelled: true };
+		}
+
+		return { cancelled: false };
 	}
 }
 
