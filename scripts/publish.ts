@@ -252,7 +252,7 @@ async function publish(options?: Options): Promise<void> {
   }
 
   // Update the manifest of each package that is part of the release.
-  console.log(`✏️  Updating manifest${s}...`);
+  console.log(`✏️ Updating manifest${s}...`);
   for (const nonPrivateWorkspaceName of nonPrivateWorkspaceNames) {
     const nonPrivateWorkspaceReleaseVersion = packageNameToReleaseVersion.get(
       nonPrivateWorkspaceName,
