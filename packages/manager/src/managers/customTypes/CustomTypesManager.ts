@@ -761,7 +761,7 @@ FINAL REMINDERS:
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
 					options: {
 						cwd: libraryAbsPath,
-						stderr: (data) => console.error(data),
+						stderr: (data) => console.error("inferSlice error:" + data),
 						model: "claude-haiku-4-5",
 						permissionMode: "bypassPermissions",
 						allowedTools: [
