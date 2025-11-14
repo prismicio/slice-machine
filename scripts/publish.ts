@@ -316,7 +316,7 @@ async function publish(options?: Options): Promise<void> {
       ...["--tag", npmDistributionTag],
       ...(args["tolerate-republish"] ? ["--tolerate-republish"] : []),
     ],
-    { dryRun },
+    { dryRun, stdio: "inherit" },
   );
 
   // Reset the index and working tree.
