@@ -1,4 +1,4 @@
-import { Button } from "@prismicio/editor-ui";
+import { Button, Tooltip } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { ReactNode } from "react";
 
@@ -31,7 +31,11 @@ export function SliceCard(props: SliceCardProps) {
       </Button>
     );
   } else if (slice.source === "figma") {
-    action = <FigmaIcon variant="square" />;
+    action = (
+      <Tooltip content="Pasted from Figma">
+        <FigmaIcon variant="square" />
+      </Tooltip>
+    );
   }
 
   return (

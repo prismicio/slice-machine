@@ -1,18 +1,25 @@
-type Props =
-  | { variant: "square"; size?: number }
-  | { variant: "original"; width?: number; height?: number };
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 
-export function FigmaIcon(props: Props) {
+type Props = (
+  | { variant: "square"; size?: number }
+  | { variant: "original"; width?: number; height?: number }
+) &
+  ComponentPropsWithoutRef<"svg">;
+
+export const FigmaIcon = forwardRef<SVGSVGElement, Props>((props, ref) => {
   const { variant } = props;
   if (variant === "square") {
-    const { size = 24 } = props;
+    const { size = 24, ...rest } = props;
+
     return (
       <svg
+        ref={ref}
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         width={size}
         height={size}
+        {...rest}
       >
         <g clipPath="url(#clip0_5065_192538)">
           <path
@@ -50,7 +57,8 @@ export function FigmaIcon(props: Props) {
     );
   }
 
-  let { width, height } = props;
+  // eslint-disable-next-line prefer-const
+  let { width, height, ...rest } = props;
   if (width === undefined && height === undefined) {
     width = 10;
     height = 16;
@@ -58,11 +66,13 @@ export function FigmaIcon(props: Props) {
 
   return (
     <svg
+      ref={ref}
       viewBox="0 0 10 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       height={height}
       width={width}
+      {...rest}
     >
       <path
         d="M5 7.83323C5 6.45253 6.11928 5.33325 7.49997 5.33325C8.8807 5.33325 10 6.45255 10 7.83328V8.16656C10 9.54728 8.8807 10.6666 7.49997 10.6666C6.11928 10.6666 5 9.54731 5 8.16661V7.83323Z"
@@ -86,4 +96,4 @@ export function FigmaIcon(props: Props) {
       />
     </svg>
   );
-}
+});

@@ -24,6 +24,7 @@ import { z } from "zod";
 
 import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
+import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 import { FigmaIcon } from "@/icons/FigmaIcon";
@@ -31,7 +32,6 @@ import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { Slice, SliceCard } from "./SliceCard";
-import { useOnboarding } from "@/features/onboarding/useOnboarding";
 
 const clipboardDataSchema = z.object({
   __type: z.literal("figma-to-prismic/clipboard-data"),
@@ -103,8 +103,8 @@ export function CreateSliceFromImageModal(
       ...prevSlices,
       ...images.map(
         (image): Slice => ({
-          status: "uploading",
           source: "upload",
+          status: "uploading",
           image,
         }),
       ),
@@ -736,14 +736,6 @@ async function getImageUrl({ image }: { image: File }) {
   });
   return url;
 }
-
-type NewSlice = {
-  image: File;
-  model: SharedSlice;
-  langSmithUrl?: string;
-  source: "figma" | "upload";
-  libraryID: string;
-};
 
 /**
  * Keeps track of the existing slices in the project.
