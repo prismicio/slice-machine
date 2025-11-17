@@ -81,6 +81,13 @@ vi.mock("@segment/analytics-node", () => {
 	};
 });
 
+vi.mock("@anthropic-ai/claude-agent-sdk", () => {
+	return {
+		createClient: vi.fn(),
+		Agent: vi.fn(),
+	};
+});
+
 const mswServer = setupServer();
 
 beforeAll(() => {
