@@ -36,6 +36,12 @@ import { UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
+import { existsSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { randomUUID } from "node:crypto";
+import { join as joinPath } from "node:path";
+import { mkdtemp, rename, rm, writeFile, readFile } from "node:fs/promises";
+import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -533,37 +539,339 @@ export class CustomTypesManager extends BaseManager {
 		return await client.getAllCustomTypes();
 	}
 
-	async inferSlice({
-		imageUrl,
-	}: {
-		imageUrl: string;
-	}): Promise<InferSliceResponse> {
+	async inferSlice(
+		args: { imageUrl: string } & (
+			| { source: "upload" }
+			| { source: "figma"; libraryID: string }
+		),
+	): Promise<InferSliceResponse> {
+		const { source, imageUrl } = args;
+
 		const authToken = await this.user.getAuthenticationToken();
-		const headers = {
-			Authorization: `Bearer ${authToken}`,
-		};
-
 		const repository = await this.project.getResolvedRepositoryName();
-		const searchParams = new URLSearchParams({
-			repository,
-		});
 
-		const url = new URL("./slices/infer", API_ENDPOINTS.CustomTypeService);
-		url.search = searchParams.toString();
+		console.info(`inferSlice (${source}) started`);
+		const startTime = Date.now();
 
-		const response = await fetch(url.toString(), {
-			method: "POST",
-			headers: headers,
-			body: JSON.stringify({ imageUrl }),
-		});
+		try {
+			if (source === "figma") {
+				const { libraryID } = args;
 
-		if (!response.ok) {
-			throw new Error(`Failed to infer slice: ${response.statusText}`);
+				const exp =
+					await this.telemetry.getExperimentVariant("llm-proxy-access");
+				if (exp?.value !== "on") {
+					throw new Error("User does not have access to the LLM proxy.");
+				}
+
+				const { llmProxyUrl } = z
+					.object({ llmProxyUrl: z.string().url() })
+					.parse(exp.payload);
+
+				let tmpDir: string | undefined;
+				try {
+					const config = await this.project.getSliceMachineConfig();
+
+					let framework:
+						| { type: "nextjs" | "nuxt" | "sveltekit"; label: string }
+						| undefined;
+					if (config.adapter === "@slicemachine/adapter-next") {
+						framework = { type: "nextjs", label: "Next.js (React)" };
+					} else if (
+						config.adapter === "@slicemachine/adapter-nuxt" ||
+						config.adapter === "@slicemachine/adapter-nuxt2"
+					) {
+						framework = { type: "nuxt", label: "Nuxt (Vue)" };
+					} else if (config.adapter === "@slicemachine/adapter-sveltekit") {
+						framework = { type: "sveltekit", label: "SvelteKit (Svelte)" };
+					}
+
+					if (!framework) {
+						throw new Error(
+							"Could not determine framework from Slice Machine config.",
+						);
+					}
+
+					let frameworkFileExtension: string | undefined;
+					if (framework.type === "nextjs") {
+						frameworkFileExtension = "tsx";
+					} else if (framework.type === "nuxt") {
+						frameworkFileExtension = "vue";
+					} else if (framework.type === "sveltekit") {
+						frameworkFileExtension = "svelte";
+					}
+
+					if (!frameworkFileExtension) {
+						throw new Error(
+							"Could not determine framework from Slice Machine config.",
+						);
+					}
+
+					const projectRoot = await this.project.getRoot();
+					const libraryAbsPath = joinPath(projectRoot, libraryID);
+
+					tmpDir = await mkdtemp(
+						joinPath(tmpdir(), "slice-machine-infer-slice-tmp-"),
+					);
+					const tmpImagePath = joinPath(tmpDir, `${randomUUID()}.png`);
+					const response = await fetch(imageUrl);
+					if (!response.ok) {
+						throw new Error(
+							`Failed to download image: ${response.status} ${response.statusText}`,
+						);
+					}
+					await writeFile(
+						tmpImagePath,
+						Buffer.from(await response.arrayBuffer()),
+					);
+
+					const queries = queryClaude({
+						prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
+	- You MUST start immediately with Step 1.1. DO NOT read, analyze, or explore any project files first.
+	- Work step-by-step through the numbered tasks below.
+	- DO NOT present any summary, explanation, or completion message after finishing.
+	- DO NOT create TODO lists while performing tasks.
+	- Keep responses minimal - only show necessary tool calls and brief progress notes.
+	
+	# CONTEXT 
+	
+	The user wants to build a new Prismic Slice based on a design image they provided.
+	Your goal is to analyze the design image and generate the JSON model data and boilerplate code for the slice following Prismic requirements.
+	
+	You will work under the slice library at <slice_library_path>, where all the slices are stored.
+	
+	# AVAILABLE RESOURCES
+	
+	<design_image_path>
+	${tmpImagePath}
+	</design_image_path>
+	
+	<slice_library_path>
+	${libraryAbsPath}
+	</slice_library_path>
+	
+	<framework>
+	${framework.label}
+	</framework>
+	
+	# AVAILABLE TOOLS
+	
+	You have access to specialized Prismic MCP tools for this task:
+	
+	<tool name="mcp__prismic__how_to_model_slice">
+	<description>
+	Provides detailed guidance on creating Prismic slice models, including field types, naming conventions, and best practices.
+	</description>
+	<when_to_use>
+	Call this tool in Step 2.1 to learn how to structure the slice model data for the design you analysed.
+	</when_to_use>
+	</tool>
+	
+	<tool name="mcp__prismic__how_to_code_slice">
+	<description>
+	Provides guidance on implementing Prismic slice components, including how to use Prismic field components, props structure, and best practices.
+	</description>
+	<when_to_use>
+	Call this tool in Step 2.1 to learn how to properly structure the slice component with Prismic fields.
+	</when_to_use>
+	</tool>
+	
+	<tool name="mcp__prismic__save_slice_data">
+	<description>
+	Validates and saves the slice model data to model.json. This is the ONLY way to create the model file.
+	</description>
+	<when_to_use>
+	Call this tool in Step 2.3 after you have built the complete slice model structure in memory.
+	</when_to_use>
+	</tool>
+	
+	# TASK REQUIREMENTS
+	
+	## Step 1: Gather information from the design image
+	1.1. Analyse the design image at <design_image_path>.
+	1.2. Identify all elements in the image that should be dynamically editable (e.g., headings, paragraphs, images, links, buttons, etc.).
+	1.3. List the slice directories under <slice_library_path>.
+	1.4. Come up with a unique name for the new slice based on the content of the image and the slice directories.
+	
+	## Step 2: Model the Prismic slice
+	2.1. Call mcp__prismic__how_to_model_slice to learn how to structure the model for this design.
+	- Make sure the name you use for the new slice does not yet exist in the slice library at <slice_library_path>. If it does, use a different name.
+	2.2. Build the complete slice JSON model data in memory based on the guidance received and the information extracted from the image.
+	2.3. Call mcp__prismic__save_slice_data to save the model (DO NOT manually write model.json) in the slice library at <slice_library_path>.
+	
+	## Step 3: Code a boilerplate slice component based on the model
+	3.1. Call mcp__prismic__how_to_code_slice to learn how to properly structure the slice component with Prismic fields.
+	3.2. Update the slice component code at <slice_library_path>/index.${frameworkFileExtension}, replacing the placeholder code with boilerplate code with the following requirements:
+	- Must NOT be based on existing slices or components from the codebase.
+	- Must render all the Prismic components to display the fields of the slice model created at <slice_model_path>.
+	- Must be a valid ${framework.label} component.
+	- Must NOT have any styling/CSS. No inlines styles or classNames. Just the skeleton component structure.
+	- Must NOT use any other custom component or functions from the user's codebase.
+	- Avoid creating unnecessary wrapper elements, like if they only wrap a single component (e.g., <div><PrismicRichText /></div>).
+	
+	## Step 4: Present the newly created slice path
+	4.1. Present the path to the newly created slice in the following format: <new_slice_path>${libraryAbsPath}/MyNewSlice</new_slice_path>.
+	- "MyNewSlice" must be the name of the directory of the newly created slice.
+	
+	# EXAMPLE OF CORRECT EXECUTION
+	
+	<example>
+	Assistant: Step 1.1: Analysing design image...
+	[reads <design_image_path>]
+	
+	Step 1.2: Identifying editable content elements...
+	[identifies: title field, description field, buttonText field, buttonLink field, backgroundImage field]
+	
+	Step 1.3: Listing slice directories under <slice_library_path>...
+	[lists slice directories: Hero, Hero2, Hero3]
+	
+	Step 1.4: Coming up with a unique name for the new slice...
+	[comes up with a unique name for the new slice: Hero4]
+	
+	Step 2.1: Getting Prismic modeling guidance...
+	[calls mcp__prismic__how_to_model_slice]
+	
+	Step 2.2: Building slice model based on guidance and the information extracted...
+	[creates model with title field, description field, buttonText field, buttonLink field, backgroundImage field]
+	
+	Step 2.3: Saving slice model...
+	[calls mcp__prismic__save_slice_data]
+	
+	Step 3.1: Learning Prismic slice coding requirements...
+	[calls mcp__prismic__how_to_code_slice]
+	
+	Step 3.2: Coding boilerplate slice component based on the model...
+	[updates component with Prismic field components, no styling, no other components]
+	
+	Step 4.1: Presenting the path to the newly created slice...
+	[presents <new_slice_path>${joinPath(
+		libraryAbsPath,
+		"MyNewSlice",
+	)}</new_slice_path>]
+	
+	# DELIVERABLES
+	- Slice model saved to <slice_library_path>/model.json using mcp__prismic__save_slice_data
+	- Slice component at <slice_library_path>/index.${frameworkFileExtension} updated with boilerplate code
+	- New slice path presented in the format mentioned in Step 3.1
+	
+	YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
+	
+	---
+	
+	FINAL REMINDERS:
+	- You MUST use mcp__prismic__save_slice_data to save the model
+	- You MUST call mcp__prismic__how_to_code_slice in Step 3.1
+	- DO NOT ATTEMPT TO BUILD THE APPLICATION
+	- START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
+						options: {
+							cwd: libraryAbsPath,
+							stderr: (data) => console.error("inferSlice error:" + data),
+							model: "claude-haiku-4-5",
+							permissionMode: "bypassPermissions",
+							allowedTools: [
+								"Bash",
+								"Read",
+								"FileSearch",
+								"Grep",
+								"Glob",
+								"Task",
+								"Edit",
+								"Write",
+								"MultiEdit",
+								"mcp__prismic__how_to_model_slice",
+								"mcp__prismic__how_to_code_slice",
+								"mcp__prismic__save_slice_data",
+							],
+							disallowedTools: [
+								`Edit(**/model.json)`,
+								`Write(**/model.json)`,
+								"Edit(**/mocks.json)",
+								"Write(**/mocks.json)",
+							],
+							env: {
+								...process.env,
+								ANTHROPIC_BASE_URL: llmProxyUrl,
+								ANTHROPIC_CUSTOM_HEADERS:
+									`x-prismic-token: ${authToken}\n` +
+									`x-prismic-repository: ${repository}\n`,
+							},
+							mcpServers: {
+								prismic: {
+									type: "stdio",
+									command: "npx",
+									args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
+								},
+							},
+						},
+					});
+
+					let newSliceAbsPath: string | undefined;
+
+					for await (const query of queries) {
+						switch (query.type) {
+							case "result":
+								if (query.subtype === "success") {
+									newSliceAbsPath = query.result.match(
+										/<new_slice_path>(.*)<\/new_slice_path>/s,
+									)?.[1];
+								}
+								break;
+						}
+					}
+
+					if (!newSliceAbsPath) {
+						throw new Error("Could not find path for the newly created slice.");
+					}
+
+					const model = await readFile(
+						joinPath(newSliceAbsPath, "model.json"),
+						"utf8",
+					);
+
+					if (!model) {
+						throw new Error(
+							"Could not find model for the newly created slice.",
+						);
+					}
+
+					// move the screenshot image to the new slice directory
+					await rename(
+						tmpImagePath,
+						joinPath(newSliceAbsPath, "screenshot-default.png"),
+					);
+
+					return InferSliceResponse.parse({ slice: JSON.parse(model) });
+				} finally {
+					if (tmpDir && existsSync(tmpDir)) {
+						await rm(tmpDir, { recursive: true });
+					}
+				}
+			} else {
+				const searchParams = new URLSearchParams({ repository });
+				const url = new URL("./slices/infer", API_ENDPOINTS.CustomTypeService);
+				url.search = searchParams.toString();
+
+				const response = await fetch(url.toString(), {
+					method: "POST",
+					headers: { Authorization: `Bearer ${authToken}` },
+					body: JSON.stringify({ imageUrl }),
+				});
+
+				if (!response.ok) {
+					throw new Error(`Failed to infer slice: ${response.statusText}`);
+				}
+
+				const json = await response.json();
+
+				return InferSliceResponse.parse(json);
+			}
+		} catch (error) {
+			console.error(`inferSlice (${source}) failed`, error);
+
+			throw error;
+		} finally {
+			const elapsedTimeSeconds = (Date.now() - startTime) / 1000;
+			console.info(`inferSlice (${source}) took ${elapsedTimeSeconds}s`);
 		}
-
-		const json = await response.json();
-
-		return InferSliceResponse.parse(json);
 	}
 }
 

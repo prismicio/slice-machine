@@ -18,12 +18,15 @@ import {
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect, useRef, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "react-toastify";
+import { z } from "zod";
 
 import { getState, telemetry } from "@/apiClient";
 import { addAiFeedback } from "@/features/aiFeedback";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { useExperimentVariant } from "@/hooks/useExperimentVariant";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
@@ -44,6 +47,12 @@ interface CreateSliceFromImageModalProps {
   onClose: () => void;
 }
 
+const clipboardDataSchema = z.object({
+  __type: z.literal("figma-to-prismic/clipboard-data"),
+  name: z.string(),
+  image: z.string().startsWith("data:image/"),
+});
+
 export function CreateSliceFromImageModal(
   props: CreateSliceFromImageModalProps,
 ) {
@@ -53,12 +62,22 @@ export function CreateSliceFromImageModal(
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
+  const isFigmaEnabled = useIsFigmaEnabled();
 
   /**
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
    */
   const id = useRef(crypto.randomUUID());
+
+  useHotkeys(
+    ["meta+v", "ctrl+v"],
+    (event) => {
+      event.preventDefault();
+      void handlePaste();
+    },
+    { enabled: open && isFigmaEnabled },
+  );
 
   const setSlice = (args: {
     index: number;
@@ -85,16 +104,23 @@ export function CreateSliceFromImageModal(
 
     setSlices(
       images.map((image) => ({
+        source: "upload",
         status: "uploading",
         image,
       })),
     );
 
-    images.forEach((image, index) => uploadImage({ index, image }));
+    images.forEach((image, index) =>
+      uploadImage({ index, image, source: "upload" }),
+    );
   };
 
-  const uploadImage = (args: { index: number; image: File }) => {
-    const { index, image } = args;
+  const uploadImage = (args: {
+    index: number;
+    image: File;
+    source: "upload" | "figma";
+  }) => {
+    const { index, image, source } = args;
     const currentId = id.current;
 
     setSlice({
@@ -102,13 +128,14 @@ export function CreateSliceFromImageModal(
       slice: (prevSlice) => ({
         ...prevSlice,
         status: "uploading",
+        source,
       }),
     });
 
     getImageUrl({ image }).then(
       (imageUrl) => {
         if (currentId !== id.current) return;
-        inferSlice({ index, imageUrl });
+        void inferSlice({ index, imageUrl, source });
       },
       () => {
         if (currentId !== id.current) return;
@@ -117,7 +144,7 @@ export function CreateSliceFromImageModal(
           slice: (prevSlice) => ({
             ...prevSlice,
             status: "uploadError",
-            onRetry: () => uploadImage({ index, image }),
+            onRetry: () => uploadImage({ index, image, source }),
           }),
         });
       },
@@ -126,9 +153,15 @@ export function CreateSliceFromImageModal(
 
   const existingSlices = useExistingSlices({ open });
 
-  const inferSlice = (args: { index: number; imageUrl: string }) => {
-    const { index, imageUrl } = args;
+  const inferSlice = async (args: {
+    index: number;
+    imageUrl: string;
+    source: "upload" | "figma";
+  }) => {
+    const { index, imageUrl, source } = args;
     const currentId = id.current;
+
+    const libraryID = await getLibraryID();
 
     setSlice({
       index,
@@ -139,46 +172,52 @@ export function CreateSliceFromImageModal(
       }),
     });
 
-    managerClient.customTypes.inferSlice({ imageUrl }).then(
-      ({ slice, langSmithUrl }) => {
-        if (currentId !== id.current) return;
+    try {
+      const inferResult = await managerClient.customTypes.inferSlice({
+        imageUrl,
+        source,
+        libraryID,
+      });
+      if (currentId !== id.current) return;
 
-        setSlices((prevSlices) =>
-          prevSlices.map((prevSlice, i) =>
-            i === index
-              ? {
-                  ...prevSlice,
-                  status: "success",
-                  thumbnailUrl: imageUrl,
-                  model: sliceWithoutConflicts({
-                    existingSlices: existingSlices.current,
-                    newSlices: prevSlices,
-                    slice,
-                  }),
-                  langSmithUrl,
-                }
-              : prevSlice,
-          ),
-        );
-      },
-      () => {
-        if (currentId !== id.current) return;
-        setSlice({
-          index,
-          slice: (prevSlice) => ({
-            ...prevSlice,
-            status: "generateError",
-            thumbnailUrl: imageUrl,
-            onRetry: () => inferSlice({ index, imageUrl }),
-          }),
-        });
-      },
-    );
+      const model = sliceWithoutConflicts({
+        existingSlices: existingSlices.current,
+        newSlices: slices,
+        slice: inferResult.slice,
+      });
+
+      setSlices((prevSlices) =>
+        prevSlices.map((prevSlice, i) =>
+          i === index
+            ? {
+                ...prevSlice,
+                status: "success",
+                thumbnailUrl: imageUrl,
+                langSmithUrl: inferResult.langSmithUrl,
+                model,
+              }
+            : prevSlice,
+        ),
+      );
+    } catch {
+      if (currentId !== id.current) return;
+      setSlice({
+        index,
+        slice: (prevSlice) => ({
+          ...prevSlice,
+          status: "generateError",
+          thumbnailUrl: imageUrl,
+          onRetry: () => void inferSlice({ index, imageUrl, source }),
+        }),
+      });
+    }
   };
 
   const onSubmit = () => {
     const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
-      if (slice.status === "success") acc.push(slice);
+      if (slice.status === "success" && slice.source === "upload") {
+        acc.push(slice);
+      }
       return acc;
     }, []);
     if (!newSlices.length) return;
@@ -226,6 +265,128 @@ export function CreateSliceFromImageModal(
         setIsCreatingSlices(false);
         toast.error("An unexpected error happened while adding slices.");
       });
+  };
+
+  const handlePaste = async () => {
+    if (
+      !open ||
+      !isFigmaEnabled ||
+      // For now we only support one Figma slice at a time
+      slices.some((slice) => slice.source === "figma")
+    ) {
+      return;
+    }
+
+    // Don't allow pasting while uploads or generation are in progress
+    const isLoading = slices.some(
+      (slice) => slice.status === "uploading" || slice.status === "generating",
+    );
+    if (isLoading) return;
+
+    const supportsClipboardRead =
+      typeof navigator.clipboard?.read === "function";
+
+    if (!supportsClipboardRead) {
+      toast.error("Clipboard paste is not supported in this browser.");
+      return;
+    }
+
+    try {
+      const clipboardItems = await navigator.clipboard.read();
+      if (clipboardItems.length === 0) {
+        toast.error("No data found in clipboard.");
+        return;
+      }
+
+      let imageName = "pasted-image.png";
+      let imageBlob: Blob | null = null;
+      let success = false;
+
+      // Method 1: Try to extract image from clipboard image/png blob (preferred)
+      for (const item of clipboardItems) {
+        const imageType = item.types.find((type) => type.startsWith("image/"));
+        if (imageType !== undefined) {
+          imageBlob = await item.getType(imageType);
+          break;
+        }
+      }
+
+      // Method 2: Read JSON from text/plain to get metadata and base64 image as fallback
+      for (const item of clipboardItems) {
+        if (item.types.includes("text/plain")) {
+          try {
+            const textBlob = await item.getType("text/plain");
+            const text = await textBlob.text();
+
+            const result = clipboardDataSchema.safeParse(JSON.parse(text));
+            if (result.success) {
+              success = true;
+              const data = result.data;
+              imageName = `${data.name}.png`;
+
+              // Use base64 image as fallback if no blob was found
+              if (!imageBlob) {
+                const response = await fetch(data.image);
+                imageBlob = await response.blob();
+              }
+            } else {
+              console.warn("Clipboard data validation failed:", result.error);
+            }
+          } catch (error) {
+            console.warn("Failed to parse JSON from clipboard:", error);
+            // Continue - we may still have imageBlob from Method 1
+          }
+        }
+      }
+
+      if (!imageBlob) {
+        if (success) {
+          toast.error(
+            "Could not extract Figma data from clipboard. Please try copying again using the Prismic Figma plugin.",
+          );
+        } else {
+          toast.error(
+            "No Figma data found in clipboard. Make sure you've copied a design using the Prismic Figma plugin.",
+          );
+        }
+        return;
+      }
+
+      // Check if we're at the limit
+      const currentSliceCount = slices.length;
+      if (currentSliceCount >= IMAGE_UPLOAD_LIMIT) {
+        toast.error(
+          `You can only upload ${IMAGE_UPLOAD_LIMIT} images at a time.`,
+        );
+        return;
+      }
+
+      // Create File object from blob and append to existing slices
+      const imageData = new File([imageBlob], imageName, {
+        type: imageBlob.type,
+      });
+      const newIndex = currentSliceCount;
+
+      // Append new slice to existing ones
+      setSlices((prevSlices) => [
+        ...prevSlices,
+        {
+          source: "figma",
+          status: "uploading",
+          image: imageData,
+        },
+      ]);
+
+      // Start uploading the new image
+      void uploadImage({ index: newIndex, image: imageData, source: "figma" });
+
+      toast.success(`Pasted ${imageName}${success ? " from Figma" : ""}`);
+    } catch (error) {
+      console.error("Failed to paste from clipboard:", error);
+      toast.error(
+        "Failed to paste from clipboard. Please check browser permissions and try again.",
+      );
+    }
   };
 
   const areSlicesLoading = slices.some(
@@ -472,3 +633,18 @@ const getSubmitButtonLabel = (
       return "Add to slices";
   }
 };
+
+function useIsFigmaEnabled() {
+  const experiment = useExperimentVariant("llm-proxy-access");
+  return experiment?.value === "on";
+}
+
+function getLibraryID() {
+  return managerClient.project.getSliceMachineConfig().then((smConfig) => {
+    const libraryID = smConfig?.libraries?.[0];
+    if (libraryID === undefined) {
+      throw new Error("No library found in the config.");
+    }
+    return libraryID;
+  });
+}

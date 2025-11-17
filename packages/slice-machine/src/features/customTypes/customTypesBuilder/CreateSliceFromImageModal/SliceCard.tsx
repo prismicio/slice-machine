@@ -45,7 +45,7 @@ export function SliceCard(props: SliceCardProps) {
   );
 }
 
-export type Slice = { image: File } & (
+export type Slice = { image: File; source: "upload" | "figma" } & (
   | { status: "uploading" }
   | { status: "uploadError"; onRetry: () => void }
   | { status: "generating"; thumbnailUrl: string }
