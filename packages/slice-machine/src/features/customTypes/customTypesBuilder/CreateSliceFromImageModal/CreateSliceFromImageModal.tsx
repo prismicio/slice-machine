@@ -86,6 +86,8 @@ export function CreateSliceFromImageModal(
   };
 
   const onImagesSelected = (images: File[]) => {
+    if (hasTriggeredGeneration) return;
+
     if (images.length > IMAGE_UPLOAD_LIMIT) {
       toast.error(
         `You can only upload ${IMAGE_UPLOAD_LIMIT} images at a time.`,
@@ -93,17 +95,22 @@ export function CreateSliceFromImageModal(
       return;
     }
 
-    setSlices(
-      images.map((image) => ({
-        source: "upload",
-        status: "uploading",
-        image,
-      })),
-    );
+    const startIndex = slices.length;
+    setSlices((prevSlices) => [
+      ...prevSlices,
+      ...images.map(
+        (image): Slice => ({
+          source: "upload",
+          status: "uploading",
+          image,
+        }),
+      ),
+    ]);
 
-    images.forEach((image, index) =>
-      void uploadImage({ index, image, source: "upload" }),
-    );
+    images.forEach((image, relativeIndex) => {
+      const index = startIndex + relativeIndex;
+      void uploadImage({ index, image, source: "upload" });
+    });
   };
 
   const uploadImage = async (args: {
