@@ -1,8 +1,8 @@
 import { Button, Tooltip } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { ReactNode } from "react";
 
 import { Card, CardFooter, CardMedia } from "@/components/Card";
-import { ReactNode } from "react";
 import { FigmaIcon } from "@/icons/FigmaIcon";
 
 interface SliceCardProps {

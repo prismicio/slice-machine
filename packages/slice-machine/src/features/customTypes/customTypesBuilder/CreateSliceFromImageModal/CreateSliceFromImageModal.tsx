@@ -27,11 +27,11 @@ import { addAiFeedback } from "@/features/aiFeedback";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useExperimentVariant } from "@/hooks/useExperimentVariant";
+import { FigmaIcon } from "@/icons/FigmaIcon";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { Slice, SliceCard } from "./SliceCard";
-import { FigmaIcon } from "@/icons/FigmaIcon";
 
 const IMAGE_UPLOAD_LIMIT = 10;
 
@@ -102,7 +102,7 @@ export function CreateSliceFromImageModal(
     );
 
     images.forEach((image, index) =>
-      uploadImage({ index, image, source: "upload" }),
+      void uploadImage({ index, image, source: "upload" }),
     );
   };
 
@@ -254,7 +254,7 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const generatePendingSlices = async () => {
+  const generatePendingSlices = () => {
     if (libraryID === undefined) return;
 
     slices.forEach((slice, index) => {
