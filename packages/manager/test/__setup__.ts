@@ -190,6 +190,14 @@ vi.mock("@amplitude/experiment-node-server", () => {
 	};
 });
 
+vi.mock("@anthropic-ai/claude-agent-sdk", () => {
+	return {
+		createClient: vi.fn(),
+		Agent: vi.fn(),
+		query: vi.fn(),
+	};
+});
+
 vi.mock("execa", async () => {
 	const execa: typeof import("execa") = await vi.importActual("execa");
 
