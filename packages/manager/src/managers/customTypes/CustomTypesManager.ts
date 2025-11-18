@@ -39,9 +39,17 @@ import { CustomTypeFormat } from "./types";
 import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { randomUUID } from "node:crypto";
-import { join as joinPath } from "node:path";
-import { mkdtemp, rename, rm, writeFile, readFile } from "node:fs/promises";
+import { join as joinPath, relative as relativePath } from "node:path";
+import {
+	mkdtemp,
+	rename,
+	rm,
+	writeFile,
+	readFile,
+	readdir,
+} from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
+import { APPLICATION_MODE } from "../../constants/APPLICATION_MODE";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -567,6 +575,8 @@ export class CustomTypesManager extends BaseManager {
 					.object({ llmProxyUrl: z.string().url() })
 					.parse(exp.payload);
 
+				console.info({ llmProxyUrl });
+
 				let tmpDir: string | undefined;
 				try {
 					const config = await this.project.getSliceMachineConfig();
@@ -608,11 +618,12 @@ export class CustomTypesManager extends BaseManager {
 
 					const projectRoot = await this.project.getRoot();
 					const libraryAbsPath = joinPath(projectRoot, libraryID);
+					const cwd = libraryAbsPath;
 
 					tmpDir = await mkdtemp(
 						joinPath(tmpdir(), "slice-machine-infer-slice-tmp-"),
 					);
-					const tmpImagePath = joinPath(tmpDir, `${randomUUID()}.png`);
+					const tmpImageAbsPath = joinPath(tmpDir, `${randomUUID()}.png`);
 					const response = await fetch(imageUrl);
 					if (!response.ok) {
 						throw new Error(
@@ -620,163 +631,207 @@ export class CustomTypesManager extends BaseManager {
 						);
 					}
 					await writeFile(
-						tmpImagePath,
+						tmpImageAbsPath,
 						Buffer.from(await response.arrayBuffer()),
 					);
 
+					const otherSlices = (
+						await Promise.all(
+							(await readdir(libraryAbsPath, { withFileTypes: true })).flatMap(
+								async (path) => {
+									try {
+										if (!path.isDirectory()) {
+											throw new Error("Not a directory");
+										}
+
+										const absPath = joinPath(libraryAbsPath, path.name);
+										const modelAbsPath = joinPath(absPath, "model.json");
+										if (!existsSync(modelAbsPath)) {
+											throw new Error("Model file not found");
+										}
+
+										const decoded = SharedSlice.decode(
+											JSON.parse(await readFile(modelAbsPath, "utf-8")),
+										);
+										if (decoded._tag === "Left") {
+											throw new Error("Invalid model file");
+										}
+
+										return [
+											{
+												absPath,
+												relPath: relativePath(cwd, absPath),
+												name: decoded.right.name,
+											},
+										];
+									} catch {
+										return [];
+									}
+								},
+							),
+						)
+					).flat();
+
+					const prompt = `CRITICAL INSTRUCTIONS - READ FIRST:
+- You MUST start immediately with Step 1.1. DO NOT read, analyze, or explore any project files first.
+- Work step-by-step through the numbered tasks below.
+- DO NOT present any summary, explanation, or completion message after finishing.
+- DO NOT create TODO lists while performing tasks.
+- Keep responses minimal - only show necessary tool calls and brief progress notes.
+
+# CONTEXT 
+
+The user wants to build a new Prismic Slice based on a design image they provided.
+Your goal is to analyze the design image and generate the JSON model data and boilerplate code for the slice following Prismic requirements.
+
+You will work under the slice library at <slice_library_directory_path>, where all the slices are stored.
+
+# AVAILABLE RESOURCES
+
+<framework>
+${framework.label}
+</framework>
+
+<design_image_path>
+${tmpImageAbsPath}
+</design_image_path>
+
+<slice_library_directory_path>
+${libraryAbsPath}
+</slice_library_directory_path>
+
+<disallowed_slice_names>
+${otherSlices.map((slice) => `- ${slice.name}`).join("\n")}
+</disallowed_slice_names>
+
+# AVAILABLE TOOLS
+
+You have access to specialized Prismic MCP tools for this task:
+
+<tool name="mcp__prismic__how_to_model_slice">
+<description>
+Provides detailed guidance on creating Prismic slice models, including field types, naming conventions, and best practices.
+</description>
+<when_to_use>
+Call this tool in Step 2.1 to learn how to structure the slice model data for the design you analysed.
+</when_to_use>
+</tool>
+
+<tool name="mcp__prismic__how_to_code_slice">
+<description>
+Provides guidance on implementing Prismic slice components, including how to use Prismic field components, props structure, and best practices.
+</description>
+<when_to_use>
+Call this tool in Step 2.1 to learn how to properly structure the slice component with Prismic fields.
+</when_to_use>
+</tool>
+
+<tool name="mcp__prismic__save_slice_data">
+<description>
+Validates and saves the slice model data to model.json. This is the ONLY way to create the model file.
+</description>
+<when_to_use>
+Call this tool in Step 2.3 after you have built the complete slice model structure in memory.
+</when_to_use>
+</tool>
+
+# TASK REQUIREMENTS
+
+## Step 1: Gather information from the design image
+1.1. Analyse the design image at <design_image_path>.
+1.2. Identify all elements in the image that should be dynamically editable (e.g., headings, paragraphs, images, links, buttons, etc.).
+1.3. Come up with a UNIQUE name for the new slice based on the content of the image, DO NOT use any of the names in <disallowed_slice_names>.
+
+## Step 2: Model the Prismic slice
+2.1. Call mcp__prismic__how_to_model_slice to learn how to structure the model for this design.
+2.2. Build the complete slice JSON model data in memory based on the guidance received and the information extracted from the image.
+2.3. Call mcp__prismic__save_slice_data to save the model (DO NOT manually write model.json) in the slice library at <slice_library_directory_path>.
+
+## Step 3: Code a boilerplate slice component based on the model
+3.1. Call mcp__prismic__how_to_code_slice to learn how to properly structure the slice component with Prismic fields.
+3.2. Update the slice component code at <slice_library_directory_path>/index.*, replacing the placeholder code with boilerplate code with the following requirements:
+- Must NOT be based on existing slices or components from the codebase.
+- Must render all the Prismic components to display the fields of the slice model created at <slice_model_path>.
+- Must be a valid ${framework.label} component.
+- Must NOT have any styling/CSS. No inlines styles or classNames. Just the skeleton component structure.
+- Must NOT use any other custom component or functions from the user's codebase.
+- Avoid creating unnecessary wrapper elements, like if they only wrap a single component (e.g., <div><PrismicRichText /></div>).
+
+## Step 4: Present the newly created slice path
+4.1. Present the path to the newly created slice in the following format: <new_slice_path>${libraryAbsPath}/MyNewSlice</new_slice_path>.
+- "MyNewSlice" must be the name of the directory of the newly created slice.
+
+# EXAMPLE OF CORRECT EXECUTION
+
+<example>
+Assistant: Step 1.1: Analysing design image...
+[reads <design_image_path>]
+
+Step 1.2: Identifying editable content elements...
+[identifies: title field, description field, buttonText field, buttonLink field, backgroundImage field]
+
+Step 1.3: Listing slice directories under <slice_library_directory_path>...
+[lists slice directories: Hero, Hero2, Hero3]
+
+Step 1.4: Coming up with a unique name for the new slice...
+[comes up with a unique name for the new slice: Hero4]
+
+Step 2.1: Getting Prismic modeling guidance...
+[calls mcp__prismic__how_to_model_slice]
+
+Step 2.2: Building slice model based on guidance and the information extracted...
+[creates model with title field, description field, buttonText field, buttonLink field, backgroundImage field]
+
+Step 2.3: Saving slice model...
+[calls mcp__prismic__save_slice_data]
+
+Step 3.1: Learning Prismic slice coding requirements...
+[calls mcp__prismic__how_to_code_slice]
+
+Step 3.2: Coding boilerplate slice component based on the model...
+[updates component with Prismic field components, no styling, no other components]
+
+Step 4.1: Presenting the path to the newly created slice...
+[presents <new_slice_path>${joinPath(
+						libraryAbsPath,
+						"MyNewSlice",
+					)}</new_slice_path>]
+
+# DELIVERABLES
+- Slice model saved to <slice_library_directory_path>/model.json using mcp__prismic__save_slice_data
+- Slice component at <slice_library_directory_path>/index.* updated with boilerplate code
+- New slice path presented in the format mentioned in Step 3.1
+
+YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
+
+---
+
+FINAL REMINDERS:
+- You MUST use mcp__prismic__save_slice_data to save the model
+- You MUST call mcp__prismic__how_to_code_slice in Step 3.1
+- DO NOT ATTEMPT TO BUILD THE APPLICATION
+- START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS`;
+
 					const queries = queryClaude({
-						prompt: `CRITICAL INSTRUCTIONS - READ FIRST:
-	- You MUST start immediately with Step 1.1. DO NOT read, analyze, or explore any project files first.
-	- Work step-by-step through the numbered tasks below.
-	- DO NOT present any summary, explanation, or completion message after finishing.
-	- DO NOT create TODO lists while performing tasks.
-	- Keep responses minimal - only show necessary tool calls and brief progress notes.
-	
-	# CONTEXT 
-	
-	The user wants to build a new Prismic Slice based on a design image they provided.
-	Your goal is to analyze the design image and generate the JSON model data and boilerplate code for the slice following Prismic requirements.
-	
-	You will work under the slice library at <slice_library_path>, where all the slices are stored.
-	
-	# AVAILABLE RESOURCES
-	
-	<design_image_path>
-	${tmpImagePath}
-	</design_image_path>
-	
-	<slice_library_path>
-	${libraryAbsPath}
-	</slice_library_path>
-	
-	<framework>
-	${framework.label}
-	</framework>
-	
-	# AVAILABLE TOOLS
-	
-	You have access to specialized Prismic MCP tools for this task:
-	
-	<tool name="mcp__prismic__how_to_model_slice">
-	<description>
-	Provides detailed guidance on creating Prismic slice models, including field types, naming conventions, and best practices.
-	</description>
-	<when_to_use>
-	Call this tool in Step 2.1 to learn how to structure the slice model data for the design you analysed.
-	</when_to_use>
-	</tool>
-	
-	<tool name="mcp__prismic__how_to_code_slice">
-	<description>
-	Provides guidance on implementing Prismic slice components, including how to use Prismic field components, props structure, and best practices.
-	</description>
-	<when_to_use>
-	Call this tool in Step 2.1 to learn how to properly structure the slice component with Prismic fields.
-	</when_to_use>
-	</tool>
-	
-	<tool name="mcp__prismic__save_slice_data">
-	<description>
-	Validates and saves the slice model data to model.json. This is the ONLY way to create the model file.
-	</description>
-	<when_to_use>
-	Call this tool in Step 2.3 after you have built the complete slice model structure in memory.
-	</when_to_use>
-	</tool>
-	
-	# TASK REQUIREMENTS
-	
-	## Step 1: Gather information from the design image
-	1.1. Analyse the design image at <design_image_path>.
-	1.2. Identify all elements in the image that should be dynamically editable (e.g., headings, paragraphs, images, links, buttons, etc.).
-	1.3. List the slice directories under <slice_library_path>.
-	1.4. Come up with a unique name for the new slice based on the content of the image and the slice directories.
-	
-	## Step 2: Model the Prismic slice
-	2.1. Call mcp__prismic__how_to_model_slice to learn how to structure the model for this design.
-	- Make sure the name you use for the new slice does not yet exist in the slice library at <slice_library_path>. If it does, use a different name.
-	2.2. Build the complete slice JSON model data in memory based on the guidance received and the information extracted from the image.
-	2.3. Call mcp__prismic__save_slice_data to save the model (DO NOT manually write model.json) in the slice library at <slice_library_path>.
-	
-	## Step 3: Code a boilerplate slice component based on the model
-	3.1. Call mcp__prismic__how_to_code_slice to learn how to properly structure the slice component with Prismic fields.
-	3.2. Update the slice component code at <slice_library_path>/index.${frameworkFileExtension}, replacing the placeholder code with boilerplate code with the following requirements:
-	- Must NOT be based on existing slices or components from the codebase.
-	- Must render all the Prismic components to display the fields of the slice model created at <slice_model_path>.
-	- Must be a valid ${framework.label} component.
-	- Must NOT have any styling/CSS. No inlines styles or classNames. Just the skeleton component structure.
-	- Must NOT use any other custom component or functions from the user's codebase.
-	- Avoid creating unnecessary wrapper elements, like if they only wrap a single component (e.g., <div><PrismicRichText /></div>).
-	
-	## Step 4: Present the newly created slice path
-	4.1. Present the path to the newly created slice in the following format: <new_slice_path>${libraryAbsPath}/MyNewSlice</new_slice_path>.
-	- "MyNewSlice" must be the name of the directory of the newly created slice.
-	
-	# EXAMPLE OF CORRECT EXECUTION
-	
-	<example>
-	Assistant: Step 1.1: Analysing design image...
-	[reads <design_image_path>]
-	
-	Step 1.2: Identifying editable content elements...
-	[identifies: title field, description field, buttonText field, buttonLink field, backgroundImage field]
-	
-	Step 1.3: Listing slice directories under <slice_library_path>...
-	[lists slice directories: Hero, Hero2, Hero3]
-	
-	Step 1.4: Coming up with a unique name for the new slice...
-	[comes up with a unique name for the new slice: Hero4]
-	
-	Step 2.1: Getting Prismic modeling guidance...
-	[calls mcp__prismic__how_to_model_slice]
-	
-	Step 2.2: Building slice model based on guidance and the information extracted...
-	[creates model with title field, description field, buttonText field, buttonLink field, backgroundImage field]
-	
-	Step 2.3: Saving slice model...
-	[calls mcp__prismic__save_slice_data]
-	
-	Step 3.1: Learning Prismic slice coding requirements...
-	[calls mcp__prismic__how_to_code_slice]
-	
-	Step 3.2: Coding boilerplate slice component based on the model...
-	[updates component with Prismic field components, no styling, no other components]
-	
-	Step 4.1: Presenting the path to the newly created slice...
-	[presents <new_slice_path>${joinPath(
-		libraryAbsPath,
-		"MyNewSlice",
-	)}</new_slice_path>]
-	
-	# DELIVERABLES
-	- Slice model saved to <slice_library_path>/model.json using mcp__prismic__save_slice_data
-	- Slice component at <slice_library_path>/index.${frameworkFileExtension} updated with boilerplate code
-	- New slice path presented in the format mentioned in Step 3.1
-	
-	YOU ARE NOT FINISHED UNTIL YOU HAVE THESE DELIVERABLES.
-	
-	---
-	
-	FINAL REMINDERS:
-	- You MUST use mcp__prismic__save_slice_data to save the model
-	- You MUST call mcp__prismic__how_to_code_slice in Step 3.1
-	- DO NOT ATTEMPT TO BUILD THE APPLICATION
-	- START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS;`,
+						prompt,
 						options: {
-							cwd: libraryAbsPath,
-							stderr: (data) => console.error("inferSlice error:" + data),
+							cwd,
+							stderr: (data) => {
+								if (!data.startsWith("Spawning Claude Code process")) {
+									console.error("inferSlice error:" + data);
+								}
+							},
 							model: "claude-haiku-4-5",
-							permissionMode: "bypassPermissions",
+							permissionMode: "acceptEdits",
 							allowedTools: [
-								"Bash",
+								`Bash(${cwd})`,
 								"Read",
-								"FileSearch",
 								"Grep",
 								"Glob",
-								"Task",
-								"Edit",
 								"Write",
+								"Edit",
 								"MultiEdit",
+								"FileSearch",
 								"mcp__prismic__how_to_model_slice",
 								"mcp__prismic__how_to_code_slice",
 								"mcp__prismic__save_slice_data",
@@ -786,6 +841,11 @@ export class CustomTypesManager extends BaseManager {
 								`Write(**/model.json)`,
 								"Edit(**/mocks.json)",
 								"Write(**/mocks.json)",
+								...otherSlices.flatMap((slice) => [
+									`Write(${slice.relPath})`,
+									`Edit(${slice.relPath})`,
+									`MultiEdit(${slice.relPath})`,
+								]),
 							],
 							env: {
 								...process.env,
@@ -807,6 +867,9 @@ export class CustomTypesManager extends BaseManager {
 					let newSliceAbsPath: string | undefined;
 
 					for await (const query of queries) {
+						if (process.env.SM_ENV !== APPLICATION_MODE.Production) {
+							console.info(JSON.stringify(query, null, 2));
+						}
 						switch (query.type) {
 							case "result":
 								if (query.subtype === "success") {
@@ -835,7 +898,7 @@ export class CustomTypesManager extends BaseManager {
 
 					// move the screenshot image to the new slice directory
 					await rename(
-						tmpImagePath,
+						tmpImageAbsPath,
 						joinPath(newSliceAbsPath, "screenshot-default.png"),
 					);
 
