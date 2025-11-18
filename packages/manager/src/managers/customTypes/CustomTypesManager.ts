@@ -601,21 +601,6 @@ export class CustomTypesManager extends BaseManager {
 						);
 					}
 
-					let frameworkFileExtension: string | undefined;
-					if (framework.type === "nextjs") {
-						frameworkFileExtension = "tsx";
-					} else if (framework.type === "nuxt") {
-						frameworkFileExtension = "vue";
-					} else if (framework.type === "sveltekit") {
-						frameworkFileExtension = "svelte";
-					}
-
-					if (!frameworkFileExtension) {
-						throw new Error(
-							"Could not determine framework from Slice Machine config.",
-						);
-					}
-
 					const projectRoot = await this.project.getRoot();
 					const libraryAbsPath = joinPath(projectRoot, libraryID);
 					const cwd = libraryAbsPath;
