@@ -78,10 +78,6 @@ export function CreateSliceFromImageModal(
     { enabled: open && isFigmaEnabled },
   );
 
-  useEffect(() => {
-    return () => void cancelGeneratingRequests();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   const setSlice = (args: {
     index: number;
     slice: (prevSlice: Slice) => Slice;
