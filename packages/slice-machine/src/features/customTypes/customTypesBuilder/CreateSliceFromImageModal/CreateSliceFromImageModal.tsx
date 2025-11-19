@@ -284,12 +284,12 @@ export function CreateSliceFromImageModal(
     });
   };
 
-  const uploadingSliceCount = slices.filter((slice) => {
-    return slice.status === "uploading";
-  }).length;
-
   const generatingSliceCount = slices.filter((slice) => {
     return slice.status === "generating";
+  }).length;
+
+  const uploadingSliceCount = slices.filter((slice) => {
+    return slice.status === "uploading";
   }).length;
 
   const loadingSliceCount = generatingSliceCount + uploadingSliceCount;
