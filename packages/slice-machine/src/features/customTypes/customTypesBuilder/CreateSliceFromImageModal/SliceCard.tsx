@@ -1,7 +1,9 @@
-import { Button } from "@prismicio/editor-ui";
+import { Button, Tooltip } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { ReactNode } from "react";
 
 import { Card, CardFooter, CardMedia } from "@/components/Card";
+import { FigmaIconSquare } from "@/icons/FigmaIconSquare";
 
 interface SliceCardProps {
   slice: Slice;
@@ -16,9 +18,25 @@ export function SliceCard(props: SliceCardProps) {
     slice.status === "uploadError" || slice.status === "generateError";
 
   const hasThumbnail =
+    slice.status === "pending" ||
     slice.status === "generateError" ||
     slice.status === "generating" ||
     slice.status === "success";
+
+  let action: ReactNode | undefined;
+  if (error) {
+    action = (
+      <Button startIcon="refresh" color="grey" onClick={slice.onRetry}>
+        Retry
+      </Button>
+    );
+  } else if (slice.source === "figma") {
+    action = (
+      <Tooltip content="Pasted from Figma">
+        <FigmaIconSquare />
+      </Tooltip>
+    );
+  }
 
   return (
     <Card disabled={loading}>
@@ -30,16 +48,10 @@ export function SliceCard(props: SliceCardProps) {
       <CardFooter
         loading={loading}
         startIcon={getStartIcon(slice.status)}
-        title={slice.status === "success" ? slice.model.name : slice.image.name}
-        subtitle={getSubtitle(slice.status)}
+        title={getTitle(slice)}
+        subtitle={getSubtitle(slice)}
         error={error}
-        action={
-          error ? (
-            <Button startIcon="refresh" color="grey" onClick={slice.onRetry}>
-              Retry
-            </Button>
-          ) : undefined
-        }
+        action={action}
       />
     </Card>
   );
@@ -48,6 +60,7 @@ export function SliceCard(props: SliceCardProps) {
 export type Slice = { image: File; source: "upload" | "figma" } & (
   | { status: "uploading" }
   | { status: "uploadError"; onRetry: () => void }
+  | { status: "pending"; thumbnailUrl: string }
   | { status: "generating"; thumbnailUrl: string }
   | { status: "generateError"; thumbnailUrl: string; onRetry: () => void }
   | {
@@ -58,11 +71,23 @@ export type Slice = { image: File; source: "upload" | "figma" } & (
     }
 );
 
+function getTitle(slice: Slice) {
+  if (slice.status === "success") {
+    return slice.model.name;
+  }
+  if (slice.source === "figma") {
+    return slice.image.name.split(".")[0];
+  }
+  return slice.image.name;
+}
+
 function getStartIcon(status: Slice["status"]) {
   switch (status) {
     case "uploadError":
     case "generateError":
       return "close";
+    case "pending":
+      return "image";
     case "success":
       return "check";
     default:
@@ -70,10 +95,22 @@ function getStartIcon(status: Slice["status"]) {
   }
 }
 
-function getSubtitle(status: Slice["status"]) {
-  switch (status) {
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) {
+    return `${bytes} B`;
+  }
+  if (bytes < 1024 * 1024) {
+    return `${(bytes / 1024).toFixed(1)} kB`;
+  }
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getSubtitle(slice: Slice) {
+  switch (slice.status) {
     case "uploading":
       return "Uploading...";
+    case "pending":
+      return formatFileSize(slice.image.size);
     case "uploadError":
       return "Unable to upload image";
     case "generating":
