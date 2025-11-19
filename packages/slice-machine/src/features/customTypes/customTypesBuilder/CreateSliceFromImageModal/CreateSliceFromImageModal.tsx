@@ -498,7 +498,7 @@ export function CreateSliceFromImageModal(
     if (cancelableIds.length === 0) return;
 
     cancelableIds.forEach((requestId) => {
-      void managerClient.customTypes.cancelInferSlice({ requestId });
+      managerClient.customTypes.cancelInferSlice({ requestId });
     });
   }
 
