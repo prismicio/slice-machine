@@ -569,7 +569,7 @@ export class CustomTypesManager extends BaseManager {
 					if (abortController && !abortController?.signal.aborted) {
 						abortController?.abort();
 						console.warn(
-							`inferSlice (${source}) request timed out after 5 minutes`,
+							`inferSlice (${source}) request ${requestId} timed out after 5 minutes`,
 						);
 					}
 				},
