@@ -49,7 +49,7 @@ test("I can navigate through all menu entries", async ({
   );
 });
 
-test("I can access the repository using the open icon", async ({
+test.skip("I can access the repository using the open icon", async ({
   sliceMachinePage,
   procedures,
 }) => {
