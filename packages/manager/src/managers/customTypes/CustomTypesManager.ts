@@ -965,9 +965,7 @@ FINAL REMINDERS:
 		}
 	}
 
-	async cancelInferSlice(args: {
-		requestId: string;
-	}): Promise<{ cancelled: boolean }> {
+	cancelInferSlice(args: { requestId: string }): { cancelled: boolean } {
 		const { requestId } = args;
 		const abortController = this.inferSliceAbortControllers.get(requestId);
 

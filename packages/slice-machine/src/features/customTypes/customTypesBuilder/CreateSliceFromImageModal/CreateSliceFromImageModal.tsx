@@ -476,11 +476,9 @@ export function CreateSliceFromImageModal(
     });
     if (cancelableIds.length === 0) return;
 
-    await Promise.all(
-      cancelableIds.map((requestId) => {
-        return managerClient.customTypes.cancelInferSlice({ requestId });
-      }),
-    );
+    cancelableIds.forEach((requestId) => {
+      managerClient.customTypes.cancelInferSlice({ requestId });
+    });
   };
 
   const onCancelConfirm = async () => {
