@@ -573,7 +573,7 @@ export class CustomTypesManager extends BaseManager {
 						);
 					}
 				},
-				1 * 60 * 1000, // 5 minutes
+				5 * 60 * 1000, // 5 minutes
 			);
 			abortController.signal.addEventListener("abort", () => {
 				clearTimeout(timeoutId);
@@ -602,8 +602,6 @@ export class CustomTypesManager extends BaseManager {
 				const { llmProxyUrl } = z
 					.object({ llmProxyUrl: z.string().url() })
 					.parse(exp.payload);
-
-				console.info({ llmProxyUrl });
 
 				let tmpDir: string | undefined;
 				try {
