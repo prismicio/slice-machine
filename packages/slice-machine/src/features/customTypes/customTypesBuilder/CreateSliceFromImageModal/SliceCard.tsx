@@ -3,7 +3,7 @@ import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { ReactNode } from "react";
 
 import { Card, CardFooter, CardMedia } from "@/components/Card";
-import { FigmaIcon } from "@/icons/FigmaIcon";
+import { FigmaIconSquare } from "@/icons/FigmaIconSquare";
 
 interface SliceCardProps {
   slice: Slice;
@@ -33,7 +33,7 @@ export function SliceCard(props: SliceCardProps) {
   } else if (slice.source === "figma") {
     action = (
       <Tooltip content="Pasted from Figma">
-        <FigmaIcon variant="square" />
+        <FigmaIconSquare />
       </Tooltip>
     );
   }

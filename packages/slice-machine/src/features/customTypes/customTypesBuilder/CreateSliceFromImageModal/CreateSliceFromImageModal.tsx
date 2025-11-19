@@ -492,7 +492,7 @@ export function CreateSliceFromImageModal(
                         alignItems="center"
                         justifyContent="center"
                       >
-                        <FigmaIcon variant="original" height={25} />
+                        <FigmaIcon height={25} />
                       </Box>
                       <Box display="flex" flexDirection="column" flexGrow={1}>
                         <Text variant="bold">Want to work faster?</Text>
@@ -678,9 +678,7 @@ function UploadBlankSlate(props: {
               <>
                 <Button
                   size="small"
-                  renderStartIcon={() => (
-                    <FigmaIcon variant="original" height={16} />
-                  )}
+                  renderStartIcon={() => <FigmaIcon height={16} />}
                   color="grey"
                   onClick={onPaste}
                 >

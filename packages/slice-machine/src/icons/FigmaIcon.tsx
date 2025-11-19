@@ -1,64 +1,10 @@
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, ElementRef, forwardRef } from "react";
 
-type Props = (
-  | { variant: "square"; size?: number }
-  | { variant: "original"; width?: number; height?: number }
-) &
-  ComponentPropsWithoutRef<"svg">;
-
-export const FigmaIcon = forwardRef<SVGSVGElement, Props>((props, ref) => {
-  const { variant } = props;
-  if (variant === "square") {
-    const { size = 24, ...rest } = props;
-
-    return (
-      <svg
-        ref={ref}
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        width={size}
-        height={size}
-        {...rest}
-      >
-        <g clipPath="url(#clip0_5065_192538)">
-          <path
-            d="M9.66862 19.9993C11.1406 19.9993 12.3353 18.8047 12.3353 17.3327V14.666H9.66862C8.19662 14.666 7.00195 15.8607 7.00195 17.3327C7.00195 18.8047 8.19662 19.9993 9.66862 19.9993Z"
-            fill="#0ACF83"
-          />
-          <path
-            d="M7.00195 12.0007C7.00195 10.5287 8.19662 9.33398 9.66862 9.33398H12.3353V14.6673H9.66862C8.19662 14.6673 7.00195 13.4727 7.00195 12.0007Z"
-            fill="#A259FF"
-          />
-          <path
-            d="M7.00195 6.66667C7.00195 5.19467 8.19662 4 9.66862 4H12.3353V9.33333H9.66862C8.19662 9.33333 7.00195 8.13867 7.00195 6.66667Z"
-            fill="#F24E1E"
-          />
-          <path
-            d="M12.334 4H15.0007C16.4727 4 17.6673 5.19467 17.6673 6.66667C17.6673 8.13867 16.4727 9.33333 15.0007 9.33333H12.334V4Z"
-            fill="#FF7262"
-          />
-          <path
-            d="M17.6673 12.0007C17.6673 13.4727 16.4727 14.6673 15.0007 14.6673C13.5287 14.6673 12.334 13.4727 12.334 12.0007C12.334 10.5287 13.5287 9.33398 15.0007 9.33398C16.4727 9.33398 17.6673 10.5287 17.6673 12.0007Z"
-            fill="#1ABCFE"
-          />
-        </g>
-        <defs>
-          <clipPath id="clip0_5065_192538">
-            <rect
-              width="10.6688"
-              height="16"
-              fill="white"
-              transform="translate(7 4)"
-            />
-          </clipPath>
-        </defs>
-      </svg>
-    );
-  }
-
-  // eslint-disable-next-line prefer-const
-  let { width, height, ...rest } = props;
+export const FigmaIcon = forwardRef<
+  ElementRef<"svg">,
+  ComponentPropsWithoutRef<"svg">
+>((props, ref) => {
+  let { width, height } = props;
   if (width === undefined && height === undefined) {
     width = 10;
     height = 16;
@@ -72,7 +18,6 @@ export const FigmaIcon = forwardRef<SVGSVGElement, Props>((props, ref) => {
       xmlns="http://www.w3.org/2000/svg"
       height={height}
       width={width}
-      {...rest}
     >
       <path
         d="M5 7.83323C5 6.45253 6.11928 5.33325 7.49997 5.33325C8.8807 5.33325 10 6.45255 10 7.83328V8.16656C10 9.54728 8.8807 10.6666 7.49997 10.6666C6.11928 10.6666 5 9.54731 5 8.16661V7.83323Z"
