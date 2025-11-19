@@ -77,6 +77,10 @@ export function CreateSliceFromImageModal(
     { enabled: open && isFigmaEnabled },
   );
 
+  useEffect(() => {
+    return () => void cancelActiveRequests();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const setSlice = (args: {
     index: number;
     slice: (prevSlice: Slice) => Slice;
@@ -166,12 +170,15 @@ export function CreateSliceFromImageModal(
     const { index, imageUrl, source } = args;
     let currentId = id.current;
 
+    const requestId = crypto.randomUUID();
+
     setSlice({
       index,
       slice: (prevSlice) => ({
         ...prevSlice,
         status: "generating",
         thumbnailUrl: imageUrl,
+        requestId,
       }),
     });
 
@@ -180,6 +187,7 @@ export function CreateSliceFromImageModal(
         source,
         libraryID,
         imageUrl,
+        requestId,
       });
 
       if (currentId !== id.current) return;
@@ -327,6 +335,19 @@ export function CreateSliceFromImageModal(
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const cancelActiveRequests = async () => {
+    const cancelableIds = slices.flatMap((slice) => {
+      return slice.status === "generating" ? [slice.requestId] : [];
+    });
+    if (cancelableIds.length === 0) return;
+
+    await Promise.all(
+      cancelableIds.map((requestId) => {
+        return managerClient.customTypes.cancelInferSlice({ requestId });
+      }),
+    );
   };
 
   const handlePaste = async () => {
@@ -570,15 +591,25 @@ export function CreateSliceFromImageModal(
               </>
             )}
             <DialogActions>
-              <DialogCancelButton
-                onClick={() => closeModal()}
-                size="medium"
-                disabled={loadingSliceCount > 0}
-                sx={{ marginRight: 8 }}
-                invisible
-              >
-                Close
-              </DialogCancelButton>
+              {generatingSliceCount > 0 ? (
+                <DialogCancelButton
+                  onClick={() => void cancelActiveRequests()}
+                  size="medium"
+                  sx={{ marginRight: 8 }}
+                  invisible
+                >
+                  Cancel
+                </DialogCancelButton>
+              ) : (
+                <DialogCancelButton
+                  onClick={() => closeModal()}
+                  size="medium"
+                  sx={{ marginRight: 8 }}
+                  invisible
+                >
+                  Close
+                </DialogCancelButton>
+              )}
               {completedSliceCount === 0 || loadingSliceCount > 0 ? (
                 <DialogActionButton
                   color="purple"

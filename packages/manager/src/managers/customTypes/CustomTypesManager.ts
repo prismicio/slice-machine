@@ -142,6 +142,8 @@ type CustomTypeFieldIdChangedMeta = {
 type LinkCustomType = NonNullable<LinkConfig["customtypes"]>[number];
 
 export class CustomTypesManager extends BaseManager {
+	private inferSliceAbortControllers = new Map<string, AbortController>();
+
 	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
 		assertPluginsInitialized(this.sliceMachinePluginRunner);
 
@@ -548,17 +550,30 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async inferSlice(
-		args: { imageUrl: string } & (
+		args: { imageUrl: string; requestId?: string } & (
 			| { source: "upload" }
 			| { source: "figma"; libraryID: string }
 		),
 	): Promise<InferSliceResponse> {
-		const { source, imageUrl } = args;
+		const { source, imageUrl, requestId } = args;
 
 		const authToken = await this.user.getAuthenticationToken();
 		const repository = await this.project.getResolvedRepositoryName();
 
-		console.info(`inferSlice (${source}) started`);
+		let abortController: AbortController | undefined;
+		if (requestId) {
+			abortController = new AbortController();
+			abortController.signal.addEventListener("abort", () => {
+				console.warn(`inferSlice (${source}) request ${requestId} was aborted`);
+			});
+			this.inferSliceAbortControllers.set(requestId, abortController);
+		}
+
+		console.info(
+			`inferSlice (${source}) started${
+				requestId ? ` for request ${requestId}` : ""
+			}`,
+		);
 		const startTime = Date.now();
 
 		try {
@@ -846,6 +861,7 @@ FINAL REMINDERS:
 									args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
 								},
 							},
+							abortController,
 						},
 					});
 
@@ -902,6 +918,7 @@ FINAL REMINDERS:
 					method: "POST",
 					headers: { Authorization: `Bearer ${authToken}` },
 					body: JSON.stringify({ imageUrl }),
+					signal: abortController?.signal,
 				});
 
 				if (!response.ok) {
@@ -913,13 +930,42 @@ FINAL REMINDERS:
 				return InferSliceResponse.parse(json);
 			}
 		} catch (error) {
-			console.error(`inferSlice (${source}) failed`, error);
+			console.error(
+				`inferSlice (${source}) failed${
+					requestId ? ` for request ${requestId}` : ""
+				}`,
+				error,
+			);
 
 			throw error;
 		} finally {
+			if (requestId) {
+				this.inferSliceAbortControllers.delete(requestId);
+			}
+
 			const elapsedTimeSeconds = (Date.now() - startTime) / 1000;
-			console.info(`inferSlice (${source}) took ${elapsedTimeSeconds}s`);
+			console.info(
+				`inferSlice took ${elapsedTimeSeconds}s${
+					requestId ? ` for request ${requestId}` : ""
+				}`,
+			);
 		}
+	}
+
+	async cancelInferSlice(args: {
+		requestId: string;
+	}): Promise<{ cancelled: boolean }> {
+		const { requestId } = args;
+		const abortController = this.inferSliceAbortControllers.get(requestId);
+
+		if (abortController) {
+			abortController.abort();
+			this.inferSliceAbortControllers.delete(requestId);
+
+			return { cancelled: true };
+		}
+
+		return { cancelled: false };
 	}
 }
 
