@@ -54,6 +54,7 @@ export function CreateSliceFromImageModal(
   const { open, location, onSuccess, onClose } = props;
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
 
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess } = useSliceMachineActions();
@@ -72,7 +73,7 @@ export function CreateSliceFromImageModal(
     ["meta+v", "ctrl+v"],
     (event) => {
       event.preventDefault();
-      void handlePaste();
+      void onPaste();
     },
     { enabled: open && isFigmaEnabled },
   );
@@ -283,12 +284,12 @@ export function CreateSliceFromImageModal(
     });
   };
 
-  const generatingSliceCount = slices.filter((slice) => {
-    return slice.status === "generating";
-  }).length;
-
   const uploadingSliceCount = slices.filter((slice) => {
     return slice.status === "uploading";
+  }).length;
+
+  const generatingSliceCount = slices.filter((slice) => {
+    return slice.status === "generating";
   }).length;
 
   const loadingSliceCount = generatingSliceCount + uploadingSliceCount;
@@ -350,7 +351,7 @@ export function CreateSliceFromImageModal(
     );
   };
 
-  const handlePaste = async () => {
+  const onPaste = async () => {
     if (
       !open ||
       !isFigmaEnabled ||
@@ -472,6 +473,11 @@ export function CreateSliceFromImageModal(
     }
   };
 
+  const onCancelConfirm = async () => {
+    setShowCancelConfirmation(false);
+    await cancelActiveRequests();
+  };
+
   return (
     <Dialog open={open} onOpenChange={(open) => !open && closeModal()}>
       <DialogHeader title="Generate with AI" />
@@ -546,14 +552,14 @@ export function CreateSliceFromImageModal(
                   overlay={
                     <UploadBlankSlate
                       onFilesSelected={onImagesSelected}
-                      onPaste={() => void handlePaste()}
+                      onPaste={() => void onPaste()}
                       droppingFiles
                     />
                   }
                 >
                   <UploadBlankSlate
                     onFilesSelected={onImagesSelected}
-                    onPaste={() => void handlePaste()}
+                    onPaste={() => void onPaste()}
                   />
                 </FileDropZone>
               </Box>
@@ -593,7 +599,7 @@ export function CreateSliceFromImageModal(
             <DialogActions>
               {generatingSliceCount > 0 ? (
                 <DialogCancelButton
-                  onClick={() => void cancelActiveRequests()}
+                  onClick={() => setShowCancelConfirmation(true)}
                   size="medium"
                   sx={{ marginRight: 8 }}
                   invisible
@@ -614,7 +620,7 @@ export function CreateSliceFromImageModal(
                 <DialogActionButton
                   color="purple"
                   startIcon="autoFixHigh"
-                  onClick={() => void generatePendingSlices()}
+                  onClick={generatePendingSlices}
                   disabled={
                     hasTriggeredGeneration ||
                     loadingSliceCount > 0 ||
@@ -650,6 +656,37 @@ export function CreateSliceFromImageModal(
           </Box>
         )}
       </DialogContent>
+      <Dialog
+        size="small"
+        open={showCancelConfirmation}
+        onOpenChange={setShowCancelConfirmation}
+      >
+        <DialogHeader title="Cancel generation" />
+        <DialogContent>
+          <DialogDescription>
+            <Box display="flex" flexDirection="column" padding={{ inline: 16 }}>
+              <Text variant="bold">
+                Are you sure you want to cancel the generation for all slices?
+              </Text>
+            </Box>
+          </DialogDescription>
+          <DialogActions>
+            <DialogCancelButton
+              onClick={() => setShowCancelConfirmation(false)}
+              size="small"
+            >
+              Keep generating
+            </DialogCancelButton>
+            <DialogActionButton
+              color="tomato"
+              onClick={() => void onCancelConfirm()}
+              size="small"
+            >
+              Confirm
+            </DialogActionButton>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 }
