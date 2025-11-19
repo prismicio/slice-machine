@@ -560,10 +560,8 @@ export class CustomTypesManager extends BaseManager {
 		const authToken = await this.user.getAuthenticationToken();
 		const repository = await this.project.getResolvedRepositoryName();
 
-		let abortController: AbortController | undefined;
-		let timeoutId: NodeJS.Timeout | undefined;
-		abortController = new AbortController();
-		timeoutId = setTimeout(
+		const abortController = new AbortController();
+		const timeoutId = setTimeout(
 			() => {
 				if (abortController && !abortController?.signal.aborted) {
 					abortController?.abort();
