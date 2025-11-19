@@ -1,3 +1,4 @@
+import { useStableCallback } from "@prismicio/editor-support/React";
 import {
   BlankSlate,
   BlankSlateIcon,
@@ -17,6 +18,7 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { toast } from "react-toastify";
@@ -52,6 +54,8 @@ export function CreateSliceFromImageModal(
   props: CreateSliceFromImageModalProps,
 ) {
   const { open, location, onSuccess, onClose } = props;
+  const router = useRouter();
+
   const [slices, setSlices] = useState<Slice[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
@@ -62,6 +66,9 @@ export function CreateSliceFromImageModal(
   const existingSlices = useExistingSlices({ open });
   const isFigmaEnabled = useIsFigmaEnabled();
   const { libraryID, isLoading: isLoadingLibraryID } = useLibraryID();
+  const stableCancelGeneratingRequests = useStableCallback(
+    cancelGeneratingRequests,
+  );
 
   /**
    * Keeps track of the current instance id.
@@ -77,6 +84,25 @@ export function CreateSliceFromImageModal(
     },
     { enabled: open && isFigmaEnabled },
   );
+
+  useEffect(() => {
+    if (!slices.some((slice) => slice.status === "generating")) return;
+
+    const onRouteChange = () => void stableCancelGeneratingRequests();
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      void stableCancelGeneratingRequests();
+      const message = "Your current generating slices will be cancelled.";
+      event.returnValue = message;
+      return message;
+    };
+
+    router.events.on("routeChangeStart", onRouteChange);
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      router.events.off("routeChangeStart", onRouteChange);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [slices, router.events, stableCancelGeneratingRequests]);
 
   const setSlice = (args: {
     index: number;
@@ -466,20 +492,20 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const cancelGeneratingRequests = async () => {
+  function cancelGeneratingRequests() {
     const cancelableIds = slices.flatMap((slice) => {
       return slice.status === "generating" ? [slice.requestId] : [];
     });
     if (cancelableIds.length === 0) return;
 
     cancelableIds.forEach((requestId) => {
-      managerClient.customTypes.cancelInferSlice({ requestId });
+      void managerClient.customTypes.cancelInferSlice({ requestId });
     });
-  };
+  }
 
-  const onCancelConfirm = async () => {
+  const onCancelConfirm = () => {
     setShowCancelConfirmation(false);
-    await cancelGeneratingRequests();
+    cancelGeneratingRequests();
   };
 
   return (
@@ -682,7 +708,7 @@ export function CreateSliceFromImageModal(
             </DialogCancelButton>
             <DialogActionButton
               color="tomato"
-              onClick={() => void onCancelConfirm()}
+              onClick={onCancelConfirm}
               size="small"
             >
               Confirm
