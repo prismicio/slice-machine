@@ -79,7 +79,7 @@ export function CreateSliceFromImageModal(
   );
 
   useEffect(() => {
-    return () => void cancelActiveRequests();
+    return () => void cancelGeneratingRequests();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setSlice = (args: {
@@ -338,19 +338,6 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const cancelActiveRequests = async () => {
-    const cancelableIds = slices.flatMap((slice) => {
-      return slice.status === "generating" ? [slice.requestId] : [];
-    });
-    if (cancelableIds.length === 0) return;
-
-    await Promise.all(
-      cancelableIds.map((requestId) => {
-        return managerClient.customTypes.cancelInferSlice({ requestId });
-      }),
-    );
-  };
-
   const onPaste = async () => {
     if (
       !open ||
@@ -473,9 +460,22 @@ export function CreateSliceFromImageModal(
     }
   };
 
+  const cancelGeneratingRequests = async () => {
+    const cancelableIds = slices.flatMap((slice) => {
+      return slice.status === "generating" ? [slice.requestId] : [];
+    });
+    if (cancelableIds.length === 0) return;
+
+    await Promise.all(
+      cancelableIds.map((requestId) => {
+        return managerClient.customTypes.cancelInferSlice({ requestId });
+      }),
+    );
+  };
+
   const onCancelConfirm = async () => {
     setShowCancelConfirmation(false);
-    await cancelActiveRequests();
+    await cancelGeneratingRequests();
   };
 
   return (
