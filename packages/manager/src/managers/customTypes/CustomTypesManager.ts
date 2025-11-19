@@ -550,7 +550,7 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async inferSlice(
-		args: { imageUrl: string; requestId?: string } & (
+		args: { imageUrl: string; requestId: string } & (
 			| { source: "upload" }
 			| { source: "figma"; libraryID: string }
 		),
@@ -562,31 +562,25 @@ export class CustomTypesManager extends BaseManager {
 
 		let abortController: AbortController | undefined;
 		let timeoutId: NodeJS.Timeout | undefined;
-		if (requestId) {
-			abortController = new AbortController();
-			timeoutId = setTimeout(
-				() => {
-					if (abortController && !abortController?.signal.aborted) {
-						abortController?.abort();
-						console.warn(
-							`inferSlice (${source}) request ${requestId} timed out after 5 minutes`,
-						);
-					}
-				},
-				5 * 60 * 1000, // 5 minutes
-			);
-			abortController.signal.addEventListener("abort", () => {
-				clearTimeout(timeoutId);
-				console.warn(`inferSlice (${source}) request ${requestId} was aborted`);
-			});
-			this.inferSliceAbortControllers.set(requestId, abortController);
-		}
-
-		console.info(
-			`inferSlice (${source}) started${
-				requestId ? ` for request ${requestId}` : ""
-			}`,
+		abortController = new AbortController();
+		timeoutId = setTimeout(
+			() => {
+				if (abortController && !abortController?.signal.aborted) {
+					abortController?.abort();
+					console.warn(
+						`inferSlice (${source}) request ${requestId} timed out after 5 minutes`,
+					);
+				}
+			},
+			5 * 60 * 1000, // 5 minutes
 		);
+		abortController.signal.addEventListener("abort", () => {
+			clearTimeout(timeoutId);
+			console.warn(`inferSlice (${source}) request ${requestId} was aborted`);
+		});
+		this.inferSliceAbortControllers.set(requestId, abortController);
+
+		console.info(`inferSlice (${source}) started for request ${requestId}`);
 		const startTime = Date.now();
 
 		try {
@@ -942,25 +936,18 @@ FINAL REMINDERS:
 			}
 		} catch (error) {
 			console.error(
-				`inferSlice (${source}) failed${
-					requestId ? ` for request ${requestId}` : ""
-				}`,
+				`inferSlice (${source}) failed for request ${requestId}`,
 				error,
 			);
 
 			throw error;
 		} finally {
-			if (requestId) {
-				this.inferSliceAbortControllers.delete(requestId);
-			}
-
+			this.inferSliceAbortControllers.delete(requestId);
 			clearTimeout(timeoutId);
 
 			const elapsedTimeSeconds = (Date.now() - startTime) / 1000;
 			console.info(
-				`inferSlice took ${elapsedTimeSeconds}s${
-					requestId ? ` for request ${requestId}` : ""
-				}`,
+				`inferSlice took ${elapsedTimeSeconds}s for request ${requestId}`,
 			);
 		}
 	}
