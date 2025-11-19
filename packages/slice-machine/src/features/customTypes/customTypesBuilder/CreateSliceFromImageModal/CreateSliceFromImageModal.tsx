@@ -260,7 +260,10 @@ export function CreateSliceFromImageModal(
         index,
         slice: (prevSlice) => ({
           ...prevSlice,
-          status: "generateError",
+          status:
+            error instanceof Error && error.name === "AbortError"
+              ? "cancelled"
+              : "generateError",
           thumbnailUrl: imageUrl,
           onRetry: () => {
             void inferSlice({ index, imageUrl, source });
