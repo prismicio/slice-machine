@@ -561,9 +561,22 @@ export class CustomTypesManager extends BaseManager {
 		const repository = await this.project.getResolvedRepositoryName();
 
 		let abortController: AbortController | undefined;
+		let timeoutId: NodeJS.Timeout | undefined;
 		if (requestId) {
 			abortController = new AbortController();
+			timeoutId = setTimeout(
+				() => {
+					if (abortController && !abortController?.signal.aborted) {
+						abortController?.abort();
+						console.warn(
+							`inferSlice (${source}) request timed out after 5 minutes`,
+						);
+					}
+				},
+				1 * 60 * 1000, // 5 minutes
+			);
 			abortController.signal.addEventListener("abort", () => {
+				clearTimeout(timeoutId);
 				console.warn(`inferSlice (${source}) request ${requestId} was aborted`);
 			});
 			this.inferSliceAbortControllers.set(requestId, abortController);
@@ -930,6 +943,7 @@ FINAL REMINDERS:
 				return InferSliceResponse.parse(json);
 			}
 		} catch (error) {
+			clearTimeout(timeoutId);
 			console.error(
 				`inferSlice (${source}) failed${
 					requestId ? ` for request ${requestId}` : ""
