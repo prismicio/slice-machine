@@ -88,18 +88,17 @@ export function CreateSliceFromImageModal(
   useEffect(() => {
     if (!slices.some((slice) => slice.status === "generating")) return;
 
-    const onRouteChange = () => void stableCancelGeneratingRequests();
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
-      void stableCancelGeneratingRequests();
+      stableCancelGeneratingRequests();
       const message = "Your current generating slices will be cancelled.";
       event.returnValue = message;
       return message;
     };
 
-    router.events.on("routeChangeStart", onRouteChange);
+    router.events.on("routeChangeStart", stableCancelGeneratingRequests);
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => {
-      router.events.off("routeChangeStart", onRouteChange);
+      router.events.off("routeChangeStart", stableCancelGeneratingRequests);
       window.removeEventListener("beforeunload", onBeforeUnload);
     };
   }, [slices, router.events, stableCancelGeneratingRequests]);
