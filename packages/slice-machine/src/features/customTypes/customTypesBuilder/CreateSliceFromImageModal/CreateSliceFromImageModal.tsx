@@ -534,7 +534,7 @@ export function CreateSliceFromImageModal(
                       color="indigo"
                       onClick={() =>
                         window.open(
-                          "https://www.figma.com/community/plugin/TODO",
+                          "https://www.figma.com/community/plugin/1567955296461153730/figma-to-slice",
                           "_blank",
                         )
                       }
