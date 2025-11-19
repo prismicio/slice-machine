@@ -284,32 +284,39 @@ export function CreateSliceFromImageModal(
     });
   };
 
-  const generatingSliceCount = slices.filter((slice) => {
-    return slice.status === "generating";
-  }).length;
+  const totals = slices.reduce(
+    (result, slice) => {
+      if (slice.status === "generating") {
+        result.generating++;
+      } else if (slice.status === "uploading") {
+        result.uploading++;
+      } else if (slice.status === "pending") {
+        result.pending++;
+      } else if (slice.status === "success") {
+        result.completed++;
+      }
+      result.loading = result.generating + result.uploading;
 
-  const uploadingSliceCount = slices.filter((slice) => {
-    return slice.status === "uploading";
-  }).length;
+      /** Total count for the generate button.
+       * Avoids resetting to zero when switching status for better UX. */
+      result.generate = result.loading + result.pending;
 
-  const loadingSliceCount = generatingSliceCount + uploadingSliceCount;
+      return result;
+    },
+    {
+      generating: 0,
+      uploading: 0,
+      pending: 0,
+      completed: 0,
+      loading: 0,
+      generate: 0,
+    },
+  );
 
-  const pendingSliceCount = slices.filter((slice) => {
-    return slice.status === "pending";
-  }).length;
-
-  const completedSliceCount = slices.filter((slice) => {
-    return slice.status === "success";
-  }).length;
-
-  const hasTriggeredGeneration = slices.some((slice) => {
-    return slice.status === "generating" || slice.status === "success";
-  });
-
-  const generateSliceCount = loadingSliceCount + pendingSliceCount;
+  const hasTriggeredGeneration = totals.generating > 0 || totals.completed > 0;
 
   const closeModal = () => {
-    if (loadingSliceCount > 0) return;
+    if (totals.loading > 0) return;
     onClose();
     id.current = crypto.randomUUID();
     setTimeout(() => setSlices([]), 250); // wait for the modal fade animation
@@ -597,7 +604,7 @@ export function CreateSliceFromImageModal(
               </>
             )}
             <DialogActions>
-              {generatingSliceCount > 0 ? (
+              {totals.generating > 0 ? (
                 <DialogCancelButton
                   onClick={() => setShowCancelConfirmation(true)}
                   size="medium"
@@ -616,22 +623,21 @@ export function CreateSliceFromImageModal(
                   Close
                 </DialogCancelButton>
               )}
-              {completedSliceCount === 0 || loadingSliceCount > 0 ? (
+              {totals.completed === 0 || totals.loading > 0 ? (
                 <DialogActionButton
                   color="purple"
                   startIcon="autoFixHigh"
                   onClick={generatePendingSlices}
                   disabled={
                     hasTriggeredGeneration ||
-                    loadingSliceCount > 0 ||
-                    pendingSliceCount === 0
+                    totals.loading > 0 ||
+                    totals.pending === 0
                   }
-                  loading={loadingSliceCount > 0}
+                  loading={totals.loading > 0}
                   size="medium"
                 >
-                  Generate{" "}
-                  {generateSliceCount > 0 ? `(${generateSliceCount}) ` : ""}
-                  {generateSliceCount === 1 ? "Slice" : "Slices"}
+                  Generate {totals.generate > 0 ? `(${totals.generate}) ` : ""}
+                  {totals.generate === 1 ? "Slice" : "Slices"}
                 </DialogActionButton>
               ) : (
                 <DialogActionButton
@@ -640,7 +646,7 @@ export function CreateSliceFromImageModal(
                   loading={isSubmitting}
                   size="medium"
                 >
-                  {getSubmitButtonLabel(location, completedSliceCount)}
+                  {getSubmitButtonLabel(location, totals.completed)}
                 </DialogActionButton>
               )}
             </DialogActions>

@@ -943,7 +943,6 @@ FINAL REMINDERS:
 				return InferSliceResponse.parse(json);
 			}
 		} catch (error) {
-			clearTimeout(timeoutId);
 			console.error(
 				`inferSlice (${source}) failed${
 					requestId ? ` for request ${requestId}` : ""
@@ -956,6 +955,8 @@ FINAL REMINDERS:
 			if (requestId) {
 				this.inferSliceAbortControllers.delete(requestId);
 			}
+
+			clearTimeout(timeoutId);
 
 			const elapsedTimeSeconds = (Date.now() - startTime) / 1000;
 			console.info(
