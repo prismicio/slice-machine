@@ -15,13 +15,16 @@ export function SliceCard(props: SliceCardProps) {
   const loading = slice.status === "uploading" || slice.status === "generating";
 
   const error =
-    slice.status === "uploadError" || slice.status === "generateError";
+    slice.status === "uploadError" ||
+    slice.status === "generateError" ||
+    slice.status === "cancelled";
 
   const hasThumbnail =
     slice.status === "pending" ||
     slice.status === "generateError" ||
     slice.status === "generating" ||
-    slice.status === "success";
+    slice.status === "success" ||
+    slice.status === "cancelled";
 
   let action: ReactNode | undefined;
   if (error) {
@@ -61,8 +64,9 @@ export type Slice = { image: File; source: "upload" | "figma" } & (
   | { status: "uploading" }
   | { status: "uploadError"; onRetry: () => void }
   | { status: "pending"; thumbnailUrl: string }
-  | { status: "generating"; thumbnailUrl: string }
+  | { status: "generating"; thumbnailUrl: string; requestId: string }
   | { status: "generateError"; thumbnailUrl: string; onRetry: () => void }
+  | { status: "cancelled"; thumbnailUrl: string; onRetry: () => void }
   | {
       status: "success";
       thumbnailUrl: string;
@@ -85,6 +89,7 @@ function getStartIcon(status: Slice["status"]) {
   switch (status) {
     case "uploadError":
     case "generateError":
+    case "cancelled":
       return "close";
     case "pending":
       return "image";
@@ -117,6 +122,8 @@ function getSubtitle(slice: Slice) {
       return "Generating...";
     case "generateError":
       return "Something went wrong";
+    case "cancelled":
+      return "Cancelled";
     case "success":
       return "Generated";
   }
