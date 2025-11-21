@@ -872,9 +872,6 @@ FINAL REMINDERS:
 					let newSliceAbsPath: string | undefined;
 
 					for await (const query of queries) {
-						if (process.env.SM_ENV !== APPLICATION_MODE.Production) {
-							console.info(JSON.stringify(query, null, 2));
-						}
 						switch (query.type) {
 							case "result":
 								if (query.subtype === "success") {
