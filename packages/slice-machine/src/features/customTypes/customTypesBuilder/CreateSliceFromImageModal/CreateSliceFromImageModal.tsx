@@ -263,8 +263,9 @@ export function CreateSliceFromImageModal(
         name: model.name,
         library: libraryID,
         location,
-        mode: "ai",
-        langSmithUrl: inferResult.langSmithUrl,
+        ...(source === "figma"
+          ? { mode: "figma-to-slice" }
+          : { mode: "ai", langSmithUrl: inferResult.langSmithUrl }),
       });
 
       addAiFeedback({
