@@ -49,7 +49,6 @@ import {
 	readdir,
 } from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
-import { APPLICATION_MODE } from "../../constants/APPLICATION_MODE";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
