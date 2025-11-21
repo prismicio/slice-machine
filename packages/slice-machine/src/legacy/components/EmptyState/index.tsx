@@ -1,6 +1,4 @@
 import {
-  ActionList,
-  ActionListItem,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
