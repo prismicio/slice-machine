@@ -110,7 +110,10 @@ const EmptyState: React.FunctionComponent<Props> = ({
         >
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Button data-testid="empty-state-main-button" sx={{ mr: 4 }}>
+              <Button
+                data-testid="empty-state-main-button"
+                sx={{ flexShrink: 0, mr: 4 }}
+              >
                 {buttonText}
               </Button>
             </DropdownMenuTrigger>
