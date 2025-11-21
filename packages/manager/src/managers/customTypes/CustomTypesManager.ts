@@ -861,7 +861,8 @@ FINAL REMINDERS:
 								prismic: {
 									type: "stdio",
 									command: "npx",
-									args: ["-y", "@prismicio/mcp-server@0.0.20-alpha.6"],
+									// keep using the latest patch version
+									args: ["-y", "@prismicio/mcp-server@0.0"],
 								},
 							},
 							abortController,
