@@ -220,6 +220,7 @@ test("I can create a slice from the empty state", async ({
   await slicesListPage.goto();
   await expect(slicesListPage.blankSlate).toBeVisible();
   await slicesListPage.blankSlateCreateAction.click();
+  await slicesListPage.addSliceDropdownCreateNewAction.click();
 
   const sliceName = "Slice" + generateRandomId();
   procedures.unmock("getState");
