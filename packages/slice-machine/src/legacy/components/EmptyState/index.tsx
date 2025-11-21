@@ -114,7 +114,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
                 {buttonText}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="center">
+            <DropdownMenuContent align="end">
               <DropdownMenuItem
                 renderStartIcon={() =>
                   sliceCreationOptions.fromImage.BackgroundIcon
