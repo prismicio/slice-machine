@@ -510,7 +510,7 @@ export function CreateSliceFromImageModal(
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && closeModal()}>
-      <DialogHeader title="Generate with AI" />
+      <DialogHeader title="Generate slices with AI" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
           Upload images to generate slices with AI
