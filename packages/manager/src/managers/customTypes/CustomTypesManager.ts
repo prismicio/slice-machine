@@ -49,7 +49,6 @@ import {
 	readdir,
 } from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
-import { APPLICATION_MODE } from "../../constants/APPLICATION_MODE";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -872,9 +871,6 @@ FINAL REMINDERS:
 					let newSliceAbsPath: string | undefined;
 
 					for await (const query of queries) {
-						if (process.env.SM_ENV !== APPLICATION_MODE.Production) {
-							console.info(JSON.stringify(query, null, 2));
-						}
 						switch (query.type) {
 							case "result":
 								if (query.subtype === "success") {
