@@ -15,6 +15,7 @@ interface Props {
   title: string;
   onCreateNew: () => void;
   onCreateFromImage: () => void;
+  onImportSlicesFromLibrary: () => void;
   buttonText: string;
   documentationComponent: React.ReactNode;
   videoPublicIdUrl: string;
@@ -24,6 +25,7 @@ const EmptyState: React.FunctionComponent<Props> = ({
   title,
   onCreateNew,
   onCreateFromImage,
+  onImportSlicesFromLibrary,
   buttonText,
   documentationComponent,
   videoPublicIdUrl,
@@ -135,6 +137,17 @@ const EmptyState: React.FunctionComponent<Props> = ({
                 description={sliceCreationOptions.fromScratch.description}
               >
                 {sliceCreationOptions.fromScratch.title}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={onImportSlicesFromLibrary}
+                renderStartIcon={() =>
+                  sliceCreationOptions.importFromExternal.BackgroundIcon
+                }
+                description={
+                  sliceCreationOptions.importFromExternal.description
+                }
+              >
+                {sliceCreationOptions.importFromExternal.title}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
