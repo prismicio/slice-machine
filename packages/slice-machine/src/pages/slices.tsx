@@ -187,6 +187,9 @@ const SlicesIndex: React.FunctionComponent = () => {
                       onCreateNew={() => {
                         setIsCreateSliceModalOpen(true);
                       }}
+                      onCreateFromImage={() => {
+                        void openCreateSliceFromImageModal();
+                      }}
                       buttonText={"Create one"}
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
                       documentationComponent={

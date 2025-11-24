@@ -285,6 +285,7 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 		location: "custom_type" | "page_type" | "slices";
 	} & (
 		| { mode: "ai"; langSmithUrl?: string }
+		| { mode: "figma-to-slice" }
 		| { mode: "manual" }
 		| { mode: "template"; sliceTemplate: string }
 		| { mode: "import" }

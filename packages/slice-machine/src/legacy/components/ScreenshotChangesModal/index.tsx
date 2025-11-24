@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Box, Close, Flex, Heading, Text } from "theme-ui";
 
 import { Kbd } from "@/components/Kbd";
-import { FigmaIcon } from "@/icons/FigmaIcon";
+import { FigmaIconSquare } from "@/icons/FigmaIconSquare";
 import { Card, useCardRadius } from "@/legacy/components/Card";
 import SliceMachineModal from "@/legacy/components/SliceMachineModal";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
@@ -52,7 +52,7 @@ const FigmaTip = () => {
         minHeight: "40px",
       }}
     >
-      <FigmaIcon />
+      <FigmaIconSquare />
       <div>
         Use&nbsp;{keys} to copy any frame as .png, then just paste it here
       </div>

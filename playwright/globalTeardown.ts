@@ -25,7 +25,15 @@ async function globalTeardown() {
 
   await fs.rm(".repository-name");
   await testUtils.deleteRepository(repository);
-  await fs.rm(`../playgrounds/${repository}`, { recursive: true });
+
+  try {
+    await fs.rm(`../playgrounds/${repository}`, { recursive: true });
+  } catch (error) {
+    console.warn(
+      `[teardown] failed to delete playground (${repository})`,
+      error,
+    );
+  }
 }
 
 export default globalTeardown;
