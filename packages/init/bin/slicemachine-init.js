@@ -11,6 +11,7 @@ const pkg = JSON.parse(
 );
 
 if (!semver.satisfies(process.version, pkg.engines.node)) {
+  // eslint-disable-next-line no-console
 	console.log(
 		`Required node version ${pkg.engines.node} not satisfied with current version ${process.version}.`,
 	);
