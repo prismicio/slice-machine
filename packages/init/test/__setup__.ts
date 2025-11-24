@@ -43,7 +43,10 @@ vi.mock("fs", async () => {
 
 	// Create escape mechanism for realpathSync to allow the Claude SDK to initialize
 	// The SDK calls realpathSync at module load time, which needs the real filesystem
-	const realpathSync = (path: string | Buffer, options?: any) => {
+	const realpathSync = (
+		path: string | Buffer,
+		options?: { encoding?: BufferEncoding },
+	) => {
 		try {
 			return _fs.realpathSync(path, options);
 		} catch {
