@@ -108,7 +108,7 @@
 		"eslint-plugin-tsdoc": "0.2.17",
 		"express": "4.20.0",
 		"hook-std": "3.0.0",
-		"memfs": "3.4.13",
+		"memfs": "4.51.0",
 		"msw": "1.1.0",
 		"parse-multipart-data": "1.5.0",
 		"prettier-plugin-jsdoc": "1.1.1",

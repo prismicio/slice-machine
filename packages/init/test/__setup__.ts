@@ -39,29 +39,10 @@ vi.mock("log-symbols", async () => {
 
 vi.mock("fs", async () => {
 	const memfs: typeof import("memfs") = await vi.importActual("memfs");
-	const _fs: typeof import("node:fs") = await vi.importActual("node:fs");
-
-	// Create escape mechanism for realpathSync to allow the Claude SDK to initialize
-	// The SDK calls realpathSync at module load time, which needs the real filesystem
-	const realpathSync = (
-		path: string | Buffer,
-		options?: { encoding?: BufferEncoding },
-	) => {
-		try {
-			return _fs.realpathSync(path, options);
-		} catch {
-			// If real fs fails, try memfs
-			return memfs.fs.realpathSync(path, options);
-		}
-	};
 
 	return {
 		...memfs.fs,
-		realpathSync,
-		default: {
-			...memfs.fs,
-			realpathSync,
-		},
+		default: memfs.fs,
 	};
 });
 

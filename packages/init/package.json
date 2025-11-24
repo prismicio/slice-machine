@@ -82,7 +82,7 @@
 		"eslint-plugin-tsdoc": "0.2.17",
 		"execa": "7.1.1",
 		"hook-std": "3.0.0",
-		"memfs": "3.4.13",
+		"memfs": "4.51.0",
 		"mock-stdin": "1.0.0",
 		"msw": "1.1.0",
 		"parse-multipart-data": "1.5.0",
