@@ -80,9 +80,20 @@ afterAll(() => {
 vi.mock("fs", async () => {
   const memfs: typeof import("memfs") = await vi.importActual("memfs");
 
+  const realpathSync = (
+    path: string | Buffer,
+    options?: { encoding?: BufferEncoding },
+  ) => {
+    return memfs.fs.realpathSync(path, options);
+  };
+
   return {
     ...memfs.fs,
-    default: memfs.fs,
+    realpathSync,
+    default: {
+      ...memfs.fs,
+      realpathSync,
+    },
   };
 });
 
