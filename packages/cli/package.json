@@ -1,0 +1,86 @@
+{
+	"name": "@prismicio/cli",
+	"version": "0.0.1",
+	"description": "Prismic CLI",
+	"keywords": [
+		"typescript",
+		"prismic"
+	],
+	"repository": {
+		"type": "git",
+		"url": "ssh://git@github.com/prismicio/devtools.git",
+		"directory": "packages/init"
+	},
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"type": "module",
+	"exports": {
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
+		"./cli": {
+			"require": "./dist/cli.cjs",
+			"import": "./dist/cli.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"bin": {
+		"prismic": "./bin/prismic.js"
+	},
+	"files": [
+		"bin",
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"format": "prettier --write .",
+		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
+		"prepack": "$npm_execpath run build",
+		"test": "yarn lint && yarn types && yarn build",
+		"types": "tsc --noEmit",
+		"depcheck": "depcheck --config=.depcheckrc",
+		"audit": "yarn npm audit --environment production --severity high"
+	},
+	"dependencies": {
+		"@antfu/ni": "^0.20.0",
+		"@prismicio/adapter-next": "workspace:*",
+		"@prismicio/adapter-nuxt": "workspace:*",
+		"@prismicio/adapter-nuxt2": "workspace:*",
+		"@prismicio/adapter-sveltekit": "workspace:*",
+		"@prismicio/manager": "workspace:*",
+		"@sentry/node": "^7.116.0",
+		"chalk": "^4.1.2",
+		"listr": "^0.14.3",
+		"meow": "^11.0.0",
+		"open": "^8.4.2",
+		"prompts": "^2.4.2",
+		"semver": "^7.3.8"
+	},
+	"devDependencies": {
+		"@types/listr": "0.14.4",
+		"@types/prompts": "2.4.3",
+		"@types/semver": "7.3.13",
+		"@typescript-eslint/eslint-plugin": "5.55.0",
+		"@typescript-eslint/parser": "5.55.0",
+		"depcheck": "1.4.3",
+		"eslint": "8.37.0",
+		"eslint-config-prettier": "9.0.0",
+		"eslint-plugin-prettier": "5.0.1",
+		"eslint-plugin-tsdoc": "0.2.17",
+		"msw": "1.1.0",
+		"prettier": "3.0.3",
+		"prettier-plugin-jsdoc": "1.1.1",
+		"typescript": "4.9.5",
+		"vite": "5.4.20",
+		"vite-plugin-sdk": "0.1.1"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

@@ -1,20 +1,17 @@
 import { source as svelte, source as ts, source as js } from "common-tags";
 
-import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
-
 export function prismicIOFileTemplate(args: { typescript: boolean }): string {
 	const { typescript } = args;
 
 	const TS = ts`
 		import { createClient as baseCreateClient, type Route } from "@prismicio/client";
 		import { type CreateClientConfig, enableAutoPreviews } from '@prismicio/svelte/kit';
-		import sm from "../../slicemachine.config.json";
+		import prismicConfig from "../../prismic.config.json";
 
 		/**
 		 * The project's Prismic repository name.
 		 */
-		export const repositoryName =
-			import${"."}meta${"."}env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || sm.repositoryName;
+		export const repositoryName = prismicConfig.repositoryName;
 
 		/**
 		 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -49,13 +46,12 @@ export function prismicIOFileTemplate(args: { typescript: boolean }): string {
 	const JS = js`
 		import { createClient as baseCreateClient } from "@prismicio/client";
 		import { enableAutoPreviews } from '@prismicio/svelte/kit';
-		import sm from "../../slicemachine.config.json";
+		import prismicConfig from "../../prismic.config.json";
 
 		/**
 		 * The project's Prismic repository name.
 		 */
-		export const repositoryName =
-			import${"."}meta${"."}env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || sm.repositoryName;
+		export const repositoryName = prismicConfig.repositoryName;
 
 		/**
 		 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -90,37 +86,6 @@ export function prismicIOFileTemplate(args: { typescript: boolean }): string {
 	`;
 
 	return typescript ? TS : JS;
-}
-
-export function sliceSimulatorPageTemplate(args: { version: number }): string {
-	const { version } = args;
-
-	const v5 = svelte`
-		<script>
-			import { SliceSimulator } from '@slicemachine/adapter-sveltekit/simulator';
-			import { SliceZone } from '@prismicio/svelte';
-			import { components } from '$lib/slices';
-		</script>
-
-		<!-- Slot syntax is used for backward compatibility with Svelte <=4. -->
-		<SliceSimulator let:slices>
-			<SliceZone {slices} {components} />
-		</SliceSimulator>
-	`;
-
-	const v4 = svelte`
-		<script>
-			import { SliceSimulator } from '@slicemachine/adapter-sveltekit/simulator';
-			import { SliceZone } from '@prismicio/svelte';
-			import { components } from '$lib/slices';
-		</script>
-
-		<SliceSimulator let:slices>
-			<SliceZone {slices} {components} />
-		</SliceSimulator>
-	`;
-
-	return version <= 4 ? v4 : v5;
 }
 
 export function previewAPIRouteTemplate(args: { typescript: boolean }): string {

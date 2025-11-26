@@ -2,7 +2,7 @@ import {
 	createSliceMachinePluginRunner,
 	SliceMachinePlugin,
 	SliceMachinePluginRunner,
-} from "@slicemachine/plugin-kit";
+} from "@prismicio/plugin-kit";
 
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 

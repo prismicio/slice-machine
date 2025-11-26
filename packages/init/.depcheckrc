@@ -1,8 +1,0 @@
-ignores:
-  [
-    "@size-limit/preset-small-lib",
-    "@vitest/coverage-v8",
-    "prettier-plugin-jsdoc",
-    "typescript",
-  ]
-skip - missing: true

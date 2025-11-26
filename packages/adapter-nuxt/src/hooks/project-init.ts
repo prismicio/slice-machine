@@ -3,19 +3,17 @@ import type {
 	ProjectInitHook,
 	ProjectInitHookData,
 	SliceMachineContext,
-} from "@slicemachine/plugin-kit";
+} from "@prismicio/plugin-kit";
 import {
 	checkHasProjectFile,
 	deleteProjectFile,
 	readProjectFile,
 	writeProjectFile,
-} from "@slicemachine/plugin-kit/fs";
-import { stripIndent } from "common-tags";
+} from "@prismicio/plugin-kit/fs";
 import { builders, loadFile, writeFile } from "magicast";
 
 import { buildSrcPath } from "../lib/buildSrcPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 
 import type { PluginOptions } from "../types";
 
@@ -85,13 +83,13 @@ const configurePrismicModule = async ({
 
 	// Append Prismic module configuration
 	if (!hasInlinedConfiguration) {
-		// Import Slice Machine configuration
+		// Import Prismic configuration
 		mod.imports.$add({
-			from: "./slicemachine.config.json",
+			from: "./prismic.config.json",
 			imported: "apiEndpoint",
 		});
 		mod.imports.$add({
-			from: "./slicemachine.config.json",
+			from: "./prismic.config.json",
 			imported: "repositoryName",
 		});
 
@@ -103,82 +101,10 @@ const configurePrismicModule = async ({
 	await writeFile(mod, nuxtConfigPath);
 };
 
-type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
-
-const createSliceSimulatorPage = async ({
-	helpers,
-	options,
-}: CreateSliceSimulatorPageArgs) => {
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
-
-	const appPagesDirectoryExists = await checkHasProjectFile({
-		filename: "app/pages",
-		helpers,
-	});
-
-	const srcPagesDirectoryExists = await checkHasProjectFile({
-		filename: "src/pages",
-		helpers,
-	});
-
-	const pagesDirectoryExists = await checkHasProjectFile({
-		filename: "pages",
-		helpers,
-	});
-
-	let filename: string;
-	// We first give priority to existing `pages` directory, then to `srcDir`
-	// because there could be conflicts with legacy `app` directory.
-	if (appPagesDirectoryExists) {
-		filename = path.join("app/pages", "slice-simulator.vue");
-	} else if (srcPagesDirectoryExists) {
-		filename = path.join("src/pages", "slice-simulator.vue");
-	} else if (pagesDirectoryExists) {
-		filename = path.join("pages", "slice-simulator.vue");
-	} else {
-		filename = await buildSrcPath({
-			filename: path.join("pages", "slice-simulator.vue"),
-			helpers,
-		});
-	}
-
-	if (await checkHasProjectFile({ filename, helpers })) {
-		return;
-	}
-
-	const scriptAttributes = ["setup"];
-	if (isTypeScriptProject) {
-		scriptAttributes.push('lang="ts"');
-	}
-
-	const contents = stripIndent`
-		<template>
-			<SliceSimulator #default="{ slices }">
-				<SliceZone :slices="slices" :components="components" />
-			</SliceSimulator>
-		</template>
-
-		<script ${scriptAttributes.join(" ")}>
-		import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
-		import { components } from "~/slices";
-		</script>
-	`;
-
-	await writeProjectFile({
-		filename,
-		contents,
-		format: options.format,
-		helpers,
-	});
-};
-
 const moveOrDeleteAppVue = async ({
 	helpers,
 	options,
-}: CreateSliceSimulatorPageArgs) => {
+}: SliceMachineContext<PluginOptions>) => {
 	const filenameAppVue = await buildSrcPath({ filename: "app.vue", helpers });
 
 	// If there's no `app.vue`, there's nothing to do.
@@ -235,10 +161,6 @@ const modifySliceMachineConfig = async ({
 	});
 	const project = await helpers.getProject();
 
-	// Add Slice Simulator URL.
-	project.config.localSliceSimulatorURL ||=
-		"http://localhost:3000/slice-simulator";
-
 	// Nest the default Slice Library in the `app` or `src` directory if it
 	// exists and is empty.
 	if (
@@ -270,7 +192,6 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 		await Promise.allSettled([
 			installDependencies({ installDependencies: _installDependencies }),
 			configurePrismicModule(context),
-			createSliceSimulatorPage(context),
 			moveOrDeleteAppVue(context),
 			modifySliceMachineConfig(context),
 		]),

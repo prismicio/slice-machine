@@ -1,8 +1,0 @@
-.content {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  gap: 12px;
-  overflow: hidden;
-  grid-area: content;
-}

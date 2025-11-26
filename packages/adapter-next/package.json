@@ -1,14 +1,14 @@
 {
-	"name": "@slicemachine/adapter-next",
-	"version": "0.3.87",
-	"description": "Slice Machine adapter for Next.js.",
+	"name": "@prismicio/adapter-next",
+	"version": "0.0.1",
+	"description": "Prismic adapter for Next.js.",
 	"keywords": [
 		"typescript",
 		"prismic"
 	],
 	"repository": {
 		"type": "git",
-		"url": "ssh://git@github.com/prismicio/slice-machine.git",
+		"url": "ssh://git@github.com/prismicio/devtools.git",
 		"directory": "packages/adapter-next"
 	},
 	"license": "Apache-2.0",
@@ -20,18 +20,6 @@
 			"require": "./dist/index.cjs",
 			"import": "./dist/index.js"
 		},
-		"./simulator": {
-			"react-server": {
-				"types": "./dist/simulator/react-server/index.d.ts",
-				"require": "./dist/simulator/react-server.cjs",
-				"import": "./dist/simulator/react-server.js"
-			},
-			"default": {
-				"types": "./dist/simulator/index.d.ts",
-				"require": "./dist/simulator.cjs",
-				"import": "./dist/simulator.js"
-			}
-		},
 		"./package.json": "./package.json"
 	},
 	"main": "dist/index.cjs",
@@ -41,9 +29,6 @@
 		"*": {
 			"*": [
 				"dist/index.d.ts"
-			],
-			"simulator": [
-				"dist/simulator/index.d.ts"
 			]
 		}
 	},
@@ -57,36 +42,23 @@
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
-		"size": "size-limit",
-		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",
+		"test": "yarn lint && yarn types && yarn build",
 		"types": "tsc --noEmit",
-		"unit": "vitest run --coverage",
-		"unit:watch": "vitest watch",
 		"depcheck": "depcheck --config=.depcheckrc",
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@prismicio/simulator": "^0.1.4",
-		"@prismicio/types-internal": "3.11.2",
-		"@slicemachine/plugin-kit": "workspace:*",
-		"common-tags": "^1.8.2",
-		"fp-ts": "^2.13.1",
-		"io-ts": "^2.2.20",
-		"io-ts-types": "^0.5.19",
-		"lz-string": "1.5.0",
-		"monocle-ts": "^2.3.13",
-		"newtype-ts": "^0.3.5",
-		"pascal-case": "^3.1.2"
+		"@prismicio/plugin-kit": "workspace:*",
+		"common-tags": "1.8.2",
+		"monocle-ts": "2.3.13",
+		"newtype-ts": "0.3.5",
+		"pascal-case": "3.1.2"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "0.7.1",
-		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
-		"@types/react": "19.2.2",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",
 		"@vitejs/plugin-react": "3.1.0",
-		"@vitest/coverage-v8": "0.32.0",
 		"depcheck": "1.4.3",
 		"eslint": "8.37.0",
 		"eslint-config-prettier": "9.0.0",
@@ -95,14 +67,11 @@
 		"next": "16.0.0-beta.0",
 		"prettier": "3.0.3",
 		"prettier-plugin-jsdoc": "1.1.1",
-		"prismic-ts-codegen": "0.1.27",
 		"react": "19.2.0",
 		"rollup-plugin-preserve-directives": "0.4.0",
-		"size-limit": "8.2.4",
 		"typescript": "4.9.5",
 		"vite": "5.4.20",
-		"vite-plugin-sdk": "0.1.1",
-		"vitest": "0.32.0"
+		"vite-plugin-sdk": "0.1.1"
 	},
 	"peerDependencies": {
 		"next": "^11 || ^12 || ^13 || ^14 || ^15 || ^16.0.0-beta.0",

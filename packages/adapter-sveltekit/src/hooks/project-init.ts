@@ -3,11 +3,11 @@ import type {
 	ProjectInitHook,
 	ProjectInitHookData,
 	SliceMachineContext,
-} from "@slicemachine/plugin-kit";
+} from "@prismicio/plugin-kit";
 import {
 	checkHasProjectFile,
 	writeProjectFile,
-} from "@slicemachine/plugin-kit/fs";
+} from "@prismicio/plugin-kit/fs";
 import { source } from "common-tags";
 import { loadFile } from "magicast";
 
@@ -22,7 +22,6 @@ import {
 	previewAPIRouteTemplate,
 	prismicIOFileTemplate,
 	rootLayoutTemplate,
-	sliceSimulatorPageTemplate,
 } from "./project-init.templates";
 
 type InstallDependenciesArgs = {
@@ -60,39 +59,6 @@ const createPrismicIOFile = async ({
 		filename,
 		contents,
 		format: options.format,
-		helpers,
-	});
-};
-
-const createSliceSimulatorPage = async ({
-	helpers,
-	options,
-}: SliceMachineContext<PluginOptions>) => {
-	const filename = path.join(
-		"src",
-		"routes",
-		"slice-simulator",
-		"+page.svelte",
-	);
-
-	if (await checkHasProjectFile({ filename, helpers })) {
-		return;
-	}
-
-	const contents = sliceSimulatorPageTemplate({
-		version: await getSvelteMajor(),
-	});
-
-	await writeProjectFile({
-		filename,
-		contents,
-		format: options.format,
-		formatOptions: {
-			prettier: {
-				plugins: ["prettier-plugin-svelte"],
-				parser: "svelte",
-			},
-		},
 		helpers,
 	});
 };
@@ -240,10 +206,6 @@ const modifySliceMachineConfig = async ({
 }: SliceMachineContext<PluginOptions>) => {
 	const project = await helpers.getProject();
 
-	// Add Slice Simulator URL.
-	project.config.localSliceSimulatorURL ||=
-		"http://localhost:5173/slice-simulator";
-
 	// Nest the default Slice Library in the src directory if it exists and
 	// is empty.
 	if (
@@ -310,13 +272,13 @@ const modifyViteConfig = async ({
 		return;
 	}
 
-	// Add `./slicemachine.config.json` to allowed files.
+	// Add `./prismic.config.json` to allowed files.
 	const config = mod.exports.default.$args[0];
 	config.server ??= {};
 	config.server.fs ??= {};
 	config.server.fs.allow ??= [];
-	if (!config.server.fs.allow.includes("./slicemachine.config.json")) {
-		config.server.fs.allow.push("./slicemachine.config.json");
+	if (!config.server.fs.allow.includes("./prismic.config.json")) {
+		config.server.fs.allow.push("./prismic.config.json");
 	}
 
 	// Remove an empty line above the `server` property.
@@ -339,7 +301,6 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			installDependencies({ installDependencies: _installDependencies }),
 			modifySliceMachineConfig(context),
 			createPrismicIOFile(context),
-			createSliceSimulatorPage(context),
 			createPreviewAPIRoute(context),
 			createPreviewRouteDirectory(context),
 			createPreviewRouteMatcherFile(context),

@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import { CallHookReturnType, HookError } from "@slicemachine/plugin-kit";
+import { CallHookReturnType, HookError } from "@prismicio/plugin-kit";
 
 import { DecodeError } from "./DecodeError";
 import { decode } from "./decode";

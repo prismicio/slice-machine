@@ -1,4 +1,4 @@
-import { SliceMachineContext } from "@slicemachine/plugin-kit";
+import { SliceMachineContext } from "@prismicio/plugin-kit";
 
 import { PluginOptions } from "../types";
 

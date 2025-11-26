@@ -1,0 +1,6 @@
+ignores:
+  [
+    "prettier-plugin-jsdoc",
+    "typescript",
+  ]
+skip - missing: true

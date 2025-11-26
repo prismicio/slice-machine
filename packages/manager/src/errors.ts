@@ -1,4 +1,4 @@
-import { HookError } from "@slicemachine/plugin-kit";
+import { HookError } from "@prismicio/plugin-kit";
 
 export class SliceMachineError extends Error {
 	name = "SMSliceMachineError";
@@ -36,9 +36,6 @@ export class PluginHookResultError extends SliceMachineError {
 		);
 	}
 }
-export class InvalidActiveEnvironmentError extends SliceMachineError {
-	name = "SMInvalidActiveEnvironmentError" as const;
-}
 export class UnsupportedError extends SliceMachineError {
 	name = "SMUnsupportedError" as const;
 }
@@ -52,7 +49,6 @@ type SliceMachineErrorNames =
 	| InternalError["name"]
 	| PluginError["name"]
 	| PluginHookResultError["name"]
-	| InvalidActiveEnvironmentError["name"]
 	| UnsupportedError["name"];
 
 type ShallowSliceMachineError<TName extends SliceMachineErrorNames> = Error & {
@@ -104,12 +100,6 @@ export const isPluginError = (
 	error: unknown,
 ): error is ShallowSliceMachineError<"SMPluginError"> => {
 	return isSliceMachineError(error, "SMPluginError");
-};
-
-export const isInvalidActiveEnvironmentError = (
-	error: unknown,
-): error is ShallowSliceMachineError<"SMInvalidActiveEnvironmentError"> => {
-	return isSliceMachineError(error, "SMInvalidActiveEnvironmentError");
 };
 
 export const isUnsupportedError = (

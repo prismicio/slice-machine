@@ -1,4 +1,4 @@
-import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+import { SliceMachinePluginRunner } from "@prismicio/plugin-kit";
 
 export function assertPluginsInitialized(
 	pluginRunner: SliceMachinePluginRunner | undefined,

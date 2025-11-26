@@ -10,7 +10,7 @@ declare const process: {
     PLAYWRIGHT_ADMIN_USERNAME: string;
     PLAYWRIGHT_ADMIN_PASSWORD: string;
     E2E_REPOSITORY: string | undefined;
-    SM_ENV:
+    PRISMIC_ENV:
       | "dev-tools"
       | "marketing-tools"
       | "platform"
@@ -20,17 +20,18 @@ declare const process: {
 };
 
 export const baseUrl = (() => {
-  switch (process.env.SM_ENV) {
+  switch (process.env.PRISMIC_ENV) {
     case "production":
       return "https://prismic.io/";
     case "staging":
       return "https://wroom.io/";
     default:
-      return `https://${process.env.SM_ENV}-wroom.com/`;
+      return `https://${process.env.PRISMIC_ENV}-wroom.com/`;
   }
 })();
 
-export const cluster = process.env.SM_ENV === "staging" ? "exp" : undefined;
+export const cluster =
+  process.env.PRISMIC_ENV === "staging" ? "exp" : undefined;
 
 export const auth = {
   username: process.env.PLAYWRIGHT_ADMIN_USERNAME,
@@ -105,15 +106,16 @@ const config = {
     permissions: ["clipboard-read", "clipboard-write"],
   },
 
+  // TODO
   // Run local dev servers before starting the tests if needed.
-  webServer: {
-    cwd: "..",
-    command: "yarn play",
-    url: "http://localhost:9999/",
-    reuseExistingServer: !process.env["CI"],
-    stdout: "pipe",
-    timeout: 120_000,
-  },
+  // webServer: {
+  //   cwd: "..",
+  //   command: "yarn play",
+  //   url: "http://localhost:9999/",
+  //   reuseExistingServer: !process.env["CI"],
+  //   stdout: "pipe",
+  //   timeout: 120_000,
+  // },
 
   // Opt out of parallel tests on CI to prioritize stability and reproducibility.
   // See: https://playwright.dev/docs/ci#workers

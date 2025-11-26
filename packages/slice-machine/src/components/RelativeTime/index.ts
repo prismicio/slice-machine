@@ -1,1 +1,0 @@
-export { RelativeTime } from "./RelativeTime";

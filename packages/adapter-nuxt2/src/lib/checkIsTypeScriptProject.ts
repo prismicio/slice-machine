@@ -1,5 +1,5 @@
-import { SliceMachineContext } from "@slicemachine/plugin-kit";
-import { checkIsTypeScriptProject as baseCheckIsTypeScriptProject } from "@slicemachine/plugin-kit/fs";
+import { SliceMachineContext } from "@prismicio/plugin-kit";
+import { checkIsTypeScriptProject as baseCheckIsTypeScriptProject } from "@prismicio/plugin-kit/fs";
 
 import { PluginOptions } from "../types";
 

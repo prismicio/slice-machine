@@ -14,7 +14,7 @@ import { decode } from "../lib/decode";
 import { serializeCookies } from "../lib/serializeCookies";
 
 import { API_ENDPOINTS } from "../constants/API_ENDPOINTS";
-import { SLICE_MACHINE_USER_AGENT } from "../constants/SLICE_MACHINE_USER_AGENT";
+import { PRISMIC_CLI_USER_AGENT } from "../constants/PRISMIC_CLI_USER_AGENT";
 import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
 import {
 	InternalError,
@@ -103,15 +103,22 @@ const checkHasAuthenticationToken = (
 };
 
 const parseCookies = (cookies: string): Record<string, string> => {
-	return cookie.parse(cookies, {
+	const parsed = cookie.parse(cookies, {
 		// Don't escape any values.
 		decode: (value) => value,
 	});
+
+	// Filter out undefined values
+	return Object.fromEntries(
+		Object.entries(parsed).filter((entry): entry is [string, string] => {
+			const [_, value] = entry;
+
+			return value !== undefined;
+		}),
+	);
 };
 
 export class PrismicAuthManager {
-	// TODO: Automatically scope the manager to the current Slice Machine
-	// project? If not, this internal state can be removed.
 	scopedDirectory: string;
 
 	constructor({
@@ -150,7 +157,7 @@ export class PrismicAuthManager {
 		const port = await getPort({ port: 5555 });
 
 		const url = new URL(
-			`./dashboard/cli/login?source=slice-machine&port=${port}`,
+			`./dashboard/cli/login?source=prismic-cli&port=${port}`,
 			API_ENDPOINTS.PrismicWroom,
 		).toString();
 
@@ -219,14 +226,17 @@ export class PrismicAuthManager {
 		const authState = await this._readPersistedAuthState();
 
 		if (checkHasAuthenticationToken(authState)) {
-			const url = new URL("./validate", API_ENDPOINTS.PrismicAuthentication);
+			const url = new URL(
+				"./validate",
+				API_ENDPOINTS.PrismicLegacyAuthenticationApi,
+			);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
 
 			let res;
 			try {
 				res = await fetch(url.toString(), {
 					headers: {
-						"User-Agent": SLICE_MACHINE_USER_AGENT,
+						"User-Agent": PRISMIC_CLI_USER_AGENT,
 					},
 				});
 			} catch (error) {
@@ -279,13 +289,13 @@ export class PrismicAuthManager {
 		if (checkHasAuthenticationToken(authState)) {
 			const url = new URL(
 				"./refreshtoken",
-				API_ENDPOINTS.PrismicAuthentication,
+				API_ENDPOINTS.PrismicLegacyAuthenticationApi,
 			);
 			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
 
 			const res = await fetch(url.toString(), {
 				headers: {
-					"User-Agent": SLICE_MACHINE_USER_AGENT,
+					"User-Agent": PRISMIC_CLI_USER_AGENT,
 				},
 			});
 			const text = await res.text();
@@ -315,11 +325,11 @@ export class PrismicAuthManager {
 	private async _getProfileForAuthenticationToken(
 		args: GetProfileForAuthenticationTokenArgs,
 	): Promise<PrismicUserProfile> {
-		const url = new URL("./profile", API_ENDPOINTS.PrismicUser);
+		const url = new URL("./profile", API_ENDPOINTS.PrismicLegacyUserApi);
 		const res = await fetch(url.toString(), {
 			headers: {
 				Authorization: `Bearer ${args.authenticationToken}`,
-				"User-Agent": SLICE_MACHINE_USER_AGENT,
+				"User-Agent": PRISMIC_CLI_USER_AGENT,
 			},
 		});
 

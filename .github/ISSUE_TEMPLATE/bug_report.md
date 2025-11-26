@@ -16,8 +16,8 @@ assignees: ""
 
 ### Versions
 
-- slice-machine-ui: <!-- ex: v0.1.0 -->
 - node: <!-- ex: v12.14.0 -->
+- prismic: <!-- Output of `npx prismic -v` -->
 
 ### When did this happen?
 

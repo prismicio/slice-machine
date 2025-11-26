@@ -3,42 +3,22 @@ import { existsSync } from "node:fs";
 import * as path from "node:path";
 import { detect as niDetect } from "@antfu/ni";
 import { ExecaChildProcess } from "execa";
-import {
-	HookError,
-	CallHookReturnType,
-	ProjectEnvironmentUpdateHook,
-} from "@slicemachine/plugin-kit";
-import * as t from "io-ts";
 
-import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
-import { decodeHookResult } from "../../lib/decodeHookResult";
 import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
-import { findEnvironment } from "../../lib/findEnvironment";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
 import { requireResolve } from "../../lib/requireResolve";
 
-import {
-	PackageManager,
-	SliceMachineConfig,
-	OnlyHookErrors,
-} from "../../types";
+import { PackageManager, PrismicConfig } from "../../types";
 
-import {
-	SliceMachineError,
-	InternalError,
-	PluginError,
-	InvalidActiveEnvironmentError,
-} from "../../errors";
+import { SliceMachineError, InternalError } from "../../errors";
 
-import { SLICE_MACHINE_CONFIG_FILENAME } from "../../constants/SLICE_MACHINE_CONFIG_FILENAME";
+import { PRISMIC_CONFIG_FILENAME } from "../../constants/PRISMIC_CONFIG_FILENAME";
 import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
-import { SLICE_MACHINE_NPM_PACKAGE_NAME } from "../../constants/SLICE_MACHINE_NPM_PACKAGE_NAME";
 
 import { BaseManager } from "../BaseManager";
-import { Environment } from "../prismicRepository/types";
 
 type ProjectManagerGetSliceMachineConfigPathArgs = {
 	ignoreCache?: boolean;
@@ -53,7 +33,7 @@ type ProjectManagerCheckIsTypeScriptArgs = {
 };
 
 type ProjectManagerWriteSliceMachineConfigArgs = {
-	config: SliceMachineConfig;
+	config: PrismicConfig;
 	path?: string;
 };
 
@@ -76,24 +56,10 @@ type ProjectManagerInstallDependenciesReturnType = {
 	execaProcess: ExecaChildProcess;
 };
 
-type ProjectManagerReadEnvironmentReturnType = {
-	environment: string | undefined;
-	errors: (DecodeError | HookError)[];
-};
-
-type ProjectManagerUpdateEnvironmentArgs = {
-	environment: string | undefined;
-};
-
-type ProjectManagerFetchActiveEnvironmentReturnType =
-	| { type: "ok"; activeEnvironment: Environment }
-	| { type: "error"; error: InvalidActiveEnvironmentError };
-
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;
 	private _cachedSliceMachineConfigPath: string | undefined;
-	private _cachedSliceMachineConfig: SliceMachineConfig | undefined;
-	private _cachedEnvironments: Environment[] | undefined;
+	private _cachedSliceMachineConfig: PrismicConfig | undefined;
 
 	async getSliceMachineConfigPath(
 		args?: ProjectManagerGetSliceMachineConfigPathArgs,
@@ -104,12 +70,12 @@ export class ProjectManager extends BaseManager {
 
 		try {
 			this._cachedSliceMachineConfigPath = await locateFileUpward(
-				SLICE_MACHINE_CONFIG_FILENAME,
+				PRISMIC_CONFIG_FILENAME,
 				{ startDir: this.cwd },
 			);
 		} catch (error) {
 			throw new Error(
-				`Could not find a ${SLICE_MACHINE_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
+				`Could not find a ${PRISMIC_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
 			);
 		}
 
@@ -141,7 +107,7 @@ export class ProjectManager extends BaseManager {
 	async suggestSliceMachineConfigPath(): Promise<string> {
 		const suggestedRoot = await this.suggestRoot();
 
-		return path.resolve(suggestedRoot, SLICE_MACHINE_CONFIG_FILENAME);
+		return path.resolve(suggestedRoot, PRISMIC_CONFIG_FILENAME);
 	}
 
 	async checkIsTypeScript(
@@ -154,7 +120,7 @@ export class ProjectManager extends BaseManager {
 		return existsSync(rootTSConfigPath);
 	}
 
-	async getSliceMachineConfig(): Promise<SliceMachineConfig> {
+	async getSliceMachineConfig(): Promise<PrismicConfig> {
 		if (this._cachedSliceMachineConfig) {
 			return this._cachedSliceMachineConfig;
 		} else {
@@ -177,7 +143,7 @@ export class ProjectManager extends BaseManager {
 		delete this._cachedSliceMachineConfig; // Clear config cache
 	}
 
-	async loadSliceMachineConfig(): Promise<SliceMachineConfig> {
+	async loadSliceMachineConfig(): Promise<PrismicConfig> {
 		// TODO: Reload plugins with a fresh plugin runner. Plugins may
 		// have been added or removed.
 		const configFilePath = await this.getSliceMachineConfigPath();
@@ -217,17 +183,6 @@ export class ProjectManager extends BaseManager {
 		return sliceMachineConfig;
 	}
 
-	async locateSliceMachineUIDir(): Promise<string> {
-		const projectRoot = await this.getRoot();
-
-		const sliceMachinePackageJSONPath = requireResolve(
-			`${SLICE_MACHINE_NPM_PACKAGE_NAME}/package.json`,
-			path.join(projectRoot, "index.js"),
-		);
-
-		return path.dirname(sliceMachinePackageJSONPath);
-	}
-
 	/**
 	 * Returns the project's repository name (i.e. the production environment). It
 	 * ignores the currently selected environment.
@@ -240,29 +195,6 @@ export class ProjectManager extends BaseManager {
 		const sliceMachineConfig = await this.getSliceMachineConfig();
 
 		return sliceMachineConfig.repositoryName;
-	}
-
-	/**
-	 * Returns the currently selected environment domain if set. If an environment
-	 * is not set, it returns the project's repository name (the production
-	 * environment).
-	 *
-	 * Use this method to retrieve the repository name to be sent with Prismic API
-	 * requests.
-	 *
-	 * @returns The resolved repository name.
-	 */
-	async getResolvedRepositoryName(): Promise<string> {
-		const repositoryName = await this.getRepositoryName();
-
-		const supportsEnvironments = this.project.checkSupportsEnvironments();
-		if (!supportsEnvironments) {
-			return repositoryName;
-		}
-
-		const { environment } = await this.project.readEnvironment();
-
-		return environment ?? repositoryName;
 	}
 
 	async getAdapterName(): Promise<string> {
@@ -374,152 +306,6 @@ export class ProjectManager extends BaseManager {
 			}
 
 			throw error;
-		}
-	}
-
-	checkSupportsEnvironments(): boolean {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		return (
-			this.sliceMachinePluginRunner.hooksForType("project:environment:read")
-				.length > 0 &&
-			this.sliceMachinePluginRunner.hooksForType("project:environment:update")
-				.length > 0
-		);
-	}
-
-	async readEnvironment(): Promise<ProjectManagerReadEnvironmentReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		await this._assertAdapterSupportsEnvironments();
-
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"project:environment:read",
-			undefined,
-		);
-		const { data, errors } = decodeHookResult(
-			t.type({
-				environment: t.union([t.undefined, t.string]),
-			}),
-			hookResult,
-		);
-
-		// An undefined value is equivalent to the production environment.
-		// We cast to undefined.
-		const repositoryName = await this.project.getRepositoryName();
-		const environmentDomain =
-			data[0]?.environment === repositoryName
-				? undefined
-				: data[0]?.environment;
-
-		return {
-			environment: environmentDomain,
-			errors,
-		};
-	}
-
-	async updateEnvironment(
-		args: ProjectManagerUpdateEnvironmentArgs,
-	): Promise<OnlyHookErrors<CallHookReturnType<ProjectEnvironmentUpdateHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		await this._assertAdapterSupportsEnvironments();
-
-		const repositoryName = await this.project.getRepositoryName();
-		const environment =
-			args.environment === repositoryName ? undefined : args.environment;
-
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"project:environment:update",
-			{ environment },
-		);
-
-		return {
-			errors: hookResult.errors,
-		};
-	}
-
-	async fetchActiveEnvironment(): Promise<ProjectManagerFetchActiveEnvironmentReturnType> {
-		const { environment: activeEnvironmentDomain } =
-			await this.readEnvironment();
-
-		// We can assume an environment cannot change its kind. If the
-		// environment exists in the cached list, we are confident it
-		// will not change.
-		const cachedActiveEnvironment = findEnvironment(
-			activeEnvironmentDomain,
-			this._cachedEnvironments || [],
-		);
-		if (cachedActiveEnvironment) {
-			return { type: "ok", activeEnvironment: cachedActiveEnvironment };
-		}
-
-		// If the environment is not in the cached environments list, we
-		// must fetch a fresh list and set the cache.
-		const { environments } = await this.prismicRepository.fetchEnvironments();
-		// TODO: Remove the wrapping if statement when
-		// `this.prismicRepository.fetchEnvironments()` is able to throw
-		// normally. The method returns an object with an `error`
-		// property at the time of this writing, which means we need to
-		// check if the `environments` property exists.
-		if (environments) {
-			this._cachedEnvironments = environments;
-		}
-
-		const activeEnvironment = findEnvironment(
-			activeEnvironmentDomain,
-			this._cachedEnvironments || [],
-		);
-
-		if (!activeEnvironment) {
-			return {
-				type: "error",
-				error: new InvalidActiveEnvironmentError(),
-			};
-		}
-
-		return { type: "ok", activeEnvironment: activeEnvironment };
-	}
-
-	async detectVersionControlSystem(): Promise<string | "_unknown"> {
-		try {
-			const projectRoot = await this.getRoot();
-
-			if (existsSync(path.join(projectRoot, ".git"))) {
-				return "Git";
-			}
-
-			if (existsSync(path.join(projectRoot, ".svn"))) {
-				return "SVN";
-			}
-
-			if (existsSync(path.join(projectRoot, ".hg"))) {
-				return "Mercurial";
-			}
-
-			if (existsSync(path.join(projectRoot, "CVS"))) {
-				return "CVS";
-			}
-		} catch (error) {
-			if (import.meta.env.DEV) {
-				console.error("Failed to detect Version Control System:", error);
-			}
-		}
-
-		return "_unknown";
-	}
-
-	private async _assertAdapterSupportsEnvironments(): Promise<void> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		const supportsEnvironments = this.checkSupportsEnvironments();
-
-		if (!supportsEnvironments) {
-			const adapterName = await this.project.getAdapterName();
-
-			throw new PluginError(
-				`${adapterName} does not support environments. Use an adapter that implements the \`project:environment:read\` and \`project:environment:update\` hooks to use environments.`,
-			);
 		}
 	}
 }

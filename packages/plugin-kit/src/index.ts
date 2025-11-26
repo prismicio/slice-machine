@@ -20,7 +20,7 @@ export { SliceMachineHookType } from "./types";
 export type {
 	SliceMachinePluginOptions,
 	SliceMachineProject,
-	SliceMachineConfig,
+	PrismicConfig,
 	SliceLibrary,
 	SliceMachineHooks,
 	SliceMachineHookTypes,
@@ -161,50 +161,12 @@ export type {
 	CustomTypeLibraryReadHookReturnType,
 } from "./hooks/customTypeLibrary-read";
 
-// snippet:read
-export type {
-	SnippetReadHook,
-	SnippetReadHookData,
-	SnippetReadHookReturnType,
-	Snippet,
-} from "./hooks/snippet-read";
-
-// project:environment:read
-export type {
-	ProjectEnvironmentReadHook,
-	ProjectEnvironmentReadHookData,
-	ProjectEnvironmentReadHookReturnType,
-} from "./hooks/project-environment-read";
-
-// project:environment:update
-export type {
-	ProjectEnvironmentUpdateHook,
-	ProjectEnvironmentUpdateHookData,
-	ProjectEnvironmentUpdateHookReturnType,
-} from "./hooks/project-environment-update";
-
 // project:init
 export type {
 	ProjectInitHook,
 	ProjectInitHookData,
 	ProjectInitHookReturnType,
 } from "./hooks/project-init";
-
-// documentation
-export type {
-	Documentation,
-	DocumentationReadHook,
-	DocumentationReadHookData,
-	DocumentationReadHookReturnType,
-} from "./hooks/documentation-read";
-
-// slice-template-library:read
-export type {
-	SliceTemplateLibraryReadHook,
-	SliceTemplateLibraryReadHookData,
-	SliceTemplateLibraryReadHookReturnType,
-} from "./hooks/sliceTemplateLibrary-read";
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Internal (for Slice Machine)

@@ -20,8 +20,8 @@ jobs:
         uses: ./.github/actions/setup-node
       - name: Install dependencies
         run: yarn install
-      - name: Build essentials
-        uses: ./.github/actions/build-essential
+      - name: Build packages
+        uses: ./.github/actions/build-packages
       - name: Run publish script
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

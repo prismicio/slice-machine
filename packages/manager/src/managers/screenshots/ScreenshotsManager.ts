@@ -7,7 +7,7 @@ import { createContentDigest } from "../../lib/createContentDigest";
 import { decode } from "../../lib/decode";
 
 import { S3ACL } from "../../types";
-import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 
 import { BaseManager } from "../BaseManager";
@@ -46,7 +46,7 @@ export class ScreenshotsManager extends BaseManager {
 		// 	return;
 		// }
 
-		const awsACLURL = new URL("create", API_ENDPOINTS.AwsAclProvider);
+		const awsACLURL = new URL("create", API_ENDPOINTS.PrismicLegacyAclApi);
 		const awsACLRes = await this._fetch({ url: awsACLURL });
 
 		const awsACLText = await awsACLRes.text();
@@ -164,7 +164,7 @@ export class ScreenshotsManager extends BaseManager {
 			// named in the ACL Provider API.
 			body: { sliceName: args.sliceID },
 			method: "POST",
-			url: new URL("delete-folder", API_ENDPOINTS.AwsAclProvider),
+			url: new URL("delete-folder", API_ENDPOINTS.PrismicLegacyAclApi),
 		});
 		if (!res.ok) {
 			const text = await res.text();
@@ -183,14 +183,14 @@ export class ScreenshotsManager extends BaseManager {
 		body?: unknown;
 	}): Promise<Response> {
 		const authenticationToken = await this.user.getAuthenticationToken();
-		const repositoryName = await this.project.getResolvedRepositoryName();
+		const repositoryName = await this.project.getRepositoryName();
 
 		return await fetch(args.url, {
 			body: args.body ? JSON.stringify(args.body) : undefined,
 			headers: {
 				Authorization: `Bearer ${authenticationToken}`,
 				Repository: repositoryName,
-				"User-Agent": SLICE_MACHINE_USER_AGENT,
+				"User-Agent": PRISMIC_CLI_USER_AGENT,
 				...(args.body ? { "Content-Type": "application/json" } : {}),
 			},
 			method: args.method,

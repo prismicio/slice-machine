@@ -4,8 +4,7 @@
 
 First, ensure you have:
 
-1. Publish access to the `slicemachine` organization and to the
-   `slice-machine-ui` and `start-slicemachine` packages.
+1. Publish access to the `prismic` organization and to the `prismic` package.
 2. Read access to the `SENTRY_AUTH_TOKEN` secret.
 
 Then, if you have access, the steps below explain how to publish packages:
@@ -25,10 +24,7 @@ Then, if you have access, the steps below explain how to publish packages:
 
 Finally, if the release succeeded, you should:
 
-1. Write/Publish the [release notes](https://github.com/prismicio/slice-machine/releases)
+1. Write/Publish the [release notes](https://github.com/prismicio/devtools/releases)
    on GitHub.
 2. Move all [Linear issues](https://linear.app/prismic/team/DT/all) in _Release → Pending_
    to _Release → Done_.
-
-> [!TIP]
-> You can use the following command as a starting point for publishing all packages at once: `yarn publish stable --dry-run @slicemachine/adapter-next:patch @slicemachine/adapter-nuxt:patch @slicemachine/adapter-nuxt2:patch @slicemachine/adapter-sveltekit:patch @slicemachine/init:patch @slicemachine/manager:patch @slicemachine/plugin-kit:patch slice-machine-ui:patch start-slicemachine:patch`.
