@@ -1,8 +1,0 @@
-name: Build essential packages
-description: Build essential packages
-runs:
-  using: composite
-  steps:
-    - name: Build essential packages used by others
-      shell: bash
-      run: yarn build-essential

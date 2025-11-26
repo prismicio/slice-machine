@@ -21,12 +21,6 @@ export type { ReadProjectFileArgs } from "./readProjectFile";
 export { deleteProjectFile } from "./deleteProjectFile";
 export type { DeleteProjectFileArgs } from "./deleteProjectFile";
 
-export { readProjectEnvironment } from "./readProjectEnvironment";
-export type {
-	ReadProjectEnvironmentArgs,
-	ReadEnvironmentReturnType,
-} from "./readProjectEnvironment";
-
 export { writeProjectEnvironment } from "./writeProjectEnvironment";
 export type { WriteProjectEnvironmentArgs } from "./writeProjectEnvironment";
 
@@ -119,6 +113,3 @@ export type { DeleteCustomTypeFileArgs } from "./deleteCustomTypeFile";
 
 export { deleteCustomTypeDirectory } from "./deleteCustomTypeDirectory";
 export type { DeleteCustomTypeDirectoryArgs } from "./deleteCustomTypeDirectory";
-
-export { readSliceTemplateLibrary } from "./readSliceTemplateLibrary";
-export type { ReadSliceTemplateLibraryArgs } from "./readSliceTemplateLibrary";

@@ -1,5 +1,5 @@
 ignores:
   [
-    "@slicemachine/manager"
+    "@prismicio/manager"
   ]
 skip - missing: true

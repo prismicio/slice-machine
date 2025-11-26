@@ -3,15 +3,11 @@ import type {
 	ProjectInitHook,
 	ProjectInitHookData,
 	SliceMachineContext,
-} from "@slicemachine/plugin-kit";
-import {
-	checkHasProjectFile,
-	writeProjectFile,
-} from "@slicemachine/plugin-kit/fs";
+} from "@prismicio/plugin-kit";
+import { checkHasProjectFile } from "@prismicio/plugin-kit/fs";
 import { stripIndent } from "common-tags";
 import { builders, loadFile, writeFile } from "magicast";
 
-import { buildSrcPath } from "../lib/buildSrcPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 
 import type { PluginOptions } from "../types";
@@ -111,13 +107,13 @@ const configurePrismicModule = async ({
 
 	// Append Prismic module configuration
 	if (!hasInlinedConfiguration) {
-		// Import Slice Machine configuration
+		// Import Prismic configuration
 		mod.imports.$add({
-			from: "./slicemachine.config.json",
+			from: "./prismic.config.json",
 			imported: "apiEndpoint",
 		});
 		mod.imports.$add({
-			from: "./slicemachine.config.json",
+			from: "./prismic.config.json",
 			imported: "repositoryName",
 		});
 
@@ -135,51 +131,6 @@ const configurePrismicModule = async ({
 	await writeFile(mod, nuxtConfigPath);
 };
 
-type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
-
-const createSliceSimulatorPage = async ({
-	helpers,
-	options,
-}: CreateSliceSimulatorPageArgs) => {
-	const filename = await buildSrcPath({
-		filename: path.join("pages", "slice-simulator.vue"),
-		helpers,
-	});
-
-	if (await checkHasProjectFile({ filename, helpers })) {
-		return;
-	}
-
-	const contents = stripIndent`
-		<template>
-			<SliceSimulator v-slot="{ slices }">
-				<SliceZone :slices="slices" :components="components" />
-			</SliceSimulator>
-		</template>
-
-		<script>
-		import { SliceSimulator } from "@slicemachine/adapter-nuxt2/dist/simulator.cjs";
-		import { components } from "~/slices";
-
-		export default {
-			components: {
-				SliceSimulator,
-			},
-			data () {
-				return { components };
-			},
-		};
-		</script>
-	`;
-
-	await writeProjectFile({
-		filename,
-		contents,
-		format: options.format,
-		helpers,
-	});
-};
-
 const modifySliceMachineConfig = async ({
 	helpers,
 	options,
@@ -190,10 +141,6 @@ const modifySliceMachineConfig = async ({
 		helpers,
 	});
 	const project = await helpers.getProject();
-
-	// Add Slice Simulator URL.
-	project.config.localSliceSimulatorURL ||=
-		"http://localhost:3000/slice-simulator";
 
 	// Nest the default Slice Library in the src directory if it exists and
 	// is empty.
@@ -224,7 +171,6 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 		await Promise.allSettled([
 			installDependencies({ installDependencies: _installDependencies }),
 			configurePrismicModule(context),
-			createSliceSimulatorPage(context),
 			modifySliceMachineConfig(context),
 		]),
 	);

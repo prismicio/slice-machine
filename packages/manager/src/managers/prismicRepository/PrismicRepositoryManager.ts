@@ -1,5 +1,4 @@
 import * as t from "io-ts";
-import { z } from "zod";
 import fetch, { Response } from "../../lib/fetch";
 import { fold } from "fp-ts/Either";
 
@@ -7,15 +6,10 @@ import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decode } from "../../lib/decode";
 import { serializeCookies } from "../../lib/serializeCookies";
 
-import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-import { REPOSITORY_NAME_VALIDATION } from "../../constants/REPOSITORY_NAME_VALIDATION";
 
-import {
-	UnauthenticatedError,
-	UnauthorizedError,
-	UnexpectedDataError,
-} from "../../errors";
+import { UnauthenticatedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -28,67 +22,18 @@ import {
 	PushChangesLimitType,
 	PrismicRepository,
 	PrismicRepositoryRole,
-	PrismicRepositoryUserAgent,
-	PrismicRepositoryUserAgents,
 	PushChangesRawLimit,
 	TransactionalMergeArgs,
 	TransactionalMergeReturnType,
-	FrameworkWroomTelemetryID,
-	StarterId,
-	Environment,
-	OnboardingState,
 } from "./types";
-import { sortEnvironments } from "./sortEnvironments";
-
-const DEFAULT_REPOSITORY_SETTINGS = {
-	plan: "personal",
-	isAnnual: "false",
-	role: "developer",
-};
 
 type PrismicRepositoryManagerCheckExistsArgs = {
 	domain: string;
 };
 
-type PrismicRepositoryManagerCreateArgs = {
-	domain: string;
-	framework: FrameworkWroomTelemetryID;
-	starterId?: StarterId;
-};
-
-type PrismicRepositoryManagerDeleteArgs = {
-	domain: string;
-	password: string;
-};
-
-type PrismicRepositoryManagerPushDocumentsArgs = {
-	domain: string;
-	signature: string;
-	documents: Record<string, unknown>; // TODO: Type unknown if possible(?)
-};
-
-type PrismicRepositoryManagerFetchEnvironmentsArgs = {
-	/**
-	 * If set to `true`, all environments are returned regardless of the user's
-	 * permission level.
-	 *
-	 * If set to `false`, only environments the user can access are returned.
-	 *
-	 * @defaultValue `false`
-	 */
-	includeAll?: boolean;
-};
-
-type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
-	environments?: Environment[];
-};
-
 export class PrismicRepositoryManager extends BaseManager {
-	// TODO: Add methods for repository-specific actions. E.g. creating a
-	// new repository.
-
 	async readAll(): Promise<PrismicRepository[]> {
-		const url = new URL("./repositories", API_ENDPOINTS.PrismicUser);
+		const url = new URL("./repositories", API_ENDPOINTS.PrismicLegacyUserApi);
 		const res = await this._fetch({ url });
 
 		if (res.ok) {
@@ -111,37 +56,6 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
-	// Should this be in manager? It's one of the few sync method
-	//
-	// Reply from Angelo 2022-12-22: I think it should be in manager
-	// because we shouldn't be exporting root-level utilities from this
-	// package. If we want to make it more inline with the other methods,
-	// we could simplify the API by changing its signature to the
-	// following:
-	//
-	// ```ts
-	// (repositoryName: string) => Promise<boolean>
-	// ```
-	//
-	// This method would:
-	//
-	// 1. Fetch the list of repositories for the user using `readAll()`.
-	//    The list would be cached.
-	// 2. Determine if the user has write access to the given repository.
-	//
-	// This version has the following benefits:
-	//
-	// - Does not expect the consumer to supply a repository object; it
-	//   only requires a repository name, which could be sourced from
-	//   anything (incl. the project's `slicemachine.config.json`).
-	//
-	// - Similarly, it does not expect the consumer to call `readAll()`
-	//   before calling this method.
-	//
-	// - Works for repositories that the user does not have access to. For
-	//   example, I could use it to check if I have access to "qwerty",
-	//   even if I am not added as a user. The purpose of the method is
-	//   still valid: do I have write access to a given repository?
 	hasWriteAccess(repository: PrismicRepository): boolean {
 		switch (repository.role) {
 			case PrismicRepositoryRole.SuperUser:
@@ -174,117 +88,6 @@ export class PrismicRepositoryManager extends BaseManager {
 			throw new Error(
 				`Failed to check repository existence for domain \`${args.domain}\``,
 				{ cause: text },
-			);
-		}
-	}
-
-	async create(args: PrismicRepositoryManagerCreateArgs): Promise<void> {
-		const url = new URL(
-			"./authentication/newrepository?app=slicemachine",
-			API_ENDPOINTS.PrismicWroom,
-		);
-
-		const body = {
-			...DEFAULT_REPOSITORY_SETTINGS,
-			domain: args.domain,
-			// These properties are optional in the API but needed for tracking
-			framework: args.framework,
-			starterId: args.starterId,
-		};
-
-		const res = await this._fetch({
-			url,
-			method: "POST",
-			body,
-			userAgent: PrismicRepositoryUserAgent.SliceMachine, // Custom User Agent is required
-		});
-		const text = await res.text();
-
-		// Endpoint returns repository name on success, that should be within the validation range
-		// Even when there is an error, we get a 200 success and so we have to check the name thanks to that
-		if (
-			!res.ok ||
-			text.length < REPOSITORY_NAME_VALIDATION.Min ||
-			text.length > REPOSITORY_NAME_VALIDATION.Max
-		) {
-			throw new Error(`Failed to create repository \`${args.domain}\``, {
-				cause: text,
-			});
-		}
-	}
-
-	// TODO: Delete this endpoint? It doesn't seem to be used (I might be wrong). - Angelo
-	async delete(args: PrismicRepositoryManagerDeleteArgs): Promise<void> {
-		const cookies = await this.user.getAuthenticationCookies();
-
-		const url = new URL(
-			`./app/settings/delete?_=${cookies["X_XSRF"]}`, // TODO: Maybe we want to throw early if the token is no available, or get the token another way
-			API_ENDPOINTS.PrismicWroom,
-		);
-		// Update hostname to include repository domain
-		url.hostname = `${args.domain}.${url.hostname}`;
-
-		const body = {
-			confirm: args.domain,
-			password: args.password,
-		};
-
-		const res = await this._fetch({
-			url,
-			method: "POST",
-			body,
-			userAgent: PrismicRepositoryUserAgent.LegacyZero, // Custom User Agent is required
-		});
-
-		if (!res.ok) {
-			throw new Error(`Failed to delete repository \`${args.domain}\``, {
-				cause: res,
-			});
-		}
-	}
-
-	async pushDocuments(
-		args: PrismicRepositoryManagerPushDocumentsArgs,
-	): Promise<void> {
-		const url = new URL("./starter/documents", API_ENDPOINTS.PrismicWroom);
-		// Update hostname to include repository domain
-		url.hostname = `${args.domain}.${url.hostname}`;
-
-		const body = {
-			signature: args.signature,
-			documents: JSON.stringify(args.documents),
-		};
-
-		const res = await this._fetch({
-			url,
-			method: "POST",
-			body,
-			userAgent: PrismicRepositoryUserAgent.LegacyZero, // Custom User Agent is required
-		});
-
-		if (!res.ok) {
-			let reason: string | null = null;
-			try {
-				reason = await res.text();
-			} catch {
-				// Noop
-			}
-
-			// Ideally the API should throw a 409 or something like that...
-			if (reason === "Repository should not contain documents") {
-				throw new Error(
-					`Failed to push documents to repository \`${args.domain}\`, repository is not empty`,
-					{
-						cause: reason,
-					},
-				);
-			}
-
-			throw new Error(
-				`Failed to push documents to repository \`${args.domain}\`, ${res.status} ${res.statusText}`,
-				{
-					cause: reason,
-				},
 			);
 		}
 	}
@@ -410,10 +213,10 @@ export class PrismicRepositoryManager extends BaseManager {
 				changes: allChanges,
 			};
 
-			const repositoryName = await this.project.getResolvedRepositoryName();
+			const repositoryName = await this.project.getRepositoryName();
 
 			const response = await this._fetch({
-				url: new URL("./push", API_ENDPOINTS.SliceMachineV1),
+				url: new URL("./push", API_ENDPOINTS.PrismicLegacySliceMachineApi),
 				method: "POST",
 				body: requestBody,
 				repository: repositoryName,
@@ -452,259 +255,6 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 	}
 
-	async fetchEnvironments(
-		args?: PrismicRepositoryManagerFetchEnvironmentsArgs,
-	): Promise<PrismicRepositoryManagerFetchEnvironmentsReturnType> {
-		const repositoryName = await this.project.getRepositoryName();
-
-		const url = new URL(`./environments`, API_ENDPOINTS.SliceMachineV1);
-		url.searchParams.set("repository", repositoryName);
-
-		const res = await this._fetch({ url });
-
-		if (res.ok) {
-			const json = await res.json();
-
-			const { value, error } = decode(
-				t.union([
-					t.type({
-						results: t.array(Environment),
-					}),
-					t.type({
-						error: t.literal("invalid_token"),
-					}),
-				]),
-				json,
-			);
-
-			if (error) {
-				throw new UnexpectedDataError(
-					`Failed to decode environments: ${error.errors.join(", ")}`,
-				);
-			}
-
-			if ("results" in value) {
-				let environments = value.results;
-
-				if (!args?.includeAll) {
-					const profile = await this.user.getProfile();
-
-					environments = environments.filter((environment) =>
-						environment.users.some((user) => user.id === profile.shortId),
-					);
-				}
-
-				return { environments: sortEnvironments(environments) };
-			}
-		}
-
-		switch (res.status) {
-			case 400:
-			case 401:
-				throw new UnauthenticatedError();
-			case 403:
-				throw new UnauthorizedError();
-			default:
-				throw new Error("Failed to fetch environments.");
-		}
-	}
-
-	async fetchOnboarding(): Promise<OnboardingState> {
-		const repositoryName = await this.project.getRepositoryName();
-
-		const url = new URL("./onboarding", API_ENDPOINTS.RepositoryService);
-		url.searchParams.set("repository", repositoryName);
-		const res = await this._fetch({ url });
-
-		if (res.ok) {
-			const json = await res.json();
-			const { value, error } = decode(OnboardingState, json);
-
-			if (error) {
-				throw new UnexpectedDataError(
-					`Failed to decode onboarding: ${error.errors.join(", ")}`,
-				);
-			}
-			if (value) {
-				return value;
-			}
-		}
-
-		switch (res.status) {
-			case 400:
-			case 401:
-				throw new UnauthenticatedError();
-			case 403:
-				throw new UnauthorizedError();
-			default:
-				throw new Error("Failed to fetch onboarding.");
-		}
-	}
-
-	async toggleOnboardingStep(
-		stepId: string,
-	): Promise<{ completedSteps: string[] }> {
-		const repositoryName = await this.project.getRepositoryName();
-
-		const url = new URL(
-			`./onboarding/${stepId}/toggle`,
-			API_ENDPOINTS.RepositoryService,
-		);
-		url.searchParams.set("repository", repositoryName);
-		const res = await this._fetch({ url, method: "PATCH" });
-
-		if (res.ok) {
-			const json = await res.json();
-			const { value, error } = decode(
-				z.object({ completedSteps: z.array(z.string()) }),
-				json,
-			);
-
-			if (error) {
-				throw new UnexpectedDataError(
-					`Failed to decode onboarding step toggle: ${error.errors.join(", ")}`,
-				);
-			}
-
-			if (value) {
-				return value;
-			}
-		}
-
-		switch (res.status) {
-			case 400:
-			case 401:
-				throw new UnauthenticatedError();
-			case 403:
-				throw new UnauthorizedError();
-			default:
-				throw new Error("Failed to toggle onboarding step.");
-		}
-	}
-
-	async completeOnboardingStep(
-		...stepIds: string[]
-	): Promise<{ completedSteps: string[] }> {
-		const repositoryName = await this.project.getRepositoryName();
-
-		const currentState = await this.fetchOnboarding();
-		const incompleteSteps = stepIds.filter(
-			(stepId) => !currentState.completedSteps.includes(stepId),
-		);
-
-		if (incompleteSteps.length > 0) {
-			// TODO: Refactor when the API accepts multiple steps (DT-2389)
-			for await (const stepId of incompleteSteps) {
-				const url = new URL(
-					`./onboarding/${stepId}/toggle`,
-					API_ENDPOINTS.RepositoryService,
-				);
-				url.searchParams.set("repository", repositoryName);
-				const res = await this._fetch({ url, method: "PATCH" });
-
-				if (res.ok) {
-					const json = await res.json();
-					const { value, error } = decode(
-						z.object({ completedSteps: z.array(z.string()) }),
-						json,
-					);
-
-					if (error) {
-						throw new UnexpectedDataError(
-							`Failed to decode onboarding step complete response: ${error.errors.join(
-								", ",
-							)}`,
-						);
-					}
-
-					if (value) {
-						currentState.completedSteps = value.completedSteps;
-						continue;
-					}
-				}
-
-				switch (res.status) {
-					case 400:
-					case 401:
-						throw new UnauthenticatedError();
-					case 403:
-						throw new UnauthorizedError();
-					default:
-						throw new Error("Failed to complete onboarding step.");
-				}
-			}
-		}
-
-		return { completedSteps: currentState.completedSteps };
-	}
-
-	async toggleOnboarding(): Promise<{ isDismissed: boolean }> {
-		const repositoryName = await this.project.getRepositoryName();
-
-		const url = new URL("./onboarding/toggle", API_ENDPOINTS.RepositoryService);
-		url.searchParams.set("repository", repositoryName);
-		const res = await this._fetch({ url, method: "PATCH" });
-
-		if (res.ok) {
-			const json = await res.json();
-			const { value, error } = decode(
-				z.object({ isDismissed: z.boolean() }),
-				json,
-			);
-
-			if (error) {
-				throw new UnexpectedDataError(
-					`Failed to decode onboarding toggle: ${error.errors.join(", ")}`,
-				);
-			}
-
-			if (value) {
-				return value;
-			}
-		}
-
-		switch (res.status) {
-			case 400:
-			case 401:
-				throw new UnauthenticatedError();
-			case 403:
-				throw new UnauthorizedError();
-			default:
-				throw new Error("Failed to toggle onboarding guide.");
-		}
-	}
-
-	async setDefaultMasterLocale(): Promise<void> {
-		const repositoryName = await this.project.getRepositoryName();
-
-		const url = new URL("./repository/locales", API_ENDPOINTS.LocaleService);
-		url.searchParams.set("repository", repositoryName);
-
-		const res = await this._fetch({
-			url,
-			method: "POST",
-			body: {
-				id: "en-us",
-				isMaster: true,
-			},
-		});
-
-		if (!res.ok) {
-			switch (res.status) {
-				case 400:
-				case 401:
-					throw new UnauthenticatedError();
-				case 403:
-					throw new UnauthorizedError();
-				default:
-					const text = await res.text();
-					throw new Error("Failed to set main content language.", {
-						cause: text,
-					});
-			}
-		}
-	}
-
 	private _decodeLimitOrThrow(
 		potentialLimit: unknown,
 		statusCode: number,
@@ -732,7 +282,6 @@ export class PrismicRepositoryManager extends BaseManager {
 		url: URL;
 		method?: "GET" | "POST" | "PATCH";
 		body?: unknown;
-		userAgent?: PrismicRepositoryUserAgents;
 		repository?: string;
 		skipAuthentication?: boolean;
 	}): Promise<Response> {
@@ -767,7 +316,7 @@ export class PrismicRepositoryManager extends BaseManager {
 							Cookie: serializeCookies(cookies),
 					  }
 					: {}),
-				"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
+				"User-Agent": PRISMIC_CLI_USER_AGENT,
 				...extraHeaders,
 			},
 		});

@@ -2,78 +2,14 @@ name: Publish stable
 on:
   workflow_dispatch:
     inputs:
-      slicemachine/adapter-next:
-        default: decline
+      release-type:
+        description: "Release type for all packages"
+        required: true
         type: choice
         options:
           - major
           - minor
           - patch
-          - decline
-      slicemachine/adapter-nuxt:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
-      slicemachine/adapter-nuxt2:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
-      slicemachine/adapter-sveltekit:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
-      slicemachine/init:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
-      slicemachine/manager:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
-      slicemachine/plugin-kit:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
-      slice-machine-ui:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
-      start-slicemachine:
-        default: decline
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
-          - decline
 jobs:
   publish-stable:
     if: ${{ startsWith(github.ref, 'refs/heads/main')}}
@@ -86,8 +22,8 @@ jobs:
         uses: ./.github/actions/setup-node
       - name: Install dependencies
         run: yarn install
-      - name: Build essentials
-        uses: ./.github/actions/build-essential
+      - name: Build packages
+        uses: ./.github/actions/build-packages
       - name: Run publish script
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -95,15 +31,18 @@ jobs:
         run: |
           git config user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
           git config user.name "${GITHUB_ACTOR}"
-          inputs=$(echo '${{ toJSON(github.event.inputs) }}' | jq -c)
-          package_names=$(echo $inputs | jq -r 'keys | .[]')
+          release_type="${{ inputs.release-type }}"
+          packages=(
+            "@prismicio/cli"
+            "@prismicio/manager"
+            "@prismicio/plugin-kit"
+            "@prismicio/adapter-next"
+            "@prismicio/adapter-nuxt"
+            "@prismicio/adapter-nuxt2"
+            "@prismicio/adapter-sveltekit"
+          )
           specifiers=""
-          for package_name in $package_names; do
-            package_release_type=$(echo $inputs | jq -r --arg k "$package_name" '.[$k]')
-            if [[ $package_name == "slicemachine/"* && $package_release_type != "decline" ]]; then
-              specifiers+="@$package_name:$package_release_type "
-            elif [ $package_release_type != "decline" ]; then
-              specifiers+="$package_name:$package_release_type "
-            fi
+          for package in "${packages[@]}"; do
+            specifiers+="$package:$release_type "
           done
           yarn publish stable $specifiers

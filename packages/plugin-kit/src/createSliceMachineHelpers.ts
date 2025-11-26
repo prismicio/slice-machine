@@ -6,7 +6,7 @@ import { stripIndent } from "common-tags";
 
 import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
 
-import { SliceMachineConfig, SliceMachineProject } from "./types";
+import { PrismicConfig, SliceMachineProject } from "./types";
 
 type UpdateSliceMachineConfigOptions = {
 	format?: boolean;
@@ -49,7 +49,7 @@ export class SliceMachineHelpers {
 	}
 
 	getProject = async (): Promise<SliceMachineProject> => {
-		const configFilePath = this.joinPathFromRoot("slicemachine.config.json");
+		const configFilePath = this.joinPathFromRoot("prismic.config.json");
 
 		let rawConfig: unknown | undefined;
 		try {
@@ -79,7 +79,7 @@ export class SliceMachineHelpers {
 	};
 
 	updateSliceMachineConfig = async (
-		sliceMachineConfig: SliceMachineConfig,
+		sliceMachineConfig: PrismicConfig,
 		options?: UpdateSliceMachineConfigOptions,
 	): Promise<void> => {
 		const { value: decodedSliceMachineConfig, error } =
@@ -90,7 +90,7 @@ export class SliceMachineHelpers {
 			throw new Error(`Invalid config provided. ${error.errors.join(", ")}`);
 		}
 
-		const configFilePath = this.joinPathFromRoot("slicemachine.config.json");
+		const configFilePath = this.joinPathFromRoot("prismic.config.json");
 		let content = JSON.stringify(decodedSliceMachineConfig, null, 2);
 
 		if (options?.format) {

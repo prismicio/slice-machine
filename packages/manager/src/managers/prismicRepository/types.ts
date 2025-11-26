@@ -3,14 +3,6 @@ import {
 	SharedSlice,
 } from "@prismicio/types-internal/lib/customtypes";
 import * as t from "io-ts";
-import { z } from "zod";
-
-export const PrismicRepositoryUserAgent = {
-	SliceMachine: "prismic-cli/sm",
-	LegacyZero: "prismic-cli/0",
-} as const;
-export type PrismicRepositoryUserAgents =
-	(typeof PrismicRepositoryUserAgent)[keyof typeof PrismicRepositoryUserAgent];
 
 export const PrismicRepositoryRole = {
 	SuperUser: "SuperUser",
@@ -139,76 +131,3 @@ export type TransactionalMergeArgs = {
 };
 
 export type TransactionalMergeReturnType = PushChangesLimit | null;
-
-/**
- * Framework id sent to Segment from wroom. Property used for the "framework"
- * and "hasSlicemachine" properties.
- *
- * Values from:
- * https://github.com/prismicio/wroom/blob/65d4f53fd46df7d366d80e7ba9c965339ac7369d/subprojects/common/app/models/Framework.scala#LL20C6-L20C6
- */
-export type FrameworkWroomTelemetryID = "next" | "nuxt" | "sveltekit" | "other";
-
-/**
- * Starter id sent to Segment from wroom.Property used for the "starter"
- * properties.
- *
- * Values from:
- * https://github.com/prismicio/wroom/blob/65d4f53fd46df7d366d80e7ba9c965339ac7369d/conf/application.conf#L938
- */
-export type StarterId =
-	| "next_multi_page"
-	| "next_blog"
-	| "next_multi_lang"
-	| "nuxt_multi_page"
-	| "nuxt_blog"
-	| "nuxt_multi_lang";
-
-export const Environment = t.type({
-	kind: t.union([t.literal("prod"), t.literal("stage"), t.literal("dev")]),
-	name: t.string,
-	domain: t.string,
-	users: t.array(
-		t.type({
-			id: t.string,
-		}),
-	),
-});
-export type Environment = t.TypeOf<typeof Environment>;
-
-export const supportedSliceMachineFrameworks = [
-	"next",
-	"nuxt",
-	"sveltekit",
-] as const;
-
-type SupportedFramework = (typeof supportedSliceMachineFrameworks)[number];
-
-function isSupportedFramework(value: string): value is SupportedFramework {
-	return supportedSliceMachineFrameworks.includes(value as SupportedFramework);
-}
-
-export const repositoryFramework = z.preprocess(
-	(value) => {
-		// NOTE: we persist a lot of different frameworks in the DB, but only the SM supported are relevant to us
-		// Any other framework is treated like "other"
-		if (typeof value === "string" && isSupportedFramework(value)) {
-			return value;
-		}
-
-		return "other";
-	},
-	z.enum([...supportedSliceMachineFrameworks, "other"]),
-);
-
-export type RepositoryFramework = z.TypeOf<typeof repositoryFramework>;
-
-export const OnboardingState = z.object({
-	completedSteps: z.array(z.string()),
-	isDismissed: z.boolean(),
-	context: z.object({
-		framework: repositoryFramework,
-		starterId: z.string().nullable(),
-	}),
-});
-export type OnboardingState = z.infer<typeof OnboardingState>;

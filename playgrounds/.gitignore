@@ -1,7 +1,0 @@
-# Ignore everything...
-*
-
-# ...except the following files.
-# They are necessary to isolate playgrounds and their dependencies from the monorepo.
-!.gitignore
-!package.json

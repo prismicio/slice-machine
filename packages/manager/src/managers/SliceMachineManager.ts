@@ -7,11 +7,11 @@ import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import {
 	SliceMachinePlugin,
 	SliceMachinePluginRunner,
-} from "@slicemachine/plugin-kit";
+} from "@prismicio/plugin-kit";
 
 import { createContentDigest } from "../lib/createContentDigest";
 
-import { PackageManager, SliceMachineConfig } from "../types";
+import { PackageManager, PrismicConfig } from "../types";
 import {
 	PrismicAuthManager,
 	PrismicUserProfile,
@@ -29,16 +29,12 @@ import { PluginsManager } from "./plugins/PluginsManager";
 import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
 import { SlicesManager } from "./slices/SlicesManager";
-import { SnippetsManager } from "./snippets/SnippetsManager";
 import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
-import { SimulatorManager } from "./simulator/SimulatorManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
 
 import { TelemetryManager } from "./telemetry/TelemetryManager";
 import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
-import { DocumentationManager } from "./documentation/DocumentationManager";
-import { SliceTemplateLibraryManager } from "./sliceTemplateLibrary/SliceTemplateLibraryManager";
 
 type SliceMachineManagerGetStateReturnType = {
 	env: {
@@ -46,7 +42,6 @@ type SliceMachineManagerGetStateReturnType = {
 		intercomHash?: string;
 		manifest: {
 			apiEndpoint: string;
-			localSliceSimulatorURL?: string;
 		};
 		repo: string;
 		packageManager: PackageManager;
@@ -108,11 +103,7 @@ export class SliceMachineManager {
 	prismicRepository: PrismicRepositoryManager;
 	project: ProjectManager;
 	screenshots: ScreenshotsManager;
-	simulator: SimulatorManager;
 	slices: SlicesManager;
-	snippets: SnippetsManager;
-	documentation: DocumentationManager;
-	sliceTemplateLibrary: SliceTemplateLibraryManager;
 	telemetry: TelemetryManager;
 	user: UserManager;
 	versions: VersionsManager;
@@ -133,11 +124,7 @@ export class SliceMachineManager {
 		this.project = new ProjectManager(this);
 		this.customTypes = new CustomTypesManager(this);
 		this.slices = new SlicesManager(this);
-		this.snippets = new SnippetsManager(this);
 		this.screenshots = new ScreenshotsManager(this);
-		this.simulator = new SimulatorManager(this);
-		this.documentation = new DocumentationManager(this);
-		this.sliceTemplateLibrary = new SliceTemplateLibraryManager(this);
 
 		this.versions = new VersionsManager(this);
 
@@ -262,7 +249,6 @@ export class SliceMachineManager {
 						buildPrismicRepositoryAPIEndpoint(
 							sliceMachineConfig.repositoryName,
 						),
-					localSliceSimulatorURL: sliceMachineConfig.localSliceSimulatorURL,
 				},
 				packageManager,
 				repo: sliceMachineConfig.repositoryName,
@@ -292,7 +278,7 @@ export class SliceMachineManager {
 	}
 
 	private async _getLibraries(
-		sliceMachineConfig: SliceMachineConfig,
+		sliceMachineConfig: PrismicConfig,
 	): Promise<SliceMachineManagerGetStateReturnType["libraries"]> {
 		const libraries: SliceMachineManagerGetStateReturnType["libraries"] = [];
 

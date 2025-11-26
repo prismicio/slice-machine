@@ -1,7 +1,7 @@
 import * as path from "node:path";
 
-import type { SliceMachineHelpers } from "@slicemachine/plugin-kit";
-import { checkHasProjectFile } from "@slicemachine/plugin-kit/fs";
+import type { SliceMachineHelpers } from "@prismicio/plugin-kit";
+import { checkHasProjectFile } from "@prismicio/plugin-kit/fs";
 
 export async function buildSrcPath(args: {
 	filename: string;

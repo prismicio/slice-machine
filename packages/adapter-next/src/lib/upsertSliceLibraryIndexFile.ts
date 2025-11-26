@@ -1,9 +1,9 @@
-import { SliceMachineContext } from "@slicemachine/plugin-kit";
+import { SliceMachineContext } from "@prismicio/plugin-kit";
 import {
 	buildSliceDirectoryPath,
 	buildSliceLibraryDirectoryPath,
 	writeProjectFile,
-} from "@slicemachine/plugin-kit/fs";
+} from "@prismicio/plugin-kit/fs";
 import { stripIndent } from "common-tags";
 import * as path from "node:path";
 import { NON_EDITABLE_FILE_BANNER } from "../constants";

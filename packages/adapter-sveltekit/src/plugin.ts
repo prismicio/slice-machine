@@ -1,7 +1,4 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-import { defineSliceMachinePlugin } from "@slicemachine/plugin-kit";
+import { defineSliceMachinePlugin } from "@prismicio/plugin-kit";
 import {
 	deleteCustomTypeDirectory,
 	deleteCustomTypeFile,
@@ -10,41 +7,25 @@ import {
 	readCustomTypeFile,
 	readCustomTypeLibrary,
 	readCustomTypeModel,
-	readProjectEnvironment,
 	readSliceFile,
 	readSliceLibrary,
 	readSliceModel,
-	readSliceTemplateLibrary,
 	renameSlice,
 	upsertGlobalTypeScriptTypes,
 	writeCustomTypeFile,
 	writeCustomTypeModel,
-	writeProjectEnvironment,
 	writeSliceFile,
 	writeSliceModel,
-} from "@slicemachine/plugin-kit/fs";
+} from "@prismicio/plugin-kit/fs";
 
 import { rejectIfNecessary } from "./lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
 
 import { name as pkgName } from "../package.json";
 import { PluginOptions } from "./types";
-import {
-	DEFAULT_ENVIRONMENT_VARIABLE_FILE_PATH,
-	ENVIRONMENT_VARIABLE_PATHS,
-	PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME,
-} from "./constants";
 
-import { documentationRead } from "./hooks/documentation-read";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
-import { snippetRead } from "./hooks/snippet-read";
-
-import * as Hero from "./sliceTemplates/Hero";
-import * as CallToAction from "./sliceTemplates/CallToAction";
-import * as AlternateGrid from "./sliceTemplates/AlternateGrid";
-import * as CustomerLogos from "./sliceTemplates/CustomerLogos";
-import { getSvelteMajor } from "./lib/getSvelteMajor";
 
 export const plugin = defineSliceMachinePlugin<PluginOptions>({
 	meta: {
@@ -60,32 +41,6 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		////////////////////////////////////////////////////////////////
 
 		hook("project:init", projectInit);
-		hook("project:environment:update", async (data, context) => {
-			await writeProjectEnvironment({
-				variableName: PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME,
-				environment: data.environment,
-				filename:
-					context.options.environmentVariableFilePath ||
-					DEFAULT_ENVIRONMENT_VARIABLE_FILE_PATH,
-				helpers: context.helpers,
-			});
-		});
-		hook("project:environment:read", async (_data, context) => {
-			const projectEnvironment = await readProjectEnvironment({
-				variableName: PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME,
-				filenames: [
-					...ENVIRONMENT_VARIABLE_PATHS,
-					context.options.environmentVariableFilePath,
-				].filter((filename): filename is NonNullable<typeof filename> =>
-					Boolean(filename),
-				),
-				helpers: context.helpers,
-			});
-
-			return {
-				environment: projectEnvironment.environment,
-			};
-		});
 
 		////////////////////////////////////////////////////////////////
 		// slice:*
@@ -197,25 +152,6 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 		});
 
 		////////////////////////////////////////////////////////////////
-		// slice-template-library:*
-		////////////////////////////////////////////////////////////////
-
-		hook("slice-template-library:read", async (data, context) => {
-			const version = await getSvelteMajor();
-
-			return await readSliceTemplateLibrary({
-				...data,
-				...context,
-				dirName: path.dirname(fileURLToPath(new URL(import.meta.url))),
-				templates: [Hero, CustomerLogos, AlternateGrid, CallToAction],
-				componentFileNames: {
-					js: version <= 4 ? "javascript.4.svelte" : "javascript.svelte",
-					ts: version <= 4 ? "typescript.4.svelte" : "typescript.svelte",
-				},
-			});
-		});
-
-		////////////////////////////////////////////////////////////////
 		// custom-type:*
 		////////////////////////////////////////////////////////////////
 
@@ -312,17 +248,5 @@ export const plugin = defineSliceMachinePlugin<PluginOptions>({
 				helpers: context.helpers,
 			});
 		});
-
-		////////////////////////////////////////////////////////////////
-		// snippet:*
-		////////////////////////////////////////////////////////////////
-
-		hook("snippet:read", snippetRead);
-
-		////////////////////////////////////////////////////////////////
-		// documentation:*
-		////////////////////////////////////////////////////////////////
-
-		hook("documentation:read", documentationRead);
 	},
 });

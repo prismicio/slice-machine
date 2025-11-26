@@ -2,12 +2,12 @@ import type {
 	SliceCreateHook,
 	SliceCreateHookData,
 	SliceMachineContext,
-} from "@slicemachine/plugin-kit";
+} from "@prismicio/plugin-kit";
 import {
 	upsertGlobalTypeScriptTypes,
 	writeSliceFile,
 	writeSliceModel,
-} from "@slicemachine/plugin-kit/fs";
+} from "@prismicio/plugin-kit/fs";
 
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getSvelteMajor } from "../lib/getSvelteMajor";

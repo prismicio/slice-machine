@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 
-import { SliceMachineConfig } from "../types";
+import { PrismicConfig } from "../types";
 
 import { decode, DecodeReturnType } from "./decode";
 
@@ -24,7 +24,6 @@ const SliceMachineConfigCodec = t.intersection([
 	t.partial({
 		apiEndpoint: t.string,
 		libraries: t.array(t.string),
-		localSliceSimulatorURL: t.string,
 		plugins: t.array(SliceMachineConfigPluginRegistrationCodec),
 		labs: t.partial({ legacySliceUpgrader: t.boolean }),
 	}),
@@ -34,6 +33,6 @@ const SliceMachineConfigCodec = t.intersection([
 // internals.
 export const decodeSliceMachineConfig = (
 	input: unknown,
-): DecodeReturnType<SliceMachineConfig, SliceMachineConfig, unknown> => {
+): DecodeReturnType<PrismicConfig, PrismicConfig, unknown> => {
 	return decode(SliceMachineConfigCodec, input);
 };

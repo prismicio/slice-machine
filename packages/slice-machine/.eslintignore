@@ -1,6 +1,0 @@
-/src/**/*.module.css.d.ts
-/storybook-static
-!/.storybook
-build
-test
-out

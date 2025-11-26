@@ -18,26 +18,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Build essentials
-        uses: ./.github/actions/build-essential
-
-  prepare-win32:
-    runs-on: [windows-latest]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Cache node_modules and artifacts
-        uses: ./.github/actions/restore-cache
-
-      - name: Set up Node
-        uses: ./.github/actions/setup-node
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build essentials
-        uses: ./.github/actions/build-essential
+      - name: Build packages
+        uses: ./.github/actions/build-packages
 
   prettier:
     needs: prepare
@@ -63,16 +45,14 @@ jobs:
       matrix:
         package:
           # Don't forget to replicate this list under `packages-win32` matrix
-          - "@slicemachine/plugin-kit"
-          - "@slicemachine/manager"
-          - "@slicemachine/init"
-          - slice-machine-ui
-          - start-slicemachine
-          - "@slicemachine/adapter-next"
-          - "@slicemachine/adapter-nuxt"
-          - "@slicemachine/adapter-nuxt2"
-          - "@slicemachine/adapter-sveltekit"
-          - "@slicemachine/e2e"
+          - "@prismicio/plugin-kit"
+          - "@prismicio/manager"
+          - "@prismicio/cli"
+          - "@prismicio/adapter-next"
+          - "@prismicio/adapter-nuxt"
+          - "@prismicio/adapter-nuxt2"
+          - "@prismicio/adapter-sveltekit"
+          - "@prismicio/e2e"
 
     steps:
       - name: Checkout
@@ -88,78 +68,14 @@ jobs:
         run: yarn workspace ${{ matrix.package }} depcheck
 
       - name: Audit dependencies
-        if: matrix.package != '@slicemachine/e2e'
+        if: matrix.package != '@prismicio/e2e'
         run: yarn workspace ${{ matrix.package }} audit
 
       - name: Lint
         run: yarn workspace ${{ matrix.package }} lint
 
-      - name: Stylelint
-        if: matrix.package == 'slice-machine-ui'
-        run: yarn workspace ${{ matrix.package }} stylelint
-
-      - name: Generate TypeScript definition files from CSS Modules
-        if: matrix.package == 'slice-machine-ui'
-        run: yarn workspace ${{ matrix.package }} typed-css-modules
-
       - name: Types
         run: yarn workspace ${{ matrix.package }} types
-
-      - name: Unit
-        if: matrix.package != '@slicemachine/e2e'
-        run: yarn workspace ${{ matrix.package }} unit
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          REPO_URL: ${{ secrets.REPO_URL }}
-          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
-          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
-          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
-          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
-          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
-
-  packages-win32:
-    needs: prepare-win32
-    runs-on: [windows-latest]
-    env:
-      WIN32: true
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          # Don't forget to replicate this list under `packages` matrix
-          - "@slicemachine/plugin-kit"
-          - "@slicemachine/manager"
-          - "@slicemachine/init"
-          - slice-machine-ui
-          - start-slicemachine
-          - "@slicemachine/adapter-next"
-          - "@slicemachine/adapter-nuxt"
-          - "@slicemachine/adapter-nuxt2"
-          - "@slicemachine/adapter-sveltekit"
-          # - "@slicemachine/e2e" # Commented as there are no unit tests for `@slicemachine/e2e`.
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Restore cache
-        uses: ./.github/actions/restore-cache
-
-      - name: Set up Node
-        uses: ./.github/actions/setup-node
-
-      - name: Unit
-        run: yarn workspace ${{ matrix.package }} unit
-        env:
-          EMAIL: ${{ secrets.EMAIL }}
-          PASSWORD: ${{ secrets.PASSWORD }}
-          REPO_URL: ${{ secrets.REPO_URL }}
-          wroom_endpoint: ${{ secrets.PRISMIC_URL }}
-          authentication_server_endpoint: ${{ secrets.AUTHENTICATION_SERVER_ENDPOINT }}
-          customtypesapi_endpoint: ${{ secrets.CUSTOMTYPESAPI_ENDPOINT }}
-          user_service_endpoint: ${{ secrets.USER_SERVICE_ENDPOINT }}
-          acl_provider_endpoint: ${{ secrets.ACL_PROVIDER_ENDPOINT }}
 
   e2e:
     needs: prepare
@@ -167,8 +83,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8]
-        shardTotal: [8]
+        shardIndex: [1, 2]
+        shardTotal: [2]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -182,16 +98,13 @@ jobs:
       - name: Set up Playwright browsers
         run: yarn test:e2e:install
 
-      - name: Set SM_ENV
+      - name: Set PRISMIC_ENV
         run: |
           if [[ $GITHUB_REF_NAME == 'main' ]]; then
-            echo "SM_ENV=production" >> $GITHUB_ENV
+            echo "PRISMIC_ENV=production" >> $GITHUB_ENV
           else 
-            echo "SM_ENV=dev-tools" >> $GITHUB_ENV
+            echo "PRISMIC_ENV=dev-tools" >> $GITHUB_ENV
           fi
-
-      - name: Build
-        run: yarn workspaces foreach --include '{@slicemachine/adapter-next,@slicemachine/init,start-slicemachine,slice-machine-ui}' --parallel --topological-dev run build
 
       - name: Running E2E tests
         run: yarn test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
@@ -199,7 +112,7 @@ jobs:
           DEBUG: pw:test
           PLAYWRIGHT_ADMIN_USERNAME: ${{ secrets.PLAYWRIGHT_ADMIN_USERNAME }}
           PLAYWRIGHT_ADMIN_PASSWORD: ${{ secrets.PLAYWRIGHT_ADMIN_PASSWORD }}
-          SM_ENV: ${{ env.SM_ENV }}
+          PRISMIC_ENV: ${{ env.PRISMIC_ENV }}
 
       - name: Upload blob report to GitHub Actions Artifacts
         uses: actions/upload-artifact@v4

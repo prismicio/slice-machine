@@ -1,4 +1,4 @@
-import { SliceMachinePluginRunner } from "@slicemachine/plugin-kit";
+import { SliceMachinePluginRunner } from "@prismicio/plugin-kit";
 import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 
 import { SliceMachineManager } from "./SliceMachineManager";
@@ -11,14 +11,10 @@ import { PluginsManager } from "./plugins/PluginsManager";
 import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
 import { SlicesManager } from "./slices/SlicesManager";
-import { SnippetsManager } from "./snippets/SnippetsManager";
 import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
-import { SimulatorManager } from "./simulator/SimulatorManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
-import { DocumentationManager } from "./documentation/DocumentationManager";
-import { SliceTemplateLibraryManager } from "./sliceTemplateLibrary/SliceTemplateLibraryManager";
 
 export abstract class BaseManager {
 	private _sliceMachineManager: SliceMachineManager;
@@ -74,20 +70,8 @@ export abstract class BaseManager {
 	protected get slices(): SlicesManager {
 		return this._sliceMachineManager.slices;
 	}
-	protected get snippets(): SnippetsManager {
-		return this._sliceMachineManager.snippets;
-	}
 	protected get screenshots(): ScreenshotsManager {
 		return this._sliceMachineManager.screenshots;
-	}
-	protected get simulator(): SimulatorManager {
-		return this._sliceMachineManager.simulator;
-	}
-	protected get documentation(): DocumentationManager {
-		return this._sliceMachineManager.documentation;
-	}
-	protected get sliceTemplateLibrary(): SliceTemplateLibraryManager {
-		return this._sliceMachineManager.sliceTemplateLibrary;
 	}
 
 	protected get versions(): VersionsManager {

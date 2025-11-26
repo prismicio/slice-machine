@@ -1,21 +1,10 @@
 # Ignore artifacts:
 .github/
 /.yarn
-/packages/*/src/**/*.module.css.d.ts
-/packages/*/storybook-static
 /.pnp.*
-packages/slice-machine/.next
-packages/slice-machine/build
-packages/slice-machine/templates/
-packages/slice-machine/out
-packages/client/build
-packages/core/build
-packages/init/build
-packages/next-slicezone/dist
-packages/nuxt-sm/src/sm-resolver.js
+packages/**/build
 packages/**/package.json
 README.md
 package.json
 dist
-packages/init/playground
 coverage/

@@ -22,12 +22,6 @@ import { SliceLibraryReadHookBase } from "./hooks/sliceLibrary-read";
 import { SliceReadHookBase } from "./hooks/slice-read";
 import { SliceRenameHookBase } from "./hooks/slice-rename";
 import { SliceUpdateHookBase } from "./hooks/slice-update";
-import { SnippetReadHookBase } from "./hooks/snippet-read";
-import { DocumentationReadHookBase } from "./hooks/documentation-read";
-
-import { SliceTemplateLibraryReadHookBase } from "./hooks/sliceTemplateLibrary-read";
-import { ProjectEnvironmentReadHookBase } from "./hooks/project-environment-read";
-import { ProjectEnvironmentUpdateHookBase } from "./hooks/project-environment-update";
 
 /**
  * A value optionally wrapped in a `PromiseLike`.
@@ -47,7 +41,7 @@ export type SliceMachinePluginOptions = Record<string, unknown>;
  *
  * @typeParam TPluginOptions - User-provided options for the plugin.
  */
-export type SliceMachineConfigPluginRegistration<
+export type PrismicConfigPluginRegistration<
 	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
 > =
 	| string
@@ -58,22 +52,19 @@ export type SliceMachineConfigPluginRegistration<
 	  };
 
 /**
- * Slice Machine configuration from `slicemachine.config.js`.
+ * Prismic configuration from `prismic.config.js`.
  */
-export type SliceMachineConfig = {
-	// TODO: Can we make `apiEndpoint` optional?
+export type PrismicConfig = {
 	apiEndpoint?: string;
-	// NOTE: This is a new property.
 	repositoryName: string;
-	localSliceSimulatorURL?: string;
 	libraries?: string[];
-	adapter: SliceMachineConfigPluginRegistration;
-	plugins?: SliceMachineConfigPluginRegistration[];
+	adapter: PrismicConfigPluginRegistration;
+	plugins?: PrismicConfigPluginRegistration[];
 	labs?: { legacySliceUpgrader?: boolean };
 };
 
 /**
- * Slice Machine project metadata.
+ * Prismic project metadata.
  */
 export type SliceMachineProject = {
 	/**
@@ -81,9 +72,9 @@ export type SliceMachineProject = {
 	 */
 	root: string;
 	/**
-	 * Slice Machine `slicemachine.config.json` content, validated.
+	 * Slice Machine `prismic.config.json` content, validated.
 	 */
-	config: SliceMachineConfig;
+	config: PrismicConfig;
 };
 
 /**
@@ -156,14 +147,10 @@ export const SliceMachineHookType = {
 	customType_asset_delete: "custom-type:asset:delete",
 	customType_asset_read: "custom-type:asset:read",
 	customTypeLibrary_read: "custom-type-library:read",
-	documentation_read: "documentation:read",
-	sliceTemplateLibrary_read: "slice-template-library:read",
 
 	snippet_read: "snippet:read",
 
 	project_init: "project:init",
-	project_environment_read: "project:environment:read",
-	project_environment_update: "project:environment:update",
 
 	debug: "debug",
 } as const;
@@ -204,20 +191,9 @@ export type SliceMachineHooks = {
 	// Custom Type Libraries
 	[SliceMachineHookType.customTypeLibrary_read]: Hook<CustomTypeLibraryReadHookBase>;
 
-	// Snippets
-	[SliceMachineHookType.snippet_read]: Hook<SnippetReadHookBase>;
-
-	// Documentation
-	[SliceMachineHookType.documentation_read]: Hook<DocumentationReadHookBase>;
-
 	// Project
 	[SliceMachineHookType.project_init]: Hook<ProjectInitHookBase>;
-	[SliceMachineHookType.project_environment_read]: Hook<ProjectEnvironmentReadHookBase>;
-	[SliceMachineHookType.project_environment_update]: Hook<ProjectEnvironmentUpdateHookBase>;
 
 	// Debug
 	[SliceMachineHookType.debug]: Hook<DebugHookBase>;
-
-	// Slice templates
-	[SliceMachineHookType.sliceTemplateLibrary_read]: Hook<SliceTemplateLibraryReadHookBase>;
 };

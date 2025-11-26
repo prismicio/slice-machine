@@ -2,11 +2,11 @@ import type {
 	ProjectInitHook,
 	ProjectInitHookData,
 	SliceMachineContext,
-} from "@slicemachine/plugin-kit";
+} from "@prismicio/plugin-kit";
 import {
 	checkHasProjectFile,
 	writeProjectFile,
-} from "@slicemachine/plugin-kit/fs";
+} from "@prismicio/plugin-kit/fs";
 import { source } from "common-tags";
 import semver from "semver";
 
@@ -18,7 +18,6 @@ import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
-import { PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME } from "../constants";
 import { getNextJSVersion } from "../lib/getNextJSVersion";
 
 type InstallDependenciesArgs = {
@@ -75,7 +74,7 @@ const createPrismicIOFile = async ({
 					type Route,
 				} from "@prismicio/client";
 				import { enableAutoPreviews } from "@prismicio/next";
-				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+				import prismicConfig from "${hasSrcDirectory ? ".." : "."}/prismic.config.json";
 			`;
 
 			createClientContents = source`
@@ -104,7 +103,7 @@ const createPrismicIOFile = async ({
 			importsContents = source`
 				import { createClient as baseCreateClient } from "@prismicio/client";
 				import { enableAutoPreviews } from "@prismicio/next";
-				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+				import prismicConfig from "${hasSrcDirectory ? ".." : "."}/prismic.config.json";
 			`;
 
 			createClientContents = source`
@@ -135,7 +134,7 @@ const createPrismicIOFile = async ({
 			importsContents = source`
 				import { createClient as baseCreateClient, type Routes } from "@prismicio/client";
 				import { enableAutoPreviews, type CreateClientConfig } from "@prismicio/next/pages";
-				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+				import prismicConfig from "${hasSrcDirectory ? ".." : "."}/prismic.config.json";
 			`;
 
 			createClientContents = source`
@@ -160,7 +159,7 @@ const createPrismicIOFile = async ({
 			importsContents = source`
 				import { createClient as baseCreateClient } from "@prismicio/client";
 				import { enableAutoPreviews } from "@prismicio/next/pages";
-				import sm from "${hasSrcDirectory ? ".." : "."}/slicemachine.config.json";
+				import prismicConfig from "${hasSrcDirectory ? ".." : "."}/prismic.config.json";
 			`;
 
 			createClientContents = source`
@@ -193,8 +192,7 @@ const createPrismicIOFile = async ({
 			/**
 			 * The project's Prismic repository name.
 			 */
-			export const repositoryName =
-				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || sm.repositoryName;
+			export const repositoryName = prismicConfig.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -217,8 +215,7 @@ const createPrismicIOFile = async ({
 			/**
 			 * The project's Prismic repository name.
 			 */
-			export const repositoryName =
-				process.env.${PRISMIC_ENVIRONMENT_ENVIRONMENT_VARIABLE_NAME} || sm.repositoryName;
+			export const repositoryName = prismicConfig.repositoryName;
 
 			/**
 			 * A list of Route Resolver objects that define how a document's \`url\` field is resolved.
@@ -235,104 +232,6 @@ const createPrismicIOFile = async ({
 			];
 
 			${createClientContents}
-		`;
-	}
-
-	await writeProjectFile({
-		filename,
-		contents,
-		format: options.format,
-		helpers,
-	});
-};
-
-type CreateSliceSimulatorPageArgs = SliceMachineContext<PluginOptions>;
-
-const createSliceSimulatorPage = async ({
-	helpers,
-	options,
-}: CreateSliceSimulatorPageArgs) => {
-	const isTypeScriptProject = await checkIsTypeScriptProject({
-		helpers,
-		options,
-	});
-	const hasAppRouter = await checkHasAppRouter({ helpers });
-
-	const extension = await getJSFileExtension({ helpers, options, jsx: true });
-	const filename = await buildSrcPath({
-		filename: hasAppRouter
-			? `app/slice-simulator/page.${extension}`
-			: `pages/slice-simulator.${extension}`,
-		helpers,
-	});
-
-	if (await checkHasProjectFile({ filename, helpers })) {
-		return;
-	}
-
-	let contents;
-
-	if (hasAppRouter) {
-		if (isTypeScriptProject) {
-			contents = source`
-				import {
-					SliceSimulator,
-					SliceSimulatorParams,
-					getSlices,
-				} from "@slicemachine/adapter-next/simulator";
-				import { SliceZone } from "@prismicio/react";
-
-				import { components } from "../../slices";
-
-				export default async function SliceSimulatorPage({
-					searchParams,
-				}: SliceSimulatorParams) {
-					const { state } = await searchParams
-					const slices = getSlices(state);
-
-					return (
-						<SliceSimulator>
-							<SliceZone slices={slices} components={components} />
-						</SliceSimulator>
-					);
-				}
-			`;
-		} else {
-			contents = source`
-				import {
-					SliceSimulator,
-					getSlices,
-				} from "@slicemachine/adapter-next/simulator";
-				import { SliceZone } from "@prismicio/react";
-
-				import { components } from "../../slices";
-
-				export default async function SliceSimulatorPage({ searchParams }) {
-					const { state } = await searchParams
-					const slices = getSlices(state);
-
-					return (
-						<SliceSimulator>
-							<SliceZone slices={slices} components={components} />
-						</SliceSimulator>
-					);
-				}
-			`;
-		}
-	} else {
-		contents = source`
-			import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-			import { SliceZone } from "@prismicio/react";
-
-			import { components } from "../slices";
-
-			export default function SliceSimulatorPage() {
-				return (
-					<SliceSimulator
-						sliceZone={(props) => <SliceZone {...props} components={components} />}
-					/>
-				);
-			}
 		`;
 	}
 
@@ -508,10 +407,6 @@ const modifySliceMachineConfig = async ({
 	});
 	const project = await helpers.getProject();
 
-	// Add Slice Simulator URL.
-	project.config.localSliceSimulatorURL ||=
-		"http://localhost:3000/slice-simulator";
-
 	// Nest the default Slice Library in the src directory if it exists and
 	// is empty.
 	if (
@@ -606,7 +501,6 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			installDependencies({ installDependencies: _installDependencies }),
 			modifySliceMachineConfig(context),
 			createPrismicIOFile(context),
-			createSliceSimulatorPage(context),
 			createPreviewRoute(context),
 			createExitPreviewRoute(context),
 			createRevalidateRoute(context),

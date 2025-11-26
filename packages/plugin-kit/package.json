@@ -1,7 +1,7 @@
 {
-	"name": "@slicemachine/plugin-kit",
-	"version": "0.4.85",
-	"description": "A set of helpers to develop and run Slice Machine plugins",
+	"name": "@prismicio/plugin-kit",
+	"version": "0.0.1",
+	"description": "A set of helpers to develop and run Prismic plugins",
 	"keywords": [
 		"typescript",
 		"helpers",
@@ -11,7 +11,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "ssh://git@github.com/prismicio/slicemachine-plugin-kit.git",
+		"url": "ssh://git@github.com/prismicio/devtools.git",
 		"directory": "packages/plugin-kit"
 	},
 	"license": "Apache-2.0",
@@ -53,11 +53,8 @@
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
-		"size": "size-limit",
-		"test": "yarn lint && yarn types && yarn unit && yarn build && yarn size",
+		"test": "yarn lint && yarn types && yarn build",
 		"types": "tsc --noEmit",
-		"unit": "vitest run --coverage",
-		"unit:watch": "vitest watch",
 		"depcheck": "depcheck --config=.depcheckrc",
 		"audit": "yarn npm audit --environment production --severity high"
 	},
@@ -75,14 +72,11 @@
 		"prismic-ts-codegen": "0.1.27"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "0.7.1",
 		"@prismicio/types-internal": "3.11.2",
-		"@size-limit/preset-small-lib": "8.2.4",
 		"@types/common-tags": "1.8.1",
 		"@types/fs-extra": "11.0.1",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",
-		"@vitest/coverage-v8": "0.32.0",
 		"depcheck": "1.4.3",
 		"eslint": "8.37.0",
 		"eslint-config-prettier": "9.0.0",
@@ -92,14 +86,12 @@
 		"monocle-ts": "2.3.13",
 		"newtype-ts": "0.3.5",
 		"prettier-plugin-jsdoc": "1.1.1",
-		"size-limit": "8.2.4",
 		"typescript": "4.9.5",
 		"vite": "5.4.20",
-		"vite-plugin-sdk": "0.1.1",
-		"vitest": "0.32.0"
+		"vite-plugin-sdk": "0.1.1"
 	},
 	"engines": {
-		"node": ">=14.15.0"
+		"node": ">=20"
 	},
 	"publishConfig": {
 		"access": "public"

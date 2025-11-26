@@ -6,7 +6,7 @@ type APITokens = {
 };
 
 export const API_TOKENS: APITokens = (() => {
-	switch (process.env.SM_ENV) {
+	switch (process.env.PRISMIC_ENV) {
 		case APPLICATION_MODE.Development:
 		case APPLICATION_MODE.DevTools:
 		case APPLICATION_MODE.MarketingTools:
@@ -24,6 +24,6 @@ export const API_TOKENS: APITokens = (() => {
 				AmplitudeKey: "client-JuQQWUPimfKWId3WWU6p8xSkTiFqd1qV",
 			};
 		default:
-			throw new Error(`Unknown application mode "${process.env.SM_ENV}".`);
+			throw new Error(`Unknown application mode "${process.env.PRISMIC_ENV}".`);
 	}
 })();

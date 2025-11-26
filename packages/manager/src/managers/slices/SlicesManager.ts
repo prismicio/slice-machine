@@ -19,7 +19,7 @@ import {
 	SliceRenameHook,
 	SliceRenameHookData,
 	SliceUpdateHook,
-} from "@slicemachine/plugin-kit";
+} from "@prismicio/plugin-kit";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
@@ -31,9 +31,8 @@ import fetch from "../../lib/fetch";
 
 import { OnlyHookErrors } from "../../types";
 import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
-import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
+import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-import { UnauthenticatedError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 
@@ -78,12 +77,6 @@ type SliceMachineManagerReadSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerPushSliceArgs = {
-	libraryID: string;
-	sliceID: string;
-	userAgent?: string;
-};
-
 export type SliceMachineManagerPushSliceReturnType = {
 	/**
 	 * A record of Slice variation IDs mapped to uploaded screenshot URLs.
@@ -124,17 +117,6 @@ type SliceMachineManagerReadSliceMocksArgs = {
 type SliceMachineManagerReadSliceMocksReturnType = {
 	mocks?: SharedSliceContent[];
 	errors: (DecodeError | HookError)[];
-};
-
-type SliceMachineManagerReadSliceMocksConfigArgs = {
-	libraryID: string;
-	sliceID: string;
-};
-
-type SliceMachineManagerReadSliceMocksConfigArgsReturnType = {
-	// TODO
-	mocksConfig?: Record<string, unknown>;
-	errors: HookError[];
 };
 
 type SliceMachineManagerUpdateSliceMocksArgs = {
@@ -239,6 +221,13 @@ export class SlicesManager extends BaseManager {
 			sliceIDs: data[0]?.sliceIDs ?? [],
 			errors: errors,
 		};
+	}
+
+	async getDefaultLibraryID(): Promise<string> {
+		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const libraryIDs = sliceMachineConfig.libraries || [];
+
+		return libraryIDs[0];
 	}
 
 	async readAllSliceLibraries(): Promise<SlicesManagerReadAllSliceLibrariesReturnType> {
@@ -746,86 +735,6 @@ export class SlicesManager extends BaseManager {
 		return { errors };
 	}
 
-	/**
-	 * @returns Record of variation IDs mapped to uploaded screenshot URLs.
-	 */
-	async pushSlice(
-		args: SliceMachineManagerPushSliceArgs,
-	): Promise<SliceMachineManagerPushSliceReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		if (!(await this.user.checkIsLoggedIn())) {
-			throw new UnauthenticatedError();
-		}
-
-		const { model, errors: readSliceErrors } = await this.readSlice({
-			libraryID: args.libraryID,
-			sliceID: args.sliceID,
-		});
-
-		if (model) {
-			const modelWithScreenshots =
-				await this.updateSliceModelScreenshotsInPlace({
-					model,
-					libraryID: args.libraryID,
-					// We are pushing it for the first time here, no remote image URLs to
-					// use during the update.
-					variationImageUrlMap: {},
-				});
-
-			const authenticationToken = await this.user.getAuthenticationToken();
-			const repositoryName = await this.project.getResolvedRepositoryName();
-
-			// TODO: Create a single shared client.
-			const client = prismicCustomTypesClient.createClient({
-				endpoint: API_ENDPOINTS.PrismicModels,
-				repositoryName,
-				token: authenticationToken,
-				fetch,
-				fetchOptions: {
-					headers: {
-						"User-Agent": args.userAgent || SLICE_MACHINE_USER_AGENT,
-					},
-				},
-			});
-
-			try {
-				// Check if Slice already exists on the repository.
-				await client.getSharedSliceByID(args.sliceID);
-
-				// If it exists on the repository, update it.
-				await client.updateSharedSlice(modelWithScreenshots);
-			} catch (error) {
-				if (error instanceof prismicCustomTypesClient.NotFoundError) {
-					// If the Slice doesn't exist on the repository, insert it.
-					await client.insertSharedSlice(modelWithScreenshots);
-				} else if (error instanceof prismicCustomTypesClient.ForbiddenError) {
-					throw new UnauthorizedError(
-						"You do not have access to push Slices to this Prismic repository.",
-					);
-				} else {
-					// Pass the error through if it isn't the one we were expecting.
-					throw error;
-				}
-			}
-
-			const screenshotURLs: Record<string, string> = {};
-			for (const variation of modelWithScreenshots.variations) {
-				screenshotURLs[variation.id] = variation.imageUrl;
-			}
-
-			return {
-				screenshotURLs,
-				errors: readSliceErrors,
-			};
-		} else {
-			return {
-				screenshotURLs: undefined,
-				errors: readSliceErrors,
-			};
-		}
-	}
-
 	async readSliceScreenshot(
 		args: SliceMachineManagerReadSliceScreenshotArgs,
 	): Promise<SliceMachineManagerReadSliceScreenshotReturnType> {
@@ -962,49 +871,18 @@ export class SlicesManager extends BaseManager {
 		};
 	}
 
-	// TODO: Remove
-	async readSliceMocksConfig(
-		args: SliceMachineManagerReadSliceMocksConfigArgs,
-	): Promise<SliceMachineManagerReadSliceMocksConfigArgsReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
-
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
-			"slice:asset:read",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				assetID: "mocks.config.json",
-			},
-		);
-		const data = hookResult.data[0]?.data;
-
-		// TODO: Validate the returned data.
-
-		if (data) {
-			return {
-				mocksConfig: JSON.parse(data.toString()),
-				errors: hookResult.errors,
-			};
-		} else {
-			return {
-				mocksConfig: undefined,
-				errors: hookResult.errors,
-			};
-		}
-	}
-
 	async fetchRemoteSlices(): Promise<SharedSlice[]> {
 		const authenticationToken = await this.user.getAuthenticationToken();
-		const repositoryName = await this.project.getResolvedRepositoryName();
+		const repositoryName = await this.project.getRepositoryName();
 
 		const client = prismicCustomTypesClient.createClient({
-			endpoint: API_ENDPOINTS.PrismicModels,
+			endpoint: API_ENDPOINTS.PrismicLegacyCustomTypesApi,
 			repositoryName,
 			token: authenticationToken,
 			fetch,
 			fetchOptions: {
 				headers: {
-					"User-Agent": SLICE_MACHINE_USER_AGENT,
+					"User-Agent": PRISMIC_CLI_USER_AGENT,
 				},
 			},
 		});
@@ -1015,7 +893,7 @@ export class SlicesManager extends BaseManager {
 	async updateSliceModelScreenshotsInPlace(
 		args: SlicesManagerUpsertHostedSliceScreenshotsArgs,
 	): Promise<SharedSlice> {
-		const repositoryName = await this.project.getResolvedRepositoryName();
+		const repositoryName = await this.project.getRepositoryName();
 
 		const variations = await Promise.all(
 			args.model.variations.map(async (variation) => {

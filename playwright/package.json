@@ -1,7 +1,7 @@
 {
-  "name": "@slicemachine/e2e",
+  "name": "@prismicio/e2e",
   "private": true,
-  "description": "E2E tests for Slice Machine",
+  "description": "E2E tests",
   "author": "Prismic <contact@prismic.io> (https://prismic.io)",
   "scripts": {
     "depcheck": "depcheck --config=.depcheckrc",
@@ -16,8 +16,8 @@
     "@msgpack/msgpack": "2.8.0",
     "@playwright/test": "^1",
     "@prismicio/e2e-tests-utils": "1.11.0",
+    "@prismicio/manager": "workspace:*",
     "@prismicio/types-internal": "3.11.2",
-    "@slicemachine/manager": "workspace:*",
     "@types/node": "22.15.17",
     "@typescript-eslint/eslint-plugin": "7.17.0",
     "@typescript-eslint/parser": "7.17.0",

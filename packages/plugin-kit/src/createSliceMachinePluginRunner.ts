@@ -10,7 +10,7 @@ import {
 	SliceMachinePlugin,
 } from "./defineSliceMachinePlugin";
 import {
-	SliceMachineConfigPluginRegistration,
+	PrismicConfigPluginRegistration,
 	SliceMachineHookExtraArgs,
 	SliceMachineHookTypes,
 	SliceMachineHooks,
@@ -59,7 +59,6 @@ export const ADAPTER_ONLY_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type:read",
 	"custom-type:asset:read",
 	"custom-type-library:read",
-	"project:environment:read",
 ];
 
 type SliceMachinePluginRunnerConstructorArgs = {
@@ -124,7 +123,7 @@ export class SliceMachinePluginRunner {
 	}
 
 	private async _loadPlugin(
-		pluginRegistration: SliceMachineConfigPluginRegistration,
+		pluginRegistration: PrismicConfigPluginRegistration,
 	): Promise<LoadedSliceMachinePlugin> {
 		// Sanitize registration
 		const { resolve, options = {} } =

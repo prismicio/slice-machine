@@ -1,4 +1,4 @@
-import { HookError, SliceMachinePluginOptions } from "@slicemachine/plugin-kit";
+import { HookError, SliceMachinePluginOptions } from "@prismicio/plugin-kit";
 import { detect as niDetect } from "@antfu/ni";
 
 export type PackageManager = NonNullable<Awaited<ReturnType<typeof niDetect>>>;
@@ -9,7 +9,7 @@ export type { APIEndpoints } from "./constants/API_ENDPOINTS";
  *
  * @typeParam TSliceMachinePluginOptions - User-provided options for the plugin.
  */
-export type SliceMachineConfigPluginRegistration<
+export type PrismicConfigPluginRegistration<
 	TSliceMachinePluginOptions extends
 		SliceMachinePluginOptions = SliceMachinePluginOptions,
 > =
@@ -20,17 +20,14 @@ export type SliceMachineConfigPluginRegistration<
 	  };
 
 /**
- * Slice Machine configuration from `slicemachine.config.js`.
+ * Prismic configuration from `prismic.config.js`.
  */
-export type SliceMachineConfig = {
-	// TODO: Can we make `apiEndpoint` optional?
+export type PrismicConfig = {
 	apiEndpoint?: string;
-	// NOTE: This is a new property.
 	repositoryName: string;
-	localSliceSimulatorURL?: string;
 	libraries?: string[];
-	adapter: SliceMachineConfigPluginRegistration;
-	plugins?: SliceMachineConfigPluginRegistration[];
+	adapter: PrismicConfigPluginRegistration;
+	plugins?: PrismicConfigPluginRegistration[];
 	labs?: { legacySliceUpgrader?: boolean };
 };
 

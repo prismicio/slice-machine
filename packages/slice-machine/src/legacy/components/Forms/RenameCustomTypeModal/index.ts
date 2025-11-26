@@ -1,1 +1,0 @@
-export { RenameCustomTypeModal } from "./RenameCustomTypeModal";

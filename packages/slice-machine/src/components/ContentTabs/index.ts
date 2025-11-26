@@ -1,1 +1,0 @@
-export { ContentTabs } from "./ContentTabs";

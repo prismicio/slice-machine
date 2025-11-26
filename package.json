@@ -1,32 +1,27 @@
 {
   "private": true,
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "packageManager": "yarn@3.6.0",
   "scripts": {
-    "clean": "rimraf --glob '{packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz,src/**/*.module.css.d.ts,storybook-static},playwright/{playwright-report,test-results}}'",
+    "clean": "rimraf --glob '{packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz},playwright/{playwright-report,test-results}}'",
     "dev": "concurrently --prefix-colors auto \"yarn:dev:*\"",
-    "dev:manager": "yarn workspace @slicemachine/manager dev",
-    "dev:start-slicemachine": "yarn workspace start-slicemachine dev",
-    "dev:plugin-kit": "yarn workspace @slicemachine/plugin-kit dev",
-    "dev:slice-machine-ui": "yarn workspace slice-machine-ui dev",
-    "dev:adapter-next": "yarn workspace @slicemachine/adapter-next dev",
-    "dev:adapter-sveltekit": "yarn workspace @slicemachine/adapter-sveltekit dev",
-    "dev:init": "yarn workspace @slicemachine/init dev",
-    "postinstall": "husky install",
+    "dev:cli": "yarn workspace @prismicio/cli dev",
+    "dev:manager": "yarn workspace @prismicio/manager dev",
+    "dev:plugin-kit": "yarn workspace @prismicio/plugin-kit dev",
+    "dev:adapter-next": "yarn workspace @prismicio/adapter-next dev",
+    "dev:adapter-nuxt": "yarn workspace @prismicio/adapter-nuxt dev",
+    "dev:adapter-nuxt2": "yarn workspace @prismicio/adapter-nuxt2 dev",
+    "dev:adapter-sveltekit": "yarn workspace @prismicio/adapter-sveltekit dev",
     "build": "yarn workspaces foreach --topological-dev --verbose run build && yarn run test",
-    "build-essential": "yarn workspace @slicemachine/plugin-kit build && yarn workspace @slicemachine/manager build",
     "audit": "yarn workspaces foreach --parallel --verbose run audit",
     "lint": "yarn workspaces foreach --verbose run lint",
-    "stylelint": "yarn workspaces foreach --verbose run stylelint",
     "lint-staged": "lint-staged",
     "prettier:fix": "prettier --write .",
     "prettier:check": "prettier --check .",
     "test": "yarn workspaces foreach --parallel --topological-dev --verbose run test",
-    "publish": "tsx scripts/publish.ts",
-    "play": "tsx scripts/play.ts",
-    "yalc:editor-packages": "tsx scripts/yalc-sm.ts"
+    "publish": "tsx scripts/publish.ts"
   },
   "dependenciesMeta": {
     "@sentry/cli": {
@@ -45,7 +40,6 @@
     "concurrently": "7.6.0",
     "eslint-plugin-simple-import-sort": "12.0.0",
     "execa": "7.1.1",
-    "husky": "8.0.3",
     "lint-staged": "13.2.0",
     "mri": "1.2.0",
     "prettier": "3.0.3",
@@ -54,20 +48,7 @@
     "start-server-and-test": "1.15.5",
     "tsx": "4.6.2"
   },
-  "lint-staged": {
-    "**/packages/slice-machine/**/*.@(js|jsx|ts|tsx|)": [
-      "prettier --write --ignore-unknown",
-      "yarn workspace slice-machine-ui lint:precommit"
-    ],
-    "**/packages/slice-machine/**/*.module.css": [
-      "prettier --write --ignore-unknown",
-      "yarn workspace slice-machine-ui stylelint:precommit"
-    ]
-  },
   "resolutions": {
-    "connected-next-router/react-redux": "8.0.7",
-    "react-beautiful-dnd/react-redux": "8.0.7",
-    "express": "4.20.0",
     "@prismicio/types-internal": "3.11.2"
   },
   "workspaces": [

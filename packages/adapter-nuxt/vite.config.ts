@@ -11,7 +11,6 @@ export default defineConfig({
 		lib: {
 			entry: {
 				index: "./src/index.ts",
-				simulator: "./src/simulator/index.ts",
 			},
 		},
 		rollupOptions: {

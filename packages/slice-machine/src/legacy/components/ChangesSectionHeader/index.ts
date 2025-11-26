@@ -1,1 +1,0 @@
-export { ChangesSectionHeader } from "./ChangesSectionHeader";
