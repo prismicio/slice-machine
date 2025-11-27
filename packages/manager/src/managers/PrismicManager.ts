@@ -4,10 +4,7 @@ import {
 } from "@prismicio/types-internal/lib/customtypes";
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import {
-	SliceMachinePlugin,
-	SliceMachinePluginRunner,
-} from "@prismicio/plugin-kit";
+import { Plugin, PluginSystemRunner } from "@prismicio/plugin-kit";
 
 import { createContentDigest } from "../lib/createContentDigest";
 
@@ -36,7 +33,7 @@ import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
 import { buildPrismicRepositoryAPIEndpoint } from "../lib/buildPrismicRepositoryAPIEndpoint";
 
-type SliceMachineManagerGetStateReturnType = {
+type PrismicManagerGetStateReturnType = {
 	env: {
 		shortId?: string;
 		intercomHash?: string;
@@ -86,14 +83,13 @@ type SliceMachineManagerGetStateReturnType = {
 	};
 };
 
-type SliceMachineManagerConstructorArgs = {
+type PrismicManagerConstructorArgs = {
 	cwd?: string;
-	nativePlugins?: Record<string, SliceMachinePlugin>;
+	nativePlugins?: Record<string, Plugin>;
 };
 
-export class SliceMachineManager {
-	private _sliceMachinePluginRunner: SliceMachinePluginRunner | undefined =
-		undefined;
+export class PrismicManager {
+	private _pluginSystemRunner: PluginSystemRunner | undefined = undefined;
 	private _prismicAuthManager: PrismicAuthManager;
 
 	cwd: string;
@@ -108,7 +104,7 @@ export class SliceMachineManager {
 	user: UserManager;
 	versions: VersionsManager;
 
-	constructor(args?: SliceMachineManagerConstructorArgs) {
+	constructor(args?: PrismicManagerConstructorArgs) {
 		// _prismicAuthManager must be set at least before UserManager
 		// is instantiated. It depends on the PrismicAuthManager for
 		// authentication-related methods.
@@ -133,13 +129,13 @@ export class SliceMachineManager {
 		this.cwd = args?.cwd ?? process.cwd();
 	}
 
-	// The `_sliceMachinePluginRunner` property is hidden behind a function to
+	// The `_pluginSystemRunner` property is hidden behind a function to
 	// discourage access. Using a function deliberatly breaks the pattern
 	// of other child managers that are accessible as properties, like
-	// `project`, `plugins`, etc. We do not treat SliceMachinePluginRunner
+	// `project`, `plugins`, etc. We do not treat PluginSystemRunner
 	// as a child manager.
-	getSliceMachinePluginRunner(): SliceMachinePluginRunner | undefined {
-		return this._sliceMachinePluginRunner;
+	getPluginSystemRunner(): PluginSystemRunner | undefined {
+		return this._pluginSystemRunner;
 	}
 
 	// The `_prismicAuthManager` property is hidden behind a function to
@@ -158,17 +154,17 @@ export class SliceMachineManager {
 	// TODO: Remove this global-state method. It is expensive and a
 	// potential source of bugs due to data inconsistency. SM UI relies on
 	// it heavily, so removal will require significant effort.
-	async getState(): Promise<SliceMachineManagerGetStateReturnType> {
+	async getState(): Promise<PrismicManagerGetStateReturnType> {
 		const [
-			{ sliceMachineConfig, libraries },
+			{ prismicConfig, libraries },
 			{ profile, remoteCustomTypes, remoteSlices, authError },
 			customTypes,
 			packageManager,
 		] = await Promise.all([
-			this.project.getSliceMachineConfig().then(async (sliceMachineConfig) => {
-				const libraries = await this._getLibraries(sliceMachineConfig);
+			this.project.getPrismicConfig().then(async (prismicConfig) => {
+				const libraries = await this._getLibraries(prismicConfig);
 
-				return { sliceMachineConfig, libraries };
+				return { prismicConfig, libraries };
 			}),
 			this._getProfile().then(async (profile) => {
 				let authError;
@@ -230,7 +226,7 @@ export class SliceMachineManager {
 		// `clientError`. Here, we simulate what the old core does by
 		// returning an `ErrorWithStatus`-like object if the user does
 		// not have access to the repository or is not logged in.
-		const clientError: SliceMachineManagerGetStateReturnType["clientError"] =
+		const clientError: PrismicManagerGetStateReturnType["clientError"] =
 			authError ||
 			(profile
 				? undefined
@@ -245,13 +241,11 @@ export class SliceMachineManager {
 			env: {
 				manifest: {
 					apiEndpoint:
-						sliceMachineConfig.apiEndpoint ||
-						buildPrismicRepositoryAPIEndpoint(
-							sliceMachineConfig.repositoryName,
-						),
+						prismicConfig.apiEndpoint ||
+						buildPrismicRepositoryAPIEndpoint(prismicConfig.repositoryName),
 				},
 				packageManager,
-				repo: sliceMachineConfig.repositoryName,
+				repo: prismicConfig.repositoryName,
 				intercomHash: profile?.intercomHash,
 				shortId: profile?.shortId,
 				endpoints: this.getAPIEndpoints(),
@@ -278,19 +272,19 @@ export class SliceMachineManager {
 	}
 
 	private async _getLibraries(
-		sliceMachineConfig: PrismicConfig,
-	): Promise<SliceMachineManagerGetStateReturnType["libraries"]> {
-		const libraries: SliceMachineManagerGetStateReturnType["libraries"] = [];
+		prismicConfig: PrismicConfig,
+	): Promise<PrismicManagerGetStateReturnType["libraries"]> {
+		const libraries: PrismicManagerGetStateReturnType["libraries"] = [];
 
-		if (sliceMachineConfig.libraries) {
+		if (prismicConfig.libraries) {
 			await Promise.all(
-				sliceMachineConfig.libraries.map(async (libraryID) => {
+				prismicConfig.libraries.map(async (libraryID) => {
 					const { sliceIDs } = await this.slices.readSliceLibrary({
 						libraryID,
 					});
 
 					if (sliceIDs) {
-						const components: SliceMachineManagerGetStateReturnType["libraries"][number]["components"] =
+						const components: PrismicManagerGetStateReturnType["libraries"][number]["components"] =
 							[];
 
 						await Promise.all(
@@ -354,19 +348,18 @@ export class SliceMachineManager {
 		// Preserve library order from config file
 		return libraries.sort((library1, library2) => {
 			const libraryIndex1 =
-				sliceMachineConfig.libraries?.indexOf(library1.name) || 0;
+				prismicConfig.libraries?.indexOf(library1.name) || 0;
 			const libraryIndex2 =
-				sliceMachineConfig.libraries?.indexOf(library2.name) || 0;
+				prismicConfig.libraries?.indexOf(library2.name) || 0;
 
 			return Math.sign(libraryIndex1 - libraryIndex2);
 		});
 	}
 
 	private async _getCustomTypes(): Promise<
-		SliceMachineManagerGetStateReturnType["customTypes"]
+		PrismicManagerGetStateReturnType["customTypes"]
 	> {
-		const customTypes: SliceMachineManagerGetStateReturnType["customTypes"] =
-			[];
+		const customTypes: PrismicManagerGetStateReturnType["customTypes"] = [];
 
 		const { ids: customTypeIDs } =
 			await this.customTypes.readCustomTypeLibrary();

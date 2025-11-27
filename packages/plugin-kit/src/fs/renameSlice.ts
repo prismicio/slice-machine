@@ -1,6 +1,6 @@
 import * as fse from "fs-extra";
 
-import { SliceMachineActions } from "../createSliceMachineActions";
+import { PluginSystemActions } from "../createPluginSystemActions";
 
 import {
 	buildSliceDirectoryPath,
@@ -9,7 +9,7 @@ import {
 import { writeSliceModel, WriteSliceModelArgs } from "./writeSliceModel";
 
 export type RenameSliceArgs = {
-	actions: SliceMachineActions;
+	actions: PluginSystemActions;
 } & Omit<BuildSliceDirectoryPathArgs, "sliceID"> &
 	WriteSliceModelArgs;
 

@@ -1,7 +1,7 @@
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
-	SliceMachineContext,
+	PluginSystemContext,
 } from "@prismicio/plugin-kit";
 import {
 	checkHasProjectFile,
@@ -36,7 +36,7 @@ const installDependencies = async ({
 	});
 };
 
-type CreatePrismicIOFileArgs = SliceMachineContext<PluginOptions>;
+type CreatePrismicIOFileArgs = PluginSystemContext<PluginOptions>;
 
 const createPrismicIOFile = async ({
 	helpers,
@@ -246,7 +246,7 @@ const createPrismicIOFile = async ({
 const createPreviewRoute = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 	const isTypeScriptProject = await checkIsTypeScriptProject({
 		helpers,
@@ -338,7 +338,7 @@ const createPreviewRoute = async ({
 const createExitPreviewRoute = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 	const isTypeScriptProject = await checkIsTypeScriptProject({
 		helpers,
@@ -396,11 +396,11 @@ const createExitPreviewRoute = async ({
 	});
 };
 
-const modifySliceMachineConfig = async ({
+const modifyPrismicConfig = async ({
 	helpers,
 	options,
 	actions,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const hasSrcDirectory = await checkHasProjectFile({
 		filename: "src",
 		helpers,
@@ -423,7 +423,7 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	await helpers.updateSliceMachineConfig(project.config, {
+	await helpers.updatePrismicConfig(project.config, {
 		format: options.format,
 	});
 };
@@ -431,7 +431,7 @@ const modifySliceMachineConfig = async ({
 const createRevalidateRoute = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const hasAppRouter = await checkHasAppRouter({ helpers });
 
 	if (!hasAppRouter) {
@@ -471,14 +471,14 @@ const createRevalidateRoute = async ({
 };
 
 const upsertSliceLibraryIndexFiles = async (
-	context: SliceMachineContext<PluginOptions>,
+	context: PluginSystemContext<PluginOptions>,
 ) => {
 	// We must use the `getProject()` helper to get the latest version of
 	// the project config. The config may have been modified in
-	// `modifySliceMachineConfig()` and will not be relfected in
+	// `modifyPrismicConfig()` and will not be relfected in
 	// `context.project`.
 	// TODO: Automatically update the plugin runner's in-memory `project`
-	// object when `updateSliceMachineConfig()` is called.
+	// object when `updatePrismicConfig()` is called.
 	const project = await context.helpers.getProject();
 
 	if (!project.config.libraries) {
@@ -499,7 +499,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 	rejectIfNecessary(
 		await Promise.allSettled([
 			installDependencies({ installDependencies: _installDependencies }),
-			modifySliceMachineConfig(context),
+			modifyPrismicConfig(context),
 			createPrismicIOFile(context),
 			createPreviewRoute(context),
 			createExitPreviewRoute(context),
@@ -507,7 +507,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 		]),
 	);
 
-	// This must happen after `modifySliceMachineConfig()` since the
+	// This must happen after `modifyPrismicConfig()` since the
 	// location of the default Slice library may change.
 	await upsertSliceLibraryIndexFiles(context);
 };

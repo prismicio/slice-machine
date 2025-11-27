@@ -1,4 +1,4 @@
-import { SliceMachineContext } from "@prismicio/plugin-kit";
+import { PluginSystemContext } from "@prismicio/plugin-kit";
 import { checkHasProjectFile } from "@prismicio/plugin-kit/fs";
 
 import { PluginOptions } from "../types";
@@ -6,7 +6,7 @@ import { PluginOptions } from "../types";
 import { buildSrcPath } from "./buildSrcPath";
 
 type CheckHasAppRouterArgs = Pick<
-	SliceMachineContext<PluginOptions>,
+	PluginSystemContext<PluginOptions>,
 	"helpers"
 >;
 

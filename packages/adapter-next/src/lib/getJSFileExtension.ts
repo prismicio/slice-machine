@@ -1,11 +1,11 @@
-import { SliceMachineContext } from "@prismicio/plugin-kit";
+import { PluginSystemContext } from "@prismicio/plugin-kit";
 
 import { PluginOptions } from "../types";
 
 import { checkIsTypeScriptProject } from "./checkIsTypeScriptProject";
 
 type GetJSFileExtensionArgs = Pick<
-	SliceMachineContext<PluginOptions>,
+	PluginSystemContext<PluginOptions>,
 	"helpers" | "options"
 > & {
 	jsx?: boolean;

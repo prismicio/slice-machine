@@ -51,7 +51,7 @@ function assertTelemetryInitialized(
 ): asserts segmentClient is NonNullable<typeof segmentClient> {
 	if (segmentClient === undefined) {
 		throw new Error(
-			"Telemetry has not been initialized. Run `SliceMachineManager.telemetry.prototype.initTelemetry()` before re-calling this method.",
+			"Telemetry has not been initialized. Run `PrismicManager.telemetry.prototype.initTelemetry()` before re-calling this method.",
 		);
 	}
 }

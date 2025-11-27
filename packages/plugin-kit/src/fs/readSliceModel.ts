@@ -1,7 +1,7 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import * as path from "node:path";
 
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
 import { checkPathExists } from "./lib/checkPathExists";
 import { isSharedSliceModel } from "./lib/isSharedSliceModel";
@@ -14,7 +14,7 @@ import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
 export type ReadSliceModelArgs = {
 	libraryID: string;
 	sliceID: string;
-	helpers: SliceMachineHelpers;
+	helpers: PluginSystemHelpers;
 };
 
 export type ReadSliceModelReturnType = {

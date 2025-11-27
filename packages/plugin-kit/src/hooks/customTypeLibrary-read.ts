@@ -1,7 +1,7 @@
 import type {
-	ExtendSliceMachineHook,
-	SliceMachinePluginOptions,
-	SliceMachineHook,
+	ExtendPluginSystemHook,
+	PluginOptions,
+	PluginHook,
 } from "../types";
 
 /**
@@ -22,7 +22,7 @@ export type CustomTypeLibraryReadHookReturnType = {
  *
  * @internal
  */
-export type CustomTypeLibraryReadHookBase = SliceMachineHook<
+export type CustomTypeLibraryReadHookBase = PluginHook<
 	CustomTypeLibraryReadHookData,
 	CustomTypeLibraryReadHookReturnType
 >;
@@ -34,5 +34,5 @@ export type CustomTypeLibraryReadHookBase = SliceMachineHook<
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
 export type CustomTypeLibraryReadHook<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = ExtendSliceMachineHook<CustomTypeLibraryReadHookBase, TPluginOptions>;
+	TPluginOptions extends PluginOptions = PluginOptions,
+> = ExtendPluginSystemHook<CustomTypeLibraryReadHookBase, TPluginOptions>;

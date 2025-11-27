@@ -1,4 +1,4 @@
-import type { SliceMachineManager } from "@prismicio/manager";
+import type { PrismicManager } from "@prismicio/manager";
 
 import { detectProjectState } from "../core/project";
 import { validateRepository } from "../core/repository";
@@ -6,7 +6,7 @@ import { saveSlices } from "../core/slices";
 import { saveCustomTypes } from "../core/customType";
 
 type SyncArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 };
 
 export async function sync(args: SyncArgs): Promise<void> {

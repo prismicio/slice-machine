@@ -1,7 +1,7 @@
 import type {
-	ExtendSliceMachineHook,
-	SliceMachinePluginOptions,
-	SliceMachineHook,
+	ExtendPluginSystemHook,
+	PluginOptions,
+	PluginHook,
 } from "../types";
 
 /**
@@ -26,7 +26,7 @@ export type SliceAssetUpdateHookReturnType = void;
  *
  * @internal
  */
-export type SliceAssetUpdateHookBase = SliceMachineHook<
+export type SliceAssetUpdateHookBase = PluginHook<
 	SliceAssetUpdateHookData,
 	SliceAssetUpdateHookReturnType
 >;
@@ -41,5 +41,5 @@ export type SliceAssetUpdateHookBase = SliceMachineHook<
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
 export type SliceAssetUpdateHook<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = ExtendSliceMachineHook<SliceAssetUpdateHookBase, TPluginOptions>;
+	TPluginOptions extends PluginOptions = PluginOptions,
+> = ExtendPluginSystemHook<SliceAssetUpdateHookBase, TPluginOptions>;

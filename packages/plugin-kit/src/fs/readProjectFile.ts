@@ -1,4 +1,4 @@
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
 import * as fs from "./lib/fsLimit";
 
@@ -6,7 +6,7 @@ type BufferEncoding = Extract<Parameters<typeof fs.readFile>[1], string>;
 
 export type ReadProjectFileArgs = {
 	filename: string;
-	helpers: SliceMachineHelpers;
+	helpers: PluginSystemHelpers;
 };
 
 export async function readProjectFile(

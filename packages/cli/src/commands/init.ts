@@ -1,4 +1,4 @@
-import type { SliceMachineManager } from "@prismicio/manager";
+import type { PrismicManager } from "@prismicio/manager";
 
 // import { installDependencies } from "../core/dependencies"
 import { initFramework } from "../core/framework";
@@ -12,7 +12,7 @@ import { validateRepository } from "../core/repository";
 import { sync } from "./sync";
 
 type InitArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 	repositoryName: string;
 };
 

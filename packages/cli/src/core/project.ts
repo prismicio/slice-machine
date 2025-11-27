@@ -1,7 +1,7 @@
 import type {
 	PackageManager,
 	PrismicConfig,
-	SliceMachineManager,
+	PrismicManager,
 } from "@prismicio/manager";
 import chalk from "chalk";
 
@@ -9,7 +9,7 @@ import { type Framework, detectFramework } from "../core/framework";
 import { listr, listrRun } from "../utils/listr";
 
 type DetectProjectStateArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 	command: "init" | "sync";
 };
 
@@ -21,7 +21,7 @@ export async function detectProjectState(
 	let prismicConfig: PrismicConfig | undefined;
 
 	try {
-		prismicConfig = await manager.project.getSliceMachineConfig();
+		prismicConfig = await manager.project.getPrismicConfig();
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	} catch (_error) {
 		// We want to manage the error depending on the need to be initialized or not
@@ -40,7 +40,7 @@ export type ProjectContext = {
 };
 
 export async function detectProjectContext(
-	manager: SliceMachineManager,
+	manager: PrismicManager,
 ): Promise<ProjectContext> {
 	let framework: Framework | undefined;
 	let packageManager: PackageManager | undefined;
@@ -103,7 +103,7 @@ export async function detectProjectContext(
 }
 
 type CreatePrismicConfigArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 	projectContext: ProjectContext;
 	repositoryName: string;
 };
@@ -120,16 +120,16 @@ export async function createPrismicConfig(
 			task: async (_, parentTask) => {
 				parentTask.title = "Creating Prismic configuration...";
 
-				const sliceMachineConfigPath =
-					await manager.project.suggestSliceMachineConfigPath();
+				const prismicConfigPath =
+					await manager.project.suggestPrismicConfigPath();
 
-				await manager.project.writeSliceMachineConfig({
+				await manager.project.writePrismicConfig({
 					config: {
 						repositoryName,
 						adapter: framework.adapterName,
 						libraries: ["./slices"],
 					},
-					path: sliceMachineConfigPath,
+					path: prismicConfigPath,
 				});
 
 				parentTask.title = "Created Prismic configuration";

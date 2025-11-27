@@ -4,26 +4,26 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-export { defineSliceMachinePlugin } from "./defineSliceMachinePlugin";
-export type { SliceMachinePlugin } from "./defineSliceMachinePlugin";
+export { definePlugin } from "./definePlugin";
+export type { Plugin } from "./definePlugin";
 
 export type {
-	SliceMachineActions,
+	PluginSystemActions,
 	ReadAllSliceModelsActionArgs,
 	ReadAllSliceModelsActionReturnType,
 	ReadAllSliceModelsForLibraryActionArgs,
-} from "./createSliceMachineActions";
-export type { SliceMachineHelpers } from "./createSliceMachineHelpers";
-export type { SliceMachineContext } from "./createSliceMachineContext";
+} from "./createPluginSystemActions";
+export type { PluginSystemHelpers } from "./createPluginSystemHelpers";
+export type { PluginSystemContext } from "./createPluginSystemContext";
 
-export { SliceMachineHookType } from "./types";
+export { PluginHookType } from "./types";
 export type {
-	SliceMachinePluginOptions,
-	SliceMachineProject,
+	PluginOptions,
+	PrismicProject,
 	PrismicConfig,
 	SliceLibrary,
-	SliceMachineHooks,
-	SliceMachineHookTypes,
+	PluginHooks,
+	PluginHookTypes,
 } from "./types";
 
 export { HookError } from "./lib/HookSystem";
@@ -169,15 +169,15 @@ export type {
 } from "./hooks/project-init";
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Internal (for Slice Machine)
+// Internal (for Plugin System)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
 export {
-	createSliceMachinePluginRunner,
-	SliceMachinePluginRunner,
+	createPluginSystemRunner,
+	PluginSystemRunner,
 	REQUIRED_ADAPTER_HOOKS,
 	ADAPTER_ONLY_HOOKS,
-} from "./createSliceMachinePluginRunner";
+} from "./createPluginSystemRunner";
 
 export type { CallHookReturnType } from "./lib/HookSystem";

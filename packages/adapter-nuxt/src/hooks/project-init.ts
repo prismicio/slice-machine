@@ -2,7 +2,7 @@ import * as path from "node:path";
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
-	SliceMachineContext,
+	PluginSystemContext,
 } from "@prismicio/plugin-kit";
 import {
 	checkHasProjectFile,
@@ -34,7 +34,7 @@ const installDependencies = async ({
 	});
 };
 
-type ConfigurePrismicModuleArgs = SliceMachineContext<PluginOptions>;
+type ConfigurePrismicModuleArgs = PluginSystemContext<PluginOptions>;
 
 const configurePrismicModule = async ({
 	helpers,
@@ -104,7 +104,7 @@ const configurePrismicModule = async ({
 const moveOrDeleteAppVue = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const filenameAppVue = await buildSrcPath({ filename: "app.vue", helpers });
 
 	// If there's no `app.vue`, there's nothing to do.
@@ -146,11 +146,11 @@ const moveOrDeleteAppVue = async ({
 	});
 };
 
-const modifySliceMachineConfig = async ({
+const modifyPrismicConfig = async ({
 	helpers,
 	options,
 	actions,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const hasAppDirectory = await checkHasProjectFile({
 		filename: "app",
 		helpers,
@@ -179,7 +179,7 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	await helpers.updateSliceMachineConfig(project.config, {
+	await helpers.updatePrismicConfig(project.config, {
 		format: options.format,
 	});
 };
@@ -193,7 +193,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			installDependencies({ installDependencies: _installDependencies }),
 			configurePrismicModule(context),
 			moveOrDeleteAppVue(context),
-			modifySliceMachineConfig(context),
+			modifyPrismicConfig(context),
 		]),
 	);
 };

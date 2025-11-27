@@ -1,28 +1,28 @@
 import { HookError } from "@prismicio/plugin-kit";
 
-export class SliceMachineError extends Error {
-	name = "SMSliceMachineError";
+export class PrismicError extends Error {
+	name = "SMPrismicError";
 }
-export class UnauthorizedError extends SliceMachineError {
+export class UnauthorizedError extends PrismicError {
 	name = "SMUnauthorizedError" as const;
 }
-export class UnauthenticatedError extends SliceMachineError {
+export class UnauthenticatedError extends PrismicError {
 	name = "SMUnauthenticatedError" as const;
 	message = "Authenticate before trying again.";
 }
-export class NotFoundError extends SliceMachineError {
+export class NotFoundError extends PrismicError {
 	name = "SMNotFoundError" as const;
 }
-export class UnexpectedDataError extends SliceMachineError {
+export class UnexpectedDataError extends PrismicError {
 	name = "SMUnexpectedDataError" as const;
 }
-export class InternalError extends SliceMachineError {
+export class InternalError extends PrismicError {
 	name = "SMInternalError" as const;
 }
-export class PluginError extends SliceMachineError {
+export class PluginError extends PrismicError {
 	name = "SMPluginError" as const;
 }
-export class PluginHookResultError extends SliceMachineError {
+export class PluginHookResultError extends PrismicError {
 	name = "SMPluginHookResultError" as const;
 
 	constructor(errors: HookError[]) {
@@ -36,12 +36,12 @@ export class PluginHookResultError extends SliceMachineError {
 		);
 	}
 }
-export class UnsupportedError extends SliceMachineError {
+export class UnsupportedError extends PrismicError {
 	name = "SMUnsupportedError" as const;
 }
 
-type SliceMachineErrorNames =
-	| "SMSliceMachineError"
+type PrismicErrorNames =
+	| "SMPrismicError"
 	| UnauthorizedError["name"]
 	| UnauthenticatedError["name"]
 	| NotFoundError["name"]
@@ -51,14 +51,14 @@ type SliceMachineErrorNames =
 	| PluginHookResultError["name"]
 	| UnsupportedError["name"];
 
-type ShallowSliceMachineError<TName extends SliceMachineErrorNames> = Error & {
+type ShallowPrismicError<TName extends PrismicErrorNames> = Error & {
 	name: TName;
 };
 
-export const isSliceMachineError = <TName extends SliceMachineErrorNames>(
+export const isPrismicError = <TName extends PrismicErrorNames>(
 	error: unknown,
 	name?: TName,
-): error is TName extends string ? ShallowSliceMachineError<TName> : Error => {
+): error is TName extends string ? ShallowPrismicError<TName> : Error => {
 	const isErrorInstance = error instanceof Error;
 
 	return name === undefined
@@ -68,42 +68,42 @@ export const isSliceMachineError = <TName extends SliceMachineErrorNames>(
 
 export const isUnauthorizedError = (
 	error: unknown,
-): error is ShallowSliceMachineError<"SMUnauthorizedError"> => {
-	return isSliceMachineError(error, "SMUnauthorizedError");
+): error is ShallowPrismicError<"SMUnauthorizedError"> => {
+	return isPrismicError(error, "SMUnauthorizedError");
 };
 
 export const isUnauthenticatedError = (
 	error: unknown,
-): error is ShallowSliceMachineError<"SMUnauthenticatedError"> => {
-	return isSliceMachineError(error, "SMUnauthenticatedError");
+): error is ShallowPrismicError<"SMUnauthenticatedError"> => {
+	return isPrismicError(error, "SMUnauthenticatedError");
 };
 
 export const isNotFoundError = (
 	error: unknown,
-): error is ShallowSliceMachineError<"SMNotFoundError"> => {
-	return isSliceMachineError(error, "SMNotFoundError");
+): error is ShallowPrismicError<"SMNotFoundError"> => {
+	return isPrismicError(error, "SMNotFoundError");
 };
 
 export const isUnexpectedDataError = (
 	error: unknown,
-): error is ShallowSliceMachineError<"SMUnexpectedDataError"> => {
-	return isSliceMachineError(error, "SMUnexpectedDataError");
+): error is ShallowPrismicError<"SMUnexpectedDataError"> => {
+	return isPrismicError(error, "SMUnexpectedDataError");
 };
 
 export const isInternalError = (
 	error: unknown,
-): error is ShallowSliceMachineError<"SMInternalError"> => {
-	return isSliceMachineError(error, "SMInternalError");
+): error is ShallowPrismicError<"SMInternalError"> => {
+	return isPrismicError(error, "SMInternalError");
 };
 
 export const isPluginError = (
 	error: unknown,
-): error is ShallowSliceMachineError<"SMPluginError"> => {
-	return isSliceMachineError(error, "SMPluginError");
+): error is ShallowPrismicError<"SMPluginError"> => {
+	return isPrismicError(error, "SMPluginError");
 };
 
 export const isUnsupportedError = (
 	error: unknown,
-): error is ShallowSliceMachineError<"SMUnsupportedError"> => {
-	return isSliceMachineError(error, "SMUnsupportedError");
+): error is ShallowPrismicError<"SMUnsupportedError"> => {
+	return isPrismicError(error, "SMUnsupportedError");
 };

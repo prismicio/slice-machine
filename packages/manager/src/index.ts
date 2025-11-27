@@ -4,10 +4,10 @@
 export type { CustomTypeFormat } from "./managers/customTypes/types";
 export type { PrismicRepository } from "./managers/prismicRepository/types";
 
-export type { SliceMachineManager } from "./managers/SliceMachineManager";
-export { createSliceMachineManager } from "./managers/createSliceMachineManager";
-export { createSliceMachineManagerMiddleware } from "./managers/createSliceMachineManagerMiddleware";
-export type { CreateSliceMachineManagerMiddlewareArgs } from "./managers/createSliceMachineManagerMiddleware";
+export type { PrismicManager } from "./managers/PrismicManager";
+export { createPrismicManager } from "./managers/createPrismicManager";
+export { createPrismicManagerMiddleware } from "./managers/createPrismicManagerMiddleware";
+export type { CreatePrismicManagerMiddlewareArgs } from "./managers/createPrismicManagerMiddleware";
 
 export type { PushChangesLimit } from "./managers/prismicRepository/types";
 
@@ -24,7 +24,7 @@ export type {
 } from "./auth/createPrismicAuthManagerMiddleware";
 
 export {
-	SliceMachineError,
+	PrismicError,
 	UnauthorizedError,
 	UnauthenticatedError,
 	NotFoundError,

@@ -1,11 +1,11 @@
-import { SliceMachineContext } from "@prismicio/plugin-kit";
+import { PluginSystemContext } from "@prismicio/plugin-kit";
 import { checkIsTypeScriptProject as baseCheckIsTypeScriptProject } from "@prismicio/plugin-kit/fs";
 
 import { PluginOptions } from "../types";
 
 type CheckIsTypeScriptProjectArgs = {
-	helpers: SliceMachineContext<PluginOptions>["helpers"];
-	options: SliceMachineContext<PluginOptions>["options"];
+	helpers: PluginSystemContext<PluginOptions>["helpers"];
+	options: PluginSystemContext<PluginOptions>["options"];
 };
 
 export const checkIsTypeScriptProject = async (

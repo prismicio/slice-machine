@@ -1,9 +1,9 @@
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
-	ExtendSliceMachineHook,
-	SliceMachinePluginOptions,
-	SliceMachineHook,
+	ExtendPluginSystemHook,
+	PluginOptions,
+	PluginHook,
 } from "../types";
 
 /**
@@ -24,7 +24,7 @@ export type CustomTypeDeleteHookReturnType = void;
  *
  * @internal
  */
-export type CustomTypeDeleteHookBase = SliceMachineHook<
+export type CustomTypeDeleteHookBase = PluginHook<
 	CustomTypeDeleteHookData,
 	CustomTypeDeleteHookReturnType
 >;
@@ -36,5 +36,5 @@ export type CustomTypeDeleteHookBase = SliceMachineHook<
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
 export type CustomTypeDeleteHook<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = ExtendSliceMachineHook<CustomTypeDeleteHookBase, TPluginOptions>;
+	TPluginOptions extends PluginOptions = PluginOptions,
+> = ExtendPluginSystemHook<CustomTypeDeleteHookBase, TPluginOptions>;

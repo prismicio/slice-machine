@@ -1,6 +1,6 @@
 import { detectTypesProvider, generateTypes } from "prismic-ts-codegen";
 
-import { SliceMachineActions } from "../createSliceMachineActions";
+import { PluginSystemActions } from "../createPluginSystemActions";
 
 import { writeProjectFile, WriteProjectFileArgs } from "./writeProjectFile";
 import {
@@ -13,7 +13,7 @@ import {
  */
 export type UpsertGlobalTypeScriptTypesArgs = {
 	filename?: string;
-	actions: SliceMachineActions;
+	actions: PluginSystemActions;
 } & Omit<WriteProjectFileArgs, "filename" | "contents">;
 
 /**

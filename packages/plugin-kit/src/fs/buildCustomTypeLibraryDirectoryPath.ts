@@ -1,10 +1,10 @@
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
 import { CUSTOM_TYPES_LIBRARY_DIRNAME } from "./constants";
 
 export type BuildCustomTypeLibraryDirectoryPathArgs = {
 	absolute?: boolean;
-	helpers: SliceMachineHelpers;
+	helpers: PluginSystemHelpers;
 };
 
 export const buildCustomTypeLibraryDirectoryPath = (

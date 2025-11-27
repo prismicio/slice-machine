@@ -1,5 +1,5 @@
 import { HookSystem } from "./lib/HookSystem";
-import { SliceMachineHooks, SliceMachineProject } from "./types";
+import { PluginHooks, PrismicProject } from "./types";
 
 import { CustomTypeLibraryReadHookReturnType } from "./hooks/customTypeLibrary-read";
 import {
@@ -27,38 +27,35 @@ export type ReadAllSliceModelsForLibraryActionArgs = {
 };
 
 /**
- * Creates Slice Machine actions.
+ * Creates Plugin System actions.
  *
  * @internal
  */
-export const createSliceMachineActions = (
-	project: SliceMachineProject,
-	hookSystem: HookSystem<SliceMachineHooks>,
-): SliceMachineActions => {
-	return new SliceMachineActions(project, hookSystem);
+export const createPluginSystemActions = (
+	project: PrismicProject,
+	hookSystem: HookSystem<PluginHooks>,
+): PluginSystemActions => {
+	return new PluginSystemActions(project, hookSystem);
 };
 
 /**
- * Slice Machine actions shared to plugins and hooks.
+ * Plugin System actions shared to plugins and hooks.
  */
-export class SliceMachineActions {
+export class PluginSystemActions {
 	/**
-	 * The Slice Machine project's metadata.
+	 * The Prismic project's metadata.
 	 *
 	 * @internal
 	 */
-	private _project: SliceMachineProject;
+	private _project: PrismicProject;
 	/**
 	 * The actions' hook system used to internally trigger hook calls.
 	 *
 	 * @internal
 	 */
-	private _hookSystem: HookSystem<SliceMachineHooks>;
+	private _hookSystem: HookSystem<PluginHooks>;
 
-	constructor(
-		project: SliceMachineProject,
-		hookSystem: HookSystem<SliceMachineHooks>,
-	) {
+	constructor(project: PrismicProject, hookSystem: HookSystem<PluginHooks>) {
 		this._project = project;
 		this._hookSystem = hookSystem;
 	}

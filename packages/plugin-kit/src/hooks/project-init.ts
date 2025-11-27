@@ -1,7 +1,7 @@
 import type {
-	ExtendSliceMachineHook,
-	SliceMachinePluginOptions,
-	SliceMachineHook,
+	ExtendPluginSystemHook,
+	PluginOptions,
+	PluginHook,
 } from "../types";
 
 /**
@@ -32,17 +32,17 @@ export type ProjectInitHookReturnType = void;
  *
  * @internal
  */
-export type ProjectInitHookBase = SliceMachineHook<
+export type ProjectInitHookBase = PluginHook<
 	ProjectInitHookData,
 	ProjectInitHookReturnType
 >;
 
 /**
- * Handler for the `project:init` hook. The hook is called during the Slice
- * Machine init Project for plugins to init
+ * Handler for the `project:init` hook. The hook is called during the init
+ * Project for plugins to init
  *
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
 export type ProjectInitHook<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = ExtendSliceMachineHook<ProjectInitHookBase, TPluginOptions>;
+	TPluginOptions extends PluginOptions = PluginOptions,
+> = ExtendPluginSystemHook<ProjectInitHookBase, TPluginOptions>;

@@ -1,5 +1,5 @@
-import { SliceMachineContext } from "./createSliceMachineContext";
-import { SliceMachinePlugin } from "./defineSliceMachinePlugin";
+import { PluginSystemContext } from "./createPluginSystemContext";
+import { Plugin } from "./definePlugin";
 import { Hook } from "./lib/HookSystem";
 
 import { ProjectInitHookBase } from "./hooks/project-init";
@@ -34,7 +34,7 @@ export type Promisable<T> = T | PromiseLike<T>;
  * A generic type for a user-provided plugin options. Prefer using a
  * plugin-specific type over this type.
  */
-export type SliceMachinePluginOptions = Record<string, unknown>;
+export type PluginOptions = Record<string, unknown>;
 
 /**
  * A string, object, or instance representing a registered plugin.
@@ -42,12 +42,12 @@ export type SliceMachinePluginOptions = Record<string, unknown>;
  * @typeParam TPluginOptions - User-provided options for the plugin.
  */
 export type PrismicConfigPluginRegistration<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
+	TPluginOptions extends PluginOptions = PluginOptions,
 > =
 	| string
-	| SliceMachinePlugin
+	| Plugin
 	| {
-			resolve: string | SliceMachinePlugin;
+			resolve: string | Plugin;
 			options?: TPluginOptions;
 	  };
 
@@ -66,13 +66,13 @@ export type PrismicConfig = {
 /**
  * Prismic project metadata.
  */
-export type SliceMachineProject = {
+export type PrismicProject = {
 	/**
 	 * An absolute path to project root.
 	 */
 	root: string;
 	/**
-	 * Slice Machine `prismic.config.json` content, validated.
+	 * Prismic `prismic.config.json` content, validated.
 	 */
 	config: PrismicConfig;
 };
@@ -93,41 +93,39 @@ export type SliceLibrary = {
 /**
  * A hook handler.
  */
-export type SliceMachineHook<TData, TReturn> = (
-	data: TData,
-) => Promisable<TReturn>;
+export type PluginHook<TData, TReturn> = (data: TData) => Promisable<TReturn>;
 
 /**
  * Extra arguments provided to hooks when called.
  *
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
-export type SliceMachineHookExtraArgs<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = [context: SliceMachineContext<TPluginOptions>];
+export type PluginHookExtraArgs<
+	TPluginOptions extends PluginOptions = PluginOptions,
+> = [context: PluginSystemContext<TPluginOptions>];
 
 /**
- * Utility type to extend a hook handler's type with Slice Machine-specific
+ * Utility type to extend a hook handler's type with Plugin System-specific
  * extra arguments.
  *
  * @typeParam THook - Hook handler to extend.
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
-export type ExtendSliceMachineHook<
+export type ExtendPluginSystemHook<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	THook extends SliceMachineHook<any, any>,
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
+	THook extends PluginHook<any, any>,
+	TPluginOptions extends PluginOptions = PluginOptions,
 > = (
 	...args: [
 		...args: Parameters<THook>,
-		...extraArgs: SliceMachineHookExtraArgs<TPluginOptions>,
+		...extraArgs: PluginHookExtraArgs<TPluginOptions>,
 	]
 ) => ReturnType<THook>;
 
 /**
  * Hook types.
  */
-export const SliceMachineHookType = {
+export const PluginHookType = {
 	slice_create: "slice:create",
 	slice_update: "slice:update",
 	slice_rename: "slice:rename",
@@ -158,42 +156,42 @@ export const SliceMachineHookType = {
 /**
  * Hook types.
  */
-export type SliceMachineHookTypes =
-	(typeof SliceMachineHookType)[keyof typeof SliceMachineHookType];
+export type PluginHookTypes =
+	(typeof PluginHookType)[keyof typeof PluginHookType];
 
 /**
- * Slice Machine-specific hook handlers.
+ * Plugin hook handlers.
  */
-export type SliceMachineHooks = {
+export type PluginHooks = {
 	// Slices
-	[SliceMachineHookType.slice_create]: Hook<SliceCreateHookBase>;
-	[SliceMachineHookType.slice_update]: Hook<SliceUpdateHookBase>;
-	[SliceMachineHookType.slice_rename]: Hook<SliceRenameHookBase>;
-	[SliceMachineHookType.slice_delete]: Hook<SliceDeleteHookBase>;
-	[SliceMachineHookType.slice_read]: Hook<SliceReadHookBase>;
-	[SliceMachineHookType.slice_asset_update]: Hook<SliceAssetUpdateHookBase>;
-	[SliceMachineHookType.slice_asset_delete]: Hook<SliceAssetDeleteHookBase>;
-	[SliceMachineHookType.slice_asset_read]: Hook<SliceAssetReadHookBase>;
+	[PluginHookType.slice_create]: Hook<SliceCreateHookBase>;
+	[PluginHookType.slice_update]: Hook<SliceUpdateHookBase>;
+	[PluginHookType.slice_rename]: Hook<SliceRenameHookBase>;
+	[PluginHookType.slice_delete]: Hook<SliceDeleteHookBase>;
+	[PluginHookType.slice_read]: Hook<SliceReadHookBase>;
+	[PluginHookType.slice_asset_update]: Hook<SliceAssetUpdateHookBase>;
+	[PluginHookType.slice_asset_delete]: Hook<SliceAssetDeleteHookBase>;
+	[PluginHookType.slice_asset_read]: Hook<SliceAssetReadHookBase>;
 
 	// Slice Libraries
-	[SliceMachineHookType.sliceLibrary_read]: Hook<SliceLibraryReadHookBase>;
+	[PluginHookType.sliceLibrary_read]: Hook<SliceLibraryReadHookBase>;
 
 	// Custom Types
-	[SliceMachineHookType.customType_create]: Hook<CustomTypeCreateHookBase>;
-	[SliceMachineHookType.customType_update]: Hook<CustomTypeUpdateHookBase>;
-	[SliceMachineHookType.customType_rename]: Hook<CustomTypeRenameHookBase>;
-	[SliceMachineHookType.customType_delete]: Hook<CustomTypeDeleteHookBase>;
-	[SliceMachineHookType.customType_read]: Hook<CustomTypeReadHookBase>;
-	[SliceMachineHookType.customType_asset_update]: Hook<CustomTypeAssetUpdateHookBase>;
-	[SliceMachineHookType.customType_asset_delete]: Hook<CustomTypeAssetDeleteHookBase>;
-	[SliceMachineHookType.customType_asset_read]: Hook<CustomTypeAssetReadHookBase>;
+	[PluginHookType.customType_create]: Hook<CustomTypeCreateHookBase>;
+	[PluginHookType.customType_update]: Hook<CustomTypeUpdateHookBase>;
+	[PluginHookType.customType_rename]: Hook<CustomTypeRenameHookBase>;
+	[PluginHookType.customType_delete]: Hook<CustomTypeDeleteHookBase>;
+	[PluginHookType.customType_read]: Hook<CustomTypeReadHookBase>;
+	[PluginHookType.customType_asset_update]: Hook<CustomTypeAssetUpdateHookBase>;
+	[PluginHookType.customType_asset_delete]: Hook<CustomTypeAssetDeleteHookBase>;
+	[PluginHookType.customType_asset_read]: Hook<CustomTypeAssetReadHookBase>;
 
 	// Custom Type Libraries
-	[SliceMachineHookType.customTypeLibrary_read]: Hook<CustomTypeLibraryReadHookBase>;
+	[PluginHookType.customTypeLibrary_read]: Hook<CustomTypeLibraryReadHookBase>;
 
 	// Project
-	[SliceMachineHookType.project_init]: Hook<ProjectInitHookBase>;
+	[PluginHookType.project_init]: Hook<ProjectInitHookBase>;
 
 	// Debug
-	[SliceMachineHookType.debug]: Hook<DebugHookBase>;
+	[PluginHookType.debug]: Hook<DebugHookBase>;
 };

@@ -1,7 +1,7 @@
 import meow from "meow";
 import chalk from "chalk";
 import * as z from "zod";
-import { createSliceMachineManager } from "@prismicio/manager";
+import { createPrismicManager } from "@prismicio/manager";
 import adapterNextPlugin from "@prismicio/adapter-next";
 import adapterNuxtPlugin from "@prismicio/adapter-nuxt";
 import adapterNuxt2Plugin from "@prismicio/adapter-nuxt2";
@@ -100,7 +100,7 @@ if (cli.flags.help) {
 
 export async function run(args: RunArgs): Promise<void> {
 	try {
-		const manager = createSliceMachineManager({
+		const manager = createPrismicManager({
 			cwd: process.cwd(),
 			nativePlugins: {
 				"@prismicio/adapter-next": adapterNextPlugin,

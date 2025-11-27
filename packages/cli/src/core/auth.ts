@@ -1,10 +1,10 @@
-import type { SliceMachineManager } from "@prismicio/manager";
+import type { PrismicManager } from "@prismicio/manager";
 import chalk from "chalk";
 import open from "open";
 
 import { listr, listrRun } from "../utils/listr";
 
-export async function login(manager: SliceMachineManager): Promise<void> {
+export async function login(manager: PrismicManager): Promise<void> {
 	return listrRun([
 		{
 			title: getLoggingInTitle(),
@@ -75,7 +75,7 @@ async function pressKeyToLogin(): Promise<void> {
 }
 
 async function waitingForLogin(
-	manager: SliceMachineManager,
+	manager: PrismicManager,
 	onListenCallback?: (
 		sessionInfo: Awaited<ReturnType<typeof manager.user.getLoginSessionInfo>>,
 	) => void,

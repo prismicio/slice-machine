@@ -1,4 +1,4 @@
-import { defineSliceMachinePlugin } from "@prismicio/plugin-kit";
+import { definePlugin } from "@prismicio/plugin-kit";
 import {
 	deleteCustomTypeDirectory,
 	deleteCustomTypeFile,
@@ -27,7 +27,7 @@ import { PluginOptions } from "./types";
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
 
-export const plugin = defineSliceMachinePlugin<PluginOptions>({
+export const plugin = definePlugin<PluginOptions>({
 	meta: {
 		name: pkgName,
 	},

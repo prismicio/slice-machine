@@ -1,4 +1,4 @@
-import { HookError, SliceMachinePluginOptions } from "@prismicio/plugin-kit";
+import { HookError, PluginOptions } from "@prismicio/plugin-kit";
 import { detect as niDetect } from "@antfu/ni";
 
 export type PackageManager = NonNullable<Awaited<ReturnType<typeof niDetect>>>;
@@ -7,16 +7,15 @@ export type { APIEndpoints } from "./constants/API_ENDPOINTS";
 /**
  * A string, object, or instance representing a registered plugin.
  *
- * @typeParam TSliceMachinePluginOptions - User-provided options for the plugin.
+ * @typeParam TPluginOptions - User-provided options for the plugin.
  */
 export type PrismicConfigPluginRegistration<
-	TSliceMachinePluginOptions extends
-		SliceMachinePluginOptions = SliceMachinePluginOptions,
+	TPluginOptions extends PluginOptions = PluginOptions,
 > =
 	| string
 	| {
 			resolve: string;
-			options?: TSliceMachinePluginOptions;
+			options?: TPluginOptions;
 	  };
 
 /**

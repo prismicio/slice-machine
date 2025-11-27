@@ -2,7 +2,7 @@ import * as path from "node:path";
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
-	SliceMachineContext,
+	PluginSystemContext,
 } from "@prismicio/plugin-kit";
 import {
 	checkHasProjectFile,
@@ -39,7 +39,7 @@ const installDependencies = async ({
 	});
 };
 
-type CreatePrismicIOFileArgs = SliceMachineContext<PluginOptions>;
+type CreatePrismicIOFileArgs = PluginSystemContext<PluginOptions>;
 
 const createPrismicIOFile = async ({
 	helpers,
@@ -66,7 +66,7 @@ const createPrismicIOFile = async ({
 const createPreviewRouteMatcherFile = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = path.join(`src/params/preview.${extension}`);
 
@@ -91,7 +91,7 @@ const createPreviewRouteMatcherFile = async ({
 const createPreviewAPIRoute = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = path.join(
 		"src",
@@ -119,7 +119,7 @@ const createPreviewAPIRoute = async ({
 const createPreviewRouteDirectory = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const filename = path.join(
 		"src",
 		"routes",
@@ -153,7 +153,7 @@ const createPreviewRouteDirectory = async ({
 const createRootLayoutServerFile = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const extension = await getJSFileExtension({ helpers, options });
 	const filename = path.join(`src/routes/+layout.server.${extension}`);
 
@@ -176,7 +176,7 @@ const createRootLayoutServerFile = async ({
 const createRootLayoutFile = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const filename = path.join("src", "routes", "+layout.svelte");
 
 	if (await checkHasProjectFile({ filename, helpers })) {
@@ -199,11 +199,11 @@ const createRootLayoutFile = async ({
 	});
 };
 
-const modifySliceMachineConfig = async ({
+const modifyPrismicConfig = async ({
 	helpers,
 	options,
 	actions,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const project = await helpers.getProject();
 
 	// Nest the default Slice Library in the src directory if it exists and
@@ -225,20 +225,20 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	await helpers.updateSliceMachineConfig(project.config, {
+	await helpers.updatePrismicConfig(project.config, {
 		format: options.format,
 	});
 };
 
 const upsertSliceLibraryIndexFiles = async (
-	context: SliceMachineContext<PluginOptions>,
+	context: PluginSystemContext<PluginOptions>,
 ) => {
 	// We must use the `getProject()` helper to get the latest version of
 	// the project config. The config may have been modified in
-	// `modifySliceMachineConfig()` and will not be relfected in
+	// `modifyPrismicConfig()` and will not be relfected in
 	// `context.project`.
 	// TODO: Automatically update the plugin runner's in-memory `project`
-	// object when `updateSliceMachineConfig()` is called.
+	// object when `updatePrismicConfig()` is called.
 	const project = await context.helpers.getProject();
 
 	if (!project.config.libraries) {
@@ -255,7 +255,7 @@ const upsertSliceLibraryIndexFiles = async (
 const modifyViteConfig = async ({
 	helpers,
 	options,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	let filename = "vite.config.js";
 	if (!(await checkHasProjectFile({ filename, helpers }))) {
 		filename = "vite.config.ts";
@@ -299,7 +299,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 	rejectIfNecessary(
 		await Promise.allSettled([
 			installDependencies({ installDependencies: _installDependencies }),
-			modifySliceMachineConfig(context),
+			modifyPrismicConfig(context),
 			createPrismicIOFile(context),
 			createPreviewAPIRoute(context),
 			createPreviewRouteDirectory(context),
@@ -310,7 +310,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 		]),
 	);
 
-	// This must happen after `modifySliceMachineConfig()` since the
+	// This must happen after `modifyPrismicConfig()` since the
 	// location of the default Slice library may change.
 	await upsertSliceLibraryIndexFiles(context);
 };

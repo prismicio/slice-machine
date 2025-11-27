@@ -1,11 +1,11 @@
 import * as path from "node:path";
 
-import type { SliceMachineHelpers } from "@prismicio/plugin-kit";
+import type { PluginSystemHelpers } from "@prismicio/plugin-kit";
 import { checkHasProjectFile } from "@prismicio/plugin-kit/fs";
 
 export async function buildSrcPath(args: {
 	filename: string;
-	helpers: SliceMachineHelpers;
+	helpers: PluginSystemHelpers;
 }): Promise<string> {
 	const hasSrcDirectory = await checkHasProjectFile({
 		filename: "src",

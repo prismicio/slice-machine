@@ -49,22 +49,22 @@ type SlicesManagerReadAllSliceLibrariesReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerReadAllSlicesForLibraryArgs = {
+type PrismicManagerReadAllSlicesForLibraryArgs = {
 	libraryID: string;
 };
 
-type SliceMachineManagerUpdateSliceArgs = {
+type PrismicManagerUpdateSliceArgs = {
 	libraryID: string;
 	model: SharedSlice;
 	mocks?: SharedSliceContent[];
 };
 
-type SliceMachineManagerReadAllSlicesForLibraryReturnType = {
+type PrismicManagerReadAllSlicesForLibraryReturnType = {
 	models: { model: SharedSlice }[];
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerReadAllSlicesReturnType = {
+type PrismicManagerReadAllSlicesReturnType = {
 	models: {
 		libraryID: string;
 		model: SharedSlice;
@@ -72,12 +72,12 @@ type SliceMachineManagerReadAllSlicesReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerReadSliceReturnType = {
+type PrismicManagerReadSliceReturnType = {
 	model: SharedSlice | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
-export type SliceMachineManagerPushSliceReturnType = {
+export type PrismicManagerPushSliceReturnType = {
 	/**
 	 * A record of Slice variation IDs mapped to uploaded screenshot URLs.
 	 */
@@ -85,47 +85,47 @@ export type SliceMachineManagerPushSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerReadSliceScreenshotArgs = {
+type PrismicManagerReadSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
 };
 
-type SliceMachineManagerReadSliceScreenshotReturnType = {
+type PrismicManagerReadSliceScreenshotReturnType = {
 	data: Buffer | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerUpdateSliceScreenshotArgs = {
+type PrismicManagerUpdateSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
 	data: Buffer;
 };
 
-type SliceMachineManagerDeleteSliceScreenshotArgs = {
+type PrismicManagerDeleteSliceScreenshotArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
 };
 
-type SliceMachineManagerReadSliceMocksArgs = {
+type PrismicManagerReadSliceMocksArgs = {
 	libraryID: string;
 	sliceID: string;
 };
 
-type SliceMachineManagerReadSliceMocksReturnType = {
+type PrismicManagerReadSliceMocksReturnType = {
 	mocks?: SharedSliceContent[];
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerUpdateSliceMocksArgs = {
+type PrismicManagerUpdateSliceMocksArgs = {
 	libraryID: string;
 	sliceID: string;
 	mocks: SharedSliceContent[];
 };
 
-type SliceMachineManagerUpdateSliceMocksArgsReturnType = {
+type PrismicManagerUpdateSliceMocksArgsReturnType = {
 	errors: HookError[];
 };
 
@@ -141,16 +141,16 @@ type SlicesManagerUpsertHostedSliceScreenshotsArgs = {
 	variationImageUrlMap: Record<string, string>;
 };
 
-type SliceMachineManagerDeleteSliceArgs = {
+type PrismicManagerDeleteSliceArgs = {
 	libraryID: string;
 	sliceID: string;
 };
 
-type SliceMachineManagerDeleteSliceReturnType = {
+type PrismicManagerDeleteSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerRenameSliceVariationArgs = {
+type PrismicManagerRenameSliceVariationArgs = {
 	libraryID: string;
 	sliceID: string;
 	/**
@@ -160,23 +160,23 @@ type SliceMachineManagerRenameSliceVariationArgs = {
 	model: Variation;
 };
 
-type SliceMachineManagerRenameSliceVariationReturnType = {
+type PrismicManagerRenameSliceVariationReturnType = {
 	errors: (DecodeError | HookError)[];
 	assetsErrors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerDeleteSliceVariationArgs = {
+type PrismicManagerDeleteSliceVariationArgs = {
 	libraryID: string;
 	sliceID: string;
 	variationID: string;
 };
 
-type SliceMachineManagerDeleteSliceVariationReturnType = {
+type PrismicManagerDeleteSliceVariationReturnType = {
 	errors: (DecodeError | HookError)[];
 	assetsErrors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
+type PrismicManagerConvertLegacySliceToSharedSliceArgs = {
 	model: CompositeSlice | LegacySlice;
 	src: {
 		customTypeID: string;
@@ -192,7 +192,7 @@ type SliceMachineManagerConvertLegacySliceToSharedSliceArgs = {
 	};
 };
 
-type SliceMachineManagerConvertLegacySliceToSharedSliceReturnType = {
+type PrismicManagerConvertLegacySliceToSharedSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
@@ -200,12 +200,12 @@ export class SlicesManager extends BaseManager {
 	async readSliceLibrary(
 		args: SliceLibraryReadHookData,
 	): Promise<SlicesManagerReadSliceLibraryReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		// TODO: Should validation happen at the `callHook` level?
 		// Including validation at the hook level would ensure
 		// hook-based actions are validated.
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice-library:read",
 			args,
 		);
@@ -224,17 +224,17 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async getDefaultLibraryID(): Promise<string> {
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
-		const libraryIDs = sliceMachineConfig.libraries || [];
+		const prismicConfig = await this.project.getPrismicConfig();
+		const libraryIDs = prismicConfig.libraries || [];
 
 		return libraryIDs[0];
 	}
 
 	async readAllSliceLibraries(): Promise<SlicesManagerReadAllSliceLibrariesReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
-		const libraryIDs = sliceMachineConfig.libraries || [];
+		const prismicConfig = await this.project.getPrismicConfig();
+		const libraryIDs = prismicConfig.libraries || [];
 
 		const res: SlicesManagerReadAllSliceLibrariesReturnType = {
 			libraries: [],
@@ -257,11 +257,11 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async readAllSlicesForLibrary(
-		args: SliceMachineManagerReadAllSlicesForLibraryArgs,
-	): Promise<SliceMachineManagerReadAllSlicesForLibraryReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerReadAllSlicesForLibraryArgs,
+	): Promise<PrismicManagerReadAllSlicesForLibraryReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const res: SliceMachineManagerReadAllSlicesForLibraryReturnType = {
+		const res: PrismicManagerReadAllSlicesForLibraryReturnType = {
 			models: [],
 			errors: [],
 		};
@@ -288,13 +288,13 @@ export class SlicesManager extends BaseManager {
 		return res;
 	}
 
-	async readAllSlices(): Promise<SliceMachineManagerReadAllSlicesReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+	async readAllSlices(): Promise<PrismicManagerReadAllSlicesReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
-		const libraryIDs = sliceMachineConfig.libraries || [];
+		const prismicConfig = await this.project.getPrismicConfig();
+		const libraryIDs = prismicConfig.libraries || [];
 
-		const res: SliceMachineManagerReadAllSlicesReturnType = {
+		const res: PrismicManagerReadAllSlicesReturnType = {
 			models: [],
 			errors: [],
 		};
@@ -319,14 +319,14 @@ export class SlicesManager extends BaseManager {
 	async createSlice(
 		args: SliceCreateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceCreateHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:create",
 			args,
 		);
 
-		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+		const updateSliceMocksArgs: PrismicManagerUpdateSliceMocksArgs = {
 			libraryID: args.libraryID,
 			sliceID: args.model.id,
 			mocks: mockSlice({ model: args.model }),
@@ -342,10 +342,10 @@ export class SlicesManager extends BaseManager {
 
 	async readSlice(
 		args: SliceReadHookData,
-	): Promise<SliceMachineManagerReadSliceReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+	): Promise<PrismicManagerReadSliceReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:read",
 			args,
 		);
@@ -367,9 +367,9 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async updateSlice(
-		args: SliceMachineManagerUpdateSliceArgs,
+		args: PrismicManagerUpdateSliceArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		const { mocks: previousMocks } = await this.readSliceMocks({
 			libraryID: args.libraryID,
@@ -379,7 +379,7 @@ export class SlicesManager extends BaseManager {
 			libraryID: args.libraryID,
 			sliceID: args.model.id,
 		});
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:update",
 			args,
 		);
@@ -389,7 +389,7 @@ export class SlicesManager extends BaseManager {
 			mocks: previousMocks,
 			diff: SliceComparator.compare(previousModel, args.model),
 		});
-		const updateSliceMocksArgs: SliceMachineManagerUpdateSliceMocksArgs = {
+		const updateSliceMocksArgs: PrismicManagerUpdateSliceMocksArgs = {
 			libraryID: args.libraryID,
 			sliceID: args.model.id,
 			mocks: updatedMocks,
@@ -406,9 +406,9 @@ export class SlicesManager extends BaseManager {
 	async renameSlice(
 		args: SliceRenameHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceRenameHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:rename",
 			args,
 		);
@@ -419,9 +419,9 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async deleteSlice(
-		args: SliceMachineManagerDeleteSliceArgs,
-	): Promise<SliceMachineManagerDeleteSliceReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerDeleteSliceArgs,
+	): Promise<PrismicManagerDeleteSliceReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		const { model, errors: readSliceErrors } = await this.readSlice({
 			libraryID: args.libraryID,
@@ -430,7 +430,7 @@ export class SlicesManager extends BaseManager {
 
 		if (model) {
 			const { errors: deleteSliceErrors } =
-				await this.sliceMachinePluginRunner.callHook("slice:delete", {
+				await this.pluginSystemRunner.callHook("slice:delete", {
 					model,
 					libraryID: args.libraryID,
 				});
@@ -456,9 +456,9 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async renameSliceVariation(
-		args: SliceMachineManagerRenameSliceVariationArgs,
-	): Promise<SliceMachineManagerRenameSliceVariationReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerRenameSliceVariationArgs,
+	): Promise<PrismicManagerRenameSliceVariationReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		// TODO: Remove when we support renaming variation ID, see: DT-1708
 		if (args.variationID !== args.model.id) {
@@ -491,11 +491,13 @@ export class SlicesManager extends BaseManager {
 					return variation;
 				}),
 			};
-			const updateSliceHookResult =
-				await this.sliceMachinePluginRunner.callHook("slice:update", {
+			const updateSliceHookResult = await this.pluginSystemRunner.callHook(
+				"slice:update",
+				{
 					libraryID: args.libraryID,
 					model: updatedModel,
-				});
+				},
+			);
 
 			// If variation ID has changed, we need to rename assets accordingly
 			const assetsErrors: (DecodeError<unknown> | HookError<unknown>)[] = [];
@@ -571,9 +573,9 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async deleteSliceVariation(
-		args: SliceMachineManagerDeleteSliceVariationArgs,
-	): Promise<SliceMachineManagerDeleteSliceVariationReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerDeleteSliceVariationArgs,
+	): Promise<PrismicManagerDeleteSliceVariationReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		const { model, errors: readSliceErrors } = await this.readSlice({
 			libraryID: args.libraryID,
@@ -588,11 +590,13 @@ export class SlicesManager extends BaseManager {
 					(variation) => variation.id !== args.variationID,
 				),
 			};
-			const updateSliceHookResult =
-				await this.sliceMachinePluginRunner.callHook("slice:update", {
+			const updateSliceHookResult = await this.pluginSystemRunner.callHook(
+				"slice:update",
+				{
 					libraryID: args.libraryID,
 					model: updatedModel,
-				});
+				},
+			);
 
 			// Cleanup deleted variation screenshot
 			const { errors: deleteSliceScreenshotErrors } =
@@ -605,7 +609,7 @@ export class SlicesManager extends BaseManager {
 					sliceID: args.sliceID,
 				},
 			);
-			let updateSliceMocksErrors: SliceMachineManagerUpdateSliceMocksArgsReturnType["errors"] =
+			let updateSliceMocksErrors: PrismicManagerUpdateSliceMocksArgsReturnType["errors"] =
 				[];
 			if (mocks?.length) {
 				updateSliceMocksErrors = (
@@ -634,8 +638,8 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async convertLegacySliceToSharedSlice(
-		args: SliceMachineManagerConvertLegacySliceToSharedSliceArgs,
-	): Promise<SliceMachineManagerConvertLegacySliceToSharedSliceReturnType> {
+		args: PrismicManagerConvertLegacySliceToSharedSliceArgs,
+	): Promise<PrismicManagerConvertLegacySliceToSharedSliceReturnType> {
 		const errors: (DecodeError | HookError)[] = [];
 
 		const { model: maybeExistingSlice } = await this.readSlice({
@@ -736,11 +740,11 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async readSliceScreenshot(
-		args: SliceMachineManagerReadSliceScreenshotArgs,
-	): Promise<SliceMachineManagerReadSliceScreenshotReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerReadSliceScreenshotArgs,
+	): Promise<PrismicManagerReadSliceScreenshotReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:asset:read",
 			{
 				libraryID: args.libraryID,
@@ -762,11 +766,11 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async updateSliceScreenshot(
-		args: SliceMachineManagerUpdateSliceScreenshotArgs,
+		args: PrismicManagerUpdateSliceScreenshotArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:asset:update",
 			{
 				libraryID: args.libraryID,
@@ -784,11 +788,11 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async deleteSliceScreenshot(
-		args: SliceMachineManagerDeleteSliceScreenshotArgs,
+		args: PrismicManagerDeleteSliceScreenshotArgs,
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:asset:delete",
 			{
 				libraryID: args.libraryID,
@@ -803,11 +807,11 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async readSliceMocks(
-		args: SliceMachineManagerReadSliceMocksArgs,
-	): Promise<SliceMachineManagerReadSliceMocksReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerReadSliceMocksArgs,
+	): Promise<PrismicManagerReadSliceMocksReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:asset:read",
 			{
 				libraryID: args.libraryID,
@@ -850,11 +854,11 @@ export class SlicesManager extends BaseManager {
 	}
 
 	async updateSliceMocks(
-		args: SliceMachineManagerUpdateSliceMocksArgs,
-	): Promise<SliceMachineManagerUpdateSliceMocksArgsReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerUpdateSliceMocksArgs,
+	): Promise<PrismicManagerUpdateSliceMocksArgsReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:asset:update",
 			{
 				libraryID: args.libraryID,

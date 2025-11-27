@@ -1,11 +1,11 @@
 import * as path from "node:path";
 
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
 export type BuildSliceLibraryDirectoryPathArgs = {
 	libraryID: string;
 	absolute?: boolean;
-	helpers: SliceMachineHelpers;
+	helpers: PluginSystemHelpers;
 };
 
 export const buildSliceLibraryDirectoryPath = (

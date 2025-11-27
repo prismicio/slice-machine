@@ -24,7 +24,7 @@ import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
 
-type SliceMachineManagerReadCustomTypeLibraryReturnType = {
+type PrismicManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
 	errors: (DecodeError | HookError)[];
 };
@@ -33,35 +33,35 @@ type CustomTypesManagerReadAllCustomTypesArgs = {
 	format: CustomTypeFormat;
 };
 
-type SliceMachineManagerReadAllCustomTypeReturnType = {
+type PrismicManagerReadAllCustomTypeReturnType = {
 	models: { model: CustomType }[];
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerReadCustomTypeReturnType = {
+type PrismicManagerReadCustomTypeReturnType = {
 	model: CustomType | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
-type SliceMachineManagerUpdateCustomTypeArgs = CustomTypeUpdateHookData;
+type PrismicManagerUpdateCustomTypeArgs = CustomTypeUpdateHookData;
 
-type CustomTypesMachineManagerDeleteCustomTypeArgs = {
+type CustomTypesManagerDeleteCustomTypeArgs = {
 	id: string;
 };
 
-type CustomTypesMachineManagerDeleteCustomTypeReturnType = {
+type CustomTypesManagerDeleteCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type CustomTypesMachineManagerUpdateCustomTypeReturnType = {
+type CustomTypesManagerUpdateCustomTypeReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
 export class CustomTypesManager extends BaseManager {
-	async readCustomTypeLibrary(): Promise<SliceMachineManagerReadCustomTypeLibraryReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+	async readCustomTypeLibrary(): Promise<PrismicManagerReadCustomTypeLibraryReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"custom-type-library:read",
 			undefined,
 		);
@@ -80,10 +80,10 @@ export class CustomTypesManager extends BaseManager {
 
 	async readAllCustomTypes(
 		args?: CustomTypesManagerReadAllCustomTypesArgs,
-	): Promise<SliceMachineManagerReadAllCustomTypeReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+	): Promise<PrismicManagerReadAllCustomTypeReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const res: SliceMachineManagerReadAllCustomTypeReturnType = {
+		const res: PrismicManagerReadAllCustomTypeReturnType = {
 			models: [],
 			errors: [],
 		};
@@ -108,9 +108,9 @@ export class CustomTypesManager extends BaseManager {
 	async createCustomType(
 		args: CustomTypeCreateHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeCreateHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"custom-type:create",
 			args,
 		);
@@ -122,10 +122,10 @@ export class CustomTypesManager extends BaseManager {
 
 	async readCustomType(
 		args: CustomTypeReadHookData,
-	): Promise<SliceMachineManagerReadCustomTypeReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+	): Promise<PrismicManagerReadCustomTypeReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"custom-type:read",
 			args,
 		);
@@ -143,12 +143,12 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async updateCustomType(
-		args: SliceMachineManagerUpdateCustomTypeArgs,
-	): Promise<CustomTypesMachineManagerUpdateCustomTypeReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: PrismicManagerUpdateCustomTypeArgs,
+	): Promise<CustomTypesManagerUpdateCustomTypeReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 		const { model } = args;
 
-		const customTypeUpdateResult = await this.sliceMachinePluginRunner.callHook(
+		const customTypeUpdateResult = await this.pluginSystemRunner.callHook(
 			"custom-type:update",
 			{ model },
 		);
@@ -163,9 +163,9 @@ export class CustomTypesManager extends BaseManager {
 	async renameCustomType(
 		args: CustomTypeRenameHookData,
 	): Promise<OnlyHookErrors<CallHookReturnType<CustomTypeRenameHook>>> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const hookResult = await this.sliceMachinePluginRunner.callHook(
+		const hookResult = await this.pluginSystemRunner.callHook(
 			"custom-type:rename",
 			args,
 		);
@@ -176,16 +176,16 @@ export class CustomTypesManager extends BaseManager {
 	}
 
 	async deleteCustomType(
-		args: CustomTypesMachineManagerDeleteCustomTypeArgs,
-	): Promise<CustomTypesMachineManagerDeleteCustomTypeReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		args: CustomTypesManagerDeleteCustomTypeArgs,
+	): Promise<CustomTypesManagerDeleteCustomTypeReturnType> {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		const { model, errors: readCustomTypeErrors } = await this.readCustomType({
 			id: args.id,
 		});
 
 		if (model) {
-			const hookResult = await this.sliceMachinePluginRunner.callHook(
+			const hookResult = await this.pluginSystemRunner.callHook(
 				"custom-type:delete",
 				{ model },
 			);

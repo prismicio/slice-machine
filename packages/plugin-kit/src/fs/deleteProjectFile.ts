@@ -1,10 +1,10 @@
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
 import * as fs from "./lib/fsLimit";
 
 export type DeleteProjectFileArgs = {
 	filename: string;
-	helpers: SliceMachineHelpers;
+	helpers: PluginSystemHelpers;
 };
 
 export const deleteProjectFile = async (

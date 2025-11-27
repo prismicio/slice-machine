@@ -1,2 +1,2 @@
-export { createSliceMachineManagerMSWHandler } from "./createSliceMachineManagerMSWHandler";
-export type { CreateSliceMachineManagerMSWHandlerArgs } from "./createSliceMachineManagerMSWHandler";
+export { createPrismicManagerMSWHandler } from "./createPrismicManagerMSWHandler";
+export type { CreatePrismicManagerMSWHandlerArgs } from "./createPrismicManagerMSWHandler";

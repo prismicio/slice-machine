@@ -5,7 +5,7 @@ import { detect as niDetect } from "@antfu/ni";
 import { ExecaChildProcess } from "execa";
 
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
-import { decodeSliceMachineConfig } from "../../lib/decodeSliceMachineConfig";
+import { decodePrismicConfig } from "../../lib/decodePrismicConfig";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
@@ -13,14 +13,14 @@ import { requireResolve } from "../../lib/requireResolve";
 
 import { PackageManager, PrismicConfig } from "../../types";
 
-import { SliceMachineError, InternalError } from "../../errors";
+import { PrismicError, InternalError } from "../../errors";
 
 import { PRISMIC_CONFIG_FILENAME } from "../../constants/PRISMIC_CONFIG_FILENAME";
 import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
 
 import { BaseManager } from "../BaseManager";
 
-type ProjectManagerGetSliceMachineConfigPathArgs = {
+type ProjectManagerGetPrismicConfigPathArgs = {
 	ignoreCache?: boolean;
 };
 
@@ -32,7 +32,7 @@ type ProjectManagerCheckIsTypeScriptArgs = {
 	rootOverride?: string;
 };
 
-type ProjectManagerWriteSliceMachineConfigArgs = {
+type ProjectManagerWritePrismicConfigArgs = {
 	config: PrismicConfig;
 	path?: string;
 };
@@ -58,18 +58,18 @@ type ProjectManagerInstallDependenciesReturnType = {
 
 export class ProjectManager extends BaseManager {
 	private _cachedRoot: string | undefined;
-	private _cachedSliceMachineConfigPath: string | undefined;
-	private _cachedSliceMachineConfig: PrismicConfig | undefined;
+	private _cachedPrismicConfigPath: string | undefined;
+	private _cachedPrismicConfig: PrismicConfig | undefined;
 
-	async getSliceMachineConfigPath(
-		args?: ProjectManagerGetSliceMachineConfigPathArgs,
+	async getPrismicConfigPath(
+		args?: ProjectManagerGetPrismicConfigPathArgs,
 	): Promise<string> {
-		if (this._cachedSliceMachineConfigPath && !args?.ignoreCache) {
-			return this._cachedSliceMachineConfigPath;
+		if (this._cachedPrismicConfigPath && !args?.ignoreCache) {
+			return this._cachedPrismicConfigPath;
 		}
 
 		try {
-			this._cachedSliceMachineConfigPath = await locateFileUpward(
+			this._cachedPrismicConfigPath = await locateFileUpward(
 				PRISMIC_CONFIG_FILENAME,
 				{ startDir: this.cwd },
 			);
@@ -79,7 +79,7 @@ export class ProjectManager extends BaseManager {
 			);
 		}
 
-		return this._cachedSliceMachineConfigPath;
+		return this._cachedPrismicConfigPath;
 	}
 
 	async getRoot(args?: ProjectManagerGetRootArgs): Promise<string> {
@@ -87,11 +87,11 @@ export class ProjectManager extends BaseManager {
 			return this._cachedRoot;
 		}
 
-		const sliceMachineConfigFilePath = await this.getSliceMachineConfigPath({
+		const prismicConfigFilePath = await this.getPrismicConfigPath({
 			ignoreCache: args?.ignoreCache,
 		});
 
-		this._cachedRoot = path.dirname(sliceMachineConfigFilePath);
+		this._cachedRoot = path.dirname(prismicConfigFilePath);
 
 		return this._cachedRoot;
 	}
@@ -104,7 +104,7 @@ export class ProjectManager extends BaseManager {
 		return path.dirname(suggestedRootPackageJSON);
 	}
 
-	async suggestSliceMachineConfigPath(): Promise<string> {
+	async suggestPrismicConfigPath(): Promise<string> {
 		const suggestedRoot = await this.suggestRoot();
 
 		return path.resolve(suggestedRoot, PRISMIC_CONFIG_FILENAME);
@@ -120,19 +120,18 @@ export class ProjectManager extends BaseManager {
 		return existsSync(rootTSConfigPath);
 	}
 
-	async getSliceMachineConfig(): Promise<PrismicConfig> {
-		if (this._cachedSliceMachineConfig) {
-			return this._cachedSliceMachineConfig;
+	async getPrismicConfig(): Promise<PrismicConfig> {
+		if (this._cachedPrismicConfig) {
+			return this._cachedPrismicConfig;
 		} else {
-			return await this.loadSliceMachineConfig();
+			return await this.loadPrismicConfig();
 		}
 	}
 
-	async writeSliceMachineConfig(
-		args: ProjectManagerWriteSliceMachineConfigArgs,
+	async writePrismicConfig(
+		args: ProjectManagerWritePrismicConfigArgs,
 	): Promise<void> {
-		const configFilePath =
-			args.path || (await this.getSliceMachineConfigPath());
+		const configFilePath = args.path || (await this.getPrismicConfigPath());
 
 		const config = await format(
 			JSON.stringify(args.config, null, 2),
@@ -140,13 +139,13 @@ export class ProjectManager extends BaseManager {
 		);
 
 		await fs.writeFile(configFilePath, config, "utf-8");
-		delete this._cachedSliceMachineConfig; // Clear config cache
+		delete this._cachedPrismicConfig; // Clear config cache
 	}
 
-	async loadSliceMachineConfig(): Promise<PrismicConfig> {
+	async loadPrismicConfig(): Promise<PrismicConfig> {
 		// TODO: Reload plugins with a fresh plugin runner. Plugins may
 		// have been added or removed.
-		const configFilePath = await this.getSliceMachineConfigPath();
+		const configFilePath = await this.getPrismicConfigPath();
 
 		let rawConfig: unknown | undefined;
 		try {
@@ -154,7 +153,7 @@ export class ProjectManager extends BaseManager {
 			rawConfig = JSON.parse(contents);
 		} catch (error) {
 			if (error instanceof SyntaxError) {
-				throw new SliceMachineError(
+				throw new PrismicError(
 					`Could not parse config file at ${configFilePath}.\n\nError Message: ${error.message}`,
 				);
 			}
@@ -167,8 +166,7 @@ export class ProjectManager extends BaseManager {
 			throw new Error("No config found.");
 		}
 
-		const { value: sliceMachineConfig, error } =
-			decodeSliceMachineConfig(rawConfig);
+		const { value: prismicConfig, error } = decodePrismicConfig(rawConfig);
 
 		if (error) {
 			// TODO: Write a more friendly and useful message.
@@ -177,10 +175,10 @@ export class ProjectManager extends BaseManager {
 			});
 		}
 
-		// Allow cached config reading using `SliceMachineManager.prototype.getProjectConfig()`.
-		this._cachedSliceMachineConfig = sliceMachineConfig;
+		// Allow cached config reading using `PrismicManager.prototype.getProjectConfig()`.
+		this._cachedPrismicConfig = prismicConfig;
 
-		return sliceMachineConfig;
+		return prismicConfig;
 	}
 
 	/**
@@ -192,17 +190,17 @@ export class ProjectManager extends BaseManager {
 	 * @returns The project's repository name.
 	 */
 	async getRepositoryName(): Promise<string> {
-		const sliceMachineConfig = await this.getSliceMachineConfig();
+		const prismicConfig = await this.getPrismicConfig();
 
-		return sliceMachineConfig.repositoryName;
+		return prismicConfig.repositoryName;
 	}
 
 	async getAdapterName(): Promise<string> {
-		const sliceMachineConfig = await this.getSliceMachineConfig();
+		const prismicConfig = await this.getPrismicConfig();
 		const adapterName =
-			typeof sliceMachineConfig.adapter === "string"
-				? sliceMachineConfig.adapter
-				: sliceMachineConfig.adapter.resolve;
+			typeof prismicConfig.adapter === "string"
+				? prismicConfig.adapter
+				: prismicConfig.adapter.resolve;
 
 		return adapterName;
 	}
@@ -219,30 +217,27 @@ export class ProjectManager extends BaseManager {
 	}
 
 	async initProject(args?: ProjectManagerInitProjectArgs): Promise<void> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		// eslint-disable-next-line no-console
 		const log = args?.log || console.log.bind(this);
 
-		const { errors } = await this.sliceMachinePluginRunner.callHook(
-			"project:init",
-			{
-				log,
-				installDependencies: async (args) => {
-					const { execaProcess } = await this.installDependencies({
-						dependencies: args.dependencies,
-						dev: args.dev,
-						log,
-					});
+		const { errors } = await this.pluginSystemRunner.callHook("project:init", {
+			log,
+			installDependencies: async (args) => {
+				const { execaProcess } = await this.installDependencies({
+					dependencies: args.dependencies,
+					dev: args.dev,
+					log,
+				});
 
-					await execaProcess;
-				},
+				await execaProcess;
 			},
-		);
+		});
 
 		if (errors.length > 0) {
 			// TODO: Provide better error message.
-			throw new SliceMachineError(
+			throw new PrismicError(
 				`Failed to initialize project: ${errors.join(", ")}`,
 			);
 		}

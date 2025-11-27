@@ -1,10 +1,10 @@
 import * as Sentry from "@sentry/node";
 
-import { PrismicUserProfile, SliceMachineManager } from "@prismicio/manager";
+import { PrismicUserProfile, PrismicManager } from "@prismicio/manager";
 import { checkIsSentryEnabled } from "./checkIsSentryEnabled";
 
 type UpdateSentryContextArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 	repositoryName: string;
 	framework: string;
 };

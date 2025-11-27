@@ -95,7 +95,7 @@ export class PrismicRepositoryManager extends BaseManager {
 	async pushChanges(
 		args: TransactionalMergeArgs,
 	): Promise<TransactionalMergeReturnType> {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+		assertPluginsInitialized(this.pluginSystemRunner);
 
 		if (!(await this.user.checkIsLoggedIn())) {
 			throw new UnauthenticatedError();

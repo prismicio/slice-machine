@@ -17,7 +17,7 @@ function assertS3ACLInitialized(
 ): asserts s3ACL is NonNullable<typeof s3ACL> {
 	if (s3ACL == undefined) {
 		throw new Error(
-			"An S3 ACL has not been initialized. Run `SliceMachineManager.screenshots.prototype.initS3ACL()` before re-calling this method.",
+			"An S3 ACL has not been initialized. Run `PrismicManager.screenshots.prototype.initS3ACL()` before re-calling this method.",
 		);
 	}
 }

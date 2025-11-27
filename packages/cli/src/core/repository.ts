@@ -1,9 +1,9 @@
-import type { SliceMachineManager } from "@prismicio/manager";
+import type { PrismicManager } from "@prismicio/manager";
 
 import { listrRun } from "../utils/listr";
 
 export type ValidateRepositoryArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 	repository: string;
 };
 

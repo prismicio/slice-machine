@@ -1,14 +1,14 @@
-import { SliceMachineError } from "../../errors";
+import { PrismicError } from "../../errors";
 import { BaseManager } from "../BaseManager";
-import { SliceMachineManager } from "../SliceMachineManager";
+import { PrismicManager } from "../PrismicManager";
 
 export class UserManager extends BaseManager {
-	constructor(sliceMachineManager: SliceMachineManager) {
-		super(sliceMachineManager);
+	constructor(prismicManager: PrismicManager) {
+		super(prismicManager);
 
-		if (!sliceMachineManager.getPrismicAuthManager()) {
-			throw new SliceMachineError(
-				"SliceMachineManager._prismicAuthManager must be set with a PrismicAuthManager instance before instantiating UserManager.",
+		if (!prismicManager.getPrismicAuthManager()) {
+			throw new PrismicError(
+				"PrismicManager._prismicAuthManager must be set with a PrismicAuthManager instance before instantiating UserManager.",
 			);
 		}
 	}

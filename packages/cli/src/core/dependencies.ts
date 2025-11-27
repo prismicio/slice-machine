@@ -1,4 +1,4 @@
-import { type SliceMachineManager } from "@prismicio/manager";
+import { type PrismicManager } from "@prismicio/manager";
 import chalk from "chalk";
 
 import { listrRun } from "../utils/listr";
@@ -6,7 +6,7 @@ import { listrRun } from "../utils/listr";
 import { type ProjectContext } from "./project";
 
 type InstallDependenciesArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 	projectContext: ProjectContext;
 };
 

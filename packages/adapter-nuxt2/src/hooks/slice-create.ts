@@ -1,7 +1,7 @@
 import type {
 	SliceCreateHook,
 	SliceCreateHookData,
-	SliceMachineContext,
+	PluginSystemContext,
 } from "@prismicio/plugin-kit";
 import {
 	upsertGlobalTypeScriptTypes,
@@ -17,7 +17,7 @@ import type { PluginOptions } from "../types";
 
 type CreateComponentFileArgs = {
 	data: SliceCreateHookData;
-} & SliceMachineContext<PluginOptions>;
+} & PluginSystemContext<PluginOptions>;
 
 const createComponentFile = async ({
 	data,

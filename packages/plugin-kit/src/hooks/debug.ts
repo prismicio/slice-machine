@@ -1,7 +1,7 @@
 import type {
-	ExtendSliceMachineHook,
-	SliceMachinePluginOptions,
-	SliceMachineHook,
+	ExtendPluginSystemHook,
+	PluginOptions,
+	PluginHook,
 } from "../types";
 
 /**
@@ -19,10 +19,7 @@ export type DebugHookReturnType = unknown;
  *
  * @internal
  */
-export type DebugHookBase = SliceMachineHook<
-	DebugHookData,
-	DebugHookReturnType
->;
+export type DebugHookBase = PluginHook<DebugHookData, DebugHookReturnType>;
 
 /**
  * Handler for the `debug` hook. This hook is never called in a production app.
@@ -30,6 +27,5 @@ export type DebugHookBase = SliceMachineHook<
  *
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
-export type DebugHook<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = ExtendSliceMachineHook<DebugHookBase, TPluginOptions>;
+export type DebugHook<TPluginOptions extends PluginOptions = PluginOptions> =
+	ExtendPluginSystemHook<DebugHookBase, TPluginOptions>;

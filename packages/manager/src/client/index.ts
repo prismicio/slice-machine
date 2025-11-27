@@ -1,25 +1,25 @@
 // This file defines the `@prismicio/manager/client` export.
 // All exports must be designed for non-Node.js usage.
 
-export { createSliceMachineManagerClient } from "../managers/createSliceMachineManagerClient";
+export { createPrismicManagerClient } from "../managers/createPrismicManagerClient";
 export type {
-	CreateSliceMachineManagerClientArgs,
-	SliceMachineManagerClient,
-} from "../managers/createSliceMachineManagerClient";
+	CreatePrismicManagerClientArgs,
+	PrismicManagerClient,
+} from "../managers/createPrismicManagerClient";
 
-export type { SliceMachineManagerPushSliceReturnType } from "../managers/slices/SlicesManager";
+export type { PrismicManagerPushSliceReturnType } from "../managers/slices/SlicesManager";
 
 export {
 	InternalError,
 	NotFoundError,
-	SliceMachineError,
+	PrismicError,
 	UnauthenticatedError,
 	UnauthorizedError,
 	UnexpectedDataError,
 	isInternalError,
 	isNotFoundError,
 	isPluginError,
-	isSliceMachineError,
+	isPrismicError,
 	isUnauthenticatedError,
 	isUnauthorizedError,
 	isUnexpectedDataError,

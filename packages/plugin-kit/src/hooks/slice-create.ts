@@ -1,9 +1,9 @@
 import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
-	ExtendSliceMachineHook,
-	SliceMachinePluginOptions,
-	SliceMachineHook,
+	ExtendPluginSystemHook,
+	PluginOptions,
+	PluginHook,
 } from "../types";
 
 /**
@@ -25,7 +25,7 @@ export type SliceCreateHookReturnType = void;
  *
  * @internal
  */
-export type SliceCreateHookBase = SliceMachineHook<
+export type SliceCreateHookBase = PluginHook<
 	SliceCreateHookData,
 	SliceCreateHookReturnType
 >;
@@ -40,5 +40,5 @@ export type SliceCreateHookBase = SliceMachineHook<
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
 export type SliceCreateHook<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = ExtendSliceMachineHook<SliceCreateHookBase, TPluginOptions>;
+	TPluginOptions extends PluginOptions = PluginOptions,
+> = ExtendPluginSystemHook<SliceCreateHookBase, TPluginOptions>;

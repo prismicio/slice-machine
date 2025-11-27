@@ -1,48 +1,45 @@
 import {
-	createSliceMachinePluginRunner,
-	SliceMachinePlugin,
-	SliceMachinePluginRunner,
+	createPluginSystemRunner,
+	Plugin,
+	PluginSystemRunner,
 } from "@prismicio/plugin-kit";
 
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 
 import { BaseManager } from "../BaseManager";
-import { SliceMachineManager } from "../SliceMachineManager";
+import { PrismicManager } from "../PrismicManager";
 
 type PluginsManagerConfig = {
-	nativePlugins?: Record<string, SliceMachinePlugin>;
+	nativePlugins?: Record<string, Plugin>;
 };
 
 export class PluginsManager extends BaseManager {
-	private _nativePlugins: Record<string, SliceMachinePlugin>;
+	private _nativePlugins: Record<string, Plugin>;
 
-	constructor(
-		sliceMachineManager: SliceMachineManager,
-		config: PluginsManagerConfig,
-	) {
-		super(sliceMachineManager);
+	constructor(prismicManager: PrismicManager, config: PluginsManagerConfig) {
+		super(prismicManager);
 
 		this._nativePlugins = config.nativePlugins ?? {};
 	}
 
 	async initPlugins(): Promise<void> {
 		const projectRoot = await this.project.getRoot();
-		const sliceMachineConfig = await this.project.getSliceMachineConfig();
+		const prismicConfig = await this.project.getPrismicConfig();
 
-		this.sliceMachinePluginRunner = createSliceMachinePluginRunner({
+		this.pluginSystemRunner = createPluginSystemRunner({
 			project: {
 				root: projectRoot,
-				config: sliceMachineConfig,
+				config: prismicConfig,
 			},
 			nativePlugins: this._nativePlugins,
 		});
 
-		await this.sliceMachinePluginRunner.init();
+		await this.pluginSystemRunner.init();
 	}
 
-	dangerouslyCallHook: SliceMachinePluginRunner["callHook"] = (...args) => {
-		assertPluginsInitialized(this.sliceMachinePluginRunner);
+	dangerouslyCallHook: PluginSystemRunner["callHook"] = (...args) => {
+		assertPluginsInitialized(this.pluginSystemRunner);
 
-		return this.sliceMachinePluginRunner.callHook(...args);
+		return this.pluginSystemRunner.callHook(...args);
 	};
 }

@@ -1,9 +1,9 @@
-import { SliceMachineManager } from "@prismicio/manager/dist/managers/SliceMachineManager";
+import { PrismicManager } from "@prismicio/manager/dist/managers/PrismicManager";
 
 import { listrRun } from "../utils/listr";
 
 type SaveCustomTypesArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 };
 
 export async function saveCustomTypes(

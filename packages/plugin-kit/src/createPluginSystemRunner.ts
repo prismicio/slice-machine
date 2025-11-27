@@ -4,32 +4,29 @@ import _module, { createRequire } from "node:module";
 import { defu } from "defu";
 
 import { HookSystem } from "./lib/HookSystem";
-import { createSliceMachineContext } from "./createSliceMachineContext";
-import {
-	LoadedSliceMachinePlugin,
-	SliceMachinePlugin,
-} from "./defineSliceMachinePlugin";
+import { createPluginSystemContext } from "./createPluginSystemContext";
+import { LoadedPlugin, Plugin } from "./definePlugin";
 import {
 	PrismicConfigPluginRegistration,
-	SliceMachineHookExtraArgs,
-	SliceMachineHookTypes,
-	SliceMachineHooks,
-	SliceMachineProject,
+	PluginHookExtraArgs,
+	PluginHookTypes,
+	PluginHooks,
+	PrismicProject,
 } from "./types";
-import { createSliceMachineHookSystem } from "./createSliceMachineHookSystem";
+import { createPluginHookSystem } from "./createPluginHookSystem";
 import {
-	createSliceMachineActions,
-	SliceMachineActions,
-} from "./createSliceMachineActions";
+	createPluginSystemActions,
+	PluginSystemActions,
+} from "./createPluginSystemActions";
 import {
-	createSliceMachineHelpers,
-	SliceMachineHelpers,
-} from "./createSliceMachineHelpers";
+	createPluginSystemHelpers,
+	PluginSystemHelpers,
+} from "./createPluginSystemHelpers";
 
 /**
  * @internal
  */
-export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
+export const REQUIRED_ADAPTER_HOOKS: PluginHookTypes[] = [
 	"slice:create",
 	"slice:read",
 	"slice:rename",
@@ -52,7 +49,7 @@ export const REQUIRED_ADAPTER_HOOKS: SliceMachineHookTypes[] = [
 /**
  * @internal
  */
-export const ADAPTER_ONLY_HOOKS: SliceMachineHookTypes[] = [
+export const ADAPTER_ONLY_HOOKS: PluginHookTypes[] = [
 	"slice:read",
 	"slice:asset:read",
 	"slice-library:read",
@@ -61,60 +58,60 @@ export const ADAPTER_ONLY_HOOKS: SliceMachineHookTypes[] = [
 	"custom-type-library:read",
 ];
 
-type SliceMachinePluginRunnerConstructorArgs = {
-	project: SliceMachineProject;
-	hookSystem: HookSystem<SliceMachineHooks>;
-	nativePlugins?: Record<string, SliceMachinePlugin>;
+type PluginSystemRunnerConstructorArgs = {
+	project: PrismicProject;
+	hookSystem: HookSystem<PluginHooks>;
+	nativePlugins?: Record<string, Plugin>;
 };
 
 /**
  * @internal
  */
-export class SliceMachinePluginRunner {
-	private _project: SliceMachineProject;
-	private _hookSystem: HookSystem<SliceMachineHooks>;
-	private _nativePlugins: Record<string, SliceMachinePlugin>;
+export class PluginSystemRunner {
+	private _project: PrismicProject;
+	private _hookSystem: HookSystem<PluginHooks>;
+	private _nativePlugins: Record<string, Plugin>;
 
 	/**
-	 * Slice Machine actions provided to hooks.
+	 * Plugin System actions provided to hooks.
 	 *
 	 * IMPORTANT: Prefer creating your own abstraction over using `rawActions`
 	 * directly to prevent code breakage if this internal API changes.
 	 *
 	 * @internal
 	 */
-	rawActions: SliceMachineActions;
+	rawActions: PluginSystemActions;
 
 	/**
-	 * Slice Machine helpers provided to hooks.
+	 * Plugin System helpers provided to hooks.
 	 *
 	 * IMPORTANT: Prefer creating your own abstraction over using `rawHelpers`
 	 * directly to prevent code breakage if this internal API changes.
 	 *
 	 * @internal
 	 */
-	rawHelpers: SliceMachineHelpers;
+	rawHelpers: PluginSystemHelpers;
 
 	// Methods forwarded to the plugin runner's hook system.
-	callHook: HookSystem<SliceMachineHooks>["callHook"];
-	hooksForOwner: HookSystem<SliceMachineHooks>["hooksForOwner"];
-	hooksForType: HookSystem<SliceMachineHooks>["hooksForType"];
-	createScope: HookSystem<SliceMachineHooks>["createScope"];
+	callHook: HookSystem<PluginHooks>["callHook"];
+	hooksForOwner: HookSystem<PluginHooks>["hooksForOwner"];
+	hooksForType: HookSystem<PluginHooks>["hooksForType"];
+	createScope: HookSystem<PluginHooks>["createScope"];
 
 	constructor({
 		project,
 		hookSystem,
 		nativePlugins = {},
-	}: SliceMachinePluginRunnerConstructorArgs) {
+	}: PluginSystemRunnerConstructorArgs) {
 		this._project = project;
 		this._hookSystem = hookSystem;
 		this._nativePlugins = nativePlugins;
 
-		this.rawActions = createSliceMachineActions(
+		this.rawActions = createPluginSystemActions(
 			this._project,
 			this._hookSystem,
 		);
-		this.rawHelpers = createSliceMachineHelpers(this._project);
+		this.rawHelpers = createPluginSystemHelpers(this._project);
 
 		this.callHook = this._hookSystem.callHook.bind(this._hookSystem);
 		this.hooksForOwner = this._hookSystem.hooksForOwner.bind(this._hookSystem);
@@ -124,14 +121,14 @@ export class SliceMachinePluginRunner {
 
 	private async _loadPlugin(
 		pluginRegistration: PrismicConfigPluginRegistration,
-	): Promise<LoadedSliceMachinePlugin> {
+	): Promise<LoadedPlugin> {
 		// Sanitize registration
 		const { resolve, options = {} } =
 			typeof pluginRegistration === "object" && "resolve" in pluginRegistration
 				? pluginRegistration
 				: { resolve: pluginRegistration };
 
-		let plugin: SliceMachinePlugin | undefined = undefined;
+		let plugin: Plugin | undefined = undefined;
 
 		if (typeof resolve === "string") {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -192,20 +189,19 @@ export class SliceMachinePluginRunner {
 	}
 
 	private async _setupPlugin(
-		plugin: LoadedSliceMachinePlugin,
+		plugin: LoadedPlugin,
 		as: "adapter" | "plugin",
 	): Promise<void> {
-		const context = createSliceMachineContext({
+		const context = createPluginSystemContext({
 			actions: this.rawActions,
 			helpers: this.rawHelpers,
 			project: this._project,
 			plugin,
 		});
-		const hookSystemScope =
-			this._hookSystem.createScope<SliceMachineHookExtraArgs>(
-				plugin.meta.name,
-				[context],
-			);
+		const hookSystemScope = this._hookSystem.createScope<PluginHookExtraArgs>(
+			plugin.meta.name,
+			[context],
+		);
 
 		// Prevent plugins from hooking to adapter only hooks
 		const hook: typeof hookSystemScope.hook =
@@ -240,7 +236,7 @@ export class SliceMachinePluginRunner {
 		}
 	}
 
-	private _validateAdapter(adapter: LoadedSliceMachinePlugin): void {
+	private _validateAdapter(adapter: LoadedPlugin): void {
 		const hooks = this._hookSystem.hooksForOwner(adapter.meta.name);
 		const hookTypes = hooks.map((hook) => hook.meta.type);
 
@@ -274,21 +270,21 @@ export class SliceMachinePluginRunner {
 	}
 }
 
-type CreateSliceMachinePluginRunnerArgs = {
-	project: SliceMachineProject;
-	nativePlugins?: Record<string, SliceMachinePlugin>;
+type CreatePluginSystemRunnerArgs = {
+	project: PrismicProject;
+	nativePlugins?: Record<string, Plugin>;
 };
 
 /**
  * @internal
  */
-export const createSliceMachinePluginRunner = ({
+export const createPluginSystemRunner = ({
 	project,
 	nativePlugins,
-}: CreateSliceMachinePluginRunnerArgs): SliceMachinePluginRunner => {
-	const hookSystem = createSliceMachineHookSystem();
+}: CreatePluginSystemRunnerArgs): PluginSystemRunner => {
+	const hookSystem = createPluginHookSystem();
 
-	return new SliceMachinePluginRunner({
+	return new PluginSystemRunner({
 		project,
 		hookSystem,
 		nativePlugins,

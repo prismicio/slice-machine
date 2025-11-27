@@ -1,9 +1,9 @@
-import { SliceMachineManager } from "@prismicio/manager/*";
+import { PrismicManager } from "@prismicio/manager/*";
 
 import { listrRun } from "../utils/listr";
 
 type SaveSlicesArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 };
 
 export async function saveSlices(args: SaveSlicesArgs): Promise<void> {

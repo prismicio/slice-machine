@@ -1,6 +1,6 @@
 import * as path from "node:path";
 
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
 import * as fs from "./lib/fsLimit";
 
@@ -8,8 +8,8 @@ export type WriteProjectFileArgs = {
 	filename: string;
 	contents: Parameters<typeof fs.writeFile>[1];
 	format?: boolean;
-	formatOptions?: Parameters<SliceMachineHelpers["format"]>[2];
-	helpers: SliceMachineHelpers;
+	formatOptions?: Parameters<PluginSystemHelpers["format"]>[2];
+	helpers: PluginSystemHelpers;
 };
 
 /**

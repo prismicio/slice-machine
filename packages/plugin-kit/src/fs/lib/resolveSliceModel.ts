@@ -1,12 +1,12 @@
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
-import { SliceMachineActions } from "../../createSliceMachineActions";
+import { PluginSystemActions } from "../../createPluginSystemActions";
 
 export type ResolveSliceModelArgs =
 	| {
 			sliceID: string;
 			libraryID: string;
-			actions: SliceMachineActions;
+			actions: PluginSystemActions;
 	  }
 	| {
 			model: SharedSlice;

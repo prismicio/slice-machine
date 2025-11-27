@@ -1,7 +1,7 @@
 import { readFile, readdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 
-import { type SliceMachineManager } from "@prismicio/manager";
+import { type PrismicManager } from "@prismicio/manager";
 import semver from "semver";
 
 import { listrRun } from "../utils/listr";
@@ -117,7 +117,7 @@ export const detectFramework = async (cwd: string): Promise<Framework> => {
 };
 
 type InitFrameworkArgs = {
-	manager: SliceMachineManager;
+	manager: PrismicManager;
 	projectContext: ProjectContext;
 };
 

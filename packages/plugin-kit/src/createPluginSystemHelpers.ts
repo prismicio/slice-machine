@@ -4,11 +4,11 @@ import * as fs from "node:fs/promises";
 import * as prettier from "prettier";
 import { stripIndent } from "common-tags";
 
-import { decodeSliceMachineConfig } from "./lib/decodeSliceMachineConfig";
+import { decodePrismicConfig } from "./lib/decodePrismicConfig";
 
-import { PrismicConfig, SliceMachineProject } from "./types";
+import { PrismicConfig, PrismicProject } from "./types";
 
-type UpdateSliceMachineConfigOptions = {
+type UpdatePrismicConfigOptions = {
 	format?: boolean;
 };
 
@@ -23,32 +23,32 @@ type FormatOptions = {
 };
 
 /**
- * Creates Slice Machine helpers.
+ * Creates Plugin System helpers.
  *
  * @internal
  */
-export const createSliceMachineHelpers = (
-	project: SliceMachineProject,
-): SliceMachineHelpers => {
-	return new SliceMachineHelpers(project);
+export const createPluginSystemHelpers = (
+	project: PrismicProject,
+): PluginSystemHelpers => {
+	return new PluginSystemHelpers(project);
 };
 
 /**
- * Slice Machine helpers shared to plugins and hooks.
+ * Plugin System helpers shared to plugins and hooks.
  */
-export class SliceMachineHelpers {
+export class PluginSystemHelpers {
 	/**
-	 * The Slice Machine project's metadata.
+	 * Project's metadata.
 	 *
 	 * @internal
 	 */
-	private _project: SliceMachineProject;
+	private _project: PrismicProject;
 
-	constructor(project: SliceMachineProject) {
+	constructor(project: PrismicProject) {
 		this._project = project;
 	}
 
-	getProject = async (): Promise<SliceMachineProject> => {
+	getProject = async (): Promise<PrismicProject> => {
 		const configFilePath = this.joinPathFromRoot("prismic.config.json");
 
 		let rawConfig: unknown | undefined;
@@ -64,8 +64,7 @@ export class SliceMachineHelpers {
 			throw new Error("No config found.");
 		}
 
-		const { value: sliceMachineConfig, error } =
-			decodeSliceMachineConfig(rawConfig);
+		const { value: prismicConfig, error } = decodePrismicConfig(rawConfig);
 
 		if (error) {
 			// TODO: Write a more friendly and useful message.
@@ -74,16 +73,16 @@ export class SliceMachineHelpers {
 
 		return {
 			...this._project,
-			config: sliceMachineConfig,
+			config: prismicConfig,
 		};
 	};
 
-	updateSliceMachineConfig = async (
-		sliceMachineConfig: PrismicConfig,
-		options?: UpdateSliceMachineConfigOptions,
+	updatePrismicConfig = async (
+		prismicConfig: PrismicConfig,
+		options?: UpdatePrismicConfigOptions,
 	): Promise<void> => {
-		const { value: decodedSliceMachineConfig, error } =
-			decodeSliceMachineConfig(sliceMachineConfig);
+		const { value: decodedPrismicConfig, error } =
+			decodePrismicConfig(prismicConfig);
 
 		if (error) {
 			// TODO: Write a more friendly and useful message.
@@ -91,7 +90,7 @@ export class SliceMachineHelpers {
 		}
 
 		const configFilePath = this.joinPathFromRoot("prismic.config.json");
-		let content = JSON.stringify(decodedSliceMachineConfig, null, 2);
+		let content = JSON.stringify(decodedPrismicConfig, null, 2);
 
 		if (options?.format) {
 			content = await this.format(content, configFilePath);

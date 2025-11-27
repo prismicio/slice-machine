@@ -1,10 +1,10 @@
 import { checkPathExists } from "./lib/checkPathExists";
 
-import { SliceMachineHelpers } from "../createSliceMachineHelpers";
+import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
 export type CheckHasProjectFileArgs = {
 	filename: string;
-	helpers: SliceMachineHelpers;
+	helpers: PluginSystemHelpers;
 };
 
 export const checkHasProjectFile = async (

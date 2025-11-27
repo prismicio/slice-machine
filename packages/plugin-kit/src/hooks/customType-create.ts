@@ -1,9 +1,9 @@
 import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
 
 import type {
-	ExtendSliceMachineHook,
-	SliceMachinePluginOptions,
-	SliceMachineHook,
+	ExtendPluginSystemHook,
+	PluginOptions,
+	PluginHook,
 } from "../types";
 
 /**
@@ -23,7 +23,7 @@ export type CustomTypeCreateHookReturnType = void;
  *
  * @internal
  */
-export type CustomTypeCreateHookBase = SliceMachineHook<
+export type CustomTypeCreateHookBase = PluginHook<
 	CustomTypeCreateHookData,
 	CustomTypeCreateHookReturnType
 >;
@@ -38,5 +38,5 @@ export type CustomTypeCreateHookBase = SliceMachineHook<
  * @typeParam TPluginOptions - User-provided options for the hook's plugin.
  */
 export type CustomTypeCreateHook<
-	TPluginOptions extends SliceMachinePluginOptions = SliceMachinePluginOptions,
-> = ExtendSliceMachineHook<CustomTypeCreateHookBase, TPluginOptions>;
+	TPluginOptions extends PluginOptions = PluginOptions,
+> = ExtendPluginSystemHook<CustomTypeCreateHookBase, TPluginOptions>;

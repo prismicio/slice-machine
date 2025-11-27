@@ -1,22 +1,22 @@
 import { handleRPCRequest } from "r19";
 import { rest, DefaultBodyType, MockedRequest, RestHandler } from "msw";
 
-import { SliceMachineManager } from "../managers/SliceMachineManager";
-import { getSliceMachineManagerProcedures } from "../managers/createSliceMachineManagerMiddleware";
+import { PrismicManager } from "../managers/PrismicManager";
+import { getPrismicManagerProcedures } from "../managers/createPrismicManagerMiddleware";
 
-export type CreateSliceMachineManagerMSWHandlerArgs = {
-	sliceMachineManager: SliceMachineManager;
+export type CreatePrismicManagerMSWHandlerArgs = {
+	prismicManager: PrismicManager;
 	url: string;
 };
 
-export const createSliceMachineManagerMSWHandler = (
-	args: CreateSliceMachineManagerMSWHandlerArgs,
+export const createPrismicManagerMSWHandler = (
+	args: CreatePrismicManagerMSWHandlerArgs,
 ): RestHandler<MockedRequest<DefaultBodyType>> => {
 	return rest.post(args.url, async (req, res, ctx) => {
 		const rpcResponse = await handleRPCRequest({
 			body: await req.arrayBuffer(),
-			procedures: getSliceMachineManagerProcedures({
-				sliceMachineManager: args.sliceMachineManager,
+			procedures: getPrismicManagerProcedures({
+				prismicManager: args.prismicManager,
 			}),
 		});
 

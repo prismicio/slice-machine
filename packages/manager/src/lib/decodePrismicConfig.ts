@@ -4,7 +4,7 @@ import { PrismicConfig } from "../types";
 
 import { decode, DecodeReturnType } from "./decode";
 
-const SliceMachineConfigPluginRegistrationCodec = t.union([
+const PrismicConfigPluginRegistrationCodec = t.union([
 	t.string,
 	t.intersection([
 		t.type({
@@ -16,23 +16,23 @@ const SliceMachineConfigPluginRegistrationCodec = t.union([
 	]),
 ]);
 
-const SliceMachineConfigCodec = t.intersection([
+const PrismicConfigCodec = t.intersection([
 	t.type({
 		repositoryName: t.string,
-		adapter: SliceMachineConfigPluginRegistrationCodec,
+		adapter: PrismicConfigPluginRegistrationCodec,
 	}),
 	t.partial({
 		apiEndpoint: t.string,
 		libraries: t.array(t.string),
-		plugins: t.array(SliceMachineConfigPluginRegistrationCodec),
+		plugins: t.array(PrismicConfigPluginRegistrationCodec),
 		labs: t.partial({ legacySliceUpgrader: t.boolean }),
 	}),
 ]);
 
 // TODO: Maybe rename "decode" to "validate". "decode" exposes the `io-ts`
 // internals.
-export const decodeSliceMachineConfig = (
+export const decodePrismicConfig = (
 	input: unknown,
 ): DecodeReturnType<PrismicConfig, PrismicConfig, unknown> => {
-	return decode(SliceMachineConfigCodec, input);
+	return decode(PrismicConfigCodec, input);
 };

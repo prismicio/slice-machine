@@ -1,7 +1,7 @@
-import { SliceMachinePluginRunner } from "@prismicio/plugin-kit";
+import { PluginSystemRunner } from "@prismicio/plugin-kit";
 import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 
-import { SliceMachineManager } from "./SliceMachineManager";
+import { PrismicManager } from "./PrismicManager";
 
 import { UserManager } from "./user/UserManager";
 import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
@@ -17,68 +17,65 @@ import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
 
 export abstract class BaseManager {
-	private _sliceMachineManager: SliceMachineManager;
+	private _prismicManager: PrismicManager;
 
-	constructor(sliceMachineManager: SliceMachineManager) {
-		this._sliceMachineManager = sliceMachineManager;
+	constructor(prismicManager: PrismicManager) {
+		this._prismicManager = prismicManager;
 	}
 
 	protected get prismicAuthManager(): PrismicAuthManager {
-		return this._sliceMachineManager.getPrismicAuthManager();
+		return this._prismicManager.getPrismicAuthManager();
 	}
 
-	protected get sliceMachinePluginRunner():
-		| SliceMachinePluginRunner
-		| undefined {
-		return this._sliceMachineManager.getSliceMachinePluginRunner();
+	protected get pluginSystemRunner(): PluginSystemRunner | undefined {
+		return this._prismicManager.getPluginSystemRunner();
 	}
 
-	protected set sliceMachinePluginRunner(
-		sliceMachinePluginRunner: SliceMachinePluginRunner | undefined,
+	protected set pluginSystemRunner(
+		pluginSystemRunner: PluginSystemRunner | undefined,
 	) {
-		// @ts-expect-error - _sliceMachinePluginRunner is private. We
+		// @ts-expect-error - _pluginSystemRunner is private. We
 		// are intentially ignoring its privacy to allow Manager
 		// classes to access a shared plugin runner via protected
 		// getters and setters.
-		this._sliceMachineManager._sliceMachinePluginRunner =
-			sliceMachinePluginRunner;
+		this._prismicManager._pluginSystemRunner = pluginSystemRunner;
 	}
 
 	protected get cwd(): string {
-		return this._sliceMachineManager.cwd;
+		return this._prismicManager.cwd;
 	}
 
 	// Protected instance prevents circular intellisense
-	// e.g. sliceMachineManager.user.user.user
+	// e.g. prismicManager.user.user.user
 	protected get user(): UserManager {
-		return this._sliceMachineManager.user;
+		return this._prismicManager.user;
 	}
 	protected get prismicRepository(): PrismicRepositoryManager {
-		return this._sliceMachineManager.prismicRepository;
+		return this._prismicManager.prismicRepository;
 	}
 
 	protected get plugins(): PluginsManager {
-		return this._sliceMachineManager.plugins;
+		return this._prismicManager.plugins;
 	}
 
 	protected get project(): ProjectManager {
-		return this._sliceMachineManager.project;
+		return this._prismicManager.project;
 	}
 	protected get customTypes(): CustomTypesManager {
-		return this._sliceMachineManager.customTypes;
+		return this._prismicManager.customTypes;
 	}
 	protected get slices(): SlicesManager {
-		return this._sliceMachineManager.slices;
+		return this._prismicManager.slices;
 	}
 	protected get screenshots(): ScreenshotsManager {
-		return this._sliceMachineManager.screenshots;
+		return this._prismicManager.screenshots;
 	}
 
 	protected get versions(): VersionsManager {
-		return this._sliceMachineManager.versions;
+		return this._prismicManager.versions;
 	}
 
 	protected get telemetry(): TelemetryManager {
-		return this._sliceMachineManager.telemetry;
+		return this._prismicManager.telemetry;
 	}
 }

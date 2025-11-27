@@ -1,4 +1,4 @@
-import { SliceMachineContext } from "@prismicio/plugin-kit";
+import { PluginSystemContext } from "@prismicio/plugin-kit";
 import {
 	buildSliceDirectoryPath,
 	buildSliceLibraryDirectoryPath,
@@ -15,7 +15,7 @@ import { pascalCase } from "./pascalCase";
 
 type UpsertSliceLibraryIndexFileArgs = {
 	libraryID: string;
-} & SliceMachineContext<PluginOptions>;
+} & PluginSystemContext<PluginOptions>;
 
 export const upsertSliceLibraryIndexFile = async (
 	args: UpsertSliceLibraryIndexFileArgs,

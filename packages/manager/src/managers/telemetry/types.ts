@@ -34,7 +34,7 @@ type SegmentEvent<
 			repository?: string;
 	  } & TProperties;
 
-type SliceMachineExperimentExposure = SegmentEvent<
+type ExperimentExposure = SegmentEvent<
 	typeof SegmentEventType.experiment_exposure,
 	{
 		flag_key: string;
@@ -59,7 +59,7 @@ type PrismicCLISyncEndSegmentEvent = SegmentEvent<
 >;
 
 export type SegmentEvents =
-	| SliceMachineExperimentExposure
+	| ExperimentExposure
 	| PrismicCLIInitStartSegmentEvent
 	| PrismicCLIInitEndSegmentEvent
 	| PrismicCLISyncStartSegmentEvent

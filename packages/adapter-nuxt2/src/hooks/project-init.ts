@@ -2,7 +2,7 @@ import * as path from "node:path";
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
-	SliceMachineContext,
+	PluginSystemContext,
 } from "@prismicio/plugin-kit";
 import { checkHasProjectFile } from "@prismicio/plugin-kit/fs";
 import { stripIndent } from "common-tags";
@@ -29,7 +29,7 @@ const installDependencies = async ({
 	});
 };
 
-type ConfigurePrismicModuleArgs = SliceMachineContext<PluginOptions>;
+type ConfigurePrismicModuleArgs = PluginSystemContext<PluginOptions>;
 
 const configurePrismicModule = async ({
 	helpers,
@@ -131,11 +131,11 @@ const configurePrismicModule = async ({
 	await writeFile(mod, nuxtConfigPath);
 };
 
-const modifySliceMachineConfig = async ({
+const modifyPrismicConfig = async ({
 	helpers,
 	options,
 	actions,
-}: SliceMachineContext<PluginOptions>) => {
+}: PluginSystemContext<PluginOptions>) => {
 	const hasSrcDirectory = await checkHasProjectFile({
 		filename: "src",
 		helpers,
@@ -158,7 +158,7 @@ const modifySliceMachineConfig = async ({
 		}
 	}
 
-	await helpers.updateSliceMachineConfig(project.config, {
+	await helpers.updatePrismicConfig(project.config, {
 		format: options.format,
 	});
 };
@@ -171,7 +171,7 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 		await Promise.allSettled([
 			installDependencies({ installDependencies: _installDependencies }),
 			configurePrismicModule(context),
-			modifySliceMachineConfig(context),
+			modifyPrismicConfig(context),
 		]),
 	);
 };
