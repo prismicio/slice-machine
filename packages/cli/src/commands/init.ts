@@ -9,7 +9,8 @@ import {
 } from "../core/project";
 import { validateRepository } from "../core/repository";
 
-import { sync } from "./sync";
+import { saveCustomTypes } from "../core/customType";
+import { saveSlices } from "../core/slices";
 
 type InitArgs = {
 	manager: PrismicManager;
@@ -37,6 +38,9 @@ export async function init(args: InitArgs): Promise<void> {
 	// Initialize the framework specific dependencies and files
 	await initFramework({ manager, projectContext });
 
-	// Finally sync the project to directly pull changes from Prismic
-	await sync({ manager });
+	// Save Prismic slices locally
+	await saveSlices({ manager });
+
+	// Save Prismic custom types locally
+	await saveCustomTypes({ manager });
 }
