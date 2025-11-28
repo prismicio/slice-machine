@@ -4686,7 +4686,6 @@ __metadata:
     "@prismicio/manager": "workspace:*"
     "@sentry/node": ^7.116.0
     "@types/listr": 0.14.4
-    "@types/prompts": 2.4.3
     "@types/semver": 7.3.13
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
@@ -4702,7 +4701,6 @@ __metadata:
     open: ^8.4.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    prompts: ^2.4.2
     semver: ^7.3.8
     typescript: 4.9.5
     vite: 5.4.20
@@ -5714,16 +5712,6 @@ __metadata:
   version: 7.0.3
   resolution: "@types/parse-path@npm:7.0.3"
   checksum: 21a12c228d38f5a75659dfd7cb127dc2001ed3f6acbd1b2e0575d1348c735594c0bab06a97fe849c151438384829f20ea5971cb045f7ecd37d53c76a9fcb9de3
-  languageName: node
-  linkType: hard
-
-"@types/prompts@npm:2.4.3":
-  version: 2.4.3
-  resolution: "@types/prompts@npm:2.4.3"
-  dependencies:
-    "@types/node": "*"
-    kleur: ^3.0.3
-  checksum: f3c150132a175d8ae808da64a67638283eb360ecafe0645549a798618dddd66ac2b83d5efac97a6f31494fa08916c355a4c00f0c864cb035faf27dc626c44f9f
   languageName: node
   linkType: hard
 

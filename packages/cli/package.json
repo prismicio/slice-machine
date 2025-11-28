@@ -58,12 +58,10 @@
 		"listr": "^0.14.3",
 		"meow": "^11.0.0",
 		"open": "^8.4.2",
-		"prompts": "^2.4.2",
 		"semver": "^7.3.8"
 	},
 	"devDependencies": {
 		"@types/listr": "0.14.4",
-		"@types/prompts": "2.4.3",
 		"@types/semver": "7.3.13",
 		"@typescript-eslint/eslint-plugin": "5.55.0",
 		"@typescript-eslint/parser": "5.55.0",
