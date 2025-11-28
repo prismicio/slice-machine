@@ -3,9 +3,7 @@ import sdk from "vite-plugin-sdk";
 
 export default defineConfig({
 	plugins: [
-		sdk({
-			internalDependencies: ["fp-ts"],
-		}),
+		sdk(),
 		{
 			name: "esm-only",
 			configResolved(config) {

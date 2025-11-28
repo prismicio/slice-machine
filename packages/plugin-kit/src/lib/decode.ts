@@ -1,6 +1,4 @@
-import * as t from "io-ts";
-import * as E from "fp-ts/Either";
-import { pipe } from "fp-ts/function";
+import * as z from "zod";
 
 import { DecodeError } from "./DecodeError";
 
@@ -15,22 +13,18 @@ export type DecodeReturnType<A, _O, I> =
 	  };
 
 export const decode = <A, O, I>(
-	codec: t.Type<A, O, I>,
+	codec: z.ZodType<A>,
 	input: I,
 ): DecodeReturnType<A, O, I> => {
-	return pipe(
-		codec.decode(input),
-		E.foldW(
-			(errors) => {
-				return {
-					error: new DecodeError({ input, errors }),
-				};
-			},
-			(value) => {
-				return {
-					value,
-				};
-			},
-		),
-	);
+	const parsed = codec.safeParse(input);
+
+	if (parsed.success) {
+		return {
+			value: parsed.data,
+		};
+	}
+
+	return {
+		error: new DecodeError({ input, errors: parsed.error.issues }),
+	};
 };

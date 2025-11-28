@@ -55,9 +55,6 @@
 		"@prismicio/plugin-kit": "workspace:*",
 		"@prismicio/types-internal": "3.16.1",
 		"common-tags": "1.8.2",
-		"fp-ts": "2.16.11",
-		"io-ts": "2.2.22",
-		"io-ts-types": "0.5.19",
 		"magicast": "0.5.1",
 		"pascal-case": "3.1.2",
 		"prettier-plugin-svelte": "3.4.0"

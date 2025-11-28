@@ -2,5 +2,8 @@ ignores:
   [
     "prettier-plugin-jsdoc",
     "typescript",
+    "fp-ts",
+    "io-ts",
+    "io-ts-types"
   ]
 skip - missing: true

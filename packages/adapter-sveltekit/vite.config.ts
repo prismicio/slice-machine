@@ -4,9 +4,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 export default defineConfig({
 	plugins: [
-		sdk({
-			internalDependencies: ["fp-ts"],
-		}),
+		sdk(),
 		{
 			name: "esm-only",
 			configResolved(config) {

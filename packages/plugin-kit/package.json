@@ -65,13 +65,11 @@
 		"@prismicio/client": "7.21.0",
 		"common-tags": "1.8.2",
 		"defu": "6.1.4",
-		"fp-ts": "2.16.11",
 		"fs-extra": "11.3.2",
-		"io-ts": "2.2.22",
-		"io-ts-reporters": "2.0.1",
 		"p-limit": "7.2.0",
 		"prettier": "3.7.1",
-		"prismic-ts-codegen": "0.1.28"
+		"prismic-ts-codegen": "0.1.28",
+		"zod": "4.1.13"
 	},
 	"devDependencies": {
 		"@eslint/js": "9.28.0",
@@ -82,7 +80,6 @@
 		"eslint": "9.39.1",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-plugin-tsdoc": "0.5.0",
-		"io-ts-types": "0.5.19",
 		"prettier-plugin-jsdoc": "1.7.0",
 		"typescript": "5.9.3",
 		"typescript-eslint": "8.33.0",

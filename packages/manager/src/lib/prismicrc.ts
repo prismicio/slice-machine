@@ -1,22 +1,22 @@
 import * as path from "node:path";
-import * as t from "io-ts";
+import * as z from "zod";
 import * as rc9 from "rc9";
 
 import { decode } from "./decode";
 
 const PRISMICRC = ".prismicrc";
 
-const Prismicrc = t.partial({
-	telemetry: t.boolean,
+const PrismicrcSchema = z.object({
+	telemetry: z.boolean().optional(),
 });
-type Prismicrc = t.TypeOf<typeof Prismicrc>;
+type Prismicrc = z.infer<typeof PrismicrcSchema>;
 
 export const readRawPrismicrc = (dir?: string): Prismicrc => {
 	const rawPrismicrc = dir
 		? rc9.read({ dir, name: PRISMICRC })
 		: rc9.readUser(PRISMICRC);
 
-	const { value: prismicrc, error } = decode(Prismicrc, rawPrismicrc);
+	const { value: prismicrc, error } = decode(PrismicrcSchema, rawPrismicrc);
 
 	if (error) {
 		throw new Error(

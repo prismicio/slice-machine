@@ -5,9 +5,7 @@ import preserveDirectives from "rollup-plugin-preserve-directives";
 
 export default defineConfig({
 	plugins: [
-		sdk({
-			internalDependencies: ["fp-ts"],
-		}),
+		sdk(),
 		{
 			name: "esm-only",
 			configResolved(config) {

@@ -1,4 +1,4 @@
-import * as t from "io-ts";
+import * as z from "zod";
 import { CallHookReturnType, HookError } from "@prismicio/plugin-kit";
 
 import { DecodeError } from "./DecodeError";
@@ -6,11 +6,11 @@ import { decode } from "./decode";
 
 export const decodeHookResult = <
 	A,
-	O,
+	_O,
 	I,
 	THookResult extends Awaited<CallHookReturnType>,
 >(
-	codec: t.Type<A, O, I>,
+	codec: z.ZodType<A>,
 	hookResult: THookResult,
 ): {
 	data: A[];

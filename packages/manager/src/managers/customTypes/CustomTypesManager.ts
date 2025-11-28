@@ -1,4 +1,4 @@
-import * as t from "io-ts";
+import * as z from "zod";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import {
@@ -20,6 +20,7 @@ import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { BaseManager } from "../BaseManager";
+import { CustomTypeSchema } from "../../lib/typesInternalSchemas";
 import { type CustomTypeFormat } from "./types";
 
 type PrismicManagerReadCustomTypeLibraryReturnType = {
@@ -64,8 +65,8 @@ export class CustomTypesManager extends BaseManager {
 			undefined,
 		);
 		const { data, errors } = decodeHookResult(
-			t.type({
-				ids: t.array(t.string),
+			z.object({
+				ids: z.array(z.string()),
 			}),
 			hookResult,
 		);
@@ -128,8 +129,8 @@ export class CustomTypesManager extends BaseManager {
 			args,
 		);
 		const { data, errors } = decodeHookResult(
-			t.type({
-				model: TypesInternal.CustomType,
+			z.object({
+				model: CustomTypeSchema,
 			}),
 			hookResult,
 		);

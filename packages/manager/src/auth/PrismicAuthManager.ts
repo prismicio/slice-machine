@@ -1,4 +1,4 @@
-import * as t from "io-ts";
+import * as z from "zod";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
@@ -23,27 +23,21 @@ const DEFAULT_PERSISTED_AUTH_STATE: PrismicAuthState = {
 	base: "https://prismic.io",
 };
 
-const PrismicAuthState = t.intersection([
-	t.type({
-		base: t.string,
-	}),
-	t.partial({
-		token: t.string,
-	}),
-]);
-export type PrismicAuthState = t.TypeOf<typeof PrismicAuthState>;
+const PrismicAuthStateSchema = z.object({
+	base: z.string(),
+	token: z.string().optional(),
+});
+export type PrismicAuthState = z.infer<typeof PrismicAuthStateSchema>;
 
-const PrismicUserProfile = t.exact(
-	t.type({
-		userId: t.string,
-		shortId: t.string,
-		intercomHash: t.string,
-		email: t.string,
-		firstName: t.string,
-		lastName: t.string,
-	}),
-);
-export type PrismicUserProfile = t.TypeOf<typeof PrismicUserProfile>;
+const PrismicUserProfileSchema = z.object({
+	userId: z.string(),
+	shortId: z.string(),
+	intercomHash: z.string(),
+	email: z.string(),
+	firstName: z.string(),
+	lastName: z.string(),
+});
+export type PrismicUserProfile = z.infer<typeof PrismicUserProfileSchema>;
 
 type PrismicAuthManagerConstructorArgs = {
 	scopedDirectory?: string;
@@ -277,7 +271,7 @@ export class PrismicAuthManager {
 
 		if (res.ok) {
 			const json = await res.json();
-			const { value: profile, error } = decode(PrismicUserProfile, json);
+			const { value: profile, error } = decode(PrismicUserProfileSchema, json);
 
 			if (error) {
 				throw new UnexpectedDataError(
@@ -315,7 +309,10 @@ export class PrismicAuthManager {
 			await fs.writeFile(authStateFilePath, authStateFileContents);
 		}
 
-		const { value: authState, error } = decode(PrismicAuthState, rawAuthState);
+		const { value: authState, error } = decode(
+			PrismicAuthStateSchema,
+			rawAuthState,
+		);
 
 		if (error) {
 			throw new UnexpectedDataError("Prismic authentication state is invalid.");

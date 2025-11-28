@@ -1,5 +1,5 @@
 import { parseSetCookie, type SetCookie } from "cookie";
-import * as t from "io-ts";
+import * as z from "zod";
 import {
 	createEvent,
 	createRouter,
@@ -13,11 +13,10 @@ import { decode } from "../lib/decode";
 
 import { PrismicAuthManager } from "./PrismicAuthManager";
 
-const PrismicAuthResponse = t.type({
-	email: t.string,
-	cookies: t.array(t.string),
+const PrismicAuthResponseSchema = z.object({
+	email: z.string(),
+	cookies: z.array(z.string()),
 });
-type PrismicAuthResponse = t.TypeOf<typeof PrismicAuthResponse>;
 
 export type PrismicAuthCheckStatusResponse =
 	| {
@@ -43,7 +42,7 @@ export const createPrismicAuthManagerMiddleware = (
 		"/",
 		eventHandler(async (event) => {
 			const body = await readBody(event);
-			const { value, error } = decode(PrismicAuthResponse, body);
+			const { value, error } = decode(PrismicAuthResponseSchema, body);
 
 			if (error) {
 				throw new Error(`Invalid auth payload: ${error.errors.join(", ")}`);

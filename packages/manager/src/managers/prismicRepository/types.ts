@@ -1,24 +1,23 @@
-import * as t from "io-ts";
+import * as z from "zod";
 
-export const PrismicRepositoryRole = {
-	SuperUser: "SuperUser",
-	Administrator: "Administrator",
-	Owner: "Owner",
-	Manager: "Manager",
-	Publisher: "Publisher",
-	Writer: "Writer",
-	Readonly: "Readonly",
-} as const;
+export enum PrismicRepositoryRole {
+	SuperUser = "SuperUser",
+	Administrator = "Administrator",
+	Owner = "Owner",
+	Manager = "Manager",
+	Publisher = "Publisher",
+	Writer = "Writer",
+	Readonly = "Readonly",
+}
 
-export type PrismicRepositoryRoles =
-	(typeof PrismicRepositoryRole)[keyof typeof PrismicRepositoryRole];
+export type PrismicRepositoryRoles = PrismicRepositoryRole;
 
-export const PrismicRepository = t.type({
-	domain: t.string,
-	name: t.string,
-	role: t.union([
-		t.keyof(PrismicRepositoryRole),
-		t.record(t.string, t.keyof(PrismicRepositoryRole)),
+export const PrismicRepositorySchema = z.object({
+	domain: z.string(),
+	name: z.string(),
+	role: z.union([
+		z.enum(PrismicRepositoryRole),
+		z.record(z.string(), z.enum(PrismicRepositoryRole)),
 	]),
 });
-export type PrismicRepository = t.TypeOf<typeof PrismicRepository>;
+export type PrismicRepository = z.infer<typeof PrismicRepositorySchema>;

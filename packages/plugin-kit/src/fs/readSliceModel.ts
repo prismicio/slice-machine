@@ -39,32 +39,34 @@ export const readSliceModel = async (
 		const unreadableModelPaths: string[] = [];
 
 		// Find the first matching model.
-		const [model] = (
-			await Promise.all(
-				childDirs.map(async (childDir) => {
-					if (childDir.isDirectory()) {
-						const modelPath = path.join(
-							libraryDir,
-							childDir.name,
-							SHARED_SLICE_MODEL_FILENAME,
-						);
+		const models: (TypesInternal.SharedSlice | undefined)[] = await Promise.all(
+			childDirs.map(async (childDir) => {
+				if (childDir.isDirectory()) {
+					const modelPath = path.join(
+						libraryDir,
+						childDir.name,
+						SHARED_SLICE_MODEL_FILENAME,
+					);
 
-						try {
-							const modelContents = await readJSONFile(modelPath);
+					try {
+						const modelContents = await readJSONFile(modelPath);
 
-							if (
-								isSharedSliceModel(modelContents) &&
-								modelContents.id === args.sliceID
-							) {
-								return modelContents;
-							}
-						} catch {
-							unreadableModelPaths.push(modelPath);
+						if (
+							isSharedSliceModel(modelContents) &&
+							modelContents.id === args.sliceID
+						) {
+							return modelContents;
 						}
+					} catch {
+						unreadableModelPaths.push(modelPath);
 					}
-				}),
-			)
-		).filter((model): model is NonNullable<typeof model> => Boolean(model));
+				}
+			}),
+		);
+		const [model] = models.filter(
+			(model): model is TypesInternal.SharedSlice =>
+				model && isSharedSliceModel(model),
+		);
 
 		if (model) {
 			return {

@@ -1,4 +1,4 @@
-import * as t from "io-ts";
+import * as z from "zod";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import {
@@ -21,6 +21,7 @@ import { OnlyHookErrors } from "../../types";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { BaseManager } from "../BaseManager";
+import { SharedSliceSchema } from "../../lib/typesInternalSchemas";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];
@@ -86,9 +87,9 @@ export class SlicesManager extends BaseManager {
 			args,
 		);
 		const { data, errors } = decodeHookResult(
-			t.type({
-				id: t.string,
-				sliceIDs: t.array(t.string),
+			z.object({
+				id: z.string(),
+				sliceIDs: z.array(z.string()),
 			}),
 			hookResult,
 		);
@@ -217,8 +218,8 @@ export class SlicesManager extends BaseManager {
 			args,
 		);
 		const { data, errors } = decodeHookResult(
-			t.type({
-				model: TypesInternal.SharedSlice,
+			z.object({
+				model: SharedSliceSchema,
 			}),
 			hookResult,
 		);

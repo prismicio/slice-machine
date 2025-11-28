@@ -1,11 +1,15 @@
-import * as t from "io-ts";
+import * as z from "zod";
 import fetch, { Response } from "node-fetch";
 
 import { decode } from "../../lib/decode";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { BaseManager } from "../BaseManager";
-import { PrismicRepository, PrismicRepositoryRole } from "./types";
+import {
+	PrismicRepository,
+	PrismicRepositoryRole,
+	PrismicRepositorySchema,
+} from "./types";
 
 type PrismicRepositoryManagerCheckExistsArgs = {
 	domain: string;
@@ -19,7 +23,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		if (res.ok) {
 			const json = await res.json();
 			const { value: repositories, error } = decode(
-				t.array(PrismicRepository),
+				z.array(PrismicRepositorySchema),
 				json,
 			);
 

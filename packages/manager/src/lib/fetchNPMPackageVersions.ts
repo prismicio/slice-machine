@@ -1,4 +1,4 @@
-import * as t from "io-ts";
+import * as z from "zod";
 import fetch from "node-fetch";
 
 import { decode } from "./decode";
@@ -14,11 +14,11 @@ const NPM_REGISTRY_ABBREVIATED_METADATA_ACCEPT_HEADER =
 	"application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*";
 
 /**
- * A minimally defined codec for NPM registry package metadata. Only data needed
- * for version detection is defined.
+ * A minimally defined schema for NPM registry package metadata. Only data
+ * needed for version detection is defined.
  */
-const NPMRegistryPackageMetadataCodec = t.type({
-	versions: t.UnknownRecord,
+const NPMRegistryPackageMetadataSchema = z.object({
+	versions: z.record(z.string(), z.unknown()),
 });
 
 type FetchNPMPackageVersionsArgs = {
@@ -36,7 +36,7 @@ export const fetchNPMPackageVersions = async (
 
 	const json = await res.json();
 
-	const { value, error } = decode(NPMRegistryPackageMetadataCodec, json);
+	const { value, error } = decode(NPMRegistryPackageMetadataSchema, json);
 
 	if (error) {
 		throw new Error(`Invalid NPM registry response.`, { cause: error });

@@ -1,17 +1,11 @@
-import * as t from "io-ts";
-import { formatValidationErrors } from "io-ts-reporters";
 import * as z from "zod";
 
-type ZodIssue = z.core.$ZodIssue;
+type ZodIssue = z.ZodIssue;
 
 type DecodeErrorConstructorArgs<TInput = unknown> = {
 	input: TInput;
-	errors: t.Errors | ZodIssue[];
+	errors: ZodIssue[];
 };
-
-function isZodIssueArray(errors: object[]): errors is ZodIssue[] {
-	return "path" in errors[0];
-}
 
 function formatZodErrors(errors: ZodIssue[]): string[] {
 	return errors.map((err) => {
@@ -27,13 +21,7 @@ export class DecodeError<TInput = unknown> extends Error {
 	errors: string[];
 
 	constructor(args: DecodeErrorConstructorArgs<TInput>) {
-		let formattedErrors: string[] = [];
-
-		if (isZodIssueArray(args.errors)) {
-			formattedErrors = formatZodErrors(args.errors);
-		} else {
-			formattedErrors = formatValidationErrors(args.errors);
-		}
+		const formattedErrors = formatZodErrors(args.errors);
 
 		super(formattedErrors.join(", "));
 

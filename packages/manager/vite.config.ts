@@ -4,7 +4,7 @@ import sdk from "vite-plugin-sdk";
 export default defineConfig({
 	plugins: [
 		sdk({
-			internalDependencies: ["fp-ts", "get-port", "node-fetch"],
+			internalDependencies: ["get-port", "node-fetch", "fp-ts"],
 		}),
 		{
 			name: "esm-only",
