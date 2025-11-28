@@ -1,4 +1,3 @@
-// TODO: Fix r19 to allow importing from `r19/client`
 import { createRPCClient, CreateRPCClientArgs, RPCClient } from "r19/client";
 
 // !!! Never import anything other than types from

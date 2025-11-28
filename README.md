@@ -32,16 +32,12 @@ For more clarity on this project and its structure you can also check out the de
 
 [prismic]: https://prismic.io
 [prismic-dashboard]: https://prismic.io/dashboard
-
-<!-- TODO: Replace link with a more useful one if available -->
-
 [prismic-docs]: https://prismic.io/docs
+[forum-question]: https://community.prismic.io
+
 [changelog]: ./CHANGELOG.md
 [contributing]: ./CONTRIBUTING.md
 
-<!-- TODO: Replace link with a more useful one if available -->
-
-[forum-question]: https://community.prismic.io
 [repo-bug-report]: https://github.com/prismicio/devtools/issues/new?assignees=&labels=bug&template=bug_report.md&title=
 [repo-feature-request]: https://github.com/prismicio/devtools/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
 [repo-pull-requests]: https://github.com/prismicio/devtools/pulls

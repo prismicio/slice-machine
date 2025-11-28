@@ -143,8 +143,6 @@ export class ProjectManager extends BaseManager {
 	}
 
 	async loadPrismicConfig(): Promise<PrismicConfig> {
-		// TODO: Reload plugins with a fresh plugin runner. Plugins may
-		// have been added or removed.
 		const configFilePath = await this.getPrismicConfigPath();
 
 		let rawConfig: unknown | undefined;
@@ -162,15 +160,15 @@ export class ProjectManager extends BaseManager {
 		}
 
 		if (!rawConfig) {
-			// TODO: Write a more friendly and useful message.
-			throw new Error("No config found.");
+			throw new Error(
+				"No Prismic config found, please initialize your project with Prismic first.",
+			);
 		}
 
 		const { value: prismicConfig, error } = decodePrismicConfig(rawConfig);
 
 		if (error) {
-			// TODO: Write a more friendly and useful message.
-			throw new Error(`Invalid config. ${error.errors.join(", ")}`, {
+			throw new Error(`Invalid Prismic config. ${error.errors.join(", ")}`, {
 				cause: { rawConfig },
 			});
 		}
@@ -236,7 +234,6 @@ export class ProjectManager extends BaseManager {
 		});
 
 		if (errors.length > 0) {
-			// TODO: Provide better error message.
 			throw new PrismicError(
 				`Failed to initialize project: ${errors.join(", ")}`,
 			);

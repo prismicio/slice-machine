@@ -29,8 +29,6 @@ const PrismicConfigCodec = t.intersection([
 	}),
 ]);
 
-// TODO: Maybe rename "decode" to "validate". "decode" exposes the `io-ts`
-// internals.
 export const decodePrismicConfig = (
 	input: unknown,
 ): DecodeReturnType<PrismicConfig, PrismicConfig, unknown> => {

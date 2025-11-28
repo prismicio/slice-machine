@@ -11,8 +11,6 @@ import {
 import { PrismicManager } from "./PrismicManager";
 
 const defineOmits = <TObj>() => {
-	// TODO: Change this to a nicer API. Maybe return an object with a named method (e.g. `compute`)
-
 	return <TOmitPaths extends string>(
 		omit: readonly TOmitPaths[] | readonly OmittableProcedures<TObj>[],
 	): readonly Extract<TOmitPaths, OmittableProcedures<TObj>>[] => {
@@ -20,7 +18,6 @@ const defineOmits = <TObj>() => {
 	};
 };
 
-// TODO: Support wildcard omits that support "*._prismicManager"
 const omitProcedures = defineOmits<PrismicManager>()([
 	"_pluginSystemRunner",
 	"_prismicAuthManager",

@@ -1,9 +1,6 @@
 import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import {
-	SharedSlice,
-	Variation,
-} from "@prismicio/types-internal/lib/customtypes";
+import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
 	HookError,
@@ -80,39 +77,12 @@ type PrismicManagerDeleteSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-type PrismicManagerRenameSliceVariationArgs = {
-	libraryID: string;
-	sliceID: string;
-	/**
-	 * Current ID of the variation to rename.
-	 */
-	variationID: string;
-	model: Variation;
-};
-
-type PrismicManagerRenameSliceVariationReturnType = {
-	errors: (DecodeError | HookError)[];
-};
-
-type PrismicManagerDeleteSliceVariationArgs = {
-	libraryID: string;
-	sliceID: string;
-	variationID: string;
-};
-
-type PrismicManagerDeleteSliceVariationReturnType = {
-	errors: (DecodeError | HookError)[];
-};
-
 export class SlicesManager extends BaseManager {
 	async readSliceLibrary(
 		args: SliceLibraryReadHookData,
 	): Promise<SlicesManagerReadSliceLibraryReturnType> {
 		assertPluginsInitialized(this.pluginSystemRunner);
 
-		// TODO: Should validation happen at the `callHook` level?
-		// Including validation at the hook level would ensure
-		// hook-based actions are validated.
 		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice-library:read",
 			args,
@@ -314,96 +284,6 @@ export class SlicesManager extends BaseManager {
 
 			return {
 				errors: deleteSliceErrors,
-			};
-		} else {
-			return {
-				errors: readSliceErrors,
-			};
-		}
-	}
-
-	async renameSliceVariation(
-		args: PrismicManagerRenameSliceVariationArgs,
-	): Promise<PrismicManagerRenameSliceVariationReturnType> {
-		assertPluginsInitialized(this.pluginSystemRunner);
-
-		// TODO: Remove when we support renaming variation ID, see: DT-1708
-		if (args.variationID !== args.model.id) {
-			throw new Error(
-				"Renaming variation ID is not supported yet by the backend, only rename its name! For more information, see: https://linear.app/prismic/issue/DT-1708",
-			);
-		}
-
-		const { model, errors: readSliceErrors } = await this.readSlice({
-			libraryID: args.libraryID,
-			sliceID: args.sliceID,
-		});
-
-		if (model) {
-			// Find and rename the variation
-			const updatedModel = {
-				...model,
-				variations: model.variations.map((variation) => {
-					if (variation.id === args.variationID) {
-						// Matches the slice we want to rename
-						return args.model;
-					} else if (variation.id === args.model.id) {
-						// Matches any other slice that has the ID of the renamed variation and throw.
-						// This should be validated on the frontend first for better UX, this is only backend validation.
-						throw new Error(
-							`Cannot rename variation \`${args.variationID}\` to \`${args.model.id}\`. A variation already exists with that ID in slice \`${args.sliceID}\` from library \`${args.libraryID}\`, try deleting it first or choose another variation ID to rename that slice.`,
-						);
-					}
-
-					return variation;
-				}),
-			};
-			const updateSliceHookResult = await this.pluginSystemRunner.callHook(
-				"slice:update",
-				{
-					libraryID: args.libraryID,
-					model: updatedModel,
-				},
-			);
-
-			return {
-				errors: updateSliceHookResult.errors,
-			};
-		} else {
-			return {
-				errors: readSliceErrors,
-			};
-		}
-	}
-
-	async deleteSliceVariation(
-		args: PrismicManagerDeleteSliceVariationArgs,
-	): Promise<PrismicManagerDeleteSliceVariationReturnType> {
-		assertPluginsInitialized(this.pluginSystemRunner);
-
-		const { model, errors: readSliceErrors } = await this.readSlice({
-			libraryID: args.libraryID,
-			sliceID: args.sliceID,
-		});
-
-		if (model) {
-			// Remove variation from model and update it
-			const updatedModel = {
-				...model,
-				variations: model.variations.filter(
-					(variation) => variation.id !== args.variationID,
-				),
-			};
-			const updateSliceHookResult = await this.pluginSystemRunner.callHook(
-				"slice:update",
-				{
-					libraryID: args.libraryID,
-					model: updatedModel,
-				},
-			);
-
-			return {
-				errors: updateSliceHookResult.errors,
 			};
 		} else {
 			return {

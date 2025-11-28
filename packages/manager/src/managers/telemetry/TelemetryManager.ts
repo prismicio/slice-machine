@@ -27,11 +27,6 @@ type TelemetryManagerTrackArgs = SegmentEvents & {
 	_includeEnvironmentKind?: boolean;
 };
 
-type TelemetryManagerIdentifyArgs = {
-	userID: string;
-	intercomHash: string;
-};
-
 type TelemetryManagerGroupArgs = {
 	manualLibsCount: number;
 	downloadedLibsCount: number;
@@ -71,7 +66,6 @@ export class TelemetryManager extends BaseManager {
 				writeKey: API_TOKENS.SegmentKey,
 				// Since it's a local app, we do not benefit from event batching the way a server would normally do, all tracking event will be awaited.
 				maxEventsInBatch: 1,
-				// TODO: Verify that this actually does not send data to Segment when false.
 				disable: !isTelemetryEnabled,
 			});
 
@@ -96,8 +90,6 @@ export class TelemetryManager extends BaseManager {
 		this._context = { app: { name: args.appName, version: args.appVersion } };
 	}
 
-	// TODO: Should `userId` be automatically populated by the logged in
-	// user? We already have their info via UserRepository.
 	async track(args: TelemetryManagerTrackArgs): Promise<void> {
 		const { event, repository, _includeEnvironmentKind, ...properties } = args;
 		let repositoryName = repository;
@@ -145,12 +137,10 @@ export class TelemetryManager extends BaseManager {
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
 
-			// TODO: Make sure client fails gracefully when no internet connection
 			this._segmentClient().track(
 				payload as TrackParams,
 				(maybeError?: unknown) => {
 					if (maybeError && import.meta.env.DEV) {
-						// TODO: Not sure how we want to deal with that
 						console.warn(
 							`An error occurred during Segment tracking`,
 							maybeError,
@@ -163,30 +153,26 @@ export class TelemetryManager extends BaseManager {
 		});
 	}
 
-	// TODO: Should `userID` and `intercomHash` be automatically populated
-	// by the logged in user? We already have their info via
-	// UserRepository.
-	identify(args: TelemetryManagerIdentifyArgs): Promise<void> {
+	async identify(): Promise<void> {
+		const userProfile = await this.user.getProfile();
 		const payload = {
-			userId: args.userID,
+			userId: userProfile.shortId,
 			anonymousId: this._anonymousID,
 			integrations: {
 				Intercom: {
-					user_hash: args.intercomHash,
+					user_hash: userProfile.intercomHash,
 				},
 			},
 			context: { ...this._context },
 		};
 
-		this._userID = args.userID;
+		this._userID = userProfile.shortId;
 
 		return new Promise((resolve) => {
 			assertTelemetryInitialized(this._segmentClient);
 
-			// TODO: Make sure client fails gracefully when no internet connection
 			this._segmentClient().identify(payload, (maybeError?: unknown) => {
 				if (maybeError && import.meta.env.DEV) {
-					// TODO: Not sure how we want to deal with that
 					console.warn(`An error occurred during Segment identify`, maybeError);
 				}
 
@@ -239,7 +225,6 @@ export class TelemetryManager extends BaseManager {
 				payload as GroupParams,
 				(maybeError?: unknown) => {
 					if (maybeError && import.meta.env.DEV) {
-						// TODO: Not sure how we want to deal with that
 						console.warn(`An error occurred during Segment group`, maybeError);
 					}
 

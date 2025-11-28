@@ -60,15 +60,15 @@ export class PluginSystemHelpers {
 		}
 
 		if (!rawConfig) {
-			// TODO: Write a more friendly and useful message.
-			throw new Error("No config found.");
+			throw new Error(
+				"No Prismic config found, please initialize your project with first.",
+			);
 		}
 
 		const { value: prismicConfig, error } = decodePrismicConfig(rawConfig);
 
 		if (error) {
-			// TODO: Write a more friendly and useful message.
-			throw new Error(`Invalid config. ${error.errors.join(", ")}`);
+			throw new Error(`Invalid Prismic config. ${error.errors.join(", ")}`);
 		}
 
 		return {
@@ -85,8 +85,9 @@ export class PluginSystemHelpers {
 			decodePrismicConfig(prismicConfig);
 
 		if (error) {
-			// TODO: Write a more friendly and useful message.
-			throw new Error(`Invalid config provided. ${error.errors.join(", ")}`);
+			throw new Error(
+				`Invalid Prismic config provided. ${error.errors.join(", ")}`,
+			);
 		}
 
 		const configFilePath = this.joinPathFromRoot("prismic.config.json");
