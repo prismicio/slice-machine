@@ -21,7 +21,7 @@ const currentVersion = process.version;
 if (!semver.satisfies(currentVersion, requiredVersion)) {
 	console.warn(
 		chalk.yellow(
-			`⚠️  Warning: You are using Node.js ${currentVersion}, but this CLI requires ${requiredVersion}.\n` +
+			`⚠️  Warning: You are using Node.js ${currentVersion}, but this tool requires ${requiredVersion}.\n` +
 				`   Some features may not work correctly. Please upgrade your Node.js version.\n`,
 		),
 	);
