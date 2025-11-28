@@ -1,6 +1,6 @@
 import * as t from "io-ts";
+import fetch, { Response } from "node-fetch";
 
-import fetch, { Response } from "../../lib/fetch";
 import { decode } from "../../lib/decode";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";

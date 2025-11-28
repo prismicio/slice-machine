@@ -11,16 +11,14 @@ import {
 	CustomTypeUpdateHookData,
 	HookError,
 } from "@prismicio/plugin-kit";
+import fetch from "node-fetch";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
-import fetch from "../../lib/fetch";
-
 import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
-
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
 

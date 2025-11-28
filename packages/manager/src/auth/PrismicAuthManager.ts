@@ -3,14 +3,12 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
 import * as http from "node:http";
-
 import * as h3 from "h3";
-import fetch from "../lib/fetch";
+import fetch from "node-fetch";
 import cors from "cors";
 import getPort from "get-port";
 
 import { decode } from "../lib/decode";
-
 import { API_ENDPOINTS } from "../constants/API_ENDPOINTS";
 import { PRISMIC_CLI_USER_AGENT } from "../constants/PRISMIC_CLI_USER_AGENT";
 import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";

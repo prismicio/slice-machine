@@ -12,16 +12,14 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 } from "@prismicio/plugin-kit";
+import fetch from "node-fetch";
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
-import fetch from "../../lib/fetch";
-
 import { OnlyHookErrors } from "../../types";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-
 import { BaseManager } from "../BaseManager";
 
 type SlicesManagerReadSliceLibraryReturnType = {
