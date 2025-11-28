@@ -41,7 +41,6 @@
     "tsx": "4.6.2"
   },
   "workspaces": [
-    "playwright",
     "packages/*"
   ]
 }
