@@ -8,9 +8,9 @@
     "url": "ssh://git@github.com/prismicio/slice-machine.git",
     "directory": "packages/slice-machine"
   },
-	"engines": {
-		"node": ">=20.19.0"
-	},
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "build": "yarn typed-css-modules && cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",
     "dev": "concurrently \"yarn typed-css-modules:watch\" \"next dev\" --names \"typed-css-modules,next\" --prefix-colors auto",
