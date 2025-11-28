@@ -1,9 +1,5 @@
 import * as Sentry from "@sentry/node";
-import {
-	PrismicUserProfile,
-	PrismicManager,
-	getEnvironmentInfo,
-} from "@prismicio/manager";
+import { PrismicUserProfile, PrismicManager } from "@prismicio/manager";
 
 import { SENTRY_DSN } from "../constants";
 import * as pkg from "../../package.json";
@@ -31,12 +27,12 @@ export function trackSentryError(error: unknown): void {
 	});
 }
 
-export function setupSentry(): void {
+export function setupSentry(manager: PrismicManager): void {
 	if (!checkIsSentryEnabled()) {
 		return;
 	}
 
-	const { environment, release } = getEnvironmentInfo(pkg);
+	const { environment, release } = manager.versions.getEnvironmentInfo(pkg);
 
 	Sentry.init({
 		dsn: SENTRY_DSN,
