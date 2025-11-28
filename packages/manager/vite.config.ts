@@ -12,6 +12,7 @@ export default defineConfig({
 				"get-port",
 				"node-fetch",
 				"file-type",
+				"@anthropic-ai/claude-agent-sdk",
 			],
 		}),
 	],
