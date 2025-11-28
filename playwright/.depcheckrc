@@ -1,5 +1,0 @@
-ignores:
-  [
-    "@prismicio/manager"
-  ]
-skip - missing: true

@@ -1,7 +1,5 @@
 ignores:
   [
-    "monocle-ts",
-    "newtype-ts",
     "prettier-plugin-jsdoc",
     "typescript",
   ]

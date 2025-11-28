@@ -12,8 +12,8 @@
 		"esModuleInterop": true,
 
 		"forceConsistentCasingInFileNames": true,
-		"lib": ["esnext"],
+		"lib": ["esnext", "dom"],
 		"types": ["node", "vite/client"]
 	},
-	"exclude": ["node_modules", "dist", "examples"]
+	"exclude": ["node_modules", "dist"]
 }

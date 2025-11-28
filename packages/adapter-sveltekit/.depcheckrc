@@ -1,8 +1,5 @@
 ignores:
   [
-    "@sveltejs/package",
-    "monocle-ts",
-    "newtype-ts",
     "prettier-plugin-jsdoc",
     "prettier-plugin-svelte",
     "svelte",

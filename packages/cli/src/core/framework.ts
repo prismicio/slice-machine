@@ -148,7 +148,7 @@ export async function initFramework(args: InitFrameworkArgs): Promise<void> {
 				});
 				for (const entry of entries) {
 					if (entry.isDirectory() && entry.name === "slice-simulator") {
-						await rm(join(entry.parentPath, entry.name), {
+						await rm(join(entry.path, entry.name), {
 							recursive: true,
 							force: true,
 						});

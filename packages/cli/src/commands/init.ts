@@ -1,6 +1,5 @@
 import type { PrismicManager } from "@prismicio/manager";
 
-// import { installDependencies } from "../core/dependencies"
 import { initFramework } from "../core/framework";
 import {
 	createPrismicConfig,

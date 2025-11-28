@@ -39,11 +39,10 @@
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch",
+		"types": "tsc --noEmit",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
-		"test": "yarn lint && yarn types && yarn build",
-		"types": "tsc --noEmit",
 		"depcheck": "depcheck --config=.depcheckrc",
 		"audit": "yarn npm audit --environment production --severity high"
 	},

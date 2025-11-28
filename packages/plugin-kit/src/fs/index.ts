@@ -21,9 +21,6 @@ export type { ReadProjectFileArgs } from "./readProjectFile";
 export { deleteProjectFile } from "./deleteProjectFile";
 export type { DeleteProjectFileArgs } from "./deleteProjectFile";
 
-export { writeProjectEnvironment } from "./writeProjectEnvironment";
-export type { WriteProjectEnvironmentArgs } from "./writeProjectEnvironment";
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Slice helpers
@@ -90,14 +87,8 @@ export type {
 	ReadCustomTypeLibraryReturnType,
 } from "./readCustomTypeLibrary";
 
-export { writeCustomTypeFile } from "./writeCustomTypeFile";
-export type { WriteCustomTypeFileArgs } from "./writeCustomTypeFile";
-
 export { writeCustomTypeModel } from "./writeCustomTypeModel";
 export type { WriteCustomTypeModelArgs } from "./writeCustomTypeModel";
-
-export { readCustomTypeFile } from "./readCustomTypeFile";
-export type { ReadCustomTypeFileArgs } from "./readCustomTypeFile";
 
 export { readCustomTypeModel } from "./readCustomTypeModel";
 export type {
@@ -107,9 +98,6 @@ export type {
 
 export { renameCustomType } from "./renameCustomType";
 export type { RenameCustomTypeArgs } from "./renameCustomType";
-
-export { deleteCustomTypeFile } from "./deleteCustomTypeFile";
-export type { DeleteCustomTypeFileArgs } from "./deleteCustomTypeFile";
 
 export { deleteCustomTypeDirectory } from "./deleteCustomTypeDirectory";
 export type { DeleteCustomTypeDirectoryArgs } from "./deleteCustomTypeDirectory";

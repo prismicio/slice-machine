@@ -32,18 +32,12 @@ export const REQUIRED_ADAPTER_HOOKS: PluginHookTypes[] = [
 	"slice:rename",
 	"slice:delete",
 	"slice:update",
-	"slice:asset:update",
-	"slice:asset:read",
-	"slice:asset:delete",
 	"slice-library:read",
 	"custom-type:create",
 	"custom-type:read",
 	"custom-type:rename",
 	"custom-type:delete",
 	"custom-type:update",
-	"custom-type:asset:update",
-	"custom-type:asset:read",
-	"custom-type:asset:delete",
 	"custom-type-library:read",
 ];
 /**
@@ -51,10 +45,8 @@ export const REQUIRED_ADAPTER_HOOKS: PluginHookTypes[] = [
  */
 export const ADAPTER_ONLY_HOOKS: PluginHookTypes[] = [
 	"slice:read",
-	"slice:asset:read",
 	"slice-library:read",
 	"custom-type:read",
-	"custom-type:asset:read",
 	"custom-type-library:read",
 ];
 

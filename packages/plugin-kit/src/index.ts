@@ -35,27 +35,6 @@ export { DecodeError } from "./lib/DecodeError";
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-// slice:asset:update
-export type {
-	SliceAssetUpdateHook,
-	SliceAssetUpdateHookData,
-	SliceAssetUpdateHookReturnType,
-} from "./hooks/slice-asset-update";
-
-// slice:asset:delete
-export type {
-	SliceAssetDeleteHook,
-	SliceAssetDeleteHookData,
-	SliceAssetDeleteHookReturnType,
-} from "./hooks/slice-asset-delete";
-
-// slice:asset:read
-export type {
-	SliceAssetReadHook,
-	SliceAssetReadHookData,
-	SliceAssetReadHookReturnType,
-} from "./hooks/slice-asset-read";
-
 // slice:create
 export type {
 	SliceCreateHook,
@@ -97,27 +76,6 @@ export type {
 	SliceLibraryReadHookData,
 	SliceLibraryReadHookReturnType,
 } from "./hooks/sliceLibrary-read";
-
-// custom-type:asset:update
-export type {
-	CustomTypeAssetUpdateHook,
-	CustomTypeAssetUpdateHookData,
-	CustomTypeAssetUpdateHookReturnType,
-} from "./hooks/customType-asset-update";
-
-// custom-type:asset:delete
-export type {
-	CustomTypeAssetDeleteHook,
-	CustomTypeAssetDeleteHookData,
-	CustomTypeAssetDeleteHookReturnType,
-} from "./hooks/customType-asset-delete";
-
-// custom-type:asset:read
-export type {
-	CustomTypeAssetReadHook,
-	CustomTypeAssetReadHookData,
-	CustomTypeAssetReadHookReturnType,
-} from "./hooks/customType-asset-read";
 
 // custom-type:create
 export type {

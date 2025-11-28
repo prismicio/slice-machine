@@ -31,7 +31,7 @@ composer.lock
 .metals
 *.code-workspace
 
-# Project Specific
+# Project specific
 node_modules
 *.log
 /lib

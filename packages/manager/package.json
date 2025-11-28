@@ -39,9 +39,6 @@
 			],
 			"client": [
 				"dist/client/index.d.ts"
-			],
-			"test": [
-				"dist/test/index.d.ts"
 			]
 		}
 	},
@@ -52,11 +49,10 @@
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch --mode development",
+		"types": "tsc --noEmit",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
 		"prepack": "$npm_execpath run build",
-		"test": "yarn lint && yarn types && yarn build",
-		"types": "tsc --noEmit",
 		"depcheck": "depcheck --config=.depcheckrc",
 		"audit": "yarn npm audit --environment production --severity high"
 	},
@@ -64,28 +60,22 @@
 		"@antfu/ni": "0.20.0",
 		"@prismicio/client": "7.17.0",
 		"@prismicio/custom-types-client": "2.1.0",
-		"@prismicio/mocks": "2.14.0",
 		"@prismicio/plugin-kit": "workspace:*",
 		"@prismicio/types-internal": "3.11.2",
 		"@segment/analytics-node": "2.1.2",
 		"cookie": "1.0.1",
 		"cors": "2.8.5",
 		"execa": "7.1.1",
-		"file-type": "18.2.1",
 		"fp-ts": "2.13.1",
 		"get-port": "6.1.2",
 		"h3": "1.6.0",
 		"io-ts": "2.2.20",
 		"io-ts-reporters": "2.0.1",
 		"io-ts-types": "0.5.19",
-		"monocle-ts": "2.3.13",
-		"newtype-ts": "0.3.5",
 		"node-fetch": "3.3.1",
-		"p-limit": "4.0.0",
 		"prettier": "3.0.3",
 		"r19": "0.1.8",
 		"rc9": "2.0.1",
-		"readable-web-to-node-stream": "3.0.2",
 		"semver": "7.3.8"
 	},
 	"devDependencies": {
@@ -99,7 +89,6 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
-		"memfs": "3.4.13",
 		"msw": "1.1.0",
 		"prettier-plugin-jsdoc": "1.1.1",
 		"typescript": "4.9.5",

@@ -1,8 +1,0 @@
-name: Build packages
-description: Build packages
-runs:
-  using: composite
-  steps:
-    - name: Build packages as they can be used by others
-      shell: bash
-      run: yarn build

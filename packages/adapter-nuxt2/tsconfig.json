@@ -12,9 +12,8 @@
 		"esModuleInterop": true,
 
 		"forceConsistentCasingInFileNames": true,
-		"jsx": "react-jsx",
 		"lib": ["esnext", "dom"],
 		"types": ["node"]
 	},
-	"exclude": ["node_modules", "dist", "examples"]
+	"exclude": ["node_modules", "dist"]
 }

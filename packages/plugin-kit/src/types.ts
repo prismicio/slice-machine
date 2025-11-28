@@ -3,9 +3,6 @@ import { Plugin } from "./definePlugin";
 import { Hook } from "./lib/HookSystem";
 
 import { ProjectInitHookBase } from "./hooks/project-init";
-import { CustomTypeAssetDeleteHookBase } from "./hooks/customType-asset-delete";
-import { CustomTypeAssetReadHookBase } from "./hooks/customType-asset-read";
-import { CustomTypeAssetUpdateHookBase } from "./hooks/customType-asset-update";
 import { CustomTypeCreateHookBase } from "./hooks/customType-create";
 import { CustomTypeDeleteHookBase } from "./hooks/customType-delete";
 import { CustomTypeLibraryReadHookBase } from "./hooks/customTypeLibrary-read";
@@ -13,9 +10,6 @@ import { CustomTypeReadHookBase } from "./hooks/customType-read";
 import { CustomTypeRenameHookBase } from "./hooks/customType-rename";
 import { CustomTypeUpdateHookBase } from "./hooks/customType-update";
 import { DebugHookBase } from "./hooks/debug";
-import { SliceAssetDeleteHookBase } from "./hooks/slice-asset-delete";
-import { SliceAssetReadHookBase } from "./hooks/slice-asset-read";
-import { SliceAssetUpdateHookBase } from "./hooks/slice-asset-update";
 import { SliceCreateHookBase } from "./hooks/slice-create";
 import { SliceDeleteHookBase } from "./hooks/slice-delete";
 import { SliceLibraryReadHookBase } from "./hooks/sliceLibrary-read";
@@ -131,9 +125,6 @@ export const PluginHookType = {
 	slice_rename: "slice:rename",
 	slice_delete: "slice:delete",
 	slice_read: "slice:read",
-	slice_asset_update: "slice:asset:update",
-	slice_asset_delete: "slice:asset:delete",
-	slice_asset_read: "slice:asset:read",
 	sliceLibrary_read: "slice-library:read",
 
 	customType_create: "custom-type:create",
@@ -141,9 +132,6 @@ export const PluginHookType = {
 	customType_rename: "custom-type:rename",
 	customType_delete: "custom-type:delete",
 	customType_read: "custom-type:read",
-	customType_asset_update: "custom-type:asset:update",
-	customType_asset_delete: "custom-type:asset:delete",
-	customType_asset_read: "custom-type:asset:read",
 	customTypeLibrary_read: "custom-type-library:read",
 
 	snippet_read: "snippet:read",
@@ -169,9 +157,6 @@ export type PluginHooks = {
 	[PluginHookType.slice_rename]: Hook<SliceRenameHookBase>;
 	[PluginHookType.slice_delete]: Hook<SliceDeleteHookBase>;
 	[PluginHookType.slice_read]: Hook<SliceReadHookBase>;
-	[PluginHookType.slice_asset_update]: Hook<SliceAssetUpdateHookBase>;
-	[PluginHookType.slice_asset_delete]: Hook<SliceAssetDeleteHookBase>;
-	[PluginHookType.slice_asset_read]: Hook<SliceAssetReadHookBase>;
 
 	// Slice Libraries
 	[PluginHookType.sliceLibrary_read]: Hook<SliceLibraryReadHookBase>;
@@ -182,10 +167,6 @@ export type PluginHooks = {
 	[PluginHookType.customType_rename]: Hook<CustomTypeRenameHookBase>;
 	[PluginHookType.customType_delete]: Hook<CustomTypeDeleteHookBase>;
 	[PluginHookType.customType_read]: Hook<CustomTypeReadHookBase>;
-	[PluginHookType.customType_asset_update]: Hook<CustomTypeAssetUpdateHookBase>;
-	[PluginHookType.customType_asset_delete]: Hook<CustomTypeAssetDeleteHookBase>;
-	[PluginHookType.customType_asset_read]: Hook<CustomTypeAssetReadHookBase>;
-
 	// Custom Type Libraries
 	[PluginHookType.customTypeLibrary_read]: Hook<CustomTypeLibraryReadHookBase>;
 

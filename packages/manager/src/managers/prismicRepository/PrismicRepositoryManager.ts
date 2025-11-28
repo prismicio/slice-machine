@@ -102,9 +102,6 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 
 		try {
-			// Update the AWS ACL before uploading screenshots as it might have expired
-			await this.screenshots.initS3ACL();
-
 			const allChanges: AllChangeTypes[] = await Promise.all(
 				args.changes.map(async (change) => {
 					if (change.type === "Slice") {
@@ -119,16 +116,9 @@ export class PrismicRepositoryManager extends BaseManager {
 									throw Error(`Could not find model ${change.id}`);
 								}
 
-								const modelWithScreenshots =
-									await this.slices.updateSliceModelScreenshotsInPlace({
-										libraryID: change.libraryID,
-										variationImageUrlMap: change.variationImageUrlMap,
-										model,
-									});
-
 								return {
 									id: change.id,
-									payload: modelWithScreenshots,
+									payload: model,
 									type: ChangeTypes.SLICE_INSERT,
 								};
 							}
@@ -142,24 +132,13 @@ export class PrismicRepositoryManager extends BaseManager {
 									throw Error(`Could not find model ${change.id}`);
 								}
 
-								const modelWithScreenshots =
-									await this.slices.updateSliceModelScreenshotsInPlace({
-										libraryID: change.libraryID,
-										variationImageUrlMap: change.variationImageUrlMap,
-										model,
-									});
-
 								return {
 									id: change.id,
-									payload: modelWithScreenshots,
+									payload: model,
 									type: ChangeTypes.SLICE_UPDATE,
 								};
 							}
 							case "DELETED":
-								await this.screenshots.deleteScreenshotFolder({
-									sliceID: change.id,
-								});
-
 								return {
 									id: change.id,
 									payload: { id: change.id },

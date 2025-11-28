@@ -4,15 +4,7 @@ import sdk from "vite-plugin-sdk";
 export default defineConfig({
 	plugins: [
 		sdk({
-			internalDependencies: [
-				"execa",
-				"fp-ts",
-				"r19",
-				"p-limit",
-				"get-port",
-				"node-fetch",
-				"file-type",
-			],
+			internalDependencies: ["execa", "fp-ts", "r19", "get-port", "node-fetch"],
 		}),
 	],
 	build: {
@@ -22,9 +14,6 @@ export default defineConfig({
 				client: "./src/client/index.ts",
 				test: "./src/test/index.ts",
 			},
-		},
-		rollupOptions: {
-			external: ["readable-web-to-node-stream"],
 		},
 	},
 });

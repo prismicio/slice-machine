@@ -29,7 +29,6 @@ const omitProcedures = defineOmits<PrismicManager>()([
 	"plugins._prismicManager",
 	"prismicRepository._prismicManager",
 	"project._prismicManager",
-	"screenshots._prismicManager",
 	"slices._prismicManager",
 	"snippets._prismicManager",
 	"telemetry._prismicManager",

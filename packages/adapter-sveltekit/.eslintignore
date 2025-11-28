@@ -1,29 +1,3 @@
 # .gitignore copy
 
-# custom
-dist
-svelte-kit
-
-# os
-.DS_Store
-._*
-
-# node
-logs
-*.log
-
-# tests
-coverage
-.eslintcache
-.nyc_output
-
-# .env
-.env
-.env.test
-.env*.local
-
-# vscode
-.vscode/*
-!.vscode/tasks.json
-!.vscode/launch.json
-*.code-workspace
+/dist

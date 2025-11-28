@@ -1,10 +1,9 @@
-# Ignore artifacts:
 .github/
 /.yarn
 /.pnp.*
 packages/**/build
 packages/**/package.json
 README.md
+CONTRIBUTING.md
 package.json
 dist
-coverage/

@@ -1,21 +1,15 @@
 import { definePlugin } from "@prismicio/plugin-kit";
 import {
 	deleteCustomTypeDirectory,
-	deleteCustomTypeFile,
 	deleteSliceDirectory,
-	deleteSliceFile,
-	readCustomTypeFile,
 	readCustomTypeLibrary,
 	readCustomTypeModel,
-	readSliceFile,
 	readSliceLibrary,
 	readSliceModel,
 	renameCustomType,
 	renameSlice,
 	upsertGlobalTypeScriptTypes,
-	writeCustomTypeFile,
 	writeCustomTypeModel,
-	writeSliceFile,
 	writeSliceModel,
 } from "@prismicio/plugin-kit/fs";
 
@@ -111,35 +105,6 @@ export const plugin = definePlugin<PluginOptions>({
 				...context,
 			});
 		});
-		hook("slice:asset:update", async (data, context) => {
-			await writeSliceFile({
-				libraryID: data.libraryID,
-				sliceID: data.sliceID,
-				filename: data.asset.id,
-				contents: data.asset.data,
-				...context,
-			});
-		});
-		hook("slice:asset:delete", async (data, context) => {
-			await deleteSliceFile({
-				libraryID: data.libraryID,
-				sliceID: data.sliceID,
-				filename: data.assetID,
-				...context,
-			});
-		});
-		hook("slice:asset:read", async (data, context) => {
-			const file = await readSliceFile({
-				libraryID: data.libraryID,
-				sliceID: data.sliceID,
-				filename: data.assetID,
-				...context,
-			});
-
-			return {
-				data: file,
-			};
-		});
 
 		////////////////////////////////////////////////////////////////
 		// slice-library:*
@@ -212,32 +177,6 @@ export const plugin = definePlugin<PluginOptions>({
 				customTypeID: data.id,
 				...context,
 			});
-		});
-		hook("custom-type:asset:update", async (data, context) => {
-			await writeCustomTypeFile({
-				customTypeID: data.customTypeID,
-				filename: data.asset.id,
-				contents: data.asset.data,
-				...context,
-			});
-		});
-		hook("custom-type:asset:delete", async (data, context) => {
-			await deleteCustomTypeFile({
-				customTypeID: data.customTypeID,
-				filename: data.assetID,
-				...context,
-			});
-		});
-		hook("custom-type:asset:read", async (data, context) => {
-			const file = await readCustomTypeFile({
-				customTypeID: data.customTypeID,
-				filename: data.assetID,
-				...context,
-			});
-
-			return {
-				data: file,
-			};
 		});
 
 		////////////////////////////////////////////////////////////////

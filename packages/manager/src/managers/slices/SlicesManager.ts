@@ -1,17 +1,12 @@
 import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
-import { SliceComparator } from "@prismicio/types-internal/lib/customtypes/diff";
 import {
-	CompositeSlice,
-	LegacySlice,
 	SharedSlice,
 	Variation,
 } from "@prismicio/types-internal/lib/customtypes";
 import {
 	CallHookReturnType,
 	HookError,
-	SliceAssetUpdateHook,
 	SliceCreateHook,
 	SliceCreateHookData,
 	SliceLibraryReadHookData,
@@ -23,14 +18,10 @@ import {
 
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
-import { bufferCodec } from "../../lib/bufferCodec";
 import { decodeHookResult } from "../../lib/decodeHookResult";
-import { createContentDigest } from "../../lib/createContentDigest";
-import { mockSlice } from "../../lib/mockSlice";
 import fetch from "../../lib/fetch";
 
 import { OnlyHookErrors } from "../../types";
-import { DEFAULT_SLICE_SCREENSHOT_URL } from "../../constants/DEFAULT_SLICE_SCREENSHOT_URL";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 
@@ -56,7 +47,6 @@ type PrismicManagerReadAllSlicesForLibraryArgs = {
 type PrismicManagerUpdateSliceArgs = {
 	libraryID: string;
 	model: SharedSlice;
-	mocks?: SharedSliceContent[];
 };
 
 type PrismicManagerReadAllSlicesForLibraryReturnType = {
@@ -78,67 +68,7 @@ type PrismicManagerReadSliceReturnType = {
 };
 
 export type PrismicManagerPushSliceReturnType = {
-	/**
-	 * A record of Slice variation IDs mapped to uploaded screenshot URLs.
-	 */
-	screenshotURLs: Record<string, string> | undefined;
 	errors: (DecodeError | HookError)[];
-};
-
-type PrismicManagerReadSliceScreenshotArgs = {
-	libraryID: string;
-	sliceID: string;
-	variationID: string;
-};
-
-type PrismicManagerReadSliceScreenshotReturnType = {
-	data: Buffer | undefined;
-	errors: (DecodeError | HookError)[];
-};
-
-type PrismicManagerUpdateSliceScreenshotArgs = {
-	libraryID: string;
-	sliceID: string;
-	variationID: string;
-	data: Buffer;
-};
-
-type PrismicManagerDeleteSliceScreenshotArgs = {
-	libraryID: string;
-	sliceID: string;
-	variationID: string;
-};
-
-type PrismicManagerReadSliceMocksArgs = {
-	libraryID: string;
-	sliceID: string;
-};
-
-type PrismicManagerReadSliceMocksReturnType = {
-	mocks?: SharedSliceContent[];
-	errors: (DecodeError | HookError)[];
-};
-
-type PrismicManagerUpdateSliceMocksArgs = {
-	libraryID: string;
-	sliceID: string;
-	mocks: SharedSliceContent[];
-};
-
-type PrismicManagerUpdateSliceMocksArgsReturnType = {
-	errors: HookError[];
-};
-
-type SlicesManagerUpsertHostedSliceScreenshotsArgs = {
-	libraryID: string;
-	model: SharedSlice;
-	/**
-	 * A map of variation IDs to remote screenshot URLs. These URLs are used to
-	 * detect if a screenshot has changed when comparing with local ones and to
-	 * push slices with the current screenshot. If a matching screenshot is not
-	 * found in this map, the current local screenshot is uploaded again.
-	 */
-	variationImageUrlMap: Record<string, string>;
 };
 
 type PrismicManagerDeleteSliceArgs = {
@@ -162,7 +92,6 @@ type PrismicManagerRenameSliceVariationArgs = {
 
 type PrismicManagerRenameSliceVariationReturnType = {
 	errors: (DecodeError | HookError)[];
-	assetsErrors: (DecodeError | HookError)[];
 };
 
 type PrismicManagerDeleteSliceVariationArgs = {
@@ -172,27 +101,6 @@ type PrismicManagerDeleteSliceVariationArgs = {
 };
 
 type PrismicManagerDeleteSliceVariationReturnType = {
-	errors: (DecodeError | HookError)[];
-	assetsErrors: (DecodeError | HookError)[];
-};
-
-type PrismicManagerConvertLegacySliceToSharedSliceArgs = {
-	model: CompositeSlice | LegacySlice;
-	src: {
-		customTypeID: string;
-		tabID: string;
-		sliceZoneID: string;
-		sliceID: string;
-	};
-	dest: {
-		libraryID: string;
-		sliceID: string;
-		variationName: string;
-		variationID: string;
-	};
-};
-
-type PrismicManagerConvertLegacySliceToSharedSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
@@ -326,17 +234,8 @@ export class SlicesManager extends BaseManager {
 			args,
 		);
 
-		const updateSliceMocksArgs: PrismicManagerUpdateSliceMocksArgs = {
-			libraryID: args.libraryID,
-			sliceID: args.model.id,
-			mocks: mockSlice({ model: args.model }),
-		};
-
-		const { errors: updateSliceHookErrors } =
-			await this.updateSliceMocks(updateSliceMocksArgs);
-
 		return {
-			errors: [...hookResult.errors, ...updateSliceHookErrors],
+			errors: hookResult.errors,
 		};
 	}
 
@@ -371,35 +270,13 @@ export class SlicesManager extends BaseManager {
 	): Promise<OnlyHookErrors<CallHookReturnType<SliceUpdateHook>>> {
 		assertPluginsInitialized(this.pluginSystemRunner);
 
-		const { mocks: previousMocks } = await this.readSliceMocks({
-			libraryID: args.libraryID,
-			sliceID: args.model.id,
-		});
-		const { model: previousModel } = await this.readSlice({
-			libraryID: args.libraryID,
-			sliceID: args.model.id,
-		});
 		const hookResult = await this.pluginSystemRunner.callHook(
 			"slice:update",
 			args,
 		);
 
-		const updatedMocks = mockSlice({
-			model: args.model,
-			mocks: previousMocks,
-			diff: SliceComparator.compare(previousModel, args.model),
-		});
-		const updateSliceMocksArgs: PrismicManagerUpdateSliceMocksArgs = {
-			libraryID: args.libraryID,
-			sliceID: args.model.id,
-			mocks: updatedMocks,
-		};
-
-		const { errors: updateSliceMocksHookResult } =
-			await this.updateSliceMocks(updateSliceMocksArgs);
-
 		return {
-			errors: [...hookResult.errors, ...updateSliceMocksHookResult],
+			errors: [...hookResult.errors],
 		};
 	}
 
@@ -435,18 +312,8 @@ export class SlicesManager extends BaseManager {
 					libraryID: args.libraryID,
 				});
 
-			// Do not update custom types if slice deletion failed
-			if (deleteSliceErrors.length > 0) {
-				return {
-					errors: deleteSliceErrors,
-				};
-			}
-
-			const { errors: updateCustomTypeErrors } =
-				await this._removeSliceFromCustomTypes(args.sliceID);
-
 			return {
-				errors: updateCustomTypeErrors,
+				errors: deleteSliceErrors,
 			};
 		} else {
 			return {
@@ -499,75 +366,12 @@ export class SlicesManager extends BaseManager {
 				},
 			);
 
-			// If variation ID has changed, we need to rename assets accordingly
-			const assetsErrors: (DecodeError<unknown> | HookError<unknown>)[] = [];
-			if (args.variationID !== args.model.id) {
-				// Renaming screenshot
-				const { data: screenshot, errors: readSliceScreenshotErrors } =
-					await this.readSliceScreenshot({
-						libraryID: args.libraryID,
-						sliceID: args.sliceID,
-						variationID: args.variationID,
-					});
-				assetsErrors.push(...readSliceScreenshotErrors);
-
-				if (screenshot) {
-					// Delete old ID screenshot
-					const { errors: deleteSliceScreenshotErrors } =
-						await this.deleteSliceScreenshot({
-							libraryID: args.libraryID,
-							sliceID: args.sliceID,
-							variationID: args.variationID,
-						});
-					assetsErrors.push(...deleteSliceScreenshotErrors);
-
-					// Create new ID screenshot
-					const { errors: updateSliceScreenshotErrors } =
-						await this.updateSliceScreenshot({
-							libraryID: args.libraryID,
-							sliceID: args.sliceID,
-							variationID: args.model.id,
-							data: screenshot,
-						});
-					assetsErrors.push(...updateSliceScreenshotErrors);
-				}
-
-				// Renaming mocks
-				const { mocks, errors: readSliceMocksErrors } =
-					await this.readSliceMocks({
-						libraryID: args.libraryID,
-						sliceID: args.sliceID,
-					});
-				assetsErrors.push(...readSliceMocksErrors);
-
-				if (mocks?.length) {
-					const { errors: updateSliceMocksErrors } =
-						await this.updateSliceMocks({
-							libraryID: args.libraryID,
-							sliceID: args.sliceID,
-							mocks: mocks.map((mock) => {
-								if (mock.variation === args.variationID) {
-									return {
-										...mock,
-										variation: args.model.id,
-									};
-								}
-
-								return mock;
-							}),
-						});
-					assetsErrors.push(...updateSliceMocksErrors);
-				}
-			}
-
 			return {
 				errors: updateSliceHookResult.errors,
-				assetsErrors,
 			};
 		} else {
 			return {
 				errors: readSliceErrors,
-				assetsErrors: [],
 			};
 		}
 	}
@@ -598,281 +402,14 @@ export class SlicesManager extends BaseManager {
 				},
 			);
 
-			// Cleanup deleted variation screenshot
-			const { errors: deleteSliceScreenshotErrors } =
-				await this.deleteSliceScreenshot(args);
-
-			// Cleanup deleted variation mocks
-			const { mocks, errors: readSliceMocksErrors } = await this.readSliceMocks(
-				{
-					libraryID: args.libraryID,
-					sliceID: args.sliceID,
-				},
-			);
-			let updateSliceMocksErrors: PrismicManagerUpdateSliceMocksArgsReturnType["errors"] =
-				[];
-			if (mocks?.length) {
-				updateSliceMocksErrors = (
-					await this.updateSliceMocks({
-						libraryID: args.libraryID,
-						sliceID: args.sliceID,
-						mocks: mocks.filter((mock) => mock.variation !== args.variationID),
-					})
-				).errors;
-			}
-
 			return {
 				errors: updateSliceHookResult.errors,
-				assetsErrors: [
-					...deleteSliceScreenshotErrors,
-					...readSliceMocksErrors,
-					...updateSliceMocksErrors,
-				],
 			};
 		} else {
 			return {
 				errors: readSliceErrors,
-				assetsErrors: [],
 			};
 		}
-	}
-
-	async convertLegacySliceToSharedSlice(
-		args: PrismicManagerConvertLegacySliceToSharedSliceArgs,
-	): Promise<PrismicManagerConvertLegacySliceToSharedSliceReturnType> {
-		const errors: (DecodeError | HookError)[] = [];
-
-		const { model: maybeExistingSlice } = await this.readSlice({
-			libraryID: args.dest.libraryID,
-			sliceID: args.dest.sliceID,
-		});
-
-		const legacySliceAsVariation: Variation = {
-			id: args.dest.variationID,
-			name: args.dest.variationName,
-			description: args.dest.variationName,
-			imageUrl: "",
-			docURL: "",
-			version: "initial",
-			primary: {},
-			items: {},
-		};
-
-		switch (args.model.type) {
-			case "Slice":
-				legacySliceAsVariation.primary = args.model["non-repeat"];
-				legacySliceAsVariation.items = args.model.repeat;
-				break;
-
-			case "Group":
-				legacySliceAsVariation.items = args.model.config?.fields ?? {};
-				break;
-
-			default:
-				legacySliceAsVariation.primary = { [args.src.sliceID]: args.model };
-				break;
-		}
-
-		// Convert as a slice variation, or merge against an existing slice variation
-		if (maybeExistingSlice) {
-			const maybeVariation = maybeExistingSlice.variations.find(
-				(variation) => variation.id === args.dest.variationID,
-			);
-
-			// If we're not merging against an existing slice variation, then we need to insert the new variation
-			if (!maybeVariation) {
-				maybeExistingSlice.variations = [
-					...maybeExistingSlice.variations,
-					legacySliceAsVariation,
-				];
-			}
-
-			maybeExistingSlice.legacyPaths ||= {};
-			maybeExistingSlice.legacyPaths[
-				`${args.src.customTypeID}::${args.src.sliceZoneID}::${args.src.sliceID}`
-			] = args.dest.variationID;
-
-			await this.updateSlice({
-				libraryID: args.dest.libraryID,
-				model: maybeExistingSlice,
-			});
-		} else {
-			// Convert to new shared slice
-			await this.createSlice({
-				libraryID: args.dest.libraryID,
-				model: {
-					id: args.dest.sliceID,
-					type: "SharedSlice",
-					name: args.dest.sliceID,
-					legacyPaths: {
-						[`${args.src.customTypeID}::${args.src.sliceZoneID}::${args.src.sliceID}`]:
-							args.dest.variationID,
-					},
-					variations: [legacySliceAsVariation],
-				},
-			});
-		}
-
-		// Update source custom type
-		const { model: customType, errors: customTypeReadErrors } =
-			await this.customTypes.readCustomType({
-				id: args.src.customTypeID,
-			});
-		errors.push(...customTypeReadErrors);
-
-		if (customType) {
-			const field = customType.json[args.src.tabID][args.src.sliceZoneID];
-
-			// Convert legacy slice definition in slice zone to shared slice reference
-			if (field.type === "Slices" && field.config?.choices) {
-				delete field.config.choices[args.src.sliceID];
-				field.config.choices[args.dest.sliceID] = {
-					type: "SharedSlice",
-				};
-			}
-
-			const { errors: customTypeUpdateErrors } =
-				await this.customTypes.updateCustomType({ model: customType });
-			errors.push(...customTypeUpdateErrors);
-		}
-
-		return { errors };
-	}
-
-	async readSliceScreenshot(
-		args: PrismicManagerReadSliceScreenshotArgs,
-	): Promise<PrismicManagerReadSliceScreenshotReturnType> {
-		assertPluginsInitialized(this.pluginSystemRunner);
-
-		const hookResult = await this.pluginSystemRunner.callHook(
-			"slice:asset:read",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				assetID: `screenshot-${args.variationID}.png`,
-			},
-		);
-		const { data, errors } = decodeHookResult(
-			t.type({
-				data: bufferCodec,
-			}),
-			hookResult,
-		);
-
-		return {
-			data: data[0]?.data,
-			errors: errors,
-		};
-	}
-
-	async updateSliceScreenshot(
-		args: PrismicManagerUpdateSliceScreenshotArgs,
-	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
-		assertPluginsInitialized(this.pluginSystemRunner);
-
-		const hookResult = await this.pluginSystemRunner.callHook(
-			"slice:asset:update",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				asset: {
-					id: `screenshot-${args.variationID}.png`,
-					data: args.data,
-				},
-			},
-		);
-
-		return {
-			errors: hookResult.errors,
-		};
-	}
-
-	async deleteSliceScreenshot(
-		args: PrismicManagerDeleteSliceScreenshotArgs,
-	): Promise<OnlyHookErrors<CallHookReturnType<SliceAssetUpdateHook>>> {
-		assertPluginsInitialized(this.pluginSystemRunner);
-
-		const hookResult = await this.pluginSystemRunner.callHook(
-			"slice:asset:delete",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				assetID: `screenshot-${args.variationID}.png`,
-			},
-		);
-
-		return {
-			errors: hookResult.errors,
-		};
-	}
-
-	async readSliceMocks(
-		args: PrismicManagerReadSliceMocksArgs,
-	): Promise<PrismicManagerReadSliceMocksReturnType> {
-		assertPluginsInitialized(this.pluginSystemRunner);
-
-		const hookResult = await this.pluginSystemRunner.callHook(
-			"slice:asset:read",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				assetID: `mocks.json`,
-			},
-		);
-		const { data, errors } = decodeHookResult(
-			t.type({
-				data: t.array(SharedSliceContent),
-			}),
-			{
-				...hookResult,
-				// Convert the asset data from a Buffer to JSON
-				// to prepare it for validation.
-				data: hookResult.data.map((result) => {
-					try {
-						return {
-							...result,
-							data: JSON.parse(result.data.toString()),
-						};
-					} catch {
-						return result;
-					}
-				}),
-			},
-		);
-
-		if (data) {
-			return {
-				mocks: data[0]?.data,
-				errors,
-			};
-		} else {
-			return {
-				mocks: [],
-				errors,
-			};
-		}
-	}
-
-	async updateSliceMocks(
-		args: PrismicManagerUpdateSliceMocksArgs,
-	): Promise<PrismicManagerUpdateSliceMocksArgsReturnType> {
-		assertPluginsInitialized(this.pluginSystemRunner);
-
-		const hookResult = await this.pluginSystemRunner.callHook(
-			"slice:asset:update",
-			{
-				libraryID: args.libraryID,
-				sliceID: args.sliceID,
-				asset: {
-					id: "mocks.json",
-					data: Buffer.from(JSON.stringify(args.mocks, null, "\t")),
-				},
-			},
-		);
-
-		return {
-			errors: hookResult.errors,
-		};
 	}
 
 	async fetchRemoteSlices(): Promise<SharedSlice[]> {
@@ -892,120 +429,5 @@ export class SlicesManager extends BaseManager {
 		});
 
 		return await client.getAllSharedSlices();
-	}
-
-	async updateSliceModelScreenshotsInPlace(
-		args: SlicesManagerUpsertHostedSliceScreenshotsArgs,
-	): Promise<SharedSlice> {
-		const repositoryName = await this.project.getRepositoryName();
-
-		const variations = await Promise.all(
-			args.model.variations.map(async (variation) => {
-				const screenshot = await this.readSliceScreenshot({
-					libraryID: args.libraryID,
-					sliceID: args.model.id,
-					variationID: variation.id,
-				});
-
-				// If there's no screenshot, delete it by replacing it with the default screenshot
-				if (!screenshot.data) {
-					return {
-						...variation,
-						imageUrl: DEFAULT_SLICE_SCREENSHOT_URL,
-					};
-				}
-
-				const remoteImageUrl = args.variationImageUrlMap?.[variation.id];
-				const hasScreenshotChanged = !remoteImageUrl?.includes(
-					createContentDigest(screenshot.data),
-				);
-
-				// If screenshot hasn't changed, no need to upload it again, just use
-				// the existing variation with the remote image URL if it exists.
-				if (!hasScreenshotChanged) {
-					return {
-						...variation,
-						// Keep the existing remote screenshot URL if it exists.
-						imageUrl: remoteImageUrl ?? variation.imageUrl,
-					};
-				}
-
-				const keyPrefix = [
-					repositoryName,
-					"shared-slices",
-					args.model.id,
-					variation.id,
-				].join("/");
-
-				const uploadedScreenshot = await this.screenshots.uploadScreenshot({
-					data: screenshot.data,
-					keyPrefix,
-				});
-
-				return {
-					...variation,
-					imageUrl: uploadedScreenshot.url,
-				};
-			}),
-		);
-
-		return {
-			...args.model,
-			variations,
-		};
-	}
-
-	private async _removeSliceFromCustomTypes(sliceID: string) {
-		const { models, errors: customTypeReadErrors } =
-			await this.customTypes.readAllCustomTypes();
-
-		// Successfully update all custom types or throw
-		await Promise.all(
-			models.map(async (customType) => {
-				const updatedJsonModel = Object.entries(customType.model.json).reduce(
-					(tabAccumulator, [tabKey, tab]) => {
-						const updatedTabFields = Object.entries(tab).reduce(
-							(fieldAccumulator, [fieldKey, field]) => {
-								if (
-									field.config === undefined ||
-									field.type !== "Slices" ||
-									field.config.choices === undefined
-								) {
-									return { ...fieldAccumulator, [fieldKey]: field };
-								}
-
-								const filteredChoices = Object.entries(
-									field.config.choices,
-								).reduce((choiceAccumulator, [choiceKey, choice]) => {
-									if (choiceKey === sliceID) {
-										return choiceAccumulator;
-									}
-
-									return { ...choiceAccumulator, [choiceKey]: choice };
-								}, {});
-
-								return {
-									...fieldAccumulator,
-									[fieldKey]: {
-										...field,
-										config: { ...field.config, choices: filteredChoices },
-									},
-								};
-							},
-							{},
-						);
-
-						return { ...tabAccumulator, [tabKey]: updatedTabFields };
-					},
-					{},
-				);
-
-				await this.customTypes.updateCustomType({
-					model: { ...customType.model, json: updatedJsonModel },
-				});
-			}),
-		);
-
-		return { errors: customTypeReadErrors };
 	}
 }

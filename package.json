@@ -5,7 +5,6 @@
   },
   "packageManager": "yarn@3.6.0",
   "scripts": {
-    "clean": "rimraf --glob '{packages/*/{.next,.svelte-kit,build,coverage,dist,out,package.tgz},playwright/{playwright-report,test-results}}'",
     "dev": "concurrently --prefix-colors auto \"yarn:dev:*\"",
     "dev:cli": "yarn workspace @prismicio/cli dev",
     "dev:manager": "yarn workspace @prismicio/manager dev",
@@ -14,22 +13,17 @@
     "dev:adapter-nuxt": "yarn workspace @prismicio/adapter-nuxt dev",
     "dev:adapter-nuxt2": "yarn workspace @prismicio/adapter-nuxt2 dev",
     "dev:adapter-sveltekit": "yarn workspace @prismicio/adapter-sveltekit dev",
-    "build": "yarn workspaces foreach --topological-dev --verbose run build && yarn run test",
+    "build": "yarn workspaces foreach --topological-dev --verbose run build",
+    "types": "yarn workspaces foreach --parallel --verbose run types",
+    "lint": "yarn workspaces foreach --parallel --verbose run lint",
     "audit": "yarn workspaces foreach --parallel --verbose run audit",
-    "lint": "yarn workspaces foreach --verbose run lint",
-    "lint-staged": "lint-staged",
-    "prettier:fix": "prettier --write .",
-    "prettier:check": "prettier --check .",
-    "test": "yarn workspaces foreach --parallel --topological-dev --verbose run test",
-    "publish": "tsx scripts/publish.ts"
+    "depcheck": "yarn workspaces foreach --parallel --verbose run depcheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "publish": "tsx scripts/publish.ts",
+    "clean": "rimraf --glob '{packages/*/{dist,package.tgz}}'"
   },
   "dependenciesMeta": {
-    "@sentry/cli": {
-      "built": true
-    },
-    "esbuild": {
-      "built": true
-    },
     "msw": {
       "built": true
     }
@@ -38,18 +32,13 @@
     "@types/semver": "7.3.13",
     "chalk": "4.1.2",
     "concurrently": "7.6.0",
-    "eslint-plugin-simple-import-sort": "12.0.0",
     "execa": "7.1.1",
-    "lint-staged": "13.2.0",
     "mri": "1.2.0",
     "prettier": "3.0.3",
+    "prettier-plugin-jsdoc": "1.1.1",
     "rimraf": "5.0.5",
     "semver": "7.3.8",
-    "start-server-and-test": "1.15.5",
     "tsx": "4.6.2"
-  },
-  "resolutions": {
-    "@prismicio/types-internal": "3.11.2"
   },
   "workspaces": [
     "playwright",

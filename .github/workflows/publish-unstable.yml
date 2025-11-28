@@ -1,10 +1,12 @@
 name: Publish unstable
+
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: main
   workflow_dispatch:
+
 jobs:
   publish-unstable:
     name: Publish unstable
@@ -16,12 +18,16 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref || github.ref }}
+
       - name: Use Node.js
         uses: ./.github/actions/setup-node
+
       - name: Install dependencies
         run: yarn install
+
       - name: Build packages
-        uses: ./.github/actions/build-packages
+        run: yarn build
+
       - name: Run publish script
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

@@ -11,7 +11,6 @@ import { PluginsManager } from "./plugins/PluginsManager";
 import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
 import { SlicesManager } from "./slices/SlicesManager";
-import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
@@ -66,9 +65,6 @@ export abstract class BaseManager {
 	}
 	protected get slices(): SlicesManager {
 		return this._prismicManager.slices;
-	}
-	protected get screenshots(): ScreenshotsManager {
-		return this._prismicManager.screenshots;
 	}
 
 	protected get versions(): VersionsManager {

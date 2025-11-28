@@ -3,13 +3,13 @@ name: ci
 on: [push]
 
 jobs:
-  prepare:
+  suite:
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Cache node_modules and artifacts
+      - name: Restore cache
         uses: ./.github/actions/restore-cache
 
       - name: Set up Node
@@ -19,136 +19,19 @@ jobs:
         run: yarn install
 
       - name: Build packages
-        uses: ./.github/actions/build-packages
+        run: yarn build
 
-  prettier:
-    needs: prepare
-    runs-on: [ubuntu-latest]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Verify formatting
+        run: yarn format:check
 
-      - name: Restore cache
-        uses: ./.github/actions/restore-cache
-
-      - name: Set up Node
-        uses: ./.github/actions/setup-node
-
-      - name: Prettier
-        run: yarn prettier:check
-
-  packages:
-    needs: prepare
-    runs-on: [ubuntu-latest]
-    strategy:
-      fail-fast: false
-      matrix:
-        package:
-          # Don't forget to replicate this list under `packages-win32` matrix
-          - "@prismicio/plugin-kit"
-          - "@prismicio/manager"
-          - "@prismicio/cli"
-          - "@prismicio/adapter-next"
-          - "@prismicio/adapter-nuxt"
-          - "@prismicio/adapter-nuxt2"
-          - "@prismicio/adapter-sveltekit"
-          - "@prismicio/e2e"
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Restore cache
-        uses: ./.github/actions/restore-cache
-
-      - name: Set up Node
-        uses: ./.github/actions/setup-node
-
-      - name: Validate dependencies
-        run: yarn workspace ${{ matrix.package }} depcheck
-
-      - name: Audit dependencies
-        if: matrix.package != '@prismicio/e2e'
-        run: yarn workspace ${{ matrix.package }} audit
-
-      - name: Lint
-        run: yarn workspace ${{ matrix.package }} lint
-
-      - name: Types
-        run: yarn workspace ${{ matrix.package }} types
-
-  e2e:
-    needs: prepare
-    runs-on: [ubuntu-latest]
-    strategy:
-      fail-fast: false
-      matrix:
-        shardIndex: [1, 2]
-        shardTotal: [2]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Restore cache
-        uses: ./.github/actions/restore-cache
-
-      - name: Set up Node
-        uses: ./.github/actions/setup-node
-
-      - name: Set up Playwright browsers
-        run: yarn test:e2e:install
-
-      - name: Set PRISMIC_ENV
-        run: |
-          if [[ $GITHUB_REF_NAME == 'main' ]]; then
-            echo "PRISMIC_ENV=production" >> $GITHUB_ENV
-          else 
-            echo "PRISMIC_ENV=dev-tools" >> $GITHUB_ENV
-          fi
-
-      - name: Running E2E tests
-        run: yarn test:e2e --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-        env:
-          DEBUG: pw:test
-          PLAYWRIGHT_ADMIN_USERNAME: ${{ secrets.PLAYWRIGHT_ADMIN_USERNAME }}
-          PLAYWRIGHT_ADMIN_PASSWORD: ${{ secrets.PLAYWRIGHT_ADMIN_PASSWORD }}
-          PRISMIC_ENV: ${{ env.PRISMIC_ENV }}
-
-      - name: Upload blob report to GitHub Actions Artifacts
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: e2e-blob-report-${{ matrix.shardIndex }}
-          path: playwright/blob-report
-          retention-days: 1
-
-  e2e-merge-reports:
-    needs: e2e
-    runs-on: ubuntu-latest
-    if: ${{ !cancelled() }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Restore cache
-        uses: ./.github/actions/restore-cache
-
-      - name: Set up Node
-        uses: ./.github/actions/setup-node
-
-      - name: Download blob reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: playwright/e2e-all-blob-reports
-          pattern: e2e-blob-report-*
-          merge-multiple: true
-
-      - name: Merge into HTML Report
-        run: yarn test:e2e:merge-reports --reporter html ./e2e-all-blob-reports
-
-      - name: Upload HTML report
-        uses: actions/upload-artifact@v4
-        with:
-          name: html-report--attempt-${{ github.run_attempt }}
-          path: playwright/playwright-report
-          retention-days: 14
+      - name: Verify linting
+        run: yarn lint
+        
+      - name: Verify types
+        run: yarn types
+        
+      - name: Verify dependencies
+        run: yarn depcheck
+        
+      - name: Verify vulnerabilities
+        run: yarn audit

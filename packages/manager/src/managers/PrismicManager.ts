@@ -2,11 +2,8 @@ import {
 	SharedSlice,
 	CustomType,
 } from "@prismicio/types-internal/lib/customtypes";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
 import { Plugin, PluginSystemRunner } from "@prismicio/plugin-kit";
-
-import { createContentDigest } from "../lib/createContentDigest";
 
 import { PackageManager, PrismicConfig } from "../types";
 import {
@@ -26,7 +23,6 @@ import { PluginsManager } from "./plugins/PluginsManager";
 import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
 import { SlicesManager } from "./slices/SlicesManager";
-import { ScreenshotsManager } from "./screenshots/ScreenshotsManager";
 
 import { VersionsManager } from "./versions/VersionsManager";
 
@@ -55,14 +51,6 @@ type PrismicManagerGetStateReturnType = {
 			fileName: string | null;
 			extension: string | null;
 			model: SharedSlice;
-			screenshots: Record<
-				string,
-				{
-					hash: string;
-					data: Buffer;
-				}
-			>;
-			mocks?: SharedSliceContent[];
 		}[];
 		meta: {
 			name?: string;
@@ -98,7 +86,6 @@ export class PrismicManager {
 	plugins: PluginsManager;
 	prismicRepository: PrismicRepositoryManager;
 	project: ProjectManager;
-	screenshots: ScreenshotsManager;
 	slices: SlicesManager;
 	telemetry: TelemetryManager;
 	user: UserManager;
@@ -120,7 +107,6 @@ export class PrismicManager {
 		this.project = new ProjectManager(this);
 		this.customTypes = new CustomTypesManager(this);
 		this.slices = new SlicesManager(this);
-		this.screenshots = new ScreenshotsManager(this);
 
 		this.versions = new VersionsManager(this);
 
@@ -289,31 +275,12 @@ export class PrismicManager {
 
 						await Promise.all(
 							sliceIDs.map(async (sliceID) => {
-								const [{ model }, { mocks }] = await Promise.all([
-									this.slices.readSlice({ libraryID, sliceID }),
-									this.slices.readSliceMocks({ libraryID, sliceID }),
-								]);
+								const { model } = await this.slices.readSlice({
+									libraryID,
+									sliceID,
+								});
 
 								if (model) {
-									const screenshots: (typeof components)[number]["screenshots"] =
-										{};
-									await Promise.all(
-										model.variations.map(async (variation) => {
-											const screenshot = await this.slices.readSliceScreenshot({
-												libraryID,
-												sliceID,
-												variationID: variation.id,
-											});
-
-											if (screenshot.data) {
-												screenshots[variation.id] = {
-													hash: createContentDigest(screenshot.data),
-													data: screenshot.data,
-												};
-											}
-										}),
-									);
-
 									components.push({
 										from: libraryID,
 										href: libraryID.replace(/\//g, "--"),
@@ -321,8 +288,6 @@ export class PrismicManager {
 										fileName: "fileName",
 										extension: "extension",
 										model,
-										screenshots,
-										mocks,
 									});
 								}
 							}),
