@@ -55,12 +55,12 @@
 	"dependencies": {
 		"@prismicio/plugin-kit": "workspace:*",
 		"@prismicio/types-internal": "3.11.2",
-		"common-tags": "^1.8.2",
-		"fp-ts": "^2.13.1",
-		"io-ts": "^2.2.20",
-		"io-ts-types": "^0.5.19",
+		"common-tags": "1.8.2",
+		"fp-ts": "2.13.1",
+		"io-ts": "2.2.20",
+		"io-ts-types": "0.5.19",
 		"magicast": "0.3.5",
-		"pascal-case": "^3.1.2",
+		"pascal-case": "3.1.2",
 		"prettier-plugin-svelte": "3.4.0"
 	},
 	"devDependencies": {
@@ -75,8 +75,8 @@
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-svelte": "2.33.0",
 		"eslint-plugin-tsdoc": "0.2.17",
-		"prettier": "3.0.3",
-		"prettier-plugin-jsdoc": "1.1.1",
+		"prettier": "3.7.1",
+		"prettier-plugin-jsdoc": "1.7.0",
 		"svelte": "5.33.5",
 		"typescript": "4.9.5",
 		"vite": "5.4.20",

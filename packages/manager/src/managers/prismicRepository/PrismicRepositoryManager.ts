@@ -105,7 +105,7 @@ export class PrismicRepositoryManager extends BaseManager {
 				...(token !== undefined
 					? {
 							Authorization: `Bearer ${token}`,
-					  }
+						}
 					: {}),
 				"User-Agent": PRISMIC_CLI_USER_AGENT,
 				...extraHeaders,

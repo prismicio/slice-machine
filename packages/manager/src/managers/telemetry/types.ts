@@ -28,11 +28,11 @@ type SegmentEvent<
 	? {
 			event: TType;
 			repository?: string;
-	  }
+		}
 	: {
 			event: TType;
 			repository?: string;
-	  } & TProperties;
+		} & TProperties;
 
 type ExperimentExposure = SegmentEvent<
 	typeof SegmentEventType.experiment_exposure,

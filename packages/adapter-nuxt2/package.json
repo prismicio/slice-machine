@@ -54,9 +54,9 @@
 	},
 	"dependencies": {
 		"@prismicio/plugin-kit": "workspace:*",
-		"common-tags": "^1.8.2",
-		"magicast": "^0.3.4",
-		"pascal-case": "^3.1.2"
+		"common-tags": "1.8.2",
+		"magicast": "0.3.4",
+		"pascal-case": "3.1.2"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "5.55.0",
@@ -67,8 +67,8 @@
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
 		"nuxt": "2.16.3",
-		"prettier": "3.0.3",
-		"prettier-plugin-jsdoc": "1.1.1",
+		"prettier": "3.7.1",
+		"prettier-plugin-jsdoc": "1.7.0",
 		"typescript": "4.9.5",
 		"vite": "5.4.20",
 		"vite-plugin-sdk": "0.1.1"

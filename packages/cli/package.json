@@ -35,7 +35,7 @@
 		"bin",
 		"dist",
 		"src"
-	],	
+	],
 	"engines": {
 		"node": ">=20.19.0"
 	},
@@ -53,18 +53,18 @@
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@antfu/ni": "^0.20.0",
+		"@antfu/ni": "0.20.0",
 		"@prismicio/adapter-next": "workspace:*",
 		"@prismicio/adapter-nuxt": "workspace:*",
 		"@prismicio/adapter-nuxt2": "workspace:*",
 		"@prismicio/adapter-sveltekit": "workspace:*",
 		"@prismicio/manager": "workspace:*",
-		"@sentry/node": "^7.116.0",
-		"chalk": "^4.1.2",
-		"listr": "^0.14.3",
-		"meow": "^11.0.0",
-		"open": "^8.4.2",
-		"semver": "^7.3.8"
+		"@sentry/node": "7.116.0",
+		"chalk": "4.1.2",
+		"listr": "0.14.3",
+		"meow": "11.0.0",
+		"open": "8.4.2",
+		"semver": "7.3.8"
 	},
 	"devDependencies": {
 		"@types/listr": "0.14.4",
@@ -76,8 +76,8 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
-		"prettier": "3.0.3",
-		"prettier-plugin-jsdoc": "1.1.1",
+		"prettier": "3.7.1",
+		"prettier-plugin-jsdoc": "1.7.0",
 		"typescript": "4.9.5",
 		"vite": "5.4.20",
 		"vite-plugin-sdk": "0.1.1"

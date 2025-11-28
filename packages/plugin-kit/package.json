@@ -65,14 +65,14 @@
 	},
 	"dependencies": {
 		"@prismicio/client": "7.17.0",
-		"common-tags": "^1.8.2",
-		"defu": "^6.1.2",
-		"fp-ts": "^2.13.1",
+		"common-tags": "1.8.2",
+		"defu": "6.1.2",
+		"fp-ts": "2.13.1",
 		"fs-extra": "11.1.1",
-		"io-ts": "^2.2.20",
-		"io-ts-reporters": "^2.0.1",
-		"p-limit": "^4.0.0",
-		"prettier": "^3.0.3",
+		"io-ts": "2.2.20",
+		"io-ts-reporters": "2.0.1",
+		"p-limit": "4.0.0",
+		"prettier": "3.7.1",
 		"prismic-ts-codegen": "0.1.27"
 	},
 	"devDependencies": {
@@ -87,7 +87,7 @@
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
 		"io-ts-types": "0.5.19",
-		"prettier-plugin-jsdoc": "1.1.1",
+		"prettier-plugin-jsdoc": "1.7.0",
 		"typescript": "4.9.5",
 		"vite": "5.4.20",
 		"vite-plugin-sdk": "0.1.1"
