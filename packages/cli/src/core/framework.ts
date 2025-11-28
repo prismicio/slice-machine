@@ -95,11 +95,8 @@ export const detectFramework = async (cwd: string): Promise<Framework> => {
 					// Determine lowest version possibly in use
 					const minimumVersion = semver.minVersion(allDependencies[pkg]);
 
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					return semver.satisfies(minimumVersion!, range);
-
-					// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				} catch (_error) {
+				} catch {
 					// We assume unconventional tags, `latest`, `beta`, `dev` matches the framework
 					return true;
 				}

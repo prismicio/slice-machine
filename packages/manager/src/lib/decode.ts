@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import { ZodType, ZodTypeDef } from "zod";
+import * as z from "zod";
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/function";
 
@@ -15,33 +15,37 @@ export type DecodeReturnType<A, _O, I> =
 			error: DecodeError<I>;
 	  };
 
-function isZodSchema(value: unknown): value is ZodType<unknown> {
+function isZodSchema(value: unknown): value is z.ZodType {
 	return (
-		typeof (value as ZodType<unknown>).safeParse === "function" &&
-		value instanceof ZodType
+		value !== null &&
+		typeof value === "object" &&
+		"safeParse" in value &&
+		typeof (value as z.ZodType).safeParse === "function"
 	);
 }
 
 export function decode<A, O, I>(
-	codec: ZodType<A, ZodTypeDef, unknown>,
+	codec: z.ZodType<A>,
 	input: I,
 ): DecodeReturnType<A, O, I>;
 export function decode<A, O, I>(
-	codec: t.Type<A, O, I> | ZodType<A, ZodTypeDef, unknown>,
+	codec: t.Type<A, O, I> | z.ZodType<A>,
 	input: I,
 ): DecodeReturnType<A, O, I>;
 export function decode<A, O, I>(
-	codec: t.Type<A, O, I> | ZodType<A, ZodTypeDef, unknown>,
+	codec: t.Type<A, O, I> | z.ZodType<A>,
 	input: I,
 ): DecodeReturnType<A, O, I> {
 	if (isZodSchema(codec)) {
 		const parsed = codec.safeParse(input);
 
 		if (parsed.success) {
-			return { value: parsed.data };
+			return { value: parsed.data } as DecodeReturnType<A, O, I>;
 		}
 
-		return { error: new DecodeError({ input, errors: parsed.error.errors }) };
+		return {
+			error: new DecodeError({ input, errors: parsed.error.issues }),
+		} as DecodeReturnType<A, O, I>;
 	}
 
 	return pipe(
@@ -50,12 +54,12 @@ export function decode<A, O, I>(
 			(errors) => {
 				return {
 					error: new DecodeError({ input, errors }),
-				};
+				} as DecodeReturnType<A, O, I>;
 			},
 			(value) => {
 				return {
 					value,
-				};
+				} as DecodeReturnType<A, O, I>;
 			},
 		),
 	);

@@ -1,9 +1,5 @@
 import { parseNi } from "@antfu/ni";
-import {
-	ExecaChildProcess,
-	execaCommand,
-	Options as ExacaOptions,
-} from "execa";
+import { execaCommand, type ResultPromise, type Options } from "execa";
 
 import { PackageManager } from "../types";
 
@@ -14,17 +10,28 @@ const EXTRA_INSTALL_FLAGS: Record<PackageManager, string[]> = {
 	"yarn@berry": [],
 	"pnpm@6": [],
 	bun: [],
+	deno: [],
 };
 
 type InstallDependenciesArgs = {
 	packageManager: PackageManager;
 	dependencies: Record<string, string>;
 	dev?: boolean;
-	execa?: ExacaOptions;
+	execa?: Options;
 };
 
 type InstallDependenciesReturnType = {
-	execaProcess: ExecaChildProcess;
+	execaProcess: ResultPromise;
+};
+
+const resolveCommand = (
+	command: string | { command: string; args: string[] },
+): string => {
+	if (typeof command === "string") {
+		return command;
+	}
+
+	return [command.command, ...command.args].join(" ");
 };
 
 export const installDependencies = async (
@@ -40,9 +47,9 @@ export const installDependencies = async (
 
 	commandArgs.push(...EXTRA_INSTALL_FLAGS[args.packageManager]);
 
-	const command = await parseNi(args.packageManager, commandArgs);
+	const parsedCommand = await parseNi(args.packageManager, commandArgs);
 
-	if (!command) {
+	if (!parsedCommand) {
 		throw new Error(
 			"Failed to begin dependency installation (could not parse command)",
 			{
@@ -54,8 +61,10 @@ export const installDependencies = async (
 		);
 	}
 
+	const command = resolveCommand(parsedCommand);
+
 	const execaProcess = execaCommand(command, {
-		encoding: "utf-8",
+		encoding: "utf8",
 		...args.execa,
 	});
 

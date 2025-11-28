@@ -1,4 +1,4 @@
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
 import { CUSTOM_TYPE_MODEL_FILENAME } from "./constants";
 import {
@@ -9,7 +9,7 @@ import {
 export type ReadCustomTypeModelArgs = Omit<ReadCustomTypeFileArgs, "filename">;
 
 export type ReadCustomTypeModelReturnType = {
-	model: CustomType;
+	model: TypesInternal.CustomType;
 };
 
 export const readCustomTypeModel = async (

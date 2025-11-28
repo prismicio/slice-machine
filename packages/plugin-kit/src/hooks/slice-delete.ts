@@ -1,4 +1,4 @@
-import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
 import type {
 	ExtendPluginSystemHook,
@@ -11,7 +11,7 @@ import type {
  */
 export type SliceDeleteHookData = {
 	libraryID: string;
-	model: SharedSlice;
+	model: TypesInternal.SharedSlice;
 };
 
 /**

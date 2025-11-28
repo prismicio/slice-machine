@@ -97,7 +97,7 @@ export class TelemetryManager extends BaseManager {
 		if (repositoryName === undefined) {
 			try {
 				repositoryName = await this.project.getRepositoryName();
-			} catch (error) {
+			} catch {
 				// noop, happen only when the user is not in a project
 			}
 		}
@@ -186,7 +186,7 @@ export class TelemetryManager extends BaseManager {
 
 		try {
 			repositoryName = await this.project.getRepositoryName();
-		} catch (error) {
+		} catch {
 			// noop, happen only when the user is not in a project
 		}
 

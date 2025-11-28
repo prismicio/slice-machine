@@ -1,3 +1,3 @@
-import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
-export type CustomTypeFormat = NonNullable<CustomType["format"]>;
+export type CustomTypeFormat = NonNullable<TypesInternal.CustomType["format"]>;

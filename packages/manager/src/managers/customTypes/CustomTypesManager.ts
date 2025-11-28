@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import {
 	CallHookReturnType,
 	CustomTypeCreateHook,
@@ -20,7 +20,7 @@ import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { BaseManager } from "../BaseManager";
-import { CustomTypeFormat } from "./types";
+import { type CustomTypeFormat } from "./types";
 
 type PrismicManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -32,12 +32,12 @@ type CustomTypesManagerReadAllCustomTypesArgs = {
 };
 
 type PrismicManagerReadAllCustomTypeReturnType = {
-	models: { model: CustomType }[];
+	models: { model: TypesInternal.CustomType }[];
 	errors: (DecodeError | HookError)[];
 };
 
 type PrismicManagerReadCustomTypeReturnType = {
-	model: CustomType | undefined;
+	model: TypesInternal.CustomType | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
@@ -129,7 +129,7 @@ export class CustomTypesManager extends BaseManager {
 		);
 		const { data, errors } = decodeHookResult(
 			t.type({
-				model: CustomType,
+				model: TypesInternal.CustomType,
 			}),
 			hookResult,
 		);
@@ -198,7 +198,7 @@ export class CustomTypesManager extends BaseManager {
 		}
 	}
 
-	async fetchRemoteCustomTypes(): Promise<CustomType[]> {
+	async fetchRemoteCustomTypes(): Promise<TypesInternal.CustomType[]> {
 		const authenticationToken = await this.user.getAuthenticationToken();
 		const repositoryName = await this.project.getRepositoryName();
 

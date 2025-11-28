@@ -22,8 +22,7 @@ export async function detectProjectState(
 
 	try {
 		prismicConfig = await manager.project.getPrismicConfig();
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	} catch (_error) {
+	} catch {
 		// We want to manage the error depending on the need to be initialized or not
 	}
 

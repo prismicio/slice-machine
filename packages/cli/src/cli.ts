@@ -41,16 +41,16 @@ OPTIONS
 		flags: {
 			repository: {
 				type: "string",
-				alias: "r",
+				shortFlag: "r",
 			},
 			help: {
 				type: "boolean",
-				alias: "h",
+				shortFlag: "h",
 				default: false,
 			},
 			version: {
 				type: "boolean",
-				alias: "v",
+				shortFlag: "v",
 				default: false,
 			},
 		},

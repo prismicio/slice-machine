@@ -6,7 +6,7 @@
 		"target": "esnext",
 		"module": "esnext",
 		"declaration": false,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,

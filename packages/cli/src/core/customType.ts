@@ -1,4 +1,4 @@
-import { PrismicManager } from "@prismicio/manager/dist/managers/PrismicManager";
+import type { PrismicManager } from "@prismicio/manager";
 
 import { listrRun } from "../utils/listr";
 

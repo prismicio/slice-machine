@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import * as path from "node:path";
 import { detect as niDetect } from "@antfu/ni";
-import { ExecaChildProcess } from "execa";
+import { type ResultPromise } from "execa";
 
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodePrismicConfig } from "../../lib/decodePrismicConfig";
@@ -52,7 +52,7 @@ type ProjectManagerInstallDependenciesArgs = {
 };
 
 type ProjectManagerInstallDependenciesReturnType = {
-	execaProcess: ExecaChildProcess;
+	execaProcess: ResultPromise;
 };
 
 export class ProjectManager extends BaseManager {
@@ -72,7 +72,7 @@ export class ProjectManager extends BaseManager {
 				PRISMIC_CONFIG_FILENAME,
 				{ startDir: this.cwd },
 			);
-		} catch (error) {
+		} catch {
 			throw new Error(
 				`Could not find a ${PRISMIC_CONFIG_FILENAME} file. Please create a config file at the root of your project.`,
 			);

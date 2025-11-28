@@ -1,6 +1,8 @@
 import * as t from "io-ts";
 import { formatValidationErrors } from "io-ts-reporters";
-import { ZodIssue } from "zod";
+import * as z from "zod";
+
+type ZodIssue = z.core.$ZodIssue;
 
 type DecodeErrorConstructorArgs<TInput = unknown> = {
 	input: TInput;

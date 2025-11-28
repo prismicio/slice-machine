@@ -14,22 +14,19 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"require": "./dist/index.cjs",
 			"import": "./dist/index.js"
 		},
 		"./client": {
 			"types": "./dist/client/index.d.js",
-			"require": "./dist/client.cjs",
 			"import": "./dist/client.js"
 		},
 		"./test": {
 			"types": "./dist/test/index.d.js",
-			"require": "./dist/test.cjs",
 			"import": "./dist/test.js"
 		},
 		"./package.json": "./package.json"
 	},
-	"main": "dist/index.cjs",
+	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"typesVersions": {
@@ -57,47 +54,47 @@
 		"dev": "vite build --watch --mode development",
 		"types": "tsc --noEmit",
 		"format": "prettier --write .",
-		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
+		"lint": "eslint --max-warnings 0 .",
 		"prepack": "$npm_execpath run build",
 		"depcheck": "depcheck --config=.depcheckrc",
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@antfu/ni": "0.20.0",
-		"@prismicio/client": "7.17.0",
+		"@antfu/ni": "27.0.1",
+		"@prismicio/client": "7.21.0",
 		"@prismicio/custom-types-client": "2.1.0",
 		"@prismicio/plugin-kit": "workspace:*",
-		"@prismicio/types-internal": "3.11.2",
-		"@segment/analytics-node": "2.1.2",
+		"@prismicio/types-internal": "3.16.1",
+		"@segment/analytics-node": "2.3.0",
 		"cookie": "1.1.1",
 		"cors": "2.8.5",
-		"execa": "7.1.1",
-		"fp-ts": "2.13.1",
-		"get-port": "6.1.2",
-		"h3": "1.6.0",
-		"io-ts": "2.2.20",
+		"execa": "9.6.0",
+		"fp-ts": "2.16.11",
+		"get-port": "7.1.0",
+		"h3": "1.15.4",
+		"io-ts": "2.2.22",
 		"io-ts-reporters": "2.0.1",
 		"io-ts-types": "0.5.19",
 		"node-fetch": "3.3.2",
 		"prettier": "3.7.1",
-		"rc9": "2.0.1",
-		"semver": "7.3.8"
+		"rc9": "2.1.2",
+		"semver": "7.7.3",
+		"zod": "4.1.13"
 	},
 	"devDependencies": {
-		"@amplitude/experiment-node-server": "1.8.1",
+		"@amplitude/experiment-node-server": "1.12.1",
+		"@eslint/js": "9.28.0",
 		"@types/cors": "2.8.19",
-		"@types/semver": "7.3.13",
-		"@typescript-eslint/eslint-plugin": "5.55.0",
-		"@typescript-eslint/parser": "5.55.0",
-		"depcheck": "1.4.3",
-		"eslint": "8.37.0",
-		"eslint-config-prettier": "9.0.0",
-		"eslint-plugin-prettier": "5.0.1",
-		"eslint-plugin-tsdoc": "0.2.17",
+		"@types/semver": "7.7.1",
+		"depcheck": "1.4.7",
+		"eslint": "9.39.1",
+		"eslint-config-prettier": "10.1.8",
+		"eslint-plugin-tsdoc": "0.5.0",
 		"prettier": "3.7.1",
 		"prettier-plugin-jsdoc": "1.7.0",
-		"typescript": "4.9.5",
-		"vite": "5.4.20",
-		"vite-plugin-sdk": "0.1.1"
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.33.0",
+		"vite": "7.2.4",
+		"vite-plugin-sdk": "0.1.5"
 	}
 }

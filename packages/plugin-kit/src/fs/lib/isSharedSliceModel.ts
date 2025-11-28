@@ -1,6 +1,8 @@
-import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
-export function isSharedSliceModel(input: unknown): input is SharedSlice {
+export function isSharedSliceModel(
+	input: unknown,
+): input is TypesInternal.SharedSlice {
 	return (
 		typeof input === "object" &&
 		input !== null &&

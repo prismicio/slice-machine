@@ -1,4 +1,4 @@
-import * as cookie from "cookie";
+import { parseSetCookie, type SetCookie } from "cookie";
 import * as t from "io-ts";
 import {
 	createEvent,
@@ -50,8 +50,8 @@ export const createPrismicAuthManagerMiddleware = (
 			}
 
 			const token = value.cookies
-				.map((c) => cookie.parseSetCookie(c))
-				.find((c) => c.name === "prismic-auth")?.value;
+				.map((c: string) => parseSetCookie(c))
+				.find((c: SetCookie) => c.name === "prismic-auth")?.value;
 
 			if (!token) {
 				throw new Error("No token found in cookies");

@@ -1,4 +1,4 @@
-import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
 import { CUSTOM_TYPE_MODEL_FILENAME } from "./constants";
 import {
@@ -10,7 +10,7 @@ export type WriteCustomTypeModelArgs = Omit<
 	WriteCustomTypeFileArgs,
 	"customTypeID" | "filename" | "contents"
 > & {
-	model: CustomType;
+	model: TypesInternal.CustomType;
 };
 
 /**

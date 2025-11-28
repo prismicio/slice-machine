@@ -16,16 +16,16 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts",
 			"import": "./dist/index.js"
 		},
 		"./cli": {
-			"require": "./dist/cli.cjs",
+			"types": "./dist/cli.d.ts",
 			"import": "./dist/cli.js"
 		},
 		"./package.json": "./package.json"
 	},
-	"main": "dist/index.cjs",
+	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"bin": {
@@ -47,39 +47,39 @@
 		"dev": "vite build --watch",
 		"types": "tsc --noEmit",
 		"format": "prettier --write .",
-		"lint": "eslint --max-warnings 0 --ext .js,.ts .",
+		"lint": "eslint --max-warnings 0 .",
 		"prepack": "$npm_execpath run build",
 		"depcheck": "depcheck --config=.depcheckrc",
 		"audit": "yarn npm audit --environment production --severity high"
 	},
 	"dependencies": {
-		"@antfu/ni": "0.20.0",
+		"@antfu/ni": "27.0.1",
 		"@prismicio/adapter-next": "workspace:*",
 		"@prismicio/adapter-nuxt": "workspace:*",
 		"@prismicio/adapter-nuxt2": "workspace:*",
 		"@prismicio/adapter-sveltekit": "workspace:*",
 		"@prismicio/manager": "workspace:*",
-		"@sentry/node": "7.116.0",
-		"chalk": "4.1.2",
+		"@sentry/node": "10.27.0",
+		"chalk": "5.6.2",
 		"listr": "0.14.3",
-		"meow": "11.0.0",
-		"open": "8.4.2",
-		"semver": "7.3.8"
+		"meow": "14.0.0",
+		"open": "11.0.0",
+		"semver": "7.7.3",
+		"zod": "4.1.13"
 	},
 	"devDependencies": {
-		"@types/listr": "0.14.4",
-		"@types/semver": "7.3.13",
-		"@typescript-eslint/eslint-plugin": "5.55.0",
-		"@typescript-eslint/parser": "5.55.0",
-		"depcheck": "1.4.3",
-		"eslint": "8.37.0",
-		"eslint-config-prettier": "9.0.0",
-		"eslint-plugin-prettier": "5.0.1",
-		"eslint-plugin-tsdoc": "0.2.17",
+		"@eslint/js": "9.28.0",
+		"@types/listr": "0.14.10",
+		"@types/semver": "7.7.1",
+		"depcheck": "1.4.7",
+		"eslint": "9.39.1",
+		"eslint-config-prettier": "10.1.8",
+		"eslint-plugin-tsdoc": "0.5.0",
 		"prettier": "3.7.1",
 		"prettier-plugin-jsdoc": "1.7.0",
-		"typescript": "4.9.5",
-		"vite": "5.4.20",
-		"vite-plugin-sdk": "0.1.1"
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.33.0",
+		"vite": "7.2.4",
+		"vite-plugin-sdk": "0.1.5"
 	}
 }

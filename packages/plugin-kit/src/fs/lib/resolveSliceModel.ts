@@ -1,4 +1,4 @@
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
 import { PluginSystemActions } from "../../createPluginSystemActions";
 
@@ -9,12 +9,12 @@ export type ResolveSliceModelArgs =
 			actions: PluginSystemActions;
 	  }
 	| {
-			model: SharedSlice;
+			model: TypesInternal.SharedSlice;
 	  };
 
 export async function resolveSliceModel(
 	args: ResolveSliceModelArgs,
-): Promise<SharedSlice> {
+): Promise<TypesInternal.SharedSlice> {
 	if ("model" in args) {
 		return args.model;
 	}

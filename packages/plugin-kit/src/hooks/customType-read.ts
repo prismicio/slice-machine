@@ -1,4 +1,4 @@
-import type { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
 import type {
 	ExtendPluginSystemHook,
@@ -17,7 +17,7 @@ export type CustomTypeReadHookData = {
  * Return value for `custom-type:read` hook handlers.
  */
 export type CustomTypeReadHookReturnType = {
-	model: CustomType;
+	model: TypesInternal.CustomType;
 };
 
 /**

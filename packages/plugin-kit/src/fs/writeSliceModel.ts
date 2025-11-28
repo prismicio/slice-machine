@@ -1,4 +1,4 @@
-import type { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
 import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
 import { writeSliceFile, WriteSliceFileArgs } from "./writeSliceFile";
@@ -7,7 +7,7 @@ export type WriteSliceModelArgs = Omit<
 	WriteSliceFileArgs,
 	"filename" | "contents" | "sliceID"
 > & {
-	model: SharedSlice;
+	model: TypesInternal.SharedSlice;
 };
 
 /**

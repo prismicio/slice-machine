@@ -113,12 +113,14 @@ export class PrismicAuthManager {
 	async nodeLoginSession(
 		args: PrismicAuthManagerNodeLoginSessionArgs,
 	): Promise<void> {
-		return new Promise<void>(async (resolve) => {
+		return new Promise<void>((resolve, reject) => {
 			// Timeout attempt after 3 minutes
 			const timeout = setTimeout(() => {
 				server.close();
-				throw new Error(
-					"Login timeout, server did not receive a response within a 3-minute delay",
+				reject(
+					new Error(
+						"Login timeout, server did not receive a response within a 3-minute delay",
+					),
 				);
 			}, 180_000);
 
@@ -140,16 +142,12 @@ export class PrismicAuthManager {
 
 			// Start server
 			const server = http.createServer(h3.toNodeListener(app));
-			await new Promise<void>((resolve) => {
-				server.once("listening", () => {
-					resolve();
-				});
-				server.listen(args.port, "127.0.0.1");
+			server.once("listening", () => {
+				if (args.onListenCallback) {
+					args.onListenCallback();
+				}
 			});
-
-			if (args.onListenCallback) {
-				args.onListenCallback();
-			}
+			server.listen(args.port, "127.0.0.1");
 		});
 	}
 
@@ -178,7 +176,7 @@ export class PrismicAuthManager {
 						"User-Agent": PRISMIC_CLI_USER_AGENT,
 					},
 				});
-			} catch (error) {
+			} catch {
 				// Noop, we return if `res` is not defined.
 			}
 

@@ -1,4 +1,4 @@
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import { source as svelte } from "common-tags";
 
 import { pascalCase } from "../lib/pascalCase";
@@ -14,7 +14,7 @@ Placeholder component for {slice.slice_type} (variation: {slice.variation}) slic
 `;
 
 export function sliceTemplate(args: {
-	model: SharedSlice;
+	model: TypesInternal.SharedSlice;
 	typescript: boolean;
 	version: number;
 }): string {

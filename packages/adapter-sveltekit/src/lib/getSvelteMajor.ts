@@ -13,7 +13,7 @@ export const getSvelteMajor = async (): Promise<number> => {
 	const { version } = JSON.parse(await readFile(packageJSONPath, "utf8"));
 
 	const major = Number.parseInt(version.split(".")[0]);
-	if (major === Number.NaN) {
+	if (Number.isNaN(major)) {
 		throw new Error(
 			`Unable to parse svelte's installed version number: "${version}"`,
 		);

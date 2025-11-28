@@ -38,27 +38,3 @@ export const readPrismicrc = (dir: string): Prismicrc => {
 		...projectPrismicrc,
 	};
 };
-
-export const writePrismicrc = (config: Prismicrc, dir?: string): void => {
-	const { value: validatedConfig, error } = decode(Prismicrc, config);
-
-	if (error) {
-		throw new Error(`Failed to validate config: ${error.errors.join(", ")}`);
-	}
-
-	dir
-		? rc9.write(validatedConfig, { dir, name: PRISMICRC })
-		: rc9.writeUser(validatedConfig, PRISMICRC);
-};
-
-export const updatePrismicrc = (config: Prismicrc, dir?: string): Prismicrc => {
-	const { value: validatedConfig, error } = decode(Prismicrc, config);
-
-	if (error) {
-		throw new Error(`Failed to validate config: ${error.errors.join(", ")}`);
-	}
-
-	return dir
-		? rc9.update(validatedConfig, { dir, name: PRISMICRC })
-		: rc9.updateUser(validatedConfig, PRISMICRC);
-};

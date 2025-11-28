@@ -1,4 +1,4 @@
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import * as path from "node:path";
 
 import { PluginSystemHelpers } from "../createPluginSystemHelpers";
@@ -18,7 +18,7 @@ export type ReadSliceModelArgs = {
 };
 
 export type ReadSliceModelReturnType = {
-	model: SharedSlice;
+	model: TypesInternal.SharedSlice;
 };
 
 export const readSliceModel = async (
@@ -58,7 +58,7 @@ export const readSliceModel = async (
 							) {
 								return modelContents;
 							}
-						} catch (error) {
+						} catch {
 							unreadableModelPaths.push(modelPath);
 						}
 					}

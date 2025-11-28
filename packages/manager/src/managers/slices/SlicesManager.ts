@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import {
 	CallHookReturnType,
 	HookError,
@@ -41,24 +41,24 @@ type PrismicManagerReadAllSlicesForLibraryArgs = {
 
 type PrismicManagerUpdateSliceArgs = {
 	libraryID: string;
-	model: SharedSlice;
+	model: TypesInternal.SharedSlice;
 };
 
 type PrismicManagerReadAllSlicesForLibraryReturnType = {
-	models: { model: SharedSlice }[];
+	models: { model: TypesInternal.SharedSlice }[];
 	errors: (DecodeError | HookError)[];
 };
 
 type PrismicManagerReadAllSlicesReturnType = {
 	models: {
 		libraryID: string;
-		model: SharedSlice;
+		model: TypesInternal.SharedSlice;
 	}[];
 	errors: (DecodeError | HookError)[];
 };
 
 type PrismicManagerReadSliceReturnType = {
-	model: SharedSlice | undefined;
+	model: TypesInternal.SharedSlice | undefined;
 	errors: (DecodeError | HookError)[];
 };
 
@@ -218,7 +218,7 @@ export class SlicesManager extends BaseManager {
 		);
 		const { data, errors } = decodeHookResult(
 			t.type({
-				model: SharedSlice,
+				model: TypesInternal.SharedSlice,
 			}),
 			hookResult,
 		);
@@ -290,7 +290,7 @@ export class SlicesManager extends BaseManager {
 		}
 	}
 
-	async fetchRemoteSlices(): Promise<SharedSlice[]> {
+	async fetchRemoteSlices(): Promise<TypesInternal.SharedSlice[]> {
 		const authenticationToken = await this.user.getAuthenticationToken();
 		const repositoryName = await this.project.getRepositoryName();
 
