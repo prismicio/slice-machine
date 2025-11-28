@@ -3320,13 +3320,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@msgpack/msgpack@npm:^2.8.0":
-  version: 2.8.0
-  resolution: "@msgpack/msgpack@npm:2.8.0"
-  checksum: bead9393f57239007a2fe455df5277cbc03b125f14f310162a652b81471dcf3ab6780eaa24b36e20aa742998910a6840147d08b7267063b8e2de5d40c624360e
-  languageName: node
-  linkType: hard
-
 "@mswjs/cookies@npm:^0.2.2":
   version: 0.2.2
   resolution: "@mswjs/cookies@npm:0.2.2"
@@ -4770,7 +4763,6 @@ __metadata:
     node-fetch: 3.3.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
-    r19: 0.1.8
     rc9: 2.0.1
     semver: 7.3.8
     typescript: 4.9.5
@@ -19312,15 +19304,6 @@ __metadata:
   version: 1.0.0
   resolution: "quote-unquote@npm:1.0.0"
   checksum: 955a2ead534f5b6a3f8d4dc5a4b95ac6468213d3fb11f8c1592a0a56345c45a3d14d5ca04d3de2bc9891493fcac38c03dfa91c48a6159aef50124e9c5afcea49
-  languageName: node
-  linkType: hard
-
-"r19@npm:0.1.8":
-  version: 0.1.8
-  resolution: "r19@npm:0.1.8"
-  dependencies:
-    "@msgpack/msgpack": ^2.8.0
-  checksum: c3c3290bea63dd415b4c4bb414ae4ac7f4835e9bc1d8b82b09545a1f78456736d04cca48e54b1c4c8c97f49f9aa21539cd77d1f60a5504c7342eec2b505a9f2d
   languageName: node
   linkType: hard
 
