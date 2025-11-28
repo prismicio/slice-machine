@@ -322,10 +322,11 @@ async function publish(options?: Options): Promise<void> {
   // Print published versions
   if (!dryRun && publishResult) {
     console.log("\n✅ Published packages:");
-    for (const [packageName, packageReleaseVersion] of packageNameToReleaseVersion) {
-      console.log(
-        chalk.green(`• ${packageName}@${packageReleaseVersion}`),
-      );
+    for (const [
+      packageName,
+      packageReleaseVersion,
+    ] of packageNameToReleaseVersion) {
+      console.log(chalk.green(`• ${packageName}@${packageReleaseVersion}`));
     }
   }
 
