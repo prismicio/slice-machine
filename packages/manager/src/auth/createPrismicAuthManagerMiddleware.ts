@@ -1,3 +1,4 @@
+import * as cookie from "cookie";
 import * as t from "io-ts";
 import {
 	createEvent,
@@ -22,7 +23,6 @@ export type PrismicAuthCheckStatusResponse =
 	| {
 			status: "ok";
 			shortId: string;
-			intercomHash: string;
 	  }
 	| {
 			status: "pending";
@@ -49,9 +49,17 @@ export const createPrismicAuthManagerMiddleware = (
 				throw new Error(`Invalid auth payload: ${error.errors.join(", ")}`);
 			}
 
+			const token = value.cookies
+				.map((c) => cookie.parseSetCookie(c))
+				.find((c) => c.name === "prismic-auth")?.value;
+
+			if (!token) {
+				throw new Error("No token found in cookies");
+			}
+
 			await args.prismicAuthManager.login({
 				email: value.email,
-				cookies: value.cookies,
+				token: token,
 			});
 
 			if (args.onLoginCallback) {

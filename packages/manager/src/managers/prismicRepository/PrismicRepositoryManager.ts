@@ -4,7 +4,6 @@ import { fold } from "fp-ts/Either";
 
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decode } from "../../lib/decode";
-import { serializeCookies } from "../../lib/serializeCookies";
 
 import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
@@ -264,9 +263,9 @@ export class PrismicRepositoryManager extends BaseManager {
 		repository?: string;
 		skipAuthentication?: boolean;
 	}): Promise<Response> {
-		let cookies;
+		let token;
 		try {
-			cookies = await this.user.getAuthenticationCookies();
+			token = await this.user.getAuthenticationToken();
 		} catch (e) {
 			if (!args.skipAuthentication) {
 				throw e;
@@ -287,12 +286,9 @@ export class PrismicRepositoryManager extends BaseManager {
 			method: args.method,
 			body: args.body ? JSON.stringify(args.body) : undefined,
 			headers: {
-				// Some endpoints rely on the authorization header...
-
-				...(cookies !== undefined
+				...(token !== undefined
 					? {
-							Authorization: `Bearer ${cookies["prismic-auth"]}`,
-							Cookie: serializeCookies(cookies),
+							Authorization: `Bearer ${token}`,
 					  }
 					: {}),
 				"User-Agent": PRISMIC_CLI_USER_AGENT,

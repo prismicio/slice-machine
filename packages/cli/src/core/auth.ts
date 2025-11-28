@@ -7,9 +7,8 @@ import { listr, listrRun } from "../utils/listr";
 export async function login(manager: PrismicManager): Promise<void> {
 	return listrRun([
 		{
-			title: getLoggingInTitle(),
+			title: "Logging in to Prismic...",
 			task: async (_, parentTask) => {
-				parentTask.title = getLoggingInTitle("Validating session...");
 				const isLoggedIn = await manager.user.checkIsLoggedIn();
 
 				if (!isLoggedIn) {

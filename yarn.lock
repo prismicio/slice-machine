@@ -4752,7 +4752,7 @@ __metadata:
     "@types/semver": 7.3.13
     "@typescript-eslint/eslint-plugin": 5.55.0
     "@typescript-eslint/parser": 5.55.0
-    cookie: 1.0.1
+    cookie: 1.1.1
     cors: 2.8.5
     depcheck: 1.4.3
     eslint: 8.37.0
@@ -8875,10 +8875,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:1.0.1":
-  version: 1.0.1
-  resolution: "cookie@npm:1.0.1"
-  checksum: e2ff4879d816ea27dab69651c06d328b1f4214ccefa1023b6ebf85787bc23b3cad777ed51b4e54c01d161c374a05fc86e45e51ee3d9fafb48a836439c56b2458
+"cookie@npm:1.1.1":
+  version: 1.1.1
+  resolution: "cookie@npm:1.1.1"
+  checksum: e40c4ff817a73ec0a41413654ca9a71e6207bd6e511151bb1d307aef2903eb59771127a85474afe0e12a8982804f7b03cce0bda798b55c306aca9608b4b9acab
   languageName: node
   linkType: hard
 

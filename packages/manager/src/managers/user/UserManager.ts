@@ -31,9 +31,5 @@ export class UserManager extends BaseManager {
 	getAuthenticationToken = this.prismicAuthManager.getAuthenticationToken.bind(
 		this.prismicAuthManager,
 	);
-	getAuthenticationCookies =
-		this.prismicAuthManager.getAuthenticationCookies.bind(
-			this.prismicAuthManager,
-		);
 	getProfile = this.prismicAuthManager.getProfile.bind(this.prismicAuthManager);
 }

@@ -6,12 +6,10 @@ import * as http from "node:http";
 
 import * as h3 from "h3";
 import fetch from "../lib/fetch";
-import cookie from "cookie";
 import cors from "cors";
 import getPort from "get-port";
 
 import { decode } from "../lib/decode";
-import { serializeCookies } from "../lib/serializeCookies";
 
 import { API_ENDPOINTS } from "../constants/API_ENDPOINTS";
 import { PRISMIC_CLI_USER_AGENT } from "../constants/PRISMIC_CLI_USER_AGENT";
@@ -22,32 +20,17 @@ import {
 	UnexpectedDataError,
 } from "../errors";
 
-const COOKIE_SEPARATOR = "; ";
-const AUTH_COOKIE_KEY = "prismic-auth";
-const SESSION_COOKIE_KEY = "SESSION";
-
 const PERSISTED_AUTH_STATE_FILE_NAME = ".prismic";
 const DEFAULT_PERSISTED_AUTH_STATE: PrismicAuthState = {
 	base: "https://prismic.io",
-	cookies: {},
 };
 
 const PrismicAuthState = t.intersection([
 	t.type({
 		base: t.string,
-		cookies: t.intersection([
-			t.partial({
-				[AUTH_COOKIE_KEY]: t.string,
-				SESSION: t.string,
-			}),
-			t.record(t.string, t.string),
-		]),
 	}),
 	t.partial({
-		shortId: t.string,
-		intercomHash: t.string,
-		oauthAccessToken: t.string,
-		authUrl: t.string,
+		token: t.string,
 	}),
 ]);
 export type PrismicAuthState = t.TypeOf<typeof PrismicAuthState>;
@@ -70,7 +53,7 @@ type PrismicAuthManagerConstructorArgs = {
 
 type PrismicAuthManagerLoginArgs = {
 	email: string;
-	cookies: string[];
+	token: string;
 };
 
 type PrismicAuthManagerGetLoginSessionInfoReturnType = {
@@ -90,32 +73,9 @@ type GetProfileForAuthenticationTokenArgs = {
 const checkHasAuthenticationToken = (
 	authState: PrismicAuthState,
 ): authState is PrismicAuthState & {
-	cookies: Required<
-		Pick<
-			PrismicAuthState["cookies"],
-			typeof AUTH_COOKIE_KEY | typeof SESSION_COOKIE_KEY
-		>
-	>;
+	token: string;
 } => {
-	return Boolean(
-		authState.cookies[AUTH_COOKIE_KEY] && authState.cookies[SESSION_COOKIE_KEY],
-	);
-};
-
-const parseCookies = (cookies: string): Record<string, string> => {
-	const parsed = cookie.parse(cookies, {
-		// Don't escape any values.
-		decode: (value) => value,
-	});
-
-	// Filter out undefined values
-	return Object.fromEntries(
-		Object.entries(parsed).filter((entry): entry is [string, string] => {
-			const [_, value] = entry;
-
-			return value !== undefined;
-		}),
-	);
+	return Boolean(authState.token);
 };
 
 export class PrismicAuthManager {
@@ -127,27 +87,12 @@ export class PrismicAuthManager {
 		this.scopedDirectory = scopedDirectory;
 	}
 
-	// TODO: Make the `cookies` argument more explicit. What are these
-	// mysterious cookies?
 	async login(args: PrismicAuthManagerLoginArgs): Promise<void> {
 		const authState = await this._readPersistedAuthState();
 
 		// Set the auth's URL base to the current base at runtime.
 		authState.base = API_ENDPOINTS.PrismicWroom;
-		authState.cookies = {
-			...authState.cookies,
-			...parseCookies(args.cookies.join(COOKIE_SEPARATOR)),
-		};
-
-		if (checkHasAuthenticationToken(authState)) {
-			const authenticationToken = authState.cookies[AUTH_COOKIE_KEY];
-			const profile = await this._getProfileForAuthenticationToken({
-				authenticationToken,
-			});
-
-			authState.shortId = profile.shortId;
-			authState.intercomHash = profile.intercomHash;
-		}
+		authState.token = args.token;
 
 		await this._writePersistedAuthState(authState);
 	}
@@ -213,11 +158,7 @@ export class PrismicAuthManager {
 	async logout(): Promise<void> {
 		const authState = await this._readPersistedAuthState();
 
-		// Remove all Prismic cookies, short ID, and Intercom hash
-		// associated with the currently logged in user.
-		authState.cookies = {};
-		authState.shortId = undefined;
-		authState.intercomHash = undefined;
+		authState.token = undefined;
 
 		await this._writePersistedAuthState(authState);
 	}
@@ -230,7 +171,7 @@ export class PrismicAuthManager {
 				"./validate",
 				API_ENDPOINTS.PrismicLegacyAuthenticationApi,
 			);
-			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
+			url.searchParams.set("token", authState.token);
 
 			let res;
 			try {
@@ -255,32 +196,37 @@ export class PrismicAuthManager {
 		}
 	}
 
-	async getAuthenticationCookies(): Promise<
-		PrismicAuthState["cookies"] &
-			Required<
-				Pick<
-					PrismicAuthState["cookies"],
-					typeof AUTH_COOKIE_KEY | typeof SESSION_COOKIE_KEY
-				>
-			>
-	> {
-		const isLoggedIn = await this.checkIsLoggedIn();
+	async getAuthenticationToken(): Promise<string> {
+		// If already logged in with a valid token, return it
+		let isLoggedIn = await this.checkIsLoggedIn();
 
 		if (isLoggedIn) {
 			const authState = await this._readPersistedAuthState();
 
-			if (checkHasAuthenticationToken(authState)) {
-				return authState.cookies;
+			if (authState.token) {
+				return authState.token;
 			}
 		}
 
+		// Not logged in - attempt silent token refresh
+		// Note: checkIsLoggedIn() logs out on invalid tokens, so refresh
+		// will only work if there was no token (edge case) or network failed
+		try {
+			await this.refreshAuthenticationToken();
+
+			// Verify the refreshed token is valid
+			isLoggedIn = await this.checkIsLoggedIn();
+			if (isLoggedIn) {
+				const authState = await this._readPersistedAuthState();
+				if (authState.token) {
+					return authState.token;
+				}
+			}
+		} catch {
+			// Refresh failed - fall through to throw UnauthenticatedError
+		}
+
 		throw new UnauthenticatedError();
-	}
-
-	async getAuthenticationToken(): Promise<string> {
-		const cookies = await this.getAuthenticationCookies();
-
-		return cookies[AUTH_COOKIE_KEY];
 	}
 
 	async refreshAuthenticationToken(): Promise<void> {
@@ -291,7 +237,7 @@ export class PrismicAuthManager {
 				"./refreshtoken",
 				API_ENDPOINTS.PrismicLegacyAuthenticationApi,
 			);
-			url.searchParams.set("token", authState.cookies[AUTH_COOKIE_KEY]);
+			url.searchParams.set("token", authState.token);
 
 			const res = await fetch(url.toString(), {
 				headers: {
@@ -301,7 +247,7 @@ export class PrismicAuthManager {
 			const text = await res.text();
 
 			if (res.ok) {
-				authState.cookies[AUTH_COOKIE_KEY] = text;
+				authState.token = text;
 
 				await this._writePersistedAuthState(authState);
 			} else {
@@ -366,20 +312,11 @@ export class PrismicAuthManager {
 			rawAuthState = JSON.parse(authStateFileContents);
 		} catch {
 			// Write a default persisted state if it doesn't already exist.
-
-			rawAuthState = {
-				...DEFAULT_PERSISTED_AUTH_STATE,
-				cookies: serializeCookies(DEFAULT_PERSISTED_AUTH_STATE.cookies),
-			};
+			rawAuthState = DEFAULT_PERSISTED_AUTH_STATE;
 			authStateFileContents = JSON.stringify(rawAuthState, null, "\t");
 
 			await fs.mkdir(path.dirname(authStateFilePath), { recursive: true });
 			await fs.writeFile(authStateFilePath, authStateFileContents);
-		}
-
-		// Decode cookies into a record for convenience.
-		if (typeof rawAuthState.cookies === "string") {
-			rawAuthState.cookies = parseCookies(rawAuthState.cookies);
 		}
 
 		const { value: authState, error } = decode(PrismicAuthState, rawAuthState);
@@ -396,16 +333,8 @@ export class PrismicAuthManager {
 	): Promise<void> {
 		const authStateFilePath = this._getPersistedAuthStateFilePath();
 
-		const preparedAuthState = {
-			...authState,
-			cookies: serializeCookies(authState.cookies),
-		};
-
 		try {
-			await fs.writeFile(
-				authStateFilePath,
-				JSON.stringify(preparedAuthState, null, 2),
-			);
+			await fs.writeFile(authStateFilePath, JSON.stringify(authState, null, 2));
 		} catch (error) {
 			throw new InternalError(
 				"Failed to write Prismic authentication state to the file system.",

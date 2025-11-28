@@ -63,7 +63,7 @@
 		"@prismicio/plugin-kit": "workspace:*",
 		"@prismicio/types-internal": "3.11.2",
 		"@segment/analytics-node": "2.1.2",
-		"cookie": "1.0.1",
+		"cookie": "1.1.1",
 		"cors": "2.8.5",
 		"execa": "7.1.1",
 		"fp-ts": "2.13.1",
