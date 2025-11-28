@@ -35,7 +35,13 @@
 		"bin",
 		"dist",
 		"src"
-	],
+	],	
+	"engines": {
+		"node": ">=20.19.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch",
@@ -70,14 +76,10 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
-		"msw": "1.1.0",
 		"prettier": "3.0.3",
 		"prettier-plugin-jsdoc": "1.1.1",
 		"typescript": "4.9.5",
 		"vite": "5.4.20",
 		"vite-plugin-sdk": "0.1.1"
-	},
-	"publishConfig": {
-		"access": "public"
 	}
 }

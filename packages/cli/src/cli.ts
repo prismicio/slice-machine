@@ -11,6 +11,10 @@ import { name as pkgName, version as pkgVersion } from "../package.json";
 import { login } from "./core/auth";
 import { init } from "./commands/init";
 import { sync } from "./commands/sync";
+import { warnIfUnsupportedNode } from "./utils/node";
+
+// Warn early if Node.js version is unsupported
+warnIfUnsupportedNode();
 
 const cli = meow(
 	`

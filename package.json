@@ -1,7 +1,7 @@
 {
   "private": true,
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19.0"
   },
   "packageManager": "yarn@3.6.0",
   "scripts": {
@@ -22,11 +22,6 @@
     "format:check": "prettier --check .",
     "publish": "tsx scripts/publish.ts",
     "clean": "rimraf --glob '{packages/*/{dist,package.tgz}}'"
-  },
-  "dependenciesMeta": {
-    "msw": {
-      "built": true
-    }
   },
   "devDependencies": {
     "@types/semver": "7.3.13",

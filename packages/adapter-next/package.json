@@ -36,6 +36,12 @@
 		"dist",
 		"src"
 	],
+	"engines": {
+		"node": ">=20.19.0"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"build": "vite build",
 		"dev": "vite build --watch",
@@ -73,11 +79,5 @@
 	"peerDependencies": {
 		"next": "^11 || ^12 || ^13 || ^14 || ^15 || ^16.0.0-beta.0",
 		"react": "^17 || ^18 || ^19.0.0-rc.0"
-	},
-	"engines": {
-		"node": ">=14.15.0"
-	},
-	"publishConfig": {
-		"access": "public"
 	}
 }
