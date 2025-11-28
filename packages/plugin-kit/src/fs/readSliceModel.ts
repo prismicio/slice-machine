@@ -65,7 +65,7 @@ export const readSliceModel = async (
 		);
 		const [model] = models.filter(
 			(model): model is TypesInternal.SharedSlice =>
-				model && isSharedSliceModel(model),
+				isSharedSliceModel(model),
 		);
 
 		if (model) {
