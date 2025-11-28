@@ -125,6 +125,7 @@ export type {
 	ProjectInitHookData,
 	ProjectInitHookReturnType,
 } from "./hooks/project-init";
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Internal (for Plugin System)
@@ -135,7 +136,6 @@ export {
 	createPluginSystemRunner,
 	PluginSystemRunner,
 	REQUIRED_ADAPTER_HOOKS,
-	ADAPTER_ONLY_HOOKS,
 } from "./createPluginSystemRunner";
 
 export type { CallHookReturnType } from "./lib/HookSystem";

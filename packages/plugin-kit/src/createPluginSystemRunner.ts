@@ -1,6 +1,4 @@
-import * as path from "node:path";
-import _module, { createRequire } from "node:module";
-
+import _module from "node:module";
 import { defu } from "defu";
 
 import { HookSystem } from "./lib/HookSystem";
@@ -40,20 +38,11 @@ export const REQUIRED_ADAPTER_HOOKS: PluginHookTypes[] = [
 	"custom-type:update",
 	"custom-type-library:read",
 ];
-/**
- * @internal
- */
-export const ADAPTER_ONLY_HOOKS: PluginHookTypes[] = [
-	"slice:read",
-	"slice-library:read",
-	"custom-type:read",
-	"custom-type-library:read",
-];
 
 type PluginSystemRunnerConstructorArgs = {
 	project: PrismicProject;
 	hookSystem: HookSystem<PluginHooks>;
-	nativePlugins?: Record<string, Plugin>;
+	nativePlugins: Record<string, Plugin>;
 };
 
 /**
@@ -93,7 +82,7 @@ export class PluginSystemRunner {
 	constructor({
 		project,
 		hookSystem,
-		nativePlugins = {},
+		nativePlugins,
 	}: PluginSystemRunnerConstructorArgs) {
 		this._project = project;
 		this._hookSystem = hookSystem;
@@ -123,40 +112,7 @@ export class PluginSystemRunner {
 		let plugin: Plugin | undefined = undefined;
 
 		if (typeof resolve === "string") {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			try {
-				const noop = path.resolve(this._project.root, "noop.js");
-
-				let resolvedID = resolve;
-
-				// Support Yarn PnP
-				if (
-					process.versions.pnp &&
-					"findPnpApi" in _module &&
-					typeof _module.findPnpApi === "function"
-				) {
-					const pnpApi = _module.findPnpApi(noop);
-					if (pnpApi) {
-						resolvedID = pnpApi.resolveRequest(resolve, noop);
-					}
-				}
-
-				const raw = await createRequire(noop)(resolvedID);
-				plugin = raw.default || raw;
-			} catch (error) {
-				// Only log in development, but not during tests when a native plugin matches.
-				if (
-					import.meta.env.DEV &&
-					!(import.meta.env.TEST && resolve in this._nativePlugins)
-				) {
-					console.error(error);
-				}
-			}
-
-			if (!plugin) {
-				// If an installed plugin cannot be resolved, try loading a native plugin.
-				plugin = this._nativePlugins[resolve];
-			}
+			plugin = this._nativePlugins[resolve];
 
 			if (!plugin) {
 				throw new Error(
@@ -180,10 +136,7 @@ export class PluginSystemRunner {
 		};
 	}
 
-	private async _setupPlugin(
-		plugin: LoadedPlugin,
-		as: "adapter" | "plugin",
-	): Promise<void> {
+	private async _setupPlugin(plugin: LoadedPlugin): Promise<void> {
 		const context = createPluginSystemContext({
 			actions: this.rawActions,
 			helpers: this.rawHelpers,
@@ -195,23 +148,11 @@ export class PluginSystemRunner {
 			[context],
 		);
 
-		// Prevent plugins from hooking to adapter only hooks
-		const hook: typeof hookSystemScope.hook =
-			as === "adapter"
-				? hookSystemScope.hook
-				: (type, hook, ...args) => {
-						if (ADAPTER_ONLY_HOOKS.includes(type)) {
-							return;
-						}
-
-						return hookSystemScope.hook(type, hook, ...args);
-				  };
-
 		// Run plugin setup with actions and context
 		try {
 			await plugin.setup({
 				...context,
-				hook,
+				hook: hookSystemScope.hook,
 				unhook: hookSystemScope.unhook,
 			});
 		} catch (error) {
@@ -246,25 +187,15 @@ export class PluginSystemRunner {
 	}
 
 	async init(): Promise<void> {
-		const [adapter, ...plugins] = await Promise.all(
-			[
-				this._project.config.adapter,
-				...(this._project.config.plugins ?? []),
-			].map((pluginRegistration) => this._loadPlugin(pluginRegistration)),
-		);
-
-		await Promise.all([
-			this._setupPlugin(adapter, "adapter"),
-			...plugins.map((plugin) => this._setupPlugin(plugin, "plugin")),
-		]);
-
+		const adapter = await this._loadPlugin(this._project.config.adapter);
+		await this._setupPlugin(adapter);
 		this._validateAdapter(adapter);
 	}
 }
 
 type CreatePluginSystemRunnerArgs = {
 	project: PrismicProject;
-	nativePlugins?: Record<string, Plugin>;
+	nativePlugins: Record<string, Plugin>;
 };
 
 /**

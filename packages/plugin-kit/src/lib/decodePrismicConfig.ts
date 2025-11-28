@@ -24,8 +24,6 @@ const PrismicConfigCodec = t.intersection([
 	t.partial({
 		apiEndpoint: t.string,
 		libraries: t.array(t.string),
-		plugins: t.array(PrismicConfigPluginRegistrationCodec),
-		labs: t.partial({ legacySliceUpgrader: t.boolean }),
 	}),
 ]);
 

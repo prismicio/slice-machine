@@ -49,12 +49,10 @@ export type PrismicConfigPluginRegistration<
  * Prismic configuration from `prismic.config.js`.
  */
 export type PrismicConfig = {
-	apiEndpoint?: string;
 	repositoryName: string;
-	libraries?: string[];
 	adapter: PrismicConfigPluginRegistration;
-	plugins?: PrismicConfigPluginRegistration[];
-	labs?: { legacySliceUpgrader?: boolean };
+	libraries?: string[];
+	apiEndpoint?: string;
 };
 
 /**

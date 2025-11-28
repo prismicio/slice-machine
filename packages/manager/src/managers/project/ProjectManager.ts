@@ -9,7 +9,6 @@ import { decodePrismicConfig } from "../../lib/decodePrismicConfig";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
-import { requireResolve } from "../../lib/requireResolve";
 
 import { PackageManager, PrismicConfig } from "../../types";
 
@@ -139,7 +138,9 @@ export class ProjectManager extends BaseManager {
 		);
 
 		await fs.writeFile(configFilePath, config, "utf-8");
-		delete this._cachedPrismicConfig; // Clear config cache
+
+		// Clear config cache
+		delete this._cachedPrismicConfig;
 	}
 
 	async loadPrismicConfig(): Promise<PrismicConfig> {
@@ -173,45 +174,15 @@ export class ProjectManager extends BaseManager {
 			});
 		}
 
-		// Allow cached config reading using `PrismicManager.prototype.getProjectConfig()`.
 		this._cachedPrismicConfig = prismicConfig;
 
 		return prismicConfig;
 	}
 
-	/**
-	 * Returns the project's repository name (i.e. the production environment). It
-	 * ignores the currently selected environment.
-	 *
-	 * Use this method to retrieve the production environment domain.
-	 *
-	 * @returns The project's repository name.
-	 */
 	async getRepositoryName(): Promise<string> {
 		const prismicConfig = await this.getPrismicConfig();
 
 		return prismicConfig.repositoryName;
-	}
-
-	async getAdapterName(): Promise<string> {
-		const prismicConfig = await this.getPrismicConfig();
-		const adapterName =
-			typeof prismicConfig.adapter === "string"
-				? prismicConfig.adapter
-				: prismicConfig.adapter.resolve;
-
-		return adapterName;
-	}
-
-	async locateAdapterDir(): Promise<string> {
-		const projectRoot = await this.getRoot();
-		const adapterName = await this.getAdapterName();
-		const adapterPackageJSONPath = requireResolve(
-			`${adapterName}/package.json`,
-			path.join(projectRoot, "index.js"),
-		);
-
-		return path.dirname(adapterPackageJSONPath);
 	}
 
 	async initProject(args?: ProjectManagerInitProjectArgs): Promise<void> {

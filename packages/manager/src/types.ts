@@ -26,8 +26,6 @@ export type PrismicConfig = {
 	repositoryName: string;
 	libraries?: string[];
 	adapter: PrismicConfigPluginRegistration;
-	plugins?: PrismicConfigPluginRegistration[];
-	labs?: { legacySliceUpgrader?: boolean };
 };
 
 export type OnlyHookErrors<
