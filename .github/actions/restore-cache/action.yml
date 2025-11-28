@@ -1,5 +1,5 @@
-name: Cache node_modules and artifacts
-description: Cache node_modules and artifacts
+name: Cache node_modules
+description: Cache node_modules
 runs:
   using: composite
   steps:
@@ -12,18 +12,3 @@ runs:
           */node_modules
           */*/node_modules
         key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-dependencies
-    - name: Cache artifacts
-      id: cache-artifacts
-      uses: actions/cache@v4
-      with:
-        path: |
-          packages/*/dist
-          packages/core/build
-        key: ${{ runner.os }}-${{ github.run_id }}-artifacts
-    - name: Cache playwright binaries
-      id: cache-playwright-binaries
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cache/ms-playwright
-        key: ${{ runner.os }}-${{ hashFiles('playwright/package.json') }}-playwright-binaries
