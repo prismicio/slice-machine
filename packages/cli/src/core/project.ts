@@ -7,6 +7,7 @@ import chalk from "chalk";
 
 import { type Framework, detectFramework } from "../core/framework";
 import { listr, listrRun } from "../utils/listr";
+import { updateSentryContext } from "../utils/sentry";
 
 type DetectProjectStateArgs = {
 	manager: PrismicManager;
@@ -53,6 +54,9 @@ export async function detectProjectContext(
 						title: "Detecting framework...",
 						task: async (_, task) => {
 							framework = await detectFramework(manager.cwd);
+
+							// Update Sentry context for the framework
+							updateSentryContext({ framework: framework.telemetryID });
 
 							task.title = `Detected framework ${chalk.cyan(framework.name)}`;
 						},

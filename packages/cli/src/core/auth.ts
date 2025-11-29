@@ -3,6 +3,7 @@ import chalk from "chalk";
 import open from "open";
 
 import { listr, listrRun } from "../utils/listr";
+import { updateSentryContext } from "../utils/sentry";
 
 export async function login(manager: PrismicManager): Promise<void> {
 	return listrRun([
@@ -35,6 +36,10 @@ export async function login(manager: PrismicManager): Promise<void> {
 							title: "Fetching user profile...",
 							task: async (_, task) => {
 								const userProfile = await manager.user.getProfile();
+
+								// Update Sentry context for the current user
+								updateSentryContext({ userProfile });
+
 								parentTask.title = `Logged in as ${chalk.cyan(
 									userProfile?.email,
 								)}`;

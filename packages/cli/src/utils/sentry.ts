@@ -1,8 +1,9 @@
 import * as Sentry from "@sentry/node";
-import { PrismicUserProfile, PrismicManager } from "@prismicio/manager";
+import { PrismicUserProfile } from "@prismicio/manager";
 
 import { SENTRY_DSN } from "../constants";
 import * as pkg from "../../package.json";
+import { getPackageInfo } from "./package";
 
 /**
  * Checks whether or not Sentry is enabled.
@@ -17,7 +18,7 @@ const checkIsSentryEnabled = (): boolean =>
 		? import.meta.env.PROD
 		: import.meta.env.VITE_ENABLE_SENTRY === "true";
 
-export function trackSentryError(error: unknown): void {
+export async function trackSentryError(error: unknown): Promise<void> {
 	if (!checkIsSentryEnabled()) {
 		return;
 	}
@@ -25,14 +26,17 @@ export function trackSentryError(error: unknown): void {
 	Sentry.captureException(error, {
 		...(error instanceof Error ? { extra: { cause: error.cause } } : {}),
 	});
+
+	// Flush Sentry events before process exits
+	await Sentry.flush();
 }
 
-export function setupSentry(manager: PrismicManager): void {
+export function setupSentry(): void {
 	if (!checkIsSentryEnabled()) {
 		return;
 	}
 
-	const { environment, release } = manager.versions.getEnvironmentInfo(pkg);
+	const { environment, release } = getPackageInfo(pkg);
 
 	Sentry.init({
 		dsn: SENTRY_DSN,
@@ -45,25 +49,18 @@ export function setupSentry(manager: PrismicManager): void {
 }
 
 type UpdateSentryContextArgs = {
-	manager: PrismicManager;
-	repositoryName: string;
-	framework: string;
+	repositoryName?: string;
+	framework?: string;
+	userProfile?: PrismicUserProfile;
 };
 
 export async function updateSentryContext({
-	manager,
 	repositoryName,
 	framework,
+	userProfile,
 }: UpdateSentryContextArgs): Promise<void> {
 	if (!checkIsSentryEnabled()) {
 		return;
-	}
-
-	let userProfile: PrismicUserProfile | undefined;
-	try {
-		userProfile = await manager.user.getProfile();
-	} catch {
-		// User is not logged in, it doesn't matter
 	}
 
 	if (userProfile) {

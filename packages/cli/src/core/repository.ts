@@ -1,6 +1,7 @@
 import type { PrismicManager } from "@prismicio/manager";
 
 import { listrRun } from "../utils/listr";
+import { updateSentryContext } from "../utils/sentry";
 
 export type ValidateRepositoryArgs = {
 	manager: PrismicManager;
@@ -16,6 +17,9 @@ export async function validateRepository(
 		{
 			title: `Validating repository...`,
 			task: async (_, task) => {
+				// Update Sentry context for the repository name
+				updateSentryContext({ repositoryName: repository });
+
 				const repositoryExists = await manager.prismicRepository.checkExists({
 					domain: repository,
 				});

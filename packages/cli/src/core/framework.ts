@@ -15,6 +15,11 @@ export type Framework = {
 	name: string;
 
 	/**
+	 * Framework 's id sent to Segment from Slice Machine
+	 */
+	telemetryID: "next" | "nuxt-2" | "nuxt" | "sveltekit-1" | "sveltekit-2";
+
+	/**
 	 * Package name of the adapter responsible for this framework
 	 */
 	adapterName: string;
@@ -35,6 +40,7 @@ export type Framework = {
 export const FRAMEWORKS: Record<string, Framework> = {
 	"nuxt-2": {
 		name: "Nuxt 2",
+		telemetryID: "nuxt-2",
 		adapterName: "@prismicio/adapter-nuxt2",
 		compatibility: {
 			nuxt: "^2.0.0",
@@ -42,6 +48,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	nuxt: {
 		name: "Nuxt",
+		telemetryID: "nuxt",
 		adapterName: "@prismicio/adapter-nuxt",
 		compatibility: {
 			nuxt: "^3.0.0 || ^4.0.0",
@@ -49,6 +56,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	next: {
 		name: "Next.js",
+		telemetryID: "next",
 		adapterName: "@prismicio/adapter-next",
 		compatibility: {
 			next: "^11 || ^12 || ^13 || ^14 || ^15 || ^16.0.0-beta.0",
@@ -56,6 +64,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	"sveltekit-1": {
 		name: "SvelteKit",
+		telemetryID: "sveltekit-1",
 		adapterName: "@prismicio/adapter-sveltekit",
 		compatibility: {
 			"@sveltejs/kit": "^1.0.0",
@@ -63,6 +72,7 @@ export const FRAMEWORKS: Record<string, Framework> = {
 	},
 	"sveltekit-2": {
 		name: "SvelteKit",
+		telemetryID: "sveltekit-2",
 		adapterName: "@prismicio/adapter-sveltekit",
 		compatibility: {
 			"@sveltejs/kit": "^2.0.0",

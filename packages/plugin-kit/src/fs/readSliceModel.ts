@@ -63,9 +63,8 @@ export const readSliceModel = async (
 				}
 			}),
 		);
-		const [model] = models.filter(
-			(model): model is TypesInternal.SharedSlice =>
-				isSharedSliceModel(model),
+		const [model] = models.filter((model): model is TypesInternal.SharedSlice =>
+			isSharedSliceModel(model),
 		);
 
 		if (model) {

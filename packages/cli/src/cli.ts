@@ -12,14 +12,11 @@ import { login } from "./core/auth";
 import { init } from "./commands/init";
 import { sync } from "./commands/sync";
 import { warnIfUnsupportedNode } from "./utils/node";
-
-// Warn early if Node.js version is unsupported
-warnIfUnsupportedNode();
+import { setupSentry, trackSentryError } from "./utils/sentry";
+import { displayError, displayHeader, displaySuccess } from "./utils/output";
 
 const cli = meow(
 	`
-Prismic CLI help
-
 DOCUMENTATION
   https://prismic.io/docs
 
@@ -61,49 +58,65 @@ OPTIONS
 	},
 );
 
-const RunArgs = z.discriminatedUnion("command", [
-	z.object({
-		command: z.literal("init"),
-		help: z.boolean().optional(),
-		version: z.boolean().optional(),
-		repository: z
-			.string()
-			.min(1, "Repository name is required to initialize a project"),
-	}),
-	z.object({
-		command: z.literal("sync"),
-		help: z.boolean().optional(),
-		version: z.boolean().optional(),
-	}),
-]);
-export type RunArgs = z.TypeOf<typeof RunArgs>;
-
-if (cli.flags.help) {
-	cli.showHelp(0);
-} else if (cli.flags.version) {
-	console.info(`${pkgName}@${pkgVersion}`);
-	process.exit(0);
-} else {
-	const args = RunArgs.safeParse({
-		...cli.flags,
-		command: cli.input[0],
-	});
-
-	if (!args.success) {
-		console.error(chalk.red(args.error.message));
-		process.exit(1);
-	}
-
-	if (cli.input.length > 1) {
-		console.error(chalk.red("Too many arguments. Expected 'init' or 'sync'."));
-		process.exit(1);
-	}
-
-	run(args.data);
-}
-
-export async function run(args: RunArgs): Promise<void> {
+export async function run(): Promise<void> {
 	try {
+		// Directly display the header so the user see something is happening
+		displayHeader();
+
+		// Setup sentry as early as possible to track errors
+		setupSentry();
+
+		// Warn early if Node.js version is unsupported
+		warnIfUnsupportedNode();
+
+		// Help command
+		if (cli.flags.help) {
+			cli.showHelp(0);
+			process.exit(0);
+		}
+
+		// Version command
+		if (cli.flags.version) {
+			console.info(`${pkgName}@${pkgVersion}`);
+			process.exit(0);
+		}
+
+		// Parse arguments
+		const RunArgs = z.discriminatedUnion("command", [
+			z.object({
+				command: z.literal("init"),
+				help: z.boolean().optional(),
+				version: z.boolean().optional(),
+				repository: z
+					.string()
+					.min(1, "Repository name is required to initialize a project"),
+			}),
+			z.object({
+				command: z.literal("sync"),
+				help: z.boolean().optional(),
+				version: z.boolean().optional(),
+			}),
+		]);
+		const args = RunArgs.safeParse({
+			...cli.flags,
+			command: cli.input[0],
+		});
+
+		// Invalid arguments
+		if (!args.success) {
+			console.error(chalk.red(args.error.message));
+			process.exit(1);
+		}
+
+		// Too many arguments
+		if (cli.input.length > 1) {
+			console.error(
+				chalk.red("Too many arguments. Expected 'init' or 'sync'."),
+			);
+			process.exit(1);
+		}
+
+		// Authentication
 		const manager = createPrismicManager({
 			cwd: process.cwd(),
 			nativePlugins: {
@@ -115,19 +128,42 @@ export async function run(args: RunArgs): Promise<void> {
 		});
 		await login(manager);
 
-		if (args.command === "init") {
+		// Init command
+		if (args.data.command === "init") {
 			await init({
 				manager,
-				repositoryName: args.repository,
+				repositoryName: args.data.repository,
 			});
-		} else if (args.command === "sync") {
+
+			displaySuccess(
+				"Project initialized successfully!",
+				"You're all set to start building with Prismic.",
+			);
+			process.exit(0);
+		}
+
+		// Sync command
+		if (args.data.command === "sync") {
 			await sync({
 				manager,
 			});
+
+			displaySuccess(
+				"Sync completed successfully!",
+				"Your local types are up to date.",
+			);
+			process.exit(0);
 		}
-		process.exit(0);
+
+		// Unknown command
+		throw new Error("Unknown command.");
 	} catch (error) {
-		console.error(error);
+		displayError(error);
+
+		await trackSentryError(error);
+
 		process.exit(1);
 	}
 }
+
+void run();

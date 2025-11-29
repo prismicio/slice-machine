@@ -1,1 +1,1 @@
-export { type RunArgs, run } from "./cli";
+export { run } from "./cli";
