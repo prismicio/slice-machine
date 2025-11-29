@@ -11,7 +11,6 @@ import { name as pkgName, version as pkgVersion } from "../package.json";
 import { login } from "./core/auth";
 import { init } from "./commands/init";
 import { sync } from "./commands/sync";
-import { warnIfUnsupportedNode } from "./utils/node";
 import { setupSentry, trackSentryError } from "./utils/sentry";
 import { displayError, displayHeader, displaySuccess } from "./utils/output";
 
@@ -65,9 +64,6 @@ export async function run(): Promise<void> {
 
 		// Setup sentry as early as possible to track errors
 		setupSentry();
-
-		// Warn early if Node.js version is unsupported
-		warnIfUnsupportedNode();
 
 		// Help command
 		if (cli.flags.help) {
