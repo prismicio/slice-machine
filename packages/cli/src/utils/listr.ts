@@ -1,6 +1,6 @@
-import Listr from "listr";
+import { Listr, type ListrTask, type ListrOptions } from "listr2";
 
-type ListrArgs = [tasks: Listr.ListrTask[], options?: Listr.ListrOptions];
+type ListrArgs = [tasks: ListrTask[], options?: ListrOptions];
 
 export const listr = (...[tasks, options]: ListrArgs): Listr => {
 	return new Listr(tasks, options);

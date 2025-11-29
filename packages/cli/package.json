@@ -60,7 +60,7 @@
 		"@prismicio/manager": "workspace:*",
 		"@sentry/node": "10.27.0",
 		"chalk": "5.6.2",
-		"listr": "0.14.3",
+		"listr2": "9.0.5",
 		"meow": "14.0.0",
 		"open": "11.0.0",
 		"semver": "7.7.3",
@@ -69,7 +69,6 @@
 	"devDependencies": {
 		"@eslint/js": "9.28.0",
 		"@trivago/prettier-plugin-sort-imports": "6.0.0",
-		"@types/listr": "0.14.10",
 		"@types/semver": "7.7.1",
 		"depcheck": "1.4.7",
 		"eslint": "9.39.1",
