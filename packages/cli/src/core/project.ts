@@ -11,13 +11,13 @@ import { updateSentryContext } from "../utils/sentry";
 
 type DetectProjectStateArgs = {
 	manager: PrismicManager;
-	command: "init" | "sync";
+	commandType: "init" | "sync";
 };
 
 export async function detectProjectState(
 	args: DetectProjectStateArgs,
 ): Promise<void> {
-	const { manager, command } = args;
+	const { manager, commandType } = args;
 
 	let prismicConfig: PrismicConfig | undefined;
 
@@ -29,9 +29,9 @@ export async function detectProjectState(
 
 	const legacyConfigExists = await manager.project.checkLegacyConfigExists();
 
-	if (command === "init" && (prismicConfig || legacyConfigExists)) {
+	if (commandType === "init" && (prismicConfig || legacyConfigExists)) {
 		throw new Error("Project has already been initialized.");
-	} else if (command === "sync" && !prismicConfig) {
+	} else if (commandType === "sync" && !prismicConfig) {
 		if (legacyConfigExists) {
 			await manager.project.migrateLegacyConfig();
 		} else {

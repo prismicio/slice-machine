@@ -1,4 +1,4 @@
-import { createPrismicManager } from "@prismicio/manager";
+import type { PrismicManager } from "@prismicio/manager";
 
 import { version as pkgVersion } from "../../package.json";
 import { detectProjectContext, detectProjectState } from "../core/project";
@@ -7,20 +7,20 @@ import { saveSlices } from "../core/slices";
 import { saveCustomTypes } from "../core/customType";
 import { checkCLIVersion } from "../core/version";
 import { displaySuccess } from "../utils/output";
-import { FRAMEWORK_PLUGINS } from "../core/framework";
 import { login } from "../core/auth";
 
-export async function sync(): Promise<void> {
-	const manager = createPrismicManager({
-		cwd: process.cwd(),
-		nativePlugins: FRAMEWORK_PLUGINS,
-	});
+type SyncArgs = {
+	manager: PrismicManager;
+};
 
-	// Authentication - Also update Sentry context
+export async function sync(args: SyncArgs): Promise<void> {
+	const { manager } = args;
+
+	// Authentication - Also updates Sentry context
 	await login(manager);
 
 	// Ensure the project is already initialized
-	await detectProjectState({ manager, command: "sync" });
+	await detectProjectState({ manager, commandType: "sync" });
 
 	// Get repository from Prismic config file
 	const repositoryName = await manager.project.getRepositoryName();
@@ -28,7 +28,7 @@ export async function sync(): Promise<void> {
 	// Ensure the repository exists and the user has write access
 	await validateRepository({ manager, repository: repositoryName });
 
-	// Ensure validity of the framework and package manager - Also update Sentry context
+	// Ensure validity of the framework and package manager - Also updates Sentry context
 	await detectProjectContext(manager);
 
 	// Check CLI version - Voluntarily late so Sentry context is updated
@@ -42,6 +42,14 @@ export async function sync(): Promise<void> {
 
 	// Save Prismic custom types locally
 	await saveCustomTypes({ manager });
+
+	await manager.telemetry.track({
+		event: "prismic-cli:end",
+		commandType: "sync",
+		repository: repositoryName,
+		fullCommand: process.argv.join(" "),
+		success: true,
+	});
 
 	displaySuccess(
 		"Sync completed successfully!",

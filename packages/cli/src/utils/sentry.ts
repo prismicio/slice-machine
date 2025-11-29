@@ -3,6 +3,7 @@ import { PrismicUserProfile } from "@prismicio/manager";
 
 import * as pkg from "../../package.json";
 import { getPackageInfo } from "./package";
+import { handleSilentError } from "./error";
 
 const SENTRY_DSN =
 	import.meta.env.VITE_SENTRY_DSN ||
@@ -22,33 +23,43 @@ const checkIsSentryEnabled = (): boolean =>
 		: import.meta.env.VITE_ENABLE_SENTRY === "true";
 
 export async function trackSentryError(error: unknown): Promise<void> {
-	if (!checkIsSentryEnabled()) {
-		return;
+	try {
+		if (!checkIsSentryEnabled()) {
+			return;
+		}
+
+		Sentry.captureException(error, {
+			...(error instanceof Error
+				? { extra: { cause: error.cause, fullCommand: process.argv.join(" ") } }
+				: {}),
+		});
+
+		// Flush Sentry events before process exit
+		await Sentry.flush();
+	} catch (sentryError) {
+		handleSilentError(sentryError, "Sentry tracking error");
 	}
-
-	Sentry.captureException(error, {
-		...(error instanceof Error ? { extra: { cause: error.cause } } : {}),
-	});
-
-	// Flush Sentry events before process exits
-	await Sentry.flush();
 }
 
 export function setupSentry(): void {
-	if (!checkIsSentryEnabled()) {
-		return;
+	try {
+		if (!checkIsSentryEnabled()) {
+			return;
+		}
+
+		const { environment, release } = getPackageInfo(pkg);
+
+		Sentry.init({
+			dsn: SENTRY_DSN,
+			release,
+			environment,
+			// Increase the default truncation length of 250 to 2500 (x10)
+			// to have enough details in Sentry
+			maxValueLength: 2_500,
+		});
+	} catch (error) {
+		handleSilentError(error, "Sentry setup error");
 	}
-
-	const { environment, release } = getPackageInfo(pkg);
-
-	Sentry.init({
-		dsn: SENTRY_DSN,
-		release,
-		environment,
-		// Increase the default truncation length of 250 to 2500 (x10)
-		// to have enough details in Sentry
-		maxValueLength: 2_500,
-	});
 }
 
 type UpdateSentryContextArgs = {
@@ -62,27 +73,31 @@ export async function updateSentryContext({
 	framework,
 	userProfile,
 }: UpdateSentryContextArgs): Promise<void> {
-	if (!checkIsSentryEnabled()) {
-		return;
-	}
+	try {
+		if (!checkIsSentryEnabled()) {
+			return;
+		}
 
-	if (userProfile) {
-		Sentry.setUser({ id: userProfile.shortId });
-	}
+		if (userProfile) {
+			Sentry.setUser({ id: userProfile.shortId });
+		}
 
-	if (repositoryName) {
-		Sentry.setTag("repository", repositoryName);
-		Sentry.setContext("Repository Data", {
-			name: repositoryName,
+		if (repositoryName) {
+			Sentry.setTag("repository", repositoryName);
+			Sentry.setContext("Repository Data", {
+				name: repositoryName,
+			});
+		}
+
+		if (framework) {
+			Sentry.setTag("framework", framework);
+		}
+
+		Sentry.setContext("Process", {
+			"Command used": process.argv.join(" "),
+			cwd: process.cwd(),
 		});
+	} catch (error) {
+		handleSilentError(error, "Sentry context update error");
 	}
-
-	if (framework) {
-		Sentry.setTag("framework", framework);
-	}
-
-	Sentry.setContext("Process", {
-		"Command used": process.argv.join(" "),
-		cwd: process.cwd(),
-	});
 }

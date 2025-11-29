@@ -2948,7 +2948,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@prismicio/cli@workspace:packages/cli"
   dependencies:
-    "@antfu/ni": 27.0.1
     "@eslint/js": 9.28.0
     "@prismicio/adapter-next": "workspace:*"
     "@prismicio/adapter-nuxt": "workspace:*"

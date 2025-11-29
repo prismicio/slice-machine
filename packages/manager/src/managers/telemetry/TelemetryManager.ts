@@ -1,17 +1,15 @@
+import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 import {
 	Experiment,
 	RemoteEvaluationClient,
 	Variant,
 } from "@amplitude/experiment-node-server";
 import { randomUUID } from "node:crypto";
-import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 
+import { PrismicUserProfile } from "../../auth/PrismicAuthManager";
 import { readPrismicrc } from "../../lib/prismicrc";
-
 import { API_TOKENS } from "../../constants/API_TOKENS";
-
 import { BaseManager } from "../BaseManager";
-
 import {
 	HumanSegmentEventType,
 	HumanSegmentEventTypes,
@@ -23,9 +21,7 @@ type TelemetryManagerInitTelemetryArgs = {
 	appVersion: string;
 };
 
-type TelemetryManagerTrackArgs = SegmentEvents & {
-	_includeEnvironmentKind?: boolean;
-};
+type TelemetryManagerTrackArgs = SegmentEvents;
 
 type TelemetryManagerGroupArgs = {
 	manualLibsCount: number;
@@ -91,7 +87,7 @@ export class TelemetryManager extends BaseManager {
 	}
 
 	async track(args: TelemetryManagerTrackArgs): Promise<void> {
-		const { event, repository, _includeEnvironmentKind, ...properties } = args;
+		const { event, repository, ...properties } = args;
 		let repositoryName = repository;
 
 		if (repositoryName === undefined) {
@@ -116,16 +112,16 @@ export class TelemetryManager extends BaseManager {
 			event: HumanSegmentEventType[event],
 			properties: {
 				nodeVersion: process.versions.node,
-				environmentKind: "prod",
 				...properties,
 			},
 			context: { ...this._context },
 		};
 
+		// Always keep an anonymous ID to keep track of the user before and after identification
+		payload.anonymousId = this._anonymousID;
+
 		if (this._userID) {
 			payload.userId = this._userID;
-		} else {
-			payload.anonymousId = this._anonymousID;
 		}
 
 		if (repositoryName) {
@@ -153,8 +149,7 @@ export class TelemetryManager extends BaseManager {
 		});
 	}
 
-	async identify(): Promise<void> {
-		const userProfile = await this.user.getProfile();
+	async identify(userProfile: PrismicUserProfile): Promise<void> {
 		const payload = {
 			userId: userProfile.shortId,
 			anonymousId: this._anonymousID,
@@ -205,10 +200,11 @@ export class TelemetryManager extends BaseManager {
 			context: { ...this._context },
 		};
 
+		// Always keep an anonymous ID to keep track of the user before and after identification
+		payload.anonymousId = this._anonymousID;
+
 		if (this._userID) {
 			payload.userId = this._userID;
-		} else {
-			payload.anonymousId = this._anonymousID;
 		}
 
 		if (repositoryName) {

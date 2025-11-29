@@ -37,6 +37,9 @@ export async function login(manager: PrismicManager): Promise<void> {
 							task: async (_, task) => {
 								const userProfile = await manager.user.getProfile();
 
+								// Identify the user for Amplitude
+								await manager.telemetry.identify(userProfile);
+
 								// Update Sentry context for the current user
 								updateSentryContext({ userProfile });
 

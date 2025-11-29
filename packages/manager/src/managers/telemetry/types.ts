@@ -2,20 +2,16 @@ export type { Variant } from "@amplitude/experiment-node-server";
 
 export const SegmentEventType = {
 	experiment_exposure: "experiment:exposure",
-	prismic_cli_init_start: "prismic-cli:init:start",
-	prismic_cli_init_end: "prismic-cli:init:end",
-	prismic_cli_sync_start: "prismic-cli:sync:start",
-	prismic_cli_sync_end: "prismic-cli:sync:end",
+	prismic_cli_start: "prismic-cli:start",
+	prismic_cli_end: "prismic-cli:end",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
 
 export const HumanSegmentEventType = {
 	[SegmentEventType.experiment_exposure]: "$exposure",
-	[SegmentEventType.prismic_cli_init_start]: "Prismic CLI Init Start",
-	[SegmentEventType.prismic_cli_init_end]: "Prismic CLI Init End",
-	[SegmentEventType.prismic_cli_sync_start]: "Prismic CLI Sync Start",
-	[SegmentEventType.prismic_cli_sync_end]: "Prismic CLI Sync End",
+	[SegmentEventType.prismic_cli_start]: "Prismic CLI Start",
+	[SegmentEventType.prismic_cli_end]: "Prismic CLI End",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -42,25 +38,25 @@ type ExperimentExposure = SegmentEvent<
 	}
 >;
 
-type PrismicCLIInitStartSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.prismic_cli_init_start
+type PrismicCLIStartSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.prismic_cli_start,
+	{
+		commandType: "init" | "sync";
+		fullCommand: string;
+	}
 >;
 
-type PrismicCLIInitEndSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.prismic_cli_init_end
->;
-
-type PrismicCLISyncStartSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.prismic_cli_sync_start
->;
-
-type PrismicCLISyncEndSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.prismic_cli_sync_end
+type PrismicCLIEndSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.prismic_cli_end,
+	{
+		commandType: "init" | "sync";
+		success: boolean;
+		error?: string;
+		fullCommand: string;
+	}
 >;
 
 export type SegmentEvents =
 	| ExperimentExposure
-	| PrismicCLIInitStartSegmentEvent
-	| PrismicCLIInitEndSegmentEvent
-	| PrismicCLISyncStartSegmentEvent
-	| PrismicCLISyncEndSegmentEvent;
+	| PrismicCLIStartSegmentEvent
+	| PrismicCLIEndSegmentEvent;

@@ -1,12 +1,15 @@
 import meow from "meow";
-import chalk from "chalk";
 import * as z from "zod";
+import { createPrismicManager } from "@prismicio/manager";
 
 import { name as pkgName, version as pkgVersion } from "../package.json";
 import { setupSentry, trackSentryError } from "./utils/sentry";
 import { displayError, displayHeader } from "./utils/output";
 import { init } from "./commands/init";
 import { sync } from "./commands/sync";
+import { initTelemetry, trackErrorTelemetry } from "./utils/telemetry";
+import { FRAMEWORK_PLUGINS } from "./core/framework";
+import { handleSilentError } from "./utils/error";
 
 const cli = meow(
 	`
@@ -51,9 +54,9 @@ OPTIONS
 	},
 );
 
-const RunArgs = z.discriminatedUnion("command", [
+export const CLIArgs = z.discriminatedUnion("commandType", [
 	z.object({
-		command: z.literal("init"),
+		commandType: z.literal("init"),
 		help: z.boolean().optional(),
 		version: z.boolean().optional(),
 		repository: z
@@ -61,71 +64,120 @@ const RunArgs = z.discriminatedUnion("command", [
 			.min(1, "Repository name is required to initialize a project"),
 	}),
 	z.object({
-		command: z.literal("sync"),
+		commandType: z.literal("sync"),
 		help: z.boolean().optional(),
 		version: z.boolean().optional(),
 	}),
 ]);
 
 export async function run(): Promise<void> {
+	// Display header immediately so user sees something is happening
+	displayHeader();
+
+	// Setup Sentry as early as possible to track ALL errors
+	setupSentry();
+
+	// Handle help flag (exit early, no telemetry needed)
+	if (cli.flags.help) {
+		cli.showHelp(0);
+		process.exit(0);
+	}
+
+	// Handle version flag (exit early, no telemetry needed)
+	if (cli.flags.version) {
+		console.info(`${pkgName}@${pkgVersion}`);
+		process.exit(0);
+	}
+
+	// Validate CLI arguments first (before any operations that might fail)
+	const cliArgs = CLIArgs.safeParse({
+		...cli.flags,
+		commandType: cli.input[0],
+	});
+
+	// Invalid arguments - track with Sentry even though it's a user error
+	if (!cliArgs.success) {
+		const error = new Error(cliArgs.error.message);
+		displayError(error);
+		await trackSentryError(error);
+		process.exit(1);
+	}
+
+	// Too many arguments - track with Sentry
+	if (cli.input.length > 1) {
+		const error = new Error("Too many arguments. Expected 'init' or 'sync'.");
+		displayError(error);
+		await trackSentryError(error);
+		process.exit(1);
+	}
+
+	// Create manager - wrap in try-catch to track failures
+	let manager;
 	try {
-		// Directly display the header so the user see something is happening
-		displayHeader();
-
-		// Setup sentry as early as possible to track errors
-		setupSentry();
-
-		// Help command
-		if (cli.flags.help) {
-			cli.showHelp(0);
-			process.exit(0);
-		}
-
-		// Version command
-		if (cli.flags.version) {
-			console.info(`${pkgName}@${pkgVersion}`);
-			process.exit(0);
-		}
-
-		// Validate CLI arguments
-		const args = RunArgs.safeParse({
-			...cli.flags,
-			command: cli.input[0],
+		manager = createPrismicManager({
+			cwd: process.cwd(),
+			nativePlugins: FRAMEWORK_PLUGINS,
 		});
+	} catch (error) {
+		// Manager creation failed - track with Sentry (telemetry not available yet)
+		displayError(error);
+		await trackSentryError(error);
+		process.exit(1);
+	}
 
-		// Invalid arguments
-		if (!args.success) {
-			console.error(chalk.red(args.error.message));
-			process.exit(1);
-		}
+	const commandType = cliArgs.data.commandType;
+	const repositoryName =
+		commandType === "init" ? cliArgs.data.repository : undefined;
 
-		// Too many arguments
-		if (cli.input.length > 1) {
-			console.error(
-				chalk.red("Too many arguments. Expected 'init' or 'sync'."),
-			);
-			process.exit(1);
-		}
+	// Initialize telemetry as early as possible (after manager creation)
+	// Track initialization failures with Sentry
+	try {
+		await initTelemetry({
+			manager,
+			commandType,
+			repositoryName,
+		});
+	} catch (telemetryError) {
+		// Telemetry initialization failed - track with Sentry but continue execution
+		// This prevents telemetry issues from breaking the CLI
+		await trackSentryError(telemetryError);
+		handleSilentError(telemetryError, "Telemetry initialization error");
+	}
 
-		// Init command
-		if (args.data.command === "init") {
+	// Execute command - all errors here will be tracked
+	try {
+		if (commandType === "init") {
 			await init({
-				repositoryName: args.data.repository,
+				manager,
+				repositoryName: cliArgs.data.repository,
 			});
 			process.exit(0);
 		}
 
-		// Sync command
-		if (args.data.command === "sync") {
-			await sync();
+		if (commandType === "sync") {
+			await sync({ manager });
 			process.exit(0);
 		}
 
-		// Unknown command
-		throw new Error("Unknown command.");
+		throw new Error("Unknown command type.");
 	} catch (error) {
 		displayError(error);
+
+		// Always track with Sentry first (most reliable)
 		await trackSentryError(error);
+
+		// Try to track with telemetry if it was initialized
+		// If telemetry wasn't initialized or tracking fails, Sentry already has it
+		try {
+			await trackErrorTelemetry({
+				manager,
+				error,
+				commandType,
+			});
+		} catch (telemetryError) {
+			handleSilentError(telemetryError, "Telemetry tracking error");
+		}
+
 		process.exit(1);
 	}
 }
