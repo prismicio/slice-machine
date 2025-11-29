@@ -1,5 +1,4 @@
 import { parseSetCookie, type SetCookie } from "cookie";
-import * as z from "zod";
 import {
 	createEvent,
 	createRouter,
@@ -8,6 +7,7 @@ import {
 	NodeMiddleware,
 	readBody,
 } from "h3";
+import * as z from "zod";
 
 import { decode } from "../lib/decode";
 

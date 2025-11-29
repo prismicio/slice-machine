@@ -1,16 +1,15 @@
-import { HookSystem } from "./lib/HookSystem";
-import { PluginHooks, PrismicProject } from "./types";
-
-import { CustomTypeLibraryReadHookReturnType } from "./hooks/customTypeLibrary-read";
 import {
 	CustomTypeReadHookData,
 	CustomTypeReadHookReturnType,
 } from "./hooks/customType-read";
+import { CustomTypeLibraryReadHookReturnType } from "./hooks/customTypeLibrary-read";
+import { SliceReadHookData, SliceReadHookReturnType } from "./hooks/slice-read";
 import {
 	SliceLibraryReadHookData,
 	SliceLibraryReadHookReturnType,
 } from "./hooks/sliceLibrary-read";
-import { SliceReadHookData, SliceReadHookReturnType } from "./hooks/slice-read";
+import { HookSystem } from "./lib/HookSystem";
+import { PluginHooks, PrismicProject } from "./types";
 
 export type ReadAllSliceModelsActionArgs<
 	TWithMetadata extends boolean = false,

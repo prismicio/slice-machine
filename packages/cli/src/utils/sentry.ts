@@ -1,9 +1,10 @@
-import * as Sentry from "@sentry/node";
 import { PrismicUserProfile } from "@prismicio/manager";
+import * as Sentry from "@sentry/node";
 
 import * as pkg from "../../package.json";
-import { getPackageInfo } from "./package";
+
 import { handleSilentError } from "./error";
+import { getPackageInfo } from "./package";
 
 const SENTRY_DSN =
 	import.meta.env.VITE_SENTRY_DSN ||

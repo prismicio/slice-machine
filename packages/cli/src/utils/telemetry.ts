@@ -1,6 +1,7 @@
 import type { PrismicManager } from "@prismicio/manager";
 
 import { name as pkgName, version as pkgVersion } from "../../package.json";
+
 import { handleSilentError } from "./error";
 
 type InitTelemetryArgs = {

@@ -1,5 +1,5 @@
-import { HookError, PluginOptions } from "@prismicio/plugin-kit";
 import { detect as niDetect } from "@antfu/ni";
+import { HookError, PluginOptions } from "@prismicio/plugin-kit";
 
 export type PackageManager = NonNullable<Awaited<ReturnType<typeof niDetect>>>;
 export type { APIEndpoints } from "./constants/API_ENDPOINTS";

@@ -14,7 +14,6 @@ import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { pascalCase } from "../lib/pascalCase";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
-
 import type { PluginOptions } from "../types";
 
 type CreateComponentFileArgs = {

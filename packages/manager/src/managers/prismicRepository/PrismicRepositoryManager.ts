@@ -1,10 +1,11 @@
-import * as z from "zod";
 import fetch, { Response } from "node-fetch";
+import * as z from "zod";
 
-import { decode } from "../../lib/decode";
-import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
+import { decode } from "../../lib/decode";
 import { BaseManager } from "../BaseManager";
+
 import {
 	PrismicRepository,
 	PrismicRepositoryRole,

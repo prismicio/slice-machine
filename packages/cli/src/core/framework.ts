@@ -1,13 +1,15 @@
-import { type PrismicManager } from "@prismicio/manager";
 import { readFile, readdir, rm } from "node:fs/promises";
+import { join } from "node:path";
+
 import adapterNextPlugin from "@prismicio/adapter-next";
 import adapterNuxtPlugin from "@prismicio/adapter-nuxt";
 import adapterNuxt2Plugin from "@prismicio/adapter-nuxt2";
 import adapterSveltekitPlugin from "@prismicio/adapter-sveltekit";
-import { join } from "node:path";
+import { type PrismicManager } from "@prismicio/manager";
 import semver from "semver";
 
 import { listrRun } from "../utils/listr";
+
 import { type ProjectContext } from "./project";
 
 export type Framework = {

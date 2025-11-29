@@ -68,6 +68,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "9.28.0",
+		"@trivago/prettier-plugin-sort-imports": "6.0.0",
 		"@types/listr": "0.14.10",
 		"@types/semver": "7.7.1",
 		"depcheck": "1.4.7",

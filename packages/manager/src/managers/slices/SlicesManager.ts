@@ -1,6 +1,4 @@
-import * as z from "zod";
 import * as prismicCustomTypesClient from "@prismicio/custom-types-client";
-import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import {
 	CallHookReturnType,
 	HookError,
@@ -12,16 +10,18 @@ import {
 	SliceRenameHookData,
 	SliceUpdateHook,
 } from "@prismicio/plugin-kit";
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import fetch from "node-fetch";
+import * as z from "zod";
 
+import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
+import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
 import { DecodeError } from "../../lib/DecodeError";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodeHookResult } from "../../lib/decodeHookResult";
-import { OnlyHookErrors } from "../../types";
-import { PRISMIC_CLI_USER_AGENT } from "../../constants/PRISMIC_CLI_USER_AGENT";
-import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
-import { BaseManager } from "../BaseManager";
 import { SharedSliceSchema } from "../../lib/typesInternalSchemas";
+import { OnlyHookErrors } from "../../types";
+import { BaseManager } from "../BaseManager";
 
 type SlicesManagerReadSliceLibraryReturnType = {
 	sliceIDs: string[];

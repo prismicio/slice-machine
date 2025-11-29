@@ -1,22 +1,24 @@
-import * as z from "zod";
 import * as fs from "node:fs/promises";
-import * as path from "node:path";
-import * as os from "node:os";
 import * as http from "node:http";
-import * as h3 from "h3";
-import fetch from "node-fetch";
+import * as os from "node:os";
+import * as path from "node:path";
+
 import cors from "cors";
 import getPort from "get-port";
+import * as h3 from "h3";
+import fetch from "node-fetch";
+import * as z from "zod";
 
-import { decode } from "../lib/decode";
 import { API_ENDPOINTS } from "../constants/API_ENDPOINTS";
 import { PRISMIC_CLI_USER_AGENT } from "../constants/PRISMIC_CLI_USER_AGENT";
-import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
 import {
 	InternalError,
 	UnauthenticatedError,
 	UnexpectedDataError,
 } from "../errors";
+import { decode } from "../lib/decode";
+
+import { createPrismicAuthManagerMiddleware } from "./createPrismicAuthManagerMiddleware";
 
 const PERSISTED_AUTH_STATE_FILE_NAME = ".prismic";
 const DEFAULT_PERSISTED_AUTH_STATE: PrismicAuthState = {

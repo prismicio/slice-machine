@@ -14,11 +14,10 @@ import { buildSrcPath } from "../lib/buildSrcPath";
 import { checkHasAppRouter } from "../lib/checkHasAppRouter";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getJSFileExtension } from "../lib/getJSFileExtension";
+import { getNextJSVersion } from "../lib/getNextJSVersion";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
-
 import type { PluginOptions } from "../types";
-import { getNextJSVersion } from "../lib/getNextJSVersion";
 
 type InstallDependenciesArgs = {
 	installDependencies: ProjectInitHookData["installDependencies"];

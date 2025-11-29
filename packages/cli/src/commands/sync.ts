@@ -1,13 +1,13 @@
 import type { PrismicManager } from "@prismicio/manager";
 
 import { version as pkgVersion } from "../../package.json";
+import { login } from "../core/auth";
+import { saveCustomTypes } from "../core/customType";
 import { detectProjectContext, detectProjectState } from "../core/project";
 import { validateRepository } from "../core/repository";
 import { saveSlices } from "../core/slices";
-import { saveCustomTypes } from "../core/customType";
 import { checkCLIVersion } from "../core/version";
 import { displaySuccess } from "../utils/output";
-import { login } from "../core/auth";
 
 type SyncArgs = {
 	manager: PrismicManager;

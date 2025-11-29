@@ -1,4 +1,5 @@
 import * as path from "node:path";
+
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
@@ -16,8 +17,8 @@ import { getJSFileExtension } from "../lib/getJSFileExtension";
 import { getSvelteMajor } from "../lib/getSvelteMajor";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
-
 import type { PluginOptions } from "../types";
+
 import {
 	previewAPIRouteTemplate,
 	prismicIOFileTemplate,

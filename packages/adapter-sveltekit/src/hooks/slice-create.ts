@@ -13,8 +13,8 @@ import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
 import { getSvelteMajor } from "../lib/getSvelteMajor";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
-
 import type { PluginOptions } from "../types";
+
 import { sliceTemplate } from "./slice-create.templates";
 
 type Args = {

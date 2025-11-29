@@ -24,6 +24,7 @@
     "clean": "rimraf --glob '{packages/*/{dist,package.tgz}}'"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "6.0.0",
     "@types/semver": "7.7.1",
     "chalk": "5.6.2",
     "concurrently": "9.2.1",

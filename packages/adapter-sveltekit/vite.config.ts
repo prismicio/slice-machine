@@ -1,6 +1,6 @@
+import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { defineConfig, type Plugin } from "vite";
 import sdk from "vite-plugin-sdk";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
 
 export default defineConfig({
 	plugins: [

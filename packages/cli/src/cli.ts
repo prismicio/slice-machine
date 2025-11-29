@@ -1,15 +1,16 @@
+import { createPrismicManager } from "@prismicio/manager";
 import meow from "meow";
 import * as z from "zod";
-import { createPrismicManager } from "@prismicio/manager";
 
 import { name as pkgName, version as pkgVersion } from "../package.json";
-import { setupSentry, trackSentryError } from "./utils/sentry";
-import { displayError, displayHeader } from "./utils/output";
+
 import { init } from "./commands/init";
 import { sync } from "./commands/sync";
-import { initTelemetry, trackErrorTelemetry } from "./utils/telemetry";
 import { FRAMEWORK_PLUGINS } from "./core/framework";
 import { handleSilentError } from "./utils/error";
+import { displayError, displayHeader } from "./utils/output";
+import { setupSentry, trackSentryError } from "./utils/sentry";
+import { initTelemetry, trackErrorTelemetry } from "./utils/telemetry";
 
 const cli = meow(
 	`

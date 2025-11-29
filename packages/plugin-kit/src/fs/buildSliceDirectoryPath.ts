@@ -1,15 +1,14 @@
 import * as path from "node:path";
 
+import {
+	buildSliceLibraryDirectoryPath,
+	BuildSliceLibraryDirectoryPathArgs,
+} from "./buildSliceLibraryDirectoryPath";
 import { pascalCase } from "./lib/pascalCase";
 import {
 	resolveSliceModel,
 	ResolveSliceModelArgs,
 } from "./lib/resolveSliceModel";
-
-import {
-	buildSliceLibraryDirectoryPath,
-	BuildSliceLibraryDirectoryPathArgs,
-} from "./buildSliceLibraryDirectoryPath";
 
 export type BuildSliceDirectoryPathArgs = BuildSliceLibraryDirectoryPathArgs &
 	ResolveSliceModelArgs;

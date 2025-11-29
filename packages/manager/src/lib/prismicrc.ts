@@ -1,6 +1,7 @@
 import * as path from "node:path";
-import * as z from "zod";
+
 import * as rc9 from "rc9";
+import * as z from "zod";
 
 import { decode } from "./decode";
 

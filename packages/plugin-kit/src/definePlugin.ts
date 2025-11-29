@@ -1,5 +1,5 @@
-import { CreateScopeReturnType } from "./lib/HookSystem";
 import { PluginSystemContext } from "./createPluginSystemContext";
+import { CreateScopeReturnType } from "./lib/HookSystem";
 import { PluginOptions, PluginHookExtraArgs, PluginHooks } from "./types";
 
 /**

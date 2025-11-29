@@ -1,11 +1,10 @@
-import * as path from "node:path";
 import * as fs from "node:fs/promises";
+import * as path from "node:path";
 
-import * as prettier from "prettier";
 import { stripIndent } from "common-tags";
+import * as prettier from "prettier";
 
 import { decodePrismicConfig } from "./lib/decodePrismicConfig";
-
 import { PrismicConfig, PrismicProject } from "./types";
 
 type UpdatePrismicConfigOptions = {

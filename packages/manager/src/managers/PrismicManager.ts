@@ -4,14 +4,14 @@ import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 import { createPrismicAuthManager } from "../auth/createPrismicAuthManager";
 import { API_ENDPOINTS, APIEndpoints } from "../constants/API_ENDPOINTS";
 
-import { UserManager } from "./user/UserManager";
-import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
-import { PluginsManager } from "./plugins/PluginsManager";
-import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
+import { PluginsManager } from "./plugins/PluginsManager";
+import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
+import { ProjectManager } from "./project/ProjectManager";
 import { SlicesManager } from "./slices/SlicesManager";
-import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
+import { UserManager } from "./user/UserManager";
+import { VersionsManager } from "./versions/VersionsManager";
 
 type PrismicManagerConstructorArgs = {
 	cwd?: string;

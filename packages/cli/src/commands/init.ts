@@ -1,6 +1,8 @@
 import type { PrismicManager } from "@prismicio/manager";
 
 import { version as pkgVersion } from "../../package.json";
+import { login } from "../core/auth";
+import { saveCustomTypes } from "../core/customType";
 import { initFramework } from "../core/framework";
 import {
 	createPrismicConfig,
@@ -8,11 +10,9 @@ import {
 	detectProjectState,
 } from "../core/project";
 import { validateRepository } from "../core/repository";
-import { saveCustomTypes } from "../core/customType";
 import { saveSlices } from "../core/slices";
 import { checkCLIVersion } from "../core/version";
 import { displaySuccess } from "../utils/output";
-import { login } from "../core/auth";
 
 type InitArgs = {
 	manager: PrismicManager;

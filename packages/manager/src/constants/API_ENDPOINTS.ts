@@ -1,4 +1,5 @@
 import { addTrailingSlash } from "../lib/trailingSlash";
+
 import { APPLICATION_MODE } from "./APPLICATION_MODE";
 
 export type APIEndpoints = {

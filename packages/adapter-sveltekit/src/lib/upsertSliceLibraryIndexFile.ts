@@ -1,3 +1,5 @@
+import * as path from "node:path";
+
 import { PluginSystemContext } from "@prismicio/plugin-kit";
 import {
 	buildSliceDirectoryPath,
@@ -5,13 +7,12 @@ import {
 	writeProjectFile,
 } from "@prismicio/plugin-kit/fs";
 import { stripIndent } from "common-tags";
-import * as path from "node:path";
 
 import { NON_EDITABLE_FILE_BANNER } from "../constants";
 import { PluginOptions } from "../types";
 
-import { pascalCase } from "./pascalCase";
 import { getJSFileExtension } from "./getJSFileExtension";
+import { pascalCase } from "./pascalCase";
 
 type UpsertSliceLibraryIndexFileArgs = {
 	libraryID: string;

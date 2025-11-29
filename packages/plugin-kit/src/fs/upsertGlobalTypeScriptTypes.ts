@@ -2,11 +2,11 @@ import { detectTypesProvider, generateTypes } from "prismic-ts-codegen";
 
 import { PluginSystemActions } from "../createPluginSystemActions";
 
-import { writeProjectFile, WriteProjectFileArgs } from "./writeProjectFile";
 import {
 	GLOBAL_TYPESCRIPT_TYPES_FILENAME,
 	NON_EDITABLE_FILE_BANNER,
 } from "./constants";
+import { writeProjectFile, WriteProjectFileArgs } from "./writeProjectFile";
 
 /**
  * Arguments for `upsertGlobalContentTypes()`.

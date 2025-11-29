@@ -1,7 +1,7 @@
-import { defineConfig, type Plugin } from "vite";
-import sdk from "vite-plugin-sdk";
 import react from "@vitejs/plugin-react";
 import preserveDirectives from "rollup-plugin-preserve-directives";
+import { defineConfig, type Plugin } from "vite";
+import sdk from "vite-plugin-sdk";
 
 export default defineConfig({
 	plugins: [

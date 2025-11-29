@@ -1,8 +1,8 @@
 import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import svelte from "eslint-plugin-svelte";
 import tsdoc from "eslint-plugin-tsdoc";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config(
 	{ ignores: ["dist/**"] },

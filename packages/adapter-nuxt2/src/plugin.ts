@@ -13,14 +13,13 @@ import {
 	writeSliceModel,
 } from "@prismicio/plugin-kit/fs";
 
-import { rejectIfNecessary } from "./lib/rejectIfNecessary";
-import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
-
 import { name as pkgName } from "../package.json";
-import { PluginOptions } from "./types";
 
 import { projectInit } from "./hooks/project-init";
 import { sliceCreate } from "./hooks/slice-create";
+import { rejectIfNecessary } from "./lib/rejectIfNecessary";
+import { upsertSliceLibraryIndexFile } from "./lib/upsertSliceLibraryIndexFile";
+import { PluginOptions } from "./types";
 
 export const plugin = definePlugin<PluginOptions>({
 	meta: {

@@ -1,23 +1,20 @@
-import * as fs from "node:fs/promises";
 import { existsSync } from "node:fs";
+import * as fs from "node:fs/promises";
 import * as path from "node:path";
+
 import { detect as niDetect } from "@antfu/ni";
 import { type ResultPromise } from "execa";
 
+import { PRISMIC_CONFIG_FILENAME } from "../../constants/PRISMIC_CONFIG_FILENAME";
+import { SLICEMACHINE_CONFIG_FILENAME } from "../../constants/SLICEMACHINE_CONFIG_FILENAME";
+import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
+import { PrismicError, InternalError } from "../../errors";
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
 import { decodePrismicConfig } from "../../lib/decodePrismicConfig";
 import { format } from "../../lib/format";
 import { installDependencies } from "../../lib/installDependencies";
 import { locateFileUpward } from "../../lib/locateFileUpward";
-
 import { PackageManager, PrismicConfig } from "../../types";
-
-import { PrismicError, InternalError } from "../../errors";
-
-import { PRISMIC_CONFIG_FILENAME } from "../../constants/PRISMIC_CONFIG_FILENAME";
-import { SLICEMACHINE_CONFIG_FILENAME } from "../../constants/SLICEMACHINE_CONFIG_FILENAME";
-import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
-
 import { BaseManager } from "../BaseManager";
 
 type ProjectManagerGetPrismicConfigPathArgs = {

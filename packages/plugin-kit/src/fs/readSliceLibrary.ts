@@ -1,15 +1,14 @@
 import * as path from "node:path";
 
-import { checkPathExists } from "./lib/checkPathExists";
-import { isSharedSliceModel } from "./lib/isSharedSliceModel";
-import { readJSONFile } from "./lib/readJSONFile";
-import * as fs from "./lib/fsLimit";
-
-import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
 import {
 	buildSliceLibraryDirectoryPath,
 	BuildSliceLibraryDirectoryPathArgs,
 } from "./buildSliceLibraryDirectoryPath";
+import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
+import { checkPathExists } from "./lib/checkPathExists";
+import * as fs from "./lib/fsLimit";
+import { isSharedSliceModel } from "./lib/isSharedSliceModel";
+import { readJSONFile } from "./lib/readJSONFile";
 
 export type ReadSliceLibraryArgs = BuildSliceLibraryDirectoryPathArgs;
 

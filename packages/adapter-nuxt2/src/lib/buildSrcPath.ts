@@ -1,7 +1,6 @@
 // TODO: If Nuxt provides a way to read `nuxt.config.js`'s `srcDir` value, we
 // can use the exact value given. The current implementation does not support
 // custom values different than "src".
-
 import * as path from "node:path";
 
 import type { PluginSystemHelpers } from "@prismicio/plugin-kit";

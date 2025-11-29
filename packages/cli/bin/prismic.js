@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 /* eslint-env node */
-
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Check Node.js version BEFORE importing any dependencies
 // This prevents errors from dependencies that require newer Node.js features

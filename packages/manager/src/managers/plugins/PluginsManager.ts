@@ -5,7 +5,6 @@ import {
 } from "@prismicio/plugin-kit";
 
 import { assertPluginsInitialized } from "../../lib/assertPluginsInitialized";
-
 import { BaseManager } from "../BaseManager";
 import { PrismicManager } from "../PrismicManager";
 

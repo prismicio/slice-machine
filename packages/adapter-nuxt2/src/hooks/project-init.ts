@@ -1,4 +1,5 @@
 import * as path from "node:path";
+
 import type {
 	ProjectInitHook,
 	ProjectInitHookData,
@@ -9,7 +10,6 @@ import { stripIndent } from "common-tags";
 import { builders, loadFile, writeFile } from "magicast";
 
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
-
 import type { PluginOptions } from "../types";
 
 const NUXT_PRISMIC = "@nuxtjs/prismic";

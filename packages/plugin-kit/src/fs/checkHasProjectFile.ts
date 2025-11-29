@@ -1,6 +1,6 @@
-import { checkPathExists } from "./lib/checkPathExists";
-
 import { PluginSystemHelpers } from "../createPluginSystemHelpers";
+
+import { checkPathExists } from "./lib/checkPathExists";
 
 export type CheckHasProjectFileArgs = {
 	filename: string;

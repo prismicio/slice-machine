@@ -1,15 +1,15 @@
-import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 import * as path from "node:path";
+
+import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
 
 import { PluginSystemHelpers } from "../createPluginSystemHelpers";
 
-import { checkPathExists } from "./lib/checkPathExists";
-import { isSharedSliceModel } from "./lib/isSharedSliceModel";
-import { readJSONFile } from "./lib/readJSONFile";
-import * as fs from "./lib/fsLimit";
-
 import { buildSliceLibraryDirectoryPath } from "./buildSliceLibraryDirectoryPath";
 import { SHARED_SLICE_MODEL_FILENAME } from "./constants";
+import { checkPathExists } from "./lib/checkPathExists";
+import * as fs from "./lib/fsLimit";
+import { isSharedSliceModel } from "./lib/isSharedSliceModel";
+import { readJSONFile } from "./lib/readJSONFile";
 
 export type ReadSliceModelArgs = {
 	libraryID: string;

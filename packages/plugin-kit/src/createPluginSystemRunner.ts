@@ -1,9 +1,19 @@
 import _module from "node:module";
+
 import { defu } from "defu";
 
-import { HookSystem } from "./lib/HookSystem";
+import { createPluginHookSystem } from "./createPluginHookSystem";
+import {
+	createPluginSystemActions,
+	PluginSystemActions,
+} from "./createPluginSystemActions";
 import { createPluginSystemContext } from "./createPluginSystemContext";
+import {
+	createPluginSystemHelpers,
+	PluginSystemHelpers,
+} from "./createPluginSystemHelpers";
 import { LoadedPlugin, Plugin } from "./definePlugin";
+import { HookSystem } from "./lib/HookSystem";
 import {
 	PrismicConfigPluginRegistration,
 	PluginHookExtraArgs,
@@ -11,15 +21,6 @@ import {
 	PluginHooks,
 	PrismicProject,
 } from "./types";
-import { createPluginHookSystem } from "./createPluginHookSystem";
-import {
-	createPluginSystemActions,
-	PluginSystemActions,
-} from "./createPluginSystemActions";
-import {
-	createPluginSystemHelpers,
-	PluginSystemHelpers,
-} from "./createPluginSystemHelpers";
 
 /**
  * @internal

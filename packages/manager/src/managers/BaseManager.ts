@@ -1,19 +1,16 @@
 import { PluginSystemRunner } from "@prismicio/plugin-kit";
+
 import { PrismicAuthManager } from "../auth/PrismicAuthManager";
 
 import { PrismicManager } from "./PrismicManager";
-
-import { UserManager } from "./user/UserManager";
-import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
-
-import { PluginsManager } from "./plugins/PluginsManager";
-
-import { ProjectManager } from "./project/ProjectManager";
 import { CustomTypesManager } from "./customTypes/CustomTypesManager";
+import { PluginsManager } from "./plugins/PluginsManager";
+import { PrismicRepositoryManager } from "./prismicRepository/PrismicRepositoryManager";
+import { ProjectManager } from "./project/ProjectManager";
 import { SlicesManager } from "./slices/SlicesManager";
-
-import { VersionsManager } from "./versions/VersionsManager";
 import { TelemetryManager } from "./telemetry/TelemetryManager";
+import { UserManager } from "./user/UserManager";
+import { VersionsManager } from "./versions/VersionsManager";
 
 export abstract class BaseManager {
 	private _prismicManager: PrismicManager;

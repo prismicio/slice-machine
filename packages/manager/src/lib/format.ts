@@ -1,5 +1,5 @@
-import prettier from "prettier";
 import { stripIndent } from "common-tags";
+import prettier from "prettier";
 
 type FormatOptions = {
 	prettier?: prettier.Options;

@@ -1,15 +1,17 @@
-import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
+import { randomUUID } from "node:crypto";
+
 import {
 	Experiment,
 	RemoteEvaluationClient,
 	Variant,
 } from "@amplitude/experiment-node-server";
-import { randomUUID } from "node:crypto";
+import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
 
 import { PrismicUserProfile } from "../../auth/PrismicAuthManager";
-import { readPrismicrc } from "../../lib/prismicrc";
 import { API_TOKENS } from "../../constants/API_TOKENS";
+import { readPrismicrc } from "../../lib/prismicrc";
 import { BaseManager } from "../BaseManager";
+
 import {
 	HumanSegmentEventType,
 	HumanSegmentEventTypes,

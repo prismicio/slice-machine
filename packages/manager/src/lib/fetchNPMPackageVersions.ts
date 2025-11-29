@@ -1,5 +1,5 @@
-import * as z from "zod";
 import fetch from "node-fetch";
+import * as z from "zod";
 
 import { decode } from "./decode";
 

@@ -1,5 +1,5 @@
-import * as z from "zod";
 import { CallHookReturnType, HookError } from "@prismicio/plugin-kit";
+import * as z from "zod";
 
 import { DecodeError } from "./DecodeError";
 import { decode } from "./decode";

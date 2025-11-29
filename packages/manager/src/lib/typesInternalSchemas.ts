@@ -1,5 +1,5 @@
-import * as z from "zod";
 import TypesInternal from "@prismicio/types-internal/lib/customtypes/index.js";
+import * as z from "zod";
 
 /**
  * Zod schema wrapper for TypesInternal.CustomType. Uses io-ts validation

@@ -1,8 +1,8 @@
-import { TSCONFIG_FILENAME } from "./constants";
 import {
 	checkHasProjectFile,
 	CheckHasProjectFileArgs,
 } from "./checkHasProjectFile";
+import { TSCONFIG_FILENAME } from "./constants";
 
 type CheckIsTypeScriptProjectArgs = Omit<CheckHasProjectFileArgs, "filename">;
 
