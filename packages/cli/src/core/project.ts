@@ -27,10 +27,16 @@ export async function detectProjectState(
 		// We want to manage the error depending on the need to be initialized or not
 	}
 
-	if (command === "init" && prismicConfig) {
+	const legacyConfigExists = await manager.project.checkLegacyConfigExists();
+
+	if (command === "init" && (prismicConfig || legacyConfigExists)) {
 		throw new Error("Project has already been initialized.");
 	} else if (command === "sync" && !prismicConfig) {
-		throw new Error("Project requires initialization before syncing.");
+		if (legacyConfigExists) {
+			await manager.project.migrateLegacyConfig();
+		} else {
+			throw new Error("Project requires initialization before syncing.");
+		}
 	}
 }
 

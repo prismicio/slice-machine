@@ -15,6 +15,7 @@ import { PackageManager, PrismicConfig } from "../../types";
 import { PrismicError, InternalError } from "../../errors";
 
 import { PRISMIC_CONFIG_FILENAME } from "../../constants/PRISMIC_CONFIG_FILENAME";
+import { SLICEMACHINE_CONFIG_FILENAME } from "../../constants/SLICEMACHINE_CONFIG_FILENAME";
 import { TS_CONFIG_FILENAME } from "../../constants/TS_CONFIG_FILENAME";
 
 import { BaseManager } from "../BaseManager";
@@ -183,6 +184,88 @@ export class ProjectManager extends BaseManager {
 		const prismicConfig = await this.getPrismicConfig();
 
 		return prismicConfig.repositoryName;
+	}
+
+	async checkLegacyConfigExists(): Promise<boolean> {
+		try {
+			await locateFileUpward(SLICEMACHINE_CONFIG_FILENAME, {
+				startDir: this.cwd,
+			});
+
+			return true;
+		} catch {
+			return false;
+		}
+	}
+
+	async migrateLegacyConfig(): Promise<void> {
+		const suggestedRoot = await this.suggestRoot();
+		const legacyConfigPath = path.resolve(
+			suggestedRoot,
+			SLICEMACHINE_CONFIG_FILENAME,
+		);
+		const newConfigPath = path.resolve(suggestedRoot, PRISMIC_CONFIG_FILENAME);
+
+		// Check if legacy config exists
+		try {
+			await fs.access(legacyConfigPath);
+		} catch {
+			throw new Error(
+				`Legacy config file ${SLICEMACHINE_CONFIG_FILENAME} not found.`,
+			);
+		}
+
+		// Check if new config already exists
+		try {
+			await fs.access(newConfigPath);
+			throw new Error(
+				`Cannot migrate: ${PRISMIC_CONFIG_FILENAME} already exists.`,
+			);
+		} catch {
+			// File doesn't exist, which is what we want
+		}
+
+		const legacyConfigContent = await fs.readFile(legacyConfigPath, "utf8");
+
+		// Parse and validate the config
+		let rawConfig: unknown;
+		try {
+			rawConfig = JSON.parse(legacyConfigContent);
+		} catch (error) {
+			if (error instanceof SyntaxError) {
+				throw new PrismicError(
+					`Could not parse legacy config file at ${legacyConfigPath}.\n\nError Message: ${error.message}`,
+				);
+			}
+			throw error;
+		}
+
+		const { value: prismicConfig, error } = decodePrismicConfig(rawConfig);
+
+		if (error) {
+			throw new Error(
+				`Invalid legacy Prismic config. ${error.errors.join(", ")}`,
+				{
+					cause: { rawConfig },
+				},
+			);
+		}
+
+		// Format and write the new config
+		const formattedConfig = await format(
+			JSON.stringify(prismicConfig, null, 2),
+			newConfigPath,
+		);
+
+		await fs.writeFile(newConfigPath, formattedConfig, "utf-8");
+
+		// Remove legacy config file
+		await fs.unlink(legacyConfigPath);
+
+		// Clear caches
+		delete this._cachedPrismicConfig;
+		delete this._cachedPrismicConfigPath;
+		delete this._cachedRoot;
 	}
 
 	async initProject(args?: ProjectManagerInitProjectArgs): Promise<void> {
