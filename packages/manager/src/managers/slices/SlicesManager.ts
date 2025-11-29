@@ -63,10 +63,6 @@ type PrismicManagerReadSliceReturnType = {
 	errors: (DecodeError | HookError)[];
 };
 
-export type PrismicManagerPushSliceReturnType = {
-	errors: (DecodeError | HookError)[];
-};
-
 type PrismicManagerDeleteSliceArgs = {
 	libraryID: string;
 	sliceID: string;

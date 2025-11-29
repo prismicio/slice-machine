@@ -5,7 +5,7 @@ import {
 	RemoteEvaluationClient,
 	Variant,
 } from "@amplitude/experiment-node-server";
-import { Analytics, GroupParams, TrackParams } from "@segment/analytics-node";
+import { Analytics, TrackParams } from "@segment/analytics-node";
 
 import { PrismicUserProfile } from "../../auth/PrismicAuthManager";
 import { API_TOKENS } from "../../constants/API_TOKENS";
@@ -24,13 +24,6 @@ type TelemetryManagerInitTelemetryArgs = {
 };
 
 type TelemetryManagerTrackArgs = SegmentEvents;
-
-type TelemetryManagerGroupArgs = {
-	manualLibsCount: number;
-	downloadedLibsCount: number;
-	npmLibsCount: number;
-	downloadedLibs: string[];
-};
 
 type TelemetryManagerContext = {
 	app: {
@@ -175,60 +168,6 @@ export class TelemetryManager extends BaseManager {
 
 				resolve();
 			});
-		});
-	}
-
-	async group(args: TelemetryManagerGroupArgs): Promise<void> {
-		let repositoryName;
-
-		try {
-			repositoryName = await this.project.getRepositoryName();
-		} catch {
-			// noop, happen only when the user is not in a project
-		}
-
-		const payload: {
-			groupId?: string;
-			userId?: string;
-			anonymousId?: string;
-			traits?: Record<string, unknown>;
-			context?: Partial<TelemetryManagerContext> & {
-				groupId?: {
-					Repository?: string;
-				};
-			};
-		} = {
-			traits: args,
-			context: { ...this._context },
-		};
-
-		// Always keep an anonymous ID to keep track of the user before and after identification
-		payload.anonymousId = this._anonymousID;
-
-		if (this._userID) {
-			payload.userId = this._userID;
-		}
-
-		if (repositoryName) {
-			payload.groupId = repositoryName;
-			payload.context ||= {};
-			payload.context.groupId ||= {};
-			payload.context.groupId.Repository = repositoryName;
-		}
-
-		return new Promise((resolve) => {
-			assertTelemetryInitialized(this._segmentClient);
-
-			this._segmentClient().group(
-				payload as GroupParams,
-				(maybeError?: unknown) => {
-					if (maybeError && import.meta.env.DEV) {
-						console.warn(`An error occurred during Segment group`, maybeError);
-					}
-
-					resolve();
-				},
-			);
 		});
 	}
 
