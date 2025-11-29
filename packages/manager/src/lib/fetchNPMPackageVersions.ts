@@ -35,7 +35,6 @@ export const fetchNPMPackageVersions = async (
 	});
 
 	const json = await res.json();
-
 	const { value, error } = decode(NPMRegistryPackageMetadataSchema, json);
 
 	if (error) {

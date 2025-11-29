@@ -1,9 +1,12 @@
 import * as Sentry from "@sentry/node";
 import { PrismicUserProfile } from "@prismicio/manager";
 
-import { SENTRY_DSN } from "../constants";
 import * as pkg from "../../package.json";
 import { getPackageInfo } from "./package";
+
+const SENTRY_DSN =
+	import.meta.env.VITE_SENTRY_DSN ||
+	"https://e1886b1775bd397cd1afc60bfd2ebfc8@o146123.ingest.us.sentry.io/4510445143588864";
 
 /**
  * Checks whether or not Sentry is enabled.

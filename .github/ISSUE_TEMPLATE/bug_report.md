@@ -17,7 +17,7 @@ assignees: ""
 ### Versions
 
 - node: <!-- ex: v12.14.0 -->
-- prismic: <!-- Output of `npx prismic -v` -->
+- prismic: <!-- Output of `npx prismic@latest -v` -->
 
 ### When did this happen?
 

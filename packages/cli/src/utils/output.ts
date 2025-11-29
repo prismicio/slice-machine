@@ -4,10 +4,10 @@ import { version as pkgVersion } from "../../package.json";
 
 export function displayHeader(): void {
 	console.info(
-		chalk.cyan.bold("┌─────────────────────────────────────────┐\n") +
+		chalk.cyan.bold("┌" + "─".repeat(48) + "┐\n") +
 			chalk.white("  Prismic ") +
 			chalk.gray(`v${pkgVersion}\n`) +
-			chalk.cyan.bold("└─────────────────────────────────────────┘\n"),
+			chalk.cyan.bold("└" + "─".repeat(48) + "┘\n"),
 	);
 }
 

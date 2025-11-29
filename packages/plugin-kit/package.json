@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/plugin-kit",
-	"version": "0.0.1",
+	"version": "0.0.1-alpha.new-prismic-cli.0",
 	"description": "A set of helpers to develop and run Prismic plugins",
 	"keywords": [
 		"typescript",

@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/adapter-sveltekit",
-	"version": "0.0.1",
+	"version": "0.0.1-alpha.new-prismic-cli.0",
 	"description": "Prismic adapter for SvelteKit.",
 	"keywords": [
 		"typescript",

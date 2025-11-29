@@ -1,18 +1,12 @@
 import meow from "meow";
 import chalk from "chalk";
 import * as z from "zod";
-import { createPrismicManager } from "@prismicio/manager";
-import adapterNextPlugin from "@prismicio/adapter-next";
-import adapterNuxtPlugin from "@prismicio/adapter-nuxt";
-import adapterNuxt2Plugin from "@prismicio/adapter-nuxt2";
-import adapterSveltekitPlugin from "@prismicio/adapter-sveltekit";
 
 import { name as pkgName, version as pkgVersion } from "../package.json";
-import { login } from "./core/auth";
+import { setupSentry, trackSentryError } from "./utils/sentry";
+import { displayError, displayHeader } from "./utils/output";
 import { init } from "./commands/init";
 import { sync } from "./commands/sync";
-import { setupSentry, trackSentryError } from "./utils/sentry";
-import { displayError, displayHeader, displaySuccess } from "./utils/output";
 
 const cli = meow(
 	`
@@ -23,8 +17,8 @@ VERSION
   ${pkgName}@${pkgVersion}
 
 USAGE
-  $ npx prismic init --repository <repository-id>
-  $ npx prismic sync
+  $ npx prismic@latest init --repository <repository-id>
+  $ npx prismic@latest sync
 
 OPTIONS
   --repository, -r        Specify a Prismic repository to use when initializing a project
@@ -57,6 +51,22 @@ OPTIONS
 	},
 );
 
+const RunArgs = z.discriminatedUnion("command", [
+	z.object({
+		command: z.literal("init"),
+		help: z.boolean().optional(),
+		version: z.boolean().optional(),
+		repository: z
+			.string()
+			.min(1, "Repository name is required to initialize a project"),
+	}),
+	z.object({
+		command: z.literal("sync"),
+		help: z.boolean().optional(),
+		version: z.boolean().optional(),
+	}),
+]);
+
 export async function run(): Promise<void> {
 	try {
 		// Directly display the header so the user see something is happening
@@ -77,22 +87,7 @@ export async function run(): Promise<void> {
 			process.exit(0);
 		}
 
-		// Parse arguments
-		const RunArgs = z.discriminatedUnion("command", [
-			z.object({
-				command: z.literal("init"),
-				help: z.boolean().optional(),
-				version: z.boolean().optional(),
-				repository: z
-					.string()
-					.min(1, "Repository name is required to initialize a project"),
-			}),
-			z.object({
-				command: z.literal("sync"),
-				help: z.boolean().optional(),
-				version: z.boolean().optional(),
-			}),
-		]);
+		// Validate CLI arguments
 		const args = RunArgs.safeParse({
 			...cli.flags,
 			command: cli.input[0],
@@ -112,42 +107,17 @@ export async function run(): Promise<void> {
 			process.exit(1);
 		}
 
-		// Authentication
-		const manager = createPrismicManager({
-			cwd: process.cwd(),
-			nativePlugins: {
-				"@prismicio/adapter-next": adapterNextPlugin,
-				"@prismicio/adapter-nuxt": adapterNuxtPlugin,
-				"@prismicio/adapter-nuxt2": adapterNuxt2Plugin,
-				"@prismicio/adapter-sveltekit": adapterSveltekitPlugin,
-			},
-		});
-		await login(manager);
-
 		// Init command
 		if (args.data.command === "init") {
 			await init({
-				manager,
 				repositoryName: args.data.repository,
 			});
-
-			displaySuccess(
-				"Project initialized successfully!",
-				"You're all set to start building with Prismic.",
-			);
 			process.exit(0);
 		}
 
 		// Sync command
 		if (args.data.command === "sync") {
-			await sync({
-				manager,
-			});
-
-			displaySuccess(
-				"Sync completed successfully!",
-				"Your local types are up to date.",
-			);
+			await sync();
 			process.exit(0);
 		}
 
@@ -155,9 +125,7 @@ export async function run(): Promise<void> {
 		throw new Error("Unknown command.");
 	} catch (error) {
 		displayError(error);
-
 		await trackSentryError(error);
-
 		process.exit(1);
 	}
 }
