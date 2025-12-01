@@ -7406,13 +7406,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/editor-fields@npm:0.4.88":
-  version: 0.4.88
-  resolution: "@prismicio/editor-fields@npm:0.4.88"
+"@prismicio/editor-fields@npm:0.4.89-alpha.jp-box-display-none.1":
+  version: 0.4.89-alpha.jp-box-display-none.1
+  resolution: "@prismicio/editor-fields@npm:0.4.89-alpha.jp-box-display-none.1"
   dependencies:
     "@floating-ui/react-dom-interactions": 0.9.3
     "@prismicio/client": 7.15.1
-    "@prismicio/editor-support": 0.4.88
+    "@prismicio/editor-support": 0.4.89-alpha.jp-box-display-none.1
     "@prismicio/richtext": 2.1.1
     "@prismicio/types-internal": 3.16.1
     "@tiptap/core": 2.11.5
@@ -7438,6 +7438,7 @@ __metadata:
     "@tiptap/react": 2.11.5
     "@tiptap/suggestion": 2.11.5
     clsx: 1.2.1
+    deep-diff: 1.0.2
     fp-ts: 2.12.3
     io-ts: 2.2.18
     io-ts-types: 0.5.16
@@ -7447,17 +7448,17 @@ __metadata:
     tslib: 2.4.0
     zod: 3.23.8
   peerDependencies:
-    "@prismicio/editor-ui": ^0.4.88
+    "@prismicio/editor-ui": ^0.4.89-alpha.jp-box-display-none.1
     "@tanstack/react-query": 5.55.4
     react: 18
     react-dom: 18
-  checksum: 4f3c00971dff7b4c04a8c74a5d2e074903b864a5b2942979fe7e75bc8575a6c1e79231bf137c4efa80b138b9ec5c12ca37de29ee5eb2fa21bd522dd03a467bbd
+  checksum: c16c22ef550e3f4b6eb631ca01aeb9f7ce6d825b449a7b08c759d51e652da745ea76d47d2d1b9b6a8f09b08065c67d0e7dbcac8223c4f95e6478f9ace8b30ef1
   languageName: node
   linkType: hard
 
-"@prismicio/editor-support@npm:0.4.88":
-  version: 0.4.88
-  resolution: "@prismicio/editor-support@npm:0.4.88"
+"@prismicio/editor-support@npm:0.4.89-alpha.jp-box-display-none.1":
+  version: 0.4.89-alpha.jp-box-display-none.1
+  resolution: "@prismicio/editor-support@npm:0.4.89-alpha.jp-box-display-none.1"
   dependencies:
     dom-confetti: 0.2.2
     is-hotkey-esm: 1.0.0
@@ -7470,19 +7471,19 @@ __metadata:
       optional: true
     zod:
       optional: true
-  checksum: 926761d13492bcd486bc738cc519c67701238dde97df76bb209b238a8736f6ae34df2073f185957c0282d777f4916a3d1bc2a64ca619a5e0faa931958185dc6c
+  checksum: c5a1b7a2e5a7202a66f578e1d8c7727c3eb2ac7ffb46a389c37b22949750d29aa48d28456548dbd4b7bfa07fc43df14f76ffb6b9113d3bad0a5d788cb69ac4b5
   languageName: node
   linkType: hard
 
-"@prismicio/editor-ui@npm:0.4.88":
-  version: 0.4.88
-  resolution: "@prismicio/editor-ui@npm:0.4.88"
+"@prismicio/editor-ui@npm:0.4.89-alpha.jp-box-display-none.1":
+  version: 0.4.89-alpha.jp-box-display-none.1
+  resolution: "@prismicio/editor-ui@npm:0.4.89-alpha.jp-box-display-none.1"
   dependencies:
     "@internationalized/date": 3.8.1
     "@nivo/bar": 0.96.0
     "@nivo/core": 0.96.0
     "@nivo/tooltip": 0.96.0
-    "@prismicio/editor-support": 0.4.88
+    "@prismicio/editor-support": 0.4.89-alpha.jp-box-display-none.1
     "@radix-ui/react-focus-scope": 1.1.7
     "@react-aria/calendar": 3.8.1
     "@react-aria/color": 3.0.0-rc.0
@@ -7513,7 +7514,7 @@ __metadata:
   peerDependencies:
     react: 17 || 18
     react-dom: 17 || 18
-  checksum: 92e4adc9d1b2b05078b37d24bcda70c0e8f35b99187f3196c85cd335d20c4efcf376633e896fbb9b04fbe6d092058b3be9a6b43caa5cb2eec8900e9686c9ae18
+  checksum: 5acac8694643a1a7d6b085f349f28b01bad5a863372072c14f8f68740c80543323efdb798157a12629fe70db3c73840130e9d4fe855bf224ee87c001bc556b00
   languageName: node
   linkType: hard
 
@@ -19050,6 +19051,13 @@ __metadata:
   version: 1.0.1
   resolution: "dedent-js@npm:1.0.1"
   checksum: 3a86f4b11176b387c0633b4b201aef884f9bc83eb9485bd1156c5d9b3984a58fd7686f8213b67212b714a1abf00279bef5cd4eea6a9a7f033e37ce33352af9a9
+  languageName: node
+  linkType: hard
+
+"deep-diff@npm:1.0.2":
+  version: 1.0.2
+  resolution: "deep-diff@npm:1.0.2"
+  checksum: 9de8b5eedc1957116e1b47e4c3c4e3dbe23cb741abefc5ec8829a12e77958c689ac46888a3c35320f976cf42fb6de2b016e158facdb24d894ab5b5fdabad9b34
   languageName: node
   linkType: hard
 
@@ -35079,9 +35087,9 @@ __metadata:
     "@emotion/react": 11.11.1
     "@extractus/oembed-extractor": 3.1.8
     "@prismicio/client": 7.17.0
-    "@prismicio/editor-fields": 0.4.88
-    "@prismicio/editor-support": 0.4.88
-    "@prismicio/editor-ui": 0.4.88
+    "@prismicio/editor-fields": 0.4.89-alpha.jp-box-display-none.1
+    "@prismicio/editor-support": 0.4.89-alpha.jp-box-display-none.1
+    "@prismicio/editor-ui": 0.4.89-alpha.jp-box-display-none.1
     "@prismicio/mock": 0.7.1
     "@prismicio/mocks": 2.14.0
     "@prismicio/simulator": 0.1.4

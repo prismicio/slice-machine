@@ -16,7 +16,6 @@ export type SliceZoneBlankSlateProps = {
   openCreateSliceModal: () => void;
   openCreateSliceFromImageModal: () => void;
   openSlicesTemplatesModal: () => void;
-  openImportSlicesFromLibraryModal: () => void;
   projectHasAvailableSlices: boolean;
   isSlicesTemplatesSupported: boolean;
 };
@@ -25,9 +24,7 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   openCreateSliceModal,
   openCreateSliceFromImageModal,
   openUpdateSliceZoneModal,
-  openImportSlicesFromLibraryModal,
   openSlicesTemplatesModal,
-  projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
   const sliceCreationOptions = getSliceCreationOptions({
@@ -79,25 +76,14 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
               {sliceCreationOptions.fromTemplate.title}
             </ActionListItem>
           )}
-          {projectHasAvailableSlices && (
-            <ActionListItem
-              renderStartIcon={() =>
-                sliceCreationOptions.fromExisting.BackgroundIcon
-              }
-              onClick={openUpdateSliceZoneModal}
-              description={sliceCreationOptions.fromExisting.description}
-            >
-              {sliceCreationOptions.fromExisting.title}
-            </ActionListItem>
-          )}
           <ActionListItem
             renderStartIcon={() =>
-              sliceCreationOptions.importFromExternal.BackgroundIcon
+              sliceCreationOptions.fromExisting.BackgroundIcon
             }
-            onClick={openImportSlicesFromLibraryModal}
-            description={sliceCreationOptions.importFromExternal.description}
+            onClick={openUpdateSliceZoneModal}
+            description={sliceCreationOptions.fromExisting.description}
           >
-            {sliceCreationOptions.importFromExternal.title}
+            {sliceCreationOptions.fromExisting.title}
           </ActionListItem>
         </ActionList>
       </BlankSlateActions>

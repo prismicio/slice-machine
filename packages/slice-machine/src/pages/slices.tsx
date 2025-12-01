@@ -15,7 +15,6 @@ import { BaseStyles, Flex, Link, Text } from "theme-ui";
 
 import { BreadcrumbItem } from "@/components/Breadcrumb";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
-import { ImportSlicesFromLibraryModal } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { SLICES_CONFIG } from "@/features/slices/slicesConfig";
@@ -65,10 +64,6 @@ const SlicesIndex: React.FunctionComponent = () => {
   const [isRenameSliceModalOpen, setIsRenameSliceModalOpen] = useState(false);
   const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
     useState(false);
-  const [
-    isImportSlicesFromLibraryModalOpen,
-    setIsImportSlicesFromLibraryModalOpen,
-  ] = useState(false);
 
   const localLibraries: LibraryUI[] = libraries.filter(
     (library) => library.isLocal,
@@ -150,17 +145,6 @@ const SlicesIndex: React.FunctionComponent = () => {
                 >
                   {sliceCreationOptions.fromScratch.title}
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  renderStartIcon={() =>
-                    sliceCreationOptions.importFromExternal.BackgroundIcon
-                  }
-                  onSelect={() => setIsImportSlicesFromLibraryModalOpen(true)}
-                  description={
-                    sliceCreationOptions.importFromExternal.description
-                  }
-                >
-                  {sliceCreationOptions.importFromExternal.title}
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : undefined}
@@ -189,9 +173,6 @@ const SlicesIndex: React.FunctionComponent = () => {
                       }}
                       onCreateFromImage={() => {
                         void openCreateSliceFromImageModal();
-                      }}
-                      onImportSlicesFromLibrary={() => {
-                        setIsImportSlicesFromLibraryModalOpen(true);
                       }}
                       buttonText={"Create one"}
                       videoPublicIdUrl={VIDEO_WHAT_ARE_SLICES}
@@ -358,20 +339,6 @@ const SlicesIndex: React.FunctionComponent = () => {
               closeCreateSliceFromImageModal();
             }}
             onClose={closeCreateSliceFromImageModal}
-          />
-          <ImportSlicesFromLibraryModal
-            open={isImportSlicesFromLibraryModalOpen}
-            location="slices"
-            onSuccess={({ slices, library }) => {
-              toast.success(
-                <ToastMessageWithPath
-                  message="Slice(s) added to slice zone and created at: "
-                  path={library ?? ""}
-                />,
-              );
-              setIsImportSlicesFromLibraryModalOpen(false);
-            }}
-            onClose={() => setIsImportSlicesFromLibraryModalOpen(false)}
           />
         </AppLayoutContent>
       </AppLayout>

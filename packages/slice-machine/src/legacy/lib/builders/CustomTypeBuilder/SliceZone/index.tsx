@@ -175,7 +175,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   );
 
   const openUpdateSliceZoneModal = () => {
-    setIsUpdateSliceZoneModalOpen(true);
+    setIsImportSlicesFromLibraryModalOpen(true);
   };
 
   const openCreateSliceModal = () => {
@@ -202,12 +202,8 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     });
   };
 
-  const openImportSlicesFromLibraryModal = () => {
-    setIsImportSlicesFromLibraryModalOpen(true);
-  };
-
   const closeUpdateSliceZoneModal = () => {
-    setIsUpdateSliceZoneModalOpen(false);
+    setIsImportSlicesFromLibraryModalOpen(false);
   };
 
   const closeCreateSliceModal = () => {
@@ -274,27 +270,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   </DropdownMenuItem>
                 ) : undefined}
 
-                {availableSlicesToAdd.length > 0 ? (
-                  <DropdownMenuItem
-                    onSelect={openUpdateSliceZoneModal}
-                    renderStartIcon={() =>
-                      sliceCreationOptions.fromExisting.BackgroundIcon
-                    }
-                    description={sliceCreationOptions.fromExisting.description}
-                  >
-                    {sliceCreationOptions.fromExisting.title}
-                  </DropdownMenuItem>
-                ) : undefined}
                 <DropdownMenuItem
-                  onSelect={openImportSlicesFromLibraryModal}
+                  onSelect={openUpdateSliceZoneModal}
                   renderStartIcon={() =>
-                    sliceCreationOptions.importFromExternal.BackgroundIcon
+                    sliceCreationOptions.fromExisting.BackgroundIcon
                   }
-                  description={
-                    sliceCreationOptions.importFromExternal.description
-                  }
+                  description={sliceCreationOptions.fromExisting.description}
                 >
-                  {sliceCreationOptions.importFromExternal.title}
+                  {sliceCreationOptions.fromExisting.title}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -347,9 +330,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               openCreateSliceModal={openCreateSliceModal}
               openCreateSliceFromImageModal={() =>
                 void openCreateSliceFromImageModal()
-              }
-              openImportSlicesFromLibraryModal={() =>
-                void openImportSlicesFromLibraryModal()
               }
               openSlicesTemplatesModal={openSlicesTemplatesModal}
               projectHasAvailableSlices={availableSlicesToAdd.length > 0}
