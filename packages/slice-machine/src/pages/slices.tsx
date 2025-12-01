@@ -362,11 +362,11 @@ const SlicesIndex: React.FunctionComponent = () => {
           <ImportSlicesFromLibraryModal
             open={isImportSlicesFromLibraryModalOpen}
             location="slices"
-            onSuccess={({ library }: { library: string }) => {
+            onSuccess={({ slices, library }) => {
               toast.success(
                 <ToastMessageWithPath
                   message="Slice(s) added to slice zone and created at: "
-                  path={library}
+                  path={library ?? ""}
                 />,
               );
               setIsImportSlicesFromLibraryModalOpen(false);

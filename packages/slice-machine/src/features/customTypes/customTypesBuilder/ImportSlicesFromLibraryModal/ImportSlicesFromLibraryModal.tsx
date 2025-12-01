@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Dialog,
   DialogActionButton,
   DialogActions,
@@ -8,15 +7,15 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  ScrollArea,
+  Tab,
   Text,
-  TextInput,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
+import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
@@ -24,7 +23,9 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { getSubmitButtonLabel } from "../shared/getSubmitButtonLabel";
 import { useExistingSlices } from "../shared/useExistingSlices";
 import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
-import { SliceCard } from "./SliceCard";
+import { ImportSlicesProvider, useImportSlicesContext } from "./ImportSlicesContext";
+import { LibrarySlicesTab } from "./LibrarySlicesTab";
+import { LocalSlicesTab } from "./LocalSlicesTab";
 import { NewSlice } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
@@ -32,45 +33,32 @@ import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
 interface ImportSlicesFromLibraryModalProps {
   open: boolean;
   location: "custom_type" | "page_type" | "slices";
+  availableSlices?: ReadonlyArray<ComponentUI>;
   onSuccess: (args: {
-    slices: {
-      model: SharedSlice;
-      langSmithUrl?: string;
-    }[];
-    library: string;
+    slices: SharedSlice[];
+    library?: string;
   }) => void;
   onClose: () => void;
 }
 
-export function ImportSlicesFromLibraryModal(
+function ImportSlicesFromLibraryModalContent(
   props: ImportSlicesFromLibraryModalProps,
 ) {
-  const { open, location, onSuccess, onClose } = props;
-
+  const { open, location, availableSlices = [], onSuccess, onClose } = props;
   const [isCreatingSlices, setIsCreatingSlices] = useState(false);
-  const [githubUrl, setGithubUrl] = useState("");
-  const [selectedSliceIds, setSelectedSliceIds] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedTab, setSelectedTab] = useState("local");
 
   const { syncChanges } = useAutoSync();
   const { createSliceSuccess, updateSliceMockSuccess } =
     useSliceMachineActions();
   const { completeStep } = useOnboarding();
   const existingSlices = useExistingSlices({ open });
-  const { isLoadingSlices, handleImportFromGithub, slices, resetSlices } =
-    useImportSlicesFromGithub();
-
-  useEffect(() => {
-    if (slices.length === 0) return;
-
-    // Set all slices as selected by default
-    const allSliceIds = new Set<string>();
-    for (const slice of slices) {
-      allSliceIds.add(slice.model.id);
-    }
-    setSelectedSliceIds(allSliceIds);
-  }, [slices]);
+  const { resetSlices } = useImportSlicesFromGithub();
+  const {
+    selectedLocalSlices,
+    selectedLibrarySlices,
+    reset,
+  } = useImportSlicesContext();
 
   /**
    * Keeps track of the current instance id.
@@ -82,210 +70,217 @@ export function ImportSlicesFromLibraryModal(
     if (open || isCreatingSlices) return;
     onClose();
     id.current = crypto.randomUUID();
-    setGithubUrl("");
-    setSelectedSliceIds(new Set());
+    reset();
     resetSlices();
   };
 
   const onSubmit = () => {
-    const newSlices = slices.reduce<NewSlice[]>((acc, slice) => {
-      if (selectedSliceIds.has(slice.model.id)) {
-        acc.push({
-          image: slice.image,
-          model: slice.model,
-          files: slice.files,
-          componentContents: slice.componentContents,
-          mocks: slice.mocks,
-          screenshots: slice.screenshots,
-        });
-      }
-      return acc;
-    }, []);
-    if (!newSlices.length) {
-      toast.error("Please select at least one slice to import");
+    const totalSelected =
+      selectedLocalSlices.length + selectedLibrarySlices.length;
+
+    if (totalSelected === 0) {
+      toast.error("Please select at least one slice");
       return;
     }
 
-    // Ensure ids and names are conflict-free against existing and newly-added slices
-    const conflictFreeSlices: NewSlice[] = [];
-    for (const s of newSlices) {
-      const adjustedModel = sliceWithoutConflicts({
-        existingSlices: existingSlices.current,
-        newSlices: conflictFreeSlices,
-        slice: s.model,
-      });
-      conflictFreeSlices.push({ ...s, model: adjustedModel });
-    }
+    // Prepare local slices (just extract models)
+    const localSliceModels = selectedLocalSlices.map((slice) => slice.model);
 
-    const currentId = id.current;
-    setIsCreatingSlices(true);
-    addSlices(conflictFreeSlices)
-      .then(async ({ slices, library }) => {
-        if (currentId !== id.current) return;
+    // Prepare library slices for import
+    const librarySlicesToImport: NewSlice[] = selectedLibrarySlices.map(
+      (slice) => ({
+        image: slice.image,
+        model: slice.model,
+        files: slice.files,
+        componentContents: slice.componentContents,
+        mocks: slice.mocks,
+        screenshots: slice.screenshots,
+      }),
+    );
 
-        // Wait a moment to ensure all file writes are complete
-        await new Promise((resolve) => setTimeout(resolve, 100));
+    // If there are library slices, create them first
+    if (librarySlicesToImport.length > 0) {
+      // Ensure ids and names are conflict-free against existing and newly-added slices
+      const conflictFreeSlices: NewSlice[] = [];
+      const allExistingSlices = [
+        ...existingSlices.current,
+        ...localSliceModels,
+      ];
 
-        const serverState = await getState();
-
-        // Ensure mocks are included in the libraries data before updating store
-        const librariesWithMocks = serverState.libraries.map((lib) => {
-          if (lib.name !== library) return lib;
-
-          return {
-            ...lib,
-            components: lib.components.map((component) => {
-              // Find the corresponding slice from newSlices to get its mocks
-              const importedSlice = conflictFreeSlices.find(
-                (s) => s.model.id === component.model.id,
-              );
-
-              // If mocks are already in component, use them; otherwise use imported mocks
-              const mocks =
-                component.mocks && component.mocks.length > 0
-                  ? component.mocks
-                  : importedSlice?.mocks;
-
-              return {
-                ...component,
-                mocks: mocks ?? component.mocks,
-              };
-            }),
-          };
+      for (const s of librarySlicesToImport) {
+        const adjustedModel = sliceWithoutConflicts({
+          existingSlices: allExistingSlices,
+          newSlices: conflictFreeSlices,
+          slice: s.model,
         });
+        conflictFreeSlices.push({ ...s, model: adjustedModel });
+      }
 
-        createSliceSuccess(librariesWithMocks);
+      const currentId = id.current;
+      setIsCreatingSlices(true);
+      addSlices(conflictFreeSlices)
+        .then(async ({ slices: createdSlices, library }) => {
+          if (currentId !== id.current) return;
 
-        // Also update mocks individually to ensure they're in the store
-        for (const slice of newSlices) {
-          if (
-            slice.mocks &&
-            Array.isArray(slice.mocks) &&
-            slice.mocks.length > 0
-          ) {
-            updateSliceMockSuccess({
-              libraryID: library,
-              sliceID: slice.model.id,
-              mocks: slice.mocks,
+          // Wait a moment to ensure all file writes are complete
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          const serverState = await getState();
+
+          // Ensure mocks are included in the libraries data before updating store
+          const librariesWithMocks = serverState.libraries.map((lib) => {
+            if (lib.name !== library) return lib;
+
+            return {
+              ...lib,
+              components: lib.components.map((component) => {
+                // Find the corresponding slice from librarySlicesToImport to get its mocks
+                const importedSlice = conflictFreeSlices.find(
+                  (s) => s.model.id === component.model.id,
+                );
+
+                // If mocks are already in component, use them; otherwise use imported mocks
+                const mocks =
+                  component.mocks && component.mocks.length > 0
+                    ? component.mocks
+                    : importedSlice?.mocks;
+
+                return {
+                  ...component,
+                  mocks: mocks ?? component.mocks,
+                };
+              }),
+            };
+          });
+
+          createSliceSuccess(librariesWithMocks);
+
+          // Also update mocks individually to ensure they're in the store
+          for (const slice of librarySlicesToImport) {
+            if (
+              slice.mocks &&
+              Array.isArray(slice.mocks) &&
+              slice.mocks.length > 0
+            ) {
+              updateSliceMockSuccess({
+                libraryID: library,
+                sliceID: slice.model.id,
+                mocks: slice.mocks,
+              });
+            }
+          }
+
+          syncChanges();
+
+          // Combine local slices with created library slices
+          const allSlices = [
+            ...localSliceModels,
+            ...createdSlices.map((s) => s.model),
+          ];
+
+          onSuccess({ slices: allSlices, library });
+
+          setIsCreatingSlices(false);
+          id.current = crypto.randomUUID();
+          reset();
+          resetSlices();
+
+          void completeStep("createSlice");
+
+          for (const { model } of createdSlices) {
+            void telemetry.track({
+              event: "slice:created",
+              id: model.id,
+              name: model.name,
+              library,
+              location,
+              mode: "import",
             });
           }
-        }
-
-        syncChanges();
-
-        onSuccess({ slices, library });
-
-        setIsCreatingSlices(false);
-        id.current = crypto.randomUUID();
-        resetSlices();
-
-        void completeStep("createSlice");
-
-        for (const { model } of slices) {
-          void telemetry.track({
-            event: "slice:created",
-            id: model.id,
-            name: model.name,
-            library,
-            location,
-            mode: "import",
-          });
-        }
-      })
-      .catch(() => {
-        if (currentId !== id.current) return;
-        setIsCreatingSlices(false);
-        toast.error("An unexpected error happened while adding slices.");
-      });
+        })
+        .catch(() => {
+          if (currentId !== id.current) return;
+          setIsCreatingSlices(false);
+          toast.error("An unexpected error happened while adding slices.");
+        });
+    } else {
+      // Only local slices selected, no need to create anything
+      onSuccess({ slices: localSliceModels });
+      reset();
+    }
   };
 
-  const selectedSlices = slices.filter((slice) =>
-    selectedSliceIds.has(slice.model.id),
-  );
+  const totalSelected =
+    selectedLocalSlices.length + selectedLibrarySlices.length;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogHeader title="Import slices from library" />
+      <DialogHeader title="Reuse an existing slice" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
-          Import slices from a github repository
+          Select existing slices or import slices from a GitHub repository
         </DialogDescription>
-        {slices.length === 0 ? (
-          <Box padding={16} height="100%" flexDirection="column" gap={16}>
-            <Box flexDirection="column" gap={8}>
-              <Box
-                display="flex"
-                flexDirection="column"
-                gap={8}
-                padding={16}
-                border
-                borderRadius={8}
-              >
-                <Text color="grey11">Import from GitHub</Text>
-                <TextInput
-                  placeholder="https://github.com/username/repository"
-                  value={githubUrl}
-                  onValueChange={setGithubUrl}
-                />
-                <Button
-                  onClick={() => handleImportFromGithub(githubUrl)}
-                  disabled={!githubUrl.trim() || isLoadingSlices}
-                  loading={isLoadingSlices}
-                  color="purple"
-                >
-                  {isLoadingSlices ? "Loading slices..." : "Import from GitHub"}
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        ) : (
-          <ScrollArea stableScrollbar={false}>
-            <Box
-              display="grid"
-              gridTemplateColumns="1fr 1fr 1fr"
-              gap={16}
-              padding={16}
+        <Box flexDirection="column" flexGrow={1} minHeight={0}>
+          <Box
+            display="flex"
+            gap={8}
+            padding={16}
+            border={{ bottom: true }}
+          >
+            <Tab
+              selected={selectedTab === "local"}
+              onClick={() => setSelectedTab("local")}
             >
-              {slices.map((slice) => {
-                return (
-                  <SliceCard
-                    model={slice.model}
-                    thumbnailUrl={slice.thumbnailUrl}
-                    key={slice.model.id}
-                    selected={selectedSliceIds.has(slice.model.id)}
-                    onSelectedChange={(selected) => {
-                      if (selected) {
-                        setSelectedSliceIds((prev) => {
-                          const next = new Set(prev);
-                          next.add(slice.model.id);
-                          return next;
-                        });
-                      } else {
-                        setSelectedSliceIds((prev) => {
-                          const next = new Set(prev);
-                          next.delete(slice.model.id);
-                          return next;
-                        });
-                      }
-                    }}
-                  />
-                );
-              })}
-            </Box>
-          </ScrollArea>
-        )}
+              Local Slices
+            </Tab>
+            <Tab
+              selected={selectedTab === "library"}
+              onClick={() => setSelectedTab("library")}
+            >
+              Library Slices
+            </Tab>
+          </Box>
+          <Box
+            flexDirection="column"
+            flexGrow={1}
+            minHeight={0}
+            visibility={selectedTab === "local" ? "visible" : "hidden"}
+          >
+            <LocalSlicesTab availableSlices={availableSlices} />
+          </Box>
+          <Box
+            flexDirection="column"
+            flexGrow={1}
+            minHeight={0}
+            visibility={selectedTab === "library" ? "visible" : "hidden"}
+          >
+            <LibrarySlicesTab />
+          </Box>
+        </Box>
 
         <DialogActions>
           <DialogCancelButton disabled={isCreatingSlices} />
           <DialogActionButton
-            disabled={selectedSlices.length === 0}
+            disabled={totalSelected === 0}
             loading={isCreatingSlices}
             onClick={onSubmit}
           >
-            {getSubmitButtonLabel(location)} ({selectedSlices.length})
+            {getSubmitButtonLabel(location)} ({totalSelected})
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function ImportSlicesFromLibraryModal(
+  props: ImportSlicesFromLibraryModalProps,
+) {
+  const { open } = props;
+
+  return (
+    <ImportSlicesProvider>
+      <ImportSlicesFromLibraryModalContent {...props} />
+    </ImportSlicesProvider>
   );
 }

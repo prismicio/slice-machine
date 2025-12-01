@@ -474,11 +474,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       <ImportSlicesFromLibraryModal
         open={isImportSlicesFromLibraryModalOpen}
         location={`${customType.format}_type`}
+        availableSlices={availableSlicesToAdd}
         onSuccess={({ slices, library }) => {
           const newCustomType = addSlicesToSliceZone({
             customType,
             tabId,
-            slices: slices.map((slice) => slice.model),
+            slices,
           });
           setCustomType({
             customType: CustomTypes.fromSM(newCustomType),
@@ -486,7 +487,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               toast.success(
                 <ToastMessageWithPath
                   message="Slice(s) added to slice zone and created at: "
-                  path={library}
+                  path={library ?? ""}
                 />,
               );
             },
