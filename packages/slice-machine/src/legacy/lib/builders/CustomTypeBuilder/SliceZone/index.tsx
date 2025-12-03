@@ -45,7 +45,6 @@ import type { SliceMachineStoreType } from "@/redux/type";
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";
 import { SlicesTemplatesModal } from "./SlicesTemplatesModal";
-import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -122,10 +121,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
     useState(false);
-  const [
-    isImportSlicesFromLibraryModalOpen,
-    setIsImportSlicesFromLibraryModalOpen,
-  ] = useState(false);
   const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
@@ -175,7 +170,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   );
 
   const openUpdateSliceZoneModal = () => {
-    setIsImportSlicesFromLibraryModalOpen(true);
+    setIsUpdateSliceZoneModalOpen(true);
   };
 
   const openCreateSliceModal = () => {
@@ -203,7 +198,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   };
 
   const closeUpdateSliceZoneModal = () => {
-    setIsImportSlicesFromLibraryModalOpen(false);
+    setIsUpdateSliceZoneModalOpen(false);
   };
 
   const closeCreateSliceModal = () => {
@@ -216,10 +211,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const closeSlicesTemplatesModal = () => {
     setIsSlicesTemplatesModalOpen(false);
-  };
-
-  const closeImportSlicesFromLibraryModal = () => {
-    setIsImportSlicesFromLibraryModalOpen(false);
   };
 
   return (
@@ -338,28 +329,33 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           </Box>
         )
       ) : undefined}
-      {isUpdateSliceZoneModalOpen && (
-        <UpdateSliceZoneModal
-          formId={`tab-slicezone-form-${tabId}`}
-          availableSlices={availableSlicesToAdd}
-          onSubmit={(slices: SharedSlice[]) => {
-            const newCustomType = addSlicesToSliceZone({
-              customType,
-              tabId,
-              slices,
-            });
-            setCustomType({
-              customType: CustomTypes.fromSM(newCustomType),
-              onSaveCallback: () => {
-                toast.success("Slice(s) added to slice zone");
-              },
-            });
-            void completeStep("createSlice");
-            closeUpdateSliceZoneModal();
-          }}
-          close={closeUpdateSliceZoneModal}
-        />
-      )}
+      <ReuseExistingSlicesDialog
+        open={isUpdateSliceZoneModalOpen}
+        location={`${customType.format}_type`}
+        typeName={customType.label ?? customType.id}
+        availableSlices={availableSlicesToAdd}
+        onSuccess={({ slices, library }) => {
+          const newCustomType = addSlicesToSliceZone({
+            customType,
+            tabId,
+            slices,
+          });
+          setCustomType({
+            customType: CustomTypes.fromSM(newCustomType),
+            onSaveCallback: () => {
+              toast.success(
+                <ToastMessageWithPath
+                  message="Slice(s) added to slice zone and created at: "
+                  path={library ?? ""}
+                />,
+              );
+            },
+          });
+          void completeStep("createSlice");
+          closeUpdateSliceZoneModal();
+        }}
+        onClose={closeUpdateSliceZoneModal}
+      />
       {isSlicesTemplatesModalOpen && (
         <SlicesTemplatesModal
           formId={`tab-slicezone-form-${tabId}`}
@@ -450,31 +446,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           closeCreateSliceFromImageModal();
         }}
         onClose={closeCreateSliceFromImageModal}
-      />
-      <ReuseExistingSlicesDialog
-        open={isImportSlicesFromLibraryModalOpen}
-        location={`${customType.format}_type`}
-        availableSlices={availableSlicesToAdd}
-        onSuccess={({ slices, library }) => {
-          const newCustomType = addSlicesToSliceZone({
-            customType,
-            tabId,
-            slices,
-          });
-          setCustomType({
-            customType: CustomTypes.fromSM(newCustomType),
-            onSaveCallback: () => {
-              toast.success(
-                <ToastMessageWithPath
-                  message="Slice(s) added to slice zone and created at: "
-                  path={library ?? ""}
-                />,
-              );
-            },
-          });
-          closeImportSlicesFromLibraryModal();
-        }}
-        onClose={closeImportSlicesFromLibraryModal}
       />
     </>
   );

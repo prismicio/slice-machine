@@ -26,7 +26,8 @@ import {
 
 interface ReuseExistingSlicesDialogProps {
   open: boolean;
-  location: "custom_type" | "page_type" | "slices";
+  location: "custom_type" | "page_type";
+  typeName: string;
   availableSlices?: ReadonlyArray<ComponentUI>;
   onSuccess: (args: { slices: SharedSlice[]; library?: string }) => void;
   onClose: () => void;
@@ -35,10 +36,15 @@ interface ReuseExistingSlicesDialogProps {
 function ReuseExistingSlicesDialogContent(
   props: ReuseExistingSlicesDialogProps,
 ) {
-  const { open, location, availableSlices = [], onSuccess, onClose } = props;
-  const [selectedTab, setSelectedTab] = useState(
-    location === "slices" ? "library" : "local",
-  );
+  const {
+    open,
+    location,
+    typeName,
+    availableSlices = [],
+    onSuccess,
+    onClose,
+  } = props;
+  const [selectedTab, setSelectedTab] = useState("local");
 
   const existingSlices = useExistingSlices({ open });
   const { resetSlices } = useImportSlicesFromGithub();
@@ -75,35 +81,29 @@ function ReuseExistingSlicesDialogContent(
             border={{ bottom: true }}
           >
             <Box gap={8}>
-              {location !== "slices" && (
-                <>
-                  <Tab
-                    selected={selectedTab === "local"}
-                    onClick={() => setSelectedTab("local")}
-                  >
-                    Local Slices
-                  </Tab>
-                  <Tab
-                    selected={selectedTab === "library"}
-                    onClick={() => setSelectedTab("library")}
-                  >
-                    Library Slices
-                  </Tab>
-                </>
-              )}
+              <Tab
+                selected={selectedTab === "local"}
+                onClick={() => setSelectedTab("local")}
+              >
+                Local Slices
+              </Tab>
+              <Tab
+                selected={selectedTab === "library"}
+                onClick={() => setSelectedTab("library")}
+              >
+                Library Slices
+              </Tab>
             </Box>
             {selectedTab === "library" && "<repo-select>"}
           </Box>
-          {location !== "slices" && (
-            <Box
-              minHeight={0}
-              {...(selectedTab === "local"
-                ? { display: "flex", flexDirection: "column", flexGrow: 1 }
-                : { display: "none" })}
-            >
-              <LocalSlicesTab availableSlices={availableSlices} />
-            </Box>
-          )}
+          <Box
+            minHeight={0}
+            {...(selectedTab === "local"
+              ? { display: "flex", flexDirection: "column", flexGrow: 1 }
+              : { display: "none" })}
+          >
+            <LocalSlicesTab availableSlices={availableSlices} />
+          </Box>
           <Box
             minHeight={0}
             {...(selectedTab === "library"
@@ -115,13 +115,14 @@ function ReuseExistingSlicesDialogContent(
         </Box>
 
         <DialogActions>
-          <DialogCancelButton disabled={isSubmitting} />
+          <DialogCancelButton disabled={isSubmitting} size="medium" />
           <DialogActionButton
             disabled={totalSelected === 0}
             loading={isSubmitting}
             onClick={() => void onSubmit()}
+            size="medium"
           >
-            {getSubmitButtonLabel(location)} ({totalSelected})
+            {getSubmitButtonLabel(location, typeName)} ({totalSelected})
           </DialogActionButton>
         </DialogActions>
       </DialogContent>
