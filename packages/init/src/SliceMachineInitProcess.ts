@@ -13,6 +13,7 @@ import pLimit from "p-limit";
 
 import {
 	createSliceMachineManager,
+	FrameworkWroomTelemetryID,
 	PrismicUserProfile,
 	PrismicRepository,
 	SliceMachineManager,
@@ -434,7 +435,22 @@ Continue with next steps in Slice Machine.
 										this.context.starterId,
 									)}`;
 								} else {
-									task.title = "No starter detected";
+									const fallbackStarterId: Partial<
+										Record<FrameworkWroomTelemetryID, StarterId>
+									> = {
+										next: "next_minimal",
+										nuxt: "nuxt_minimal",
+										sveltekit: "sveltekit_minimal",
+									};
+									this.context.starterId = this.context.framework
+										? fallbackStarterId[this.context.framework.wroomTelemetryID]
+										: undefined;
+
+									if (this.context.starterId) {
+										task.title = "Using a starter";
+									} else {
+										task.title = "No starter detected";
+									}
 								}
 							},
 						},
@@ -552,7 +568,7 @@ Continue with next steps in Slice Machine.
 
 	protected getLoggingInTitle(subtitle?: string, ...extra: string[]): string {
 		return `Logging in to Prismic...
-		
+
 ███████████████████████████████████████████████████████████████████████████
 
 ${subtitle ? `* * ${subtitle}` : ""}
