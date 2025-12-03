@@ -4,12 +4,13 @@ import { join } from "node:path";
 import { StarterId } from "@slicemachine/manager";
 
 const STARTERS_REPOSITORY_NAME_TO_ID: Record<string, StarterId> = {
+	"nextjs-starter-prismic-minimal": "next_minimal",
+	"nextjs-starter-prismic-minimal-ts": "next_minimal",
 	"nextjs-starter-prismic-multi-page": "next_multi_page",
-	"nextjs-starter-prismic-blog": "next_blog",
-	"nextjs-starter-prismic-multi-language": "next_multi_lang",
+	"nuxt-starter-prismic-minimal": "nuxt_minimal",
 	"nuxt-starter-prismic-multi-page": "nuxt_multi_page",
-	"nuxt-starter-prismic-blog": "nuxt_blog",
-	"nuxt-starter-prismic-multi-language": "nuxt_multi_lang",
+	"sveltekit-starter-prismic-minimal": "sveltekit_minimal",
+	"sveltekit-starter-prismic-multi-page": "sveltekit_multi_page",
 };
 
 export const detectStarterId = async (
