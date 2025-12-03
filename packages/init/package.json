@@ -94,9 +94,6 @@
 		"vite-plugin-sdk": "0.1.1",
 		"vitest": "0.32.0"
 	},
-	"engines": {
-		"node": ">=20.19.0"
-	},
 	"publishConfig": {
 		"access": "public"
 	}
