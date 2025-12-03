@@ -106,7 +106,6 @@ async function publish(options?: Options): Promise<void> {
 
   // Ensure the repository is clean and validate the current branch name.
   const { stdout: gitStatus } = await exec("git", ["status", "--porcelain"]);
-  console.log("gitStatus", gitStatus);
   if (gitStatus.length > 0) {
     throw new CommandError(
       "This command must be executed on a clean repository.",
