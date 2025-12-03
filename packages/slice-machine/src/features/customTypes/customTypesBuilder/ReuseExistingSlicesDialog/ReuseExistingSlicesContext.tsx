@@ -20,7 +20,7 @@ import { NewSlice } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
 
-interface ImportSlicesContextValue {
+interface ReuseExistingSlicesContextValue {
   selectedLocalSlices: ComponentUI[];
   selectedLibrarySlices: SliceImport[];
   toggleLocalSlice: (slice: ComponentUI) => void;
@@ -36,15 +36,17 @@ interface ImportSlicesContextValue {
   totalSelected: number;
 }
 
-const ImportSlicesContext = createContext<ImportSlicesContextValue | undefined>(
-  undefined,
-);
+const ReuseExistingSlicesContext = createContext<
+  ReuseExistingSlicesContextValue | undefined
+>(undefined);
 
-interface ImportSlicesProviderProps {
+interface ReuseExistingSlicesProviderProps {
   children: ReactNode;
 }
 
-export function ImportSlicesProvider({ children }: ImportSlicesProviderProps) {
+export function ReuseExistingSlicesProvider({
+  children,
+}: ReuseExistingSlicesProviderProps) {
   const [localSlices, setSelectedLocalSlices] = useState<ComponentUI[]>([]);
   const [librarySlices, setSelectedLibrarySlices] = useState<SliceImport[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -248,7 +250,7 @@ export function ImportSlicesProvider({ children }: ImportSlicesProviderProps) {
   const totalSelected = localSlices.length + librarySlices.length;
 
   return (
-    <ImportSlicesContext.Provider
+    <ReuseExistingSlicesContext.Provider
       value={{
         selectedLocalSlices: localSlices,
         selectedLibrarySlices: librarySlices,
@@ -262,15 +264,15 @@ export function ImportSlicesProvider({ children }: ImportSlicesProviderProps) {
       }}
     >
       {children}
-    </ImportSlicesContext.Provider>
+    </ReuseExistingSlicesContext.Provider>
   );
 }
 
-export function useImportSlicesContext() {
-  const context = useContext(ImportSlicesContext);
+export function useReuseExistingSlicesContext() {
+  const context = useContext(ReuseExistingSlicesContext);
   if (context === undefined) {
     throw new Error(
-      "useImportSlicesContext must be used within ImportSlicesProvider",
+      "useReuseExistingSlicesContext must be used within ReuseExistingSlicesProvider",
     );
   }
   return context;

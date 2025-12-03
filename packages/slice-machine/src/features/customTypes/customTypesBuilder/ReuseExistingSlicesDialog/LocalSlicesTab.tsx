@@ -4,7 +4,7 @@ import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import Grid from "@/legacy/components/Grid";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
-import { useImportSlicesContext } from "./ImportSlicesContext";
+import { useReuseExistingSlicesContext } from "./ReuseExistingSlicesContext";
 
 interface LocalSlicesTabProps {
   availableSlices: ReadonlyArray<ComponentUI>;
@@ -12,7 +12,7 @@ interface LocalSlicesTabProps {
 
 export function LocalSlicesTab(props: LocalSlicesTabProps) {
   const { availableSlices } = props;
-  const { selectedLocalSlices, toggleLocalSlice } = useImportSlicesContext();
+  const { selectedLocalSlices, toggleLocalSlice } = useReuseExistingSlicesContext();
 
   if (availableSlices.length === 0) {
     return (

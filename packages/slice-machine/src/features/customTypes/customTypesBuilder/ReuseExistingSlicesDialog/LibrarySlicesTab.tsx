@@ -2,7 +2,7 @@ import { Box, Button, ScrollArea, Text, TextInput } from "@prismicio/editor-ui";
 import { useEffect, useState } from "react";
 
 import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
-import { useImportSlicesContext } from "./ImportSlicesContext";
+import { useReuseExistingSlicesContext } from "./ReuseExistingSlicesContext";
 import { SliceCard } from "./SliceCard";
 
 export function LibrarySlicesTab() {
@@ -10,7 +10,7 @@ export function LibrarySlicesTab() {
   const { isLoadingSlices, handleImportFromGithub, slices } =
     useImportSlicesFromGithub();
   const { selectedLibrarySlices, toggleLibrarySlice, setAllLibrarySlices } =
-    useImportSlicesContext();
+    useReuseExistingSlicesContext();
 
   useEffect(() => {
     if (slices.length === 0) return;

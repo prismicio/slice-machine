@@ -17,14 +17,14 @@ import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 import { getSubmitButtonLabel } from "../shared/getSubmitButtonLabel";
 import { useExistingSlices } from "../shared/useExistingSlices";
 import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
-import {
-  ImportSlicesProvider,
-  useImportSlicesContext,
-} from "./ImportSlicesContext";
 import { LibrarySlicesTab } from "./LibrarySlicesTab";
 import { LocalSlicesTab } from "./LocalSlicesTab";
+import {
+  ReuseExistingSlicesProvider,
+  useReuseExistingSlicesContext,
+} from "./ReuseExistingSlicesContext";
 
-interface ImportSlicesFromLibraryModalProps {
+interface ReuseExistingSlicesDialogProps {
   open: boolean;
   location: "custom_type" | "page_type" | "slices";
   availableSlices?: ReadonlyArray<ComponentUI>;
@@ -32,8 +32,8 @@ interface ImportSlicesFromLibraryModalProps {
   onClose: () => void;
 }
 
-function ImportSlicesFromLibraryModalContent(
-  props: ImportSlicesFromLibraryModalProps,
+function ReuseExistingSlicesDialogContent(
+  props: ReuseExistingSlicesDialogProps,
 ) {
   const { open, location, availableSlices = [], onSuccess, onClose } = props;
   const [selectedTab, setSelectedTab] = useState(
@@ -43,7 +43,7 @@ function ImportSlicesFromLibraryModalContent(
   const existingSlices = useExistingSlices({ open });
   const { resetSlices } = useImportSlicesFromGithub();
   const { submit, isSubmitting, totalSelected, reset } =
-    useImportSlicesContext();
+    useReuseExistingSlicesContext();
 
   const onOpenChange = (open: boolean) => {
     if (open || isSubmitting) return;
@@ -129,12 +129,12 @@ function ImportSlicesFromLibraryModalContent(
   );
 }
 
-export function ImportSlicesFromLibraryModal(
-  props: ImportSlicesFromLibraryModalProps,
+export function ReuseExistingSlicesDialog(
+  props: ReuseExistingSlicesDialogProps,
 ) {
   return (
-    <ImportSlicesProvider>
-      <ImportSlicesFromLibraryModalContent {...props} />
-    </ImportSlicesProvider>
+    <ReuseExistingSlicesProvider>
+      <ReuseExistingSlicesDialogContent {...props} />
+    </ReuseExistingSlicesProvider>
   );
 }
