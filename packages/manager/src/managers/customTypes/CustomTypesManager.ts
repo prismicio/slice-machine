@@ -873,10 +873,25 @@ FINAL REMINDERS:
 					for await (const query of queries) {
 						switch (query.type) {
 							case "result":
-								if (query.subtype === "success") {
-									newSliceAbsPath = query.result.match(
-										/<new_slice_path>(.*)<\/new_slice_path>/s,
-									)?.[1];
+								switch (query.subtype) {
+									case "success":
+										newSliceAbsPath = query.result.match(
+											/<new_slice_path>(.*)<\/new_slice_path>/s,
+										)?.[1];
+										break;
+									case "error_during_execution":
+									case "error_max_budget_usd":
+									case "error_max_turns":
+										console.error(
+											`inferSlice result error for request ${requestId}}:`,
+											query.errors,
+										);
+										break;
+									default:
+										console.error(
+											`inferSlice result error for request ${requestId}: Unknown`,
+										);
+										break;
 								}
 								break;
 						}
