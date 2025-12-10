@@ -49,6 +49,7 @@ import {
 	readdir,
 } from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
+import { trackSentryError } from "../../lib/sentryErrorHandlers";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -595,6 +596,8 @@ export class CustomTypesManager extends BaseManager {
 					.parse(exp.payload);
 
 				let tmpDir: string | undefined;
+				const claudeErrors: string[] = [];
+
 				try {
 					const config = await this.project.getSliceMachineConfig();
 
@@ -818,9 +821,11 @@ FINAL REMINDERS:
 						prompt,
 						options: {
 							cwd,
-							stderr: (data) => {
-								if (!data.startsWith("Spawning Claude Code process")) {
-									console.error("inferSlice error:" + data);
+							stderr: (error) => {
+								if (!error.startsWith("Spawning Claude Code process")) {
+									const formattedError = `inferSlice - stderr for request ${requestId}: ${error}`;
+									claudeErrors.push(formattedError);
+									console.error(formattedError);
 								}
 							},
 							model: "claude-haiku-4-5",
@@ -882,14 +887,10 @@ FINAL REMINDERS:
 									case "error_during_execution":
 									case "error_max_budget_usd":
 									case "error_max_turns":
+										claudeErrors.push(...query.errors);
 										console.error(
-											`inferSlice result error for request ${requestId}}:`,
+											`inferSlice - result query error for request ${requestId}}:`,
 											query.errors,
-										);
-										break;
-									default:
-										console.error(
-											`inferSlice result error for request ${requestId}: Unknown`,
 										);
 										break;
 								}
@@ -922,6 +923,15 @@ FINAL REMINDERS:
 				} finally {
 					if (tmpDir && existsSync(tmpDir)) {
 						await rm(tmpDir, { recursive: true });
+					}
+
+					if (claudeErrors.length > 0) {
+						trackSentryError(
+							new Error(
+								`inferSlice - Claude encountered errors for request ${requestId}`,
+								{ cause: { errors: claudeErrors } },
+							),
+						);
 					}
 				}
 			} else {
