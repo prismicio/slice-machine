@@ -575,12 +575,15 @@ export function CreateSliceFromImageModal(
                     <Button
                       endIcon="arrowForward"
                       color="indigo"
-                      onClick={() =>
+                      onClick={() => {
                         window.open(
                           "https://www.figma.com/community/plugin/1567955296461153730/figma-to-slice",
                           "_blank",
-                        )
-                      }
+                        );
+                        void telemetry.track({
+                          event: "slice-generation:plugin-installation-clicked",
+                        });
+                      }}
                       sx={{ marginRight: 8 }}
                       invisible
                     >
