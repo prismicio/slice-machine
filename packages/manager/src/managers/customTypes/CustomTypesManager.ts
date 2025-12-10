@@ -823,9 +823,11 @@ FINAL REMINDERS:
 							cwd,
 							stderr: (error) => {
 								if (!error.startsWith("Spawning Claude Code process")) {
-									const formattedError = `inferSlice - stderr for request ${requestId}: ${error}`;
-									claudeErrors.push(formattedError);
-									console.error(formattedError);
+									claudeErrors.push(error);
+									console.error(
+										`inferSlice - stderr for request ${requestId}:`,
+										error,
+									);
 								}
 							},
 							model: "claude-haiku-4-5",
