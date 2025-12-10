@@ -80,7 +80,7 @@ export function CreateSliceFromImageModal(
     ["meta+v", "ctrl+v"],
     (event) => {
       event.preventDefault();
-      void onPaste();
+      void onPaste({ isShortcut: true });
     },
     { enabled: open && isFigmaEnabled },
   );
@@ -205,6 +205,8 @@ export function CreateSliceFromImageModal(
     });
 
     try {
+      void telemetry.track({ event: "slice-generation:started", source });
+
       const inferResult = await managerClient.customTypes.inferSlice({
         source,
         libraryID,
@@ -268,6 +270,8 @@ export function CreateSliceFromImageModal(
           : { mode: "ai", langSmithUrl: inferResult.langSmithUrl }),
       });
 
+      void telemetry.track({ event: "slice-generation:ended", error: false });
+
       addAiFeedback({
         type: "model",
         library: libraryID,
@@ -292,6 +296,8 @@ export function CreateSliceFromImageModal(
           },
         }),
       });
+
+      void telemetry.track({ event: "slice-generation:ended", error: true });
     }
   };
 
@@ -370,7 +376,9 @@ export function CreateSliceFromImageModal(
     }
   };
 
-  const onPaste = async () => {
+  const onPaste = async (args?: { isShortcut?: boolean }) => {
+    const { isShortcut = false } = args ?? {};
+
     if (
       !open ||
       !isFigmaEnabled ||
@@ -483,6 +491,11 @@ export function CreateSliceFromImageModal(
       // Start uploading the new image
       void uploadImage({ index: newIndex, image, source: "figma" });
 
+      void telemetry.track({
+        event: "slice-generation:pasted-from-figma",
+        source: isShortcut ? "shortcut" : "button",
+      });
+
       toast.success(`Pasted ${imageName}${success ? " from Figma" : ""}`);
     } catch (error) {
       console.error("Failed to paste from clipboard:", error);
@@ -562,12 +575,15 @@ export function CreateSliceFromImageModal(
                     <Button
                       endIcon="arrowForward"
                       color="indigo"
-                      onClick={() =>
+                      onClick={() => {
                         window.open(
                           "https://www.figma.com/community/plugin/1567955296461153730/figma-to-slice",
                           "_blank",
-                        )
-                      }
+                        );
+                        void telemetry.track({
+                          event: "slice-generation:plugin-installation-clicked",
+                        });
+                      }}
                       sx={{ marginRight: 8 }}
                       invisible
                     >
@@ -582,14 +598,14 @@ export function CreateSliceFromImageModal(
                   overlay={
                     <UploadBlankSlate
                       onFilesSelected={onImagesSelected}
-                      onPaste={() => void onPaste()}
+                      onPaste={onPaste}
                       droppingFiles
                     />
                   }
                 >
                   <UploadBlankSlate
                     onFilesSelected={onImagesSelected}
-                    onPaste={() => void onPaste()}
+                    onPaste={onPaste}
                   />
                 </FileDropZone>
               </Box>
@@ -723,7 +739,7 @@ export function CreateSliceFromImageModal(
 function UploadBlankSlate(props: {
   droppingFiles?: boolean;
   onFilesSelected: (files: File[]) => void;
-  onPaste: () => void;
+  onPaste: () => void | Promise<void>;
 }) {
   const { droppingFiles = false, onFilesSelected, onPaste } = props;
   const isFigmaEnabled = useIsFigmaEnabled();
@@ -777,7 +793,7 @@ function UploadBlankSlate(props: {
                   size="small"
                   renderStartIcon={() => <FigmaIcon height={16} />}
                   color="grey"
-                  onClick={onPaste}
+                  onClick={() => void onPaste()}
                 >
                   Paste from Figma
                 </Button>
