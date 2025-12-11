@@ -32,7 +32,7 @@ import fetch from "../../lib/fetch";
 import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
-import { UnauthorizedError } from "../../errors";
+import { InferSliceAbortError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
@@ -48,7 +48,10 @@ import {
 	readdir,
 	copyFile,
 } from "node:fs/promises";
-import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
+import {
+	AbortError as ClaudeAbortError,
+	query as queryClaude,
+} from "@anthropic-ai/claude-agent-sdk";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -961,11 +964,18 @@ FINAL REMINDERS:
 				return InferSliceResponse.parse(json);
 			}
 		} catch (error) {
+			if (
+				error instanceof ClaudeAbortError ||
+				(error instanceof Error && error.name === "AbortError")
+			) {
+				console.warn(`inferSlice (${source}) request ${requestId} was aborted`);
+				throw new InferSliceAbortError();
+			}
+
 			console.error(
 				`inferSlice (${source}) failed for request ${requestId}`,
 				error,
 			);
-
 			throw new Error(`inferSlice encountered errors`, {
 				cause: {
 					error,
