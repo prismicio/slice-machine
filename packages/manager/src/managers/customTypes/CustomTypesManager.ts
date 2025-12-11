@@ -46,7 +46,7 @@ import {
 	writeFile,
 	readFile,
 	readdir,
-	cp,
+	copyFile,
 } from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
 import { trackSentryError } from "../../lib/sentryErrorHandlers";
@@ -916,7 +916,7 @@ FINAL REMINDERS:
 					}
 
 					// copy instead of moving because the file might be in a different volume
-					await cp(
+					await copyFile(
 						tmpImageAbsPath,
 						joinPath(newSliceAbsPath, "screenshot-default.png"),
 					);
