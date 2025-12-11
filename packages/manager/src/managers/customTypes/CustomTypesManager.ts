@@ -925,7 +925,7 @@ FINAL REMINDERS:
 						await rm(tmpImageAbsPath);
 					} catch (error) {
 						console.warn(
-							`Failed to delete temporary slice screenshot at ${tmpImageAbsPath}`,
+							`inferSlice - Failed to delete temporary slice screenshot at ${tmpImageAbsPath}`,
 							error,
 						);
 					}
