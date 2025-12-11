@@ -49,7 +49,6 @@ import {
 	copyFile,
 } from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
-import { trackSentryError } from "../../lib/sentryErrorHandlers";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -581,6 +580,8 @@ export class CustomTypesManager extends BaseManager {
 		console.info(`inferSlice (${source}) started for request ${requestId}`);
 		const startTime = Date.now();
 
+		const claudeErrors: string[] = [];
+
 		try {
 			if (source === "figma") {
 				const { libraryID } = args;
@@ -596,7 +597,6 @@ export class CustomTypesManager extends BaseManager {
 					.parse(exp.payload);
 
 				let tmpDir: string | undefined;
-				const claudeErrors: string[] = [];
 
 				try {
 					const config = await this.project.getSliceMachineConfig();
@@ -882,9 +882,13 @@ FINAL REMINDERS:
 							case "result":
 								switch (query.subtype) {
 									case "success":
-										newSliceAbsPath = query.result.match(
-											/<new_slice_path>(.*)<\/new_slice_path>/s,
-										)?.[1];
+										if (!query.is_error) {
+											newSliceAbsPath = query.result.match(
+												/<new_slice_path>(.*)<\/new_slice_path>/s,
+											)?.[1];
+										} else {
+											claudeErrors.push(query.result);
+										}
 										break;
 									case "error_during_execution":
 									case "error_max_budget_usd":
@@ -935,15 +939,6 @@ FINAL REMINDERS:
 					if (tmpDir && existsSync(tmpDir)) {
 						await rm(tmpDir, { recursive: true });
 					}
-
-					if (claudeErrors.length > 0) {
-						trackSentryError(
-							new Error(
-								`inferSlice - Claude encountered errors for request ${requestId}`,
-								{ cause: { errors: claudeErrors } },
-							),
-						);
-					}
 				}
 			} else {
 				const searchParams = new URLSearchParams({ repository });
@@ -971,7 +966,13 @@ FINAL REMINDERS:
 				error,
 			);
 
-			throw error;
+			throw new Error(`inferSlice encountered errors`, {
+				cause: {
+					error,
+					...(claudeErrors.length > 0 ? { claudeErrors } : {}),
+					args,
+				},
+			});
 		} finally {
 			this.inferSliceAbortControllers.delete(requestId);
 			clearTimeout(timeoutId);
