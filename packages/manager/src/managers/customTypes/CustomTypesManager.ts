@@ -42,11 +42,11 @@ import { randomUUID } from "node:crypto";
 import { join as joinPath, relative as relativePath } from "node:path";
 import {
 	mkdtemp,
-	rename,
 	rm,
 	writeFile,
 	readFile,
 	readdir,
+	cp,
 } from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
 
@@ -897,11 +897,20 @@ FINAL REMINDERS:
 						);
 					}
 
-					// move the screenshot image to the new slice directory
-					await rename(
+					// copy instead of moving because the file might be in a different volume
+					await cp(
 						tmpImageAbsPath,
 						joinPath(newSliceAbsPath, "screenshot-default.png"),
 					);
+
+					try {
+						await rm(tmpImageAbsPath);
+					} catch (error) {
+						console.warn(
+							`Failed to delete temporary slice screenshot at ${tmpImageAbsPath}`,
+							error,
+						);
+					}
 
 					return InferSliceResponse.parse({ slice: JSON.parse(model) });
 				} finally {
