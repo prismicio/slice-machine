@@ -49,6 +49,7 @@ import {
 	cp,
 } from "node:fs/promises";
 import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
+import { trackSentryError } from "../../lib/sentryErrorHandlers";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -595,6 +596,8 @@ export class CustomTypesManager extends BaseManager {
 					.parse(exp.payload);
 
 				let tmpDir: string | undefined;
+				const claudeErrors: string[] = [];
+
 				try {
 					const config = await this.project.getSliceMachineConfig();
 
@@ -818,9 +821,13 @@ FINAL REMINDERS:
 						prompt,
 						options: {
 							cwd,
-							stderr: (data) => {
-								if (!data.startsWith("Spawning Claude Code process")) {
-									console.error("inferSlice error:" + data);
+							stderr: (error) => {
+								if (!error.startsWith("Spawning Claude Code process")) {
+									claudeErrors.push(error);
+									console.error(
+										`inferSlice - stderr for request ${requestId}:`,
+										error,
+									);
 								}
 							},
 							model: "claude-haiku-4-5",
@@ -873,10 +880,21 @@ FINAL REMINDERS:
 					for await (const query of queries) {
 						switch (query.type) {
 							case "result":
-								if (query.subtype === "success") {
-									newSliceAbsPath = query.result.match(
-										/<new_slice_path>(.*)<\/new_slice_path>/s,
-									)?.[1];
+								switch (query.subtype) {
+									case "success":
+										newSliceAbsPath = query.result.match(
+											/<new_slice_path>(.*)<\/new_slice_path>/s,
+										)?.[1];
+										break;
+									case "error_during_execution":
+									case "error_max_budget_usd":
+									case "error_max_turns":
+										claudeErrors.push(...query.errors);
+										console.error(
+											`inferSlice - result query error for request ${requestId}}:`,
+											query.errors,
+										);
+										break;
 								}
 								break;
 						}
@@ -916,6 +934,15 @@ FINAL REMINDERS:
 				} finally {
 					if (tmpDir && existsSync(tmpDir)) {
 						await rm(tmpDir, { recursive: true });
+					}
+
+					if (claudeErrors.length > 0) {
+						trackSentryError(
+							new Error(
+								`inferSlice - Claude encountered errors for request ${requestId}`,
+								{ cause: { errors: claudeErrors } },
+							),
+						);
 					}
 				}
 			} else {
