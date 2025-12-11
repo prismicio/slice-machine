@@ -830,7 +830,7 @@ FINAL REMINDERS:
 									);
 								}
 							},
-							model: "claude-haiku-4-5??",
+							model: "claude-haiku-4-5",
 							permissionMode: "acceptEdits",
 							allowedTools: [
 								`Bash(${cwd})`,
