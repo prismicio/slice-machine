@@ -866,7 +866,7 @@ FINAL REMINDERS:
 								]),
 							],
 							env: {
-								...process.env,
+								PATH: process.env.PATH,
 								ANTHROPIC_BASE_URL: llmProxyUrl,
 								ANTHROPIC_CUSTOM_HEADERS:
 									`x-prismic-token: ${authToken}\n` +
