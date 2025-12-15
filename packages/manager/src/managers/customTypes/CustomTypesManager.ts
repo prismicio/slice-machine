@@ -32,11 +32,7 @@ import fetch from "../../lib/fetch";
 import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
-import {
-	InferSliceAbortError,
-	UnauthenticatedError,
-	UnauthorizedError,
-} from "../../errors";
+import { InferSliceAbortError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
