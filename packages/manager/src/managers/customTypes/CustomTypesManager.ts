@@ -564,11 +564,6 @@ export class CustomTypesManager extends BaseManager {
 		const { source, imageUrl, requestId } = args;
 
 		const authToken = await this.user.getAuthenticationToken();
-
-		if (!authToken) {
-			throw new UnauthenticatedError("User is not authenticated.");
-		}
-
 		const repository = await this.project.getResolvedRepositoryName();
 
 		const abortController = new AbortController();
