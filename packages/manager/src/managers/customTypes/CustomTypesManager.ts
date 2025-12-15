@@ -32,7 +32,11 @@ import fetch from "../../lib/fetch";
 import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
-import { InferSliceAbortError, UnauthorizedError } from "../../errors";
+import {
+	InferSliceAbortError,
+	UnauthenticatedError,
+	UnauthorizedError,
+} from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
@@ -560,6 +564,11 @@ export class CustomTypesManager extends BaseManager {
 		const { source, imageUrl, requestId } = args;
 
 		const authToken = await this.user.getAuthenticationToken();
+
+		if (!authToken) {
+			throw new UnauthenticatedError("User is not authenticated.");
+		}
+
 		const repository = await this.project.getResolvedRepositoryName();
 
 		const abortController = new AbortController();
@@ -819,6 +828,12 @@ FINAL REMINDERS:
 - You MUST call mcp__prismic__how_to_code_slice in Step 3.1
 - DO NOT ATTEMPT TO BUILD THE APPLICATION
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS`;
+
+					void this.telemetry.track({
+						event: "slice-generation:started",
+						source,
+						proxyUrl: llmProxyUrl,
+					});
 
 					const queries = queryClaude({
 						prompt,
