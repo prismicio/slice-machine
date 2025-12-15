@@ -140,6 +140,12 @@ export function CreateSliceFromImageModal(
     });
   };
 
+  const failAndPromptLogin = () => {
+    toast.error("Please log in and try again.");
+    closeModal();
+    openLoginModal();
+  };
+
   const uploadImage = async (args: {
     index: number;
     image: File;
@@ -170,8 +176,9 @@ export function CreateSliceFromImageModal(
           thumbnailUrl: imageUrl,
         }),
       });
-    } catch {
+    } catch (error) {
       if (currentId !== id.current) return;
+
       setSlice({
         index,
         slice: (prevSlice) => ({
@@ -180,6 +187,11 @@ export function CreateSliceFromImageModal(
           onRetry: () => void uploadImage({ index, image, source }),
         }),
       });
+
+      if (isUnauthenticatedError(error)) {
+        failAndPromptLogin();
+        return;
+      }
     }
   };
 
@@ -301,9 +313,7 @@ export function CreateSliceFromImageModal(
       });
 
       if (isUnauthenticatedError(error)) {
-        toast.error("Please log in and try again.");
-        closeModal();
-        openLoginModal();
+        failAndPromptLogin();
         return;
       }
 
