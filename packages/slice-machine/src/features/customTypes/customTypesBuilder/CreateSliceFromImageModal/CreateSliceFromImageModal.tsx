@@ -140,7 +140,7 @@ export function CreateSliceFromImageModal(
     });
   };
 
-  const showFailedDueToUnauthenticatedError = () => {
+  const failAndPromptLogin = () => {
     toast.error("Please log in and try again.");
     closeModal();
     openLoginModal();
@@ -189,7 +189,7 @@ export function CreateSliceFromImageModal(
       });
 
       if (isUnauthenticatedError(error)) {
-        showFailedDueToUnauthenticatedError();
+        failAndPromptLogin();
         return;
       }
     }
@@ -313,7 +313,7 @@ export function CreateSliceFromImageModal(
       });
 
       if (isUnauthenticatedError(error)) {
-        showFailedDueToUnauthenticatedError();
+        failAndPromptLogin();
         return;
       }
 
