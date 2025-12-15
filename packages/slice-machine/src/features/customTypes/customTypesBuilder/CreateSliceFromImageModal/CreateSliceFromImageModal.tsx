@@ -18,6 +18,7 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { isUnauthenticatedError } from "@slicemachine/manager/client";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -61,7 +62,7 @@ export function CreateSliceFromImageModal(
   const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
 
   const { syncChanges } = useAutoSync();
-  const { createSliceSuccess } = useSliceMachineActions();
+  const { createSliceSuccess, openLoginModal } = useSliceMachineActions();
   const { completeStep } = useOnboarding();
   const existingSlices = useExistingSlices({ open });
   const isFigmaEnabled = useIsFigmaEnabled();
@@ -205,8 +206,6 @@ export function CreateSliceFromImageModal(
     });
 
     try {
-      void telemetry.track({ event: "slice-generation:started", source });
-
       const inferResult = await managerClient.customTypes.inferSlice({
         source,
         libraryID,
@@ -296,6 +295,13 @@ export function CreateSliceFromImageModal(
           },
         }),
       });
+
+      if (isUnauthenticatedError(error)) {
+        toast.error("Please log in and try again.");
+        closeModal();
+        openLoginModal();
+        return;
+      }
 
       void telemetry.track({ event: "slice-generation:ended", error: true });
     }

@@ -820,6 +820,12 @@ FINAL REMINDERS:
 - DO NOT ATTEMPT TO BUILD THE APPLICATION
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS`;
 
+					void this.telemetry.track({
+						event: "slice-generation:started",
+						source,
+						llmProxyUrl,
+					});
+
 					const queries = queryClaude({
 						prompt,
 						options: {
