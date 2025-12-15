@@ -269,7 +269,11 @@ export function CreateSliceFromImageModal(
           : { mode: "ai", langSmithUrl: inferResult.langSmithUrl }),
       });
 
-      void telemetry.track({ event: "slice-generation:ended", error: false });
+      void telemetry.track({
+        event: "slice-generation:ended",
+        error: false,
+        source,
+      });
 
       addAiFeedback({
         type: "model",
@@ -303,7 +307,11 @@ export function CreateSliceFromImageModal(
         return;
       }
 
-      void telemetry.track({ event: "slice-generation:ended", error: true });
+      void telemetry.track({
+        event: "slice-generation:ended",
+        error: true,
+        source,
+      });
     }
   };
 

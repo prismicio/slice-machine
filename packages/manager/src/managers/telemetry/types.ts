@@ -460,6 +460,7 @@ type SliceGenerationEnded = SegmentEvent<
 	typeof SegmentEventType.sliceGeneration_ended,
 	{
 		error: boolean;
+		source: "figma" | "upload";
 	}
 >;
 
