@@ -866,7 +866,7 @@ FINAL REMINDERS:
 								]),
 							],
 							env: {
-								PATH: process.env.PATH,
+								...this.sanitizeClaudeEnv(process.env),
 								ANTHROPIC_BASE_URL: llmProxyUrl,
 								ANTHROPIC_CUSTOM_HEADERS:
 									`x-prismic-token: ${authToken}\n` +
@@ -998,6 +998,35 @@ FINAL REMINDERS:
 				`inferSlice took ${elapsedTimeSeconds}s for request ${requestId}`,
 			);
 		}
+	}
+
+	// https://code.claude.com/docs/en/settings#environment-variables
+	private claudeExcludePatterns = [
+		"ANTHROPIC_",
+		"CLAUDE_",
+		"MCP_",
+		"VERTEX_",
+		"DISABLE_",
+		"BASH_",
+		"AWS_",
+		"SLASH_COMMAND_",
+		"NO_PROXY",
+		"HTTP_PROXY",
+		"HTTPS_PROXY",
+		"HTTP_MAX_REDIRECTS",
+		"MAX_THINKING_TOKENS",
+		"USE_BUILTIN_RIPGREP",
+	];
+
+	private sanitizeClaudeEnv(env: Record<string, string | undefined>) {
+		return Object.fromEntries(
+			Object.entries(env).filter(([key, value]) => {
+				return (
+					value !== undefined &&
+					!this.claudeExcludePatterns.some((pattern) => key.startsWith(pattern))
+				);
+			}),
+		);
 	}
 
 	cancelInferSlice(args: { requestId: string }): { cancelled: boolean } {
