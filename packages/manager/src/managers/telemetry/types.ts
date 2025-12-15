@@ -452,7 +452,7 @@ type SliceGenerationStarted = SegmentEvent<
 	typeof SegmentEventType.sliceGeneration_started,
 	{
 		source: "figma" | "upload";
-		proxyUrl: string;
+		llmProxyUrl: string;
 	}
 >;
 

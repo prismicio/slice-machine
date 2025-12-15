@@ -823,7 +823,7 @@ FINAL REMINDERS:
 					void this.telemetry.track({
 						event: "slice-generation:started",
 						source,
-						proxyUrl: llmProxyUrl,
+						llmProxyUrl,
 					});
 
 					const queries = queryClaude({
