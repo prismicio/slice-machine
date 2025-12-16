@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Dialog,
   DialogActionButton,
   DialogActions,
@@ -8,6 +9,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  InlineLabel,
   ScrollArea,
   Text,
   TextInput,
@@ -203,6 +205,30 @@ export function ImportSlicesFromLibraryModal(
     selectedSliceIds.has(slice.model.id),
   );
 
+  const allSelected =
+    slices.length > 0 && selectedSliceIds.size === slices.length;
+  const someSelected =
+    selectedSliceIds.size > 0 && selectedSliceIds.size < slices.length;
+
+  const handleSelectAll = (selected: boolean) => {
+    if (selected) {
+      const allSliceIds = new Set<string>();
+      for (const slice of slices) {
+        allSliceIds.add(slice.model.id);
+      }
+      setSelectedSliceIds(allSliceIds);
+    } else {
+      setSelectedSliceIds(new Set());
+    }
+  };
+
+  let selectAllLabel = "Select all slices";
+  if (allSelected) {
+    selectAllLabel = `Selected all slices (${selectedSliceIds.size})`;
+  } else if (someSelected) {
+    selectAllLabel = `${selectedSliceIds.size} of ${slices.length} selected`;
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogHeader title="Import slices from library" />
@@ -239,40 +265,59 @@ export function ImportSlicesFromLibraryModal(
             </Box>
           </Box>
         ) : (
-          <ScrollArea stableScrollbar={false}>
+          <>
             <Box
-              display="grid"
-              gridTemplateColumns="1fr 1fr 1fr"
-              gap={16}
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
               padding={16}
+              border={{ bottom: true }}
             >
-              {slices.map((slice) => {
-                return (
-                  <SliceCard
-                    model={slice.model}
-                    thumbnailUrl={slice.thumbnailUrl}
-                    key={slice.model.id}
-                    selected={selectedSliceIds.has(slice.model.id)}
-                    onSelectedChange={(selected) => {
-                      if (selected) {
-                        setSelectedSliceIds((prev) => {
-                          const next = new Set(prev);
-                          next.add(slice.model.id);
-                          return next;
-                        });
-                      } else {
-                        setSelectedSliceIds((prev) => {
-                          const next = new Set(prev);
-                          next.delete(slice.model.id);
-                          return next;
-                        });
-                      }
-                    }}
+              <Box display="flex" alignItems="center" gap={8}>
+                <InlineLabel value={selectAllLabel}>
+                  <Checkbox
+                    checked={allSelected}
+                    indeterminate={someSelected}
+                    onCheckedChange={handleSelectAll}
                   />
-                );
-              })}
+                </InlineLabel>
+              </Box>
             </Box>
-          </ScrollArea>
+            <ScrollArea stableScrollbar={false}>
+              <Box
+                display="grid"
+                gridTemplateColumns="1fr 1fr 1fr"
+                gap={16}
+                padding={16}
+              >
+                {slices.map((slice) => {
+                  return (
+                    <SliceCard
+                      model={slice.model}
+                      thumbnailUrl={slice.thumbnailUrl}
+                      key={slice.model.id}
+                      selected={selectedSliceIds.has(slice.model.id)}
+                      onSelectedChange={(selected) => {
+                        if (selected) {
+                          setSelectedSliceIds((prev) => {
+                            const next = new Set(prev);
+                            next.add(slice.model.id);
+                            return next;
+                          });
+                        } else {
+                          setSelectedSliceIds((prev) => {
+                            const next = new Set(prev);
+                            next.delete(slice.model.id);
+                            return next;
+                          });
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </Box>
+            </ScrollArea>
+          </>
         )}
 
         <DialogActions>
