@@ -41,6 +41,7 @@ export {
 	PluginHookResultError,
 	InvalidActiveEnvironmentError,
 	UnsupportedError,
+	InferSliceAbortError,
 } from "./errors";
 
 export { getEnvironmentInfo } from "./getEnvironmentInfo";

@@ -43,6 +43,10 @@ export class UnsupportedError extends SliceMachineError {
 	name = "SMUnsupportedError" as const;
 }
 
+export class InferSliceAbortError extends SliceMachineError {
+	name = "SMInferSliceAbortError" as const;
+}
+
 type SliceMachineErrorNames =
 	| "SMSliceMachineError"
 	| UnauthorizedError["name"]
@@ -53,7 +57,8 @@ type SliceMachineErrorNames =
 	| PluginError["name"]
 	| PluginHookResultError["name"]
 	| InvalidActiveEnvironmentError["name"]
-	| UnsupportedError["name"];
+	| UnsupportedError["name"]
+	| InferSliceAbortError["name"];
 
 type ShallowSliceMachineError<TName extends SliceMachineErrorNames> = Error & {
 	name: TName;
@@ -116,4 +121,10 @@ export const isUnsupportedError = (
 	error: unknown,
 ): error is ShallowSliceMachineError<"SMUnsupportedError"> => {
 	return isSliceMachineError(error, "SMUnsupportedError");
+};
+
+export const isInferSliceAbortError = (
+	error: unknown,
+): error is ShallowSliceMachineError<"SMInferSliceAbortError"> => {
+	return isSliceMachineError(error, "SMInferSliceAbortError");
 };
