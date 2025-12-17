@@ -156,13 +156,11 @@ export const parseGithubUrl = (
 export const getDefaultBranch = async ({
   owner,
   repo,
-  token,
 }: {
   owner: string;
   repo: string;
-  token?: string;
 }): Promise<string> => {
-  const github = new GitHubRepositoryAPI({ owner, repo, token });
+  const github = new GitHubRepositoryAPI({ owner, repo });
   return github.getDefaultBranch();
 };
 
@@ -170,14 +168,12 @@ export const getSliceLibraries = async ({
   owner,
   repo,
   branch,
-  token,
 }: {
   owner: string;
   repo: string;
   branch: string;
-  token?: string;
 }): Promise<string[]> => {
-  const github = new GitHubRepositoryAPI({ owner, repo, token });
+  const github = new GitHubRepositoryAPI({ owner, repo });
   return github.getSliceLibraries(branch);
 };
 
@@ -186,15 +182,13 @@ export const fetchSlicesFromLibraries = async ({
   repo,
   branch,
   libraries,
-  token,
 }: {
   owner: string;
   repo: string;
   branch: string;
   libraries: string[];
-  token?: string;
 }) => {
-  const github = new GitHubRepositoryAPI({ owner, repo, token });
+  const github = new GitHubRepositoryAPI({ owner, repo });
   const fetchedSlices: SliceImport[] = [];
 
   console.log(
