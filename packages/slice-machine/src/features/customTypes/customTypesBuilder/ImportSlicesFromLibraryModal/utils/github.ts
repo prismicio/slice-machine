@@ -20,6 +20,67 @@ export const parseGithubUrl = (
   return { owner, repo };
 };
 
+/**
+ * Fetches file content from GitHub using the API (supports authentication and CORS)
+ * Returns the decoded content as string or ArrayBuffer
+ */
+const fetchFileFromGitHubAPI = async ({
+  owner,
+  repo,
+  branch,
+  path,
+  isBinary = false,
+  token,
+}: {
+  owner: string;
+  repo: string;
+  branch: string;
+  path: string;
+  isBinary?: boolean;
+  token?: string;
+}): Promise<string | ArrayBuffer> => {
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+  const response = await fetch(apiUrl, {
+    headers: {
+      Accept: "application/vnd.github.v3+json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch ${path} from GitHub API: ${response.statusText}`,
+    );
+  }
+
+  const data = z
+    .object({
+      content: z.string(),
+      encoding: z.string(),
+    })
+    .parse(await response.json());
+
+  if (data.encoding !== "base64") {
+    throw new Error(`Unexpected encoding for ${path}: ${data.encoding}`);
+  }
+
+  // Decode base64 content
+  const base64Content = data.content.replace(/\s/g, "");
+  const binaryString = atob(base64Content);
+
+  if (isBinary) {
+    // Convert to ArrayBuffer
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  } else {
+    // Return as string
+    return binaryString;
+  }
+};
+
 export const getDefaultBranch = async ({
   owner,
   repo,
@@ -28,7 +89,11 @@ export const getDefaultBranch = async ({
   repo: string;
 }) => {
   const rawUrl = `https://api.github.com/repos/${owner}/${repo}`;
-  const response = await fetch(rawUrl);
+  const response = await fetch(rawUrl, {
+    headers: {
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch branches: ${response.statusText}`);
@@ -49,42 +114,34 @@ export const getSliceLibraries = async ({
   repo: string;
   branch: string;
 }) => {
-  const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/slicemachine.config.json`;
-  const response = await fetch(rawUrl);
+  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/slicemachine.config.json?ref=${branch}`;
+  const response = await fetch(apiUrl, {
+    headers: {
+      Accept: "application/vnd.github.v3+json",
+      Authorization: `Bearer ${bearerToken}`,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(
       `Failed to fetch slicemachine.config.json: ${response.statusText}`,
     );
   }
-  const json = z
-    .object({ libraries: z.array(z.string()) })
+
+  const data = z
+    .object({ content: z.string().optional(), encoding: z.string().optional() })
     .parse(await response.json());
 
-  let libraries = json.libraries;
-
-  if (libraries.length === 0) {
-    // Fallback: single Contents API call (defaults to default branch if no ref is provided)
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/slicemachine.config.json`;
-    const response = await fetch(apiUrl);
-
-    if (response.ok) {
-      const data = z
-        .object({ content: z.string().optional() })
-        .parse(await response.json());
-      if (typeof data.content === "string") {
-        const decodedContent = atob(data.content.replace(/\s/g, ""));
-        const config = z
-          .object({ libraries: z.array(z.string()) })
-          .parse(JSON.parse(decodedContent));
-        libraries = config.libraries;
-      }
-    } else {
-      throw new Error(`Failed to fetch the SM config: ${response.statusText}`);
-    }
+  if (typeof data.content === "string") {
+    // GitHub API returns base64-encoded content
+    const decodedContent = atob(data.content.replace(/\s/g, ""));
+    const config = z
+      .object({ libraries: z.array(z.string()) })
+      .parse(JSON.parse(decodedContent));
+    return config.libraries;
+  } else {
+    throw new Error("No content found in slicemachine.config.json");
   }
-
-  return libraries;
 };
 
 export const fetchSlicesFromLibraries = async ({
@@ -122,6 +179,7 @@ export const fetchSlicesFromLibraries = async ({
       const libraryResponse = await fetch(libraryApiUrl, {
         headers: {
           Accept: "application/vnd.github.v3+json",
+          Authorization: `Bearer ${bearerToken}`,
         },
       });
 
@@ -178,6 +236,7 @@ export const fetchSlicesFromLibraries = async ({
         const searchResponse = await fetch(searchUrl, {
           headers: {
             Accept: "application/vnd.github.v3+json",
+            Authorization: `Bearer ${bearerToken}`,
           },
         });
 
@@ -252,17 +311,22 @@ export const fetchSlicesFromLibraries = async ({
     // Fetch each slice's model.json, screenshot, and all other files with bounded concurrency
     const perSlice = async (sliceDir: { name: string; path: string }) => {
       try {
-        const modelUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${sliceDir.path}/model.json`;
-        const modelResponse = await fetch(modelUrl);
+        const modelContent = await fetchFileFromGitHubAPI({
+          owner,
+          repo,
+          branch,
+          path: `${sliceDir.path}/model.json`,
+          isBinary: false,
+        });
 
-        if (!modelResponse.ok) {
+        if (typeof modelContent !== "string") {
           console.warn(
-            `Failed to fetch model.json for slice: ${sliceDir.name}`,
+            `Failed to fetch model.json for slice: ${sliceDir.name} - unexpected content type`,
           );
           return;
         }
 
-        const modelResult = SharedSlice.decode(await modelResponse.json());
+        const modelResult = SharedSlice.decode(JSON.parse(modelContent));
         if (modelResult._tag === "Left") {
           console.warn(
             `Failed to decode model.json for slice: ${sliceDir.name}`,
@@ -339,11 +403,19 @@ export const fetchSlicesFromLibraries = async ({
           const screenshotResults = await Promise.allSettled(
             model.variations.map(async (variation) => {
               try {
-                const screenshotUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${sliceDir.path}/screenshot-${variation.id}.png`;
-                const screenshotResponse = await fetch(screenshotUrl);
+                const screenshotPath = `${sliceDir.path}/screenshot-${variation.id}.png`;
+                const screenshotContent = await fetchFileFromGitHubAPI({
+                  owner,
+                  repo,
+                  branch,
+                  path: screenshotPath,
+                  isBinary: true,
+                });
 
-                if (screenshotResponse.ok) {
-                  const blob = await screenshotResponse.blob();
+                if (screenshotContent instanceof ArrayBuffer) {
+                  const blob = new Blob([screenshotContent], {
+                    type: "image/png",
+                  });
                   const file = new File(
                     [blob],
                     `screenshot-${variation.id}.png`,
@@ -363,7 +435,11 @@ export const fetchSlicesFromLibraries = async ({
                   }
                 }
               } catch (error) {
-                throw error;
+                // Screenshot might not exist for this variation, that's okay
+                console.warn(
+                  `Failed to fetch screenshot for variation ${variation.id}:`,
+                  error instanceof Error ? error.message : String(error),
+                );
               }
             }),
           );
@@ -428,7 +504,11 @@ const fetchAllFilesFromDirectory = async (args: {
   let apiWorked = false;
   try {
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${directoryPath}`;
-    const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    });
 
     if (response.ok) {
       apiWorked = true;
@@ -449,34 +529,40 @@ const fetchAllFilesFromDirectory = async (args: {
         8,
         async (item) => {
           if (item.name === "model.json") return null;
-          const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${item.path}`;
-          const fileResponse = await fetch(rawUrl);
-          if (!fileResponse.ok) return null;
+          try {
+            const binaryExtensions = [
+              ".png",
+              ".jpg",
+              ".jpeg",
+              ".gif",
+              ".svg",
+              ".ico",
+              ".webp",
+            ];
+            const isBinaryFile = binaryExtensions.some((ext) =>
+              item.name.toLowerCase().endsWith(ext),
+            );
 
-          const binaryExtensions = [
-            ".png",
-            ".jpg",
-            ".jpeg",
-            ".gif",
-            ".svg",
-            ".ico",
-            ".webp",
-          ];
-          const isBinaryFile = binaryExtensions.some((ext) =>
-            item.name.toLowerCase().endsWith(ext),
-          );
-          let fileContents: string | ArrayBuffer;
-          if (isBinaryFile) {
-            const arrayBuffer = await fileResponse.arrayBuffer();
-            fileContents = arrayBuffer;
-          } else {
-            fileContents = await fileResponse.text();
+            const fileContents = await fetchFileFromGitHubAPI({
+              owner,
+              repo,
+              branch,
+              path: item.path,
+              isBinary: isBinaryFile,
+            });
+
+            return {
+              path: item.name,
+              contents: fileContents,
+              isBinary: isBinaryFile,
+            } as SliceFile;
+          } catch (error) {
+            console.warn(
+              `Failed to fetch file ${item.path}:`,
+              error instanceof Error ? error.message : String(error),
+            );
+            return null;
           }
-          return {
-            path: item.name,
-            contents: fileContents,
-            isBinary: isBinaryFile,
-          } as SliceFile;
         },
       );
       for (const r of fileResults) {
@@ -523,6 +609,7 @@ const fetchAllFilesFromDirectory = async (args: {
       const searchResponse = await fetch(searchUrl, {
         headers: {
           Accept: "application/vnd.github.v3+json",
+          Authorization: `Bearer ${bearerToken}`,
         },
       });
 
@@ -551,14 +638,7 @@ const fetchAllFilesFromDirectory = async (args: {
                 const relativePath = item.path.startsWith(directoryPath + "/")
                   ? item.path.slice(directoryPath.length + 1)
                   : item.name;
-                const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${item.path}`;
-                const fileResponse = await fetch(rawUrl);
-                if (!fileResponse.ok) {
-                  console.warn(
-                    `Failed to fetch file ${item.path}: ${fileResponse.status} ${fileResponse.statusText}`,
-                  );
-                  return null;
-                }
+
                 const binaryExtensions = [
                   ".png",
                   ".jpg",
@@ -579,12 +659,15 @@ const fetchAllFilesFromDirectory = async (args: {
                 const isBinaryFile = binaryExtensions.some((ext) =>
                   item.name.toLowerCase().endsWith(ext),
                 );
-                let fileContents: string | ArrayBuffer;
-                if (isBinaryFile) {
-                  fileContents = await fileResponse.arrayBuffer();
-                } else {
-                  fileContents = await fileResponse.text();
-                }
+
+                const fileContents = await fetchFileFromGitHubAPI({
+                  owner,
+                  repo,
+                  branch,
+                  path: item.path,
+                  isBinary: isBinaryFile,
+                });
+
                 return {
                   path: relativePath,
                   contents: fileContents,
