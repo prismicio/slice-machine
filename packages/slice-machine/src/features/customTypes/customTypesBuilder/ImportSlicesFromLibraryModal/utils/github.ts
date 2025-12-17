@@ -21,7 +21,7 @@ class GitHubRepositoryAPI {
     const headers: HeadersInit = {
       Accept: "application/vnd.github.v3+json",
     };
-    if (this.token) {
+    if (this.token !== undefined) {
       headers.Authorization = `Bearer ${this.token}`;
     }
     return headers;
@@ -97,8 +97,8 @@ class GitHubRepositoryAPI {
     const { path, filename } = args;
 
     const query: string[] = [];
-    if (path) query.push(`path:${path}`);
-    if (filename) query.push(`filename:${filename}`);
+    if (path !== undefined) query.push(`path:${path}`);
+    if (filename !== undefined) query.push(`filename:${filename}`);
     query.push(`repo:${this.owner}/${this.repo}`);
 
     const searchUrl = `/search/code?q=${encodeURIComponent(query.join(" "))}`;
