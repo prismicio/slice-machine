@@ -13,7 +13,7 @@ export type SliceImport = {
 
 export type SliceFile = {
   path: string;
-  contents: string | ArrayBuffer;
+  contents: string | File;
   isBinary: boolean;
 };
 

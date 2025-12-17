@@ -142,18 +142,11 @@ async function writeSliceFiles(args: {
   }
 
   try {
-    // Convert ArrayBuffer to base64 string for binary files to send via RPC
     const filesForRPC = filesToWrite.map((file) => {
-      if (file.isBinary && file.contents instanceof ArrayBuffer) {
-        // Convert ArrayBuffer to base64
-        const bytes = new Uint8Array(file.contents);
-        const binary = bytes.reduce(
-          (acc, byte) => acc + String.fromCharCode(byte),
-          "",
-        );
+      if (file.isBinary) {
         return {
           path: file.path,
-          contents: btoa(binary),
+          contents: file.contents,
           isBinary: true,
         };
       } else if (typeof file.contents === "string") {
