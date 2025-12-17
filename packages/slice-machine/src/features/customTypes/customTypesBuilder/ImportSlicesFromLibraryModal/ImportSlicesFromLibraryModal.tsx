@@ -254,7 +254,7 @@ export function ImportSlicesFromLibraryModal(
                   onValueChange={setGithubUrl}
                 />
                 <Button
-                  onClick={() => handleImportFromGithub(githubUrl)}
+                  onClick={() => void handleImportFromGithub(githubUrl)}
                   disabled={!githubUrl.trim() || isLoadingSlices}
                   loading={isLoadingSlices}
                   color="purple"
