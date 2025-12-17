@@ -5,6 +5,139 @@ import { z } from "zod";
 import { SliceFile, SliceImport } from "../types";
 import { mapWithConcurrency } from "./mapWithConcurrency";
 
+class GitHubRepositoryAPI {
+  private readonly owner: string;
+  private readonly repo: string;
+  private readonly token?: string;
+  private readonly baseUrl = "https://api.github.com";
+
+  constructor(args: { owner: string; repo: string; token?: string }) {
+    this.owner = args.owner;
+    this.repo = args.repo;
+    this.token = args.token;
+  }
+
+  private getHeaders(): HeadersInit {
+    const headers: HeadersInit = {
+      Accept: "application/vnd.github.v3+json",
+    };
+    if (this.token) {
+      headers.Authorization = `Bearer ${this.token}`;
+    }
+    return headers;
+  }
+
+  private async request<T>(
+    endpoint: string,
+    options?: RequestInit,
+  ): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const response = await fetch(url, {
+      ...options,
+      headers: { ...this.getHeaders(), ...options?.headers },
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `GitHub API request failed: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    return response.json() as Promise<T>;
+  }
+
+  async getDefaultBranch() {
+    const data = await this.request(`/repos/${this.owner}/${this.repo}`);
+    return z.object({ default_branch: z.string() }).parse(data).default_branch;
+  }
+
+  async getFileContents(
+    path: string,
+    branch: string,
+    isBinary = false,
+  ): Promise<string | ArrayBuffer> {
+    const data = await this.request(
+      `/repos/${this.owner}/${this.repo}/contents/${path}?ref=${branch}`,
+    );
+    const parsed = z
+      .object({ content: z.string(), encoding: z.string() })
+      .parse(data);
+
+    if (parsed.encoding !== "base64") {
+      throw new Error(`Unexpected encoding for ${path}: ${parsed.encoding}`);
+    }
+
+    // Decode base64 content
+    const base64Content = parsed.content.replace(/\s/g, "");
+    const binaryString = atob(base64Content);
+
+    if (isBinary) {
+      // Convert to ArrayBuffer
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return bytes.buffer;
+    } else {
+      // Return as string
+      return binaryString;
+    }
+  }
+
+  async getDirectoryContents(path: string) {
+    const contents = await this.request(
+      `/repos/${this.owner}/${this.repo}/contents/${path}`,
+    );
+    return z
+      .array(z.object({ name: z.string(), type: z.string(), path: z.string() }))
+      .parse(contents);
+  }
+
+  async searchCode(args: { path?: string; filename?: string }) {
+    const { path, filename } = args;
+
+    let query: string[] = [];
+    if (path) query.push(`path:${path}`);
+    if (filename) query.push(`filename:${filename}`);
+    query.push(`repo:${this.owner}/${this.repo}`);
+
+    const searchUrl = `/search/code?q=${encodeURIComponent(query.join(" "))}`;
+    const data = await this.request(searchUrl);
+
+    return z
+      .object({
+        items: z
+          .array(z.object({ path: z.string(), name: z.string() }))
+          .optional(),
+        total_count: z.number().optional(),
+      })
+      .parse(data);
+  }
+
+  async getSliceLibraries(branch: string) {
+    const data = await this.request(
+      `/repos/${this.owner}/${this.repo}/contents/slicemachine.config.json?ref=${branch}`,
+    );
+    const parsed = z
+      .object({
+        content: z.string().optional(),
+        encoding: z.string().optional(),
+      })
+      .parse(data);
+
+    if (typeof parsed.content === "string") {
+      // GitHub API returns base64-encoded content
+      const decodedContent = atob(parsed.content.replace(/\s/g, ""));
+
+      return z
+        .object({ libraries: z.array(z.string()) })
+        .parse(JSON.parse(decodedContent)).libraries;
+    } else {
+      throw new Error("No content found in slicemachine.config.json");
+    }
+  }
+}
+
 export const parseGithubUrl = (
   githubUrl: string,
 ): {
@@ -20,128 +153,32 @@ export const parseGithubUrl = (
   return { owner, repo };
 };
 
-/**
- * Fetches file content from GitHub using the API (supports authentication and CORS)
- * Returns the decoded content as string or ArrayBuffer
- */
-const fetchFileFromGitHubAPI = async ({
+export const getDefaultBranch = async ({
   owner,
   repo,
-  branch,
-  path,
-  isBinary = false,
   token,
 }: {
   owner: string;
   repo: string;
-  branch: string;
-  path: string;
-  isBinary?: boolean;
   token?: string;
-}): Promise<string | ArrayBuffer> => {
-  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
-  const response = await fetch(apiUrl, {
-    headers: {
-      Accept: "application/vnd.github.v3+json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch ${path} from GitHub API: ${response.statusText}`,
-    );
-  }
-
-  const data = z
-    .object({
-      content: z.string(),
-      encoding: z.string(),
-    })
-    .parse(await response.json());
-
-  if (data.encoding !== "base64") {
-    throw new Error(`Unexpected encoding for ${path}: ${data.encoding}`);
-  }
-
-  // Decode base64 content
-  const base64Content = data.content.replace(/\s/g, "");
-  const binaryString = atob(base64Content);
-
-  if (isBinary) {
-    // Convert to ArrayBuffer
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes.buffer;
-  } else {
-    // Return as string
-    return binaryString;
-  }
-};
-
-export const getDefaultBranch = async ({
-  owner,
-  repo,
-}: {
-  owner: string;
-  repo: string;
-}) => {
-  const rawUrl = `https://api.github.com/repos/${owner}/${repo}`;
-  const response = await fetch(rawUrl, {
-    headers: {
-      Authorization: `Bearer ${bearerToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch branches: ${response.statusText}`);
-  }
-  const json = z
-    .object({ default_branch: z.string() })
-    .parse(await response.json());
-
-  return json.default_branch;
+}): Promise<string> => {
+  const github = new GitHubRepositoryAPI({ owner, repo, token });
+  return github.getDefaultBranch();
 };
 
 export const getSliceLibraries = async ({
   owner,
   repo,
   branch,
+  token,
 }: {
   owner: string;
   repo: string;
   branch: string;
-}) => {
-  const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/slicemachine.config.json?ref=${branch}`;
-  const response = await fetch(apiUrl, {
-    headers: {
-      Accept: "application/vnd.github.v3+json",
-      Authorization: `Bearer ${bearerToken}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch slicemachine.config.json: ${response.statusText}`,
-    );
-  }
-
-  const data = z
-    .object({ content: z.string().optional(), encoding: z.string().optional() })
-    .parse(await response.json());
-
-  if (typeof data.content === "string") {
-    // GitHub API returns base64-encoded content
-    const decodedContent = atob(data.content.replace(/\s/g, ""));
-    const config = z
-      .object({ libraries: z.array(z.string()) })
-      .parse(JSON.parse(decodedContent));
-    return config.libraries;
-  } else {
-    throw new Error("No content found in slicemachine.config.json");
-  }
+  token?: string;
+}): Promise<string[]> => {
+  const github = new GitHubRepositoryAPI({ owner, repo, token });
+  return github.getSliceLibraries(branch);
 };
 
 export const fetchSlicesFromLibraries = async ({
@@ -149,12 +186,15 @@ export const fetchSlicesFromLibraries = async ({
   repo,
   branch,
   libraries,
+  token,
 }: {
   owner: string;
   repo: string;
   branch: string;
   libraries: string[];
+  token?: string;
 }) => {
+  const github = new GitHubRepositoryAPI({ owner, repo, token });
   const fetchedSlices: SliceImport[] = [];
 
   console.log(
@@ -172,51 +212,30 @@ export const fetchSlicesFromLibraries = async ({
     }> = [];
 
     // Try GitHub API first
-    const libraryApiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${normalizedPath}`;
     let apiFailed = false;
 
     try {
-      const libraryResponse = await fetch(libraryApiUrl, {
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      });
-
-      if (libraryResponse.ok) {
-        const libraryContents = z
-          .array(
-            z.object({
-              name: z.string(),
-              type: z.string(),
-              path: z.string(),
-            }),
-          )
-          .parse(await libraryResponse.json());
-        sliceDirectories = libraryContents
-          .filter((item) => item.type === "dir")
-          .map((item) => ({
-            name: item.name,
-            path: item.path,
-          }));
-      } else if (libraryResponse.status === 403) {
-        apiFailed = true;
+      const libraryContents = await github.getDirectoryContents(normalizedPath);
+      sliceDirectories = libraryContents
+        .filter((item) => item.type === "dir")
+        .map((item) => ({
+          name: item.name,
+          path: item.path,
+        }));
+    } catch (error) {
+      apiFailed = true;
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes("403")) {
         console.warn(
           `GitHub API returned 403 for ${libraryPath}, trying direct discovery...`,
         );
       } else {
         console.warn(
-          `Failed to fetch library directory: ${libraryPath}`,
-          libraryResponse.statusText,
+          `GitHub API error for ${libraryPath}, trying direct discovery...`,
+          errorMessage,
         );
-        continue;
       }
-    } catch (error) {
-      apiFailed = true;
-      console.warn(
-        `GitHub API error for ${libraryPath}, trying direct discovery...`,
-        error instanceof Error ? error.message : String(error),
-      );
     }
 
     // If API failed, use GitHub Search API to find all model.json files in this library path
@@ -227,73 +246,55 @@ export const fetchSlicesFromLibraries = async ({
 
       try {
         // Use GitHub Search API to find all model.json files in the library path
-        // Format: q=path:libraryPath filename:model.json repo:owner/repo
-        const searchQuery = `path:${normalizedPath} filename:model.json repo:${owner}/${repo}`;
-        const searchUrl = `https://api.github.com/search/code?q=${encodeURIComponent(
-          searchQuery,
-        )}`;
-
-        const searchResponse = await fetch(searchUrl, {
-          headers: {
-            Accept: "application/vnd.github.v3+json",
-            Authorization: `Bearer ${bearerToken}`,
-          },
+        const searchData = await github.searchCode({
+          path: normalizedPath,
+          filename: "model.json",
         });
 
-        if (searchResponse.ok) {
-          const searchData = (await searchResponse.json()) as {
-            items?: Array<{
-              path: string;
-              name: string;
-            }>;
-            total_count?: number;
-          };
-
-          if (searchData.items && searchData.items.length > 0) {
-            // Extract slice directory names from the paths
-            // Path format: slices/marketing/slice-name/model.json
-            const foundSlices = new Set<string>();
-            for (const item of searchData.items) {
-              // Extract the slice directory name from the path
-              // e.g., "slices/marketing/hero/model.json" -> "hero"
-              const pathParts = item.path.split("/");
-              // The slice name should be the second-to-last part (before "model.json")
-              if (pathParts.length >= 2) {
-                const sliceName = pathParts[pathParts.length - 2];
-                if (sliceName && !foundSlices.has(sliceName)) {
-                  foundSlices.add(sliceName);
-                }
+        if (searchData.items && searchData.items.length > 0) {
+          // Extract slice directory names from the paths
+          // Path format: slices/marketing/slice-name/model.json
+          const foundSlices = new Set<string>();
+          for (const item of searchData.items) {
+            // Extract the slice directory name from the path
+            // e.g., "slices/marketing/hero/model.json" -> "hero"
+            const pathParts = item.path.split("/");
+            // The slice name should be the second-to-last part (before "model.json")
+            if (pathParts.length >= 2) {
+              const sliceName = pathParts[pathParts.length - 2];
+              if (sliceName && !foundSlices.has(sliceName)) {
+                foundSlices.add(sliceName);
               }
             }
-
-            // Convert to slice directories format
-            sliceDirectories = Array.from(foundSlices).map((sliceName) => ({
-              name: sliceName,
-              path: `${normalizedPath}/${sliceName}`,
-            }));
-
-            console.log(
-              `Discovered ${sliceDirectories.length} slice(s) via GitHub Search API for library ${libraryPath}`,
-            );
-          } else {
-            console.warn(
-              `GitHub Search API found no model.json files in ${libraryPath}`,
-            );
           }
-        } else if (searchResponse.status === 403) {
+
+          // Convert to slice directories format
+          sliceDirectories = Array.from(foundSlices).map((sliceName) => ({
+            name: sliceName,
+            path: `${normalizedPath}/${sliceName}`,
+          }));
+
+          console.log(
+            `Discovered ${sliceDirectories.length} slice(s) via GitHub Search API for library ${libraryPath}`,
+          );
+        } else {
+          console.warn(
+            `GitHub Search API found no model.json files in ${libraryPath}`,
+          );
+        }
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        if (errorMessage.includes("403")) {
           console.warn(
             `GitHub Search API also returned 403. Cannot discover slices without API access.`,
           );
         } else {
           console.warn(
-            `GitHub Search API failed: ${searchResponse.statusText}`,
+            `Error using GitHub Search API for ${libraryPath}:`,
+            errorMessage,
           );
         }
-      } catch (error) {
-        console.warn(
-          `Error using GitHub Search API for ${libraryPath}:`,
-          error instanceof Error ? error.message : String(error),
-        );
       }
     }
 
@@ -311,13 +312,11 @@ export const fetchSlicesFromLibraries = async ({
     // Fetch each slice's model.json, screenshot, and all other files with bounded concurrency
     const perSlice = async (sliceDir: { name: string; path: string }) => {
       try {
-        const modelContent = await fetchFileFromGitHubAPI({
-          owner,
-          repo,
+        const modelContent = await github.getFileContents(
+          `${sliceDir.path}/model.json`,
           branch,
-          path: `${sliceDir.path}/model.json`,
-          isBinary: false,
-        });
+          false,
+        );
 
         if (typeof modelContent !== "string") {
           console.warn(
@@ -340,8 +339,7 @@ export const fetchSlicesFromLibraries = async ({
         let sliceFiles: SliceFile[] = [];
         try {
           sliceFiles = await fetchAllFilesFromDirectory({
-            owner,
-            repo,
+            api: github,
             branch,
             directoryPath: sliceDir.path,
           });
@@ -404,13 +402,11 @@ export const fetchSlicesFromLibraries = async ({
             model.variations.map(async (variation) => {
               try {
                 const screenshotPath = `${sliceDir.path}/screenshot-${variation.id}.png`;
-                const screenshotContent = await fetchFileFromGitHubAPI({
-                  owner,
-                  repo,
+                const screenshotContent = await github.getFileContents(
+                  screenshotPath,
                   branch,
-                  path: screenshotPath,
-                  isBinary: true,
-                });
+                  true,
+                );
 
                 if (screenshotContent instanceof ArrayBuffer) {
                   const blob = new Blob([screenshotContent], {
@@ -492,102 +488,79 @@ export const fetchSlicesFromLibraries = async ({
  * Recursively fetches all files from a GitHub directory
  */
 const fetchAllFilesFromDirectory = async (args: {
-  owner: string;
-  repo: string;
+  api: GitHubRepositoryAPI;
   branch: string;
   directoryPath: string;
 }): Promise<SliceFile[]> => {
-  const { owner, repo, branch, directoryPath } = args;
+  const { api, branch, directoryPath } = args;
   const files: SliceFile[] = [];
 
   // Try GitHub API first
   let apiWorked = false;
   try {
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${directoryPath}`;
-    const response = await fetch(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    });
+    const contents = await api.getDirectoryContents(directoryPath);
+    apiWorked = true;
 
-    if (response.ok) {
-      apiWorked = true;
-      const contents = (await response.json()) as Array<{
-        name: string;
-        type: string;
-        path: string;
-        content?: string;
-        encoding?: string;
-      }>;
+    const fileItems = contents.filter((i) => i.type === "file");
+    const dirItems = contents.filter((i) => i.type === "dir");
 
-      const fileItems = contents.filter((i) => i.type === "file");
-      const dirItems = contents.filter((i) => i.type === "dir");
+    // Process files with bounded concurrency
+    const fileResults = await mapWithConcurrency(fileItems, 8, async (item) => {
+      if (item.name === "model.json") return null;
+      try {
+        const binaryExtensions = [
+          ".png",
+          ".jpg",
+          ".jpeg",
+          ".gif",
+          ".svg",
+          ".ico",
+          ".webp",
+        ];
+        const isBinaryFile = binaryExtensions.some((ext) =>
+          item.name.toLowerCase().endsWith(ext),
+        );
 
-      // Process files with bounded concurrency
-      const fileResults = await mapWithConcurrency(
-        fileItems,
-        8,
-        async (item) => {
-          if (item.name === "model.json") return null;
-          try {
-            const binaryExtensions = [
-              ".png",
-              ".jpg",
-              ".jpeg",
-              ".gif",
-              ".svg",
-              ".ico",
-              ".webp",
-            ];
-            const isBinaryFile = binaryExtensions.some((ext) =>
-              item.name.toLowerCase().endsWith(ext),
-            );
-
-            const fileContents = await fetchFileFromGitHubAPI({
-              owner,
-              repo,
-              branch,
-              path: item.path,
-              isBinary: isBinaryFile,
-            });
-
-            return {
-              path: item.name,
-              contents: fileContents,
-              isBinary: isBinaryFile,
-            } as SliceFile;
-          } catch (error) {
-            console.warn(
-              `Failed to fetch file ${item.path}:`,
-              error instanceof Error ? error.message : String(error),
-            );
-            return null;
-          }
-        },
-      );
-      for (const r of fileResults) {
-        if (r) files.push(r);
-      }
-
-      // Recursively process directories sequentially (counts are usually low)
-      for (const item of dirItems) {
-        const subFiles = await fetchAllFilesFromDirectory({
-          owner,
-          repo,
+        const fileContents = await api.getFileContents(
+          item.path,
           branch,
-          directoryPath: item.path,
+          isBinaryFile,
+        );
+
+        return {
+          path: item.name,
+          contents: fileContents,
+          isBinary: isBinaryFile,
+        } as SliceFile;
+      } catch (error) {
+        console.warn(
+          `Failed to fetch file ${item.path}:`,
+          error instanceof Error ? error.message : String(error),
+        );
+        return null;
+      }
+    });
+    for (const r of fileResults) {
+      if (r) files.push(r);
+    }
+
+    // Recursively process directories sequentially (counts are usually low)
+    for (const item of dirItems) {
+      const subFiles = await fetchAllFilesFromDirectory({
+        api,
+        branch,
+        directoryPath: item.path,
+      });
+      for (const subFile of subFiles) {
+        files.push({
+          ...subFile,
+          path: `${item.name}/${subFile.path}`,
         });
-        for (const subFile of subFiles) {
-          files.push({
-            ...subFile,
-            path: `${item.name}/${subFile.path}`,
-          });
-        }
       }
     }
   } catch (error) {
     console.warn(
-      `GitHub API failed for directory ${directoryPath}, trying HTML parsing...`,
+      `GitHub API failed for directory ${directoryPath}, trying Search API...`,
       error instanceof Error ? error.message : String(error),
     );
   }
@@ -600,112 +573,89 @@ const fetchAllFilesFromDirectory = async (args: {
       );
 
       // Use GitHub Search API to find all files in this directory (recursively)
-      // Format: path:directoryPath repo:owner/repo
-      const searchQuery = `path:${directoryPath} repo:${owner}/${repo}`;
-      const searchUrl = `https://api.github.com/search/code?q=${encodeURIComponent(
-        searchQuery,
-      )}`;
+      const searchData = await api.searchCode({ path: directoryPath });
 
-      const searchResponse = await fetch(searchUrl, {
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-          Authorization: `Bearer ${bearerToken}`,
-        },
-      });
+      if (searchData.items && searchData.items.length > 0) {
+        console.log(
+          `Found ${searchData.items.length} file(s) via Search API for ${directoryPath}`,
+        );
 
-      if (searchResponse.ok) {
-        const searchData = (await searchResponse.json()) as {
-          items?: Array<{
-            path: string;
-            name: string;
-          }>;
-          total_count?: number;
-        };
+        // Fetch all discovered files
+        // Note: Search API returns up to 100 results per page, but we should get all files
+        const fetched = await mapWithConcurrency(
+          searchData.items,
+          8,
+          async (item) => {
+            try {
+              if (item.name === "model.json") return null;
+              const relativePath = item.path.startsWith(directoryPath + "/")
+                ? item.path.slice(directoryPath.length + 1)
+                : item.name;
 
-        if (searchData.items && searchData.items.length > 0) {
-          console.log(
-            `Found ${searchData.items.length} file(s) via Search API for ${directoryPath}`,
-          );
+              const binaryExtensions = [
+                ".png",
+                ".jpg",
+                ".jpeg",
+                ".gif",
+                ".svg",
+                ".ico",
+                ".webp",
+                ".woff",
+                ".woff2",
+                ".ttf",
+                ".eot",
+                ".otf",
+                ".pdf",
+                ".zip",
+                ".gz",
+              ];
+              const isBinaryFile = binaryExtensions.some((ext) =>
+                item.name.toLowerCase().endsWith(ext),
+              );
 
-          // Fetch all discovered files
-          // Note: Search API returns up to 100 results per page, but we should get all files
-          const fetched = await mapWithConcurrency(
-            searchData.items,
-            8,
-            async (item) => {
-              try {
-                if (item.name === "model.json") return null;
-                const relativePath = item.path.startsWith(directoryPath + "/")
-                  ? item.path.slice(directoryPath.length + 1)
-                  : item.name;
+              const fileContents = await api.getFileContents(
+                item.path,
+                branch,
+                isBinaryFile,
+              );
 
-                const binaryExtensions = [
-                  ".png",
-                  ".jpg",
-                  ".jpeg",
-                  ".gif",
-                  ".svg",
-                  ".ico",
-                  ".webp",
-                  ".woff",
-                  ".woff2",
-                  ".ttf",
-                  ".eot",
-                  ".otf",
-                  ".pdf",
-                  ".zip",
-                  ".gz",
-                ];
-                const isBinaryFile = binaryExtensions.some((ext) =>
-                  item.name.toLowerCase().endsWith(ext),
-                );
-
-                const fileContents = await fetchFileFromGitHubAPI({
-                  owner,
-                  repo,
-                  branch,
-                  path: item.path,
-                  isBinary: isBinaryFile,
-                });
-
-                return {
-                  path: relativePath,
-                  contents: fileContents,
-                  isBinary: isBinaryFile,
-                } as SliceFile | null;
-              } catch (error) {
-                console.warn(
-                  `Error fetching file ${item.path}:`,
-                  error instanceof Error ? error.message : String(error),
-                );
-                return null;
-              }
-            },
-          );
-          for (const item of fetched) {
-            if (item) files.push(item);
-          }
-
-          console.log(
-            `Fetched ${files.length} file(s) from ${directoryPath} via Search API`,
-          );
-        } else {
-          console.warn(`GitHub Search API found no files in ${directoryPath}`);
+              return {
+                path: relativePath,
+                contents: fileContents,
+                isBinary: isBinaryFile,
+              } as SliceFile | null;
+            } catch (error) {
+              console.warn(
+                `Error fetching file ${item.path}:`,
+                error instanceof Error ? error.message : String(error),
+              );
+              return null;
+            }
+          },
+        );
+        for (const item of fetched) {
+          if (item) files.push(item);
         }
-      } else if (searchResponse.status === 403) {
+
+        console.log(
+          `Fetched ${files.length} file(s) from ${directoryPath} via Search API`,
+        );
+      } else {
+        console.warn(`GitHub Search API found no files in ${directoryPath}`);
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      if (errorMessage.includes("403")) {
         console.warn(
           `GitHub Search API returned 403 for ${directoryPath}. Cannot fetch files without API access.`,
         );
       } else {
         console.warn(
-          `GitHub Search API failed for ${directoryPath}: ${searchResponse.statusText}`,
+          `Error using GitHub Search API for ${directoryPath}:`,
+          errorMessage,
         );
       }
-    } catch (error) {
-      console.warn(
-        `Error using GitHub Search API for ${directoryPath}:`,
-        error instanceof Error ? error.message : String(error),
-      );
     }
   }
 
