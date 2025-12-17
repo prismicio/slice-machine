@@ -96,7 +96,7 @@ class GitHubRepositoryAPI {
   async searchCode(args: { path?: string; filename?: string }) {
     const { path, filename } = args;
 
-    let query: string[] = [];
+    const query: string[] = [];
     if (path) query.push(`path:${path}`);
     if (filename) query.push(`filename:${filename}`);
     query.push(`repo:${this.owner}/${this.repo}`);
