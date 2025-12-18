@@ -1,4 +1,4 @@
-import { Box } from "@prismicio/editor-ui";
+import { Box, ScrollArea } from "@prismicio/editor-ui";
 
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
@@ -34,32 +34,34 @@ export function LocalSlicesTab(props: LocalSlicesTabProps) {
   }
 
   return (
-    <Box
-      display="grid"
-      gridTemplateColumns="1fr 1fr 1fr"
-      gap={16}
-      flexGrow={1}
-      padding={16}
-      minHeight={0}
-    >
-      {availableSlices.map((slice) => {
-        const isSelected = selectedLocalSlices.some(
-          (s) => s.model.id === slice.model.id,
-        );
-        return (
-          <SharedSliceCard
-            key={`${slice.from}-${slice.model.name}`}
-            action={{ type: "checkbox" }}
-            mode="selection"
-            onSelectedChange={() => {
-              toggleLocalSlice(slice);
-            }}
-            selected={isSelected}
-            slice={slice}
-            variant="outlined"
-          />
-        );
-      })}
-    </Box>
+    <ScrollArea stableScrollbar={false}>
+      <Box
+        display="grid"
+        gridTemplateColumns="1fr 1fr 1fr"
+        gap={16}
+        flexGrow={1}
+        padding={16}
+        minHeight={0}
+      >
+        {availableSlices.map((slice) => {
+          const isSelected = selectedLocalSlices.some(
+            (s) => s.model.id === slice.model.id,
+          );
+          return (
+            <SharedSliceCard
+              key={`${slice.from}-${slice.model.name}`}
+              action={{ type: "checkbox" }}
+              mode="selection"
+              onSelectedChange={() => {
+                toggleLocalSlice(slice);
+              }}
+              selected={isSelected}
+              slice={slice}
+              variant="outlined"
+            />
+          );
+        })}
+      </Box>
+    </ScrollArea>
   );
 }
