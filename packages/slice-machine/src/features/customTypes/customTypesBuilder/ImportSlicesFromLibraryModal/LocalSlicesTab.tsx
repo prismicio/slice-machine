@@ -12,7 +12,8 @@ interface LocalSlicesTabProps {
 
 export function LocalSlicesTab(props: LocalSlicesTabProps) {
   const { availableSlices } = props;
-  const { selectedLocalSlices, toggleLocalSlice } = useReuseExistingSlicesContext();
+  const { selectedLocalSlices, toggleLocalSlice } =
+    useReuseExistingSlicesContext();
 
   if (availableSlices.length === 0) {
     return (
@@ -60,4 +61,3 @@ export function LocalSlicesTab(props: LocalSlicesTabProps) {
     </Box>
   );
 }
-

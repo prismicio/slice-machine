@@ -17,7 +17,7 @@ import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
-import { ReuseExistingSlicesDialog } from "@/features/customTypes/customTypesBuilder/ReuseExistingSlicesDialog";
+import { ImportSlicesFromLibraryModal } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
@@ -329,7 +329,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           </Box>
         )
       ) : undefined}
-      <ReuseExistingSlicesDialog
+      <ImportSlicesFromLibraryModal
         open={isUpdateSliceZoneModalOpen}
         location={`${customType.format}_type`}
         typeName={customType.label ?? customType.id}
