@@ -10,7 +10,7 @@ import {
   Tab,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
@@ -96,22 +96,12 @@ function ReuseExistingSlicesDialogContent(
             </Box>
             {selectedTab === "library" && "<repo-select>"}
           </Box>
-          <Box
-            minHeight={0}
-            {...(selectedTab === "local"
-              ? { display: "flex", flexDirection: "column", flexGrow: 1 }
-              : { display: "none" })}
-          >
+          <TabContent selected={selectedTab === "local"}>
             <LocalSlicesTab availableSlices={availableSlices} />
-          </Box>
-          <Box
-            minHeight={0}
-            {...(selectedTab === "library"
-              ? { display: "flex", flexDirection: "column", flexGrow: 1 }
-              : { display: "none" })}
-          >
+          </TabContent>
+          <TabContent selected={selectedTab === "library"}>
             <LibrarySlicesTab />
-          </Box>
+          </TabContent>
         </Box>
 
         <DialogActions>
@@ -127,6 +117,25 @@ function ReuseExistingSlicesDialogContent(
         </DialogActions>
       </DialogContent>
     </Dialog>
+  );
+}
+
+interface TabContentProps {
+  children: ReactNode;
+  selected: boolean;
+}
+
+function TabContent(args: TabContentProps) {
+  const { children, selected } = args;
+
+  if (!selected) {
+    return <Box display="none">{children}</Box>;
+  }
+
+  return (
+    <Box display="flex" flexDirection="column" flexGrow={1}>
+      {children}
+    </Box>
   );
 }
 
