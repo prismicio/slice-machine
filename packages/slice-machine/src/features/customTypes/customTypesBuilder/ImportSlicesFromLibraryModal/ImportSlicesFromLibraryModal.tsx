@@ -129,11 +129,15 @@ function TabContent(args: TabContentProps) {
   const { children, selected } = args;
 
   if (!selected) {
-    return <Box display="none">{children}</Box>;
+    return (
+      <Box display="none" minHeight={0}>
+        {children}
+      </Box>
+    );
   }
 
   return (
-    <Box display="flex" flexDirection="column" flexGrow={1}>
+    <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
       {children}
     </Box>
   );

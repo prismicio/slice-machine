@@ -1,5 +1,13 @@
-import { Box, Button, ScrollArea, Text, TextInput } from "@prismicio/editor-ui";
-import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  InlineLabel,
+  ScrollArea,
+  Text,
+  TextInput,
+} from "@prismicio/editor-ui";
+import { useMemo, useState } from "react";
 
 import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
 import { useReuseExistingSlicesContext } from "./ReuseExistingSlicesContext";
@@ -12,12 +20,30 @@ export function LibrarySlicesTab() {
   const { selectedLibrarySlices, toggleLibrarySlice, setAllLibrarySlices } =
     useReuseExistingSlicesContext();
 
-  useEffect(() => {
-    if (slices.length === 0) return;
+  const { allSelected, someSelected } = useMemo(() => {
+    if (slices.length === 0) return { allSelected: false, someSelected: false };
+    return {
+      allSelected: slices.every((slice) =>
+        selectedLibrarySlices.some((s) => s.model.id === slice.model.id),
+      ),
+      someSelected: slices.some((slice) =>
+        selectedLibrarySlices.some((s) => s.model.id === slice.model.id),
+      ),
+    };
+  }, [slices, selectedLibrarySlices]);
 
-    // Set all slices as selected by default
-    setAllLibrarySlices(slices);
-  }, [slices, setAllLibrarySlices]);
+  const onSelectAll = (checked: boolean) => {
+    if (checked) {
+      setAllLibrarySlices(slices);
+    } else {
+      setAllLibrarySlices([]);
+    }
+  };
+
+  const onImport = async () => {
+    const fetchedSlices = await handleImportFromGithub(githubUrl);
+    setAllLibrarySlices(fetchedSlices);
+  };
 
   if (slices.length === 0) {
     return (
@@ -38,7 +64,7 @@ export function LibrarySlicesTab() {
               onValueChange={setGithubUrl}
             />
             <Button
-              onClick={() => void handleImportFromGithub(githubUrl)}
+              onClick={() => void onImport()}
               disabled={!githubUrl.trim() || isLoadingSlices}
               loading={isLoadingSlices}
               color="purple"
@@ -51,31 +77,49 @@ export function LibrarySlicesTab() {
     );
   }
 
+  let selectAllLabel = "Select all slices";
+  if (allSelected) {
+    selectAllLabel = `Selected all slices (${selectedLibrarySlices.length})`;
+  } else if (someSelected) {
+    selectAllLabel = `${selectedLibrarySlices.length} of ${slices.length} selected`;
+  }
+
   return (
-    <ScrollArea stableScrollbar={false}>
-      <Box
-        display="grid"
-        gridTemplateColumns="1fr 1fr 1fr"
-        gap={16}
-        padding={16}
-      >
-        {slices.map((slice) => {
-          const isSelected = selectedLibrarySlices.some(
-            (s) => s.model.id === slice.model.id,
-          );
-          return (
-            <SliceCard
-              model={slice.model}
-              thumbnailUrl={slice.thumbnailUrl}
-              key={slice.model.id}
-              selected={isSelected}
-              onSelectedChange={() => {
-                toggleLibrarySlice(slice);
-              }}
-            />
-          );
-        })}
+    <Box flexDirection="column" flexGrow={1} minHeight={0}>
+      <Box padding={{ block: 12, inline: 16 }} alignItems="center" gap={8}>
+        <InlineLabel value={selectAllLabel}>
+          <Checkbox
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
+            onCheckedChange={onSelectAll}
+          />
+        </InlineLabel>
       </Box>
-    </ScrollArea>
+      <ScrollArea stableScrollbar={false}>
+        <Box
+          display="grid"
+          gridTemplateColumns="1fr 1fr 1fr"
+          gap={16}
+          padding={{ inline: 16, bottom: 16 }}
+        >
+          {slices.map((slice) => {
+            const isSelected = selectedLibrarySlices.some(
+              (s) => s.model.id === slice.model.id,
+            );
+            return (
+              <SliceCard
+                model={slice.model}
+                thumbnailUrl={slice.thumbnailUrl}
+                key={slice.model.id}
+                selected={isSelected}
+                onSelectedChange={() => {
+                  toggleLibrarySlice(slice);
+                }}
+              />
+            );
+          })}
+        </Box>
+      </ScrollArea>
+    </Box>
   );
 }

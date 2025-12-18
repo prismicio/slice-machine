@@ -26,7 +26,7 @@ export function useImportSlicesFromGithub() {
       if (!owner || !repo) {
         toast.error("Invalid GitHub URL format");
         setIsLoadingSlices(false);
-        return;
+        throw new Error("Invalid GitHub URL format");
       }
 
       const branch = await getDefaultBranch({ owner, repo });
@@ -43,14 +43,14 @@ export function useImportSlicesFromGithub() {
           }`,
         );
         setIsLoadingSlices(false);
-        return;
+        throw error;
       }
 
       if (libraries.length === 0) {
         console.warn("No libraries were found in the SM config.");
         setIsLoadingSlices(false);
         toast.error("No libraries were found in the SM config.");
-        return;
+        throw new Error("No libraries were found in the SM config.");
       }
 
       const fetchedSlices = await fetchSlicesFromLibraries({
@@ -63,7 +63,7 @@ export function useImportSlicesFromGithub() {
       if (fetchedSlices.length === 0) {
         toast.error("Error fetching slices from the repository");
         setIsLoadingSlices(false);
-        return;
+        throw new Error("No slices were found in the libraries.");
       }
 
       setSlices(fetchedSlices);
@@ -71,6 +71,8 @@ export function useImportSlicesFromGithub() {
       toast.success(
         `Found ${fetchedSlices.length} slice(s) from ${libraries.length} library/libraries`,
       );
+
+      return fetchedSlices;
     } catch (error) {
       console.error("Error importing from GitHub:", error);
       toast.error(
@@ -79,6 +81,7 @@ export function useImportSlicesFromGithub() {
         }`,
       );
       setIsLoadingSlices(false);
+      return [];
     }
   };
 
