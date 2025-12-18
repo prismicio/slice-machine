@@ -28,7 +28,6 @@ it("returns global Slice Machine state", async () => {
 		RepositoryService: "https://api.internal.prismic.io/repository/",
 		LocaleService: "https://api.internal.prismic.io/locale/",
 		CustomTypeService: "https://api.internal.prismic.io/custom-type/",
-		GitIntegrationService: "https://git.internal.prismic.io/",
 	});
 	expect(result.clientError).toStrictEqual({
 		name: new UnauthenticatedError().name,
