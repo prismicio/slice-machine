@@ -1,7 +1,6 @@
 import { Box } from "@prismicio/editor-ui";
 
 import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
-import Grid from "@/legacy/components/Grid";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
 import { useReuseExistingSlicesContext } from "./ReuseExistingSlicesContext";
@@ -35,29 +34,32 @@ export function LocalSlicesTab(props: LocalSlicesTabProps) {
   }
 
   return (
-    <Box padding={16}>
-      <Grid
-        gridTemplateMinPx="200px"
-        elems={availableSlices}
-        defineElementKey={(slice) => `${slice.from}-${slice.model.name}`}
-        renderElem={(slice) => {
-          const isSelected = selectedLocalSlices.some(
-            (s) => s.model.id === slice.model.id,
-          );
-          return (
-            <SharedSliceCard
-              action={{ type: "checkbox" }}
-              mode="selection"
-              onSelectedChange={() => {
-                toggleLocalSlice(slice);
-              }}
-              selected={isSelected}
-              slice={slice}
-              variant="outlined"
-            />
-          );
-        }}
-      />
+    <Box
+      display="grid"
+      gridTemplateColumns="1fr 1fr 1fr"
+      gap={16}
+      flexGrow={1}
+      padding={16}
+      minHeight={0}
+    >
+      {availableSlices.map((slice) => {
+        const isSelected = selectedLocalSlices.some(
+          (s) => s.model.id === slice.model.id,
+        );
+        return (
+          <SharedSliceCard
+            key={`${slice.from}-${slice.model.name}`}
+            action={{ type: "checkbox" }}
+            mode="selection"
+            onSelectedChange={() => {
+              toggleLocalSlice(slice);
+            }}
+            selected={isSelected}
+            slice={slice}
+            variant="outlined"
+          />
+        );
+      })}
     </Box>
   );
 }

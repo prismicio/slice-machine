@@ -56,6 +56,7 @@ function ImportSlicesFromLibraryModalContent(
     onClose();
     reset();
     resetSlices();
+    setSelectedTab("local");
   };
 
   const onSubmit = async () => {
