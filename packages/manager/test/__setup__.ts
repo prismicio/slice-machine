@@ -40,41 +40,28 @@ vi.mock("fs", async () => {
 	const memfs: typeof import("memfs") = await vi.importActual("memfs");
 	const _fs: typeof import("node:fs") = await vi.importActual("node:fs");
 
-	const realpathSyncFn = (
-		path: string | Buffer,
-		options?: { encoding?: BufferEncoding },
-	) => {
-		try {
-			return _fs.realpathSync(path, options);
-		} catch {
-			// If real fs fails, try memfs
-			return memfs.fs.realpathSync(path, options);
-		}
-	};
-
 	const readFileSync = escapeOnigurumaMethod(
 		_fs.readFileSync,
 		memfs.fs.readFileSync,
 	);
 	const statSync = escapeOnigurumaMethod(_fs.statSync, memfs.fs.statSync);
 	const realpathSync = escapeOnigurumaMethod(
-		realpathSyncFn,
+		_fs.realpathSync,
 		memfs.fs.realpathSync,
 	);
 
 	const vscodeOnigurumaFix = {
 		readFileSync,
 		statSync,
+		realpathSync,
 	};
 
 	return {
 		...memfs.fs,
 		...vscodeOnigurumaFix,
-		realpathSync,
 		default: {
 			...memfs.fs,
 			...vscodeOnigurumaFix,
-			realpathSync,
 		},
 	};
 });

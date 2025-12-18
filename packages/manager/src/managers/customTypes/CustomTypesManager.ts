@@ -32,7 +32,7 @@ import fetch from "../../lib/fetch";
 import { OnlyHookErrors } from "../../types";
 import { API_ENDPOINTS } from "../../constants/API_ENDPOINTS";
 import { SLICE_MACHINE_USER_AGENT } from "../../constants/SLICE_MACHINE_USER_AGENT";
-import { UnauthorizedError } from "../../errors";
+import { InferSliceAbortError, UnauthorizedError } from "../../errors";
 
 import { BaseManager } from "../BaseManager";
 import { CustomTypeFormat } from "./types";
@@ -42,13 +42,16 @@ import { randomUUID } from "node:crypto";
 import { join as joinPath, relative as relativePath } from "node:path";
 import {
 	mkdtemp,
-	rename,
 	rm,
 	writeFile,
 	readFile,
 	readdir,
+	copyFile,
 } from "node:fs/promises";
-import { query as queryClaude } from "@anthropic-ai/claude-agent-sdk";
+import {
+	AbortError as ClaudeAbortError,
+	query as queryClaude,
+} from "@anthropic-ai/claude-agent-sdk";
 
 type SliceMachineManagerReadCustomTypeLibraryReturnType = {
 	ids: string[];
@@ -580,6 +583,8 @@ export class CustomTypesManager extends BaseManager {
 		console.info(`inferSlice (${source}) started for request ${requestId}`);
 		const startTime = Date.now();
 
+		const claudeErrors: string[] = [];
+
 		try {
 			if (source === "figma") {
 				const { libraryID } = args;
@@ -595,6 +600,7 @@ export class CustomTypesManager extends BaseManager {
 					.parse(exp.payload);
 
 				let tmpDir: string | undefined;
+
 				try {
 					const config = await this.project.getSliceMachineConfig();
 
@@ -814,13 +820,23 @@ FINAL REMINDERS:
 - DO NOT ATTEMPT TO BUILD THE APPLICATION
 - START IMMEDIATELY WITH STEP 1.1 - NO PRELIMINARY ANALYSIS`;
 
+					void this.telemetry.track({
+						event: "slice-generation:started",
+						source,
+						llmProxyUrl,
+					});
+
 					const queries = queryClaude({
 						prompt,
 						options: {
 							cwd,
-							stderr: (data) => {
-								if (!data.startsWith("Spawning Claude Code process")) {
-									console.error("inferSlice error:" + data);
+							stderr: (error) => {
+								if (!error.startsWith("Spawning Claude Code process")) {
+									claudeErrors.push(error);
+									console.error(
+										`inferSlice - stderr for request ${requestId}:`,
+										error,
+									);
 								}
 							},
 							model: "claude-haiku-4-5",
@@ -850,7 +866,7 @@ FINAL REMINDERS:
 								]),
 							],
 							env: {
-								...process.env,
+								...this.sanitizeClaudeEnv(process.env),
 								ANTHROPIC_BASE_URL: llmProxyUrl,
 								ANTHROPIC_CUSTOM_HEADERS:
 									`x-prismic-token: ${authToken}\n` +
@@ -873,10 +889,25 @@ FINAL REMINDERS:
 					for await (const query of queries) {
 						switch (query.type) {
 							case "result":
-								if (query.subtype === "success") {
-									newSliceAbsPath = query.result.match(
-										/<new_slice_path>(.*)<\/new_slice_path>/s,
-									)?.[1];
+								switch (query.subtype) {
+									case "success":
+										if (!query.is_error) {
+											newSliceAbsPath = query.result.match(
+												/<new_slice_path>(.*)<\/new_slice_path>/s,
+											)?.[1];
+										} else {
+											claudeErrors.push(query.result);
+										}
+										break;
+									case "error_during_execution":
+									case "error_max_budget_usd":
+									case "error_max_turns":
+										claudeErrors.push(...query.errors);
+										console.error(
+											`inferSlice - result query error for request ${requestId}}:`,
+											query.errors,
+										);
+										break;
 								}
 								break;
 						}
@@ -897,11 +928,20 @@ FINAL REMINDERS:
 						);
 					}
 
-					// move the screenshot image to the new slice directory
-					await rename(
+					// copy instead of moving because the file might be in a different volume
+					await copyFile(
 						tmpImageAbsPath,
 						joinPath(newSliceAbsPath, "screenshot-default.png"),
 					);
+
+					try {
+						await rm(tmpImageAbsPath);
+					} catch (error) {
+						console.warn(
+							`inferSlice - Failed to delete temporary slice screenshot at ${tmpImageAbsPath}`,
+							error,
+						);
+					}
 
 					return InferSliceResponse.parse({ slice: JSON.parse(model) });
 				} finally {
@@ -930,12 +970,25 @@ FINAL REMINDERS:
 				return InferSliceResponse.parse(json);
 			}
 		} catch (error) {
+			if (
+				error instanceof ClaudeAbortError ||
+				(error instanceof Error && error.name === "AbortError")
+			) {
+				console.warn(`inferSlice (${source}) request ${requestId} was aborted`);
+				throw new InferSliceAbortError();
+			}
+
 			console.error(
 				`inferSlice (${source}) failed for request ${requestId}`,
 				error,
 			);
-
-			throw error;
+			throw new Error(`inferSlice encountered errors`, {
+				cause: {
+					error,
+					...(claudeErrors.length > 0 ? { claudeErrors } : {}),
+					args,
+				},
+			});
 		} finally {
 			this.inferSliceAbortControllers.delete(requestId);
 			clearTimeout(timeoutId);
@@ -945,6 +998,35 @@ FINAL REMINDERS:
 				`inferSlice took ${elapsedTimeSeconds}s for request ${requestId}`,
 			);
 		}
+	}
+
+	// https://code.claude.com/docs/en/settings#environment-variables
+	private claudeExcludePatterns = [
+		"ANTHROPIC_",
+		"CLAUDE_",
+		"MCP_",
+		"VERTEX_",
+		"DISABLE_",
+		"BASH_",
+		"AWS_",
+		"SLASH_COMMAND_",
+		"NO_PROXY",
+		"HTTP_PROXY",
+		"HTTPS_PROXY",
+		"HTTP_MAX_REDIRECTS",
+		"MAX_THINKING_TOKENS",
+		"USE_BUILTIN_RIPGREP",
+	];
+
+	private sanitizeClaudeEnv(env: Record<string, string | undefined>) {
+		return Object.fromEntries(
+			Object.entries(env).filter(([key, value]) => {
+				return (
+					value !== undefined &&
+					!this.claudeExcludePatterns.some((pattern) => key.startsWith(pattern))
+				);
+			}),
+		);
 	}
 
 	cancelInferSlice(args: { requestId: string }): { cancelled: boolean } {

@@ -17,6 +17,7 @@ import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
+import { ImportSlicesFromLibraryModal } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal";
 import { getSliceCreationOptions } from "@/features/customTypes/customTypesBuilder/sliceCreationOptions";
 import { SliceZoneBlankSlate } from "@/features/customTypes/customTypesBuilder/SliceZoneBlankSlate";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
@@ -121,6 +122,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
     useState(false);
+  const [
+    isImportSlicesFromLibraryModalOpen,
+    setIsImportSlicesFromLibraryModalOpen,
+  ] = useState(false);
   const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
@@ -197,6 +202,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     });
   };
 
+  const openImportSlicesFromLibraryModal = () => {
+    setIsImportSlicesFromLibraryModalOpen(true);
+  };
+
   const closeUpdateSliceZoneModal = () => {
     setIsUpdateSliceZoneModalOpen(false);
   };
@@ -211,6 +220,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const closeSlicesTemplatesModal = () => {
     setIsSlicesTemplatesModalOpen(false);
+  };
+
+  const closeImportSlicesFromLibraryModal = () => {
+    setIsImportSlicesFromLibraryModalOpen(false);
   };
 
   return (
@@ -272,6 +285,17 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                     {sliceCreationOptions.fromExisting.title}
                   </DropdownMenuItem>
                 ) : undefined}
+                <DropdownMenuItem
+                  onSelect={openImportSlicesFromLibraryModal}
+                  renderStartIcon={() =>
+                    sliceCreationOptions.importFromExternal.BackgroundIcon
+                  }
+                  description={
+                    sliceCreationOptions.importFromExternal.description
+                  }
+                >
+                  {sliceCreationOptions.importFromExternal.title}
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : undefined
@@ -323,6 +347,9 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               openCreateSliceModal={openCreateSliceModal}
               openCreateSliceFromImageModal={() =>
                 void openCreateSliceFromImageModal()
+              }
+              openImportSlicesFromLibraryModal={() =>
+                void openImportSlicesFromLibraryModal()
               }
               openSlicesTemplatesModal={openSlicesTemplatesModal}
               projectHasAvailableSlices={availableSlicesToAdd.length > 0}
@@ -443,6 +470,30 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           closeCreateSliceFromImageModal();
         }}
         onClose={closeCreateSliceFromImageModal}
+      />
+      <ImportSlicesFromLibraryModal
+        open={isImportSlicesFromLibraryModalOpen}
+        location={`${customType.format}_type`}
+        onSuccess={({ slices, library }) => {
+          const newCustomType = addSlicesToSliceZone({
+            customType,
+            tabId,
+            slices: slices.map((slice) => slice.model),
+          });
+          setCustomType({
+            customType: CustomTypes.fromSM(newCustomType),
+            onSaveCallback: () => {
+              toast.success(
+                <ToastMessageWithPath
+                  message="Slice(s) added to slice zone and created at: "
+                  path={library}
+                />,
+              );
+            },
+          });
+          closeImportSlicesFromLibraryModal();
+        }}
+        onClose={closeImportSlicesFromLibraryModal}
       />
     </>
   );
