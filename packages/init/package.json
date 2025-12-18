@@ -1,6 +1,6 @@
 {
 	"name": "@slicemachine/init",
-	"version": "2.10.43",
+	"version": "2.10.47",
 	"description": "Init Prismic Slice Machine in your project",
 	"keywords": [
 		"typescript",
@@ -93,6 +93,9 @@
 		"vite": "5.4.20",
 		"vite-plugin-sdk": "0.1.1",
 		"vitest": "0.32.0"
+	},
+	"engines": {
+		"node": ">=20.19.0"
 	},
 	"publishConfig": {
 		"access": "public"

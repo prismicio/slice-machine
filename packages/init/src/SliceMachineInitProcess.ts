@@ -13,6 +13,7 @@ import pLimit from "p-limit";
 
 import {
 	createSliceMachineManager,
+	FrameworkWroomTelemetryID,
 	PrismicUserProfile,
 	PrismicRepository,
 	SliceMachineManager,
@@ -552,7 +553,7 @@ Continue with next steps in Slice Machine.
 
 	protected getLoggingInTitle(subtitle?: string, ...extra: string[]): string {
 		return `Logging in to Prismic...
-		
+
 ███████████████████████████████████████████████████████████████████████████
 
 ${subtitle ? `* * ${subtitle}` : ""}
@@ -927,11 +928,28 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						"Project framework must be available through context to run `createNewRepository`",
 					);
 
+					// Fallback to minimal starter if no starter detected and --starter flag was passed.
+					// This allows for uploading documents even in unknown starters.
+					let starterId = this.context.starterId;
+					if (!starterId && this.options.starter) {
+						const frameworkToMinimalStarter: Partial<
+							Record<FrameworkWroomTelemetryID, StarterId>
+						> = {
+							next: "next_minimal",
+							nuxt: "nuxt_minimal",
+							sveltekit: "sveltekit_minimal",
+						};
+						starterId =
+							frameworkToMinimalStarter[
+								this.context.framework.wroomTelemetryID
+							];
+					}
+
 					try {
 						await this.manager.prismicRepository.create({
 							domain: this.context.repository.domain,
 							framework: this.context.framework.wroomTelemetryID,
-							starterId: this.context.starterId,
+							starterId,
 						});
 					} catch (error) {
 						// When we have an error here, it's most probably because the user has a stale SESSION cookie
@@ -950,7 +968,7 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 						await this.manager.prismicRepository.create({
 							domain: this.context.repository.domain,
 							framework: this.context.framework.wroomTelemetryID,
-							starterId: this.context.starterId,
+							starterId,
 						});
 					}
 

@@ -150,19 +150,19 @@ export type TransactionalMergeReturnType = PushChangesLimit | null;
 export type FrameworkWroomTelemetryID = "next" | "nuxt" | "sveltekit" | "other";
 
 /**
- * Starter id sent to Segment from wroom.Property used for the "starter"
+ * Starter id sent to Segment from wroom. Property used for the "starter"
  * properties.
  *
  * Values from:
- * https://github.com/prismicio/wroom/blob/65d4f53fd46df7d366d80e7ba9c965339ac7369d/conf/application.conf#L938
+ * https://github.com/prismicio/wroom/blob/main/conf/application.conf
  */
 export type StarterId =
+	| "next_minimal"
 	| "next_multi_page"
-	| "next_blog"
-	| "next_multi_lang"
+	| "nuxt_minimal"
 	| "nuxt_multi_page"
-	| "nuxt_blog"
-	| "nuxt_multi_lang";
+	| "sveltekit_minimal"
+	| "sveltekit_multi_page";
 
 export const Environment = t.type({
 	kind: t.union([t.literal("prod"), t.literal("stage"), t.literal("dev")]),

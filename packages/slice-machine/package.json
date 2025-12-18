@@ -1,6 +1,6 @@
 {
   "name": "slice-machine-ui",
-  "version": "2.20.0",
+  "version": "2.20.4",
   "license": "MIT",
   "description": "A visual builder for your Slice Models with all the tools you need to generate data models and mock CMS content locally.",
   "repository": {
@@ -9,7 +9,7 @@
     "directory": "packages/slice-machine"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=20.19.0"
   },
   "scripts": {
     "build": "yarn typed-css-modules && cross-env NODE_OPTIONS=--max_old_space_size=8192 next build",

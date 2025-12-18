@@ -45,6 +45,11 @@ export const SegmentEventType = {
 	sharedOnboarding_completed: "shared-onboarding:completed",
 	sharedOnboarding_tutorial: "shared-onboarding:follow-tutorial",
 	sliceGenerationFeedback: "slice-generation-feedback",
+	sliceGeneration_pastedFromFigma: "slice-generation:pasted-from-figma",
+	sliceGeneration_started: "slice-generation:started",
+	sliceGeneration_ended: "slice-generation:ended",
+	sliceGeneration_pluginInstallationClicked:
+		"slice-generation:plugin-installation-clicked",
 	navigation_documentationLinkClicked: "navigation:documentation-link-clicked",
 	sidebar_link_clicked: "sidebar:link-clicked",
 	mcp_promo_link_clicked: "mcp:promo-link-clicked",
@@ -106,6 +111,14 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.sharedOnboarding_tutorial]:
 		"Prismic Onboarding Guide Follow Tutorial",
 	[SegmentEventType.sliceGenerationFeedback]: "Slice Generation Feedback",
+	[SegmentEventType.sliceGeneration_pastedFromFigma]:
+		"SliceMachine Shared Slice Generation - Pasted From Figma",
+	[SegmentEventType.sliceGeneration_started]:
+		"SliceMachine Shared Slice Generation - Started",
+	[SegmentEventType.sliceGeneration_ended]:
+		"SliceMachine Shared Slice Generation - Ended",
+	[SegmentEventType.sliceGeneration_pluginInstallationClicked]:
+		"SliceMachine Shared Slice Generation - Plugin Installation Clicked",
 	[SegmentEventType.navigation_documentationLinkClicked]:
 		"SliceMachine Documentation Link Clicked",
 	[SegmentEventType.sidebar_link_clicked]: "Sidebar Link Clicked",
@@ -429,6 +442,33 @@ type SliceGenerationFeedback = SegmentEvent<
 	}
 >;
 
+type SliceGenerationPastedFromFigma = SegmentEvent<
+	typeof SegmentEventType.sliceGeneration_pastedFromFigma,
+	{
+		source: "shortcut" | "button";
+	}
+>;
+
+type SliceGenerationStarted = SegmentEvent<
+	typeof SegmentEventType.sliceGeneration_started,
+	{
+		source: "figma" | "upload";
+		llmProxyUrl: string;
+	}
+>;
+
+type SliceGenerationEnded = SegmentEvent<
+	typeof SegmentEventType.sliceGeneration_ended,
+	{
+		error: boolean;
+		source: "figma" | "upload";
+	}
+>;
+
+type SliceGenerationPluginInstallationClicked = SegmentEvent<
+	typeof SegmentEventType.sliceGeneration_pluginInstallationClicked
+>;
+
 type NavigationDocumentationLinkClicked = SegmentEvent<
 	typeof SegmentEventType.navigation_documentationLinkClicked,
 	{
@@ -503,6 +543,10 @@ export type SegmentEvents =
 	| SliceMachinePostPushToastCtaClicked
 	| SliceMachineExperimentExposure
 	| SliceGenerationFeedback
+	| SliceGenerationPastedFromFigma
+	| SliceGenerationStarted
+	| SliceGenerationEnded
+	| SliceGenerationPluginInstallationClicked
 	| NavigationDocumentationLinkClicked
 	| SidebarLinkClicked
 	| McpPromoLinkClicked

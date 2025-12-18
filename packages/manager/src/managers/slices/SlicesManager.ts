@@ -102,7 +102,7 @@ type SliceMachineManagerReadSliceScreenshotArgs = {
 
 type SliceFile = {
 	path: string;
-	contents: string; // String content, or base64-encoded string for binary files
+	contents: string | Buffer; // String for plain text files, Buffer for binary files
 	isBinary: boolean;
 };
 
@@ -1172,18 +1172,11 @@ export class SlicesManager extends BaseManager {
 			files.map((file) =>
 				limit(async () => {
 					try {
-						let contents: string | Buffer;
-						if (file.isBinary) {
-							contents = Buffer.from(file.contents, "base64");
-						} else {
-							contents = file.contents;
-						}
-
 						const writtenPath = await writeSliceFile({
 							libraryID,
 							model,
 							filename: file.path,
-							contents,
+							contents: file.contents,
 							helpers,
 						});
 						console.info(
