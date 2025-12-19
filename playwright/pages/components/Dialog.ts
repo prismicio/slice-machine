@@ -6,7 +6,7 @@ export class Dialog {
   readonly title: Locator;
   readonly closeButton: Locator;
   readonly cancelButton: Locator;
-  protected submitButton: Locator;
+  submitButton: Locator;
 
   constructor(
     page: Page,
