@@ -27,8 +27,6 @@ import { CommonDialogContentProps, NewSlice, SliceImport } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
 
-export function ReuseSlicesDialogContent() {}
-
 interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   onSuccess: (args: { slices: SharedSlice[]; library?: string }) => void;
 }

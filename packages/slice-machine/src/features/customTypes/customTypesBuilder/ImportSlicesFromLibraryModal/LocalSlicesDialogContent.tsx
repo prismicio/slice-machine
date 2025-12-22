@@ -9,8 +9,6 @@ import { DialogTabs } from "./DialogTabs";
 import { SliceCard } from "./SliceCard";
 import { CommonDialogContentProps } from "./types";
 
-export function ReuseSlicesDialogContent() {}
-
 interface LocalSlicesDialogContentProps extends CommonDialogContentProps {
   availableSlices: (SharedSlice & { thumbnailUrl?: string })[];
   onSuccess: (args: { slices: SharedSlice[] }) => void;

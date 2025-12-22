@@ -7,8 +7,6 @@ import {
 import { getSubmitButtonLabel } from "../shared/getSubmitButtonLabel";
 import { CommonDialogProps } from "./types";
 
-export function ReuseSlicesDialogContent() {}
-
 type DialogButtonsProps = {
   totalSelected: number;
   isSubmitting?: boolean;
