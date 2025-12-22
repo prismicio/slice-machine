@@ -45,7 +45,7 @@ export function LibrarySlicesDialogContent(
 
   const {
     isLoadingSlices,
-    handleImportFromGithub,
+    importSlicesFromGithub,
     slices: importedSlices,
     resetSlices,
   } = useImportSlicesFromGithub();
@@ -58,14 +58,14 @@ export function LibrarySlicesDialogContent(
    * Keeps track of the current instance id.
    * When the modal is closed, the id is reset.
    */
-  const id = useRef(crypto.randomUUID());
+  const instanceId = useRef(crypto.randomUUID());
 
   useStableEffect(() => {
     if (!open) {
       setSelectedSlices([]);
       resetSlices();
       setGithubUrl("");
-      id.current = crypto.randomUUID();
+      instanceId.current = crypto.randomUUID();
     }
   }, [open]);
 
@@ -74,7 +74,7 @@ export function LibrarySlicesDialogContent(
   };
 
   const onImport = () => {
-    void handleImportFromGithub(githubUrl);
+    void importSlicesFromGithub(githubUrl);
   };
 
   const onSelect = (slice: SliceImport) => {
@@ -108,23 +108,23 @@ export function LibrarySlicesDialogContent(
       .readAllSlices()
       .then((slices) => slices.models.map(({ model }) => model));
 
-    for (const s of librarySlicesToImport) {
+    for (const sliceToImport of librarySlicesToImport) {
       const adjustedModel = sliceWithoutConflicts({
         existingSlices: existingSlices,
         newSlices: conflictFreeSlices,
-        slice: s.model,
+        slice: sliceToImport.model,
       });
-      conflictFreeSlices.push({ ...s, model: adjustedModel });
+      conflictFreeSlices.push({ ...sliceToImport, model: adjustedModel });
     }
 
-    const currentId = id.current;
+    const currentInstanceId = instanceId.current;
     setIsSubmitting(true);
 
     try {
       const { slices: createdSlices, library } =
         await addSlices(conflictFreeSlices);
 
-      if (currentId !== id.current) {
+      if (currentInstanceId !== instanceId.current) {
         throw new Error("Modal instance changed");
       }
 
@@ -140,7 +140,8 @@ export function LibrarySlicesDialogContent(
         return {
           ...lib,
           components: lib.components.map((component) => {
-            // Find the corresponding slice from librarySlicesToImport to get its mocks
+            // Find the corresponding slice from conflictFreeSlices to get its mocks
+            // Note: We use conflictFreeSlices (not librarySlicesToImport) because IDs may have changed during conflict resolution
             const importedSlice = conflictFreeSlices.find(
               (s) => s.model.id === component.model.id,
             );
@@ -162,7 +163,8 @@ export function LibrarySlicesDialogContent(
       smActions.createSliceSuccess(librariesWithMocks);
 
       // Also update mocks individually to ensure they're in the store
-      for (const slice of librarySlicesToImport) {
+      // Note: We use conflictFreeSlices (not librarySlicesToImport) because slice IDs may have changed during conflict resolution
+      for (const slice of conflictFreeSlices) {
         if (
           slice.mocks &&
           Array.isArray(slice.mocks) &&
@@ -179,7 +181,7 @@ export function LibrarySlicesDialogContent(
       syncChanges();
 
       setIsSubmitting(false);
-      id.current = crypto.randomUUID();
+      instanceId.current = crypto.randomUUID();
       resetSlices();
 
       void completeOnboardingStep("createSlice");
@@ -197,7 +199,7 @@ export function LibrarySlicesDialogContent(
 
       onSuccess({ slices: createdSlices, library });
     } catch (error) {
-      if (currentId !== id.current) {
+      if (currentInstanceId !== instanceId.current) {
         throw error;
       }
       setIsSubmitting(false);

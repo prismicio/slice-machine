@@ -18,7 +18,7 @@ export function useImportSlicesFromGithub() {
     setIsLoadingSlices(false);
   };
 
-  const handleImportFromGithub = async (githubUrl: string) => {
+  const importSlicesFromGithub = async (githubUrl: string) => {
     try {
       setIsLoadingSlices(true);
 
@@ -85,7 +85,7 @@ export function useImportSlicesFromGithub() {
     isLoadingSlices,
     slices,
     resetSlices,
-    handleImportFromGithub,
+    importSlicesFromGithub,
   };
 }
 
