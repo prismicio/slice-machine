@@ -24,9 +24,7 @@ export function useImportSlicesFromGithub() {
 
       const { owner, repo } = parseGithubUrl(githubUrl);
       if (!owner || !repo) {
-        toast.error("Invalid GitHub URL format");
-        setIsLoadingSlices(false);
-        throw new Error("Invalid GitHub URL format");
+        throw new GitHubImportError("Invalid GitHub URL format");
       }
 
       const branch = await getDefaultBranch({ owner, repo });
@@ -36,21 +34,17 @@ export function useImportSlicesFromGithub() {
       try {
         libraries = await getSliceLibraries({ owner, repo, branch });
       } catch (error) {
-        console.error("Failed to fetch slicemachine.config.json:", error);
-        toast.error(
-          `Failed to fetch slicemachine.config.json: ${
+        throw new GitHubImportError(`
+          Failed to fetch slicemachine.config.json: ${
             error instanceof Error ? error.message : "Unknown error"
-          }`,
-        );
-        setIsLoadingSlices(false);
-        throw error;
+          }
+        `);
       }
 
       if (libraries.length === 0) {
-        console.warn("No libraries were found in the SM config.");
-        setIsLoadingSlices(false);
-        toast.error("No libraries were found in the SM config.");
-        throw new Error("No libraries were found in the SM config.");
+        throw new GitHubImportError(
+          "No libraries were found in the SM config.",
+        );
       }
 
       const fetchedSlices = await fetchSlicesFromLibraries({
@@ -61,27 +55,29 @@ export function useImportSlicesFromGithub() {
       });
 
       if (fetchedSlices.length === 0) {
-        toast.error("Error fetching slices from the repository");
-        setIsLoadingSlices(false);
-        throw new Error("No slices were found in the libraries.");
+        throw new GitHubImportError("No slices were found in the libraries.");
       }
 
       setSlices(fetchedSlices);
-      setIsLoadingSlices(false);
       toast.success(
         `Found ${fetchedSlices.length} slice(s) from ${libraries.length} library/libraries`,
       );
 
       return fetchedSlices;
     } catch (error) {
-      console.error("Error importing from GitHub:", error);
-      toast.error(
-        `Error importing from GitHub: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-      );
-      setIsLoadingSlices(false);
+      if (error instanceof GitHubImportError) {
+        toast.error(error.message);
+      } else {
+        toast.error(
+          `Failed to import from GitHub: ${
+            error instanceof Error ? error.message : "Unknown error"
+          }`,
+        );
+      }
+
       return [];
+    } finally {
+      setIsLoadingSlices(false);
     }
   };
 
@@ -91,4 +87,11 @@ export function useImportSlicesFromGithub() {
     resetSlices,
     handleImportFromGithub,
   };
+}
+
+class GitHubImportError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GitHubImportError";
+  }
 }
