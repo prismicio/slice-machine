@@ -26,3 +26,15 @@ export type NewSlice = {
   mocks?: SharedSliceContent[];
   screenshots?: Record<string, File>;
 };
+
+export type CommonDialogProps = {
+  open: boolean;
+  location: "custom_type" | "page_type";
+  typeName: string;
+  onClose: () => void;
+};
+
+export type CommonDialogContentProps = CommonDialogProps & {
+  onSelectTab: (tab: "local" | "library") => void;
+  selected: boolean;
+};

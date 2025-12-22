@@ -7,18 +7,13 @@ import { DialogButtons } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
 import { SliceCard } from "./SliceCard";
+import { CommonDialogContentProps } from "./types";
 
 export function ReuseSlicesDialogContent() {}
 
-interface LocalSlicesDialogContentProps {
-  open: boolean;
-  location: "custom_type" | "page_type";
-  typeName: string;
+interface LocalSlicesDialogContentProps extends CommonDialogContentProps {
   availableSlices: (SharedSlice & { thumbnailUrl?: string })[];
   onSuccess: (args: { slices: SharedSlice[] }) => void;
-  onClose: () => void;
-  onSelectTab: (tab: "local" | "library") => void;
-  selected: boolean;
 }
 
 export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
@@ -49,9 +44,7 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
   const onSelect = (slice: SharedSlice) => {
     setSelectedSlices((prev) => {
       const isSelected = prev.some((s) => s.id === slice.id);
-      if (isSelected) {
-        return prev.filter((s) => s.id !== slice.id);
-      }
+      if (isSelected) return prev.filter((s) => s.id !== slice.id);
       return [...prev, slice];
     });
   };

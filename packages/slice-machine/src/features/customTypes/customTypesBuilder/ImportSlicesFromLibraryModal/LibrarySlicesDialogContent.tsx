@@ -23,26 +23,20 @@ import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
 import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
 import { SliceCard } from "./SliceCard";
-import { NewSlice, SliceImport } from "./types";
+import { CommonDialogContentProps, NewSlice, SliceImport } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
 
 export function ReuseSlicesDialogContent() {}
 
-interface LibrarySlicesDialogContentProps {
-  open: boolean;
-  location: "custom_type" | "page_type";
-  typeName: string;
+interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   onSuccess: (args: { slices: SharedSlice[]; library?: string }) => void;
-  onClose: () => void;
-  onSelectTab: (tab: "local" | "library") => void;
-  selected: boolean;
 }
 
 export function LibrarySlicesDialogContent(
   props: LibrarySlicesDialogContentProps,
 ) {
-  const { open, location, typeName, onSelectTab, selected } = props;
+  const { open, location, typeName, onSelectTab, onSuccess, selected } = props;
 
   const [githubUrl, setGithubUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,9 +81,7 @@ export function LibrarySlicesDialogContent(
   const onSelect = (slice: SliceImport) => {
     setSelectedSlices((prev) => {
       const isSelected = prev.some((s) => s.model.id === slice.model.id);
-      if (isSelected) {
-        return prev.filter((s) => s.model.id !== slice.model.id);
-      }
+      if (isSelected) return prev.filter((s) => s.model.id !== slice.model.id);
       return [...prev, slice];
     });
   };
@@ -204,7 +196,7 @@ export function LibrarySlicesDialogContent(
         });
       }
 
-      return { slices: allSlices, library };
+      onSuccess({ slices: allSlices, library });
     } catch (error) {
       if (currentId !== id.current) {
         throw error;

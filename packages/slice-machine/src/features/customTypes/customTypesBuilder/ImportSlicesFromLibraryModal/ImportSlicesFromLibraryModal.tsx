@@ -9,15 +9,12 @@ import { useState } from "react";
 
 import { LibrarySlicesDialogContent } from "./LibrarySlicesDialogContent";
 import { LocalSlicesDialogContent } from "./LocalSlicesDialogContent";
+import { CommonDialogProps } from "./types";
 
-interface ImportSlicesFromLibraryModalProps {
-  open: boolean;
-  location: "custom_type" | "page_type";
-  typeName: string;
+type ImportSlicesFromLibraryModalProps = CommonDialogProps & {
   availableSlices: (SharedSlice & { thumbnailUrl?: string })[];
   onSuccess: (args: { slices: SharedSlice[]; library?: string }) => void;
-  onClose: () => void;
-}
+};
 
 export function ImportSlicesFromLibraryModal(
   props: ImportSlicesFromLibraryModalProps,
