@@ -177,6 +177,7 @@ export function LibrarySlicesDialogContent(
       syncChanges();
 
       setIsSubmitting(false);
+      id.current = crypto.randomUUID();
       resetSlices();
 
       void completeStep("createSlice");
