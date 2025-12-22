@@ -13,9 +13,9 @@ import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
-import { useExistingSlices } from "@/features/customTypes/customTypesBuilder/shared/useExistingSlices";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { DialogButtons } from "./DialogButtons";
@@ -51,10 +51,8 @@ export function LibrarySlicesDialogContent(
   } = useImportSlicesFromGithub();
 
   const smActions = useSliceMachineActions();
-
-  const existingSlicesRef = useExistingSlices({ open });
   const { syncChanges } = useAutoSync();
-  const { completeStep } = useOnboarding();
+  const { completeStep: completeOnboardingStep } = useOnboarding();
 
   /**
    * Keeps track of the current instance id.
@@ -106,9 +104,13 @@ export function LibrarySlicesDialogContent(
     // Ensure ids and names are conflict-free against existing and newly-added slices
     const conflictFreeSlices: NewSlice[] = [];
 
+    const existingSlices = await managerClient.slices
+      .readAllSlices()
+      .then((slices) => slices.models.map(({ model }) => model));
+
     for (const s of librarySlicesToImport) {
       const adjustedModel = sliceWithoutConflicts({
-        existingSlices: existingSlicesRef.current,
+        existingSlices: existingSlices,
         newSlices: conflictFreeSlices,
         slice: s.model,
       });
@@ -180,7 +182,7 @@ export function LibrarySlicesDialogContent(
       id.current = crypto.randomUUID();
       resetSlices();
 
-      void completeStep("createSlice");
+      void completeOnboardingStep("createSlice");
 
       for (const { model } of createdSlices) {
         void telemetry.track({
@@ -301,7 +303,6 @@ export function LibrarySlicesDialogContent(
         totalSelected={selectedSlices.length}
         onSubmit={() => void onSubmit()}
         isSubmitting={isSubmitting}
-        location={location}
         typeName={typeName}
       />
     </DialogContent>

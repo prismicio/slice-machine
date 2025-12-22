@@ -4,19 +4,17 @@ import {
   DialogCancelButton,
 } from "@prismicio/editor-ui";
 
-import { getSubmitButtonLabel } from "../shared/getSubmitButtonLabel";
 import { CommonDialogProps } from "./types";
 
 type DialogButtonsProps = {
   totalSelected: number;
   isSubmitting?: boolean;
   onSubmit: () => void | Promise<void>;
-  location: CommonDialogProps["location"];
   typeName: CommonDialogProps["typeName"];
 };
 
 export function DialogButtons(props: DialogButtonsProps) {
-  const { totalSelected, onSubmit, isSubmitting, location, typeName } = props;
+  const { totalSelected, onSubmit, isSubmitting, typeName } = props;
 
   return (
     <DialogActions>
@@ -27,7 +25,7 @@ export function DialogButtons(props: DialogButtonsProps) {
         onClick={() => void onSubmit()}
         size="medium"
       >
-        {getSubmitButtonLabel(location, typeName)} ({totalSelected})
+        Add to {typeName} ({totalSelected})
       </DialogActionButton>
     </DialogActions>
   );

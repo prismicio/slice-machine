@@ -17,7 +17,6 @@ interface LocalSlicesDialogContentProps extends CommonDialogContentProps {
 export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
   const {
     open,
-    location,
     typeName,
     onSelectTab,
     onSuccess,
@@ -101,7 +100,6 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
       <DialogButtons
         totalSelected={selectedSlices.length}
         onSubmit={onSubmit}
-        location={location}
         typeName={typeName}
       />
     </DialogContent>
