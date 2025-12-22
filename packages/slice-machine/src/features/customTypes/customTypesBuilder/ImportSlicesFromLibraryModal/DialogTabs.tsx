@@ -1,9 +1,11 @@
 import { Box, Tab } from "@prismicio/editor-ui";
 import { ReactNode } from "react";
 
+import { DialogTab } from "./types";
+
 interface DialogTabsProps {
-  selectedTab: "local" | "library";
-  onSelectTab: (tab: "local" | "library") => void;
+  selectedTab: DialogTab;
+  onSelectTab: (tab: DialogTab) => void;
   rightContent?: ReactNode;
 }
 

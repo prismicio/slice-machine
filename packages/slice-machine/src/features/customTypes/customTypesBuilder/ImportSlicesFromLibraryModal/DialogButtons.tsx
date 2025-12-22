@@ -5,16 +5,17 @@ import {
 } from "@prismicio/editor-ui";
 
 import { getSubmitButtonLabel } from "../shared/getSubmitButtonLabel";
+import { CommonDialogProps } from "./types";
 
 export function ReuseSlicesDialogContent() {}
 
-interface DialogButtonsProps {
+type DialogButtonsProps = {
   totalSelected: number;
-  onSubmit: () => void;
-  location: "custom_type" | "page_type";
-  typeName: string;
   isSubmitting?: boolean;
-}
+  onSubmit: () => void | Promise<void>;
+  location: CommonDialogProps["location"];
+  typeName: CommonDialogProps["typeName"];
+};
 
 export function DialogButtons(props: DialogButtonsProps) {
   const { totalSelected, onSubmit, isSubmitting, location, typeName } = props;

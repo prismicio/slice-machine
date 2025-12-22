@@ -35,7 +35,8 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
 
   const onSubmit = () => {
     if (selectedSlices.length === 0) {
-      return toast.error("Please select at least one slice");
+      toast.error("Please select at least one slice");
+      return;
     }
 
     onSuccess({ slices: selectedSlices });

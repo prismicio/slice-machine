@@ -27,6 +27,8 @@ export type NewSlice = {
   screenshots?: Record<string, File>;
 };
 
+export type DialogTab = "local" | "library";
+
 export type CommonDialogProps = {
   open: boolean;
   location: "custom_type" | "page_type";
@@ -35,6 +37,6 @@ export type CommonDialogProps = {
 };
 
 export type CommonDialogContentProps = CommonDialogProps & {
-  onSelectTab: (tab: "local" | "library") => void;
+  onSelectTab: (tab: DialogTab) => void;
   selected: boolean;
 };

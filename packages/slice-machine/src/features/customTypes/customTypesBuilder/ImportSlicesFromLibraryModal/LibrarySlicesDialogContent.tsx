@@ -88,7 +88,8 @@ export function LibrarySlicesDialogContent(
 
   const onSubmit = async () => {
     if (selectedSlices.length === 0) {
-      return toast.error("Please select at least one slice");
+      toast.error("Please select at least one slice");
+      return;
     }
 
     // Prepare library slices for import
