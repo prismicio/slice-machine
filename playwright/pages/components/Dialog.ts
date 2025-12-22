@@ -6,13 +6,13 @@ export class Dialog {
   readonly title: Locator;
   readonly closeButton: Locator;
   readonly cancelButton: Locator;
-  submitButton: Locator;
+  readonly submitButton: Locator;
 
   constructor(
     page: Page,
     options: {
       title: string | RegExp | Locator;
-      submitName?: string;
+      submitName?: string | RegExp;
     },
   ) {
     const { title, submitName = "Submit" } = options;
