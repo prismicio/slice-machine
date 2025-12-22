@@ -32,6 +32,7 @@ import {
 } from "@/legacy/lib/models/common/CustomType";
 import type { SliceZoneSlice } from "@/legacy/lib/models/common/CustomType/sliceZone";
 import type { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { Slices } from "@/legacy/lib/models/common/Slice";
 import type { SlicesSM } from "@/legacy/lib/models/common/Slices";
 import { managerClient } from "@/managerClient";
 import {
@@ -333,7 +334,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         open={isUpdateSliceZoneModalOpen}
         location={`${customType.format}_type`}
         typeName={customType.label ?? customType.id}
-        availableSlices={availableSlicesToAdd}
+        availableSlices={availableSlicesToAdd.map((slice) => ({
+          ...Slices.fromSM(slice.model),
+          thumbnailUrl: Object.values(slice.screenshots)[0]?.url,
+        }))}
         onSuccess={({ slices }) => {
           const newCustomType = addSlicesToSliceZone({
             customType,
