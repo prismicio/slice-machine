@@ -1,3 +1,4 @@
+import { useStableEffect } from "@prismicio/editor-support/React";
 import {
   Box,
   Button,
@@ -8,7 +9,7 @@ import {
   TextInput,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
@@ -19,7 +20,7 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
 import { DialogButtons } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
-import { DialogTabHeader } from "./DialogTabHeader";
+import { DialogTabs } from "./DialogTabs";
 import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
 import { SliceCard } from "./SliceCard";
 import { NewSlice, SliceImport } from "./types";
@@ -35,23 +36,28 @@ interface LibrarySlicesDialogContentProps {
   onSuccess: (args: { slices: SharedSlice[]; library?: string }) => void;
   onClose: () => void;
   onSelectTab: (tab: "local" | "library") => void;
-  isSelected: boolean;
+  selected: boolean;
 }
 
 export function LibrarySlicesDialogContent(
   props: LibrarySlicesDialogContentProps,
 ) {
-  const { open, location, typeName, onSelectTab, isSelected } = props;
+  const { open, location, typeName, onSelectTab, selected } = props;
 
   const [githubUrl, setGithubUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSlices, setSelectedSlices] = useState<SliceImport[]>([]);
 
-  const { isLoadingSlices, handleImportFromGithub, slices, resetSlices } =
-    useImportSlicesFromGithub();
-  const { createSliceSuccess, updateSliceMockSuccess } =
-    useSliceMachineActions();
-  const existingSlices = useExistingSlices({ open: true });
+  const {
+    isLoadingSlices,
+    handleImportFromGithub,
+    slices: importedSlices,
+    resetSlices,
+  } = useImportSlicesFromGithub();
+
+  const smActions = useSliceMachineActions();
+
+  const existingSlicesRef = useExistingSlices({ open });
   const { syncChanges } = useAutoSync();
   const { completeStep } = useOnboarding();
 
@@ -61,39 +67,24 @@ export function LibrarySlicesDialogContent(
    */
   const id = useRef(crypto.randomUUID());
 
-  useEffect(() => {
+  useStableEffect(() => {
     if (!open) {
       setSelectedSlices([]);
       resetSlices();
       setGithubUrl("");
+      id.current = crypto.randomUUID();
     }
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const { allSelected, someSelected } = useMemo(() => {
-    if (slices.length === 0) return { allSelected: false, someSelected: false };
-    return {
-      allSelected: slices.every((slice) =>
-        selectedSlices.some((s) => s.model.id === slice.model.id),
-      ),
-      someSelected: slices.some((slice) =>
-        selectedSlices.some((s) => s.model.id === slice.model.id),
-      ),
-    };
-  }, [slices, selectedSlices]);
+  }, [open]);
 
   const onSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedSlices(slices);
-    } else {
-      setSelectedSlices([]);
-    }
+    setSelectedSlices(checked ? importedSlices : []);
   };
 
   const onImport = () => {
     void handleImportFromGithub(githubUrl);
   };
 
-  const toggleSliceSelected = (slice: SliceImport) => {
+  const onSelect = (slice: SliceImport) => {
     setSelectedSlices((prev) => {
       const isSelected = prev.some((s) => s.model.id === slice.model.id);
       if (isSelected) {
@@ -123,7 +114,7 @@ export function LibrarySlicesDialogContent(
 
     for (const s of librarySlicesToImport) {
       const adjustedModel = sliceWithoutConflicts({
-        existingSlices: existingSlices.current,
+        existingSlices: existingSlicesRef.current,
         newSlices: conflictFreeSlices,
         slice: s.model,
       });
@@ -172,7 +163,7 @@ export function LibrarySlicesDialogContent(
         };
       });
 
-      createSliceSuccess(librariesWithMocks);
+      smActions.createSliceSuccess(librariesWithMocks);
 
       // Also update mocks individually to ensure they're in the store
       for (const slice of librarySlicesToImport) {
@@ -181,7 +172,7 @@ export function LibrarySlicesDialogContent(
           Array.isArray(slice.mocks) &&
           slice.mocks.length > 0
         ) {
-          updateSliceMockSuccess({
+          smActions.updateSliceMockSuccess({
             libraryID: library,
             sliceID: slice.model.id,
             mocks: slice.mocks,
@@ -193,7 +184,7 @@ export function LibrarySlicesDialogContent(
 
       // Combine local slices with created library slices
       const allSlices: SharedSlice[] = [
-        ...existingSlices.current,
+        ...existingSlicesRef.current,
         ...createdSlices.map((s) => s.model),
       ] as SharedSlice[];
 
@@ -224,23 +215,30 @@ export function LibrarySlicesDialogContent(
     }
   };
 
+  const allSelected = importedSlices.every((slice) =>
+    selectedSlices.some((s) => s.model.id === slice.model.id),
+  );
+  const someSelected = importedSlices.some((slice) =>
+    selectedSlices.some((s) => s.model.id === slice.model.id),
+  );
+
   let selectAllLabel = "Select all slices";
   if (allSelected) {
     selectAllLabel = `Selected all slices (${selectedSlices.length})`;
   } else if (someSelected) {
-    selectAllLabel = `${selectedSlices.length} of ${slices.length} selected`;
+    selectAllLabel = `${selectedSlices.length} of ${importedSlices.length} selected`;
   }
 
   return (
-    <DialogContent selected={isSelected}>
-      <DialogTabHeader
+    <DialogContent selected={selected}>
+      <DialogTabs
         selectedTab="library"
         onSelectTab={onSelectTab}
         rightContent={"<repo-select>"}
       />
 
       <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
-        {slices.length > 0 ? (
+        {importedSlices.length > 0 ? (
           <Box flexDirection="column" flexGrow={1} minHeight={0}>
             <Box
               padding={{ block: 12, inline: 16 }}
@@ -262,7 +260,7 @@ export function LibrarySlicesDialogContent(
                 gap={16}
                 padding={{ inline: 16, bottom: 16 }}
               >
-                {slices.map((slice) => {
+                {importedSlices.map((slice) => {
                   const isSelected = selectedSlices.some(
                     (s) => s.model.id === slice.model.id,
                   );
@@ -272,7 +270,7 @@ export function LibrarySlicesDialogContent(
                       thumbnailUrl={slice.thumbnailUrl}
                       key={slice.model.id}
                       selected={isSelected}
-                      onSelectedChange={() => toggleSliceSelected(slice)}
+                      onSelectedChange={() => onSelect(slice)}
                     />
                   );
                 })}

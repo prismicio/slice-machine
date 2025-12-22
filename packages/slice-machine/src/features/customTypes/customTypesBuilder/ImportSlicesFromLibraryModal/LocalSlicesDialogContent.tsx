@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import { DialogButtons } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
-import { DialogTabHeader } from "./DialogTabHeader";
+import { DialogTabs } from "./DialogTabs";
 import { SliceCard } from "./SliceCard";
 
 export function ReuseSlicesDialogContent() {}
@@ -18,7 +18,7 @@ interface LocalSlicesDialogContentProps {
   onSuccess: (args: { slices: SharedSlice[] }) => void;
   onClose: () => void;
   onSelectTab: (tab: "local" | "library") => void;
-  isSelected: boolean;
+  selected: boolean;
 }
 
 export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
@@ -29,7 +29,7 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
     onSelectTab,
     onSuccess,
     availableSlices = [],
-    isSelected,
+    selected,
   } = props;
 
   const [selectedSlices, setSelectedSlices] = useState<SharedSlice[]>([]);
@@ -46,7 +46,7 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
     onSuccess({ slices: selectedSlices });
   };
 
-  const toggleSliceSelected = (slice: SharedSlice) => {
+  const onSelect = (slice: SharedSlice) => {
     setSelectedSlices((prev) => {
       const isSelected = prev.some((s) => s.id === slice.id);
       if (isSelected) {
@@ -57,8 +57,8 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
   };
 
   return (
-    <DialogContent selected={isSelected}>
-      <DialogTabHeader selectedTab="local" onSelectTab={onSelectTab} />
+    <DialogContent selected={selected}>
+      <DialogTabs selectedTab="local" onSelectTab={onSelectTab} />
 
       <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
         {availableSlices.length > 0 ? (
@@ -82,7 +82,7 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
                     model={slice}
                     thumbnailUrl={slice.thumbnailUrl}
                     selected={isSelected}
-                    onSelectedChange={() => toggleSliceSelected(slice)}
+                    onSelectedChange={() => onSelect(slice)}
                   />
                 );
               })}

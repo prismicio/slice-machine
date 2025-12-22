@@ -24,18 +24,17 @@ export function ImportSlicesFromLibraryModal(
 ) {
   const {
     open,
+    location,
+    typeName,
     availableSlices = [],
     onSuccess,
     onClose,
-    ...commonProps
   } = props;
   const [selectedTab, setSelectedTab] = useState("local");
 
   const onOpenChange = (open: boolean) => {
     if (open) return;
     onClose();
-    // reset();
-    // resetSlices();
     setSelectedTab("local");
   };
 
@@ -47,16 +46,20 @@ export function ImportSlicesFromLibraryModal(
           Select existing slices or import slices from a GitHub repository
         </DialogDescription>
         <LocalSlicesDialogContent
-          {...commonProps}
-          isSelected={selectedTab === "local"}
+          open={open}
+          location={location}
+          typeName={typeName}
+          selected={selectedTab === "local"}
           onSelectTab={setSelectedTab}
           availableSlices={availableSlices}
           onSuccess={onSuccess}
           onClose={onClose}
         />
         <LibrarySlicesDialogContent
-          {...commonProps}
-          isSelected={selectedTab === "library"}
+          open={open}
+          location={location}
+          typeName={typeName}
+          selected={selectedTab === "library"}
           onSelectTab={setSelectedTab}
           onSuccess={onSuccess}
           onClose={onClose}
