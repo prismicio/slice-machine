@@ -22,14 +22,7 @@ interface ImportSlicesFromLibraryModalProps {
 export function ImportSlicesFromLibraryModal(
   props: ImportSlicesFromLibraryModalProps,
 ) {
-  const {
-    open,
-    location,
-    typeName,
-    availableSlices = [],
-    onSuccess,
-    onClose,
-  } = props;
+  const { open, availableSlices = [], onClose, ...commonProps } = props;
   const [selectedTab, setSelectedTab] = useState("local");
 
   const onOpenChange = (open: boolean) => {
@@ -46,22 +39,18 @@ export function ImportSlicesFromLibraryModal(
           Select existing slices or import slices from a GitHub repository
         </DialogDescription>
         <LocalSlicesDialogContent
+          {...commonProps}
           open={open}
-          location={location}
-          typeName={typeName}
           selected={selectedTab === "local"}
           onSelectTab={setSelectedTab}
           availableSlices={availableSlices}
-          onSuccess={onSuccess}
           onClose={onClose}
         />
         <LibrarySlicesDialogContent
+          {...commonProps}
           open={open}
-          location={location}
-          typeName={typeName}
           selected={selectedTab === "library"}
           onSelectTab={setSelectedTab}
-          onSuccess={onSuccess}
           onClose={onClose}
         />
       </DialogContent>
