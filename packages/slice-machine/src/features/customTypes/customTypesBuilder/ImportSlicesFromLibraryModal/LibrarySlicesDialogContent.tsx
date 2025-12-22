@@ -28,7 +28,10 @@ import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
 
 interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
-  onSuccess: (args: { slices: SharedSlice[]; library?: string }) => void;
+  onSuccess: (args: {
+    slices: { model: SharedSlice; langSmithUrl?: string }[];
+    library?: string;
+  }) => void;
 }
 
 export function LibrarySlicesDialogContent(
@@ -173,12 +176,6 @@ export function LibrarySlicesDialogContent(
 
       syncChanges();
 
-      // Combine local slices with created library slices
-      const allSlices: SharedSlice[] = [
-        ...existingSlicesRef.current,
-        ...createdSlices.map((s) => s.model),
-      ] as SharedSlice[];
-
       setIsSubmitting(false);
       resetSlices();
 
@@ -195,7 +192,7 @@ export function LibrarySlicesDialogContent(
         });
       }
 
-      onSuccess({ slices: allSlices, library });
+      onSuccess({ slices: createdSlices, library });
     } catch (error) {
       if (currentId !== id.current) {
         throw error;

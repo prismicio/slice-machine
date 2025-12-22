@@ -11,7 +11,7 @@ import { CommonDialogContentProps } from "./types";
 
 interface LocalSlicesDialogContentProps extends CommonDialogContentProps {
   availableSlices: (SharedSlice & { thumbnailUrl?: string })[];
-  onSuccess: (args: { slices: SharedSlice[] }) => void;
+  onSuccess: (args: { slices: { model: SharedSlice }[] }) => void;
 }
 
 export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
@@ -37,7 +37,7 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
       return;
     }
 
-    onSuccess({ slices: selectedSlices });
+    onSuccess({ slices: selectedSlices.map((s) => ({ model: s })) });
   };
 
   const onSelect = (slice: SharedSlice) => {

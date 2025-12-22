@@ -9,23 +9,27 @@ import { useState } from "react";
 
 import { LibrarySlicesDialogContent } from "./LibrarySlicesDialogContent";
 import { LocalSlicesDialogContent } from "./LocalSlicesDialogContent";
-import { CommonDialogProps } from "./types";
+import { CommonDialogProps, DialogTab } from "./types";
 
 type ImportSlicesFromLibraryModalProps = CommonDialogProps & {
   availableSlices: (SharedSlice & { thumbnailUrl?: string })[];
-  onSuccess: (args: { slices: SharedSlice[]; library?: string }) => void;
+  onSuccess: (args: {
+    slices: { model: SharedSlice; langSmithUrl?: string }[];
+    library?: string;
+  }) => void;
 };
 
 export function ImportSlicesFromLibraryModal(
   props: ImportSlicesFromLibraryModalProps,
 ) {
   const { open, availableSlices = [], onClose, ...commonProps } = props;
-  const [selectedTab, setSelectedTab] = useState("local");
+  const [selectedTab, setSelectedTab] = useState<DialogTab>("local");
 
   const onOpenChange = (open: boolean) => {
-    if (open) return;
-    onClose();
-    setSelectedTab("local");
+    if (!open) {
+      onClose();
+      setTimeout(() => setSelectedTab("local"), 250); // wait for the modal fade animation
+    }
   };
 
   return (
