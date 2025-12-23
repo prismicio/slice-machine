@@ -867,6 +867,9 @@ FINAL REMINDERS:
 							],
 							env: {
 								...this.sanitizeClaudeEnv(process.env),
+								ANTHROPIC_API_KEY: "required-for-proxy-usage",
+								CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC: "1",
+								CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS: "1",
 								ANTHROPIC_BASE_URL: llmProxyUrl,
 								ANTHROPIC_CUSTOM_HEADERS:
 									`x-prismic-token: ${authToken}\n` +
