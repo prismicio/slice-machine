@@ -301,6 +301,7 @@ type SliceCreatedSegmentEvent = SegmentEvent<
 		| { mode: "figma-to-slice" }
 		| { mode: "manual" }
 		| { mode: "template"; sliceTemplate: string }
+		| { mode: "import" }
 	)
 >;
 
