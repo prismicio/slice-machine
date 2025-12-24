@@ -64,19 +64,5 @@ export const getSliceCreationOptions = (args: SliceCreationOptionArgs) => {
       title: "Reuse an existing slice",
       description: "Select from your created slices.",
     },
-    importFromExternal: {
-      BackgroundIcon: (
-        <BackgroundIcon
-          name="cloudUpload"
-          size={menuType === "ActionList" ? "small" : "extraSmall"}
-          iconSize={menuType === "ActionList" ? "medium" : "small"}
-          color="white"
-          variant="solid"
-          radius={6}
-        />
-      ),
-      title: "Add from external library",
-      description: "Import slices from a github repository.",
-    },
   };
 };

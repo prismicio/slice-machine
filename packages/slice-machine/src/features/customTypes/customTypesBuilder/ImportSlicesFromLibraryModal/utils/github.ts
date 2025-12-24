@@ -177,6 +177,24 @@ export const getSliceLibraries = async ({
   return github.getSliceLibraries(branch);
 };
 
+const mocksSchema = z.array(
+  z.unknown().transform((content, ctx) => {
+    const result = SharedSliceContent.decode(content);
+    if (result._tag === "Left") {
+      for (const error of result.left) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: error.message,
+        });
+      }
+
+      return z.NEVER;
+    }
+
+    return result.right;
+  }),
+);
+
 export const fetchSlicesFromLibraries = async ({
   owner,
   repo,
@@ -365,15 +383,15 @@ export const fetchSlicesFromLibraries = async ({
 
           if (file.path === "mocks.json" && typeof file.contents === "string") {
             try {
-              const parsedMocksResult = SharedSliceContent.decode(
+              const parsedMocksResult = mocksSchema.safeParse(
                 JSON.parse(file.contents),
               );
-              if (parsedMocksResult._tag === "Left") {
+              if (!parsedMocksResult.success) {
                 console.warn(
                   `Failed to decode mocks.json for slice: ${sliceDir.name}`,
                 );
               } else {
-                const parsedMocks = parsedMocksResult.right;
+                const parsedMocks = parsedMocksResult.data;
                 if (Array.isArray(parsedMocks) && parsedMocks.length > 0) {
                   mocks = parsedMocks;
                 }
