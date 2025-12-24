@@ -26,6 +26,7 @@ import { SliceCard } from "./SliceCard";
 import { CommonDialogContentProps, NewSlice, SliceImport } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
+import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   onSuccess: (args: {
@@ -114,6 +115,7 @@ export function LibrarySlicesDialogContent(
         newSlices: conflictFreeSlices,
         slice: sliceToImport.model,
       });
+
       conflictFreeSlices.push({ ...sliceToImport, model: adjustedModel });
     }
 
@@ -132,38 +134,9 @@ export function LibrarySlicesDialogContent(
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       const serverState = await getState();
-
-      // Ensure mocks are included in the libraries data before updating store
-      const librariesWithMocks = serverState.libraries.map((lib) => {
-        if (lib.name !== library) return lib;
-
-        return {
-          ...lib,
-          components: lib.components.map((component) => {
-            // Find the corresponding slice from conflictFreeSlices to get its mocks
-            // Note: We use conflictFreeSlices (not librarySlicesToImport) because IDs may have changed during conflict resolution
-            const importedSlice = conflictFreeSlices.find(
-              (s) => s.model.id === component.model.id,
-            );
-
-            // If mocks are already in component, use them; otherwise use imported mocks
-            const mocks =
-              component.mocks && component.mocks.length > 0
-                ? component.mocks
-                : importedSlice?.mocks;
-
-            return {
-              ...component,
-              mocks: mocks ?? component.mocks,
-            };
-          }),
-        };
-      });
-
-      smActions.createSliceSuccess(librariesWithMocks);
+      smActions.createSliceSuccess(serverState.libraries);
 
       // Also update mocks individually to ensure they're in the store
-      // Note: We use conflictFreeSlices (not librarySlicesToImport) because slice IDs may have changed during conflict resolution
       for (const slice of conflictFreeSlices) {
         if (
           slice.mocks &&
