@@ -26,7 +26,6 @@ import { SliceCard } from "./SliceCard";
 import { CommonDialogContentProps, NewSlice, SliceImport } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
-import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 
 interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   onSuccess: (args: {
