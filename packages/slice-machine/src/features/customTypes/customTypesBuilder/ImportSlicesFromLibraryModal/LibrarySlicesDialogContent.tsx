@@ -441,7 +441,9 @@ function RepositorySelector(props: RepositorySelectorProps) {
                 asChild
                 invisible
               >
-                <a href={configureUrl}>Configure Repositories on Prismic</a>
+                <a href={configureUrl} target="_blank">
+                  Configure Repositories on Prismic
+                </a>
               </Button>
             </ComboboxAction>
           </ComboBoxContent>

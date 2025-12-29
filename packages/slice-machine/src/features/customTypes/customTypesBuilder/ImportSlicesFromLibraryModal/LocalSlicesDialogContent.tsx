@@ -1,14 +1,15 @@
-import { Box, ScrollArea, Text } from "@prismicio/editor-ui";
+import { Box, ScrollArea } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
+import { EmptyView } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/EmptyView";
 
 import { DialogButtons } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
 import { SliceCard } from "./SliceCard";
 import { CommonDialogContentProps } from "./types";
-import { EmptyView } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/EmptyView";
 
 interface LocalSlicesDialogContentProps extends CommonDialogContentProps {
   slices: (SharedSlice & { thumbnailUrl?: string })[];
