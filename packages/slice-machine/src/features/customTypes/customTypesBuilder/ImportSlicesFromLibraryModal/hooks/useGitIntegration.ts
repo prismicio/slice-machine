@@ -16,11 +16,11 @@ export function useGitIntegration() {
   const [isLoadingSlices, setIsLoadingSlices] = useState(false);
   const [importedSlices, setImportedSlices] = useState<SliceImport[]>([]);
 
-  const { data: integrationsData } = useSuspenseQuery({
+  const { data: githubIntegrations } = useSuspenseQuery({
     queryKey: ["getIntegrations"],
     queryFn: () => managerClient.prismicRepository.fetchGitIntegrations(),
   });
-  const { mutateAsync: fetchGitIntegrationToken } = useMutation({
+  const { mutateAsync: fetchGitHubToken } = useMutation({
     mutationFn: (args: { integrationId: string }) => {
       return managerClient.prismicRepository.fetchGitIntegrationToken({
         integrationId: args.integrationId,
@@ -42,7 +42,7 @@ export function useGitIntegration() {
       resetImportedSlices();
       setIsLoadingSlices(true);
 
-      const { token } = await fetchGitIntegrationToken({
+      const { token } = await fetchGitHubToken({
         integrationId: repository.integrationId,
       });
 
@@ -109,7 +109,7 @@ export function useGitIntegration() {
   };
 
   return {
-    integrations: integrationsData.integrations ?? [],
+    integrations: githubIntegrations.integrations ?? [],
     isLoadingSlices,
     importedSlices,
     resetImportedSlices,
