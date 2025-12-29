@@ -1,5 +1,6 @@
 import { Box, Checkbox, Text } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { useState } from "react";
 
 import { Card, CardFooter, CardMedia } from "@/components/Card";
 
@@ -12,6 +13,7 @@ interface SliceCardProps {
 
 export function SliceCard(props: SliceCardProps) {
   const { thumbnailUrl, model, selected = true, onSelectedChange } = props;
+  const [thumbnailError, setThumbnailError] = useState(false);
 
   const handleClick = () => {
     onSelectedChange(!selected);
@@ -19,8 +21,8 @@ export function SliceCard(props: SliceCardProps) {
 
   const cardContent = (
     <>
-      {thumbnailUrl !== undefined && thumbnailUrl ? (
-        <CardMedia src={thumbnailUrl} />
+      {thumbnailUrl !== undefined && thumbnailUrl && !thumbnailError ? (
+        <CardMedia src={thumbnailUrl} onError={() => setThumbnailError(true)} />
       ) : (
         <CardMedia component="div">
           <Box
