@@ -32,6 +32,7 @@ import {
 } from "@/legacy/lib/models/common/CustomType";
 import type { SliceZoneSlice } from "@/legacy/lib/models/common/CustomType/sliceZone";
 import type { LibraryUI } from "@/legacy/lib/models/common/LibraryUI";
+import { Slices } from "@/legacy/lib/models/common/Slice";
 import type { SlicesSM } from "@/legacy/lib/models/common/Slices";
 import { managerClient } from "@/managerClient";
 import {
@@ -45,7 +46,6 @@ import type { SliceMachineStoreType } from "@/redux/type";
 import { DeleteSliceZoneModal } from "./DeleteSliceZoneModal";
 import { SlicesList } from "./List";
 import { SlicesTemplatesModal } from "./SlicesTemplatesModal";
-import UpdateSliceZoneModal from "./UpdateSliceZoneModal";
 
 const mapAvailableAndSharedSlices = (
   sliceZone: SlicesSM,
@@ -122,10 +122,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
   const [isCreateSliceModalOpen, setIsCreateSliceModalOpen] = useState(false);
   const [isCreateSliceFromImageModalOpen, setIsCreateSliceFromImageModalOpen] =
     useState(false);
-  const [
-    isImportSlicesFromLibraryModalOpen,
-    setIsImportSlicesFromLibraryModalOpen,
-  ] = useState(false);
   const { remoteSlices, libraries } = useSelector(
     (store: SliceMachineStoreType) => ({
       remoteSlices: getRemoteSlices(store),
@@ -202,10 +198,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     });
   };
 
-  const openImportSlicesFromLibraryModal = () => {
-    setIsImportSlicesFromLibraryModalOpen(true);
-  };
-
   const closeUpdateSliceZoneModal = () => {
     setIsUpdateSliceZoneModalOpen(false);
   };
@@ -220,10 +212,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 
   const closeSlicesTemplatesModal = () => {
     setIsSlicesTemplatesModalOpen(false);
-  };
-
-  const closeImportSlicesFromLibraryModal = () => {
-    setIsImportSlicesFromLibraryModalOpen(false);
   };
 
   return (
@@ -274,27 +262,14 @@ const SliceZone: React.FC<SliceZoneProps> = ({
                   </DropdownMenuItem>
                 ) : undefined}
 
-                {availableSlicesToAdd.length > 0 ? (
-                  <DropdownMenuItem
-                    onSelect={openUpdateSliceZoneModal}
-                    renderStartIcon={() =>
-                      sliceCreationOptions.fromExisting.BackgroundIcon
-                    }
-                    description={sliceCreationOptions.fromExisting.description}
-                  >
-                    {sliceCreationOptions.fromExisting.title}
-                  </DropdownMenuItem>
-                ) : undefined}
                 <DropdownMenuItem
-                  onSelect={openImportSlicesFromLibraryModal}
+                  onSelect={openUpdateSliceZoneModal}
                   renderStartIcon={() =>
-                    sliceCreationOptions.importFromExternal.BackgroundIcon
+                    sliceCreationOptions.fromExisting.BackgroundIcon
                   }
-                  description={
-                    sliceCreationOptions.importFromExternal.description
-                  }
+                  description={sliceCreationOptions.fromExisting.description}
                 >
-                  {sliceCreationOptions.importFromExternal.title}
+                  {sliceCreationOptions.fromExisting.title}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -348,9 +323,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
               openCreateSliceFromImageModal={() =>
                 void openCreateSliceFromImageModal()
               }
-              openImportSlicesFromLibraryModal={() =>
-                void openImportSlicesFromLibraryModal()
-              }
               openSlicesTemplatesModal={openSlicesTemplatesModal}
               projectHasAvailableSlices={availableSlicesToAdd.length > 0}
               isSlicesTemplatesSupported={availableSlicesTemplates.length > 0}
@@ -358,28 +330,31 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           </Box>
         )
       ) : undefined}
-      {isUpdateSliceZoneModalOpen && (
-        <UpdateSliceZoneModal
-          formId={`tab-slicezone-form-${tabId}`}
-          availableSlices={availableSlicesToAdd}
-          onSubmit={(slices: SharedSlice[]) => {
-            const newCustomType = addSlicesToSliceZone({
-              customType,
-              tabId,
-              slices,
-            });
-            setCustomType({
-              customType: CustomTypes.fromSM(newCustomType),
-              onSaveCallback: () => {
-                toast.success("Slice(s) added to slice zone");
-              },
-            });
-            void completeStep("createSlice");
-            closeUpdateSliceZoneModal();
-          }}
-          close={closeUpdateSliceZoneModal}
-        />
-      )}
+      <ImportSlicesFromLibraryModal
+        open={isUpdateSliceZoneModalOpen}
+        location={`${customType.format}_type`}
+        typeName={customType.label ?? customType.id}
+        availableSlices={availableSlicesToAdd.map((slice) => ({
+          ...Slices.fromSM(slice.model),
+          thumbnailUrl: Object.values(slice.screenshots)[0]?.url,
+        }))}
+        onSuccess={({ slices }) => {
+          const newCustomType = addSlicesToSliceZone({
+            customType,
+            tabId,
+            slices: slices.map((s) => s.model),
+          });
+          setCustomType({
+            customType: CustomTypes.fromSM(newCustomType),
+            onSaveCallback: () => {
+              toast.success("Slices successfully added");
+            },
+          });
+          void completeStep("createSlice");
+          closeUpdateSliceZoneModal();
+        }}
+        onClose={closeUpdateSliceZoneModal}
+      />
       {isSlicesTemplatesModalOpen && (
         <SlicesTemplatesModal
           formId={`tab-slicezone-form-${tabId}`}
@@ -470,30 +445,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
           closeCreateSliceFromImageModal();
         }}
         onClose={closeCreateSliceFromImageModal}
-      />
-      <ImportSlicesFromLibraryModal
-        open={isImportSlicesFromLibraryModalOpen}
-        location={`${customType.format}_type`}
-        onSuccess={({ slices, library }) => {
-          const newCustomType = addSlicesToSliceZone({
-            customType,
-            tabId,
-            slices: slices.map((slice) => slice.model),
-          });
-          setCustomType({
-            customType: CustomTypes.fromSM(newCustomType),
-            onSaveCallback: () => {
-              toast.success(
-                <ToastMessageWithPath
-                  message="Slice(s) added to slice zone and created at: "
-                  path={library}
-                />,
-              );
-            },
-          });
-          closeImportSlicesFromLibraryModal();
-        }}
-        onClose={closeImportSlicesFromLibraryModal}
       />
     </>
   );

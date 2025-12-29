@@ -41,6 +41,7 @@ export function SliceCard(props: SliceCardProps) {
       onClick={handleClick}
       checked={selected}
       size="small"
+      data-testid="slice-card"
     >
       {cardContent}
     </Card>
