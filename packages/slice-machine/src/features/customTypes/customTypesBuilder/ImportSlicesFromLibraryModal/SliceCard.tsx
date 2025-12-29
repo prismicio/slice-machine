@@ -26,7 +26,11 @@ export function SliceCard(props: SliceCardProps) {
       )}
       <CardFooter
         title={model.name}
-        subtitle={`${model.variations.length} variations`}
+        subtitle={
+          model.variations.length > 1
+            ? `${model.variations.length} variations`
+            : `1 variation`
+        }
         action={
           <div onClick={(event) => event.stopPropagation()}>
             <Checkbox checked={selected} onCheckedChange={onSelectedChange} />
