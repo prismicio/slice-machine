@@ -3,27 +3,43 @@ import {
   Box,
   Button,
   Checkbox,
+  ComboBox,
+  ComboboxAction,
+  ComboBoxContent,
+  ComboBoxInput,
+  ComboBoxItem,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  Icon,
   InlineLabel,
   ScrollArea,
+  Skeleton,
   Text,
   TextInput,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useRef, useState } from "react";
+import { Suspense, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
-import { DialogButtons } from "./DialogButtons";
+import { DialogButtons, DialogButtonsSkeleton } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
 import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
 import { SliceCard } from "./SliceCard";
-import { CommonDialogContentProps, NewSlice, SliceImport } from "./types";
+import {
+  CommonDialogContentProps,
+  GitHubRepository,
+  NewSlice,
+  SliceImport,
+} from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
 
@@ -34,7 +50,9 @@ interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   }) => void;
 }
 
-export function LibrarySlicesDialogContent(
+const CARD_SPACING = 16;
+
+function LibrarySlicesDialogSuspenseContent(
   props: LibrarySlicesDialogContentProps,
 ) {
   const { open, location, typeName, onSelectTab, onSuccess, selected } = props;
@@ -44,11 +62,16 @@ export function LibrarySlicesDialogContent(
   const [selectedSlices, setSelectedSlices] = useState<SliceImport[]>([]);
 
   const {
+    integrations,
     isLoadingSlices,
     importSlicesFromGithub,
     slices: importedSlices,
     resetSlices,
   } = useImportSlicesFromGithub();
+
+  const repositories = useMemo(() => {
+    return integrations.map((integration) => integration.repositories).flat();
+  }, [integrations]);
 
   const smActions = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
@@ -199,14 +222,19 @@ export function LibrarySlicesDialogContent(
       <DialogTabs
         selectedTab="library"
         onSelectTab={onSelectTab}
-        rightContent={"<repo-select>"}
+        rightContent={
+          <RepositorySelector
+            repositories={repositories}
+            onValueChange={setGithubUrl}
+          />
+        }
       />
 
       <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
         {importedSlices.length > 0 ? (
           <Box flexDirection="column" flexGrow={1} minHeight={0}>
             <Box
-              padding={{ block: 12, inline: 16 }}
+              padding={{ block: 12, inline: CARD_SPACING }}
               alignItems="center"
               gap={8}
             >
@@ -222,8 +250,8 @@ export function LibrarySlicesDialogContent(
               <Box
                 display="grid"
                 gridTemplateColumns="1fr 1fr 1fr"
-                gap={16}
-                padding={{ inline: 16, bottom: 16 }}
+                gap={CARD_SPACING}
+                padding={{ inline: CARD_SPACING, bottom: CARD_SPACING }}
               >
                 {importedSlices.map((slice) => {
                   const isSelected = selectedSlices.some(
@@ -243,7 +271,12 @@ export function LibrarySlicesDialogContent(
             </ScrollArea>
           </Box>
         ) : (
-          <Box padding={16} height="100%" flexDirection="column" gap={16}>
+          <Box
+            padding={CARD_SPACING}
+            height="100%"
+            flexDirection="column"
+            gap={CARD_SPACING}
+          >
             <Box flexDirection="column" gap={8}>
               <Box
                 display="flex"
@@ -279,6 +312,119 @@ export function LibrarySlicesDialogContent(
         isSubmitting={isSubmitting}
         typeName={typeName}
       />
+    </DialogContent>
+  );
+}
+
+function RepositorySelector(props: {
+  repositories: GitHubRepository[];
+  onValueChange: (value: string) => void;
+}) {
+  const { repositories } = props;
+
+  const [filter, setFilter] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const { repositoryUrl } = useRepositoryInformation();
+
+  const configureUrl = new URL("settings/git-integration", repositoryUrl);
+  const filteredRepositories = repositories.filter((repository) =>
+    repository.fullName.toLowerCase().includes(filter.toLowerCase()),
+  );
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger>
+        <Button
+          endIcon="arrowDropDown"
+          textWeight="normal"
+          sx={{ width: 420 }}
+          startIcon="label"
+          color="grey"
+          size="large"
+          flexContent
+        >
+          Select a GitHub repository
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        border={false}
+        minWidth="full-trigger-width"
+        childrenFocusScope
+      >
+        <ComboBox variant="attached">
+          <ComboBoxInput
+            value={filter}
+            onValueChange={setFilter}
+            placeholder="Search"
+            endAdornment
+          />
+          <ComboBoxContent>
+            {filteredRepositories.map((repository) => (
+              <ComboBoxItem
+                key={repository.fullName}
+                value={repository.fullName}
+              >
+                <Box padding={{ inline: 8, block: 4 }}>
+                  <Text variant="normal">{repository.fullName}</Text>
+                </Box>
+              </ComboBoxItem>
+            ))}
+            <ComboboxAction>
+              <Button
+                textWeight="normal"
+                size="medium"
+                color="dark"
+                renderEndIcon={() => <Icon name="openInNew" size="small" />}
+                flexContent
+                asChild
+                invisible
+              >
+                <a href={configureUrl.toString()}>
+                  Configure Repositories on Prismic
+                </a>
+              </Button>
+            </ComboboxAction>
+          </ComboBoxContent>
+        </ComboBox>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+export function LibrarySlicesDialogContent(
+  props: LibrarySlicesDialogContentProps,
+) {
+  return (
+    <DialogContent selected={props.selected}>
+      <Suspense
+        fallback={
+          <>
+            <DialogTabs
+              selectedTab="library"
+              onSelectTab={props.onSelectTab}
+              rightContent={<Skeleton height={40} width={420} />}
+            />
+            <Box
+              flexGrow={1}
+              display="grid"
+              gridTemplateColumns="1fr 1fr 1fr"
+              padding={16}
+              gap={16}
+              minHeight={0}
+              overflow="hidden"
+            >
+              {Array.from({ length: 9 }).map((_, index) => (
+                <Skeleton key={index} height={240} width="100%" />
+              ))}
+            </Box>
+            <DialogButtonsSkeleton />
+          </>
+        }
+      >
+        <LibrarySlicesDialogSuspenseContent {...props} />
+      </Suspense>
     </DialogContent>
   );
 }

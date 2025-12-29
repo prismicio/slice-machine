@@ -40,3 +40,8 @@ export type CommonDialogContentProps = CommonDialogProps & {
   onSelectTab: (tab: DialogTab) => void;
   selected: boolean;
 };
+
+export type GitHubRepository = {
+  name: string;
+  fullName: string;
+};

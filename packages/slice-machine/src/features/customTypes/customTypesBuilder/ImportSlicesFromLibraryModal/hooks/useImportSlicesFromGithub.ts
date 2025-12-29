@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -15,12 +15,10 @@ import {
 export function useImportSlicesFromGithub() {
   const [isLoadingSlices, setIsLoadingSlices] = useState(false);
   const [slices, setSlices] = useState<SliceImport[]>([]);
-  const { data: integrations } = useQuery({
+  const { data: integrationsData } = useSuspenseQuery({
     queryKey: ["getIntegrations"],
     queryFn: () => managerClient.prismicRepository.fetchGitIntegrations(),
   });
-
-  console.log(integrations);
 
   const resetSlices = () => {
     setSlices([]);
@@ -91,6 +89,7 @@ export function useImportSlicesFromGithub() {
   };
 
   return {
+    integrations: integrationsData.integrations ?? [],
     isLoadingSlices,
     slices,
     resetSlices,
