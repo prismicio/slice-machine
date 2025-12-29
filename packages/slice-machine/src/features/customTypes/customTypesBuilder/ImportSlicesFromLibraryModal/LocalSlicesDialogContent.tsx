@@ -74,7 +74,7 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
 
                   return (
                     <SliceCard
-                      key={slice.id}
+                      key={slice.name}
                       model={slice}
                       thumbnailUrl={slice.thumbnailUrl}
                       selected={isSelected}

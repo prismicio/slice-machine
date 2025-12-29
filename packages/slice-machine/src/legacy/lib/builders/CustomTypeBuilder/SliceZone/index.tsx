@@ -338,7 +338,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         typeName={customType.label ?? customType.id}
         localSlices={availableSlicesToAdd.map((slice) => ({
           ...Slices.fromSM(slice.model),
-          thumbnailUrl: Object.values(slice.screenshots)[0]?.url,
+          thumbnailUrl: getFirstVariationScreenshot(slice),
         }))}
         isEveryLocalSliceAdded={
           availableSlices.length > 0 && availableSlicesToAdd.length === 0
@@ -454,5 +454,10 @@ const SliceZone: React.FC<SliceZoneProps> = ({
     </>
   );
 };
+
+function getFirstVariationScreenshot(slice: ComponentUI): string | undefined {
+  if ("default" in slice.screenshots) return slice.screenshots.default.url;
+  return Object.values(slice.screenshots)[0]?.url;
+}
 
 export default SliceZone;
