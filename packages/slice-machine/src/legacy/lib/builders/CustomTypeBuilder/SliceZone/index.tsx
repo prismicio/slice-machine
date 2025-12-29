@@ -129,6 +129,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       slices: getFrontendSlices(store),
     }),
   );
+  console.log({ remoteSlices, libraries });
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
   const { openLoginModal } = useSliceMachineActions();
@@ -146,6 +147,7 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         : { availableSlices: [], slicesInSliceZone: [], notFound: [] },
     [sliceZone, libraries],
   );
+
   const [isDeleteSliceZoneModalOpen, setIsDeleteSliceZoneModalOpen] =
     useState(false);
 
@@ -334,10 +336,13 @@ const SliceZone: React.FC<SliceZoneProps> = ({
         open={isUpdateSliceZoneModalOpen}
         location={`${customType.format}_type`}
         typeName={customType.label ?? customType.id}
-        availableSlices={availableSlicesToAdd.map((slice) => ({
+        localSlices={availableSlicesToAdd.map((slice) => ({
           ...Slices.fromSM(slice.model),
           thumbnailUrl: Object.values(slice.screenshots)[0]?.url,
         }))}
+        isEveryLocalSliceAdded={
+          availableSlices.length > 0 && availableSlicesToAdd.length === 0
+        }
         onSuccess={({ slices }) => {
           const newCustomType = addSlicesToSliceZone({
             customType,

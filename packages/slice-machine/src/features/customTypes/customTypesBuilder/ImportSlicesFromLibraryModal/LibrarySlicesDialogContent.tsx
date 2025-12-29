@@ -16,13 +16,13 @@ import {
   ScrollArea,
   Skeleton,
   Text,
-  TextInput,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { Suspense, useMemo, useRef, useState } from "react";
+import { ReactNode, Suspense, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
+import { EmptyView } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/EmptyView";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
@@ -32,12 +32,13 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { DialogButtons, DialogButtonsSkeleton } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
-import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
+import { useGitIntegration } from "./hooks/useGitIntegration";
 import { SliceCard } from "./SliceCard";
 import {
   CommonDialogContentProps,
-  GitHubRepository,
+  GitIntegration,
   NewSlice,
+  RepositorySelection,
   SliceImport,
 } from "./types";
 import { addSlices } from "./utils/addSlices";
@@ -57,25 +58,29 @@ function LibrarySlicesDialogSuspenseContent(
 ) {
   const { open, location, typeName, onSelectTab, onSuccess, selected } = props;
 
-  const [githubUrl, setGithubUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSlices, setSelectedSlices] = useState<SliceImport[]>([]);
+
+  const [selectedRepository, setSelectedRepository] =
+    useState<RepositorySelection>();
 
   const {
     integrations,
     isLoadingSlices,
     importSlicesFromGithub,
-    slices: importedSlices,
-    resetSlices,
-  } = useImportSlicesFromGithub();
-
-  const repositories = useMemo(() => {
-    return integrations.map((integration) => integration.repositories).flat();
-  }, [integrations]);
+    importedSlices,
+    resetImportedSlices,
+  } = useGitIntegration();
 
   const smActions = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const { completeStep: completeOnboardingStep } = useOnboarding();
+  const { repositoryUrl } = useRepositoryInformation();
+
+  const configureUrl = new URL(
+    "settings/git-integration",
+    repositoryUrl,
+  ).toString();
 
   /**
    * Keeps track of the current instance id.
@@ -86,18 +91,19 @@ function LibrarySlicesDialogSuspenseContent(
   useStableEffect(() => {
     if (!open) {
       setSelectedSlices([]);
-      resetSlices();
-      setGithubUrl("");
+      resetImportedSlices();
       instanceId.current = crypto.randomUUID();
     }
   }, [open]);
 
-  const onSelectAll = (checked: boolean) => {
-    setSelectedSlices(checked ? importedSlices : []);
+  const onSelectRepository = (repository: RepositorySelection) => {
+    setSelectedRepository(repository);
+    setSelectedSlices([]);
+    void importSlicesFromGithub({ repository });
   };
 
-  const onImport = () => {
-    void importSlicesFromGithub(githubUrl);
+  const onSelectAll = (checked: boolean) => {
+    setSelectedSlices(checked ? importedSlices : []);
   };
 
   const onSelect = (slice: SliceImport) => {
@@ -177,7 +183,7 @@ function LibrarySlicesDialogSuspenseContent(
 
       setIsSubmitting(false);
       instanceId.current = crypto.randomUUID();
-      resetSlices();
+      resetImportedSlices();
 
       void completeOnboardingStep("createSlice");
 
@@ -224,110 +230,146 @@ function LibrarySlicesDialogSuspenseContent(
         onSelectTab={onSelectTab}
         rightContent={
           <RepositorySelector
-            repositories={repositories}
-            onValueChange={setGithubUrl}
+            integrations={integrations}
+            selectedRepository={selectedRepository}
+            onSelectRepository={onSelectRepository}
+            configureUrl={configureUrl}
           />
         }
       />
 
       <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
-        {importedSlices.length > 0 ? (
-          <Box flexDirection="column" flexGrow={1} minHeight={0}>
-            <Box
-              padding={{ block: 12, inline: CARD_SPACING }}
-              alignItems="center"
-              gap={8}
-            >
-              <InlineLabel value={selectAllLabel}>
-                <Checkbox
-                  checked={allSelected}
-                  indeterminate={someSelected && !allSelected}
-                  onCheckedChange={onSelectAll}
-                />
-              </InlineLabel>
-            </Box>
-            <ScrollArea stableScrollbar={false}>
-              <Box
-                display="grid"
-                gridTemplateColumns="1fr 1fr 1fr"
-                gap={CARD_SPACING}
-                padding={{ inline: CARD_SPACING, bottom: CARD_SPACING }}
-              >
-                {importedSlices.map((slice) => {
-                  const isSelected = selectedSlices.some(
-                    (s) => s.model.id === slice.model.id,
-                  );
-                  return (
-                    <SliceCard
-                      model={slice.model}
-                      thumbnailUrl={slice.thumbnailUrl}
-                      key={slice.model.id}
-                      selected={isSelected}
-                      onSelectedChange={() => onSelect(slice)}
-                    />
-                  );
-                })}
-              </Box>
-            </ScrollArea>
-          </Box>
+        {!isLoadingSlices ? (
+          <>
+            {integrations.length > 0 ? (
+              <>
+                {selectedRepository ? (
+                  <>
+                    {importedSlices.length > 0 ? (
+                      <>
+                        <Box flexDirection="column" flexGrow={1} minHeight={0}>
+                          <Box
+                            padding={{ block: 12, inline: CARD_SPACING }}
+                            alignItems="center"
+                            gap={8}
+                          >
+                            <InlineLabel value={selectAllLabel}>
+                              <Checkbox
+                                checked={allSelected}
+                                indeterminate={someSelected && !allSelected}
+                                onCheckedChange={onSelectAll}
+                              />
+                            </InlineLabel>
+                          </Box>
+                          <ScrollArea stableScrollbar={false}>
+                            <Box
+                              display="grid"
+                              gridTemplateColumns="1fr 1fr 1fr"
+                              gap={CARD_SPACING}
+                              padding={{
+                                inline: CARD_SPACING,
+                                bottom: CARD_SPACING,
+                              }}
+                            >
+                              {importedSlices.map((slice) => {
+                                const isSelected = selectedSlices.some(
+                                  (s) => s.model.id === slice.model.id,
+                                );
+                                return (
+                                  <SliceCard
+                                    model={slice.model}
+                                    thumbnailUrl={slice.thumbnailUrl}
+                                    key={slice.model.id}
+                                    selected={isSelected}
+                                    onSelectedChange={() => onSelect(slice)}
+                                  />
+                                );
+                              })}
+                            </Box>
+                          </ScrollArea>
+                        </Box>
+
+                        <DialogButtons
+                          totalSelected={selectedSlices.length}
+                          onSubmit={() => void onSubmit()}
+                          isSubmitting={isSubmitting}
+                          typeName={typeName}
+                        />
+                      </>
+                    ) : (
+                      <EmptyView
+                        title="Nothing to import"
+                        description="No slices were found in the selected repository."
+                        icon="alert"
+                      />
+                    )}
+                  </>
+                ) : (
+                  <EmptyView
+                    title="No repositories selected"
+                    description="Choose a GitHub repository from the menu above."
+                    icon="alert"
+                  />
+                )}
+              </>
+            ) : (
+              <EmptyView
+                title="GitHub connection required"
+                description="Connect your GitHub account to access repositories and set a library for this project."
+                icon="alert"
+                children={
+                  <Button
+                    textWeight="normal"
+                    size="medium"
+                    color="grey"
+                    // TODO: Replace add with github icon when available
+                    startIcon="add"
+                    asChild
+                  >
+                    <a href={configureUrl} target="_blank">
+                      Connect GitHub
+                    </a>
+                  </Button>
+                }
+              />
+            )}
+          </>
         ) : (
-          <Box
-            padding={CARD_SPACING}
-            height="100%"
-            flexDirection="column"
-            gap={CARD_SPACING}
-          >
-            <Box flexDirection="column" gap={8}>
-              <Box
-                display="flex"
-                flexDirection="column"
-                gap={8}
-                padding={16}
-                border
-                borderRadius={8}
-              >
-                <Text color="grey11">Import from GitHub</Text>
-                <TextInput
-                  placeholder="https://github.com/username/repository"
-                  value={githubUrl}
-                  onValueChange={setGithubUrl}
-                />
-                <Button
-                  onClick={() => void onImport()}
-                  disabled={!githubUrl.trim() || isLoadingSlices}
-                  loading={isLoadingSlices}
-                  color="purple"
-                >
-                  {isLoadingSlices ? "Loading slices..." : "Import from GitHub"}
-                </Button>
-              </Box>
-            </Box>
-          </Box>
+          <SlicesLoadingSkeleton />
         )}
       </Box>
-
-      <DialogButtons
-        totalSelected={selectedSlices.length}
-        onSubmit={() => void onSubmit()}
-        isSubmitting={isSubmitting}
-        typeName={typeName}
-      />
     </DialogContent>
   );
 }
 
-function RepositorySelector(props: {
-  repositories: GitHubRepository[];
-  onValueChange: (value: string) => void;
-}) {
-  const { repositories } = props;
+type RepositorySelectorProps = {
+  integrations: GitIntegration[];
+  selectedRepository: RepositorySelection | undefined;
+  onSelectRepository: (repository: RepositorySelection) => void;
+  configureUrl: string;
+};
 
-  const [filter, setFilter] = useState("");
+function RepositorySelector(props: RepositorySelectorProps) {
+  const { integrations, selectedRepository, onSelectRepository, configureUrl } =
+    props;
+
   const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState("");
 
-  const { repositoryUrl } = useRepositoryInformation();
+  const onSelect = (repository: RepositorySelection) => {
+    onSelectRepository(repository);
+    setOpen(false);
+  };
 
-  const configureUrl = new URL("settings/git-integration", repositoryUrl);
+  const repositories = useMemo(() => {
+    return integrations.flatMap((integration) =>
+      integration.repositories.map((repository) => ({
+        ...repository,
+        integrationId: integration.id,
+      })),
+    );
+  }, [integrations]);
+
   const filteredRepositories = repositories.filter((repository) =>
     repository.fullName.toLowerCase().includes(filter.toLowerCase()),
   );
@@ -344,7 +386,9 @@ function RepositorySelector(props: {
           size="large"
           flexContent
         >
-          Select a GitHub repository
+          {selectedRepository
+            ? selectedRepository.fullName
+            : "Select a GitHub repository"}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -361,16 +405,32 @@ function RepositorySelector(props: {
             endAdornment
           />
           <ComboBoxContent>
-            {filteredRepositories.map((repository) => (
-              <ComboBoxItem
-                key={repository.fullName}
-                value={repository.fullName}
-              >
-                <Box padding={{ inline: 8, block: 4 }}>
-                  <Text variant="normal">{repository.fullName}</Text>
-                </Box>
+            {filteredRepositories.length > 0 ? (
+              <>
+                {/* TODO: Scroll to the selected repository */}
+                {filteredRepositories.map((repository) => (
+                  <ComboBoxItem
+                    key={repository.fullName}
+                    value={repository.fullName}
+                    onCheckedChange={() => onSelect(repository)}
+                    checked={
+                      selectedRepository?.fullName === repository.fullName
+                    }
+                  >
+                    <ComboBoxItemContent>
+                      {repository.fullName}
+                    </ComboBoxItemContent>
+                  </ComboBoxItem>
+                ))}
+              </>
+            ) : (
+              <ComboBoxItem value="none" disabled>
+                <ComboBoxItemContent disabled>
+                  No repositories found
+                </ComboBoxItemContent>
               </ComboBoxItem>
-            ))}
+            )}
+
             <ComboboxAction>
               <Button
                 textWeight="normal"
@@ -381,15 +441,45 @@ function RepositorySelector(props: {
                 asChild
                 invisible
               >
-                <a href={configureUrl.toString()}>
-                  Configure Repositories on Prismic
-                </a>
+                <a href={configureUrl}>Configure Repositories on Prismic</a>
               </Button>
             </ComboboxAction>
           </ComboBoxContent>
         </ComboBox>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function ComboBoxItemContent(props: {
+  children: ReactNode;
+  disabled?: boolean;
+}) {
+  const { children, disabled } = props;
+  return (
+    <Box padding={{ inline: 8, block: 4 }}>
+      <Text variant="normal" color={disabled === true ? "grey9" : "grey12"}>
+        {children}
+      </Text>
+    </Box>
+  );
+}
+
+function SlicesLoadingSkeleton() {
+  return (
+    <Box
+      flexGrow={1}
+      display="grid"
+      gridTemplateColumns="1fr 1fr 1fr"
+      padding={16}
+      gap={16}
+      minHeight={0}
+      overflow="hidden"
+    >
+      {Array.from({ length: 9 }).map((_, index) => (
+        <Skeleton key={index} height={240} width="100%" />
+      ))}
+    </Box>
   );
 }
 
@@ -406,19 +496,7 @@ export function LibrarySlicesDialogContent(
               onSelectTab={props.onSelectTab}
               rightContent={<Skeleton height={40} width={420} />}
             />
-            <Box
-              flexGrow={1}
-              display="grid"
-              gridTemplateColumns="1fr 1fr 1fr"
-              padding={16}
-              gap={16}
-              minHeight={0}
-              overflow="hidden"
-            >
-              {Array.from({ length: 9 }).map((_, index) => (
-                <Skeleton key={index} height={240} width="100%" />
-              ))}
-            </Box>
+            <SlicesLoadingSkeleton />
             <DialogButtonsSkeleton />
           </>
         }

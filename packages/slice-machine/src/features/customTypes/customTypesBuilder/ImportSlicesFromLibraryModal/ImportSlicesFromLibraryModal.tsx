@@ -5,14 +5,15 @@ import {
   DialogHeader,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { LibrarySlicesDialogContent } from "./LibrarySlicesDialogContent";
 import { LocalSlicesDialogContent } from "./LocalSlicesDialogContent";
 import { CommonDialogProps, DialogTab } from "./types";
 
 type ImportSlicesFromLibraryModalProps = CommonDialogProps & {
-  availableSlices: (SharedSlice & { thumbnailUrl?: string })[];
+  localSlices: (SharedSlice & { thumbnailUrl?: string })[];
+  isEveryLocalSliceAdded: boolean;
   onSuccess: (args: {
     slices: { model: SharedSlice; langSmithUrl?: string }[];
     library?: string;
@@ -22,15 +23,19 @@ type ImportSlicesFromLibraryModalProps = CommonDialogProps & {
 export function ImportSlicesFromLibraryModal(
   props: ImportSlicesFromLibraryModalProps,
 ) {
-  const { open, availableSlices = [], onClose, ...commonProps } = props;
+  const { open, localSlices, isEveryLocalSliceAdded, onClose, ...commonProps } =
+    props;
   const [selectedTab, setSelectedTab] = useState<DialogTab>("local");
 
   const onOpenChange = (open: boolean) => {
+    if (!open) onClose();
+  };
+
+  useEffect(() => {
     if (!open) {
-      onClose();
       setTimeout(() => setSelectedTab("local"), 250); // wait for the modal fade animation
     }
-  };
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -44,7 +49,8 @@ export function ImportSlicesFromLibraryModal(
           open={open}
           selected={selectedTab === "local"}
           onSelectTab={setSelectedTab}
-          availableSlices={availableSlices}
+          slices={localSlices}
+          isEveryLocalSliceAdded={isEveryLocalSliceAdded}
           onClose={onClose}
         />
         <LibrarySlicesDialogContent

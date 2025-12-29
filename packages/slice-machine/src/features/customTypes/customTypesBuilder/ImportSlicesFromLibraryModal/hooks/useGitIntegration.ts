@@ -1,10 +1,10 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { managerClient } from "@/managerClient";
 
-import { SliceImport } from "../types";
+import { RepositorySelection, SliceImport } from "../types";
 import {
   fetchSlicesFromLibraries,
   getDefaultBranch,
@@ -12,34 +12,53 @@ import {
   parseGithubUrl,
 } from "../utils/github";
 
-export function useImportSlicesFromGithub() {
+export function useGitIntegration() {
   const [isLoadingSlices, setIsLoadingSlices] = useState(false);
-  const [slices, setSlices] = useState<SliceImport[]>([]);
+  const [importedSlices, setImportedSlices] = useState<SliceImport[]>([]);
+
   const { data: integrationsData } = useSuspenseQuery({
     queryKey: ["getIntegrations"],
     queryFn: () => managerClient.prismicRepository.fetchGitIntegrations(),
   });
+  const { mutateAsync: fetchGitIntegrationToken } = useMutation({
+    mutationFn: (args: { integrationId: string }) => {
+      return managerClient.prismicRepository.fetchGitIntegrationToken({
+        integrationId: args.integrationId,
+      });
+    },
+  });
 
-  const resetSlices = () => {
-    setSlices([]);
+  const resetImportedSlices = () => {
+    setImportedSlices([]);
     setIsLoadingSlices(false);
   };
 
-  const importSlicesFromGithub = async (githubUrl: string) => {
+  const importSlicesFromGithub = async (args: {
+    repository: RepositorySelection;
+  }) => {
     try {
+      const { repository } = args;
+
+      resetImportedSlices();
       setIsLoadingSlices(true);
 
-      const { owner, repo } = parseGithubUrl(githubUrl);
+      const { token } = await fetchGitIntegrationToken({
+        integrationId: repository.integrationId,
+      });
+
+      const { owner, repo } = parseGithubUrl(
+        new URL(args.repository.fullName, "https://github.com").toString(),
+      );
       if (!owner || !repo) {
         throw new GitHubImportError("Invalid GitHub URL format");
       }
 
-      const branch = await getDefaultBranch({ owner, repo });
+      const branch = await getDefaultBranch({ owner, repo, token });
 
       let libraries: string[] | undefined;
 
       try {
-        libraries = await getSliceLibraries({ owner, repo, branch });
+        libraries = await getSliceLibraries({ owner, repo, branch, token });
       } catch (error) {
         throw new GitHubImportError(`
           Failed to fetch slicemachine.config.json: ${
@@ -59,13 +78,14 @@ export function useImportSlicesFromGithub() {
         repo,
         branch,
         libraries,
+        token,
       });
 
       if (fetchedSlices.length === 0) {
         throw new GitHubImportError("No slices were found in the libraries.");
       }
 
-      setSlices(fetchedSlices);
+      setImportedSlices(fetchedSlices);
       toast.success(
         `Found ${fetchedSlices.length} slice(s) from ${libraries.length} library/libraries`,
       );
@@ -91,8 +111,8 @@ export function useImportSlicesFromGithub() {
   return {
     integrations: integrationsData.integrations ?? [],
     isLoadingSlices,
-    slices,
-    resetSlices,
+    importedSlices,
+    resetImportedSlices,
     importSlicesFromGithub,
   };
 }

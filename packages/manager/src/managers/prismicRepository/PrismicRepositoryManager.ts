@@ -107,6 +107,10 @@ const GitIntegrationsSchema = z.object({
 	),
 });
 
+const GitIntegrationTokenSchema = z.object({
+	token: z.string(),
+});
+
 export class PrismicRepositoryManager extends BaseManager {
 	// TODO: Add methods for repository-specific actions. E.g. creating a
 	// new repository.
@@ -759,6 +763,39 @@ export class PrismicRepositoryManager extends BaseManager {
 		}
 
 		throw new Error("Failed to fetch integrations.");
+	}
+
+	async fetchGitIntegrationToken(args: {
+		integrationId: string;
+	}): Promise<z.infer<typeof GitIntegrationTokenSchema>> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL(
+			`integrations/${args.integrationId}/token`,
+			API_ENDPOINTS.GitService,
+		);
+		url.searchParams.set("repository", repositoryName);
+
+		const res = await this._fetch({ url, method: "POST" });
+
+		if (!res.ok) {
+			const text = await res.text();
+			throw new Error(
+				`Failed to fetch token for integration ${args.integrationId}`,
+				{ cause: text },
+			);
+		}
+
+		const json = await res.json();
+		const { value, error } = decode(GitIntegrationTokenSchema, json);
+
+		if (error) {
+			throw new UnexpectedDataError(
+				`Failed to decode integration token: ${error.errors.join(", ")}`,
+			);
+		}
+
+		return value;
 	}
 
 	private _decodeLimitOrThrow(

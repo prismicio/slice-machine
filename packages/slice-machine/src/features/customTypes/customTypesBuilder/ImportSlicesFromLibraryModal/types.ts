@@ -41,7 +41,16 @@ export type CommonDialogContentProps = CommonDialogProps & {
   selected: boolean;
 };
 
+export type GitIntegration = {
+  id: string;
+  repositories: GitHubRepository[];
+};
+
 export type GitHubRepository = {
   name: string;
   fullName: string;
 };
+
+export type RepositorySelection = {
+  integrationId: string;
+} & GitHubRepository;
