@@ -1,5 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
+import { managerClient } from "@/managerClient";
 
 import { SliceImport } from "../types";
 import {
@@ -12,6 +15,12 @@ import {
 export function useImportSlicesFromGithub() {
   const [isLoadingSlices, setIsLoadingSlices] = useState(false);
   const [slices, setSlices] = useState<SliceImport[]>([]);
+  const { data: integrations } = useQuery({
+    queryKey: ["getIntegrations"],
+    queryFn: () => managerClient.prismicRepository.fetchGitIntegrations(),
+  });
+
+  console.log(integrations);
 
   const resetSlices = () => {
     setSlices([]);
