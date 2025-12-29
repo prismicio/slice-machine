@@ -11,6 +11,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  ErrorBoundary,
   Icon,
   InlineLabel,
   ScrollArea,
@@ -490,21 +491,34 @@ export function LibrarySlicesDialogContent(
 ) {
   return (
     <DialogContent selected={props.selected}>
-      <Suspense
-        fallback={
+      <ErrorBoundary
+        renderError={() => (
           <>
-            <DialogTabs
-              selectedTab="library"
-              onSelectTab={props.onSelectTab}
-              rightContent={<Skeleton height={40} width={420} />}
+            <DialogTabs selectedTab="library" onSelectTab={props.onSelectTab} />
+            <EmptyView
+              title="Failed to load library slices"
+              icon="alert"
+              color="tomato"
             />
-            <SlicesLoadingSkeleton />
-            <DialogButtonsSkeleton />
           </>
-        }
+        )}
       >
-        <LibrarySlicesDialogSuspenseContent {...props} />
-      </Suspense>
+        <Suspense
+          fallback={
+            <>
+              <DialogTabs
+                selectedTab="library"
+                onSelectTab={props.onSelectTab}
+                rightContent={<Skeleton height={40} width={420} />}
+              />
+              <SlicesLoadingSkeleton />
+              <DialogButtonsSkeleton />
+            </>
+          }
+        >
+          <LibrarySlicesDialogSuspenseContent {...props} />
+        </Suspense>
+      </ErrorBoundary>
     </DialogContent>
   );
 }
