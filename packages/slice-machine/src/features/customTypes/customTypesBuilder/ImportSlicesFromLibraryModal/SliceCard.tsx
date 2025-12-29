@@ -1,4 +1,4 @@
-import { Checkbox } from "@prismicio/editor-ui";
+import { Box, Checkbox, Text } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 
 import { Card, CardFooter, CardMedia } from "@/components/Card";
@@ -22,7 +22,18 @@ export function SliceCard(props: SliceCardProps) {
       {thumbnailUrl !== undefined && thumbnailUrl ? (
         <CardMedia src={thumbnailUrl} />
       ) : (
-        <CardMedia component="div" />
+        <CardMedia component="div">
+          <Box
+            alignItems="center"
+            flexDirection="column"
+            gap={8}
+            justifyContent="center"
+          >
+            <Text color="grey11" component="span">
+              No screenshot available
+            </Text>
+          </Box>
+        </CardMedia>
       )}
       <CardFooter
         title={model.name}
