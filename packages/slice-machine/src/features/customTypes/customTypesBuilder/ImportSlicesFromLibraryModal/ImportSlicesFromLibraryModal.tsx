@@ -23,29 +23,29 @@ type ImportSlicesFromLibraryModalProps = CommonDialogProps & {
 export function ImportSlicesFromLibraryModal(
   props: ImportSlicesFromLibraryModalProps,
 ) {
-  const { open, localSlices, isEveryLocalSliceAdded, onClose, ...commonProps } =
-    props;
+  const {
+    open,
+    localSlices,
+    isEveryLocalSliceAdded,
+    onClose,
+    ...contentProps
+  } = props;
+
   const [selectedTab, setSelectedTab] = useState<DialogTab>("local");
 
-  const onOpenChange = (open: boolean) => {
-    if (!open) onClose();
-  };
-
   useEffect(() => {
-    if (!open) {
-      setTimeout(() => setSelectedTab("local"), 250); // wait for the modal fade animation
-    }
+    if (!open) setTimeout(() => setSelectedTab("local"), 250); // wait for the modal fade animation
   }, [open]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogHeader title="Reuse an existing slice" />
       <DialogContent gap={0}>
         <DialogDescription hidden>
           Select existing slices or import slices from a GitHub repository
         </DialogDescription>
         <LocalSlicesDialogContent
-          {...commonProps}
+          {...contentProps}
           open={open}
           selected={selectedTab === "local"}
           onSelectTab={setSelectedTab}
@@ -54,7 +54,7 @@ export function ImportSlicesFromLibraryModal(
           onClose={onClose}
         />
         <LibrarySlicesDialogContent
-          {...commonProps}
+          {...contentProps}
           open={open}
           selected={selectedTab === "library"}
           onSelectTab={setSelectedTab}
