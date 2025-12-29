@@ -19,6 +19,7 @@ import {
   Text,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { ReactNode, Suspense, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -323,8 +324,8 @@ function LibrarySlicesDialogSuspenseContent(
                     textWeight="normal"
                     size="medium"
                     color="grey"
-                    // TODO: Replace add with github icon when available
-                    startIcon="add"
+                    // TODO: Replace with github icon when available
+                    startIcon="prismic"
                     asChild
                   >
                     <a href={configureUrl} target="_blank">
@@ -486,6 +487,42 @@ function SlicesLoadingSkeleton() {
   );
 }
 
+function LibrarySlicesLoggedInContent(props: LibrarySlicesDialogContentProps) {
+  const { openLoginModal } = useSliceMachineActions();
+  const queryClient = useQueryClient();
+  const { data: isLoggedIn } = useSuspenseQuery({
+    queryKey: ["checkIsLoggedIn"],
+    queryFn: () => managerClient.user.checkIsLoggedIn(),
+    gcTime: 0,
+    staleTime: 0,
+  });
+
+  if (!isLoggedIn) {
+    const onLogin = () => {
+      props.onClose();
+      openLoginModal();
+      void queryClient.invalidateQueries({ queryKey: ["checkIsLoggedIn"] });
+    };
+
+    return (
+      <>
+        <DialogTabs selectedTab="library" onSelectTab={props.onSelectTab} />
+        <EmptyView
+          title="You are logged out"
+          description="This action requires you to be logged in. Please log in to continue."
+          icon="logout"
+        >
+          <Button size="small" color="grey" onClick={onLogin}>
+            Log in
+          </Button>
+        </EmptyView>
+      </>
+    );
+  }
+
+  return <LibrarySlicesDialogSuspenseContent {...props} />;
+}
+
 export function LibrarySlicesDialogContent(
   props: LibrarySlicesDialogContentProps,
 ) {
@@ -516,7 +553,7 @@ export function LibrarySlicesDialogContent(
             </>
           }
         >
-          <LibrarySlicesDialogSuspenseContent {...props} />
+          <LibrarySlicesLoggedInContent {...props} />
         </Suspense>
       </ErrorBoundary>
     </DialogContent>

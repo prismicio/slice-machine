@@ -4,8 +4,8 @@ import { ReactNode } from "react";
 type EmptyViewProps = {
   title: string;
   description?: string;
-  // TODO: Replace add with github icon when available
-  icon: "add" | "alert";
+  // TODO: Replace prismic with github icon when available
+  icon: "prismic" | "alert" | "logout";
   color?: "purple" | "tomato";
   children?: ReactNode;
 };
