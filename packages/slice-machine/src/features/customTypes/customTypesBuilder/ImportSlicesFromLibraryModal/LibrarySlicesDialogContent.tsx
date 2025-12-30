@@ -1,3 +1,4 @@
+import { useDebounce } from "@prismicio/editor-support/React";
 import {
   Box,
   Button,
@@ -34,7 +35,6 @@ import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
 import { EmptyView } from "./EmptyView";
 import { useGitIntegration } from "./hooks/useGitIntegration";
-import { useStableDebouncedEffect } from "./hooks/useStableDebouncedEffect";
 import { SliceCard } from "./SliceCard";
 import {
   CommonDialogContentProps,
@@ -88,8 +88,8 @@ function LibrarySlicesDialogSuspenseContent(
     }
   }, [isTabSelected]);
 
-  useStableDebouncedEffect(() => {
-    if (selectedRepository) {
+  useDebounce(selectedSlices, 1000, () => {
+    if (selectedRepository && selectedSlices.length > 0) {
       void telemetry.track({
         event: "slice-library:slice-selected",
         slices_count: selectedSlices.length,
@@ -97,7 +97,7 @@ function LibrarySlicesDialogSuspenseContent(
         destination_project_id: prismicRepositoryInformation.repositoryName,
       });
     }
-  }, [selectedSlices]);
+  });
 
   const onSelectRepository = (repository: RepositorySelection) => {
     setSelectedRepository(repository);
@@ -380,7 +380,7 @@ function RepositorySelector(props: RepositorySelectorProps) {
     );
   }, [integrations]);
 
-  useStableDebouncedEffect(() => {
+  useEffect(() => {
     if (isTabSelected && repositories.length > 0) {
       void telemetry.track({
         event: "slice-library:projects-listed",
