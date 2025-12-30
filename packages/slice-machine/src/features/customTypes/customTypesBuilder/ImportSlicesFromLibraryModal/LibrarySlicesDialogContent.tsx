@@ -435,19 +435,30 @@ function ComboBoxItemContent(props: {
 
 function SlicesLoadingSkeleton() {
   return (
-    <Box
-      flexGrow={1}
-      display="grid"
-      gridTemplateColumns="1fr 1fr 1fr"
-      padding={16}
-      gap={16}
-      minHeight={0}
-      overflow="hidden"
-    >
-      {Array.from({ length: 9 }).map((_, index) => (
-        <Skeleton key={index} height={240} width="100%" />
-      ))}
-    </Box>
+    <>
+      <Box
+        flexGrow={1}
+        minHeight={0}
+        flexDirection="column"
+        padding={{ inline: 16, top: 16 }}
+        gap={16}
+      >
+        <Skeleton height={24} width={125} />
+        <Box
+          flexGrow={1}
+          display="grid"
+          gridTemplateColumns="1fr 1fr 1fr"
+          gap={16}
+          padding={{ bottom: 16 }}
+          overflow="hidden"
+        >
+          {Array.from({ length: 9 }).map((_, index) => (
+            <Skeleton key={index} height={240} width="100%" />
+          ))}
+        </Box>
+      </Box>
+      <DialogButtonsSkeleton />
+    </>
   );
 }
 
@@ -515,7 +526,6 @@ export function LibrarySlicesDialogContent(
                 rightContent={<Skeleton height={40} width={420} />}
               />
               <SlicesLoadingSkeleton />
-              <DialogButtonsSkeleton />
             </>
           }
         >
