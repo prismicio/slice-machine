@@ -64,10 +64,10 @@ function LibrarySlicesDialogSuspenseContent(
 
   const {
     integrations,
-    isLoadingSlices,
-    importSlicesFromGithub,
     importedSlices,
     resetImportedSlices,
+    importSlicesFromGithub,
+    isImportingSlices: isImporting,
   } = useGitIntegration();
 
   const smActions = useSliceMachineActions();
@@ -214,95 +214,85 @@ function LibrarySlicesDialogSuspenseContent(
       />
 
       <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
-        {!isLoadingSlices ? (
+        {!isImporting && importedSlices.length > 0 && (
           <>
-            {integrations.length > 0 ? (
-              <>
-                {selectedRepository ? (
-                  <>
-                    {importedSlices.length > 0 ? (
-                      <>
-                        <Box flexDirection="column" flexGrow={1} minHeight={0}>
-                          <Box
-                            padding={{ block: 12, inline: 16 }}
-                            alignItems="center"
-                            gap={8}
-                          >
-                            <InlineLabel value={selectAllLabel}>
-                              <Checkbox
-                                checked={allSelected}
-                                indeterminate={someSelected && !allSelected}
-                                onCheckedChange={onSelectAll}
-                              />
-                            </InlineLabel>
-                          </Box>
-                          <ScrollArea stableScrollbar={false}>
-                            <Box
-                              display="grid"
-                              gridTemplateColumns="1fr 1fr 1fr"
-                              gap={16}
-                              padding={{ inline: 16, bottom: 16 }}
-                            >
-                              {importedSlices.map((slice) => {
-                                const isSelected = selectedSlices.some(
-                                  (s) => s.model.id === slice.model.id,
-                                );
-                                return (
-                                  <SliceCard
-                                    model={slice.model}
-                                    thumbnailUrl={slice.thumbnailUrl}
-                                    key={slice.model.id}
-                                    selected={isSelected}
-                                    onSelectedChange={() => onSelect(slice)}
-                                  />
-                                );
-                              })}
-                            </Box>
-                          </ScrollArea>
-                        </Box>
-
-                        <DialogButtons
-                          totalSelected={selectedSlices.length}
-                          onSubmit={() => void onSubmit()}
-                          isSubmitting={isSubmitting}
-                          typeName={typeName}
-                        />
-                      </>
-                    ) : (
-                      <EmptyView
-                        title="Nothing to import"
-                        description="No slices were found in the selected repository."
-                        icon="alert"
-                      />
-                    )}
-                  </>
-                ) : (
-                  <EmptyView
-                    title="No repositories selected"
-                    description="Choose a GitHub repository from the menu above."
-                    icon="alert"
+            <Box flexDirection="column" flexGrow={1} minHeight={0}>
+              <Box
+                padding={{ block: 12, inline: 16 }}
+                alignItems="center"
+                gap={8}
+              >
+                <InlineLabel value={selectAllLabel}>
+                  <Checkbox
+                    checked={allSelected}
+                    indeterminate={someSelected && !allSelected}
+                    onCheckedChange={onSelectAll}
                   />
-                )}
-              </>
-            ) : (
-              <EmptyView
-                title="GitHub connection required"
-                description={`Connect your GitHub account to access
-repositories and set a library for this project.`}
-                icon="alert"
-                actions={
-                  <Button size="medium" color="grey" startIcon="github" asChild>
-                    <a href={configureUrl} target="_blank">
-                      Connect GitHub
-                    </a>
-                  </Button>
-                }
-              />
-            )}
+                </InlineLabel>
+              </Box>
+              <ScrollArea stableScrollbar={false}>
+                <Box
+                  display="grid"
+                  gridTemplateColumns="1fr 1fr 1fr"
+                  gap={16}
+                  padding={{ inline: 16, bottom: 16 }}
+                >
+                  {importedSlices.map((slice) => {
+                    const isSelected = selectedSlices.some(
+                      (s) => s.model.id === slice.model.id,
+                    );
+                    return (
+                      <SliceCard
+                        model={slice.model}
+                        thumbnailUrl={slice.thumbnailUrl}
+                        key={slice.model.id}
+                        selected={isSelected}
+                        onSelectedChange={() => onSelect(slice)}
+                      />
+                    );
+                  })}
+                </Box>
+              </ScrollArea>
+            </Box>
+
+            <DialogButtons
+              totalSelected={selectedSlices.length}
+              onSubmit={() => void onSubmit()}
+              isSubmitting={isSubmitting}
+              typeName={typeName}
+            />
           </>
-        ) : (
-          <SlicesLoadingSkeleton />
         )}
+        {!isImporting && integrations.length === 0 && (
+          <EmptyView
+            title="GitHub connection required"
+            description={`Connect your GitHub account to access
+repositories and set a library for this project.`}
+            icon="alert"
+            actions={
+              <Button size="medium" color="grey" startIcon="github" asChild>
+                <a href={configureUrl} target="_blank">
+                  Connect GitHub
+                </a>
+              </Button>
+            }
+          />
+        )}
+        {!isImporting && integrations.length > 0 && !selectedRepository && (
+          <EmptyView
+            title="No repositories selected"
+            description="Choose a GitHub repository from the menu above."
+            icon="alert"
+          />
+        )}
+        {!isImporting && !importedSlices.length && selectedRepository && (
+          <EmptyView
+            title="Nothing to import"
+            description="No slices were found in the selected repository."
+            icon="alert"
+          />
+        )}
+        {isImporting && <SlicesLoadingSkeleton />}
       </Box>
     </DialogContent>
   );
