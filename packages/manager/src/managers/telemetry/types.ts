@@ -60,10 +60,8 @@ export const SegmentEventType = {
 	slice_library_slice_selected: "slice-library:slice-selected",
 	slice_library_fetching_started: "slice-library:fetching-started",
 	slice_library_fetching_ended: "slice-library:fetching-ended",
-	slice_library_fetching_failed: "slice-library:fetching-failed",
 	slice_library_import_started: "slice-library:import-started",
-	slice_library_import_complete: "slice-library:import-completed",
-	slice_library_import_failed: "slice-library:import-failed",
+	slice_library_import_ended: "slice-library:import-ended",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -146,14 +144,10 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slice Library - Slice Fetching Started",
 	[SegmentEventType.slice_library_fetching_ended]:
 		"SliceMachine Slice Library - Slice Fetching Ended",
-	[SegmentEventType.slice_library_fetching_failed]:
-		"SliceMachine Slice Library - Slice Fetching Failed",
 	[SegmentEventType.slice_library_import_started]:
 		"SliceMachine Slice Library - Slice Import Started",
-	[SegmentEventType.slice_library_import_complete]:
-		"SliceMachine Slice Library - Slice Import Complete",
-	[SegmentEventType.slice_library_import_failed]:
-		"SliceMachine Slice Library - Slice Import Failed",
+	[SegmentEventType.slice_library_import_ended]:
+		"SliceMachine Slice Library - Slice Import Ended",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -558,16 +552,16 @@ type SliceLibraryFetchingStarted = SegmentEvent<
 >;
 type SliceLibraryFetchingEnded = SegmentEvent<
 	typeof SegmentEventType.slice_library_fetching_ended,
-	{
-		slices_count: number;
-		source_project_id: string;
-	}
->;
-type SliceLibraryFetchingFailed = SegmentEvent<
-	typeof SegmentEventType.slice_library_fetching_failed,
-	{
-		source_project_id: string;
-	}
+	| {
+			error: false;
+			slices_count: number;
+			source_project_id: string;
+	  }
+	| {
+			error: true;
+			slices_count?: never;
+			source_project_id: string;
+	  }
 >;
 type SliceLibraryImportStarted = SegmentEvent<
 	typeof SegmentEventType.slice_library_import_started,
@@ -575,19 +569,20 @@ type SliceLibraryImportStarted = SegmentEvent<
 		source_project_id: string;
 	}
 >;
-type SliceLibraryImportComplete = SegmentEvent<
-	typeof SegmentEventType.slice_library_import_complete,
-	{
-		slices_count: number;
-		source_project_id: string;
-		destination_project_id: string;
-	}
->;
-type SliceLibraryImportFailed = SegmentEvent<
-	typeof SegmentEventType.slice_library_import_failed,
-	{
-		source_project_id: string;
-	}
+type SliceLibraryImportEnded = SegmentEvent<
+	typeof SegmentEventType.slice_library_import_ended,
+	| {
+			error: false;
+			slices_count: number;
+			source_project_id: string;
+			destination_project_id: string;
+	  }
+	| {
+			error: true;
+			slices_count?: never;
+			source_project_id: string;
+			destination_project_id: string;
+	  }
 >;
 
 export type SegmentEvents =
@@ -641,7 +636,5 @@ export type SegmentEvents =
 	| SliceLibrarySliceSelected
 	| SliceLibraryFetchingStarted
 	| SliceLibraryFetchingEnded
-	| SliceLibraryFetchingFailed
 	| SliceLibraryImportStarted
-	| SliceLibraryImportComplete
-	| SliceLibraryImportFailed;
+	| SliceLibraryImportEnded;

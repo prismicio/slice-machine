@@ -204,7 +204,8 @@ function LibrarySlicesDialogSuspenseContent(
       }
 
       void telemetry.track({
-        event: "slice-library:import-completed",
+        event: "slice-library:import-ended",
+        error: false,
         slices_count: createdSlices.length,
         source_project_id: selectedRepository.fullName,
         destination_project_id: prismicRepositoryInformation.repositoryName,
@@ -216,8 +217,10 @@ function LibrarySlicesDialogSuspenseContent(
       toast.error("An unexpected error happened while adding slices.");
 
       void telemetry.track({
-        event: "slice-library:import-failed",
+        event: "slice-library:import-ended",
+        error: true,
         source_project_id: selectedRepository.fullName,
+        destination_project_id: prismicRepositoryInformation.repositoryName,
       });
     }
   };

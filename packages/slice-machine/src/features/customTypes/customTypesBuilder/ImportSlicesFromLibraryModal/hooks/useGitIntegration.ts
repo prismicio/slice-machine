@@ -96,6 +96,7 @@ export function useGitIntegration() {
 
       void telemetry.track({
         event: "slice-library:fetching-ended",
+        error: false,
         slices_count: fetchedSlices.length,
         source_project_id: repository.fullName,
       });
@@ -113,7 +114,8 @@ export function useGitIntegration() {
       }
 
       void telemetry.track({
-        event: "slice-library:fetching-failed",
+        event: "slice-library:fetching-ended",
+        error: true,
         source_project_id: repository.fullName,
       });
 
