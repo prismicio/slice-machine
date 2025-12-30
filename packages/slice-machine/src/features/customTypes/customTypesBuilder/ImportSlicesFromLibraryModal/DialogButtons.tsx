@@ -10,7 +10,7 @@ import { CommonDialogProps } from "./types";
 type DialogButtonsProps = {
   totalSelected: number;
   isSubmitting?: boolean;
-  onSubmit: () => void | Promise<void>;
+  onSubmit: () => void;
   typeName: CommonDialogProps["typeName"];
 };
 
@@ -32,7 +32,7 @@ export function DialogButtons(props: DialogButtonsProps) {
       <DialogActionButton
         disabled={totalSelected === 0}
         loading={isSubmitting}
-        onClick={() => void onSubmit()}
+        onClick={onSubmit}
         size="medium"
       >
         Add to {typeName} ({totalSelected})

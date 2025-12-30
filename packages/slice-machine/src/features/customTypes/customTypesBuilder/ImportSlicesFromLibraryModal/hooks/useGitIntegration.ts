@@ -2,6 +2,7 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { telemetry } from "@/apiClient";
 import { managerClient } from "@/managerClient";
 
 import { RepositorySelection, SliceImport } from "../types";
@@ -32,14 +33,19 @@ export function useGitIntegration() {
     setIsImportingSlices(false);
   };
 
-  const importSlicesFromGithub = async (args: {
+  const fetchSlicesFromGithub = async (args: {
     repository: RepositorySelection;
   }) => {
-    try {
-      const { repository } = args;
+    const { repository } = args;
 
+    try {
       resetImportedSlices();
       setIsImportingSlices(true);
+
+      void telemetry.track({
+        event: "slice-library:fetching-started",
+        source_project_id: repository.fullName,
+      });
 
       const { token } = await fetchGitHubToken({
         integrationId: repository.integrationId,
@@ -88,6 +94,13 @@ export function useGitIntegration() {
         `Found ${fetchedSlices.length} slice(s) from ${libraries.length} library/libraries`,
       );
 
+      void telemetry.track({
+        event: "slice-library:fetching-ended",
+        error: false,
+        slices_count: fetchedSlices.length,
+        source_project_id: repository.fullName,
+      });
+
       return fetchedSlices;
     } catch (error) {
       if (error instanceof GitHubImportError) {
@@ -100,6 +113,12 @@ export function useGitIntegration() {
         );
       }
 
+      void telemetry.track({
+        event: "slice-library:fetching-ended",
+        error: true,
+        source_project_id: repository.fullName,
+      });
+
       return [];
     } finally {
       setIsImportingSlices(false);
@@ -111,7 +130,7 @@ export function useGitIntegration() {
     isImportingSlices,
     importedSlices,
     resetImportedSlices,
-    importSlicesFromGithub,
+    fetchSlicesFromGithub,
   };
 }
 
