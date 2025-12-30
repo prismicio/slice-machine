@@ -75,11 +75,6 @@ function LibrarySlicesDialogSuspenseContent(
   const { completeStep: completeOnboardingStep } = useOnboarding();
   const { repositoryUrl } = useRepositoryInformation();
 
-  const configureUrl = new URL(
-    "settings/git-integration",
-    repositoryUrl,
-  ).toString();
-
   const onSelectRepository = (repository: RepositorySelection) => {
     setSelectedRepository(repository);
     setSelectedSlices([]);
@@ -183,6 +178,11 @@ function LibrarySlicesDialogSuspenseContent(
       throw error;
     }
   };
+
+  const configureUrl = new URL(
+    "settings/git-integration",
+    repositoryUrl,
+  ).toString();
 
   let renderedContent: ReactNode;
 
