@@ -12,7 +12,7 @@ import { ReactNode } from "react";
 type EmptyViewProps = {
   title: string;
   description?: string;
-  icon: "github" | "alert" | "logout";
+  icon: "github" | "alert" | "logout" | "viewDay";
   color?: "purple" | "tomato";
   actions?: ReactNode;
 };
