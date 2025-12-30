@@ -12,8 +12,7 @@ import { ReactNode } from "react";
 type EmptyViewProps = {
   title: string;
   description?: string;
-  // TODO: Replace prismic with github icon when available
-  icon: "prismic" | "alert" | "logout";
+  icon: "github" | "alert" | "logout";
   color?: "purple" | "tomato";
   actions?: ReactNode;
 };

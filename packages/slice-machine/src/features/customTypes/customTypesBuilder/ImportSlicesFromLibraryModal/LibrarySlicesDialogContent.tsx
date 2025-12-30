@@ -287,17 +287,11 @@ function LibrarySlicesDialogSuspenseContent(
             ) : (
               <EmptyView
                 title="GitHub connection required"
-                description="Connect your GitHub account to access repositories and set a library for this project."
+                description={`Connect your GitHub account to access
+repositories and set a library for this project.`}
                 icon="alert"
                 actions={
-                  <Button
-                    textWeight="normal"
-                    size="medium"
-                    color="grey"
-                    // TODO: Replace with github icon when available
-                    startIcon="prismic"
-                    asChild
-                  >
+                  <Button size="medium" color="grey" startIcon="github" asChild>
                     <a href={configureUrl} target="_blank">
                       Connect GitHub
                     </a>
@@ -353,7 +347,7 @@ function RepositorySelector(props: RepositorySelectorProps) {
           endIcon="arrowDropDown"
           textWeight="normal"
           sx={{ width: 420 }}
-          startIcon="label"
+          startIcon="github"
           color="grey"
           size="large"
           flexContent
@@ -479,7 +473,8 @@ function LibrarySlicesLoggedInContent(props: LibrarySlicesDialogContentProps) {
         <DialogTabs selectedTab="library" onSelectTab={props.onSelectTab} />
         <EmptyView
           title="You are logged out"
-          description="This action requires you to be logged in. Please log in to continue."
+          description={`This action requires you to be logged in.
+Please log in to continue.`}
           icon="logout"
           actions={
             <Button size="small" color="grey" onClick={onLogin}>
