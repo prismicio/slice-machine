@@ -2,6 +2,7 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+import { telemetry } from "@/apiClient";
 import { managerClient } from "@/managerClient";
 
 import { RepositorySelection, SliceImport } from "../types";
@@ -10,7 +11,6 @@ import {
   getDefaultBranch,
   getSliceLibraries,
 } from "../utils/github";
-import { telemetry } from "@/apiClient";
 
 export function useGitIntegration() {
   const [isImportingSlices, setIsImportingSlices] = useState(false);

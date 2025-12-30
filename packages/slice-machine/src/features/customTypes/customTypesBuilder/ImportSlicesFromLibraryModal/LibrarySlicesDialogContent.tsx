@@ -23,7 +23,6 @@ import { ReactNode, Suspense, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
-import { EmptyView } from "./EmptyView";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
@@ -33,7 +32,9 @@ import useSliceMachineActions from "@/modules/useSliceMachineActions";
 import { DialogButtons, DialogButtonsSkeleton } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
+import { EmptyView } from "./EmptyView";
 import { useGitIntegration } from "./hooks/useGitIntegration";
+import { useStableDebouncedEffect } from "./hooks/useStableDebouncedEffect";
 import { SliceCard } from "./SliceCard";
 import {
   CommonDialogContentProps,
@@ -44,7 +45,6 @@ import {
 } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
-import { useStableDebouncedEffect } from "./hooks/useStableDebouncedEffect";
 
 interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   onSuccess: (args: {
