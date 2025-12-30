@@ -58,6 +58,9 @@ export const SegmentEventType = {
 	slice_library_opened: "slice-library:opened",
 	slice_library_projects_listed: "slice-library:projects-listed",
 	slice_library_slice_selected: "slice-library:slice-selected",
+	slice_library_fetching_started: "slice-library:fetching-started",
+	slice_library_fetching_ended: "slice-library:fetching-ended",
+	slice_library_fetching_failed: "slice-library:fetching-failed",
 	slice_library_import_started: "slice-library:import-started",
 	slice_library_import_complete: "slice-library:import-completed",
 	slice_library_import_failed: "slice-library:import-failed",
@@ -139,12 +142,18 @@ export const HumanSegmentEventType = {
 		"SliceMachine Slice Library - Projects Listed",
 	[SegmentEventType.slice_library_slice_selected]:
 		"SliceMachine Slice Library - Slice Selected",
+	[SegmentEventType.slice_library_fetching_started]:
+		"SliceMachine Slice Library - Slice Fetching Started",
+	[SegmentEventType.slice_library_fetching_ended]:
+		"SliceMachine Slice Library - Slice Fetching Ended",
+	[SegmentEventType.slice_library_fetching_failed]:
+		"SliceMachine Slice Library - Slice Fetching Failed",
 	[SegmentEventType.slice_library_import_started]:
-		"SliceMachine Slice Library - Import Started",
+		"SliceMachine Slice Library - Slice Import Started",
 	[SegmentEventType.slice_library_import_complete]:
-		"SliceMachine Slice Library - Import Complete",
+		"SliceMachine Slice Library - Slice Import Complete",
 	[SegmentEventType.slice_library_import_failed]:
-		"SliceMachine Slice Library - Import Failed",
+		"SliceMachine Slice Library - Slice Import Failed",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -528,7 +537,10 @@ type SliceLibraryOpened = SegmentEvent<
 	typeof SegmentEventType.slice_library_opened
 >;
 type SliceLibraryProjectsListed = SegmentEvent<
-	typeof SegmentEventType.slice_library_projects_listed
+	typeof SegmentEventType.slice_library_projects_listed,
+	{
+		repositories_count: number;
+	}
 >;
 type SliceLibrarySliceSelected = SegmentEvent<
 	typeof SegmentEventType.slice_library_slice_selected,
@@ -538,8 +550,30 @@ type SliceLibrarySliceSelected = SegmentEvent<
 		destination_project_id: string;
 	}
 >;
+type SliceLibraryFetchingStarted = SegmentEvent<
+	typeof SegmentEventType.slice_library_fetching_started,
+	{
+		source_project_id: string;
+	}
+>;
+type SliceLibraryFetchingEnded = SegmentEvent<
+	typeof SegmentEventType.slice_library_fetching_ended,
+	{
+		slices_count: number;
+		source_project_id: string;
+	}
+>;
+type SliceLibraryFetchingFailed = SegmentEvent<
+	typeof SegmentEventType.slice_library_fetching_failed,
+	{
+		source_project_id: string;
+	}
+>;
 type SliceLibraryImportStarted = SegmentEvent<
-	typeof SegmentEventType.slice_library_import_started
+	typeof SegmentEventType.slice_library_import_started,
+	{
+		source_project_id: string;
+	}
 >;
 type SliceLibraryImportComplete = SegmentEvent<
 	typeof SegmentEventType.slice_library_import_complete,
@@ -550,7 +584,10 @@ type SliceLibraryImportComplete = SegmentEvent<
 	}
 >;
 type SliceLibraryImportFailed = SegmentEvent<
-	typeof SegmentEventType.slice_library_import_failed
+	typeof SegmentEventType.slice_library_import_failed,
+	{
+		source_project_id: string;
+	}
 >;
 
 export type SegmentEvents =
@@ -602,6 +639,9 @@ export type SegmentEvents =
 	| SliceLibraryOpened
 	| SliceLibraryProjectsListed
 	| SliceLibrarySliceSelected
+	| SliceLibraryFetchingStarted
+	| SliceLibraryFetchingEnded
+	| SliceLibraryFetchingFailed
 	| SliceLibraryImportStarted
 	| SliceLibraryImportComplete
 	| SliceLibraryImportFailed;

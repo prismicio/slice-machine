@@ -23,7 +23,7 @@ import { ReactNode, Suspense, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
-import { EmptyView } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/EmptyView";
+import { EmptyView } from "./EmptyView";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
@@ -44,7 +44,7 @@ import {
 } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
-import { useStableEffect } from "@prismicio/editor-support/React";
+import { useStableDebouncedEffect } from "./hooks/useStableDebouncedEffect";
 
 interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   onSuccess: (args: {
@@ -72,7 +72,7 @@ function LibrarySlicesDialogSuspenseContent(
   const {
     integrations,
     isImportingSlices,
-    importSlicesFromGithub,
+    fetchSlicesFromGithub,
     importedSlices,
     resetImportedSlices,
   } = useGitIntegration();
@@ -80,7 +80,7 @@ function LibrarySlicesDialogSuspenseContent(
   const smActions = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const { completeStep: completeOnboardingStep } = useOnboarding();
-  const { repositoryUrl, repositoryName } = useRepositoryInformation();
+  const prismicRepositoryInformation = useRepositoryInformation();
 
   useEffect(() => {
     if (isTabSelected) {
@@ -88,13 +88,13 @@ function LibrarySlicesDialogSuspenseContent(
     }
   }, [isTabSelected]);
 
-  useStableEffect(() => {
-    if (selectedRepository && selectedSlices.length > 0) {
+  useStableDebouncedEffect(() => {
+    if (selectedRepository) {
       void telemetry.track({
         event: "slice-library:slice-selected",
         slices_count: selectedSlices.length,
         source_project_id: selectedRepository.fullName,
-        destination_project_id: repositoryName,
+        destination_project_id: prismicRepositoryInformation.repositoryName,
       });
     }
   }, [selectedSlices]);
@@ -102,7 +102,7 @@ function LibrarySlicesDialogSuspenseContent(
   const onSelectRepository = (repository: RepositorySelection) => {
     setSelectedRepository(repository);
     setSelectedSlices([]);
-    void importSlicesFromGithub({ repository });
+    void fetchSlicesFromGithub({ repository });
   };
 
   const onSelectAll = (checked: boolean) => {
@@ -117,15 +117,23 @@ function LibrarySlicesDialogSuspenseContent(
     });
   };
 
-  const onSubmit = async () => {
+  const importSelectedSlices = async () => {
     if (selectedSlices.length === 0) {
       toast.error("Please select at least one slice");
       return;
     }
-
-    setIsSubmitting(true);
+    if (!selectedRepository) {
+      toast.error("Please select a repository");
+      return;
+    }
 
     try {
+      setIsSubmitting(true);
+      void telemetry.track({
+        event: "slice-library:import-started",
+        source_project_id: selectedRepository.fullName,
+      });
+
       // Prepare library slices for import
       const librarySlicesToImport: NewSlice[] = selectedSlices.map((slice) => ({
         image: slice.image,
@@ -195,17 +203,28 @@ function LibrarySlicesDialogSuspenseContent(
         });
       }
 
+      void telemetry.track({
+        event: "slice-library:import-completed",
+        slices_count: createdSlices.length,
+        source_project_id: selectedRepository.fullName,
+        destination_project_id: prismicRepositoryInformation.repositoryName,
+      });
+
       onSuccess({ slices: createdSlices, library });
     } catch (error) {
       setIsSubmitting(false);
       toast.error("An unexpected error happened while adding slices.");
-      throw error;
+
+      void telemetry.track({
+        event: "slice-library:import-failed",
+        source_project_id: selectedRepository.fullName,
+      });
     }
   };
 
   const configureUrl = new URL(
     "settings/git-integration",
-    repositoryUrl,
+    prismicRepositoryInformation.repositoryUrl,
   ).toString();
 
   let renderedContent: ReactNode;
@@ -294,7 +313,7 @@ repositories and set a library for this project.`}
         </Box>
         <DialogButtons
           totalSelected={selectedSlices.length}
-          onSubmit={() => void onSubmit()}
+          onSubmit={() => void importSelectedSlices()}
           isSubmitting={isSubmitting}
           typeName={typeName}
         />
@@ -358,9 +377,12 @@ function RepositorySelector(props: RepositorySelectorProps) {
     );
   }, [integrations]);
 
-  useEffect(() => {
-    if (isTabSelected) {
-      void telemetry.track({ event: "slice-library:projects-listed" });
+  useStableDebouncedEffect(() => {
+    if (isTabSelected && repositories.length > 0) {
+      void telemetry.track({
+        event: "slice-library:projects-listed",
+        repositories_count: repositories.length,
+      });
     }
   }, [isTabSelected, repositories]);
 

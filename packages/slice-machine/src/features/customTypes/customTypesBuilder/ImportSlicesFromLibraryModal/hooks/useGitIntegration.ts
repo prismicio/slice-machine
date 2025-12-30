@@ -11,12 +11,10 @@ import {
   getSliceLibraries,
 } from "../utils/github";
 import { telemetry } from "@/apiClient";
-import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 
 export function useGitIntegration() {
   const [isImportingSlices, setIsImportingSlices] = useState(false);
   const [importedSlices, setImportedSlices] = useState<SliceImport[]>([]);
-  const { repositoryName: prismicRepositoryName } = useRepositoryInformation();
 
   const { data: githubIntegrations } = useSuspenseQuery({
     queryKey: ["getIntegrations"],
@@ -35,15 +33,19 @@ export function useGitIntegration() {
     setIsImportingSlices(false);
   };
 
-  const importSlicesFromGithub = async (args: {
+  const fetchSlicesFromGithub = async (args: {
     repository: RepositorySelection;
   }) => {
-    try {
-      const { repository } = args;
+    const { repository } = args;
 
+    try {
       resetImportedSlices();
       setIsImportingSlices(true);
-      void telemetry.track({ event: "slice-library:import-started" });
+
+      void telemetry.track({
+        event: "slice-library:fetching-started",
+        source_project_id: repository.fullName,
+      });
 
       const { token } = await fetchGitHubToken({
         integrationId: repository.integrationId,
@@ -93,10 +95,9 @@ export function useGitIntegration() {
       );
 
       void telemetry.track({
-        event: "slice-library:import-completed",
+        event: "slice-library:fetching-ended",
         slices_count: fetchedSlices.length,
         source_project_id: repository.fullName,
-        destination_project_id: prismicRepositoryName,
       });
 
       return fetchedSlices;
@@ -111,7 +112,10 @@ export function useGitIntegration() {
         );
       }
 
-      void telemetry.track({ event: "slice-library:import-failed" });
+      void telemetry.track({
+        event: "slice-library:fetching-failed",
+        source_project_id: repository.fullName,
+      });
 
       return [];
     } finally {
@@ -124,7 +128,7 @@ export function useGitIntegration() {
     isImportingSlices,
     importedSlices,
     resetImportedSlices,
-    importSlicesFromGithub,
+    fetchSlicesFromGithub,
   };
 }
 
