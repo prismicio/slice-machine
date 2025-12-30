@@ -13,7 +13,12 @@ export function DialogTabs(props: DialogTabsProps) {
   const { selectedTab, onSelectTab, rightContent } = props;
 
   return (
-    <Box justifyContent="space-between" padding={16} border={{ bottom: true }}>
+    <Box
+      justifyContent="space-between"
+      padding={16}
+      border={{ bottom: true }}
+      gap={8}
+    >
       <Box gap={8}>
         <Tab
           selected={selectedTab === "local"}

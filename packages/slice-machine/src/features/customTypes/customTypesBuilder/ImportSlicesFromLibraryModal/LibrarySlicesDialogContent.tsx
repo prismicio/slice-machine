@@ -1,29 +1,47 @@
-import { useStableEffect } from "@prismicio/editor-support/React";
 import {
   Box,
   Button,
   Checkbox,
+  ComboBox,
+  ComboboxAction,
+  ComboBoxContent,
+  ComboBoxInput,
+  ComboBoxItem,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  ErrorBoundary,
+  Icon,
   InlineLabel,
   ScrollArea,
+  Skeleton,
   Text,
-  TextInput,
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useRef, useState } from "react";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { ReactNode, Suspense, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
+import { EmptyView } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/EmptyView";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 import { managerClient } from "@/managerClient";
 import useSliceMachineActions from "@/modules/useSliceMachineActions";
 
-import { DialogButtons } from "./DialogButtons";
+import { DialogButtons, DialogButtonsSkeleton } from "./DialogButtons";
 import { DialogContent } from "./DialogContent";
 import { DialogTabs } from "./DialogTabs";
-import { useImportSlicesFromGithub } from "./hooks/useImportSlicesFromGithub";
+import { useGitIntegration } from "./hooks/useGitIntegration";
 import { SliceCard } from "./SliceCard";
-import { CommonDialogContentProps, NewSlice, SliceImport } from "./types";
+import {
+  CommonDialogContentProps,
+  GitIntegration,
+  NewSlice,
+  RepositorySelection,
+  SliceImport,
+} from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
 
@@ -34,47 +52,37 @@ interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   }) => void;
 }
 
-export function LibrarySlicesDialogContent(
+function LibrarySlicesDialogSuspenseContent(
   props: LibrarySlicesDialogContentProps,
 ) {
-  const { open, location, typeName, onSelectTab, onSuccess, selected } = props;
+  const { location, typeName, onSelectTab, onSuccess, selected } = props;
 
-  const [githubUrl, setGithubUrl] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSlices, setSelectedSlices] = useState<SliceImport[]>([]);
+  const [selectedRepository, setSelectedRepository] =
+    useState<RepositorySelection>();
 
   const {
-    isLoadingSlices,
+    integrations,
+    isImportingSlices,
     importSlicesFromGithub,
-    slices: importedSlices,
-    resetSlices,
-  } = useImportSlicesFromGithub();
+    importedSlices,
+    resetImportedSlices,
+  } = useGitIntegration();
 
   const smActions = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const { completeStep: completeOnboardingStep } = useOnboarding();
+  const { repositoryUrl } = useRepositoryInformation();
 
-  /**
-   * Keeps track of the current instance id.
-   * When the modal is closed, the id is reset.
-   */
-  const instanceId = useRef(crypto.randomUUID());
-
-  useStableEffect(() => {
-    if (!open) {
-      setSelectedSlices([]);
-      resetSlices();
-      setGithubUrl("");
-      instanceId.current = crypto.randomUUID();
-    }
-  }, [open]);
+  const onSelectRepository = (repository: RepositorySelection) => {
+    setSelectedRepository(repository);
+    setSelectedSlices([]);
+    void importSlicesFromGithub({ repository });
+  };
 
   const onSelectAll = (checked: boolean) => {
     setSelectedSlices(checked ? importedSlices : []);
-  };
-
-  const onImport = () => {
-    void importSlicesFromGithub(githubUrl);
   };
 
   const onSelect = (slice: SliceImport) => {
@@ -91,43 +99,38 @@ export function LibrarySlicesDialogContent(
       return;
     }
 
-    // Prepare library slices for import
-    const librarySlicesToImport: NewSlice[] = selectedSlices.map((slice) => ({
-      image: slice.image,
-      model: slice.model,
-      files: slice.files,
-      componentContents: slice.componentContents,
-      mocks: slice.mocks,
-      screenshots: slice.screenshots,
-    }));
-
-    // Ensure ids and names are conflict-free against existing and newly-added slices
-    const conflictFreeSlices: NewSlice[] = [];
-
-    const existingSlices = await managerClient.slices
-      .readAllSlices()
-      .then((slices) => slices.models.map(({ model }) => model));
-
-    for (const sliceToImport of librarySlicesToImport) {
-      const adjustedModel = sliceWithoutConflicts({
-        existingSlices: existingSlices,
-        newSlices: conflictFreeSlices,
-        slice: sliceToImport.model,
-      });
-
-      conflictFreeSlices.push({ ...sliceToImport, model: adjustedModel });
-    }
-
-    const currentInstanceId = instanceId.current;
     setIsSubmitting(true);
 
     try {
+      // Prepare library slices for import
+      const librarySlicesToImport: NewSlice[] = selectedSlices.map((slice) => ({
+        image: slice.image,
+        model: slice.model,
+        files: slice.files,
+        componentContents: slice.componentContents,
+        mocks: slice.mocks,
+        screenshots: slice.screenshots,
+      }));
+
+      // Ensure ids and names are conflict-free against existing and newly-added slices
+      const conflictFreeSlices: NewSlice[] = [];
+
+      const existingSlices = await managerClient.slices
+        .readAllSlices()
+        .then((slices) => slices.models.map(({ model }) => model));
+
+      for (const sliceToImport of librarySlicesToImport) {
+        const adjustedModel = sliceWithoutConflicts({
+          existingSlices: existingSlices,
+          newSlices: conflictFreeSlices,
+          slice: sliceToImport.model,
+        });
+
+        conflictFreeSlices.push({ ...sliceToImport, model: adjustedModel });
+      }
+
       const { slices: createdSlices, library } =
         await addSlices(conflictFreeSlices);
-
-      if (currentInstanceId !== instanceId.current) {
-        throw new Error("Modal instance changed");
-      }
 
       // Wait a moment to ensure all file writes are complete
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -153,8 +156,7 @@ export function LibrarySlicesDialogContent(
       syncChanges();
 
       setIsSubmitting(false);
-      instanceId.current = crypto.randomUUID();
-      resetSlices();
+      resetImportedSlices();
 
       void completeOnboardingStep("createSlice");
 
@@ -171,27 +173,109 @@ export function LibrarySlicesDialogContent(
 
       onSuccess({ slices: createdSlices, library });
     } catch (error) {
-      if (currentInstanceId !== instanceId.current) {
-        throw error;
-      }
       setIsSubmitting(false);
       toast.error("An unexpected error happened while adding slices.");
       throw error;
     }
   };
 
-  const allSelected = importedSlices.every((slice) =>
-    selectedSlices.some((s) => s.model.id === slice.model.id),
-  );
-  const someSelected = importedSlices.some((slice) =>
-    selectedSlices.some((s) => s.model.id === slice.model.id),
-  );
+  const configureUrl = new URL(
+    "settings/git-integration",
+    repositoryUrl,
+  ).toString();
 
-  let selectAllLabel = "Select all slices";
-  if (allSelected) {
-    selectAllLabel = `Selected all slices (${selectedSlices.length})`;
-  } else if (someSelected) {
-    selectAllLabel = `${selectedSlices.length} of ${importedSlices.length} selected`;
+  let renderedContent: ReactNode;
+
+  if (isImportingSlices) {
+    renderedContent = <SlicesLoadingSkeleton />;
+  } else if (integrations.length === 0) {
+    renderedContent = (
+      <EmptyView
+        title="GitHub connection required"
+        description={`Connect your GitHub account to access
+repositories and set a library for this project.`}
+        icon="github"
+        actions={
+          <Button size="medium" color="grey" startIcon="github" asChild>
+            <a href={configureUrl} target="_blank">
+              Connect GitHub
+            </a>
+          </Button>
+        }
+      />
+    );
+  } else if (!selectedRepository) {
+    renderedContent = (
+      <EmptyView
+        title="No repository selected"
+        description="Choose a GitHub repository from the menu above."
+        icon="alert"
+      />
+    );
+  } else if (importedSlices.length === 0) {
+    renderedContent = (
+      <EmptyView
+        title="No slices found"
+        description="This repository doesn't contain any Slice components."
+        icon="viewDay"
+      />
+    );
+  } else {
+    const allSelected = importedSlices.every((slice) =>
+      selectedSlices.some((s) => s.model.id === slice.model.id),
+    );
+    const someSelected = importedSlices.some((slice) =>
+      selectedSlices.some((s) => s.model.id === slice.model.id),
+    );
+
+    let selectAllLabel = "Select all slices";
+    if (allSelected) {
+      selectAllLabel = `Selected all slices (${selectedSlices.length})`;
+    } else if (someSelected) {
+      selectAllLabel = `${selectedSlices.length} of ${importedSlices.length} selected`;
+    }
+
+    renderedContent = (
+      <>
+        <Box flexDirection="column" flexGrow={1} minHeight={0}>
+          <Box padding={{ block: 12, inline: 16 }} alignItems="center" gap={8}>
+            <InlineLabel value={selectAllLabel}>
+              <Checkbox
+                checked={allSelected}
+                indeterminate={someSelected && !allSelected}
+                onCheckedChange={onSelectAll}
+              />
+            </InlineLabel>
+          </Box>
+          <ScrollArea stableScrollbar={false}>
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr 1fr"
+              gap={16}
+              padding={{ inline: 16, bottom: 16 }}
+            >
+              {importedSlices.map((slice) => (
+                <SliceCard
+                  key={slice.model.id}
+                  model={slice.model}
+                  thumbnailUrl={slice.thumbnailUrl}
+                  selected={selectedSlices.some(
+                    (s) => s.model.id === slice.model.id,
+                  )}
+                  onSelectedChange={() => onSelect(slice)}
+                />
+              ))}
+            </Box>
+          </ScrollArea>
+        </Box>
+        <DialogButtons
+          totalSelected={selectedSlices.length}
+          onSubmit={() => void onSubmit()}
+          isSubmitting={isSubmitting}
+          typeName={typeName}
+        />
+      </>
+    );
   }
 
   return (
@@ -199,86 +283,245 @@ export function LibrarySlicesDialogContent(
       <DialogTabs
         selectedTab="library"
         onSelectTab={onSelectTab}
-        rightContent={"<repo-select>"}
+        rightContent={
+          <RepositorySelector
+            integrations={integrations}
+            selectedRepository={selectedRepository}
+            onSelectRepository={onSelectRepository}
+            configureUrl={configureUrl}
+          />
+        }
       />
-
       <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
-        {importedSlices.length > 0 ? (
-          <Box flexDirection="column" flexGrow={1} minHeight={0}>
-            <Box
-              padding={{ block: 12, inline: 16 }}
-              alignItems="center"
-              gap={8}
-            >
-              <InlineLabel value={selectAllLabel}>
-                <Checkbox
-                  checked={allSelected}
-                  indeterminate={someSelected && !allSelected}
-                  onCheckedChange={onSelectAll}
-                />
-              </InlineLabel>
-            </Box>
-            <ScrollArea stableScrollbar={false}>
-              <Box
-                display="grid"
-                gridTemplateColumns="1fr 1fr 1fr"
-                gap={16}
-                padding={{ inline: 16, bottom: 16 }}
-              >
-                {importedSlices.map((slice) => {
-                  const isSelected = selectedSlices.some(
-                    (s) => s.model.id === slice.model.id,
-                  );
-                  return (
-                    <SliceCard
-                      model={slice.model}
-                      thumbnailUrl={slice.thumbnailUrl}
-                      key={slice.model.id}
-                      selected={isSelected}
-                      onSelectedChange={() => onSelect(slice)}
-                    />
-                  );
-                })}
-              </Box>
-            </ScrollArea>
-          </Box>
-        ) : (
-          <Box padding={16} height="100%" flexDirection="column" gap={16}>
-            <Box flexDirection="column" gap={8}>
-              <Box
-                display="flex"
-                flexDirection="column"
-                gap={8}
-                padding={16}
-                border
-                borderRadius={8}
-              >
-                <Text color="grey11">Import from GitHub</Text>
-                <TextInput
-                  placeholder="https://github.com/username/repository"
-                  value={githubUrl}
-                  onValueChange={setGithubUrl}
-                />
-                <Button
-                  onClick={() => void onImport()}
-                  disabled={!githubUrl.trim() || isLoadingSlices}
-                  loading={isLoadingSlices}
-                  color="purple"
-                >
-                  {isLoadingSlices ? "Loading slices..." : "Import from GitHub"}
-                </Button>
-              </Box>
-            </Box>
-          </Box>
-        )}
+        {renderedContent}
       </Box>
+    </DialogContent>
+  );
+}
 
-      <DialogButtons
-        totalSelected={selectedSlices.length}
-        onSubmit={() => void onSubmit()}
-        isSubmitting={isSubmitting}
-        typeName={typeName}
-      />
+type RepositorySelectorProps = {
+  integrations: GitIntegration[];
+  selectedRepository: RepositorySelection | undefined;
+  onSelectRepository: (repository: RepositorySelection) => void;
+  configureUrl: string;
+};
+
+function RepositorySelector(props: RepositorySelectorProps) {
+  const { integrations, selectedRepository, onSelectRepository, configureUrl } =
+    props;
+
+  const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState("");
+
+  const onSelect = (repository: RepositorySelection) => {
+    onSelectRepository(repository);
+    setOpen(false);
+  };
+
+  const repositories = useMemo(() => {
+    return integrations.flatMap((integration) =>
+      integration.repositories.map((repository) => ({
+        ...repository,
+        integrationId: integration.id,
+      })),
+    );
+  }, [integrations]);
+
+  const filteredRepositories = repositories.filter((repository) =>
+    repository.fullName.toLowerCase().includes(filter.toLowerCase()),
+  );
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger disabled={integrations.length === 0}>
+        <Button
+          endIcon="arrowDropDown"
+          textWeight="normal"
+          sx={{ width: 420 }}
+          startIcon="github"
+          color="grey"
+          size="large"
+          flexContent
+        >
+          {selectedRepository
+            ? selectedRepository.fullName
+            : "Select a GitHub repository"}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align="start"
+        border={false}
+        minWidth="full-trigger-width"
+        childrenFocusScope
+      >
+        <ComboBox variant="attached">
+          <ComboBoxInput
+            value={filter}
+            onValueChange={setFilter}
+            placeholder="Search"
+            endAdornment
+          />
+          <ComboBoxContent>
+            {filteredRepositories.length > 0 ? (
+              <>
+                {/* TODO: (DT-3163) Scroll to the selected repository */}
+                {filteredRepositories.map((repository) => (
+                  <ComboBoxItem
+                    key={repository.fullName}
+                    value={repository.fullName}
+                    onCheckedChange={() => onSelect(repository)}
+                    checked={
+                      selectedRepository?.fullName === repository.fullName
+                    }
+                  >
+                    <ComboBoxItemContent>
+                      {repository.fullName}
+                    </ComboBoxItemContent>
+                  </ComboBoxItem>
+                ))}
+              </>
+            ) : (
+              <ComboBoxItem value="none" disabled>
+                <ComboBoxItemContent disabled>
+                  <Box padding={8}>No repositories found</Box>
+                </ComboBoxItemContent>
+              </ComboBoxItem>
+            )}
+            <ComboboxAction>
+              <Button
+                textWeight="normal"
+                size="medium"
+                color="dark"
+                renderEndIcon={() => <Icon name="openInNew" size="small" />}
+                flexContent
+                asChild
+                invisible
+              >
+                <a href={configureUrl} target="_blank">
+                  Configure Repositories on Prismic
+                </a>
+              </Button>
+            </ComboboxAction>
+          </ComboBoxContent>
+        </ComboBox>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function ComboBoxItemContent(props: {
+  children: ReactNode;
+  disabled?: boolean;
+}) {
+  const { children, disabled } = props;
+  return (
+    <Box padding={{ inline: 8, block: 4 }}>
+      <Text variant="normal" color={disabled === true ? "grey9" : "grey12"}>
+        {children}
+      </Text>
+    </Box>
+  );
+}
+
+function SlicesLoadingSkeleton() {
+  return (
+    <>
+      <Box
+        flexGrow={1}
+        minHeight={0}
+        flexDirection="column"
+        padding={{ inline: 16, top: 16 }}
+        gap={16}
+      >
+        <Skeleton height={24} width={125} />
+        <Box
+          flexGrow={1}
+          display="grid"
+          gridTemplateColumns="1fr 1fr 1fr"
+          gap={16}
+          padding={{ bottom: 16 }}
+          overflow="hidden"
+        >
+          {Array.from({ length: 9 }).map((_, index) => (
+            <Skeleton key={index} height={240} width="100%" />
+          ))}
+        </Box>
+      </Box>
+      <DialogButtonsSkeleton />
+    </>
+  );
+}
+
+function LibrarySlicesLoggedInContent(props: LibrarySlicesDialogContentProps) {
+  const { openLoginModal } = useSliceMachineActions();
+  const queryClient = useQueryClient();
+  const { data: isLoggedIn } = useSuspenseQuery({
+    queryKey: ["checkIsLoggedIn"],
+    queryFn: () => managerClient.user.checkIsLoggedIn(),
+    gcTime: 0,
+    staleTime: 0,
+  });
+
+  if (!isLoggedIn) {
+    const onLogin = () => {
+      props.onClose();
+      openLoginModal();
+      void queryClient.invalidateQueries({ queryKey: ["checkIsLoggedIn"] });
+    };
+
+    return (
+      <>
+        <DialogTabs selectedTab="library" onSelectTab={props.onSelectTab} />
+        <EmptyView
+          title="You are logged out"
+          description={`This action requires you to be logged in.
+Please log in to continue.`}
+          icon="logout"
+          actions={
+            <Button size="small" color="grey" onClick={onLogin}>
+              Log in
+            </Button>
+          }
+        />
+      </>
+    );
+  }
+
+  return <LibrarySlicesDialogSuspenseContent {...props} />;
+}
+
+export function LibrarySlicesDialogContent(
+  props: LibrarySlicesDialogContentProps,
+) {
+  return (
+    <DialogContent selected={props.selected}>
+      <ErrorBoundary
+        renderError={() => (
+          <>
+            <DialogTabs selectedTab="library" onSelectTab={props.onSelectTab} />
+            <EmptyView
+              title="Failed to load library slices"
+              icon="alert"
+              color="tomato"
+            />
+          </>
+        )}
+      >
+        <Suspense
+          fallback={
+            <>
+              <DialogTabs
+                selectedTab="library"
+                onSelectTab={props.onSelectTab}
+                rightContent={<Skeleton height={40} width={420} />}
+              />
+              <SlicesLoadingSkeleton />
+            </>
+          }
+        >
+          <LibrarySlicesLoggedInContent {...props} />
+        </Suspense>
+      </ErrorBoundary>
     </DialogContent>
   );
 }
