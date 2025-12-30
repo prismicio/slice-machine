@@ -194,7 +194,7 @@ function LibrarySlicesDialogSuspenseContent(
         title="GitHub connection required"
         description={`Connect your GitHub account to access
 repositories and set a library for this project.`}
-        icon="alert"
+        icon="github"
         actions={
           <Button size="medium" color="grey" startIcon="github" asChild>
             <a href={configureUrl} target="_blank">
@@ -207,7 +207,7 @@ repositories and set a library for this project.`}
   } else if (!selectedRepository) {
     renderedContent = (
       <EmptyView
-        title="No repositories selected"
+        title="No repository selected"
         description="Choose a GitHub repository from the menu above."
         icon="alert"
       />
@@ -215,9 +215,9 @@ repositories and set a library for this project.`}
   } else if (importedSlices.length === 0) {
     renderedContent = (
       <EmptyView
-        title="Nothing to import"
-        description="No slices were found in the selected repository."
-        icon="alert"
+        title="No slices found"
+        description="This repository doesn't contain any Slice components."
+        icon="viewDay"
       />
     );
   } else {
@@ -383,7 +383,7 @@ function RepositorySelector(props: RepositorySelectorProps) {
             ) : (
               <ComboBoxItem value="none" disabled>
                 <ComboBoxItemContent disabled>
-                  No repositories found
+                  <Box padding={8}>No repositories found</Box>
                 </ComboBoxItemContent>
               </ComboBoxItem>
             )}
