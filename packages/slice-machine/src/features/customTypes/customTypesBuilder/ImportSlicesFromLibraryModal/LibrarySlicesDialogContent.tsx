@@ -64,10 +64,10 @@ function LibrarySlicesDialogSuspenseContent(
 
   const {
     integrations,
+    isImportingSlices,
+    importSlicesFromGithub,
     importedSlices,
     resetImportedSlices,
-    importSlicesFromGithub,
-    isImportingSlices: isImporting,
   } = useGitIntegration();
 
   const smActions = useSliceMachineActions();
@@ -184,18 +184,98 @@ function LibrarySlicesDialogSuspenseContent(
     }
   };
 
-  const allSelected = importedSlices.every((slice) =>
-    selectedSlices.some((s) => s.model.id === slice.model.id),
-  );
-  const someSelected = importedSlices.some((slice) =>
-    selectedSlices.some((s) => s.model.id === slice.model.id),
-  );
+  let renderedContent: ReactNode;
 
-  let selectAllLabel = "Select all slices";
-  if (allSelected) {
-    selectAllLabel = `Selected all slices (${selectedSlices.length})`;
-  } else if (someSelected) {
-    selectAllLabel = `${selectedSlices.length} of ${importedSlices.length} selected`;
+  if (isImportingSlices) {
+    renderedContent = <SlicesLoadingSkeleton />;
+  } else if (integrations.length === 0) {
+    renderedContent = (
+      <EmptyView
+        title="GitHub connection required"
+        description={`Connect your GitHub account to access
+repositories and set a library for this project.`}
+        icon="alert"
+        actions={
+          <Button size="medium" color="grey" startIcon="github" asChild>
+            <a href={configureUrl} target="_blank">
+              Connect GitHub
+            </a>
+          </Button>
+        }
+      />
+    );
+  } else if (!selectedRepository) {
+    renderedContent = (
+      <EmptyView
+        title="No repositories selected"
+        description="Choose a GitHub repository from the menu above."
+        icon="alert"
+      />
+    );
+  } else if (importedSlices.length === 0) {
+    renderedContent = (
+      <EmptyView
+        title="Nothing to import"
+        description="No slices were found in the selected repository."
+        icon="alert"
+      />
+    );
+  } else {
+    const allSelected = importedSlices.every((slice) =>
+      selectedSlices.some((s) => s.model.id === slice.model.id),
+    );
+    const someSelected = importedSlices.some((slice) =>
+      selectedSlices.some((s) => s.model.id === slice.model.id),
+    );
+
+    let selectAllLabel = "Select all slices";
+    if (allSelected) {
+      selectAllLabel = `Selected all slices (${selectedSlices.length})`;
+    } else if (someSelected) {
+      selectAllLabel = `${selectedSlices.length} of ${importedSlices.length} selected`;
+    }
+
+    renderedContent = (
+      <>
+        <Box flexDirection="column" flexGrow={1} minHeight={0}>
+          <Box padding={{ block: 12, inline: 16 }} alignItems="center" gap={8}>
+            <InlineLabel value={selectAllLabel}>
+              <Checkbox
+                checked={allSelected}
+                indeterminate={someSelected && !allSelected}
+                onCheckedChange={onSelectAll}
+              />
+            </InlineLabel>
+          </Box>
+          <ScrollArea stableScrollbar={false}>
+            <Box
+              display="grid"
+              gridTemplateColumns="1fr 1fr 1fr"
+              gap={16}
+              padding={{ inline: 16, bottom: 16 }}
+            >
+              {importedSlices.map((slice) => (
+                <SliceCard
+                  key={slice.model.id}
+                  model={slice.model}
+                  thumbnailUrl={slice.thumbnailUrl}
+                  selected={selectedSlices.some(
+                    (s) => s.model.id === slice.model.id,
+                  )}
+                  onSelectedChange={() => onSelect(slice)}
+                />
+              ))}
+            </Box>
+          </ScrollArea>
+        </Box>
+        <DialogButtons
+          totalSelected={selectedSlices.length}
+          onSubmit={() => void onSubmit()}
+          isSubmitting={isSubmitting}
+          typeName={typeName}
+        />
+      </>
+    );
   }
 
   return (
@@ -212,87 +292,8 @@ function LibrarySlicesDialogSuspenseContent(
           />
         }
       />
-
       <Box display="flex" flexDirection="column" flexGrow={1} minHeight={0}>
-        {!isImporting && importedSlices.length > 0 && (
-          <>
-            <Box flexDirection="column" flexGrow={1} minHeight={0}>
-              <Box
-                padding={{ block: 12, inline: 16 }}
-                alignItems="center"
-                gap={8}
-              >
-                <InlineLabel value={selectAllLabel}>
-                  <Checkbox
-                    checked={allSelected}
-                    indeterminate={someSelected && !allSelected}
-                    onCheckedChange={onSelectAll}
-                  />
-                </InlineLabel>
-              </Box>
-              <ScrollArea stableScrollbar={false}>
-                <Box
-                  display="grid"
-                  gridTemplateColumns="1fr 1fr 1fr"
-                  gap={16}
-                  padding={{ inline: 16, bottom: 16 }}
-                >
-                  {importedSlices.map((slice) => {
-                    const isSelected = selectedSlices.some(
-                      (s) => s.model.id === slice.model.id,
-                    );
-                    return (
-                      <SliceCard
-                        model={slice.model}
-                        thumbnailUrl={slice.thumbnailUrl}
-                        key={slice.model.id}
-                        selected={isSelected}
-                        onSelectedChange={() => onSelect(slice)}
-                      />
-                    );
-                  })}
-                </Box>
-              </ScrollArea>
-            </Box>
-
-            <DialogButtons
-              totalSelected={selectedSlices.length}
-              onSubmit={() => void onSubmit()}
-              isSubmitting={isSubmitting}
-              typeName={typeName}
-            />
-          </>
-        )}
-        {!isImporting && integrations.length === 0 && (
-          <EmptyView
-            title="GitHub connection required"
-            description={`Connect your GitHub account to access
-repositories and set a library for this project.`}
-            icon="alert"
-            actions={
-              <Button size="medium" color="grey" startIcon="github" asChild>
-                <a href={configureUrl} target="_blank">
-                  Connect GitHub
-                </a>
-              </Button>
-            }
-          />
-        )}
-        {!isImporting && integrations.length > 0 && !selectedRepository && (
-          <EmptyView
-            title="No repositories selected"
-            description="Choose a GitHub repository from the menu above."
-            icon="alert"
-          />
-        )}
-        {!isImporting && !importedSlices.length && selectedRepository && (
-          <EmptyView
-            title="Nothing to import"
-            description="No slices were found in the selected repository."
-            icon="alert"
-          />
-        )}
-        {isImporting && <SlicesLoadingSkeleton />}
+        {renderedContent}
       </Box>
     </DialogContent>
   );
@@ -332,7 +333,7 @@ function RepositorySelector(props: RepositorySelectorProps) {
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger disabled={integrations.length === 0}>
         <Button
           endIcon="arrowDropDown"
           textWeight="normal"
@@ -386,7 +387,6 @@ function RepositorySelector(props: RepositorySelectorProps) {
                 </ComboBoxItemContent>
               </ComboBoxItem>
             )}
-
             <ComboboxAction>
               <Button
                 textWeight="normal"

@@ -12,7 +12,7 @@ import {
 } from "../utils/github";
 
 export function useGitIntegration() {
-  const [isLoadingSlices, setIsLoadingSlices] = useState(false);
+  const [isImportingSlices, setIsImportingSlices] = useState(false);
   const [importedSlices, setImportedSlices] = useState<SliceImport[]>([]);
 
   const { data: githubIntegrations } = useSuspenseQuery({
@@ -29,7 +29,7 @@ export function useGitIntegration() {
 
   const resetImportedSlices = () => {
     setImportedSlices([]);
-    setIsLoadingSlices(false);
+    setIsImportingSlices(false);
   };
 
   const importSlicesFromGithub = async (args: {
@@ -39,7 +39,7 @@ export function useGitIntegration() {
       const { repository } = args;
 
       resetImportedSlices();
-      setIsLoadingSlices(true);
+      setIsImportingSlices(true);
 
       const { token } = await fetchGitHubToken({
         integrationId: repository.integrationId,
@@ -102,13 +102,13 @@ export function useGitIntegration() {
 
       return [];
     } finally {
-      setIsLoadingSlices(false);
+      setIsImportingSlices(false);
     }
   };
 
   return {
     integrations: githubIntegrations.integrations ?? [],
-    isLoadingSlices,
+    isImportingSlices,
     importedSlices,
     resetImportedSlices,
     importSlicesFromGithub,
