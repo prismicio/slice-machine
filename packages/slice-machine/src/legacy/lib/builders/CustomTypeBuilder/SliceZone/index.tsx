@@ -129,7 +129,6 @@ const SliceZone: React.FC<SliceZoneProps> = ({
       slices: getFrontendSlices(store),
     }),
   );
-  console.log({ remoteSlices, libraries });
   const { setCustomType } = useCustomTypeState();
   const { completeStep } = useOnboarding();
   const { openLoginModal } = useSliceMachineActions();

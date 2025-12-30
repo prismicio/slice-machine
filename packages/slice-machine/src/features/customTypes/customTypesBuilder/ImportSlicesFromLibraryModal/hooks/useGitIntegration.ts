@@ -9,7 +9,6 @@ import {
   fetchSlicesFromLibraries,
   getDefaultBranch,
   getSliceLibraries,
-  parseGithubUrl,
 } from "../utils/github";
 
 export function useGitIntegration() {
@@ -46,9 +45,8 @@ export function useGitIntegration() {
         integrationId: repository.integrationId,
       });
 
-      const { owner, repo } = parseGithubUrl(
-        new URL(args.repository.fullName, "https://github.com").toString(),
-      );
+      const [owner, repo] = args.repository.fullName.split("/");
+
       if (!owner || !repo) {
         throw new GitHubImportError("Invalid GitHub URL format");
       }

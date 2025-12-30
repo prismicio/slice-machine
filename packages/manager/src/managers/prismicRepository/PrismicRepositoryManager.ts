@@ -758,20 +758,17 @@ export class PrismicRepositoryManager extends BaseManager {
 			);
 		}
 
-		if (value) {
-			return value;
-		}
-
-		throw new Error("Failed to fetch integrations.");
+		return value;
 	}
 
 	async fetchGitIntegrationToken(args: {
 		integrationId: string;
 	}): Promise<z.infer<typeof GitIntegrationTokenSchema>> {
+		const { integrationId } = args;
 		const repositoryName = await this.project.getRepositoryName();
 
 		const url = new URL(
-			`integrations/${args.integrationId}/token`,
+			`integrations/${integrationId}/token`,
 			API_ENDPOINTS.GitService,
 		);
 		url.searchParams.set("repository", repositoryName);
@@ -781,7 +778,7 @@ export class PrismicRepositoryManager extends BaseManager {
 		if (!res.ok) {
 			const text = await res.text();
 			throw new Error(
-				`Failed to fetch token for integration ${args.integrationId}`,
+				`Failed to fetch token for integration ${integrationId}`,
 				{ cause: text },
 			);
 		}

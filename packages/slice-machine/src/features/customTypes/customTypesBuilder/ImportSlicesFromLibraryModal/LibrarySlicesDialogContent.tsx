@@ -1,4 +1,3 @@
-import { useStableEffect } from "@prismicio/editor-support/React";
 import {
   Box,
   Button,
@@ -20,7 +19,7 @@ import {
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { ReactNode, Suspense, useMemo, useRef, useState } from "react";
+import { ReactNode, Suspense, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
@@ -53,16 +52,13 @@ interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   }) => void;
 }
 
-const CARD_SPACING = 16;
-
 function LibrarySlicesDialogSuspenseContent(
   props: LibrarySlicesDialogContentProps,
 ) {
-  const { open, location, typeName, onSelectTab, onSuccess, selected } = props;
+  const { location, typeName, onSelectTab, onSuccess, selected } = props;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSlices, setSelectedSlices] = useState<SliceImport[]>([]);
-
   const [selectedRepository, setSelectedRepository] =
     useState<RepositorySelection>();
 
@@ -83,20 +79,6 @@ function LibrarySlicesDialogSuspenseContent(
     "settings/git-integration",
     repositoryUrl,
   ).toString();
-
-  /**
-   * Keeps track of the current instance id.
-   * When the modal is closed, the id is reset.
-   */
-  const instanceId = useRef(crypto.randomUUID());
-
-  useStableEffect(() => {
-    if (!open) {
-      setSelectedSlices([]);
-      resetImportedSlices();
-      instanceId.current = crypto.randomUUID();
-    }
-  }, [open]);
 
   const onSelectRepository = (repository: RepositorySelection) => {
     setSelectedRepository(repository);
@@ -122,43 +104,38 @@ function LibrarySlicesDialogSuspenseContent(
       return;
     }
 
-    // Prepare library slices for import
-    const librarySlicesToImport: NewSlice[] = selectedSlices.map((slice) => ({
-      image: slice.image,
-      model: slice.model,
-      files: slice.files,
-      componentContents: slice.componentContents,
-      mocks: slice.mocks,
-      screenshots: slice.screenshots,
-    }));
-
-    // Ensure ids and names are conflict-free against existing and newly-added slices
-    const conflictFreeSlices: NewSlice[] = [];
-
-    const existingSlices = await managerClient.slices
-      .readAllSlices()
-      .then((slices) => slices.models.map(({ model }) => model));
-
-    for (const sliceToImport of librarySlicesToImport) {
-      const adjustedModel = sliceWithoutConflicts({
-        existingSlices: existingSlices,
-        newSlices: conflictFreeSlices,
-        slice: sliceToImport.model,
-      });
-
-      conflictFreeSlices.push({ ...sliceToImport, model: adjustedModel });
-    }
-
-    const currentInstanceId = instanceId.current;
     setIsSubmitting(true);
 
     try {
+      // Prepare library slices for import
+      const librarySlicesToImport: NewSlice[] = selectedSlices.map((slice) => ({
+        image: slice.image,
+        model: slice.model,
+        files: slice.files,
+        componentContents: slice.componentContents,
+        mocks: slice.mocks,
+        screenshots: slice.screenshots,
+      }));
+
+      // Ensure ids and names are conflict-free against existing and newly-added slices
+      const conflictFreeSlices: NewSlice[] = [];
+
+      const existingSlices = await managerClient.slices
+        .readAllSlices()
+        .then((slices) => slices.models.map(({ model }) => model));
+
+      for (const sliceToImport of librarySlicesToImport) {
+        const adjustedModel = sliceWithoutConflicts({
+          existingSlices: existingSlices,
+          newSlices: conflictFreeSlices,
+          slice: sliceToImport.model,
+        });
+
+        conflictFreeSlices.push({ ...sliceToImport, model: adjustedModel });
+      }
+
       const { slices: createdSlices, library } =
         await addSlices(conflictFreeSlices);
-
-      if (currentInstanceId !== instanceId.current) {
-        throw new Error("Modal instance changed");
-      }
 
       // Wait a moment to ensure all file writes are complete
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -184,7 +161,6 @@ function LibrarySlicesDialogSuspenseContent(
       syncChanges();
 
       setIsSubmitting(false);
-      instanceId.current = crypto.randomUUID();
       resetImportedSlices();
 
       void completeOnboardingStep("createSlice");
@@ -202,9 +178,6 @@ function LibrarySlicesDialogSuspenseContent(
 
       onSuccess({ slices: createdSlices, library });
     } catch (error) {
-      if (currentInstanceId !== instanceId.current) {
-        throw error;
-      }
       setIsSubmitting(false);
       toast.error("An unexpected error happened while adding slices.");
       throw error;
@@ -251,7 +224,7 @@ function LibrarySlicesDialogSuspenseContent(
                       <>
                         <Box flexDirection="column" flexGrow={1} minHeight={0}>
                           <Box
-                            padding={{ block: 12, inline: CARD_SPACING }}
+                            padding={{ block: 12, inline: 16 }}
                             alignItems="center"
                             gap={8}
                           >
@@ -267,11 +240,8 @@ function LibrarySlicesDialogSuspenseContent(
                             <Box
                               display="grid"
                               gridTemplateColumns="1fr 1fr 1fr"
-                              gap={CARD_SPACING}
-                              padding={{
-                                inline: CARD_SPACING,
-                                bottom: CARD_SPACING,
-                              }}
+                              gap={16}
+                              padding={{ inline: 16, bottom: 16 }}
                             >
                               {importedSlices.map((slice) => {
                                 const isSelected = selectedSlices.some(
@@ -319,7 +289,7 @@ function LibrarySlicesDialogSuspenseContent(
                 title="GitHub connection required"
                 description="Connect your GitHub account to access repositories and set a library for this project."
                 icon="alert"
-                children={
+                actions={
                   <Button
                     textWeight="normal"
                     size="medium"
@@ -409,7 +379,7 @@ function RepositorySelector(props: RepositorySelectorProps) {
           <ComboBoxContent>
             {filteredRepositories.length > 0 ? (
               <>
-                {/* TODO: Scroll to the selected repository */}
+                {/* TODO: (DT-3163) Scroll to the selected repository */}
                 {filteredRepositories.map((repository) => (
                   <ComboBoxItem
                     key={repository.fullName}
@@ -511,11 +481,12 @@ function LibrarySlicesLoggedInContent(props: LibrarySlicesDialogContentProps) {
           title="You are logged out"
           description="This action requires you to be logged in. Please log in to continue."
           icon="logout"
-        >
-          <Button size="small" color="grey" onClick={onLogin}>
-            Log in
-          </Button>
-        </EmptyView>
+          actions={
+            <Button size="small" color="grey" onClick={onLogin}>
+              Log in
+            </Button>
+          }
+        />
       </>
     );
   }

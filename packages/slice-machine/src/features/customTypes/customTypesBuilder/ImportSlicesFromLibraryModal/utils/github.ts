@@ -138,21 +138,6 @@ class GitHubRepositoryAPI {
   }
 }
 
-export const parseGithubUrl = (
-  githubUrl: string,
-): {
-  owner: string;
-  repo: string;
-} => {
-  const urlMatch = githubUrl.match(/github\.com\/([^\/]+)\/([^\/]+)(?:\/|$)/);
-  if (!urlMatch) {
-    throw new Error("Invalid GitHub URL format");
-  }
-  const [, owner, repoRaw] = urlMatch;
-  const repo = repoRaw.replace(/\.git$/, "");
-  return { owner, repo };
-};
-
 export const getDefaultBranch = async ({
   owner,
   repo,

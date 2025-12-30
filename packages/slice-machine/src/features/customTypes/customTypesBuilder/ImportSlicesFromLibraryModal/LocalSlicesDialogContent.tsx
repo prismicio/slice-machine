@@ -1,6 +1,6 @@
 import { Box, ScrollArea } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 
 import { EmptyView } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/EmptyView";
@@ -19,7 +19,6 @@ interface LocalSlicesDialogContentProps extends CommonDialogContentProps {
 
 export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
   const {
-    open,
     typeName,
     onSelectTab,
     onSuccess,
@@ -29,10 +28,6 @@ export function LocalSlicesDialogContent(props: LocalSlicesDialogContentProps) {
   } = props;
 
   const [selectedSlices, setSelectedSlices] = useState<SharedSlice[]>([]);
-
-  useEffect(() => {
-    if (!open) setSelectedSlices([]);
-  }, [open]);
 
   const onSubmit = () => {
     if (selectedSlices.length === 0) {

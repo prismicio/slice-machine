@@ -26,7 +26,7 @@ export const dummyServerState: Pick<
       RepositoryService: "https://api.internal.prismic.io/repository/",
       LocaleService: "https://api.internal.prismic.io/locale/",
       CustomTypeService: "https://api.internal.prismic.io/custom-type/",
-      GitService: "https://git.internal.prismic.io/",
+      GitService: "https://api.internal.prismic.io/git/",
     },
     shortId: "shortId",
   },

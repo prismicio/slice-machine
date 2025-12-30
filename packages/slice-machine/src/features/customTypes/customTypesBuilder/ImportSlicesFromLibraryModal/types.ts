@@ -30,7 +30,6 @@ export type NewSlice = {
 export type DialogTab = "local" | "library";
 
 export type CommonDialogProps = {
-  open: boolean;
   location: "custom_type" | "page_type";
   typeName: string;
   onClose: () => void;

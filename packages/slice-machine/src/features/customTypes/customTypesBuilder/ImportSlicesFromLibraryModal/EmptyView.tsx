@@ -1,4 +1,12 @@
-import { Box, Icon, Text, ThemeKeys } from "@prismicio/editor-ui";
+import {
+  BlankSlate,
+  BlankSlateActions,
+  BlankSlateDescription,
+  BlankSlateIcon,
+  BlankSlateTitle,
+  Box,
+  ThemeKeys,
+} from "@prismicio/editor-ui";
 import { ReactNode } from "react";
 
 type EmptyViewProps = {
@@ -7,13 +15,25 @@ type EmptyViewProps = {
   // TODO: Replace prismic with github icon when available
   icon: "prismic" | "alert" | "logout";
   color?: "purple" | "tomato";
-  children?: ReactNode;
+  actions?: ReactNode;
 };
 
 export function EmptyView(props: EmptyViewProps) {
-  const { title, description, icon, children, color = "purple" } = props;
+  const { title, description, icon, actions, color = "purple" } = props;
 
-  const colors = getColors(color);
+  let iconColor: ThemeKeys<"color">;
+  let iconBackgroundColor: ThemeKeys<"color">;
+
+  switch (color) {
+    case "purple":
+      iconColor = "purple11";
+      iconBackgroundColor = "purple3";
+      break;
+    case "tomato":
+      iconColor = "tomato11";
+      iconBackgroundColor = "tomato3";
+      break;
+  }
 
   return (
     <Box
@@ -23,50 +43,20 @@ export function EmptyView(props: EmptyViewProps) {
       gap={16}
       flexGrow={1}
     >
-      <Box
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        gap={8}
-        maxWidth={324}
-      >
-        <Box
-          borderRadius="100%"
-          backgroundColor={colors.iconBackgroundColor}
-          padding={8}
-        >
-          <Icon name={icon} size="small" color={colors.iconColor} />
-        </Box>
-        <Box flexDirection="column" alignItems="center">
-          <Text variant="bold" align="center">
-            {title}
-          </Text>
-          {description !== undefined && (
-            <Text align="center" color="grey11">
-              {description}
-            </Text>
-          )}
-        </Box>
-      </Box>
-      {children}
+      <BlankSlate>
+        <BlankSlateIcon
+          lineColor={iconColor}
+          backgroundColor={iconBackgroundColor}
+          name={icon}
+        />
+        <BlankSlateTitle size="medium">{title}</BlankSlateTitle>
+        {description !== undefined && (
+          <BlankSlateDescription>{description}</BlankSlateDescription>
+        )}
+        {actions !== undefined && (
+          <BlankSlateActions>{actions}</BlankSlateActions>
+        )}
+      </BlankSlate>
     </Box>
   );
-}
-
-function getColors(color: "purple" | "tomato"): {
-  iconBackgroundColor: ThemeKeys<"color">;
-  iconColor: ThemeKeys<"color">;
-} {
-  switch (color) {
-    case "purple":
-      return {
-        iconBackgroundColor: "purple3",
-        iconColor: "purple11",
-      };
-    case "tomato":
-      return {
-        iconBackgroundColor: "tomato3",
-        iconColor: "tomato11",
-      };
-  }
 }

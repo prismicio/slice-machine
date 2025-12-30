@@ -12,6 +12,7 @@ import { LocalSlicesDialogContent } from "./LocalSlicesDialogContent";
 import { CommonDialogProps, DialogTab } from "./types";
 
 type ImportSlicesFromLibraryModalProps = CommonDialogProps & {
+  open: boolean;
   localSlices: (SharedSlice & { thumbnailUrl?: string })[];
   isEveryLocalSliceAdded: boolean;
   onSuccess: (args: {
@@ -34,7 +35,14 @@ export function ImportSlicesFromLibraryModal(
   const [selectedTab, setSelectedTab] = useState<DialogTab>("local");
 
   useEffect(() => {
-    if (!open) setTimeout(() => setSelectedTab("local"), 250); // wait for the modal fade animation
+    if (!open) {
+      // wait for the modal fade animation
+      const timeout = setTimeout(() => {
+        setSelectedTab("local");
+      }, 250);
+
+      return () => clearTimeout(timeout);
+    }
   }, [open]);
 
   return (
@@ -46,7 +54,6 @@ export function ImportSlicesFromLibraryModal(
         </DialogDescription>
         <LocalSlicesDialogContent
           {...contentProps}
-          open={open}
           selected={selectedTab === "local"}
           onSelectTab={setSelectedTab}
           slices={localSlices}
@@ -55,7 +62,6 @@ export function ImportSlicesFromLibraryModal(
         />
         <LibrarySlicesDialogContent
           {...contentProps}
-          open={open}
           selected={selectedTab === "library"}
           onSelectTab={setSelectedTab}
           onClose={onClose}
