@@ -55,6 +55,12 @@ export const SegmentEventType = {
 	mcp_promo_link_clicked: "mcp:promo-link-clicked",
 	info_banner_dismissed: "info-banner:dismissed",
 	info_banner_button_clicked: "info-banner:button-clicked",
+	slice_library_opened: "slice-library:opened",
+	slice_library_projects_listed: "slice-library:projects-listed",
+	slice_library_slice_selected: "slice-library:slice-selected",
+	slice_library_import_started: "slice-library:import-started",
+	slice_library_import_complete: "slice-library:import-completed",
+	slice_library_import_failed: "slice-library:import-failed",
 } as const;
 type SegmentEventTypes =
 	(typeof SegmentEventType)[keyof typeof SegmentEventType];
@@ -127,6 +133,18 @@ export const HumanSegmentEventType = {
 		"SliceMachine Info Banner Dismissed",
 	[SegmentEventType.info_banner_button_clicked]:
 		"SliceMachine Info Banner Button Clicked",
+	[SegmentEventType.slice_library_opened]:
+		"SliceMachine Slice Library - Opened",
+	[SegmentEventType.slice_library_projects_listed]:
+		"SliceMachine Slice Library - Projects Listed",
+	[SegmentEventType.slice_library_slice_selected]:
+		"SliceMachine Slice Library - Slice Selected",
+	[SegmentEventType.slice_library_import_started]:
+		"SliceMachine Slice Library - Import Started",
+	[SegmentEventType.slice_library_import_complete]:
+		"SliceMachine Slice Library - Import Complete",
+	[SegmentEventType.slice_library_import_failed]:
+		"SliceMachine Slice Library - Import Failed",
 } as const;
 
 export type HumanSegmentEventTypes =
@@ -506,6 +524,35 @@ type InfoBannerButtonClicked = SegmentEvent<
 	}
 >;
 
+type SliceLibraryOpened = SegmentEvent<
+	typeof SegmentEventType.slice_library_opened
+>;
+type SliceLibraryProjectsListed = SegmentEvent<
+	typeof SegmentEventType.slice_library_projects_listed
+>;
+type SliceLibrarySliceSelected = SegmentEvent<
+	typeof SegmentEventType.slice_library_slice_selected,
+	{
+		slices_count: number;
+		source_project_id: string;
+		destination_project_id: string;
+	}
+>;
+type SliceLibraryImportStarted = SegmentEvent<
+	typeof SegmentEventType.slice_library_import_started
+>;
+type SliceLibraryImportComplete = SegmentEvent<
+	typeof SegmentEventType.slice_library_import_complete,
+	{
+		slices_count: number;
+		source_project_id: string;
+		destination_project_id: string;
+	}
+>;
+type SliceLibraryImportFailed = SegmentEvent<
+	typeof SegmentEventType.slice_library_import_failed
+>;
+
 export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
@@ -551,4 +598,10 @@ export type SegmentEvents =
 	| SidebarLinkClicked
 	| McpPromoLinkClicked
 	| InfoBannerDismissed
-	| InfoBannerButtonClicked;
+	| InfoBannerButtonClicked
+	| SliceLibraryOpened
+	| SliceLibraryProjectsListed
+	| SliceLibrarySliceSelected
+	| SliceLibraryImportStarted
+	| SliceLibraryImportComplete
+	| SliceLibraryImportFailed;

@@ -19,7 +19,7 @@ import {
 } from "@prismicio/editor-ui";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { ReactNode, Suspense, useMemo, useState } from "react";
+import { ReactNode, Suspense, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
@@ -44,6 +44,7 @@ import {
 } from "./types";
 import { addSlices } from "./utils/addSlices";
 import { sliceWithoutConflicts } from "./utils/sliceWithoutConflicts";
+import { useStableEffect } from "@prismicio/editor-support/React";
 
 interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
   onSuccess: (args: {
@@ -55,7 +56,13 @@ interface LibrarySlicesDialogContentProps extends CommonDialogContentProps {
 function LibrarySlicesDialogSuspenseContent(
   props: LibrarySlicesDialogContentProps,
 ) {
-  const { location, typeName, onSelectTab, onSuccess, selected } = props;
+  const {
+    location,
+    typeName,
+    onSelectTab,
+    onSuccess,
+    selected: isTabSelected,
+  } = props;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedSlices, setSelectedSlices] = useState<SliceImport[]>([]);
@@ -73,7 +80,24 @@ function LibrarySlicesDialogSuspenseContent(
   const smActions = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const { completeStep: completeOnboardingStep } = useOnboarding();
-  const { repositoryUrl } = useRepositoryInformation();
+  const { repositoryUrl, repositoryName } = useRepositoryInformation();
+
+  useEffect(() => {
+    if (isTabSelected) {
+      void telemetry.track({ event: "slice-library:opened" });
+    }
+  }, [isTabSelected]);
+
+  useStableEffect(() => {
+    if (selectedRepository && selectedSlices.length > 0) {
+      void telemetry.track({
+        event: "slice-library:slice-selected",
+        slices_count: selectedSlices.length,
+        source_project_id: selectedRepository.fullName,
+        destination_project_id: repositoryName,
+      });
+    }
+  }, [selectedSlices]);
 
   const onSelectRepository = (repository: RepositorySelection) => {
     setSelectedRepository(repository);
@@ -279,7 +303,7 @@ repositories and set a library for this project.`}
   }
 
   return (
-    <DialogContent selected={selected}>
+    <DialogContent selected={isTabSelected}>
       <DialogTabs
         selectedTab="library"
         onSelectTab={onSelectTab}
@@ -289,6 +313,7 @@ repositories and set a library for this project.`}
             selectedRepository={selectedRepository}
             onSelectRepository={onSelectRepository}
             configureUrl={configureUrl}
+            isTabSelected={isTabSelected}
           />
         }
       />
@@ -304,11 +329,17 @@ type RepositorySelectorProps = {
   selectedRepository: RepositorySelection | undefined;
   onSelectRepository: (repository: RepositorySelection) => void;
   configureUrl: string;
+  isTabSelected: boolean;
 };
 
 function RepositorySelector(props: RepositorySelectorProps) {
-  const { integrations, selectedRepository, onSelectRepository, configureUrl } =
-    props;
+  const {
+    integrations,
+    selectedRepository,
+    onSelectRepository,
+    configureUrl,
+    isTabSelected,
+  } = props;
 
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
@@ -326,6 +357,12 @@ function RepositorySelector(props: RepositorySelectorProps) {
       })),
     );
   }, [integrations]);
+
+  useEffect(() => {
+    if (isTabSelected) {
+      void telemetry.track({ event: "slice-library:projects-listed" });
+    }
+  }, [isTabSelected, repositories]);
 
   const filteredRepositories = repositories.filter((repository) =>
     repository.fullName.toLowerCase().includes(filter.toLowerCase()),

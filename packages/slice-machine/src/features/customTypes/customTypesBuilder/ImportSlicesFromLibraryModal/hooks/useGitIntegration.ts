@@ -10,10 +10,13 @@ import {
   getDefaultBranch,
   getSliceLibraries,
 } from "../utils/github";
+import { telemetry } from "@/apiClient";
+import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
 
 export function useGitIntegration() {
   const [isImportingSlices, setIsImportingSlices] = useState(false);
   const [importedSlices, setImportedSlices] = useState<SliceImport[]>([]);
+  const { repositoryName: prismicRepositoryName } = useRepositoryInformation();
 
   const { data: githubIntegrations } = useSuspenseQuery({
     queryKey: ["getIntegrations"],
@@ -40,6 +43,7 @@ export function useGitIntegration() {
 
       resetImportedSlices();
       setIsImportingSlices(true);
+      void telemetry.track({ event: "slice-library:import-started" });
 
       const { token } = await fetchGitHubToken({
         integrationId: repository.integrationId,
@@ -88,6 +92,13 @@ export function useGitIntegration() {
         `Found ${fetchedSlices.length} slice(s) from ${libraries.length} library/libraries`,
       );
 
+      void telemetry.track({
+        event: "slice-library:import-completed",
+        slices_count: fetchedSlices.length,
+        source_project_id: repository.fullName,
+        destination_project_id: prismicRepositoryName,
+      });
+
       return fetchedSlices;
     } catch (error) {
       if (error instanceof GitHubImportError) {
@@ -99,6 +110,8 @@ export function useGitIntegration() {
           }`,
         );
       }
+
+      void telemetry.track({ event: "slice-library:import-failed" });
 
       return [];
     } finally {
