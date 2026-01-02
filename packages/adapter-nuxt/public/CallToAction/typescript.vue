@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Content } from "@prismicio/client";
 
-const props = defineProps(getSliceComponentProps<Content.PascalNameToReplaceSlice>());
+const props = defineProps(
+	getSliceComponentProps<Content.PascalNameToReplaceSlice>(),
+);
 
 const alignment = computed(() => {
 	return props.slice.variation === "alignLeft" ? "left" : "center";
