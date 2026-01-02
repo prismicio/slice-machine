@@ -1,0 +1,51 @@
+{
+  "name": "@slicemachine/agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Headless CLI agent for syncing Prismic models and generating TypeScript types",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "slicemachine-agent": "./bin/agent.js",
+    "sm-agent": "./bin/agent.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "types": "tsc --declaration --emitDeclarationOnly --outDir dist",
+    "dev": "vite build --watch",
+    "test": "yarn types && yarn build",
+    "prepublishOnly": "yarn build && yarn types"
+  },
+  "dependencies": {
+    "@slicemachine/manager": "workspace:*",
+    "chalk": "^4.1.2",
+    "execa": "^7.1.1",
+    "open": "^8.4.2",
+    "prismic-ts-codegen": "^0.1.21",
+    "prompts": "^2.4.2",
+    "semver": "^7.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/prompts": "^2.4.3",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
