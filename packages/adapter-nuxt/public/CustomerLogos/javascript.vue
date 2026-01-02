@@ -1,7 +1,5 @@
 <script setup>
-import { isFilled } from "@prismicio/client";
-
-defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
+defineProps(getSliceComponentProps());
 </script>
 
 <template>
@@ -12,7 +10,7 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 	>
 		<div class="es-bounded__content es-customer-logos__content">
 			<div
-				v-if="isFilled.richText(slice.primary.eyebrowHeadline)"
+				v-if="$prismic.isFilled.richText(slice.primary.eyebrowHeadline)"
 				class="es-customer-logos__heading"
 			>
 				<PrismicRichText :field="slice.primary.eyebrowHeadline" />

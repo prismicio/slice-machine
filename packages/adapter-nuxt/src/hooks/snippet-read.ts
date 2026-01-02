@@ -131,7 +131,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 				language: "vue",
 				code: await format(
 					stripIndent`
-							<PrismicEmbed :field="${dotPath(fieldPath)}" />
+							<div v-html="${dotPath(fieldPath)}?.html" />
 						`,
 					helpers,
 				),

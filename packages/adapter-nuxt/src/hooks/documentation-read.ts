@@ -27,14 +27,15 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 		if (model.repeatable) {
 			fileContent = stripIndent`
 				<script ${scriptAttributes.join(" ")}>
+				import { asImageSrc } from "@prismicio/client";
 				import { components } from "~/slices";
 
-				const prismic = usePrismic();
 				const route = useRoute();
+				const { client } = usePrismic();
 				const { data: page } = await useAsyncData(\`[${
 					model.id
 				}-uid-\${route.params.uid}]\`, () =>
-					prismic.client.getByUID("${model.id}", route.params.uid${
+					client.getByUID("${model.id}", route.params.uid${
 						isTypeScriptProject ? " as string" : ""
 					})
 				);
@@ -44,26 +45,25 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					ogTitle: page.value?.data.meta_title,
 					description: page.value?.data.meta_description,
 					ogDescription: page.value?.data.meta_description,
-					ogImage: computed(() => prismic.asImageSrc(page.value?.data.meta_image)),
+					ogImage: computed(() => asImageSrc(page.value?.data.meta_image)),
 				});
 				</script>
 
 				<template>
-					<SliceZone
-						wrapper="main"
-						:slices="page?.data.slices ?? []"
-						:components="components"
-					/>
+					<main>
+						<SliceZone :slices="page?.data.slices ?? []" :components="components" />
+					</main>
 				</template>
 			`;
 		} else {
 			fileContent = stripIndent`
 				<script ${scriptAttributes.join(" ")}>
+				import { asImageSrc } from "@prismicio/client";
 				import { components } from "~/slices";
 
-				const prismic = usePrismic();
+				const { client } = usePrismic();
 				const { data: page } = await useAsyncData("[${model.id}]", () =>
-					prismic.client.getSingle("${model.id}")
+					client.getSingle("${model.id}")
 				);
 
 				useSeoMeta({
@@ -71,16 +71,14 @@ export const documentationRead: DocumentationReadHook<PluginOptions> = async (
 					ogTitle: page.value?.data.meta_title,
 					description: page.value?.data.meta_description,
 					ogDescription: page.value?.data.meta_description,
-					ogImage: computed(() => prismic.asImageSrc(page.value?.data.meta_image)),
+					ogImage: computed(() => asImageSrc(page.value?.data.meta_image)),
 				});
 				</script>
 
 				<template>
-					<SliceZone
-						wrapper="main"
-						:slices="page?.data.slices ?? []"
-						:components="components"
-					/>
+					<main>
+						<SliceZone :slices="page?.data.slices ?? []" :components="components" />
+					</main>
 				</template>
 			`;
 		}
