@@ -1,7 +1,5 @@
 <script setup>
-import { isFilled } from "@prismicio/client";
-
-defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
+defineProps(getSliceComponentProps());
 </script>
 
 <template>
@@ -13,13 +11,13 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 		<div
 			:class="[
 				'es-alternate-grid__content',
-				isFilled.image(slice.primary.image)
+				$prismic.isFilled.image(slice.primary.image)
 					? 'es-alternate-grid__content--with-image'
 					: '',
 			]"
 		>
 			<PrismicImage
-				v-if="isFilled.image(slice.primary.image)"
+				v-if="$prismic.isFilled.image(slice.primary.image)"
 				:field="slice.primary.image"
 				class="es-alternate-grid__image"
 				:class="
@@ -31,19 +29,19 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 			<div class="es-alternate-grid__primary-content">
 				<div className="es-alternate-grid__primary-content__intro">
 					<div
-						v-if="isFilled.keyText(slice.primary.eyebrowHeadline)"
+						v-if="$prismic.isFilled.keyText(slice.primary.eyebrowHeadline)"
 						class="es-alternate-grid__primary-content__intro__eyebrow"
 					>
 						{{ slice.primary.eyebrowHeadline }}
 					</div>
 					<PrismicRichText
-						v-if="isFilled.richText(slice.primary.title)"
+						v-if="$prismic.isFilled.richText(slice.primary.title)"
 						:field="slice.primary.title"
 						class="es-alternate-grid__primary-content__intro__headline"
 						wrapper="div"
 					/>
 					<PrismicRichText
-						v-if="isFilled.richText(slice.primary.description)"
+						v-if="$prismic.isFilled.richText(slice.primary.description)"
 						:field="slice.primary.description"
 						class="es-alternate-grid__primary-content__intro__description"
 						wrapper="div"
@@ -59,13 +57,13 @@ defineProps(getSliceComponentProps(["slice", "index", "slices", "context"]));
 						class="es-alternate-grid__item"
 					>
 						<PrismicRichText
-							v-if="isFilled.richText(item.title)"
+							v-if="$prismic.isFilled.richText(item.title)"
 							:field="item.title"
 							class="es-alternate-grid__item__heading"
 							wrapper="div"
 						/>
 						<PrismicRichText
-							v-if="isFilled.richText(item.description)"
+							v-if="$prismic.isFilled.richText(item.description)"
 							:field="item.description"
 							class="es-alternate-grid__item__description"
 							wrapper="div"

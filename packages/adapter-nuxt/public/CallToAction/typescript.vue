@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import { type Content, isFilled } from "@prismicio/client";
+import type { Content } from "@prismicio/client";
 
 const props = defineProps(
-	getSliceComponentProps<Content.PascalNameToReplaceSlice>([
-		"slice",
-		"index",
-		"slices",
-		"context",
-	]),
+	getSliceComponentProps<Content.PascalNameToReplaceSlice>(),
 );
 
 const alignment = computed(() => {
@@ -23,19 +18,19 @@ const alignment = computed(() => {
 	>
 		<div class="es-bounded__content es-call-to-action__content">
 			<PrismicImage
-				v-if="isFilled.image(slice.primary.image)"
+				v-if="$prismic.isFilled.image(slice.primary.image)"
 				:field="slice.primary.image"
 				class="es-call-to-action__image"
 			/>
 			<div class="es-call-to-action__content">
 				<div
-					v-if="isFilled.richText(slice.primary.title)"
+					v-if="$prismic.isFilled.richText(slice.primary.title)"
 					class="es-call-to-action__content__heading"
 				>
 					<PrismicRichText :field="slice.primary.title" />
 				</div>
 				<div
-					v-if="isFilled.richText(slice.primary.paragraph)"
+					v-if="$prismic.isFilled.richText(slice.primary.paragraph)"
 					class="es-call-to-action__content__paragraph"
 				>
 					<PrismicRichText :field="slice.primary.paragraph" />
