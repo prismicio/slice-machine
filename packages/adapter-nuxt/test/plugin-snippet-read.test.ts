@@ -90,7 +90,7 @@ testSnippet(
 
 testSnippet("date", `{{${model.id}.data.date}}`);
 
-testSnippet("embed", `<PrismicEmbed :field="${model.id}.data.embed" />`);
+testSnippet("embed", `<div v-html="${model.id}.data.embed?.html" />`);
 
 testSnippet("geoPoint", `{{${model.id}.data.geoPoint}}`);
 

@@ -1,14 +1,7 @@
 <script setup lang="ts">
-import { type Content, isFilled } from "@prismicio/client";
+import type { Content } from "@prismicio/client";
 
-defineProps(
-	getSliceComponentProps<Content.PascalNameToReplaceSlice>([
-		"slice",
-		"index",
-		"slices",
-		"context",
-	]),
-);
+defineProps(getSliceComponentProps<Content.PascalNameToReplaceSlice>());
 </script>
 
 <template>
@@ -19,7 +12,7 @@ defineProps(
 	>
 		<div class="es-bounded__content es-customer-logos__content">
 			<div
-				v-if="isFilled.richText(slice.primary.eyebrowHeadline)"
+				v-if="$prismic.isFilled.richText(slice.primary.eyebrowHeadline)"
 				class="es-customer-logos__heading"
 			>
 				<PrismicRichText :field="slice.primary.eyebrowHeadline" />

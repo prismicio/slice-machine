@@ -1,9 +1,5 @@
 <script setup>
-import { isFilled } from "@prismicio/client";
-
-const props = defineProps(
-	getSliceComponentProps(["slice", "index", "slices", "context"]),
-);
+const props = defineProps(getSliceComponentProps());
 
 const alignment = computed(() => {
 	return props.slice.variation === "alignLeft" ? "left" : "center";
@@ -18,19 +14,19 @@ const alignment = computed(() => {
 	>
 		<div class="es-bounded__content es-call-to-action__content">
 			<PrismicImage
-				v-if="isFilled.image(slice.primary.image)"
+				v-if="$prismic.isFilled.image(slice.primary.image)"
 				:field="slice.primary.image"
 				class="es-call-to-action__image"
 			/>
 			<div class="es-call-to-action__content">
 				<div
-					v-if="isFilled.richText(slice.primary.title)"
+					v-if="$prismic.isFilled.richText(slice.primary.title)"
 					class="es-call-to-action__content__heading"
 				>
 					<PrismicRichText :field="slice.primary.title" />
 				</div>
 				<div
-					v-if="isFilled.richText(slice.primary.paragraph)"
+					v-if="$prismic.isFilled.richText(slice.primary.paragraph)"
 					class="es-call-to-action__content__paragraph"
 				>
 					<PrismicRichText :field="slice.primary.paragraph" />
