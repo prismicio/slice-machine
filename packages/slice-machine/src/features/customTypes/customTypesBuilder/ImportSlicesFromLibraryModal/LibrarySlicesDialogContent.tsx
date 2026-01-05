@@ -226,7 +226,7 @@ function LibrarySlicesDialogSuspenseContent(
   };
 
   const configureUrl = new URL(
-    "settings/git-integration",
+    "builder/settings/git-integration",
     prismicRepositoryInformation.repositoryUrl,
   ).toString();
 
