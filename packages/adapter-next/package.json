@@ -92,7 +92,7 @@
 		"eslint-config-prettier": "9.0.0",
 		"eslint-plugin-prettier": "5.0.1",
 		"eslint-plugin-tsdoc": "0.2.17",
-		"next": "16.0.0-beta.0",
+		"next": "16.0.10",
 		"prettier": "3.0.3",
 		"prettier-plugin-jsdoc": "1.1.1",
 		"prismic-ts-codegen": "0.1.27",
