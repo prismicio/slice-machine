@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
-import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
-import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+import { SliceComponentProps } from "@prismicio/react";
+import { PrismicNextLink, PrismicNextImage, PrismicNextRichText } from "@prismicio/next";
 
 export type PascalNameToReplaceProps =
 	SliceComponentProps<Content.PascalNameToReplaceSlice>;
@@ -25,12 +25,12 @@ const PascalNameToReplace: FC<PascalNameToReplaceProps> = ({ slice }) => {
 				<div className="es-call-to-action__content">
 					{isFilled.richText(slice.primary.title) && (
 						<div className="es-call-to-action__content__heading">
-							<PrismicRichText field={slice.primary.title} />
+							<PrismicNextRichText field={slice.primary.title} />
 						</div>
 					)}
 					{isFilled.richText(slice.primary.paragraph) && (
 						<div className="es-call-to-action__content__paragraph">
-							<PrismicRichText field={slice.primary.paragraph} />
+							<PrismicNextRichText field={slice.primary.paragraph} />
 						</div>
 					)}
 				</div>

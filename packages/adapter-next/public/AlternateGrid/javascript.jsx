@@ -1,6 +1,5 @@
 import { isFilled } from "@prismicio/client";
-import { PrismicNextImage } from "@prismicio/next";
-import { PrismicRichText } from "@prismicio/react";
+import { PrismicNextImage, PrismicNextRichText } from "@prismicio/next";
 
 /**
  * @typedef {import("@prismicio/client").Content.PascalNameToReplaceSlice} PascalNameToReplaceSlice
@@ -48,12 +47,12 @@ const PascalNameToReplace = ({ slice }) => {
 						)}
 						{isFilled.richText(slice.primary.title) && (
 							<div className="es-alternate-grid__primary-content__intro__headline">
-								<PrismicRichText field={slice.primary.title} />
+								<PrismicNextRichText field={slice.primary.title} />
 							</div>
 						)}
 						{isFilled.richText(slice.primary.description) && (
 							<div className="es-alternate-grid__primary-content__intro__description">
-								<PrismicRichText field={slice.primary.description} />
+								<PrismicNextRichText field={slice.primary.description} />
 							</div>
 						)}
 					</div>
@@ -63,12 +62,12 @@ const PascalNameToReplace = ({ slice }) => {
 								<div key={`item-${i + 1}`} className="es-alternate-grid__item">
 									{isFilled.richText(item.title) && (
 										<div className="es-alternate-grid__item__heading">
-											<PrismicRichText field={item.title} />
+											<PrismicNextRichText field={item.title} />
 										</div>
 									)}
 									{isFilled.richText(item.description) && (
 										<div className="es-alternate-grid__item__description">
-											<PrismicRichText field={item.description} />
+											<PrismicNextRichText field={item.description} />
 										</div>
 									)}
 								</div>

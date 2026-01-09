@@ -145,7 +145,7 @@ testSnippet("richText", [
 	{
 		label: "React (components)",
 		language: "tsx",
-		code: `<PrismicRichText field={${model.id}.data.richText} />`,
+		code: `<PrismicNextRichText field={${model.id}.data.richText} />`,
 	},
 	{
 		label: "React (plain text)",
@@ -169,7 +169,7 @@ testSnippet("title", [
 	{
 		label: "React (components)",
 		language: "tsx",
-		code: `<PrismicRichText field={${model.id}.data.title} />`,
+		code: `<PrismicNextRichText field={${model.id}.data.title} />`,
 	},
 	{
 		label: "React (plain text)",

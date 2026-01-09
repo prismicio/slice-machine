@@ -40,7 +40,7 @@ export const snippetRead: SnippetReadHook<PluginOptions> = async (
 					language: "tsx",
 					code: await format(
 						stripIndent`
-							<PrismicRichText field={${dotPath(fieldPath)}} />
+							<PrismicNextRichText field={${dotPath(fieldPath)}} />
 						`,
 						helpers,
 					),

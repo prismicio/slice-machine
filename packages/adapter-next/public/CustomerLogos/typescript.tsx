@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
-import { SliceComponentProps, PrismicRichText } from "@prismicio/react";
-import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+import { SliceComponentProps } from "@prismicio/react";
+import { PrismicNextLink, PrismicNextImage, PrismicNextRichText } from "@prismicio/next";
 
 export type PascalNameToReplaceProps =
 	SliceComponentProps<Content.PascalNameToReplaceSlice>;
@@ -16,7 +16,7 @@ const PascalNameToReplace: FC<PascalNameToReplaceProps> = ({ slice }) => {
 			<div className="es-bounded__content es-customer-logos__content">
 				{isFilled.richText(slice.primary.eyebrowHeadline) && (
 					<div className="es-customer-logos__heading">
-						<PrismicRichText field={slice.primary.eyebrowHeadline} />
+						<PrismicNextRichText field={slice.primary.eyebrowHeadline} />
 					</div>
 				)}
 				{slice.primary.logos.length > 0 && (
