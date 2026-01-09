@@ -1,5 +1,9 @@
 import { isFilled } from "@prismicio/client";
-import { PrismicNextLink, PrismicNextImage, PrismicNextRichText } from "@prismicio/next";
+import {
+	PrismicNextLink,
+	PrismicNextImage,
+	PrismicNextRichText,
+} from "@prismicio/next";
 
 /**
  * @typedef {import("@prismicio/client").Content.PascalNameToReplaceSlice} PascalNameToReplaceSlice

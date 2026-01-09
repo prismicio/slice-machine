@@ -1,7 +1,11 @@
 import { FC } from "react";
 import { Content, isFilled } from "@prismicio/client";
 import { SliceComponentProps } from "@prismicio/react";
-import { PrismicNextLink, PrismicNextImage, PrismicNextRichText } from "@prismicio/next";
+import {
+	PrismicNextLink,
+	PrismicNextImage,
+	PrismicNextRichText,
+} from "@prismicio/next";
 
 export type PascalNameToReplaceProps =
 	SliceComponentProps<Content.PascalNameToReplaceSlice>;
