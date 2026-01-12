@@ -1,4 +1,4 @@
-import { useDebounce } from "@prismicio/editor-support/React";
+import { useDebounce, useStableEffect } from "@prismicio/editor-support/React";
 import {
   Box,
   Button,
@@ -386,8 +386,12 @@ function RepositorySelector(props: RepositorySelectorProps) {
     );
   }, [integrations]);
 
-  useEffect(() => {
+  useStableEffect(() => {
     if (isTabSelected && repositories.length > 0) {
+      if (repositories.length === 1) {
+        onSelectRepository(repositories[0]);
+      }
+
       void telemetry.track({
         event: "slice-library:projects-listed",
         repositories_count: repositories.length,
