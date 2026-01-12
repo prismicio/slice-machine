@@ -1,5 +1,17 @@
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
+import { z } from "zod";
+
+export type Framework = "next" | "nuxt" | "sveltekit";
+
+export const AdapterSchema = z.enum([
+  "@slicemachine/adapter-next",
+  "@slicemachine/adapter-nuxt",
+  "@slicemachine/adapter-nuxt2",
+  "@slicemachine/adapter-sveltekit",
+]);
+
+export type Adapter = z.infer<typeof AdapterSchema>;
 
 export type SliceImport = {
   image: File;

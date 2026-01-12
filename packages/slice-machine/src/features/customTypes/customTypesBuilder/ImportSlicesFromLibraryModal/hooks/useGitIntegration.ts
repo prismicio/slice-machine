@@ -5,16 +5,16 @@ import { toast } from "react-toastify";
 import { telemetry } from "@/apiClient";
 import { managerClient } from "@/managerClient";
 
-import { RepositorySelection, SliceImport } from "../types";
+import { Framework, RepositorySelection, SliceImport } from "../types";
 import {
   fetchSlicesFromLibraries,
   getDefaultBranch,
-  getSliceLibraries,
+  getProjectDetails,
 } from "../utils/github";
 
 export function useGitIntegration() {
   const [isImportingSlices, setIsImportingSlices] = useState(false);
-  const [importedSlices, setImportedSlices] = useState<SliceImport[]>([]);
+  const [fetchedSlices, setFetchedSlices] = useState<SliceImport[]>([]);
 
   const { data: githubIntegrations } = useSuspenseQuery({
     queryKey: ["getIntegrations"],
@@ -29,14 +29,15 @@ export function useGitIntegration() {
   });
 
   const resetImportedSlices = () => {
-    setImportedSlices([]);
+    setFetchedSlices([]);
     setIsImportingSlices(false);
   };
 
   const fetchSlicesFromGithub = async (args: {
     repository: RepositorySelection;
+    targetFramework: Framework;
   }) => {
-    const { repository } = args;
+    const { repository, targetFramework } = args;
 
     try {
       resetImportedSlices();
@@ -62,7 +63,12 @@ export function useGitIntegration() {
       let libraries: string[] | undefined;
 
       try {
-        libraries = await getSliceLibraries({ owner, repo, branch, token });
+        const project = await getProjectDetails({ owner, repo, branch, token });
+        if (project.framework !== targetFramework) {
+          throw new GitHubImportError("Incompatible project framework.");
+        }
+
+        libraries = project.libraries;
       } catch (error) {
         throw new GitHubImportError(`
           Failed to fetch slicemachine.config.json: ${
@@ -89,7 +95,7 @@ export function useGitIntegration() {
         throw new GitHubImportError("No slices were found in the libraries.");
       }
 
-      setImportedSlices(fetchedSlices);
+      setFetchedSlices(fetchedSlices);
       toast.success(
         `Found ${fetchedSlices.length} slice(s) from ${libraries.length} library/libraries`,
       );
@@ -127,8 +133,8 @@ export function useGitIntegration() {
 
   return {
     integrations: githubIntegrations.integrations ?? [],
+    fetchedSlices: fetchedSlices ?? [],
     isImportingSlices,
-    importedSlices,
     resetImportedSlices,
     fetchSlicesFromGithub,
   };

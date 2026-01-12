@@ -1,4 +1,4 @@
-import { useDebounce } from "@prismicio/editor-support/React";
+import { useDebounce, useStableEffect } from "@prismicio/editor-support/React";
 import {
   Box,
   Button,
@@ -24,6 +24,7 @@ import { ReactNode, Suspense, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
 import { getState, telemetry } from "@/apiClient";
+import { getFrameworkFromAdapter } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/utils/getFrameworkFromAdapter";
 import { useOnboarding } from "@/features/onboarding/useOnboarding";
 import { useAutoSync } from "@/features/sync/AutoSyncProvider";
 import { useRepositoryInformation } from "@/hooks/useRepositoryInformation";
@@ -37,6 +38,7 @@ import { EmptyView } from "./EmptyView";
 import { useGitIntegration } from "./hooks/useGitIntegration";
 import { SliceCard } from "./SliceCard";
 import {
+  AdapterSchema,
   CommonDialogContentProps,
   GitIntegration,
   NewSlice,
@@ -71,16 +73,16 @@ function LibrarySlicesDialogSuspenseContent(
 
   const {
     integrations,
+    fetchedSlices,
     isImportingSlices,
     fetchSlicesFromGithub,
-    importedSlices,
     resetImportedSlices,
   } = useGitIntegration();
 
   const smActions = useSliceMachineActions();
   const { syncChanges } = useAutoSync();
   const { completeStep: completeOnboardingStep } = useOnboarding();
-  const prismicRepositoryInformation = useRepositoryInformation();
+  const prismicRepositoryInformation = usePrismicRepositoryDetails();
 
   useEffect(() => {
     if (isTabSelected) {
@@ -102,11 +104,14 @@ function LibrarySlicesDialogSuspenseContent(
   const onSelectRepository = (repository: RepositorySelection) => {
     setSelectedRepository(repository);
     setSelectedSlices([]);
-    void fetchSlicesFromGithub({ repository });
+    void fetchSlicesFromGithub({
+      repository,
+      targetFramework: prismicRepositoryInformation.framework,
+    });
   };
 
   const onSelectAll = (checked: boolean) => {
-    setSelectedSlices(checked ? importedSlices : []);
+    setSelectedSlices(checked ? fetchedSlices : []);
   };
 
   const onSelect = (slice: SliceImport) => {
@@ -258,19 +263,20 @@ repositories and set a library for this project.`}
         icon="alert"
       />
     );
-  } else if (importedSlices.length === 0) {
+  } else if (fetchedSlices.length === 0) {
     renderedContent = (
       <EmptyView
         title="No slices found"
-        description="This repository doesn't contain any Slice components."
+        description={`This repository doesn't contain any Slice components
+compatible with your project.`}
         icon="viewDay"
       />
     );
   } else {
-    const allSelected = importedSlices.every((slice) =>
+    const allSelected = fetchedSlices.every((slice) =>
       selectedSlices.some((s) => s.model.id === slice.model.id),
     );
-    const someSelected = importedSlices.some((slice) =>
+    const someSelected = fetchedSlices.some((slice) =>
       selectedSlices.some((s) => s.model.id === slice.model.id),
     );
 
@@ -278,7 +284,7 @@ repositories and set a library for this project.`}
     if (allSelected) {
       selectAllLabel = `Selected all slices (${selectedSlices.length})`;
     } else if (someSelected) {
-      selectAllLabel = `${selectedSlices.length} of ${importedSlices.length} selected`;
+      selectAllLabel = `${selectedSlices.length} of ${fetchedSlices.length} selected`;
     }
 
     renderedContent = (
@@ -300,7 +306,7 @@ repositories and set a library for this project.`}
               gap={16}
               padding={{ inline: 16, bottom: 16 }}
             >
-              {importedSlices.map((slice) => (
+              {fetchedSlices.map((slice) => (
                 <SliceCard
                   key={slice.model.id}
                   model={slice.model}
@@ -380,8 +386,12 @@ function RepositorySelector(props: RepositorySelectorProps) {
     );
   }, [integrations]);
 
-  useEffect(() => {
+  useStableEffect(() => {
     if (isTabSelected && repositories.length > 0) {
+      if (repositories.length === 1) {
+        onSelectRepository(repositories[0]);
+      }
+
       void telemetry.track({
         event: "slice-library:projects-listed",
         repositories_count: repositories.length,
@@ -469,6 +479,20 @@ function RepositorySelector(props: RepositorySelectorProps) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
+}
+
+function usePrismicRepositoryDetails() {
+  const prismicRepositoryInformation = useRepositoryInformation();
+  const { data: framework } = useSuspenseQuery({
+    queryKey: ["getFrameworkFromAdapterName"],
+    queryFn: async () => {
+      return getFrameworkFromAdapter(
+        AdapterSchema.parse(await managerClient.project.getAdapterName()),
+      );
+    },
+  });
+
+  return { ...prismicRepositoryInformation, framework };
 }
 
 function ComboBoxItemContent(props: {

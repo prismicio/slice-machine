@@ -2,7 +2,9 @@ import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
 import { SharedSlice } from "@prismicio/types-internal/lib/customtypes";
 import { z } from "zod";
 
-import { SliceFile, SliceImport } from "../types";
+import { getFrameworkFromAdapter } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal/utils/getFrameworkFromAdapter";
+
+import { AdapterSchema, Framework, SliceFile, SliceImport } from "../types";
 import { mapWithConcurrency } from "./mapWithConcurrency";
 
 class GitHubRepositoryAPI {
@@ -114,7 +116,7 @@ class GitHubRepositoryAPI {
       .parse(data);
   }
 
-  async getSliceLibraries(branch: string) {
+  async getSliceMachineConfigDetails(branch: string) {
     const data = await this.request(
       `/repos/${this.owner}/${this.repo}/contents/slicemachine.config.json?ref=${branch}`,
     );
@@ -130,8 +132,15 @@ class GitHubRepositoryAPI {
       const decodedContent = atob(parsed.content.replace(/\s/g, ""));
 
       return z
-        .object({ libraries: z.array(z.string()) })
-        .parse(JSON.parse(decodedContent)).libraries;
+        .object({
+          libraries: z.array(z.string()),
+          adapter: AdapterSchema,
+        })
+        .transform((data) => ({
+          framework: getFrameworkFromAdapter(data.adapter),
+          libraries: data.libraries,
+        }))
+        .parse(JSON.parse(decodedContent));
     } else {
       throw new Error("No content found in slicemachine.config.json");
     }
@@ -151,7 +160,7 @@ export const getDefaultBranch = async ({
   return github.getDefaultBranch();
 };
 
-export const getSliceLibraries = async ({
+export const getProjectDetails = async ({
   owner,
   repo,
   branch,
@@ -161,9 +170,9 @@ export const getSliceLibraries = async ({
   repo: string;
   branch: string;
   token: string;
-}): Promise<string[]> => {
+}): Promise<{ libraries: string[]; framework: Framework }> => {
   const github = new GitHubRepositoryAPI({ owner, repo, token });
-  return github.getSliceLibraries(branch);
+  return github.getSliceMachineConfigDetails(branch);
 };
 
 const mocksSchema = z.array(
