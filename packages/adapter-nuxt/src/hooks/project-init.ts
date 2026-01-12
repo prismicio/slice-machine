@@ -30,7 +30,8 @@ const installDependencies = async ({
 }: InstallDependenciesArgs) => {
 	await installDependencies({
 		dependencies: {
-			[NUXT_PRISMIC]: "^4.0.0",
+			[NUXT_PRISMIC]: "latest",
+			"@prismicio/client": "latest",
 		},
 		dev: true,
 	});
