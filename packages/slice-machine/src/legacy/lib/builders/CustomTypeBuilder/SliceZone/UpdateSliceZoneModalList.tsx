@@ -4,11 +4,9 @@ import { SharedSliceCard } from "@/features/slices/sliceCards/SharedSliceCard";
 import Grid from "@/legacy/components/Grid";
 import { ComponentUI } from "@/legacy/lib/models/common/ComponentUI";
 
-import { SliceZoneFormValues } from "./UpdateSliceZoneModal";
-
 const UpdateSliceZoneModalList: React.FC<{
   availableSlices: ReadonlyArray<ComponentUI>;
-  values: SliceZoneFormValues;
+  values: { sliceKeys: string[] };
 }> = ({ availableSlices, values }) => (
   <FieldArray
     name="sliceKeys"

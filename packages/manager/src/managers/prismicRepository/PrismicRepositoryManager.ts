@@ -83,6 +83,34 @@ type PrismicRepositoryManagerFetchEnvironmentsReturnType = {
 	environments?: Environment[];
 };
 
+const GitIntegrationsSchema = z.object({
+	integrations: z.array(
+		z.discriminatedUnion("status", [
+			z.object({
+				id: z.string(),
+				status: z.literal("connected"),
+				owner: z.string(),
+				repositories: z.array(
+					z.object({
+						name: z.string(),
+						fullName: z.string(),
+					}),
+				),
+			}),
+			z.object({
+				id: z.string(),
+				status: z.literal("broken"),
+				owner: z.string().optional(),
+				repositories: z.tuple([]),
+			}),
+		]),
+	),
+});
+
+const GitIntegrationTokenSchema = z.object({
+	token: z.string(),
+});
+
 export class PrismicRepositoryManager extends BaseManager {
 	// TODO: Add methods for repository-specific actions. E.g. creating a
 	// new repository.
@@ -703,6 +731,68 @@ export class PrismicRepositoryManager extends BaseManager {
 					});
 			}
 		}
+	}
+
+	async fetchGitIntegrations(): Promise<z.infer<typeof GitIntegrationsSchema>> {
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL("integrations", API_ENDPOINTS.GitService);
+		url.searchParams.set("repository", repositoryName);
+
+		const res = await this._fetch({ url });
+
+		if (!res.ok) {
+			const text = await res.text();
+			throw new Error(
+				`Failed to fetch integrations for repository ${repositoryName}`,
+				{ cause: text },
+			);
+		}
+
+		const json = await res.json();
+		const { value, error } = decode(GitIntegrationsSchema, json);
+
+		if (error) {
+			throw new UnexpectedDataError(
+				`Failed to decode integrations: ${error.errors.join(", ")}`,
+			);
+		}
+
+		return value;
+	}
+
+	async fetchGitIntegrationToken(args: {
+		integrationId: string;
+	}): Promise<z.infer<typeof GitIntegrationTokenSchema>> {
+		const { integrationId } = args;
+		const repositoryName = await this.project.getRepositoryName();
+
+		const url = new URL(
+			`integrations/${integrationId}/token`,
+			API_ENDPOINTS.GitService,
+		);
+		url.searchParams.set("repository", repositoryName);
+
+		const res = await this._fetch({ url, method: "POST" });
+
+		if (!res.ok) {
+			const text = await res.text();
+			throw new Error(
+				`Failed to fetch token for integration ${integrationId}`,
+				{ cause: text },
+			);
+		}
+
+		const json = await res.json();
+		const { value, error } = decode(GitIntegrationTokenSchema, json);
+
+		if (error) {
+			throw new UnexpectedDataError(
+				`Failed to decode integration token: ${error.errors.join(", ")}`,
+			);
+		}
+
+		return value;
 	}
 
 	private _decodeLimitOrThrow(

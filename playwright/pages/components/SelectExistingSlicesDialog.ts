@@ -8,15 +8,15 @@ export class SelectExistingSlicesDialog extends Dialog {
 
   constructor(page: Page) {
     super(page, {
-      title: `Select existing slices`,
-      submitName: "Add",
+      title: "Reuse an existing slice",
+      submitName: new RegExp(`^Add to .+ \\(\\d+\\)$`),
     });
 
     /**
      * Static locators
      */
-    this.sharedSliceCard = this.dialog.getByTestId("shared-slice-card");
-    this.addedMessage = page.getByText("Slice(s) added to slice zone", {
+    this.sharedSliceCard = this.dialog.getByTestId("slice-card");
+    this.addedMessage = page.getByText("Slices successfully added", {
       exact: true,
     });
   }

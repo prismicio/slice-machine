@@ -25,7 +25,6 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
   openCreateSliceFromImageModal,
   openUpdateSliceZoneModal,
   openSlicesTemplatesModal,
-  projectHasAvailableSlices,
   isSlicesTemplatesSupported,
 }) => {
   const sliceCreationOptions = getSliceCreationOptions({
@@ -77,17 +76,15 @@ export const SliceZoneBlankSlate: FC<SliceZoneBlankSlateProps> = ({
               {sliceCreationOptions.fromTemplate.title}
             </ActionListItem>
           )}
-          {projectHasAvailableSlices && (
-            <ActionListItem
-              renderStartIcon={() =>
-                sliceCreationOptions.fromExisting.BackgroundIcon
-              }
-              onClick={openUpdateSliceZoneModal}
-              description={sliceCreationOptions.fromExisting.description}
-            >
-              {sliceCreationOptions.fromExisting.title}
-            </ActionListItem>
-          )}
+          <ActionListItem
+            renderStartIcon={() =>
+              sliceCreationOptions.fromExisting.BackgroundIcon
+            }
+            onClick={openUpdateSliceZoneModal}
+            description={sliceCreationOptions.fromExisting.description}
+          >
+            {sliceCreationOptions.fromExisting.title}
+          </ActionListItem>
         </ActionList>
       </BlankSlateActions>
     </BlankSlate>

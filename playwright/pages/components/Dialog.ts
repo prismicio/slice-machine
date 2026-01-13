@@ -12,7 +12,7 @@ export class Dialog {
     page: Page,
     options: {
       title: string | RegExp | Locator;
-      submitName?: string;
+      submitName?: string | RegExp;
     },
   ) {
     const { title, submitName = "Submit" } = options;
