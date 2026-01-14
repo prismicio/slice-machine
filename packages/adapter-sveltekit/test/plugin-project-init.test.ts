@@ -814,8 +814,7 @@ describe("Slice Simulator route", () => {
 
 		expect(contents).toMatchInlineSnapshot(`
 			"<script>
-			  import { SliceSimulator } from \\"@slicemachine/adapter-sveltekit/simulator\\";
-			  import { SliceZone } from \\"@prismicio/svelte\\";
+			  import { SliceSimulator, SliceZone } from \\"@prismicio/svelte\\";
 			  import { components } from \\"$lib/slices\\";
 			</script>
 
@@ -948,8 +947,7 @@ describe("Slice Simulator route", () => {
 
 			expect(contents).toMatchInlineSnapshot(`
 				"<script>
-				  import { SliceSimulator } from \\"@slicemachine/adapter-sveltekit/simulator\\";
-				  import { SliceZone } from \\"@prismicio/svelte\\";
+				  import { SliceSimulator, SliceZone } from \\"@prismicio/svelte\\";
 				  import { components } from \\"$lib/slices\\";
 				</script>
 

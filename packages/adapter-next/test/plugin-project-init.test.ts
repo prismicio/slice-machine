@@ -835,10 +835,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import {
-				  SliceSimulator,
-				  getSlices,
-				} from \\"@slicemachine/adapter-next/simulator\\";
+				"import { SliceSimulator, getSlices } from \\"@prismicio/next\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../../slices\\";
@@ -901,10 +898,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import {
-				  SliceSimulator,
-				  getSlices,
-				} from \\"@slicemachine/adapter-next/simulator\\";
+				"import { SliceSimulator, getSlices } from \\"@prismicio/next\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../../slices\\";
@@ -1002,7 +996,7 @@ describe("Slice Simulator route", () => {
 				  SliceSimulator,
 				  SliceSimulatorParams,
 				  getSlices,
-				} from \\"@slicemachine/adapter-next/simulator\\";
+				} from \\"@prismicio/next\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../../slices\\";
@@ -1040,7 +1034,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"import { SliceSimulator } from \\"@prismicio/next/pages\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";
@@ -1097,7 +1091,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"import { SliceSimulator } from \\"@prismicio/next/pages\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";
@@ -1188,7 +1182,7 @@ describe("Slice Simulator route", () => {
 			);
 
 			expect(contents).toMatchInlineSnapshot(`
-				"import { SliceSimulator } from \\"@slicemachine/adapter-next/simulator\\";
+				"import { SliceSimulator } from \\"@prismicio/next/pages\\";
 				import { SliceZone } from \\"@prismicio/react\\";
 
 				import { components } from \\"../slices\\";
