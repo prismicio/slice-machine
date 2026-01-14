@@ -33,6 +33,7 @@ export const createStartSliceMachineProcess = (
 export type StartSliceMachineProcessConstructorArgs = {
 	open: boolean;
 	port?: number;
+	cwd?: string;
 };
 
 /**
@@ -60,7 +61,9 @@ export class StartSliceMachineProcess {
 	private _sliceMachineManager: SliceMachineManager;
 
 	constructor(args: StartSliceMachineProcessConstructorArgs) {
-		this._sliceMachineManager = createSliceMachineManager();
+		this._sliceMachineManager = createSliceMachineManager({
+			cwd: args.cwd,
+		});
 
 		this.open = args.open ?? false;
 		this.port = args.port ?? DEFAULT_SERVER_PORT;
