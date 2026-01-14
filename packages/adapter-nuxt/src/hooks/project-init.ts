@@ -156,16 +156,15 @@ const createSliceSimulatorPage = async ({
 	}
 
 	const contents = stripIndent`
+		<script ${scriptAttributes.join(" ")}>
+		import { components } from "~/slices";
+		</script>
+
 		<template>
 			<SliceSimulator #default="{ slices }">
 				<SliceZone :slices="slices" :components="components" />
 			</SliceSimulator>
 		</template>
-
-		<script ${scriptAttributes.join(" ")}>
-		import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
-		import { components } from "~/slices";
-		</script>
 	`;
 
 	await writeProjectFile({

@@ -130,16 +130,15 @@ describe.each(["./app", "./src", "./"])(
 				"utf8",
 			);
 
-			expect(contents).toBe(`<template>
+			expect(contents).toBe(`<script setup>
+import { components } from "~/slices";
+</script>
+
+<template>
   <SliceSimulator #default="{ slices }">
     <SliceZone :slices="slices" :components="components" />
   </SliceSimulator>
 </template>
-
-<script setup>
-import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
-import { components } from "~/slices";
-</script>
 `);
 		});
 
@@ -167,16 +166,15 @@ import { components } from "~/slices";
 				"utf8",
 			);
 
-			expect(contents).toBe(`<template>
+			expect(contents).toBe(`<script setup lang="ts">
+import { components } from "~/slices";
+</script>
+
+<template>
   <SliceSimulator #default="{ slices }">
     <SliceZone :slices="slices" :components="components" />
   </SliceSimulator>
 </template>
-
-<script setup lang="ts">
-import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
-import { components } from "~/slices";
-</script>
 `);
 		});
 
@@ -233,16 +231,15 @@ import { components } from "~/slices";
 						"utf8",
 					);
 
-					expect(contents).toBe(`<template>
+					expect(contents).toBe(`<script setup>
+import { components } from "~/slices";
+</script>
+
+<template>
   <SliceSimulator #default="{ slices }">
     <SliceZone :slices="slices" :components="components" />
   </SliceSimulator>
 </template>
-
-<script setup>
-import { SliceSimulator } from "@slicemachine/adapter-nuxt/simulator";
-import { components } from "~/slices";
-</script>
 `);
 				});
 			},
