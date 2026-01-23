@@ -11027,7 +11027,7 @@ __metadata:
     file-type: ^18.2.1
     fp-ts: ^2.13.1
     get-port: ^6.1.2
-    h3: ^1.6.0
+    h3: ^1.15.5
     hook-std: 3.0.0
     io-ts: ^2.2.20
     io-ts-reporters: ^2.0.1
@@ -17959,13 +17959,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie-es@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "cookie-es@npm:1.0.0"
-  checksum: e8721cf4d38f3e44049c9118874b323f4f674b1c5cef84a2b888f5bf86ad720ad17b51b43150cad7535a375c24e2921da603801ad28aa6125c3d36c031b41468
-  languageName: node
-  linkType: hard
-
 "cookie-es@npm:^1.2.2":
   version: 1.2.2
   resolution: "cookie-es@npm:1.2.2"
@@ -18287,7 +18280,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crossws@npm:>=0.2.0 <0.4.0, crossws@npm:^0.3.4, crossws@npm:^0.3.5":
+"crossws@npm:>=0.2.0 <0.4.0, crossws@npm:^0.3.5":
   version: 0.3.5
   resolution: "crossws@npm:0.3.5"
   dependencies:
@@ -22862,35 +22855,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"h3@npm:^1.12.0, h3@npm:^1.15.1, h3@npm:^1.15.2, h3@npm:^1.15.3":
-  version: 1.15.3
-  resolution: "h3@npm:1.15.3"
+"h3@npm:^1.12.0, h3@npm:^1.15.1, h3@npm:^1.15.2, h3@npm:^1.15.3, h3@npm:^1.15.5":
+  version: 1.15.5
+  resolution: "h3@npm:1.15.5"
   dependencies:
     cookie-es: ^1.2.2
-    crossws: ^0.3.4
+    crossws: ^0.3.5
     defu: ^6.1.4
     destr: ^2.0.5
     iron-webcrypto: ^1.2.1
-    node-mock-http: ^1.0.0
+    node-mock-http: ^1.0.4
     radix3: ^1.1.2
-    ufo: ^1.6.1
+    ufo: ^1.6.3
     uncrypto: ^0.1.3
-  checksum: 23bd309aed995e64f5cb69333d24e628b6516b7d86cae504be486437d229beaecd03a296c1294740d33d6e9fd1c2c1423268783eea6228f87b18f6c4cd6d933e
-  languageName: node
-  linkType: hard
-
-"h3@npm:^1.6.0":
-  version: 1.6.6
-  resolution: "h3@npm:1.6.6"
-  dependencies:
-    cookie-es: ^1.0.0
-    defu: ^6.1.2
-    destr: ^1.2.2
-    iron-webcrypto: ^0.7.0
-    radix3: ^1.0.1
-    ufo: ^1.1.2
-    uncrypto: ^0.1.2
-  checksum: 58a24d0f5eeff0e36caf7299d0237c43e0e10b9fcc8f8858aec51bcac0a0ab6ed28ebff199119a62e5571c0c35e6788acb69fe63468ff04c3134598c7ee46f1a
+  checksum: 455f58681de2b789b39af45067db8dde35234c18d86ec5068687300aae3c0225f85edcd110906493e087407e2caaa1f292352769c484284e72558d7677c29899
   languageName: node
   linkType: hard
 
@@ -23951,13 +23929,6 @@ __metadata:
   version: 1.9.1
   resolution: "ipaddr.js@npm:1.9.1"
   checksum: f88d3825981486f5a1942414c8d77dd6674dd71c065adcfa46f578d677edcb99fda25af42675cb59db492fdf427b34a5abfcde3982da11a8fd83a500b41cfe77
-  languageName: node
-  linkType: hard
-
-"iron-webcrypto@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "iron-webcrypto@npm:0.7.0"
-  checksum: e866c039bf06444dbb1986821df87706dc90ec1c04a03b27eb7f554f4c8dc43b6647f434645060a22c59990f9acac4b87a454adf47d89e5509e5bd627cd423be
   languageName: node
   linkType: hard
 
@@ -28619,6 +28590,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-mock-http@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "node-mock-http@npm:1.0.4"
+  checksum: 965f7915d3bbe9cbf5555dca12800cb0ca78a0b8db9c8f33a0ea6d9447fd200a925232b5ddf0d60c7112785ea282eb9baa079bb53d485b2b554355e8559f98ed
+  languageName: node
+  linkType: hard
+
 "node-object-hash@npm:^1.2.0":
   version: 1.4.2
   resolution: "node-object-hash@npm:1.4.2"
@@ -32638,13 +32616,6 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 6ac3861aee968a1c9971f17614719e04d8990e616f975a6aa0f8dec5f92fb79433b13807bcc40f54c33da3c79f17861fa7468eb314084369b984088a53679a20
-  languageName: node
-  linkType: hard
-
-"radix3@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "radix3@npm:1.0.1"
-  checksum: 042e11588464ca444a663f78c2aad11eb35533a26d08a56a53786fd60ddb20a058c720d8f66cad4f010859493753f29ac36aaa47d122b6459675c68a3f74928a
   languageName: node
   linkType: hard
 
@@ -37425,6 +37396,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ufo@npm:^1.6.3":
+  version: 1.6.3
+  resolution: "ufo@npm:1.6.3"
+  checksum: a23eff86bbbef0b9cc69c19c653c703b656c2328938576d3a60e05e246ef5a78d88b17c710afa146311c5b855950ccfee60ba8f6c8845e8d1ed6b5a9086ddad1
+  languageName: node
+  linkType: hard
+
 "uglify-js@npm:^3.1.4, uglify-js@npm:^3.5.1":
   version: 3.17.4
   resolution: "uglify-js@npm:3.17.4"
@@ -37453,7 +37431,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uncrypto@npm:^0.1.2, uncrypto@npm:^0.1.3":
+"uncrypto@npm:^0.1.3":
   version: 0.1.3
   resolution: "uncrypto@npm:0.1.3"
   checksum: 07160e08806dd6cea16bb96c3fd54cd70fc801e02fc3c6f86980144d15c9ebbd1c55587f7280a207b3af6cd34901c0d0b77ada5a02c2f7081a033a05acf409e2
