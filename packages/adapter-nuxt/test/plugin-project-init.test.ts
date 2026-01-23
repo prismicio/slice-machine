@@ -529,3 +529,25 @@ describe("modify slicemachine.config.json", () => {
 		expect(contents.libraries).toStrictEqual(preHookConfig.libraries);
 	});
 });
+
+test("creates all Slice library index files", async (ctx) => {
+	await fs.writeFile(
+		path.join(ctx.project.root, "slicemachine.config.json"),
+		JSON.stringify({
+			...ctx.project.config,
+			libraries: ["./foo", "./bar"],
+		}),
+	);
+
+	await ctx.pluginRunner.callHook("project:init", {
+		log: vi.fn(),
+		installDependencies: vi.fn(),
+	});
+
+	expect(await fs.readdir(path.join(ctx.project.root, "foo"))).includes(
+		"index.js",
+	);
+	expect(await fs.readdir(path.join(ctx.project.root, "bar"))).includes(
+		"index.js",
+	);
+});

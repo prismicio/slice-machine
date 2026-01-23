@@ -16,6 +16,7 @@ import { builders, loadFile, writeFile } from "magicast";
 import { buildSrcPath } from "../lib/buildSrcPath";
 import { rejectIfNecessary } from "../lib/rejectIfNecessary";
 import { checkIsTypeScriptProject } from "../lib/checkIsTypeScriptProject";
+import { upsertSliceLibraryIndexFile } from "../lib/upsertSliceLibraryIndexFile";
 
 import type { PluginOptions } from "../types";
 
@@ -262,6 +263,28 @@ const modifySliceMachineConfig = async ({
 	});
 };
 
+const upsertSliceLibraryIndexFiles = async (
+	context: SliceMachineContext<PluginOptions>,
+) => {
+	// We must use the `getProject()` helper to get the latest version of
+	// the project config. The config may have been modified in
+	// `modifySliceMachineConfig()` and will not be relfected in
+	// `context.project`.
+	// TODO: Automatically update the plugin runner's in-memory `project`
+	// object when `updateSliceMachineConfig()` is called.
+	const project = await context.helpers.getProject();
+
+	if (!project.config.libraries) {
+		return;
+	}
+
+	await Promise.all(
+		project.config.libraries.map(async (libraryID) => {
+			await upsertSliceLibraryIndexFile({ libraryID, ...context });
+		}),
+	);
+};
+
 export const projectInit: ProjectInitHook<PluginOptions> = async (
 	{ installDependencies: _installDependencies },
 	context,
@@ -275,4 +298,8 @@ export const projectInit: ProjectInitHook<PluginOptions> = async (
 			modifySliceMachineConfig(context),
 		]),
 	);
+
+	// This must happen after `modifySliceMachineConfig()` since the
+	// location of the default Slice library may change.
+	await upsertSliceLibraryIndexFiles(context);
 };
