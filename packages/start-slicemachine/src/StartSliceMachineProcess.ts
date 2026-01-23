@@ -1,9 +1,13 @@
 /* eslint-disable no-console */
 
 import type { AddressInfo } from "node:net";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import chalk from "chalk";
 import open from "open";
 import os from "node:os";
+import semver from "semver";
 
 import {
 	PrismicUserProfile,
@@ -70,6 +74,8 @@ export class StartSliceMachineProcess {
 	 * Runs the process.
 	 */
 	async run(): Promise<void> {
+		this._checkNodeVersion();
+
 		// This migration needs to run before the plugins are initialised
 		// Nothing can start without the config file
 		await migrateSMJSON(this._sliceMachineManager);
@@ -162,6 +168,34 @@ export class StartSliceMachineProcess {
 				// noop - We'll try again before uploading a screenshot.
 				this._sliceMachineManager.screenshots.initS3ACL(),
 			]);
+		}
+	}
+
+	/**
+	 * Checks if the current Node.js version satisfies the required version and
+	 * displays a warning if it doesn't.
+	 */
+	private _checkNodeVersion(): void {
+		const __dirname = dirname(fileURLToPath(import.meta.url));
+		const pkg = JSON.parse(
+			readFileSync(join(__dirname, "../package.json"), "utf8"),
+		);
+
+		const requiredVersion = pkg.engines?.node;
+
+		if (!requiredVersion) {
+			return;
+		}
+
+		const currentVersion = process.version;
+
+		if (!semver.satisfies(currentVersion, requiredVersion)) {
+			console.warn(
+				chalk.yellow(
+					`⚠️  Warning: You are using Node.js ${currentVersion}, but this tool requires ${requiredVersion}.\n` +
+						`   Some features may not work correctly. Please upgrade your Node.js version.\n`,
+				),
+			);
 		}
 	}
 

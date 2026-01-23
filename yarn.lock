@@ -35622,6 +35622,7 @@ __metadata:
     open: ^8.4.2
     prettier: 3.0.3
     prettier-plugin-jsdoc: 1.1.1
+    semver: ^7.3.8
     serve-static: ^1.15.0
     size-limit: 8.2.4
     typescript: 4.9.5
