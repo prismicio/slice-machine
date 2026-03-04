@@ -48,6 +48,7 @@ type Args = {
     | "production"
     | "development"
     | "dev-tools"
+    | "devops"
     | "marketing-tools"
     | "platform";
 
@@ -109,7 +110,7 @@ Usage:
 Options:
     --new              Create a new playground
     --framework, -f    Specify the playground's framework (next, nuxt, sveltekit) (default: ${DEFAULT_FRAMEWORK})
-    --environment, -e  Specify the playground's environment (staging, dev-tools, marketing-tools, platform, production, development) (default: ${DEFAULT_ENVIRONMENT})
+    --environment, -e  Specify the playground's environment (staging, dev-tools, marketing-tools, platform, devops, production, development) (default: ${DEFAULT_ENVIRONMENT})
     --no-start         Do not start Slice Machine and the website
     --prefix, -p       Specify the prefix for the playground name (default: ${DEFAULT_PREFIX})
     --dry-run, -n      Show what would have happened
@@ -130,6 +131,7 @@ Arguments:
       "development",
       "dev-tools",
       "marketing-tools",
+      "devops",
       "platform",
     ].includes(args.environment)
   ) {
@@ -338,7 +340,7 @@ async function createPlayground(
       { dryRun: options.dryRun },
     );
   } else if (
-    ["dev-tools", "marketing-tools", "platform"].includes(options.environment!)
+    ["dev-tools", "marketing-tools", "devops", "platform"].includes(options.environment!)
   ) {
     await updateSliceMachineConfig(
       dir,
