@@ -22855,7 +22855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"h3@npm:>=1.15.6":
+"h3@npm:^1.15.6":
   version: 1.15.10
   resolution: "h3@npm:1.15.10"
   dependencies:
