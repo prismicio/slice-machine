@@ -150,6 +150,7 @@ export class SliceMachineInitProcess {
 			await this.manager.telemetry.track({
 				event: "command:init:start",
 				repository: this.options.repository,
+				starter: this.options.starter,
 			});
 
 			await this.detectEnvironment();
@@ -202,6 +203,7 @@ export class SliceMachineInitProcess {
 			event: "command:init:end",
 			framework: this.context.framework.sliceMachineTelemetryID,
 			repository: this.context.repository.domain,
+			starter: this.options.starter,
 			success: true,
 		});
 
@@ -300,6 +302,7 @@ Continue with next steps in Slice Machine.
 			event: "command:init:end",
 			framework: this.context.framework?.sliceMachineTelemetryID ?? "unknown",
 			repository: this.context.repository?.domain || "",
+			starter: this.options.starter,
 			success: false,
 			error: safeError,
 		});

@@ -167,7 +167,8 @@ type SegmentEvent<
 	  } & TProperties;
 
 type CommandInitStartSegmentEvent = SegmentEvent<
-	typeof SegmentEventType.command_init_start
+	typeof SegmentEventType.command_init_start,
+	{ starter?: string }
 >;
 
 // This event feels off, we have a dedicated `identify` method...
@@ -177,7 +178,7 @@ type CommandInitIdentifySegmentEvent = SegmentEvent<
 
 type CommandInitEndSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.command_init_end,
-	{ framework: string; success: boolean; error?: string }
+	{ framework: string; success: boolean; starter?: string; error?: string }
 >;
 
 type SliceSimulatorOpenSegmentEvent = SegmentEvent<
