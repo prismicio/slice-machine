@@ -22855,24 +22855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"h3@npm:^1.12.0, h3@npm:^1.15.1, h3@npm:^1.15.2, h3@npm:^1.15.3":
-  version: 1.15.5
-  resolution: "h3@npm:1.15.5"
-  dependencies:
-    cookie-es: ^1.2.2
-    crossws: ^0.3.5
-    defu: ^6.1.4
-    destr: ^2.0.5
-    iron-webcrypto: ^1.2.1
-    node-mock-http: ^1.0.4
-    radix3: ^1.1.2
-    ufo: ^1.6.3
-    uncrypto: ^0.1.3
-  checksum: 455f58681de2b789b39af45067db8dde35234c18d86ec5068687300aae3c0225f85edcd110906493e087407e2caaa1f292352769c484284e72558d7677c29899
-  languageName: node
-  linkType: hard
-
-"h3@npm:^1.15.6":
+"h3@npm:>=1.15.6":
   version: 1.15.10
   resolution: "h3@npm:1.15.10"
   dependencies:
