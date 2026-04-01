@@ -102,21 +102,16 @@ export class TelemetryManager extends BaseManager {
 	async track(args: TelemetryManagerTrackArgs): Promise<void> {
 		const { event, repository, _includeEnvironmentKind, ...properties } = args;
 		let repositoryName = repository;
+		let starter: string | undefined;
 
 		if (repositoryName === undefined) {
 			try {
-				repositoryName = await this.project.getRepositoryName();
-			} catch (error) {
-				// noop, happen only when the user is not in a project
+				const config = await this.project.getSliceMachineConfig();
+				repositoryName = config.repositoryName;
+				starter = config.starter;
+			} catch {
+				// noop, happens only when the user is not in a project
 			}
-		}
-
-		let starter: string | undefined;
-		try {
-			const config = await this.project.getSliceMachineConfig();
-			starter = config.starter;
-		} catch {
-			// noop, happen only when the user is not in a project
 		}
 
 		let environmentKind: Environment["kind"] | "_unknown" | undefined =
