@@ -1084,6 +1084,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								...config,
 								repositoryName: this.context.repository.domain,
 								adapter: this.context.framework.adapterName,
+								...(this.options.starter
+									? { starter: this.options.starter }
+									: {}),
 							},
 						});
 						parentTask.title = "Updated Slice Machine configuration";
@@ -1098,6 +1101,9 @@ ${chalk.cyan("?")} Your Prismic repository name`.replace("\n", ""),
 								repositoryName: this.context.repository.domain,
 								adapter: this.context.framework.adapterName,
 								libraries: ["./slices"],
+								...(this.options.starter
+									? { starter: this.options.starter }
+									: {}),
 							},
 							path: sliceMachineConfigPath,
 						});

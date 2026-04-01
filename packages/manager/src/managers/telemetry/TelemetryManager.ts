@@ -111,6 +111,14 @@ export class TelemetryManager extends BaseManager {
 			}
 		}
 
+		let starter: string | undefined;
+		try {
+			const config = await this.project.getSliceMachineConfig();
+			starter = config.starter;
+		} catch {
+			// noop, happen only when the user is not in a project
+		}
+
 		let environmentKind: Environment["kind"] | "_unknown" | undefined =
 			undefined;
 		if (_includeEnvironmentKind) {
@@ -150,6 +158,7 @@ export class TelemetryManager extends BaseManager {
 			properties: {
 				nodeVersion: process.versions.node,
 				environmentKind,
+				starter,
 				...properties,
 			},
 			context: { ...this._context },

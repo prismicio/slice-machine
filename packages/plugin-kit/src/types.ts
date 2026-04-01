@@ -70,6 +70,7 @@ export type SliceMachineConfig = {
 	adapter: SliceMachineConfigPluginRegistration;
 	plugins?: SliceMachineConfigPluginRegistration[];
 	labs?: { legacySliceUpgrader?: boolean };
+	starter?: string;
 };
 
 /**
