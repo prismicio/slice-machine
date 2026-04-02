@@ -1,3 +1,6 @@
+import * as path from "node:path";
+import * as fs from "node:fs";
+
 import mri from "mri";
 
 import * as pkg from "../package.json";
@@ -5,15 +8,17 @@ import * as pkg from "../package.json";
 type Args = {
 	open: boolean;
 	port: string;
+	config: string;
 	help: boolean;
 	version: boolean;
 };
 
 const args = mri<Args>(process.argv.slice(2), {
 	boolean: ["open", "help", "version"],
-	string: ["port"],
+	string: ["port", "config"],
 	alias: {
 		port: "p",
+		config: "c",
 		help: "h",
 		version: "v",
 	},
@@ -33,6 +38,7 @@ Usage:
 Options:
     --open         Open Slice Machine automatically
     --port, -p     Specify the port on which to run Slice Machine
+    --config, -c   Path to your slicemachine.config.json (directory or config file)
     --help, -h     Show help text
     --version, -v  Show version
 `.trim(),
@@ -58,11 +64,23 @@ if (args.port) {
 	}
 }
 
+let cwd: string | undefined;
+if (args.config) {
+	const configPath = path.resolve(process.cwd(), args.config);
+	// Handle both cases where the config is a directory or a file path
+	if (fs.existsSync(configPath) && fs.statSync(configPath).isDirectory()) {
+		cwd = configPath;
+	} else {
+		cwd = path.dirname(configPath);
+	}
+}
+
 import("./StartSliceMachineProcess").then(
 	({ createStartSliceMachineProcess }) => {
 		const startSliceMachineProcess = createStartSliceMachineProcess({
 			open: args.open,
 			port,
+			cwd,
 		});
 
 		startSliceMachineProcess.run();
