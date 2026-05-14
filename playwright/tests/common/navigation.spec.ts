@@ -148,7 +148,5 @@ test('I can open Prismic AI documentation by clicking the "Prismic with AI" link
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
-  await expect(newTab).toHaveURL(
-    "https://prismic.io/docs/ai",
-  );
+  await expect(newTab).toHaveURL("https://prismic.io/docs/ai");
 });
