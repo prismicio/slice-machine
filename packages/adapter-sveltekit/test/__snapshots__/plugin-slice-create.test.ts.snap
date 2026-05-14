@@ -15,8 +15,8 @@ exports[`Svelte <=4 syntax > component file has correct contents 1`] = `
   <br />
   <strong>You can edit this slice directly in your code editor.</strong>
   <!--
-	💡 Use the Prismic MCP server with your code editor
-	📚 Docs: https://prismic.io/docs/ai#code-with-prismics-mcp-server
+	💡 Use your own AI agent with the Prismic CLI
+	📚 Docs: https://prismic.io/docs/ai#create-slices
 	-->
 </section>
 "
@@ -38,8 +38,8 @@ exports[`Svelte <=4 syntax > component file is correctly typed when TypeScript i
   <br />
   <strong>You can edit this slice directly in your code editor.</strong>
   <!--
-	💡 Use the Prismic MCP server with your code editor
-	📚 Docs: https://prismic.io/docs/ai#code-with-prismics-mcp-server
+	💡 Use your own AI agent with the Prismic CLI
+	📚 Docs: https://prismic.io/docs/ai#create-slices
 	-->
 </section>
 "
@@ -63,8 +63,8 @@ exports[`component file has correct contents 1`] = `
   <br />
   <strong>You can edit this slice directly in your code editor.</strong>
   <!--
-	💡 Use the Prismic MCP server with your code editor
-	📚 Docs: https://prismic.io/docs/ai#code-with-prismics-mcp-server
+	💡 Use your own AI agent with the Prismic CLI
+	📚 Docs: https://prismic.io/docs/ai#create-slices
 	-->
 </section>
 "
@@ -89,8 +89,8 @@ exports[`component file is correctly typed when TypeScript is enabled 1`] = `
   <br />
   <strong>You can edit this slice directly in your code editor.</strong>
   <!--
-	💡 Use the Prismic MCP server with your code editor
-	📚 Docs: https://prismic.io/docs/ai#code-with-prismics-mcp-server
+	💡 Use your own AI agent with the Prismic CLI
+	📚 Docs: https://prismic.io/docs/ai#create-slices
 	-->
 </section>
 "
