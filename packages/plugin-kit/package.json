@@ -64,7 +64,7 @@
 	"dependencies": {
 		"@prismicio/client": "7.17.0",
 		"common-tags": "^1.8.2",
-		"defu": "^6.1.2",
+		"defu": "^6.1.5",
 		"dotenv": "16.3.1",
 		"fp-ts": "^2.13.1",
 		"fs-extra": "11.1.1",

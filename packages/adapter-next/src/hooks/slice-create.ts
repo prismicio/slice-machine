@@ -44,8 +44,8 @@ const createComponentFile = async ({
 		<br />
 		<strong>You can edit this slice directly in your code editor.</strong>
 		{/**
-		 * 💡 Use the Prismic MCP server with your code editor
-		 * 📚 Docs: https://prismic.io/docs/ai#code-with-prismics-mcp-server
+		 * 💡 Use your own AI agent with the Prismic CLI
+		 * 📚 Docs: https://prismic.io/docs/ai#create-slices
 		 */}`;
 
 	if (data.componentContents) {

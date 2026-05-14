@@ -11072,7 +11072,7 @@ __metadata:
     "@typescript-eslint/parser": 5.55.0
     "@vitest/coverage-v8": 0.32.0
     common-tags: ^1.8.2
-    defu: ^6.1.2
+    defu: ^6.1.5
     depcheck: 1.4.3
     dotenv: 16.3.1
     eslint: 8.37.0
@@ -19196,24 +19196,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"defu@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "defu@npm:5.0.1"
-  checksum: f65556c2e8aa7789080f04c1d52fd7188d8258d9bc7f673e5bedc6be33eb6150f41844ac96aec99c798e47eb9beb97dae03c24edd73d3ddc643e4c7c72124606
-  languageName: node
-  linkType: hard
-
-"defu@npm:^6.0.0, defu@npm:^6.1.1, defu@npm:^6.1.2":
-  version: 6.1.2
-  resolution: "defu@npm:6.1.2"
-  checksum: 2ec0ff8414d5a1ab2b8c7e9a79bbad6d97d23ea7ebf5dcf80c3c7ffd9715c30f84a3cc47b917379ea756b3db0dc4701ce6400e493a1ae1688dffcd0f884233b2
-  languageName: node
-  linkType: hard
-
-"defu@npm:^6.1.4":
-  version: 6.1.4
-  resolution: "defu@npm:6.1.4"
-  checksum: 40e3af6338f195ac1564f53d1887fa2d0429ac7e8c081204bc4d29191180059d3952b5f4e08fe5df8d59eb873aa26e9c88b56d4fac699673d4a372c93620b229
+"defu@npm:^6.1.5":
+  version: 6.1.7
+  resolution: "defu@npm:6.1.7"
+  checksum: aeca3fc4a1e9f5a99c8b2cd3efa478dbbda1b344e3facfbe750e8b10d8ec48ede08560108f58363e9b8b8687d9ccb68faf0ba24833e267a0f1c0518c89fdabfe
   languageName: node
   linkType: hard
 

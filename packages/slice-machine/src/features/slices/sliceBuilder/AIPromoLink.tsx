@@ -2,7 +2,7 @@ import { Button } from "@prismicio/editor-ui";
 
 import { telemetry } from "@/apiClient";
 
-export const McpPromoLink = () => {
+export const AIPromoLink = () => {
   return (
     <Button
       asChild
@@ -12,17 +12,14 @@ export const McpPromoLink = () => {
       sx={{ alignSelf: "center" }}
       onClick={() => {
         void telemetry.track({
-          event: "mcp:promo-link-clicked",
+          event: "ai:promo-link-clicked",
           source: "slice_editor",
           target: "docs",
         });
       }}
     >
-      <a
-        href="https://prismic.io/docs/ai#code-with-prismics-mcp-server"
-        target="_blank"
-      >
-        Boost your workflow in Cursor with Prismic MCP
+      <a href="https://prismic.io/docs/ai" target="_blank">
+        Boost your workflow with Prismic AI modeling
       </a>
     </Button>
   );

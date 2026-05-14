@@ -136,19 +136,17 @@ test('I can open Prismic documentation by clicking the "Documentation" link', as
   await expect(newTab).toHaveURL("https://prismic.io/docs/nextjs");
 });
 
-test('I can open Prismic MCP documentation by clicking the "Prismic MCP" link', async ({
+test('I can open Prismic AI documentation by clicking the "Prismic with AI" link', async ({
   sliceMachinePage,
 }) => {
   await sliceMachinePage.gotoDefaultPage();
-  await expect(sliceMachinePage.menu.prismicMcpLink).toBeVisible();
+  await expect(sliceMachinePage.menu.prismicAiLink).toBeVisible();
 
   const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
-  await sliceMachinePage.menu.prismicMcpLink.click();
+  await sliceMachinePage.menu.prismicAiLink.click();
 
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();
 
-  await expect(newTab).toHaveURL(
-    "https://prismic.io/docs/ai#code-with-prismics-mcp-server",
-  );
+  await expect(newTab).toHaveURL("https://prismic.io/docs/ai");
 });
