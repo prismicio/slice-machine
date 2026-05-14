@@ -18,10 +18,7 @@ export const McpPromoLink = () => {
         });
       }}
     >
-      <a
-        href="https://prismic.io/docs/ai#code-with-prismics-mcp-server"
-        target="_blank"
-      >
+      <a href="https://prismic.io/docs/ai" target="_blank">
         Boost your workflow in Cursor with Prismic MCP
       </a>
     </Button>

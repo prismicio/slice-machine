@@ -115,7 +115,7 @@ export function Navigation() {
 
           <NavigationItem
             title="Prismic MCP"
-            href="https://prismic.io/docs/ai#code-with-prismics-mcp-server"
+            href="https://prismic.io/docs/ai"
             target="_blank"
             Icon={CodeIcon}
             RightElement={<Badge title="New" color="indigo" />}

@@ -149,6 +149,6 @@ test('I can open Prismic MCP documentation by clicking the "Prismic MCP" link', 
   await newTab.waitForLoadState();
 
   await expect(newTab).toHaveURL(
-    "https://prismic.io/docs/ai#code-with-prismics-mcp-server",
+    "https://prismic.io/docs/ai",
   );
 });
