@@ -140,10 +140,10 @@ test('I can open Prismic AI documentation by clicking the "Prismic with AI" link
   sliceMachinePage,
 }) => {
   await sliceMachinePage.gotoDefaultPage();
-  await expect(sliceMachinePage.menu.prismicMcpLink).toBeVisible();
+  await expect(sliceMachinePage.menu.prismicAiLink).toBeVisible();
 
   const newTabPromise = sliceMachinePage.page.waitForEvent("popup");
-  await sliceMachinePage.menu.prismicMcpLink.click();
+  await sliceMachinePage.menu.prismicAiLink.click();
 
   const newTab = await newTabPromise;
   await newTab.waitForLoadState();

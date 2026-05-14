@@ -12,7 +12,7 @@ export class Menu {
   readonly slicesLink: Locator;
   readonly changesLink: Locator;
   readonly documentationLink: Locator;
-  readonly prismicMcpLink: Locator;
+  readonly prismicAiLink: Locator;
   readonly changelogLink: Locator;
   readonly appVersion: Locator;
   readonly updatesAvailableTitle: Locator;
@@ -59,7 +59,7 @@ export class Menu {
       exact: true,
     });
 
-    this.prismicMcpLink = this.menu.getByRole("link", {
+    this.prismicAiLink = this.menu.getByRole("link", {
       name: "Prismic with AI",
     });
     this.changelogLink = this.menu.getByRole("link", {
