@@ -1,6 +1,6 @@
 import mri from "mri";
 import chalk from "chalk";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import * as fs from "node:fs/promises";
 import * as fsSync from "node:fs";
 import * as crypto from "node:crypto";
@@ -475,8 +475,8 @@ async function getLastModifiedEntryName(
 
   return entries.sort((a, b) => {
     return (
-      fsSync.statSync(new URL(b.name, dir)).mtimeMs -
-      fsSync.statSync(new URL(a.name, dir)).mtimeMs
+      fsSync.statSync(new URL(b.name, pathToFileURL(b.path))).mtimeMs -
+      fsSync.statSync(new URL(a.name, pathToFileURL(a.path))).mtimeMs
     );
   })[0].name;
 }
