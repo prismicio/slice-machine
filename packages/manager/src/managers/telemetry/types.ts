@@ -52,7 +52,7 @@ export const SegmentEventType = {
 		"slice-generation:plugin-installation-clicked",
 	navigation_documentationLinkClicked: "navigation:documentation-link-clicked",
 	sidebar_link_clicked: "sidebar:link-clicked",
-	mcp_promo_link_clicked: "mcp:promo-link-clicked",
+	ai_promo_link_clicked: "ai:promo-link-clicked",
 	info_banner_dismissed: "info-banner:dismissed",
 	info_banner_button_clicked: "info-banner:button-clicked",
 	slice_library_opened: "slice-library:opened",
@@ -129,7 +129,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.navigation_documentationLinkClicked]:
 		"SliceMachine Documentation Link Clicked",
 	[SegmentEventType.sidebar_link_clicked]: "Sidebar Link Clicked",
-	[SegmentEventType.mcp_promo_link_clicked]: "MCP Promo Link Clicked",
+	[SegmentEventType.ai_promo_link_clicked]: "AI Promo Link Clicked",
 	[SegmentEventType.info_banner_dismissed]:
 		"SliceMachine Info Banner Dismissed",
 	[SegmentEventType.info_banner_button_clicked]:
@@ -506,8 +506,8 @@ type SidebarLinkClicked = SegmentEvent<
 	}
 >;
 
-type McpPromoLinkClicked = SegmentEvent<
-	typeof SegmentEventType.mcp_promo_link_clicked,
+type AiPromoLinkClicked = SegmentEvent<
+	typeof SegmentEventType.ai_promo_link_clicked,
 	{
 		source: string;
 		target: string;
@@ -629,7 +629,7 @@ export type SegmentEvents =
 	| SliceGenerationPluginInstallationClicked
 	| NavigationDocumentationLinkClicked
 	| SidebarLinkClicked
-	| McpPromoLinkClicked
+	| AiPromoLinkClicked
 	| InfoBannerDismissed
 	| InfoBannerButtonClicked
 	| SliceLibraryOpened

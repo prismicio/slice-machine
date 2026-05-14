@@ -123,7 +123,7 @@ export function Navigation() {
             onClick={() => {
               void telemetry.track({
                 event: "sidebar:link-clicked",
-                link_name: "prismic_mcp",
+                link_name: "prismic_ai",
                 source: "slice_machine_sidebar",
               });
             }}

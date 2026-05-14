@@ -2,7 +2,7 @@ import { Button } from "@prismicio/editor-ui";
 
 import { telemetry } from "@/apiClient";
 
-export const McpPromoLink = () => {
+export const AIPromoLink = () => {
   return (
     <Button
       asChild
@@ -12,7 +12,7 @@ export const McpPromoLink = () => {
       sx={{ alignSelf: "center" }}
       onClick={() => {
         void telemetry.track({
-          event: "mcp:promo-link-clicked",
+          event: "ai:promo-link-clicked",
           source: "slice_editor",
           target: "docs",
         });
