@@ -136,7 +136,7 @@ test('I can open Prismic documentation by clicking the "Documentation" link', as
   await expect(newTab).toHaveURL("https://prismic.io/docs/nextjs");
 });
 
-test('I can open Prismic MCP documentation by clicking the "Prismic MCP" link', async ({
+test('I can open Prismic AI documentation by clicking the "Prismic with AI" link', async ({
   sliceMachinePage,
 }) => {
   await sliceMachinePage.gotoDefaultPage();

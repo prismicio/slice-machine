@@ -114,12 +114,12 @@ export function Navigation() {
           />
 
           <NavigationItem
-            title="Prismic MCP"
+            title="Prismic with AI"
             href="https://prismic.io/docs/ai"
             target="_blank"
             Icon={CodeIcon}
             RightElement={<Badge title="New" color="indigo" />}
-            tooltip="Connect Prismic MCP to your editor (like Cursor) for AI-powered coding."
+            tooltip="Learn how to use Prismic with AI and the CLI to create content and code slices."
             onClick={() => {
               void telemetry.track({
                 event: "sidebar:link-clicked",
