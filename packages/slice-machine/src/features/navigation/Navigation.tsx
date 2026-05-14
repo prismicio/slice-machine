@@ -119,7 +119,7 @@ export function Navigation() {
             target="_blank"
             Icon={CodeIcon}
             RightElement={<Badge title="New" color="indigo" />}
-            tooltip="Learn how to use Prismic with AI and the CLI to create content and code slices."
+            tooltip="Learn how to use Prismic with AI for modeling and coding slices."
             onClick={() => {
               void telemetry.track({
                 event: "sidebar:link-clicked",
