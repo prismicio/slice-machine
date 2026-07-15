@@ -126,9 +126,6 @@
 			"optional": true
 		}
 	},
-	"resolutions": {
-		"uuid": "^14.0.1"
-	},
 	"engines": {
 		"node": ">=20.19.0"
 	},

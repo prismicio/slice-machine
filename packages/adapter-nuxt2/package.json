@@ -97,9 +97,6 @@
 	"peerDependencies": {
 		"nuxt": "^2.0.0"
 	},
-	"resolutions": {
-		"uuid": "^14.0.1"
-	},
 	"engines": {
 		"node": ">=14.15.0"
 	},
