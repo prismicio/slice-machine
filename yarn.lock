@@ -11031,7 +11031,7 @@ __metadata:
     eslint-plugin-tsdoc: 0.2.17
     execa: ^7.1.1
     express: 4.20.0
-    file-type: ^22.0.1
+    file-type: ^21.3.1
     fp-ts: ^2.13.1
     get-port: ^6.1.2
     h3: ^1.15.6
@@ -21585,15 +21585,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-type@npm:^22.0.1":
-  version: 22.0.1
-  resolution: "file-type@npm:22.0.1"
+"file-type@npm:^21.3.1":
+  version: 21.3.4
+  resolution: "file-type@npm:21.3.4"
   dependencies:
     "@tokenizer/inflate": ^0.4.1
-    strtok3: ^10.3.5
-    token-types: ^6.1.2
-    uint8array-extras: ^1.5.0
-  checksum: 1761c69f3ec1add7895d3edb98630dabb8c7914edd32dde60e575f9f5498e8f87cefdb77507cd36639a4d238c1852e566dca35dd4084abe6ce8c01069db222dd
+    strtok3: ^10.3.4
+    token-types: ^6.1.1
+    uint8array-extras: ^1.4.0
+  checksum: fa4c9a30a619e1b7fad1e416cc994eb446520a4001bcecea933fa115ae17cc24f38257d2c54b27df6c511e85ec5e6400968c61ecaee7fd332646bdb70512f620
   languageName: node
   linkType: hard
 
@@ -35993,7 +35993,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"strtok3@npm:^10.3.5":
+"strtok3@npm:^10.3.4":
   version: 10.3.5
   resolution: "strtok3@npm:10.3.5"
   dependencies:
@@ -36914,7 +36914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"token-types@npm:^6.1.1, token-types@npm:^6.1.2":
+"token-types@npm:^6.1.1":
   version: 6.1.2
   resolution: "token-types@npm:6.1.2"
   dependencies:
@@ -37421,7 +37421,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uint8array-extras@npm:^1.5.0":
+"uint8array-extras@npm:^1.4.0":
   version: 1.5.0
   resolution: "uint8array-extras@npm:1.5.0"
   checksum: e7fb42b57e73a5891fe3d5358ca6ac2e2db8e8666b1621220319e2dd0523965cd35562a8171c3e9b2ff26693cc658dc5bc1256e6f4935e4e4c13070d779bf76e
