@@ -236,7 +236,12 @@ async function createPlayground(
       await cloneGitRepo(
         "https://github.com/prismicio-community/nextjs-starter-prismic-minimal-ts.git",
         dir,
-        { dryRun: options.dryRun },
+        {
+          // Pin to a commit that still uses `slicemachine.config.json`
+          // (main has since renamed it to `prismic.config.json`).
+          commit: "71b6cecb1d51209c659c8da691dd3396488b0cd7",
+          dryRun: options.dryRun,
+        },
       );
 
       await updatePackageJSON(
@@ -396,12 +401,42 @@ async function createPlayground(
 async function cloneGitRepo(
   url: string,
   dir: URL,
-  options: DryRunOption = {},
+  options: DryRunOption & {
+    /**
+     * If set, check out this commit after cloning instead of `HEAD`.
+     */
+    commit?: string;
+  } = {},
 ): Promise<void> {
-  await exec("git", ["clone", "--depth=1", url, fileURLToPath(dir)], {
-    stdio: "inherit",
-    dryRun: options.dryRun,
-  });
+  const dest = fileURLToPath(dir);
+
+  if (options.commit) {
+    // Shallow clone of an arbitrary commit requires an explicit fetch.
+    await exec("git", ["init", dest], {
+      stdio: "inherit",
+      dryRun: options.dryRun,
+    });
+    await exec("git", ["remote", "add", "origin", url], {
+      cwd: dir,
+      stdio: "inherit",
+      dryRun: options.dryRun,
+    });
+    await exec("git", ["fetch", "--depth=1", "origin", options.commit], {
+      cwd: dir,
+      stdio: "inherit",
+      dryRun: options.dryRun,
+    });
+    await exec("git", ["checkout", "FETCH_HEAD"], {
+      cwd: dir,
+      stdio: "inherit",
+      dryRun: options.dryRun,
+    });
+  } else {
+    await exec("git", ["clone", "--depth=1", url, dest], {
+      stdio: "inherit",
+      dryRun: options.dryRun,
+    });
+  }
 }
 
 /**
