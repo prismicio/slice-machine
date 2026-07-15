@@ -69,6 +69,7 @@
     "react-beautiful-dnd/react-redux": "8.0.7",
     "express": "4.20.0",
     "@prismicio/types-internal": "3.11.2",
+    "uuid": "^14.0.1",
     "defu": "^6.1.5"
   },
   "workspaces": [
