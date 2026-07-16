@@ -76,7 +76,7 @@
 		"prettier-plugin-svelte": "3.4.0"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "0.7.1",
+		"@prismicio/mock": "0.7.2",
 		"@size-limit/preset-small-lib": "8.2.4",
 		"@sveltejs/kit": "2.20.6",
 		"@sveltejs/package": "2.3.1",
