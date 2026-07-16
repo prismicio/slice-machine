@@ -10799,7 +10799,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@typescript-eslint/eslint-plugin": 5.55.0
@@ -10882,7 +10882,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@sveltejs/kit": 2.20.6
@@ -10937,7 +10937,7 @@ __metadata:
     "@msgpack/msgpack": 2.8.0
     "@playwright/test": ^1
     "@prismicio/e2e-tests-utils": 1.11.0
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/types-internal": ^3.17.2
     "@slicemachine/manager": "workspace:*"
     "@types/node": 22.15.17
     "@typescript-eslint/eslint-plugin": 7.17.0
