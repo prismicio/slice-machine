@@ -7335,18 +7335,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/api-renderer@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "@prismicio/api-renderer@npm:6.4.0"
+"@prismicio/api-renderer@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "@prismicio/api-renderer@npm:7.1.2"
   dependencies:
-    "@prismicio/types-internal": ^3.8.0
-    tslib: ^2.5.0
-    uuid: ^9.0.0
+    "@prismicio/types-internal": ^3.17.2
   peerDependencies:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
-  checksum: 10d229d29530bc7e4381e9e617374da1c14224c94f5e8653c8a1a1bcde70ee258dad977b93a23c536b1b26455600a2324b3fb35405f1213e8ae574b53882fd2d
+  checksum: 212a9a85bd84ae3a6f654349f1cce2da98180282cd848d574e6907e1dc54988f0b7c1e9f7a3dc5baddb8051cf433e3cc5cc0833e44533cd4bf60680e15b3b8fc
   languageName: node
   linkType: hard
 
@@ -7535,21 +7533,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/mocks@npm:^2.15.2":
-  version: 2.15.2
-  resolution: "@prismicio/mocks@npm:2.15.2"
+"@prismicio/mocks@npm:^2.16.0":
+  version: 2.16.0
+  resolution: "@prismicio/mocks@npm:2.16.0"
   dependencies:
-    "@prismicio/api-renderer": ^6.4.0
-    "@prismicio/types-internal": 3.13
-    fp-ts: ^2.11.8
-    io-ts: ^2.2.16
-    io-ts-types: ^0.5.16
-    lorem-ipsum: ^2.0.4
-    monocle-ts: ^2.3.11
+    "@prismicio/api-renderer": ^7.1.2
+    "@prismicio/types-internal": ^3.17.2
+    fp-ts: ^2.16.11
+    io-ts: ^2.2.22
+    io-ts-types: ^0.5.19
+    lorem-ipsum: ^2.0.10
+    monocle-ts: ^2.3.13
     newtype-ts: ^0.3.5
-    tslib: ^2.3.1
-    uuid: ^9.0.1
-  checksum: 6b19cff06c6838ee3e8dcd9f2de8cbdc9a5077ffdbb58ff28ea8dc71961435b14b4341d14d6ab76aeab99fc528f686ed59bc5ab988a815953d3985a8d26c04f6
+    tslib: ^2.8.1
+  checksum: cef1ce90b1760484ffdaddb94853001cc49f88a399dca5018b184162e7dee1a355be61854d3a223e048e3c02f01a293bcfe3b4a93c3e8537de0e7d878218ab5c
   languageName: node
   linkType: hard
 
@@ -7573,19 +7570,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/types-internal@npm:^3.17.0":
-  version: 3.17.0
-  resolution: "@prismicio/types-internal@npm:3.17.0"
+"@prismicio/types-internal@npm:^3.17.2":
+  version: 3.17.2
+  resolution: "@prismicio/types-internal@npm:3.17.2"
   dependencies:
     monocle-ts: ^2.3.11
     newtype-ts: ^0.3.5
     tslib: ^2.3.1
-    uuid: ^9.0.0
+    uuid: ^11.1.1
   peerDependencies:
     fp-ts: ^2.11.8
     io-ts: ^2.2.16
     io-ts-types: ^0.5.16
-  checksum: 1899b56e299bb0b4eb2c16bb1513fc6c37d586f9a1bead2c0c653bee3878f0efd9c806bfcb77edd58284b1142a7a6bd3f8ef995123350f020c2f1751b30f8684
+  checksum: 07f4909d248f4412e145f742d1d2d656fed71cbc07e5d8909e9a9423642c5d3db1f056cd8eebb5fdd970ca88237044a8017eaceee62eb6f480b8516cf237c295
   languageName: node
   linkType: hard
 
@@ -10757,7 +10754,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -10843,7 +10840,7 @@ __metadata:
   dependencies:
     "@prismicio/mock": 0.7.1
     "@prismicio/simulator": ^0.1.4
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
     "@types/common-tags": 1.8.1
@@ -11012,8 +11009,8 @@ __metadata:
     "@prismicio/client": 7.17.0
     "@prismicio/custom-types-client": 2.1.0
     "@prismicio/mock": 0.7.1
-    "@prismicio/mocks": ^2.15.2
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/mocks": ^2.16.0
+    "@prismicio/types-internal": ^3.17.2
     "@segment/analytics-node": ^2.1.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
@@ -11071,7 +11068,7 @@ __metadata:
   dependencies:
     "@prismicio/client": 7.17.0
     "@prismicio/mock": 0.7.1
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@types/common-tags": 1.8.1
     "@types/fs-extra": 11.0.1
@@ -21966,10 +21963,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fp-ts@npm:^2.11.8, fp-ts@npm:^2.13.1":
+"fp-ts@npm:^2.13.1":
   version: 2.16.0
   resolution: "fp-ts@npm:2.16.0"
   checksum: 0724a4d8b2171cc98e9d9a05e6fe7e0acbc8c79eaabe8e257cbe3a6a5a77acdbdd2572e2ca8135e91d6e02542237499db6e952a58829ba0796ab96063dd39eb2
+  languageName: node
+  linkType: hard
+
+"fp-ts@npm:^2.16.11":
+  version: 2.16.11
+  resolution: "fp-ts@npm:2.16.11"
+  checksum: 4da74c5e11596f39ccc5ebfeb711a29aebddd3397252ace763bdd9d715c4d4081aae7649b943b4a074eb27c1a0ada7004124fdb62b25960f2052a4a2ebbfac3b
   languageName: node
   linkType: hard
 
@@ -23880,7 +23884,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"io-ts-types@npm:0.5.19, io-ts-types@npm:^0.5.16, io-ts-types@npm:^0.5.19":
+"io-ts-types@npm:0.5.19, io-ts-types@npm:^0.5.19":
   version: 0.5.19
   resolution: "io-ts-types@npm:0.5.19"
   peerDependencies:
@@ -23901,12 +23905,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"io-ts@npm:2.2.20, io-ts@npm:^2.2.16, io-ts@npm:^2.2.20":
+"io-ts@npm:2.2.20, io-ts@npm:^2.2.20":
   version: 2.2.20
   resolution: "io-ts@npm:2.2.20"
   peerDependencies:
     fp-ts: ^2.5.0
   checksum: 72517bf72ab1ad61b81960cb37f46e7a9f6dc84235b7d9b62f346ca84120dd89134b652fc3a0b9751129331084fd3e059349561bb96587d91ba7b40985fe7aac
+  languageName: node
+  linkType: hard
+
+"io-ts@npm:^2.2.22":
+  version: 2.2.22
+  resolution: "io-ts@npm:2.2.22"
+  peerDependencies:
+    fp-ts: ^2.5.0
+  checksum: d1b6a5f9d3e0ce1f4304955c0c40e3f1c31d9d5a42df83fc0d42eb356aa8b2c29c1342615aa51704f0309a75d1ba2924e87de87484a89e9326de62a869bad118
   languageName: node
   linkType: hard
 
@@ -26052,14 +26065,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lorem-ipsum@npm:^2.0.4":
-  version: 2.0.8
-  resolution: "lorem-ipsum@npm:2.0.8"
+"lorem-ipsum@npm:^2.0.10":
+  version: 2.0.10
+  resolution: "lorem-ipsum@npm:2.0.10"
   dependencies:
     commander: ^9.3.0
   bin:
     lorem-ipsum: dist/bin/lorem-ipsum.bin.js
-  checksum: 63049aab1f0fa2887fab11dc8a3882f9eef76b2ebc80d0c13659b45709b5c78c291f3328b999f12441ef74f8e49606be62e97033d76e72551629c1467b7b6528
+  checksum: fb79a6585253bab5014fbe0408d7e72ba254505bd083198f61326d7f0ef2d7596b033b4ba1a7d64ec27032f61a0c455b776069fb5f5c3c1911ad6d9850bb5798
   languageName: node
   linkType: hard
 
@@ -35131,9 +35144,9 @@ __metadata:
     "@prismicio/editor-support": 0.4.90
     "@prismicio/editor-ui": 0.4.90
     "@prismicio/mock": 0.7.1
-    "@prismicio/mocks": ^2.15.2
+    "@prismicio/mocks": ^2.16.0
     "@prismicio/simulator": 0.1.4
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/types-internal": ^3.17.2
     "@reach/menu-button": 0.18.0
     "@sentry/nextjs": 7.43.0
     "@slicemachine/manager": "workspace:*"
@@ -35598,8 +35611,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "start-slicemachine@workspace:packages/start-slicemachine"
   dependencies:
-    "@prismicio/mocks": ^2.15.2
-    "@prismicio/types-internal": ^3.17.0
+    "@prismicio/mocks": ^2.16.0
+    "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/manager": "workspace:*"
     "@types/body-parser": 1.19.2
@@ -37119,7 +37132,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.6.3, tslib@npm:^2.8.0":
+"tslib@npm:^2.6.3, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
@@ -38343,7 +38356,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.1.0":
+"uuid@npm:^11.1.0, uuid@npm:^11.1.1":
   version: 11.1.1
   resolution: "uuid@npm:11.1.1"
   bin:
@@ -38361,7 +38374,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^9.0.0, uuid@npm:^9.0.1":
+"uuid@npm:^9.0.0":
   version: 9.0.1
   resolution: "uuid@npm:9.0.1"
   bin:
