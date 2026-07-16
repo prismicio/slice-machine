@@ -76,6 +76,7 @@ export const mocks: SharedSliceContent[] = [
 				value: [
 					{
 						__TYPE__: "GroupItemContent",
+						key: "a937f90e-e055-4c39-b6e5-8cfdb21b0f50",
 						value: [
 							[
 								"title",
@@ -113,6 +114,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 					{
 						__TYPE__: "GroupItemContent",
+						key: "f44160cf-44ed-41ff-93cb-29361c3810cc",
 						value: [
 							[
 								"title",
@@ -150,6 +152,7 @@ export const mocks: SharedSliceContent[] = [
 					},
 					{
 						__TYPE__: "GroupItemContent",
+						key: "d8620f49-9397-43bf-a461-24d72839e9c9",
 						value: [
 							[
 								"title",
@@ -259,6 +262,7 @@ export const mocks: SharedSliceContent[] = [
 				value: [
 					{
 						__TYPE__: "GroupItemContent",
+						key: "eb28b870-8a03-438a-a9dd-1a19ef46b29c",
 						value: [
 							[
 								"title",

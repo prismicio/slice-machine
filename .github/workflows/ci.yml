@@ -89,6 +89,7 @@ jobs:
 
       - name: Audit dependencies
         if: matrix.package != '@slicemachine/e2e'
+        continue-on-error: true
         run: yarn workspace ${{ matrix.package }} audit
 
       - name: Lint

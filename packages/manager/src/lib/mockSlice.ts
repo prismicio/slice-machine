@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { SharedSliceMock } from "@prismicio/mocks";
 
 import { SharedSliceContent } from "@prismicio/types-internal/lib/content";
@@ -35,7 +36,11 @@ export const mockSlice = (args: mockSliceArgs): SharedSliceContent[] => {
 			Object.keys(variation.items || {}).length &&
 			variationMock.items.length === 0
 		) {
-			variationMock.items.push({ __TYPE__: "GroupItemContent", value: [] });
+			variationMock.items.push({
+				__TYPE__: "GroupItemContent",
+				key: randomUUID(),
+				value: [],
+			});
 		}
 		const patched = SharedSliceMock.patch(diff, variationMock, mockConfig);
 		if (!patched.ok) {
