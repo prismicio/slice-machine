@@ -106,6 +106,7 @@ If you didn't intend to run Slice Machine this way, stop it immediately and unse
 
 		case APPLICATION_MODE.DevTools:
 		case APPLICATION_MODE.MarketingTools:
+		case APPLICATION_MODE.Devops:
 		case APPLICATION_MODE.Platform: {
 			return {
 				PrismicWroom: `https://${process.env.SM_ENV}-wroom.com/`,
