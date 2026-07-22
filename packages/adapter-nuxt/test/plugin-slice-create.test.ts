@@ -87,7 +87,7 @@ test("library index file includes created Slice", async (ctx) => {
 		)
 			.getPropertyOrThrow("bar_baz")
 			.getText(),
-	).toBe('bar_baz: defineAsyncComponent(() => import("./QuxQuux/index.vue"))');
+	).toBe('bar_baz: defineAsyncComponent(() => import("./QuxQuux/index.vue").then((r) => r.default))');
 });
 
 test("library index file includes created Slice without lazy-loading when disabled", async (ctx) => {

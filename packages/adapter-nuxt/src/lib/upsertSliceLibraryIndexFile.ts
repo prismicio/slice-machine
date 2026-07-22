@@ -46,7 +46,7 @@ export const upsertSliceLibraryIndexFile = async (
 								}),
 							);
 
-							return `${id}: defineAsyncComponent(() => import("./${dirName}/index.vue"))`;
+							return `${id}: defineAsyncComponent(() => import("./${dirName}/index.vue").then((r) => r.default))`;
 						}),
 					)
 				).join(",\n")}
