@@ -4,6 +4,7 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { Flex, Spinner, Text } from "theme-ui";
 
+import { addImgixDisplayParams } from "@/domain/imgix";
 import { uploadSliceScreenshot } from "@/features/slices/actions/uploadSliceScreenshot";
 import { ScreenshotPreview } from "@/legacy/components/ScreenshotPreview";
 import { acceptedImagesTypes } from "@/legacy/lib/consts";
@@ -212,7 +213,7 @@ const DropZone: React.FC<DropZoneProps> = ({
       ) : null}
       {!isUploadingScreenshot && maybeScreenshot !== undefined ? (
         <ScreenshotPreview
-          src={maybeScreenshot.url}
+          src={addImgixDisplayParams(maybeScreenshot.url, { width: 1200 })}
           sx={{
             width: "100%",
             height: "100%",

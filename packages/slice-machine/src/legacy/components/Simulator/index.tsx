@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { BaseStyles, Box, Flex, Spinner } from "theme-ui";
 
 import { saveSliceMock, telemetry } from "@/apiClient";
+import { addImgixDisplayParams } from "@/domain/imgix";
 import { DefaultErrorBoundary } from "@/features/errorBoundaries";
 import useThrottle from "@/hooks/useThrottle";
 import ScreenshotPreviewModal from "@/legacy/components/ScreenshotPreviewModal";
@@ -324,7 +325,10 @@ const Simulator: FC<SimulatorProps> = ({ slice, variation }) => {
       {!!slice.screenshots[variation.id]?.url && (
         <ScreenshotPreviewModal
           sliceName={slice.model.name}
-          screenshotUrl={slice.screenshots[variation.id]?.url}
+          screenshotUrl={addImgixDisplayParams(
+            slice.screenshots[variation.id]?.url,
+            { width: 1200 },
+          )}
         />
       )}
     </Flex>

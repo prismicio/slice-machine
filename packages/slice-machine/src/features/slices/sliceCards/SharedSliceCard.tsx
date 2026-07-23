@@ -17,6 +17,7 @@ import type { FC } from "react";
 
 import { Card, CardFooter, CardMedia, CardStatus } from "@/components/Card";
 import { CardProps } from "@/components/Card/Card";
+import { addImgixDisplayParams } from "@/domain/imgix";
 import { countMissingScreenshots, getScreenshotUrl } from "@/domain/slice";
 import {
   StatusBadge,
@@ -75,7 +76,9 @@ export const SharedSliceCard: FC<SharedSliceCardProps> = (props) => {
 
   const variation = ComponentUI.variation(slice, variationId);
   if (!variation) return null;
-  const src = getScreenshotUrl(slice, variation);
+  const src = addImgixDisplayParams(getScreenshotUrl(slice, variation), {
+    width: 600,
+  });
 
   const disabled = isDeleted;
   const canUpdateScreenshot = !disabled && !!onUpdateScreenshot;

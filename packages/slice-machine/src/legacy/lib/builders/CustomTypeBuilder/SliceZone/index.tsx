@@ -15,6 +15,7 @@ import { BaseStyles } from "theme-ui";
 
 import { telemetry } from "@/apiClient";
 import { ListHeader } from "@/components/List";
+import { addImgixDisplayParams } from "@/domain/imgix";
 import { CreateSliceFromImageModal } from "@/features/customTypes/customTypesBuilder/CreateSliceFromImageModal";
 import { useCustomTypeState } from "@/features/customTypes/customTypesBuilder/CustomTypeProvider";
 import { ImportSlicesFromLibraryModal } from "@/features/customTypes/customTypesBuilder/ImportSlicesFromLibraryModal";
@@ -455,8 +456,12 @@ const SliceZone: React.FC<SliceZoneProps> = ({
 };
 
 function getFirstVariationScreenshot(slice: ComponentUI): string | undefined {
-  if ("default" in slice.screenshots) return slice.screenshots.default.url;
-  return Object.values(slice.screenshots)[0]?.url;
+  const url =
+    "default" in slice.screenshots
+      ? slice.screenshots.default.url
+      : Object.values(slice.screenshots)[0]?.url;
+
+  return addImgixDisplayParams(url, { width: 600 });
 }
 
 export default SliceZone;
