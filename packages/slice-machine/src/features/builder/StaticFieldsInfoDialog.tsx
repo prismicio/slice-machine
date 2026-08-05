@@ -41,7 +41,7 @@ export function StaticFieldsInfoDialog(props: StaticFieldsInfoDialogProps) {
               which can be added or removed, static zone fields remain fixed.
             </Text>
             <Video
-              src="https://images.prismic.io/prismic-main/6T7q81Wk_lj5hyWH_slice-machine_explication_vide%CC%81o_zone_statique.mp4"
+              src="https://prismic-main.cdn.prismic.io/prismic-main/6T7q81Wk_lj5hyWH_slice-machine_explication_vide%CC%81o_zone_statique.mp4"
               sizing="contain"
               autoPlay
               loop
