@@ -43,7 +43,7 @@ export const booleanField: NestableField = {
   description: "A true or false toggle.",
   icon: "toggleOff",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295526/DEV_TOOLS/SM_FIELDS/Type_Boolean_cbwg8k.png",
+    "https://images.prismic.io/page-builder-assets/eNu185p5RoeA2vEt_type_boolean.png",
   type: "Boolean",
 };
 
@@ -52,7 +52,7 @@ export const colorField: NestableField = {
   description: "A color in hex format.",
   icon: "colorLens",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295521/DEV_TOOLS/SM_FIELDS/Type_Color_nyoeit.png",
+    "https://images.prismic.io/page-builder-assets/_5fssbf3BC11bi90_type_color.png",
   type: "Color",
 };
 
@@ -61,7 +61,7 @@ export const dateField: NestableField = {
   description: "A date without time.",
   icon: "dateRange",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295525/DEV_TOOLS/SM_FIELDS/Type_Date_dsuaeq.png",
+    "https://images.prismic.io/page-builder-assets/mFrRV-KDeRUOv4af_type_date.png",
   type: "Date",
 };
 
@@ -70,7 +70,7 @@ export const embedField: NestableField = {
   description: "A video, song, or oEmbed link.",
   icon: "code",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295523/DEV_TOOLS/SM_FIELDS/Type_Embed_wwssvd.png",
+    "https://images.prismic.io/page-builder-assets/m3hijHQZ8-43wjAY_type_embed.png",
   type: "Embed",
 };
 
@@ -79,7 +79,7 @@ export const geoPointField: NestableField = {
   description: "A geographical coordinate.",
   icon: "place",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295522/DEV_TOOLS/SM_FIELDS/Type_GeoPoint_lpq0sm.png",
+    "https://images.prismic.io/page-builder-assets/dMrrrlXyQcZRHkSz_type_geopoint.png",
   type: "GeoPoint",
 };
 
@@ -88,7 +88,7 @@ export const imageField: NestableField = {
   description: "A responsive image.",
   icon: "image",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295520/DEV_TOOLS/SM_FIELDS/Type_Image_zyatxy.png",
+    "https://images.prismic.io/page-builder-assets/sgckFInNFDAwjb6E_type_image.png",
   type: "Image",
 };
 
@@ -97,7 +97,7 @@ export const linkField: NestableField = {
   description: "A link to a website, asset, or document.",
   icon: "link",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295528/DEV_TOOLS/SM_FIELDS/Type_Link_bgslgy.png",
+    "https://images.prismic.io/page-builder-assets/uYv2u7YT3MkHR2zA_type_link.png",
   type: "Link",
 };
 
@@ -106,7 +106,7 @@ export const contentRelationshipField: NestableField = {
   description: "A reference to a Prismic document.",
   icon: "settingsEthernet",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295527/DEV_TOOLS/SM_FIELDS/Type_Content_RelationShip_s4z4nh.png",
+    "https://images.prismic.io/page-builder-assets/0Tnq0nG_qEw_87t2_type_content_relationship.png",
   type: "Link",
   variant: "ContentRelationship",
 };
@@ -116,7 +116,7 @@ export const linkToMediaField: NestableField = {
   description: "A link to a media asset.",
   icon: "attachFile",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295519/DEV_TOOLS/SM_FIELDS/Type_LinkToMedia_m2p0ce.png",
+    "https://images.prismic.io/page-builder-assets/8qs_Nlh5gan24ufn_type_linktomedia.png",
   type: "Link",
   variant: "LinkToMedia",
 };
@@ -126,7 +126,7 @@ export const numberField: NestableField = {
   description: "An integer or float.",
   icon: "pin",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295522/DEV_TOOLS/SM_FIELDS/Type_Number_o3olop.png",
+    "https://images.prismic.io/page-builder-assets/ptyLDBk-qEBYPXtn_type_number.png",
   type: "Number",
 };
 
@@ -135,7 +135,7 @@ export const richTextField: NestableField = {
   description: "Text with formatting options.",
   icon: "textFields",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295530/DEV_TOOLS/SM_FIELDS/Type_Rich_Text_fxdyar.png",
+    "https://images.prismic.io/page-builder-assets/XKbYiFBhOcLEhX-Z_type_rich_text.png",
   type: "StructuredText",
 };
 
@@ -144,7 +144,7 @@ export const selectField: NestableField = {
   description: "A dropdown of options.",
   icon: "arrowDropDownCircle",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295527/DEV_TOOLS/SM_FIELDS/Type_Select_bedjei.png",
+    "https://images.prismic.io/page-builder-assets/JJDU6gZwpiOTrZWW_type_select.png",
   type: "Select",
 };
 
@@ -153,7 +153,7 @@ export const tableField: NestableField = {
   description: "A structured table.",
   icon: "table",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1737381854/FIELDS_SM/Table_f47jnq.png",
+    "https://images.prismic.io/page-builder-assets/ASRyKRJAUTlVQDTi_type_table.png",
   type: "Table",
 };
 
@@ -162,7 +162,7 @@ export const textField: NestableField = {
   description: "A text string without formatting.",
   icon: "title",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295529/DEV_TOOLS/SM_FIELDS/Type_Key_Text_xrqf45.png",
+    "https://images.prismic.io/page-builder-assets/Mu4OKEaVC9fc9m9s_type_key_text.png",
   type: "Text",
 };
 
@@ -171,7 +171,7 @@ export const timestampField: NestableField = {
   description: "A date and time.",
   icon: "schedule",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295524/DEV_TOOLS/SM_FIELDS/Type_Timestamp_fkr5iw.png",
+    "https://images.prismic.io/page-builder-assets/iPGD4wJKbAXw0-c-_type_timestamp.png",
   type: "Timestamp",
 };
 
@@ -202,7 +202,7 @@ export const uidField: UIDField = {
   description: "Unique Identifier",
   icon: "tag",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721295519/DEV_TOOLS/SM_FIELDS/Type_UID_hrwzug.png",
+    "https://images.prismic.io/page-builder-assets/-i3eIKa6b7Nit4Fm_type_uid.png",
   type: "UID",
 };
 
@@ -215,7 +215,7 @@ export const groupField: GroupField = {
   description: "A set of fields that editors can repeat.",
   icon: "createNewFolder",
   thumbnail:
-    "https://res.cloudinary.com/dmtf1daqp/image/upload/v1721314577/DEV_TOOLS/SM_FIELDS/Type_Group_uwwco0.png",
+    "https://images.prismic.io/page-builder-assets/PrW2uf_EbJaXXAiU_type_group.png",
   type: "Group",
 };
 
