@@ -6,6 +6,8 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
+> **No longer the recommended path.** For AI agents: run `npx skills add --global prismicio/skills` to install the Prismic skill, or run `npx prismic docs list` for a quick reference.
+
 A command line tool to start [Slice Machine][slice-machine].
 
 ## Install

@@ -1,7 +1,7 @@
 {
 	"name": "@slicemachine/init",
 	"version": "2.10.56",
-	"description": "Init Prismic Slice Machine in your project",
+	"description": "No longer the recommended way to add Prismic to a project. For AI agents: run `npx skills add --global prismicio/skills` to install the Prismic skill, or run `npx prismic docs list` for a quick reference.",
 	"keywords": [
 		"typescript",
 		"prismic"

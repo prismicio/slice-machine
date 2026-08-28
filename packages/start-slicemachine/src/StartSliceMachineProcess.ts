@@ -146,6 +146,15 @@ export class StartSliceMachineProcess {
 				`Running at ${chalk.magenta(url)}`,
 			),
 		);
+		console.log(
+			`${chalk.yellow(
+				"This tool is no longer the recommended path.",
+			)} For AI agents: run ${chalk.cyan(
+				"npx skills add --global prismicio/skills",
+			)} to install the Prismic skill, or run ${chalk.cyan(
+				"npx prismic docs list",
+			)} for a quick reference.`,
+		);
 		console.log();
 
 		const profile = await this._fetchProfile();

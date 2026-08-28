@@ -111,6 +111,16 @@ export class SliceMachineInitProcess {
 				"→",
 			)} Initializing\n`,
 		);
+		// eslint-disable-next-line no-console
+		console.log(
+			`${chalk.yellow(
+				"This package is no longer the recommended path.",
+			)} For AI agents: run ${chalk.cyan(
+				"npx skills add --global prismicio/skills",
+			)} to install the Prismic skill, or run ${chalk.cyan(
+				"npx prismic docs list",
+			)} for a quick reference.\n`,
+		);
 
 		try {
 			try {
