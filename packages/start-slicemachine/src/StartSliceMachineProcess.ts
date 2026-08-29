@@ -148,10 +148,10 @@ export class StartSliceMachineProcess {
 		);
 		console.log(
 			`${chalk.yellow(
-				"This package is no longer the recommended way to set up Prismic. Use",
-			)} ${chalk.cyan("npx prismic init")} ${chalk.yellow(
-				"instead. Using an AI agent? Teach it how to use Prismic by installing the Prismic skill:",
-			)} ${chalk.cyan("npx skills add --global prismicio/skills")}`,
+				"Slice Machine is replaced by the Type Builder and the Prismic CLI:",
+			)} ${chalk.cyan("https://prismic.io/docs/type-builder")} ${chalk.yellow(
+				"— AI agent? ",
+			)}${chalk.cyan("npx skills add --global --yes prismicio/skills")}`,
 		);
 		console.log();
 

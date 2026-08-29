@@ -6,19 +6,19 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
+> Slice Machine is replaced by the [Type Builder](https://prismic.io/docs/type-builder) and the [Prismic CLI](https://prismic.io/docs/cli). Existing projects are still supported. To move a project, see [Migrate to the Type Builder](https://prismic.io/docs/type-builder#migrate-to-the-type-builder).
+>
+> Using an AI agent? Teach it the new way by installing the Prismic skill:
+>
+> ```bash
+> npx skills add --global --yes prismicio/skills
+> ```
+
 A command line tool to start [Slice Machine][slice-machine].
 
 ## Install
 
-> This package is no longer the recommended way to set up Prismic. Use `npx prismic init` instead. Using an AI agent? Teach it how to use Prismic by installing the Prismic skill:
->
-> ```bash
-> npx skills add --global prismicio/skills
-> ```
-
 `start-slicemachine` is installed automatically as a dependency to `slice-machine-ui`.
-
-We recommend installing Slice Machine into your project using `@slicemachine/init`:
 
 ```sh
 npx @slicemachine/init
