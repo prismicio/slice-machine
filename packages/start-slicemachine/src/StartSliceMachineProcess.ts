@@ -148,7 +148,7 @@ export class StartSliceMachineProcess {
 		);
 		console.log(
 			`${chalk.yellow(
-				"This tool is no longer the recommended way to set up Prismic. Use",
+				"This package is no longer the recommended way to set up Prismic. Use",
 			)} ${chalk.cyan("npx prismic init")} ${chalk.yellow(
 				"instead. Using an AI agent? Teach it how to use Prismic by installing the Prismic skill:",
 			)} ${chalk.cyan("npx skills add --global prismicio/skills")}`,
