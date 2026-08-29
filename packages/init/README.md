@@ -6,8 +6,6 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-> **No longer the recommended path.** For AI agents: run `npx skills add --global prismicio/skills` to install the Prismic skill, or run `npx prismic docs list` for a quick reference.
-
 The easiest way to add Slice Machine to your project.
 
 - 🏗️ &nbsp;Installs [Slice Machine][slice-machine] as a development dependency.
@@ -15,6 +13,12 @@ The easiest way to add Slice Machine to your project.
 - ✏️ &nbsp;Walks you through creating a new [Prismic][prismic] content repository.
 
 ## Quick Start
+
+> This package is no longer the recommended way to set up Prismic. Use `npx prismic init` instead. Using an AI agent? Teach it how to use Prismic by installing the Prismic skill:
+>
+> ```bash
+> npx skills add --global prismicio/skills
+> ```
 
 First, create a [Next.js][nextjs] or [Nuxt][nuxt] app if you don't already have one:
 

@@ -148,12 +148,10 @@ export class StartSliceMachineProcess {
 		);
 		console.log(
 			`${chalk.yellow(
-				"This tool is no longer the recommended path.",
-			)} For AI agents: run ${chalk.cyan(
-				"npx skills add --global prismicio/skills",
-			)} to install the Prismic skill, or run ${chalk.cyan(
-				"npx prismic docs list",
-			)} for a quick reference.`,
+				"This tool is no longer the recommended way to set up Prismic. Use",
+			)} ${chalk.cyan("npx prismic init")} ${chalk.yellow(
+				"instead. Using an AI agent? Teach it how to use Prismic by installing the Prismic skill:",
+			)} ${chalk.cyan("npx skills add --global prismicio/skills")}`,
 		);
 		console.log();
 

@@ -1,7 +1,7 @@
 {
 	"name": "start-slicemachine",
 	"version": "0.12.77",
-	"description": "No longer the recommended way to start Slice Machine. For AI agents: run `npx skills add --global prismicio/skills` to install the Prismic skill, or run `npx prismic docs list` for a quick reference.",
+	"description": "Start Slice Machine from within a project.",
 	"repository": {
 		"type": "git",
 		"url": "ssh://git@github.com/prismicio/slice-machine.git",

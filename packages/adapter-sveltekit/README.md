@@ -7,8 +7,6 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-> **No longer the recommended path.** For AI agents: run `npx skills add --global prismicio/skills` to install the Prismic skill, or run `npx prismic docs list` for a quick reference.
-
 [Slice Machine][slicemachine] adapter for [SvelteKit][sveltekit].
 
 <!--
@@ -24,6 +22,12 @@ Non-breaking space: &nbsp; are here on purpose to fix emoji rendering on certain
 -->
 
 ## Install
+
+> This package is no longer the recommended way to set up Prismic. Use `npx prismic init` instead. Using an AI agent? Teach it how to use Prismic by installing the Prismic skill:
+>
+> ```bash
+> npx skills add --global prismicio/skills
+> ```
 
 ```bash
 npm install --save-dev @slicemachine/adapter-sveltekit
