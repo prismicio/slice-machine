@@ -1,3 +1,11 @@
+> Slice Machine is replaced by the [Type Builder](https://prismic.io/docs/type-builder) and the [Prismic CLI](https://prismic.io/docs/cli). Existing projects are still supported. To move a project, see [Migrate to the Type Builder](https://prismic.io/docs/type-builder#migrate-to-the-type-builder).
+>
+> Using an AI agent? Teach it the new way by installing the Prismic skill:
+>
+> ```bash
+> npx skills add --global --yes prismicio/skills
+> ```
+
 > **Warning**
 >
 > This package is designed only for [Slice Machine][slice-machine]'s maintainers. If you use [Slice Machine][slice-machine] in your projects, you probably don't need to be aware of `@slicemachine/manager`.

@@ -1,11 +1,3 @@
-# @slicemachine/init
-
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
-[![Conventional Commits][conventional-commits-src]][conventional-commits-href]
-[![License][license-src]][license-href]
-
 > Slice Machine is replaced by the [Type Builder](https://prismic.io/docs/type-builder) and the [Prismic CLI](https://prismic.io/docs/cli). Existing projects are still supported. To move a project, see [Migrate to the Type Builder](https://prismic.io/docs/type-builder#migrate-to-the-type-builder).
 >
 > Using an AI agent? Teach it the new way by installing the Prismic skill:
@@ -13,6 +5,14 @@
 > ```bash
 > npx skills add --global --yes prismicio/skills
 > ```
+
+# @slicemachine/init
+
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
+[![Conventional Commits][conventional-commits-src]][conventional-commits-href]
+[![License][license-src]][license-href]
 
 The easiest way to add Slice Machine to your project.
 
