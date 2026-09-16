@@ -7,7 +7,10 @@ const BIN = fileURLToPath(
 );
 
 // The fixture's `.prismicrc` disables telemetry so tests never reach Segment.
-const CWD = fileURLToPath(
+// The manager reads the user-level `.prismicrc` from `XDG_CONFIG_HOME`, and
+// the project-level one from the nearest `package.json`, which is this
+// package's and has none.
+const CONFIG_HOME = fileURLToPath(
 	new URL("./__fixtures__/telemetry-disabled/", import.meta.url),
 );
 
@@ -26,7 +29,10 @@ Existing Slice Machine projects: https://prismic.io/docs/slice-machine
 `;
 
 const runBin = (args: string[]) => {
-	return execa(process.execPath, [BIN, ...args], { cwd: CWD, reject: false });
+	return execa(process.execPath, [BIN, ...args], {
+		env: { XDG_CONFIG_HOME: CONFIG_HOME },
+		reject: false,
+	});
 };
 
 describe("slicemachine-init bin", () => {
