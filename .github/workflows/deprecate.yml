@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       packages:
-        description: Packages to deprecate, one per line. Every published version of each package is deprecated.
+        description: Packages to deprecate, one per line. Every published version is deprecated.
         type: string
         required: true
         default: |
@@ -39,21 +39,9 @@ jobs:
           PACKAGES: ${{ inputs.packages }}
           MESSAGE: ${{ inputs.message }}
         run: |
-          failed=()
-          while IFS= read -r package; do
-            package="$(echo "$package" | xargs)"
-            if [ -z "$package" ]; then
-              continue
-            fi
-            echo "::group::$package"
-            if npm deprecate "$package@*" "$MESSAGE"; then
-              echo "Deprecated every version of $package"
-            else
-              failed+=("$package")
-            fi
-            echo "::endgroup::"
+          status=0
+          while read -r package; do
+            [ -z "$package" ] && continue
+            npm deprecate "$package@*" "$MESSAGE" || status=1
           done <<< "$PACKAGES"
-          if [ "${#failed[@]}" -gt 0 ]; then
-            echo "::error::Failed to deprecate: ${failed[*]}"
-            exit 1
-          fi
+          exit $status

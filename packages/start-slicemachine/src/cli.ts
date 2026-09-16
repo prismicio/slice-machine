@@ -2,8 +2,7 @@ import mri from "mri";
 
 import * as pkg from "../package.json";
 
-// Slice Machine is deprecated. The notice prints on every invocation,
-// including `--help` and `--version`, and then the command runs as normal.
+// Slice Machine is deprecated: every run prints the notice, then continues.
 console.error(
 	`Slice Machine is deprecated. This project still works but Slice Machine is no longer updated.
 New projects use the Type Builder and the Prismic CLI. To move this project:

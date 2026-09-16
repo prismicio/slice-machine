@@ -16,9 +16,8 @@ const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
 const DEFAULT_ENVIRONMENT = "dev-tools" satisfies Args["environment"];
 const DEFAULT_WROOM_URL = "https://cdn.wroom.io";
 const DEFAULT_PREFIX = "play-";
-// The `@slicemachine/init` bin only prints a deprecation message and exits, so
-// playgrounds are initialized through the package's library entry instead. The
-// CommonJS build is the one Node can load outside a bundler.
+// The init bin only prints a deprecation message, so playgrounds use the
+// library entry. Node can load the CommonJS build but not the ES build.
 const SLICEMACHINE_INIT_LIB = new URL(
   "../packages/init/dist/index.cjs",
   import.meta.url,

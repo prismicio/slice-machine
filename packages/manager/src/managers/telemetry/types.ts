@@ -184,7 +184,6 @@ type CommandInitEndSegmentEvent = SegmentEvent<
 	{ framework: string; success: boolean; starter?: string; error?: string }
 >;
 
-// Sent when `@slicemachine/init` prints the deprecation message and exits.
 type CommandInitDeprecationHaltSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.command_init_deprecationHalt
 >;
