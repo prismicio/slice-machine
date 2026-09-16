@@ -16,8 +16,11 @@ const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
 const DEFAULT_ENVIRONMENT = "dev-tools" satisfies Args["environment"];
 const DEFAULT_WROOM_URL = "https://cdn.wroom.io";
 const DEFAULT_PREFIX = "play-";
-const SLICEMACHINE_INIT_SCRIPT = new URL(
-  "../packages/init/bin/slicemachine-init.js",
+// The `@slicemachine/init` bin only prints a deprecation message and exits, so
+// playgrounds are initialized through the package's library entry instead. The
+// CommonJS build is the one Node can load outside a bundler.
+const SLICEMACHINE_INIT_LIB = new URL(
+  "../packages/init/dist/index.cjs",
   import.meta.url,
 );
 // A path relative to the playground is used to make the playground portable.
@@ -367,8 +370,19 @@ async function createPlayground(
   }
 
   await exec(
-    fileURLToPath(SLICEMACHINE_INIT_SCRIPT),
-    [`--repository="${name}"`, "--no-start-slicemachine"],
+    process.execPath,
+    [
+      "--input-type=module",
+      "--eval",
+      [
+        `const { createSliceMachineInitProcess } = await import(${JSON.stringify(
+          SLICEMACHINE_INIT_LIB.href,
+        )});`,
+        `await createSliceMachineInitProcess({ repository: ${JSON.stringify(
+          name,
+        )}, startSlicemachine: false }).run();`,
+      ].join("\n"),
+    ],
     {
       cwd: dir,
       env: {

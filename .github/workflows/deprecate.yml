@@ -1,0 +1,59 @@
+name: Deprecate on npm
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: Packages to deprecate, one per line. Every published version of each package is deprecated.
+        type: string
+        required: true
+        default: |
+          @slicemachine/init
+          start-slicemachine
+          slice-machine-ui
+          @slicemachine/manager
+          @slicemachine/plugin-kit
+          @slicemachine/adapter-next
+          @slicemachine/adapter-nuxt
+          @slicemachine/adapter-nuxt2
+          @slicemachine/adapter-sveltekit
+          @slicemachine/core
+          @slicemachine/client
+      message:
+        description: Deprecation message. npm prints it on install with the package name in front.
+        type: string
+        required: true
+        default: "Replaced by the Prismic CLI. AI agents: npx skills add --global --yes prismicio/skills. Docs: https://prismic.io/docs/cli"
+jobs:
+  deprecate:
+    if: ${{ startsWith(github.ref, 'refs/heads/main') }}
+    name: Deprecate on npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: ./.github/actions/setup-node
+      - name: Deprecate packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGES: ${{ inputs.packages }}
+          MESSAGE: ${{ inputs.message }}
+        run: |
+          failed=()
+          while IFS= read -r package; do
+            package="$(echo "$package" | xargs)"
+            if [ -z "$package" ]; then
+              continue
+            fi
+            echo "::group::$package"
+            if npm deprecate "$package@*" "$MESSAGE"; then
+              echo "Deprecated every version of $package"
+            else
+              failed+=("$package")
+            fi
+            echo "::endgroup::"
+          done <<< "$PACKAGES"
+          if [ "${#failed[@]}" -gt 0 ]; then
+            echo "::error::Failed to deprecate: ${failed[*]}"
+            exit 1
+          fi
