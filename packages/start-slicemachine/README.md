@@ -62,6 +62,12 @@ Pass `--open` to automatically launch Slice Machine in your browser:
 npm run slicemachine -- --open
 ```
 
+Every run prints a notice that Slice Machine is deprecated. Set `PRISMIC_IGNORE_SLICE_MACHINE_DEPRECATION` to hide it:
+
+```
+PRISMIC_IGNORE_SLICE_MACHINE_DEPRECATION=1 npm run slicemachine
+```
+
 ## Documentation
 
 For full documentation, visit the [official Prismic documentation][prismic-docs].
