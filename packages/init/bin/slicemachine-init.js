@@ -42,9 +42,9 @@ process.stderr.write(
 New projects should use the Type Builder: ${prismicInit}
 Docs: https://prismic.io/docs/cli
 `
-		: `Slice Machine is deprecated. New projects should use the Type Builder.
+		: `Slice Machine is deprecated and is no longer the correct way to start a Prismic project.
 
-Start one with the Prismic CLI:
+New projects use the Type Builder. Start one with the Prismic CLI:
 
   ${prismicInit}
 
