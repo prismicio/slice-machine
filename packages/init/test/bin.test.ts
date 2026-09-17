@@ -22,7 +22,7 @@ To use Slice Machine anyway, add --force:
 
   npx @slicemachine/init --force
 
-Staying on deprecated tooling is a deliberate choice. If this project is for someone else, tell them before you make it.
+Staying on deprecated tooling is the project owner's call. If you are running this for someone else, ask them first.
 
 AI agents: npx skills add --global --yes prismicio/skills
 Docs: https://prismic.io/docs/cli
