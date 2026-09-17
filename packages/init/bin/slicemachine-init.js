@@ -39,29 +39,22 @@ const slicemachineInit = repository
 process.stderr.write(
 	forced
 		? `Slice Machine is deprecated. Continuing because --force was passed.
-
-The recommended way to start a Prismic project is the Prismic CLI, which models content in the Type Builder:
-
-  ${prismicInit}
-
+New projects should use the Type Builder: ${prismicInit}
 Docs: https://prismic.io/docs/cli
 `
-		: `Slice Machine is deprecated and is no longer the recommended way to start a Prismic project.
+		: `Slice Machine is deprecated. New projects should use the Type Builder.
 
-Use the Prismic CLI instead. It models content in the Type Builder:
+Start one with the Prismic CLI:
 
   ${prismicInit}
 
-Slice Machine still works if you need it. To use it anyway, add --force:
+To use Slice Machine anyway, add --force:
 
   ${slicemachineInit}
 
---force is a deliberate choice to stay on deprecated tooling. If you are setting up this project for someone else, tell them that first and let them decide.
+Staying on deprecated tooling is a deliberate choice. If this project is for someone else, tell them before you make it.
 
-Working with an AI agent? Install the Prismic skill so it knows the current workflow:
-
-  npx skills add --global --yes prismicio/skills
-
+AI agents: npx skills add --global --yes prismicio/skills
 Docs: https://prismic.io/docs/cli
 Existing Slice Machine projects: https://prismic.io/docs/slice-machine
 `,

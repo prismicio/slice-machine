@@ -12,31 +12,24 @@ const XDG_CONFIG_HOME = fileURLToPath(
 	new URL("./__fixtures__/telemetry-disabled/", import.meta.url),
 );
 
-const HALT = `Slice Machine is deprecated and is no longer the recommended way to start a Prismic project.
+const HALT = `Slice Machine is deprecated. New projects should use the Type Builder.
 
-Use the Prismic CLI instead. It models content in the Type Builder:
+Start one with the Prismic CLI:
 
   npx prismic init
 
-Slice Machine still works if you need it. To use it anyway, add --force:
+To use Slice Machine anyway, add --force:
 
   npx @slicemachine/init --force
 
---force is a deliberate choice to stay on deprecated tooling. If you are setting up this project for someone else, tell them that first and let them decide.
+Staying on deprecated tooling is a deliberate choice. If this project is for someone else, tell them before you make it.
 
-Working with an AI agent? Install the Prismic skill so it knows the current workflow:
-
-  npx skills add --global --yes prismicio/skills
-
+AI agents: npx skills add --global --yes prismicio/skills
 Docs: https://prismic.io/docs/cli
 Existing Slice Machine projects: https://prismic.io/docs/slice-machine`;
 
 const FORCED = `Slice Machine is deprecated. Continuing because --force was passed.
-
-The recommended way to start a Prismic project is the Prismic CLI, which models content in the Type Builder:
-
-  npx prismic init
-
+New projects should use the Type Builder: npx prismic init
 Docs: https://prismic.io/docs/cli`;
 
 const runBin = (args: string[]) => {
@@ -81,8 +74,8 @@ it.each([
 	expect(result.stdout).toBe("");
 	expect(result.stderr).toBe(
 		HALT.replace(
-			"npx prismic init\n",
-			"npx prismic init --repo my-repo\n",
+			"  npx prismic init\n",
+			"  npx prismic init --repo my-repo\n",
 		).replace(
 			"npx @slicemachine/init --force",
 			"npx @slicemachine/init --repository my-repo --force",
