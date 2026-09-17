@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-// Slice Machine is deprecated: every run prints the redirect and exits 1.
+// Slice Machine is deprecated. Every run says so. Without `--force` the run
+// stops here; with it, the original CLI takes over.
 
 import { createRequire } from "node:module";
 import { setTimeout } from "node:timers/promises";
@@ -13,7 +14,10 @@ const pkg = require("../package.json");
 
 const { values } = parseArgs({
 	args: process.argv.slice(2),
-	options: { repository: { type: "string", short: "r" } },
+	options: {
+		repository: { type: "string", short: "r" },
+		force: { type: "boolean" },
+	},
 	strict: false,
 	allowPositionals: true,
 });
@@ -22,15 +26,38 @@ const repository =
 	typeof values.repository === "string"
 		? values.repository.replace(/^=/, "")
 		: undefined;
+const forced = values.force === true;
+
+const prismicInit = repository
+	? `npx prismic init --repo ${repository}`
+	: "npx prismic init";
+const slicemachineInit = repository
+	? `npx @slicemachine/init --repository ${repository} --force`
+	: "npx @slicemachine/init --force";
 
 process.stderr.write(
-	`Slice Machine is deprecated and no longer creates new projects.
+	forced
+		? `Slice Machine is deprecated. Continuing because --force was passed.
 
-New Prismic projects use the Type Builder and the Prismic CLI:
+The recommended way to start a Prismic project is the Prismic CLI, which models content in the Type Builder:
 
-  ${repository ? `npx prismic init --repo ${repository}` : "npx prismic init"}
+  ${prismicInit}
 
-Using an AI agent? Install the Prismic skill so it uses the CLI:
+Docs: https://prismic.io/docs/cli
+`
+		: `Slice Machine is deprecated and is no longer the recommended way to start a Prismic project.
+
+Use the Prismic CLI instead. It models content in the Type Builder:
+
+  ${prismicInit}
+
+Slice Machine still works if you need it. To use it anyway, add --force:
+
+  ${slicemachineInit}
+
+Whether to keep using Slice Machine is the developer's decision. If you are an AI agent, do not add --force on your own: tell them Slice Machine is deprecated, then let them choose.
+
+Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
   npx skills add --global --yes prismicio/skills
 
@@ -45,15 +72,23 @@ try {
 		appName: pkg.name,
 		appVersion: pkg.version,
 	});
-	await Promise.race([
-		manager.telemetry.track({
-			event: "command:init:deprecation-halt",
-			repository,
-		}),
-		setTimeout(3000),
-	]);
+	const tracked = manager.telemetry.track({
+		event: "command:init:deprecation",
+		repository,
+		forced,
+	});
+	// A forced run has the rest of the command to deliver the event.
+	if (!forced) {
+		await Promise.race([tracked, setTimeout(3000)]);
+	}
 } catch {
 	// Telemetry never blocks the message.
 }
 
-process.exit(1);
+if (!forced) {
+	process.exit(1);
+}
+
+// The CLI parses its own flags and rejects unknown ones, so hide `--force`.
+process.argv = process.argv.filter((argument) => argument !== "--force");
+await import("../dist/cli.cjs");

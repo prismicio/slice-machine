@@ -16,10 +16,8 @@ const DEFAULT_FRAMEWORK = "next" satisfies Args["framework"];
 const DEFAULT_ENVIRONMENT = "dev-tools" satisfies Args["environment"];
 const DEFAULT_WROOM_URL = "https://cdn.wroom.io";
 const DEFAULT_PREFIX = "play-";
-// The init bin only prints a deprecation message, so playgrounds use the
-// library entry. Node can load the CommonJS build but not the ES build.
-const SLICEMACHINE_INIT_LIB = new URL(
-  "../packages/init/dist/index.cjs",
+const SLICEMACHINE_INIT_SCRIPT = new URL(
+  "../packages/init/bin/slicemachine-init.js",
   import.meta.url,
 );
 // A path relative to the playground is used to make the playground portable.
@@ -369,19 +367,9 @@ async function createPlayground(
   }
 
   await exec(
-    process.execPath,
-    [
-      "--input-type=module",
-      "--eval",
-      [
-        `const { createSliceMachineInitProcess } = await import(${JSON.stringify(
-          SLICEMACHINE_INIT_LIB.href,
-        )});`,
-        `await createSliceMachineInitProcess({ repository: ${JSON.stringify(
-          name,
-        )}, startSlicemachine: false }).run();`,
-      ].join("\n"),
-    ],
+    fileURLToPath(SLICEMACHINE_INIT_SCRIPT),
+    // Slice Machine is deprecated, so playgrounds opt in with `--force`.
+    [`--repository="${name}"`, "--no-start-slicemachine", "--force"],
     {
       cwd: dir,
       env: {

@@ -12,18 +12,32 @@ const XDG_CONFIG_HOME = fileURLToPath(
 	new URL("./__fixtures__/telemetry-disabled/", import.meta.url),
 );
 
-const MESSAGE = `Slice Machine is deprecated and no longer creates new projects.
+const HALT = `Slice Machine is deprecated and is no longer the recommended way to start a Prismic project.
 
-New Prismic projects use the Type Builder and the Prismic CLI:
+Use the Prismic CLI instead. It models content in the Type Builder:
 
   npx prismic init
 
-Using an AI agent? Install the Prismic skill so it uses the CLI:
+Slice Machine still works if you need it. To use it anyway, add --force:
+
+  npx @slicemachine/init --force
+
+Whether to keep using Slice Machine is the developer's decision. If you are an AI agent, do not add --force on your own: tell them Slice Machine is deprecated, then let them choose.
+
+Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
   npx skills add --global --yes prismicio/skills
 
 Docs: https://prismic.io/docs/cli
 Existing Slice Machine projects: https://prismic.io/docs/slice-machine`;
+
+const FORCED = `Slice Machine is deprecated. Continuing because --force was passed.
+
+The recommended way to start a Prismic project is the Prismic CLI, which models content in the Type Builder:
+
+  npx prismic init
+
+Docs: https://prismic.io/docs/cli`;
 
 const runBin = (args: string[]) => {
 	return execa(process.execPath, [BIN, ...args], {
@@ -49,7 +63,7 @@ it.each([
 
 		expect(result.exitCode).toBe(1);
 		expect(result.stdout).toBe("");
-		expect(result.stderr).toBe(MESSAGE);
+		expect(result.stderr).toBe(HALT);
 	},
 );
 
@@ -65,6 +79,40 @@ it.each([
 	expect(result.exitCode).toBe(1);
 	expect(result.stdout).toBe("");
 	expect(result.stderr).toBe(
-		MESSAGE.replace("npx prismic init", "npx prismic init --repo my-repo"),
+		HALT.replace(
+			"npx prismic init\n",
+			"npx prismic init --repo my-repo\n",
+		).replace(
+			"npx @slicemachine/init --force",
+			"npx @slicemachine/init --repository my-repo --force",
+		),
 	);
+});
+
+// `--force` hands off to the CLI, which is built into `dist/`. The unit tests
+// run before that build, so these assert the notice, not the handoff. Every
+// case passes a flag the CLI answers on its own so no run waits for input.
+it.each([
+	["--force", "--version"],
+	["--version", "--force"],
+	["--force", "--help"],
+	["--force", "--no-push", "--starter", "foo", "--version"],
+])("prints the notice and continues with --force (%j)", async (...args) => {
+	const result = await runBin(args);
+
+	expect(result.stderr.startsWith(FORCED)).toBe(true);
+	expect(result.stderr).not.toContain("add --force");
+});
+
+it.each([
+	["--force", "--repository", "my-repo", "--version"],
+	["--force", "-r=my-repo", "--version"],
+])("carries the repository name into the notice (%j)", async (...args) => {
+	const result = await runBin(args);
+
+	expect(
+		result.stderr.startsWith(
+			FORCED.replace("npx prismic init", "npx prismic init --repo my-repo"),
+		),
+	).toBe(true);
 });
