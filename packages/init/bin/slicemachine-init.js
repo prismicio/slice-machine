@@ -26,7 +26,8 @@ const repository =
 	typeof values.repository === "string"
 		? values.repository.replace(/^=/, "")
 		: undefined;
-const forced = values.force === true;
+// `--force=true` parses as a string, so accept both spellings.
+const forced = values.force === true || values.force === "true";
 
 const prismicInit = repository
 	? `npx prismic init --repo ${repository}`
@@ -90,5 +91,7 @@ if (!forced) {
 }
 
 // The CLI parses its own flags and rejects unknown ones, so hide `--force`.
-process.argv = process.argv.filter((argument) => argument !== "--force");
+process.argv = process.argv.filter(
+	(argument) => argument !== "--force" && !argument.startsWith("--force="),
+);
 await import("../dist/cli.cjs");

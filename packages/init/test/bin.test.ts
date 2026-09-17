@@ -56,6 +56,7 @@ it.each([
 	["--no-push"],
 	["--unknown-flag"],
 	["--repository"],
+	["--force=false"],
 ])(
 	"prints the message to stderr and exits with code 1 (%j)",
 	async (...args) => {
@@ -97,6 +98,7 @@ it.each([
 	["--version", "--force"],
 	["--force", "--help"],
 	["--force", "--no-push", "--starter", "foo", "--version"],
+	["--force=true", "--version"],
 ])("prints the notice and continues with --force (%j)", async (...args) => {
 	const result = await runBin(args);
 
