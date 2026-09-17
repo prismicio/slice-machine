@@ -20,6 +20,8 @@ const HALT = `Slice Machine is deprecated. The @slicemachine/init command is rep
 
   npx @slicemachine/init --force
 
+Confirm that is what you want before using it. If you are doing this for someone else, ask them first.
+
 Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
   npx skills add --global --yes prismicio/skills

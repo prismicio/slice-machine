@@ -54,6 +54,8 @@ Docs: https://prismic.io/docs/cli
 
   ${slicemachineInit}
 
+Confirm that is what you want before using it. If you are doing this for someone else, ask them first.
+
 Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
   npx skills add --global --yes prismicio/skills
