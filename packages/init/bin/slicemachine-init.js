@@ -48,11 +48,9 @@ Start one with the Prismic CLI:
 
   ${prismicInit}
 
-To use Slice Machine anyway, add --force:
+--force sets up a project with the deprecated Slice Machine. Not recommended:
 
   ${slicemachineInit}
-
-If someone asked you to set this up, check with them first.
 
 AI agents: npx skills add --global --yes prismicio/skills
 Docs: https://prismic.io/docs/cli
