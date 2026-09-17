@@ -1,3 +1,11 @@
+> Slice Machine is replaced by the [Prismic CLI](https://prismic.io/docs/cli) and the [Type Builder](https://prismic.io/docs/type-builder). Existing projects are still supported. To move a project, see [Migrate to the Type Builder](https://prismic.io/docs/slice-machine#migrate-to-the-type-builder).
+>
+> Using an AI agent? Teach it the new way by installing the Prismic skill:
+>
+> ```bash
+> npx skills add --global --yes prismicio/skills
+> ```
+
 # start-slicemachine
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -52,6 +60,12 @@ Pass `--open` to automatically launch Slice Machine in your browser:
 
 ```
 npm run slicemachine -- --open
+```
+
+Every run prints a notice that Slice Machine is deprecated. Set `PRISMIC_IGNORE_SLICE_MACHINE_DEPRECATION` to hide it:
+
+```
+PRISMIC_IGNORE_SLICE_MACHINE_DEPRECATION=1 npm run slicemachine
 ```
 
 ## Documentation

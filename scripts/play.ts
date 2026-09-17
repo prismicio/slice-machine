@@ -368,7 +368,8 @@ async function createPlayground(
 
   await exec(
     fileURLToPath(SLICEMACHINE_INIT_SCRIPT),
-    [`--repository="${name}"`, "--no-start-slicemachine"],
+    // Slice Machine is deprecated, so playgrounds opt in with `--force`.
+    [`--repository="${name}"`, "--no-start-slicemachine", "--force"],
     {
       cwd: dir,
       env: {

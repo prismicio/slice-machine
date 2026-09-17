@@ -2,6 +2,26 @@ import mri from "mri";
 
 import * as pkg from "../package.json";
 
+// Slice Machine is deprecated: every run prints the notice, then continues.
+// Projects that have read it can set PRISMIC_IGNORE_SLICE_MACHINE_DEPRECATION.
+if (!process.env.PRISMIC_IGNORE_SLICE_MACHINE_DEPRECATION) {
+	console.error(
+		`Slice Machine is deprecated. This project still works, but Slice Machine is no longer updated.
+
+New projects use the Type Builder, and this project can move to it with the Prismic CLI:
+
+  npx prismic init
+
+Working with an AI agent? Install the Prismic skill so it knows the current workflow:
+
+  npx skills add --global --yes prismicio/skills
+
+Docs: https://prismic.io/docs/slice-machine#migrate-to-the-type-builder
+Set PRISMIC_IGNORE_SLICE_MACHINE_DEPRECATION=1 to hide this notice.
+`,
+	);
+}
+
 type Args = {
 	open: boolean;
 	port: string;

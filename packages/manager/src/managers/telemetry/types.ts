@@ -12,6 +12,7 @@ export const SegmentEventType = {
 	command_init_start: "command:init:start",
 	command_init_identify: "command:init:identify",
 	command_init_end: "command:init:end",
+	command_init_deprecation: "command:init:deprecation",
 	sliceSimulator_open: "slice-simulator:open",
 	sliceSimulator_isNotRunning: "slice-simulator:is-not-running",
 	pageView: "page-view",
@@ -70,6 +71,7 @@ export const HumanSegmentEventType = {
 	[SegmentEventType.command_init_start]: "SliceMachine Init Start",
 	[SegmentEventType.command_init_identify]: "SliceMachine Init Identify",
 	[SegmentEventType.command_init_end]: "SliceMachine Init End",
+	[SegmentEventType.command_init_deprecation]: "SliceMachine Init Deprecation",
 	[SegmentEventType.sliceSimulator_open]: "SliceMachine Slice Simulator Open",
 	[SegmentEventType.sliceSimulator_isNotRunning]:
 		"SliceMachine Slice Simulator is not running",
@@ -179,6 +181,11 @@ type CommandInitIdentifySegmentEvent = SegmentEvent<
 type CommandInitEndSegmentEvent = SegmentEvent<
 	typeof SegmentEventType.command_init_end,
 	{ framework: string; success: boolean; starter?: string; error?: string }
+>;
+
+type CommandInitDeprecationSegmentEvent = SegmentEvent<
+	typeof SegmentEventType.command_init_deprecation,
+	{ forced: boolean }
 >;
 
 type SliceSimulatorOpenSegmentEvent = SegmentEvent<
@@ -590,6 +597,7 @@ export type SegmentEvents =
 	| CommandInitStartSegmentEvent
 	| CommandInitIdentifySegmentEvent
 	| CommandInitEndSegmentEvent
+	| CommandInitDeprecationSegmentEvent
 	| SliceSimulatorOpenSegmentEvent
 	| SliceSimulatorIsNotRunningSegmentEvent
 	| PageViewSegmentEvent
