@@ -39,12 +39,12 @@ const slicemachineInit = repository
 process.stderr.write(
 	forced
 		? `Slice Machine is deprecated. Continuing because --force was passed.
-New projects should use the Type Builder: ${prismicInit}
+@slicemachine/init is replaced by: ${prismicInit}
 Docs: https://prismic.io/docs/cli
 `
-		: `Slice Machine is deprecated and is no longer the correct way to start a Prismic project.
+		: `Slice Machine is deprecated. @slicemachine/init is replaced by prismic init.
 
-New projects use the Type Builder. Start one with the Prismic CLI:
+Run this instead. It sets up a project with the Type Builder:
 
   ${prismicInit}
 

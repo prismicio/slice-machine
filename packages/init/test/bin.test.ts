@@ -12,9 +12,9 @@ const XDG_CONFIG_HOME = fileURLToPath(
 	new URL("./__fixtures__/telemetry-disabled/", import.meta.url),
 );
 
-const HALT = `Slice Machine is deprecated and is no longer the correct way to start a Prismic project.
+const HALT = `Slice Machine is deprecated. @slicemachine/init is replaced by prismic init.
 
-New projects use the Type Builder. Start one with the Prismic CLI:
+Run this instead. It sets up a project with the Type Builder:
 
   npx prismic init
 
@@ -27,7 +27,7 @@ Docs: https://prismic.io/docs/cli
 Existing Slice Machine projects: https://prismic.io/docs/slice-machine`;
 
 const FORCED = `Slice Machine is deprecated. Continuing because --force was passed.
-New projects should use the Type Builder: npx prismic init
+@slicemachine/init is replaced by: npx prismic init
 Docs: https://prismic.io/docs/cli`;
 
 const runBin = (args: string[]) => {
