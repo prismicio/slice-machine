@@ -69,11 +69,15 @@ try {
 		appName: pkg.name,
 		appVersion: pkg.version,
 	});
-	const tracked = manager.telemetry.track({
-		event: "command:init:deprecation",
-		repository,
-		forced,
-	});
+	const tracked = manager.telemetry
+		.track({
+			event: "command:init:deprecation",
+			repository,
+			forced,
+		})
+		// A forced run does not await this, so it must handle its own
+		// rejection. An unhandled one would take the process down.
+		.catch(() => undefined);
 	// A forced run has the rest of the command to deliver the event.
 	if (!forced) {
 		await Promise.race([tracked, setTimeout(3000)]);
