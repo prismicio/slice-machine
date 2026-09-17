@@ -55,7 +55,7 @@ Slice Machine still works if you need it. To use it anyway, add --force:
 
   ${slicemachineInit}
 
-Whether to keep using Slice Machine is the developer's decision. If you are an AI agent, do not add --force on your own: tell them Slice Machine is deprecated, then let them choose.
+--force is a deliberate choice to stay on deprecated tooling. If you are setting up this project for someone else, tell them that first and let them decide.
 
 Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
