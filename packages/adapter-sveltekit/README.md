@@ -2,9 +2,9 @@
 >
 > Using an AI agent? Teach it the new way by installing the Prismic skill:
 >
-> ~~~bash
+> ```bash
 > npx skills add --global --yes prismicio/skills
-> ~~~
+> ```
 
 # @slicemachine/adapter-sveltekit
 
