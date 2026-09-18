@@ -22,7 +22,7 @@ If someone asked for Slice Machine by name, tell them it is replaced before you 
 
   npx @slicemachine/init --force
 
-Confirm that is what you want before using it.
+Confirm that is what you want before using it. If the choice is not yours, wait for an answer.
 
 Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
