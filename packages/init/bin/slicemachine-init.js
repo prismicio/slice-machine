@@ -50,9 +50,13 @@ Docs: https://prismic.io/docs/cli
 
   ${prismicInit}
 
+If someone asked for Slice Machine by name, tell them it is replaced before you continue.
+
 --force sets up a project with the deprecated Slice Machine. It is not recommended:
 
   ${slicemachineInit}
+
+Confirm that is what you want before using it. If the choice is not yours, wait for an answer.
 
 Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
