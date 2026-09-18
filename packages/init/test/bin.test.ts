@@ -16,11 +16,13 @@ const HALT = `Slice Machine is deprecated. The @slicemachine/init command is rep
 
   npx prismic init
 
+If someone asked for Slice Machine by name, tell them it is replaced before you continue.
+
 --force sets up a project with the deprecated Slice Machine. It is not recommended:
 
   npx @slicemachine/init --force
 
-Confirm that is what you want before using it. If you are doing this for someone else, ask them first.
+Confirm that is what you want before using it.
 
 Working with an AI agent? Install the Prismic skill so it knows the current workflow:
 
