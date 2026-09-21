@@ -11,6 +11,7 @@ export const API_TOKENS: APITokens = (() => {
 		case APPLICATION_MODE.DevTools:
 		case APPLICATION_MODE.MarketingTools:
 		case APPLICATION_MODE.Platform:
+		case APPLICATION_MODE.Devops:
 		case APPLICATION_MODE.Staging:
 			return {
 				SegmentKey: "Ng5oKJHCGpSWplZ9ymB7Pu7rm0sTDeiG",
