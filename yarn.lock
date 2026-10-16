@@ -7559,7 +7559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prismicio/simulator@npm:0.1.4, @prismicio/simulator@npm:^0.1.4":
+"@prismicio/simulator@npm:0.1.4":
   version: 0.1.4
   resolution: "@prismicio/simulator@npm:0.1.4"
   dependencies:
@@ -7567,6 +7567,15 @@ __metadata:
     "@types/statuses": ^2.0.1
     statuses: ^2.0.1
   checksum: f6a9b01b2c5df2243e96c2d57f12db5d477b0782309126fd07afa4091b20cee3dd27632f8d1ae0d9c10b20322213d930c144dd727955d2e2d141686b55810d75
+  languageName: node
+  linkType: hard
+
+"@prismicio/simulator@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "@prismicio/simulator@npm:0.2.4"
+  peerDependencies:
+    "@prismicio/client": ^7
+  checksum: de5a9fcc3c107f246e68e4ab195cd8a2bcb005ef128e8c4799fa5bc20176862fdf2cdc09cb21859652daf7594561ad301a8cb49ad96cc74fb41d3208441294d7
   languageName: node
   linkType: hard
 
@@ -10753,7 +10762,7 @@ __metadata:
   resolution: "@slicemachine/adapter-next@workspace:packages/adapter-next"
   dependencies:
     "@prismicio/mock": 0.7.2
-    "@prismicio/simulator": ^0.1.4
+    "@prismicio/simulator": ^0.2.4
     "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
@@ -10798,7 +10807,7 @@ __metadata:
   resolution: "@slicemachine/adapter-nuxt2@workspace:packages/adapter-nuxt2"
   dependencies:
     "@prismicio/mock": 0.7.2
-    "@prismicio/simulator": ^0.1.4
+    "@prismicio/simulator": ^0.2.4
     "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
@@ -10839,7 +10848,7 @@ __metadata:
   resolution: "@slicemachine/adapter-nuxt@workspace:packages/adapter-nuxt"
   dependencies:
     "@prismicio/mock": 0.7.2
-    "@prismicio/simulator": ^0.1.4
+    "@prismicio/simulator": ^0.2.4
     "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
@@ -10881,7 +10890,7 @@ __metadata:
   resolution: "@slicemachine/adapter-sveltekit@workspace:packages/adapter-sveltekit"
   dependencies:
     "@prismicio/mock": 0.7.2
-    "@prismicio/simulator": ^0.1.4
+    "@prismicio/simulator": ^0.2.4
     "@prismicio/types-internal": ^3.17.2
     "@size-limit/preset-small-lib": 8.2.4
     "@slicemachine/plugin-kit": "workspace:*"
